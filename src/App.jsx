@@ -6,7 +6,7 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
-const GEMINI_KEY = 'AIzaSyB_BHi8w1WcnCvpJq-IIRdB2Y6H2uKCLms';
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_KEY || 'AIzaSyDZ_pC9Mhrmd5RPbO2XJaBbxcMv_x-_XWw';
 
 // ============================================
 // SUPABASE CLIENT
