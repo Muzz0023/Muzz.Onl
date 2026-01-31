@@ -134,6 +134,22 @@ const useAuth = () => useContext(AuthContext);
 // ============================================
 // LOGIN/SIGNUP SCREEN
 // ============================================
+const loginGreetings = [
+  "Missed you papi 😘",
+  "Welcome back daddy 🔥",
+  "Good to see you ain't locked up in the pen yet 🙏",
+  "Welcome back big dawg 🐕",
+  "Big dawg gotta eat aye 🍖",
+];
+
+const signupGreetings = [
+  "Let's get this bread 🍞",
+  "New money who dis 💵",
+  "Fresh account, fresh start 🚀",
+  "Welcome to the fam 🦘",
+  "Time to stack some cash 💰",
+];
+
 function AuthScreen() {
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -142,6 +158,11 @@ function AuthScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [greeting] = useState(() => 
+    isLogin 
+      ? loginGreetings[Math.floor(Math.random() * loginGreetings.length)]
+      : signupGreetings[Math.floor(Math.random() * signupGreetings.length)]
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -173,7 +194,7 @@ function AuthScreen() {
 
         <div className="bg-white rounded-3xl shadow-2xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            {isLogin ? 'Welcome back!' : 'Create account'}
+            {isLogin ? greeting : 'Create account'}
           </h2>
 
           {error && (
