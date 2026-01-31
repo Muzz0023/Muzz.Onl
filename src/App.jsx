@@ -6,7 +6,7 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
-const GEMINI_KEY = import.meta.env.VITE_GEMINI_KEY;
+const GEMINI_KEY = 'AIzaSyB_BHi8w1WcnCvpJq-IIRdB2Y6H2uKCLms';
 
 // ============================================
 // SUPABASE CLIENT
@@ -267,6 +267,27 @@ const investmentQuotes = [
   { author: "Howard Marks", quote: "You cannot predict. You can prepare." },
 ];
 
+// Helper function to calculate how long you've held something
+const getHoldingDuration = (dateAdded) => {
+  if (!dateAdded) return null;
+  const start = new Date(dateAdded);
+  const now = new Date();
+  const diffMs = now - start;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (days < 1) return "Today";
+  if (days === 1) return "1 day";
+  if (days < 30) return `${days} days`;
+  if (days < 365) {
+    const months = Math.floor(days / 30);
+    return months === 1 ? "1 month" : `${months} months`;
+  }
+  const years = Math.floor(days / 365);
+  const remainingMonths = Math.floor((days % 365) / 30);
+  if (remainingMonths === 0) return years === 1 ? "1 year" : `${years} years`;
+  return `${years}y ${remainingMonths}m`;
+};
+
 // Floating Chat Component - New Visual Style (matches app-2)
 function FloatingChat({ 
   isChatOpen, 
@@ -289,17 +310,19 @@ function FloatingChat({
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setIsTyping(true);
     
-const systemPrompt = `You are Muzz 🦘, a friendly Australian kangaroo financial mate!
-Rules:
-- Keep replies to 2-3 sentences MAX
-- Use Aussie slang (mate, legend, ripper, no worries)
-- Sprinkle in ONE brainrot phrase per reply (skibidi, rizz, bussin, no cap, its giving, slay, aura, baby gronk, baddie, cooked, crash out, no diddy, doom scrolling, big stein, fanum tax, glazing, goon, goofy ahh, you as sweet as grandmas cookies, grimace shake, gyatt, looksmaxxing, mewing, mog, npc, only in ohio, pookie, sus, yapping, double chunk choclate cookie, low taper fade, on kirk)
-- Stay focused on answering the users financial question
-- Stay focused on answering the users financial question
-- Be casual and friendly
-- No long explanations
+    const systemPrompt = `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
+
+Your personality:
+- Warm, encouraging, and supportive mate
+- Use Aussie slang naturally (mate, legend, ripper, no worries, fair dinkum, etc.)
+- Keep responses concise but helpful (2-3 paragraphs max)
+- Give practical, actionable advice
+- Celebrate wins, no matter how small
+- Be honest but kind about areas needing improvement
+
 ${financialContext}
-Short and sweet! 🦘`;
+
+Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
     
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
@@ -1061,11 +1084,11 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
   // TASKS VIEW
   if (activeView === 'tasks') {
     const addDailyTask = () => {
-      setDailyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false }]);
+      setDailyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, dateAdded: new Date().toISOString() }]);
     };
 
     const addWeeklyTask = () => {
-      setWeeklyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, startDate: '', dueDate: '' }]);
+      setWeeklyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, startDate: '', dueDate: '', dateAdded: new Date().toISOString() }]);
     };
 
     const toggleDailyTask = (id) => {
@@ -1162,6 +1185,11 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                             placeholder="What needs to be done today?"
                             className={`flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 ${task.completed ? 'line-through text-gray-400' : ''}`}
                           />
+                          {task.dateAdded && (
+                            <span className="text-xs text-green-500 font-medium">
+                              🔥 {getHoldingDuration(task.dateAdded)}
+                            </span>
+                          )}
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
                             className="text-red-400 hover:text-red-600 text-sm"
@@ -3672,9 +3700,9 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
               <button
                 onClick={() => {
                   if (billsType === 'personal') {
-                    setSubscriptions(prev => [...prev, { name: '', monthly: 0, monthlyStr: '', dueDate: '' }]);
+                    setSubscriptions(prev => [...prev, { name: '', monthly: 0, monthlyStr: '', dueDate: '', dateAdded: new Date().toISOString() }]);
                   } else {
-                    setBusinessSubscriptions(prev => [...prev, { name: '', monthly: 0, monthlyStr: '', dueDate: '' }]);
+                    setBusinessSubscriptions(prev => [...prev, { name: '', monthly: 0, monthlyStr: '', dueDate: '', dateAdded: new Date().toISOString() }]);
                   }
                 }}
                 className={`w-full mt-4 py-3 border-2 border-dashed rounded-xl transition-colors text-sm font-medium ${
@@ -3843,7 +3871,14 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                       return parseDay(a.dueDate) - parseDay(b.dueDate);
                     }).map((sub, idx) => (
                       <tr key={idx} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium">{sub.name}</td>
+                        <td className="py-3 px-4 font-medium">
+                          {sub.name}
+                          {sub.dateAdded && (
+                            <span className="ml-2 text-xs text-gray-400">
+                              ({getHoldingDuration(sub.dateAdded)})
+                            </span>
+                          )}
+                        </td>
                         <td className="py-3 px-3 text-center text-gray-500">
                           {sub.dueDate || '-'}
                         </td>
@@ -4641,6 +4676,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                     <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">ASSET NAME</th>
                     <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TYPE</th>
                     <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">VALUE</th>
+                    <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">OWNED</th>
                     <th className="w-10"></th>
                   </tr>
                 </thead>
@@ -4681,6 +4717,13 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                           />
                         </div>
                       </td>
+                      <td className="py-3 px-4 text-right">
+                        {asset?.dateAdded && (
+                          <span className="text-xs text-gray-400">
+                            {getHoldingDuration(asset.dateAdded)}
+                          </span>
+                        )}
+                      </td>
                       <td className="py-2 px-2">
                         <button
                           onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
@@ -4696,7 +4739,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
             </div>
             <div className="p-4 border-t">
               <button
-                onClick={() => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '' }])}
+                onClick={() => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }])}
                 className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
               >
                 + Add Asset
@@ -5543,6 +5586,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                         <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">INVESTED</th>
                         <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">VALUE</th>
                         <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">GAIN/LOSS</th>
+                        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">HELD</th>
                         <th className="w-10"></th>
                       </tr>
                     </thead>
@@ -5606,6 +5650,13 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                                 </span>
                               )}
                             </td>
+                            <td className="py-3 px-4 text-right">
+                              {stock?.dateAdded && (
+                                <span className="text-xs text-gray-400">
+                                  {getHoldingDuration(stock.dateAdded)}
+                                </span>
+                              )}
+                            </td>
                             <td className="py-2 px-2">
                               <button
                                 onClick={() => setStocks(prev => prev.filter((_, i) => i !== index))}
@@ -5622,7 +5673,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                 </div>
                 <div className="p-4 border-t">
                   <button
-                    onClick={() => setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '' }])}
+                    onClick={() => setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }])}
                     className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
                   >
                     + Add Stock
