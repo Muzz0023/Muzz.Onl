@@ -2517,6 +2517,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                     <span className="px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium">🐾 Pet Management</span>
                     <span className="px-3 py-1.5 bg-sky-100 text-sky-700 rounded-full text-sm font-medium">🚗 Car / Vehicle Log</span>
                     <span className="px-3 py-1.5 bg-violet-100 text-violet-700 rounded-full text-sm font-medium">🏥 Medical / Health</span>
+                    <span className="px-3 py-1.5 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">🩸 Period / Cycle Tracker</span>
                     <span className="px-3 py-1.5 bg-lime-100 text-lime-700 rounded-full text-sm font-medium">📚 Studying</span>
                   </div>
                   <p className="text-gray-500 text-sm mt-4">Click "+ Add Section" above to get started!</p>
