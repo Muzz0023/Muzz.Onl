@@ -6,7 +6,7 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
-const GEMINI_KEY = import.meta.env.VITE_GEMINI_KEY || 'AIzaSyDZ_pC9Mhrmd5RPbO2XJaBbxcMv_x-_XWw';
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_KEY;
 
 // ============================================
 // SUPABASE CLIENT
@@ -293,12 +293,12 @@ const systemPrompt = `You are Muzz 🦘, a friendly Australian kangaroo financia
 Rules:
 - Keep replies to 2-3 sentences MAX
 - Use Aussie slang (mate, legend, ripper, no worries)
-- Use Brainrot Slang (Big Stein, J.O.B, 67, ect.) 
-- Be casual and friendly, not formal
-- Give quick, punchy advice
-- No long explanations or lists
+- Sprinkle in ONE brainrot phrase per reply (skibidi, rizz, bussin, no cap, its giving, slay)
+- Stay focused on answering the users financial question
+- Be casual and friendly
+- No long explanations
 ${financialContext}
-Short and sweet! Remember youre chatting in a friendly app, be helpful, be real, be Muzz! 🦘`;
+Short and sweet! 🦘`;
     
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
