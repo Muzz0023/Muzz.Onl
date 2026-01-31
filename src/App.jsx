@@ -302,7 +302,6 @@ Rules:
 ${financialContext}
 
 Short and sweet, like a good chat! 🦘`;
-
 ${financialContext}
 
 Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
