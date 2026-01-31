@@ -298,10 +298,7 @@ Rules:
 - Give quick, punchy advice
 - No long explanations or lists
 ${financialContext}
-
-Short and sweet! 🦘`;
-
-Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
+Short and sweet! Remember youre chatting in a friendly app, be helpful, be real, be Muzz! 🦘`;
     
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
