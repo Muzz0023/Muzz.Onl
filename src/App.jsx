@@ -31,7 +31,7 @@ const supabase = {
     if (d.access_token) {
       this.token = d.access_token;
       this.user = d.user;
-      localStorage.setItem('muzz_auth', JSON.stringify({ token: d.access_token, user: d.user }));
+      localStorage.setItem('muzz_auth', JSON.stringify({ token: d.access_token, refreshToken: d.refresh_token, user: d.user }));
     }
     return d;
   },
@@ -46,7 +46,7 @@ const supabase = {
     if (d.access_token) {
       this.token = d.access_token;
       this.user = d.user;
-      localStorage.setItem('muzz_auth', JSON.stringify({ token: d.access_token, user: d.user }));
+      localStorage.setItem('muzz_auth', JSON.stringify({ token: d.access_token, refreshToken: d.refresh_token, user: d.user }));
     }
     return d;
   },
@@ -55,6 +55,28 @@ const supabase = {
     this.token = null;
     this.user = null;
     localStorage.removeItem('muzz_auth');
+  },
+
+  async refreshSession() {
+    try {
+      const s = localStorage.getItem('muzz_auth');
+      if (!s) return null;
+      const { refreshToken } = JSON.parse(s);
+      if (!refreshToken) return null;
+      const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+        method: 'POST',
+        headers: this.headers(false),
+        body: JSON.stringify({ refresh_token: refreshToken })
+      });
+      const d = await r.json();
+      if (d.access_token) {
+        this.token = d.access_token;
+        this.user = d.user;
+        localStorage.setItem('muzz_auth', JSON.stringify({ token: d.access_token, refreshToken: d.refresh_token, user: d.user }));
+        return d.user;
+      }
+    } catch (e) { console.error('Refresh error:', e); }
+    return null;
   },
   
   restore() {
@@ -100,9 +122,34 @@ function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const restored = supabase.restore();
-    setUser(restored);
-    setLoading(false);
+    const initAuth = async () => {
+      // First try quick restore from localStorage
+      const restored = supabase.restore();
+      if (restored) {
+        setUser(restored);
+        // Then refresh token in background to keep session alive
+        const refreshed = await supabase.refreshSession();
+        if (refreshed) {
+          setUser(refreshed);
+        } else {
+          // Refresh failed = token fully expired, force re-login
+          supabase.signOut();
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    };
+    initAuth();
+
+    // Auto-refresh every 50 minutes (tokens expire at 60 min)
+    const refreshInterval = setInterval(async () => {
+      if (supabase.token) {
+        const refreshed = await supabase.refreshSession();
+        if (refreshed) setUser(refreshed);
+      }
+    }, 50 * 60 * 1000);
+
+    return () => clearInterval(refreshInterval);
   }, []);
 
   const signIn = async (email, password) => {
@@ -543,6 +590,7 @@ function MuzzApp() {
   const [holdingsResearch, setHoldingsResearch] = useState([]);
   const [billSmallGoals, setBillSmallGoals] = useState([]);
   const [billBigGoals, setBillBigGoals] = useState([]);
+  const [debts, setDebts] = useState([]);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   
   // Custom Categories State
@@ -595,6 +643,7 @@ function MuzzApp() {
           if (d.biggestRisks) setBiggestRisks(d.biggestRisks);
           if (d.risksColumns) setRisksColumns(d.risksColumns);
           if (d.billSmallGoals) setBillSmallGoals(d.billSmallGoals);
+          if (d.debts) setDebts(d.debts);
           if (d.billBigGoals) setBillBigGoals(d.billBigGoals);
           if (d.calendarBills) setCalendarBills(d.calendarBills);
           if (d.tasks) setTasks(d.tasks);
@@ -647,6 +696,7 @@ function MuzzApp() {
           risksColumns,
           billSmallGoals,
           billBigGoals,
+          debts,
           calendarBills,
           tasks,
           dailyTasks,
@@ -669,7 +719,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1483,7 +1533,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              💧 Water
+              Water
             </button>
           </div>
 
@@ -1622,6 +1672,18 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           {/* Weekly Meals Tab */}
           {dietSubTab === 'meals' && (
             <div className="space-y-4">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    const resetMeals = {};
+                    weekDays.forEach(d => { resetMeals[d.date] = []; });
+                    setDailyMeals(prev => ({ ...prev, ...resetMeals }));
+                  }}
+                  className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
+                >
+                  Reset Week
+                </button>
+              </div>
               {weekDays.map(day => {
                 const dayMeals = dailyMeals[day.date] || [];
                 return (
@@ -1714,7 +1776,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-semibold">💧 Water Intake</h2>
+                      <h2 className="text-xl font-semibold">Water Intake</h2>
                       <p className="text-sm text-gray-500">Stay hydrated, legend</p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -1818,7 +1880,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-semibold">📊 This Week</h2>
+                      <h2 className="text-xl font-semibold">This Week</h2>
                       <p className="text-sm text-gray-500">
                         Weekly avg: {weekAvg.toFixed(1)}L / day • Total: {weekTotal.toFixed(1)}L
                       </p>
@@ -1831,7 +1893,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                       }}
                       className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
                     >
-                      🔄 Reset Week
+                      Reset Week
                     </button>
                   </div>
                   <div className="p-6">
@@ -2450,7 +2512,6 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                     <span className="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">📓 Journal / Mood</span>
                     <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium">🎄 Christmas List</span>
                     <span className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">🛒 Shopping List</span>
-                    <span className="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">💳 Debt Tracker</span>
                     <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">🎁 Wish List</span>
                     <span className="px-3 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium">🔧 Warranty Tracker</span>
                     <span className="px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium">🐾 Pet Management</span>
@@ -3771,6 +3832,16 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
             >
               Goals
             </button>
+            <button
+              onClick={() => setBillsSubTab('debts')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                billsSubTab === 'debts'
+                  ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Debts
+            </button>
           </div>
 
           {billsSubTab === 'bills' && (
@@ -4757,11 +4828,262 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
               </div>
             </>
           )}
+
+          {/* Debts Tab */}
+          {billsSubTab === 'debts' && (() => {
+            const personalDebts = debts.filter(d => d.type === 'personal');
+            const businessDebts = debts.filter(d => d.type === 'business');
+            const totalOwed = debts.reduce((sum, d) => sum + ((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0)), 0);
+            const totalDebt = debts.reduce((sum, d) => sum + (parseFloat(d.total) || 0), 0);
+            const totalPaid = debts.reduce((sum, d) => sum + (parseFloat(d.paid) || 0), 0);
+            const overallPct = totalDebt > 0 ? Math.min((totalPaid / totalDebt) * 100, 100) : 0;
+
+            const addDebt = (type) => {
+              setDebts(prev => [...prev, {
+                id: Date.now(),
+                type,
+                name: '',
+                total: 0,
+                totalStr: '',
+                paid: 0,
+                paidStr: '',
+                minPayment: '',
+                minInterval: 'month',
+                startDate: '',
+                dueDate: '',
+                notes: ''
+              }]);
+            };
+
+            const updateDebt = (id, updates) => {
+              setDebts(prev => prev.map(d => d.id === id ? { ...d, ...updates } : d));
+            };
+
+            const deleteDebt = (id) => {
+              setDebts(prev => prev.filter(d => d.id !== id));
+            };
+
+            const renderDebtCard = (debt) => {
+              const total = parseFloat(debt.total) || 0;
+              const paid = parseFloat(debt.paid) || 0;
+              const remaining = Math.max(total - paid, 0);
+              const pct = total > 0 ? Math.min((paid / total) * 100, 100) : 0;
+
+              return (
+                <div key={debt.id} className="p-5 bg-gray-50 rounded-2xl space-y-4">
+                  {/* Row 1: Name + Delete */}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      value={debt.name}
+                      onChange={(e) => updateDebt(debt.id, { name: e.target.value })}
+                      placeholder="e.g. Car Loan, Credit Card, HECS..."
+                      className="flex-1 px-3 py-2 border-2 rounded-xl text-sm font-medium focus:outline-none focus:border-red-500 bg-white"
+                    />
+                    <button onClick={() => deleteDebt(debt.id)} className="text-red-400 hover:text-red-600">✕</button>
+                  </div>
+
+                  {/* Row 2: Total + Paid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Total Owed</label>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400 text-sm">$</span>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={debt.totalStr || ''}
+                          onChange={(e) => updateDebt(debt.id, { total: parseFloat(e.target.value) || 0, totalStr: e.target.value })}
+                          placeholder="25000"
+                          className="flex-1 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Amount Paid</label>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400 text-sm">$</span>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={debt.paidStr || ''}
+                          onChange={(e) => updateDebt(debt.id, { paid: parseFloat(e.target.value) || 0, paidStr: e.target.value })}
+                          placeholder="5000"
+                          className="flex-1 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Progress Bar */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-gray-500">{Math.round(pct)}% paid off</span>
+                      <span className="text-xs font-semibold text-red-500">${remaining.toLocaleString()} remaining</span>
+                    </div>
+                    <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${pct >= 100 ? 'bg-gradient-to-r from-green-400 to-green-600' : pct >= 50 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'bg-gradient-to-r from-red-400 to-red-600'}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 4: Min Payment + Interval */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Min. Payment</label>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400 text-sm">$</span>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={debt.minPayment || ''}
+                          onChange={(e) => updateDebt(debt.id, { minPayment: e.target.value })}
+                          placeholder="500"
+                          className="flex-1 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Per</label>
+                      <select
+                        value={debt.minInterval || 'month'}
+                        onChange={(e) => updateDebt(debt.id, { minInterval: e.target.value })}
+                        className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                      >
+                        <option value="week">Week</option>
+                        <option value="fortnight">Fortnight</option>
+                        <option value="month">Month</option>
+                        <option value="quarter">Quarter</option>
+                        <option value="year">Year</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Row 5: Start Date + Due Date */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Start Date</label>
+                      <input
+                        type="date"
+                        value={debt.startDate || ''}
+                        onChange={(e) => updateDebt(debt.id, { startDate: e.target.value })}
+                        className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Due Date</label>
+                      <input
+                        type="date"
+                        value={debt.dueDate || ''}
+                        onChange={(e) => updateDebt(debt.id, { dueDate: e.target.value })}
+                        className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 6: Notes */}
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Notes</label>
+                    <input
+                      type="text"
+                      value={debt.notes || ''}
+                      onChange={(e) => updateDebt(debt.id, { notes: e.target.value })}
+                      placeholder="Extra info..."
+                      className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                    />
+                  </div>
+                </div>
+              );
+            };
+
+            return (
+              <div className="space-y-6">
+                {/* Overview Card */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6">
+                    <h2 className="text-xl font-semibold mb-1">Debt Overview</h2>
+                    <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="text-center p-3 bg-red-50 rounded-xl">
+                        <p className="text-xs text-gray-500">Total Debt</p>
+                        <p className="text-lg font-bold text-red-600">${totalDebt.toLocaleString()}</p>
+                      </div>
+                      <div className="text-center p-3 bg-green-50 rounded-xl">
+                        <p className="text-xs text-gray-500">Total Paid</p>
+                        <p className="text-lg font-bold text-green-600">${totalPaid.toLocaleString()}</p>
+                      </div>
+                      <div className="text-center p-3 bg-orange-50 rounded-xl">
+                        <p className="text-xs text-gray-500">Remaining</p>
+                        <p className="text-lg font-bold text-orange-600">${totalOwed.toLocaleString()}</p>
+                      </div>
+                    </div>
+                    {totalDebt > 0 && (
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-xs text-gray-500">Overall Progress</span>
+                          <span className="text-xs font-semibold">{Math.round(overallPct)}%</span>
+                        </div>
+                        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${overallPct >= 100 ? 'bg-gradient-to-r from-green-400 to-green-600' : 'bg-gradient-to-r from-blue-400 to-indigo-600'}`}
+                            style={{ width: `${overallPct}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Personal Debts */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6 border-b bg-green-50">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-xl font-semibold">Personal Debts</h2>
+                        <p className="text-sm text-gray-500">{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {personalDebts.map(renderDebtCard)}
+                    <button
+                      onClick={() => addDebt('personal')}
+                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-red-500 hover:text-red-500 transition-colors text-sm font-medium"
+                    >
+                      + Add Personal Debt
+                    </button>
+                  </div>
+                </div>
+
+                {/* Business Debts */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6 border-b bg-purple-50">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-xl font-semibold">Business Debts</h2>
+                        <p className="text-sm text-gray-500">{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {businessDebts.map(renderDebtCard)}
+                    <button
+                      onClick={() => addDebt('business')}
+                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-purple-500 hover:text-purple-500 transition-colors text-sm font-medium"
+                    >
+                      + Add Business Debt
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     );
   }
-
   // ASSETS VIEW
   if (activeView === 'assets') {
     const assetCategories = [
