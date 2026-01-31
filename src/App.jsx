@@ -8,6 +8,12 @@ const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
 const GEMINI_KEY = 'AIzaSyB_BHi8w1WcnCvpJq-IIRdB2Y6H2uKCLms';
 
+// VIP Users - Always Premium, no subscription needed
+const VIP_EMAILS = [
+  'lauchy23@outlook.com',
+  'sarah.addison78@gmail.com',
+];
+
 // ============================================
 // SUPABASE CLIENT
 // ============================================
@@ -532,8 +538,8 @@ function MuzzApp() {
     const current = getAiUsage();
     localStorage.setItem('muzz_ai_usage', JSON.stringify({ count: current + 1, date: today }));
   };
-  const isAiLimitReached = () => getAiUsage() >= AI_DAILY_LIMIT;
-  const getAiRemaining = () => Math.max(AI_DAILY_LIMIT - getAiUsage(), 0);
+  const isAiLimitReached = () => isVIP ? false : getAiUsage() >= AI_DAILY_LIMIT;
+  const getAiRemaining = () => isVIP ? '∞' : Math.max(AI_DAILY_LIMIT - getAiUsage(), 0);
   const [isChatHidden, setIsChatHidden] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false); // New floating chat state
   const [isMuzzEnabled, setIsMuzzEnabled] = useState(true);
@@ -651,6 +657,8 @@ function MuzzApp() {
   // Load data on mount from Supabase
   const { user: authUser, signOut } = useAuth();
   const userId = authUser?.id;
+  const userEmail = authUser?.email?.toLowerCase() || '';
+  const isVIP = VIP_EMAILS.includes(userEmail);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
