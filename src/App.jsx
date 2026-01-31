@@ -364,7 +364,11 @@ function FloatingChat({
   setChatMessages, 
   isTyping, 
   setIsTyping,
-  financialContext 
+  financialContext,
+  isAiLimitReached,
+  incrementAiUsage,
+  getAiRemaining,
+  AI_DAILY_LIMIT
 }) {
   const [input, setInput] = useState("");
   const endRef = useRef(null);
@@ -375,6 +379,16 @@ function FloatingChat({
 
   const sendMessage = async (msg) => {
     if (!msg.trim() || isTyping) return;
+
+    // Check AI daily limit
+    if (isAiLimitReached()) {
+      setChatMessages(prev => [...prev, 
+        { role: "user", text: msg },
+        { role: "muzz", text: `Oi mate, you've hit your daily limit of ${AI_DAILY_LIMIT} messages! 🦘\n\nThis resets at midnight so come back tomorrow. Upgrade to Premium for unlimited chats!` }
+      ]);
+      return;
+    }
+
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setIsTyping(true);
     
@@ -404,6 +418,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
       const data = await response.json();
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No worries mate, give it another go! 🦘";
       setChatMessages(prev => [...prev, { role: "muzz", text: reply }]);
+      incrementAiUsage();
     } catch (e) {
       setChatMessages(prev => [...prev, { role: "muzz", text: "Crikey! Hit a snag there mate. Give it another go! 🦘" }]);
     }
@@ -456,9 +471,12 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
       </div>
       <div className="p-3 border-t bg-white">
         <div className="flex gap-2">
-          <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter") handleSend(); }} placeholder="Ask Muzz..." disabled={isTyping} className="flex-1 px-4 py-2 border-2 rounded-full text-sm focus:outline-none focus:border-orange-400 transition-colors" />
-          <button onClick={handleSend} disabled={isTyping || !input.trim()} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-full disabled:opacity-50 transition-all hover:shadow-lg"><Send className="w-4 h-4" /></button>
+          <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter") handleSend(); }} placeholder="Ask Muzz..." disabled={isTyping || isAiLimitReached()} className="flex-1 px-4 py-2 border-2 rounded-full text-sm focus:outline-none focus:border-orange-400 transition-colors" />
+          <button onClick={handleSend} disabled={isTyping || !input.trim() || isAiLimitReached()} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-full disabled:opacity-50 transition-all hover:shadow-lg"><Send className="w-4 h-4" /></button>
         </div>
+        <p className={`text-xs text-center mt-1 ${getAiRemaining() <= 5 ? 'text-red-400' : 'text-gray-400'}`}>
+          {getAiRemaining()} / {AI_DAILY_LIMIT} messages remaining today
+        </p>
       </div>
     </div>
   );
@@ -495,6 +513,27 @@ function MuzzApp() {
   const [muzzPersonality, setMuzzPersonality] = useState(true);
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatExpanded, setIsChatExpanded] = useState(true);
+
+  // AI Daily Message Limit
+  const AI_DAILY_LIMIT = 10;
+  const getAiUsage = () => {
+    try {
+      const stored = localStorage.getItem('muzz_ai_usage');
+      if (stored) {
+        const { count, date } = JSON.parse(stored);
+        const today = new Date().toISOString().split('T')[0];
+        if (date === today) return count;
+      }
+    } catch (e) {}
+    return 0;
+  };
+  const incrementAiUsage = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const current = getAiUsage();
+    localStorage.setItem('muzz_ai_usage', JSON.stringify({ count: current + 1, date: today }));
+  };
+  const isAiLimitReached = () => getAiUsage() >= AI_DAILY_LIMIT;
+  const getAiRemaining = () => Math.max(AI_DAILY_LIMIT - getAiUsage(), 0);
   const [isChatHidden, setIsChatHidden] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false); // New floating chat state
   const [isMuzzEnabled, setIsMuzzEnabled] = useState(true);
@@ -732,6 +771,16 @@ function MuzzApp() {
   // Send message to Muzz AI
   const sendMessageToMuzz = async (userMessage) => {
     if (!userMessage.trim() || isTyping) return;
+
+    // Check AI daily limit
+    if (isAiLimitReached()) {
+      setChatMessages(prev => [...prev, 
+        { role: 'user', text: userMessage.trim() },
+        { role: 'muzz', text: `Oi mate, you've hit your daily limit of ${AI_DAILY_LIMIT} messages! 🦘\n\nThis resets at midnight so come back tomorrow for another yarn. Upgrade to Premium for unlimited chats!` }
+      ]);
+      setHomeInput('');
+      return;
+    }
     
     const msg = userMessage.trim();
     setChatMessages(prev => [...prev, { role: 'user', text: msg }]);
@@ -770,35 +819,25 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
 
     try {
       // Build conversation history for context
-      const conversationHistory = chatMessages.slice(-10).map(m => ({
-        role: m.role === 'user' ? 'user' : 'assistant',
-        content: m.text
-      }));
+      const conversationHistory = chatMessages.slice(-10).map(m => 
+        `${m.role === 'user' ? 'User' : 'Muzz'}: ${m.text}`
+      ).join('\n');
       
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const fullPrompt = systemPrompt + '\n\nConversation so far:\n' + conversationHistory + '\n\nUser: ' + msg + '\n\nMuzz:';
+      
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: systemPrompt,
-          messages: [
-            ...conversationHistory,
-            { role: "user", content: msg }
-          ],
+          contents: [{ parts: [{ text: fullPrompt }] }],
+          generationConfig: { temperature: 0.8, maxOutputTokens: 800 }
         })
       });
 
       const data = await response.json();
-      
-      if (data.error) {
-        setChatMessages(prev => [...prev, { role: 'muzz', text: `Crikey! Something went wrong mate: ${data.error.message}` }]);
-      } else {
-        const reply = data.content?.[0]?.text || "No worries, give me another crack at that question!";
-        setChatMessages(prev => [...prev, { role: 'muzz', text: reply }]);
-      }
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No worries, give me another crack at that question!";
+      setChatMessages(prev => [...prev, { role: 'muzz', text: reply }]);
+      incrementAiUsage();
     } catch (e) {
       setChatMessages(prev => [...prev, { role: 'muzz', text: `Aw mate, hit a snag there: ${e.message}. Give it another go!` }]);
     }
@@ -1150,6 +1189,10 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           isTyping={isTyping}
           setIsTyping={setIsTyping}
           financialContext={financialContext}
+          isAiLimitReached={isAiLimitReached}
+          incrementAiUsage={incrementAiUsage}
+          getAiRemaining={getAiRemaining}
+          AI_DAILY_LIMIT={AI_DAILY_LIMIT}
         />
       </div>
     );
@@ -3733,6 +3776,10 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           isTyping={isTyping}
           setIsTyping={setIsTyping}
           financialContext={financialContext}
+          isAiLimitReached={isAiLimitReached}
+          incrementAiUsage={incrementAiUsage}
+          getAiRemaining={getAiRemaining}
+          AI_DAILY_LIMIT={AI_DAILY_LIMIT}
         />
       </div>
     );
@@ -8350,6 +8397,10 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
         isTyping={isTyping}
         setIsTyping={setIsTyping}
         financialContext={financialContext}
+        isAiLimitReached={isAiLimitReached}
+        incrementAiUsage={incrementAiUsage}
+        getAiRemaining={getAiRemaining}
+        AI_DAILY_LIMIT={AI_DAILY_LIMIT}
       />
     </div>
   );
