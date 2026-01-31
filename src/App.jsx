@@ -536,6 +536,7 @@ function MuzzApp() {
     }
   });
   const [dietSubTab, setDietSubTab] = useState('groceries');
+  const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
   const [gymSubTab, setGymSubTab] = useState('steps');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
@@ -604,6 +605,7 @@ function MuzzApp() {
           if (d.reminders) setReminders(d.reminders);
           if (d.groceries) setGroceries(d.groceries);
           if (d.dailyMeals) setDailyMeals(d.dailyMeals);
+          if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
           if (d.customCategories) setCustomCategories(d.customCategories);
@@ -654,6 +656,7 @@ function MuzzApp() {
           reminders,
           groceries,
           dailyMeals,
+          waterIntake,
           dailySteps,
           workoutPlan,
           customCategories
@@ -666,7 +669,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, dailySteps, workoutPlan, customCategories, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1472,6 +1475,16 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
             >
               Weekly Meals
             </button>
+            <button
+              onClick={() => setDietSubTab('water')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                dietSubTab === 'water'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              💧 Water
+            </button>
           </div>
 
           {/* Groceries Tab */}
@@ -1670,11 +1683,198 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
               })}
             </div>
           )}
+
+          {/* Water Intake Tab */}
+          {dietSubTab === 'water' && (() => {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+            const waterDays = [];
+            for (let i = 0; i < 7; i++) {
+              const day = new Date(monday);
+              day.setDate(monday.getDate() + i);
+              const dateKey = day.toISOString().split('T')[0];
+              waterDays.push({
+                date: dateKey,
+                dayName: day.toLocaleDateString('en-AU', { weekday: 'short' }),
+                isToday: dateKey === now.toISOString().split('T')[0]
+              });
+            }
+            const todayKey = now.toISOString().split('T')[0];
+            const todayAmount = parseFloat(waterIntake.days?.[todayKey]) || 0;
+            const goalAmount = parseFloat(waterIntake.goal) || 3;
+            const todayPercent = Math.min((todayAmount / goalAmount) * 100, 100);
+            const weekTotal = waterDays.reduce((sum, d) => sum + (parseFloat(waterIntake.days?.[d.date]) || 0), 0);
+            const weekAvg = weekTotal / 7;
+
+            return (
+              <div className="space-y-6">
+                {/* Water Bottle + Today's Progress */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6 border-b flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold">💧 Water Intake</h2>
+                      <p className="text-sm text-gray-500">Stay hydrated, legend</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">Daily Goal:</span>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={waterIntake.goalStr || '3'}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const num = parseFloat(val) || 0;
+                          setWaterIntake(prev => ({ ...prev, goal: num, goalStr: val }));
+                        }}
+                        className="w-16 px-2 py-1 border-2 rounded-lg text-sm text-center focus:outline-none focus:border-blue-500"
+                      />
+                      <span className="text-sm text-gray-500">L</span>
+                    </div>
+                  </div>
+                  <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
+                    {/* Water Bottle SVG */}
+                    <div className="relative">
+                      <svg width="120" height="220" viewBox="0 0 120 220">
+                        {/* Bottle cap */}
+                        <rect x="40" y="0" width="40" height="20" rx="5" fill="#60A5FA" />
+                        {/* Bottle neck */}
+                        <rect x="35" y="20" width="50" height="15" rx="3" fill="#93C5FD" stroke="#60A5FA" strokeWidth="2" />
+                        {/* Bottle body outline */}
+                        <rect x="15" y="35" width="90" height="175" rx="15" fill="#EFF6FF" stroke="#60A5FA" strokeWidth="2" />
+                        {/* Water fill */}
+                        <clipPath id="bottleClip">
+                          <rect x="15" y="35" width="90" height="175" rx="15" />
+                        </clipPath>
+                        <rect
+                          x="15"
+                          y={35 + 175 * (1 - todayPercent / 100)}
+                          width="90"
+                          height={175 * (todayPercent / 100)}
+                          fill="url(#waterGrad)"
+                          clipPath="url(#bottleClip)"
+                        />
+                        {/* Water gradient */}
+                        <defs>
+                          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#60A5FA" />
+                            <stop offset="100%" stopColor="#3B82F6" />
+                          </linearGradient>
+                        </defs>
+                        {/* Percentage text */}
+                        <text x="60" y="130" textAnchor="middle" fill={todayPercent > 50 ? '#FFFFFF' : '#3B82F6'} fontSize="24" fontWeight="bold">
+                          {Math.round(todayPercent)}%
+                        </text>
+                        {/* Amount text */}
+                        <text x="60" y="155" textAnchor="middle" fill={todayPercent > 60 ? '#DBEAFE' : '#93C5FD'} fontSize="14">
+                          {todayAmount.toFixed(1)}L / {goalAmount}L
+                        </text>
+                      </svg>
+                    </div>
+                    {/* Today's Input */}
+                    <div className="flex flex-col items-center gap-4">
+                      <h3 className="text-lg font-semibold text-gray-700">Today</h3>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => {
+                            const current = parseFloat(waterIntake.days?.[todayKey]) || 0;
+                            const newVal = Math.max(0, current - 0.25);
+                            setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: newVal } }));
+                          }}
+                          className="w-12 h-12 bg-red-100 text-red-500 rounded-full text-2xl font-bold hover:bg-red-200 transition-colors"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={waterIntake.days?.[todayKey] ?? '0'}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const num = parseFloat(val) || 0;
+                            setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: num } }));
+                          }}
+                          className="w-20 px-3 py-3 border-2 rounded-xl text-xl text-center font-bold focus:outline-none focus:border-blue-500"
+                        />
+                        <span className="text-lg text-gray-500">L</span>
+                        <button
+                          onClick={() => {
+                            const current = parseFloat(waterIntake.days?.[todayKey]) || 0;
+                            const newVal = current + 0.25;
+                            setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: newVal } }));
+                          }}
+                          className="w-12 h-12 bg-blue-100 text-blue-500 rounded-full text-2xl font-bold hover:bg-blue-200 transition-colors"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-400">Tap +/- for 0.25L or type manually</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Weekly View */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6 border-b flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold">📊 This Week</h2>
+                      <p className="text-sm text-gray-500">
+                        Weekly avg: {weekAvg.toFixed(1)}L / day • Total: {weekTotal.toFixed(1)}L
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const resetDays = {};
+                        waterDays.forEach(d => { resetDays[d.date] = 0; });
+                        setWaterIntake(prev => ({ ...prev, days: { ...prev.days, ...resetDays } }));
+                      }}
+                      className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
+                    >
+                      🔄 Reset Week
+                    </button>
+                  </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-7 gap-3">
+                      {waterDays.map(day => {
+                        const amount = parseFloat(waterIntake.days?.[day.date]) || 0;
+                        const pct = Math.min((amount / goalAmount) * 100, 100);
+                        return (
+                          <div key={day.date} className={`flex flex-col items-center gap-2 p-3 rounded-2xl ${day.isToday ? 'bg-blue-50 ring-2 ring-blue-400' : 'bg-gray-50'}`}>
+                            <span className={`text-xs font-bold ${day.isToday ? 'text-blue-600' : 'text-gray-500'}`}>{day.dayName}</span>
+                            {/* Mini water bottle */}
+                            <div className="relative w-8 h-16 bg-gray-200 rounded-lg overflow-hidden">
+                              <div
+                                className="absolute bottom-0 w-full bg-gradient-to-t from-blue-500 to-blue-400 transition-all duration-300"
+                                style={{ height: `${pct}%` }}
+                              />
+                            </div>
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              value={waterIntake.days?.[day.date] ?? ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const num = parseFloat(val) || 0;
+                                setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [day.date]: num } }));
+                              }}
+                              placeholder="0"
+                              className="w-12 px-1 py-1 border rounded-lg text-xs text-center focus:outline-none focus:border-blue-500"
+                            />
+                            <span className="text-xs text-gray-400">{Math.round(pct)}%</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     );
   }
-
   // GYM MANAGEMENT VIEW
   if (activeView === 'gym') {
     const today = new Date().toISOString().split('T')[0];
@@ -2241,12 +2441,22 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                   <h3 className="text-2xl font-bold text-gray-800 mb-3">G'day! Use Custom Categories to manage other aspects of your life.</h3>
                   <p className="text-gray-600 mb-4">Some areas this might help with:</p>
                   <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                    <span className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">📚 Studying</span>
+                    <span className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">📚 Books & Learning</span>
                     <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">💼 Work</span>
                     <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">📊 Sales</span>
                     <span className="px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">📋 Projects</span>
                     <span className="px-3 py-1.5 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">✈️ Travel</span>
-                    <span className="px-3 py-1.5 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">🏠 Home</span>
+                    <span className="px-3 py-1.5 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">🏠 Home Inventory</span>
+                    <span className="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">📓 Journal / Mood</span>
+                    <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium">🎄 Christmas List</span>
+                    <span className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">🛒 Shopping List</span>
+                    <span className="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">💳 Debt Tracker</span>
+                    <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">🎁 Wish List</span>
+                    <span className="px-3 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium">🔧 Warranty Tracker</span>
+                    <span className="px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium">🐾 Pet Management</span>
+                    <span className="px-3 py-1.5 bg-sky-100 text-sky-700 rounded-full text-sm font-medium">🚗 Car / Vehicle Log</span>
+                    <span className="px-3 py-1.5 bg-violet-100 text-violet-700 rounded-full text-sm font-medium">🏥 Medical / Health</span>
+                    <span className="px-3 py-1.5 bg-lime-100 text-lime-700 rounded-full text-sm font-medium">📚 Studying</span>
                   </div>
                   <p className="text-gray-500 text-sm mt-4">Click "+ Add Section" above to get started!</p>
                 </div>
