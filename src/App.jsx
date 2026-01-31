@@ -1206,11 +1206,13 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                             placeholder="What needs to be done today?"
                             className={`flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 ${task.completed ? 'line-through text-gray-400' : ''}`}
                           />
-                          {task.dateAdded && (
-                            <span className="text-xs text-green-500 font-medium">
-                              🔥 {getHoldingDuration(task.dateAdded)}
-                            </span>
-                          )}
+                          <input
+                            type="text"
+                            value={task?.streak || ''}
+                            onChange={(e) => setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, streak: e.target.value } : t))}
+                            placeholder="🔥 streak"
+                            className="w-20 px-2 py-1 border rounded-lg text-xs text-center text-green-500 focus:outline-none focus:border-green-500"
+                          />
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
                             className="text-red-400 hover:text-red-600 text-sm"
@@ -4738,12 +4740,14 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                           />
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-right">
-                        {asset?.dateAdded && (
-                          <span className="text-xs text-gray-400">
-                            {getHoldingDuration(asset.dateAdded)}
-                          </span>
-                        )}
+                      <td className="py-2 px-4">
+                        <input
+                          type="text"
+                          value={asset?.ownedFor || ''}
+                          onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
+                          placeholder="e.g. 1y 5m"
+                          className="w-20 px-2 py-2 border rounded-lg text-xs text-center focus:outline-none focus:border-blue-500"
+                        />
                       </td>
                       <td className="py-2 px-2">
                         <button
@@ -5671,12 +5675,14 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
                                 </span>
                               )}
                             </td>
-                            <td className="py-3 px-4 text-right">
-                              {stock?.dateAdded && (
-                                <span className="text-xs text-gray-400">
-                                  {getHoldingDuration(stock.dateAdded)}
-                                </span>
-                              )}
+                            <td className="py-2 px-4">
+                              <input
+                                type="text"
+                                value={stock?.heldFor || ''}
+                                onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
+                                placeholder="e.g. 2y 3m"
+                                className="w-20 px-2 py-2 border rounded-lg text-xs text-center focus:outline-none focus:border-green-500"
+                              />
                             </td>
                             <td className="py-2 px-2">
                               <button
