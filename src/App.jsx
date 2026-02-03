@@ -1111,6 +1111,10 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
               })}
             </nav>
             <div className="pt-4 border-t border-gray-200 mt-4">
+              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 transition-all mb-3">
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium">Sign Out</span>
+              </button>
               <div className="flex items-center justify-center gap-2 text-gray-400">
                 <span className="text-2xl">🦘</span>
                 <span className="text-sm font-medium">Muzz v2.0</span>
