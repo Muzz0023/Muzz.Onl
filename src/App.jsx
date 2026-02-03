@@ -13,6 +13,7 @@ const VIP_EMAILS = [
   'lauchy23@outlook.com',
   'sarah.addison78@gmail.com',
   'cooperkb05@gmail.com',
+  'kirstykb44@gmail.com',
 ];
 
 // Elite limits
