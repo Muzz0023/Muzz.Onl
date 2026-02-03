@@ -12,6 +12,7 @@ const GEMINI_KEY = 'AIzaSyB_BHi8w1WcnCvpJq-IIRdB2Y6H2uKCLms';
 const VIP_EMAILS = [
   'lauchy23@outlook.com',
   'sarah.addison78@gmail.com',
+  'cooperkb05@gmail.com',
 ];
 
 // Elite limits
