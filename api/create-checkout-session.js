@@ -25,8 +25,8 @@ export default async function handler(req, res) {
       payment_method_types: ['card'],
       line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
       mode: 'subscription',
-      success_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz-onl.vercel.app') + '?payment=success',
-      cancel_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz-onl.vercel.app') + '?payment=cancelled',
+      success_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=success',
+      cancel_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=cancelled',
       metadata: { supabase_user_id: userId },
       subscription_data: { metadata: { supabase_user_id: userId } },
     });
