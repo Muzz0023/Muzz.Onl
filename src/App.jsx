@@ -544,6 +544,17 @@ function MuzzApp() {
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatExpanded, setIsChatExpanded] = useState(true);
 
+  // Auth & Elite status (must be before AI limits)
+  const { user: authUser, signOut } = useAuth();
+  const userId = authUser?.id;
+  const userEmail = authUser?.email?.toLowerCase() || '';
+  const isVIP = VIP_EMAILS.includes(userEmail);
+  const [stripeElite, setStripeElite] = useState(false);
+  const isElite = isVIP || stripeElite;
+  const [eliteName, setEliteName] = useState('');
+  const [subscriptionInfo, setSubscriptionInfo] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
   // AI Daily Message Limit
   const AI_DAILY_LIMIT = isElite ? ELITE_AI_LIMIT : FREE_AI_LIMIT;
   const getAiUsage = () => {
@@ -677,17 +688,6 @@ function MuzzApp() {
   const [customCalYear, setCustomCalYear] = useState(new Date().getFullYear());
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showAddSection, setShowAddSection] = useState(false);
-
-  // Load data on mount from Supabase
-  const { user: authUser, signOut } = useAuth();
-  const userId = authUser?.id;
-  const userEmail = authUser?.email?.toLowerCase() || '';
-  const isVIP = VIP_EMAILS.includes(userEmail);
-  const [stripeElite, setStripeElite] = useState(false); // Will be set by Stripe later
-  const isElite = isVIP || stripeElite;
-  const [eliteName, setEliteName] = useState('');
-  const [subscriptionInfo, setSubscriptionInfo] = useState(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
 
   // Check Stripe subscription on load
   useEffect(() => {
