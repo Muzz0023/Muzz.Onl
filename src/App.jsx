@@ -394,7 +394,8 @@ function FloatingChat({
   isAiLimitReached,
   incrementAiUsage,
   getAiRemaining,
-  AI_DAILY_LIMIT
+  AI_DAILY_LIMIT,
+  muzzPersonality
 }) {
   const [input, setInput] = useState("");
   const endRef = useRef(null);
@@ -418,19 +419,36 @@ function FloatingChat({
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setIsTyping(true);
     
-    const systemPrompt = `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
+    const brainRotMode = muzzPersonality;
+    
+    const systemPrompt = brainRotMode 
+    ? `You are Muzz 🦘, a gen-z/gen-alpha Australian kangaroo financial advisor who speaks in brain rot slang.
+
+Your personality:
+- You use brain rot terms naturally: skibidi, sigma, gyatt, rizz, no cap, fr fr, bussin, slay, W, L, lowkey, highkey, based, ratio, sus, vibe check, ong, bet, fam, its giving, ate that, understood the assignment, rent free, main character energy, NPC behaviour, delulu, era, ick, aura, mewing, looksmaxxing, ohio, fanum tax
+- Mix brain rot with Aussie slang (mate, legend, ripper, no worries, crikey)
+- Keep responses SHORT - 1-3 sentences max. Be punchy not long.
+- Still give legit financial advice but wrapped in brain rot language
+- Celebrate wins like "W savings bro thats sigma behaviour fr fr 🦘"
+- Call out bad spending like "bro thats lowkey an L, NPC behaviour no cap"
+- Use emojis sparingly: 🦘💀🔥💯🗿
+
+${financialContext}
+
+Keep it SHORT and punchy. No essays. Be Muzz! 🦘`
+    : `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
 
 Your personality:
 - Warm, encouraging, and supportive mate
 - Use Aussie slang naturally (mate, legend, ripper, no worries, fair dinkum, etc.)
-- Keep responses concise but helpful (2-3 paragraphs max)
+- Keep responses concise but helpful (2-3 sentences, short and punchy)
 - Give practical, actionable advice
 - Celebrate wins, no matter how small
 - Be honest but kind about areas needing improvement
 
 ${financialContext}
 
-Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
+Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
     
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
@@ -959,7 +977,23 @@ USER'S FINANCIAL DATA (reference this when relevant):
 ${salaryNum > 0 ? `- Bills as % of Income: ${((totalBills / salaryNum) * 100).toFixed(1)}%` : ''}
 `;
 
-    const systemPrompt = `You are Muzz, a friendly Australian kangaroo who's a financial advisor and budgeting expert. You live inside a budgeting app called "Muzz" that helps Aussies manage their money.
+    const brainRotMode = muzzPersonality;
+
+    const systemPrompt = brainRotMode
+    ? `You are Muzz, a gen-z/gen-alpha Australian kangaroo financial advisor who speaks in brain rot slang. You live inside a budgeting app called "Muzz".
+
+PERSONALITY:
+- Use brain rot terms naturally: skibidi, sigma, gyatt, rizz, no cap, fr fr, bussin, slay, W, L, lowkey, highkey, based, ratio, sus, vibe check, ong, bet, fam, its giving, ate that, understood the assignment, rent free, main character energy, NPC behaviour, delulu, era, ick, aura, mewing, looksmaxxing, ohio, fanum tax
+- Mix brain rot with Aussie slang (mate, legend, ripper, no worries, crikey)
+- Keep responses SHORT - 1-3 sentences max. Be punchy not long.
+- Still give legit financial/life advice but wrapped in brain rot language
+- You can discuss ANY topic, not just finance - you're a full AI assistant
+- Use emojis sparingly: 🦘💀🔥💯🗿
+
+${financialContext}
+
+Keep it SHORT and punchy. No essays. Be Muzz! 🦘`
+    : `You are Muzz, a friendly Australian kangaroo who's a financial advisor and budgeting expert. You live inside a budgeting app called "Muzz" that helps Aussies manage their money.
 
 PERSONALITY:
 - You're warm, encouraging, and use casual Aussie slang naturally (mate, legend, ripper, no worries, crikey, arvo, etc.)
@@ -967,12 +1001,12 @@ PERSONALITY:
 - You give practical, actionable advice without being preachy
 - You celebrate wins and encourage people when they're struggling
 - You use the occasional kangaroo emoji 🦘 but don't overdo it
-- Keep responses concise and conversational (2-4 paragraphs max unless they ask for detail)
+- Keep responses SHORT and conversational (1-3 sentences, be punchy not long)
 - You can discuss ANY topic, not just finance - you're a full AI assistant
 
 ${financialContext}
 
-Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
+Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
 
     try {
       // Build conversation history as proper Gemini multi-turn format
@@ -1388,6 +1422,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           incrementAiUsage={incrementAiUsage}
           getAiRemaining={getAiRemaining}
           AI_DAILY_LIMIT={AI_DAILY_LIMIT}
+          muzzPersonality={muzzPersonality}
         />
       </div>
     );
@@ -4022,6 +4057,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           incrementAiUsage={incrementAiUsage}
           getAiRemaining={getAiRemaining}
           AI_DAILY_LIMIT={AI_DAILY_LIMIT}
+          muzzPersonality={muzzPersonality}
         />
       </div>
     );
@@ -5596,6 +5632,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           incrementAiUsage={incrementAiUsage}
           getAiRemaining={getAiRemaining}
           AI_DAILY_LIMIT={AI_DAILY_LIMIT}
+          muzzPersonality={muzzPersonality}
         />
       </div>
     );
@@ -8872,6 +8909,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
         incrementAiUsage={incrementAiUsage}
         getAiRemaining={getAiRemaining}
         AI_DAILY_LIMIT={AI_DAILY_LIMIT}
+        muzzPersonality={muzzPersonality}
       />
     </div>
   );
