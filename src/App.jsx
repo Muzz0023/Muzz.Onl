@@ -6,7 +6,7 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZW5pZXNib3J1aWh3bW1rYW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4MDA3NjcsImV4cCI6MjA4NTM3Njc2N30.gCIgG3zLcB83FxnRcBNqsk6RdwXD6WjHzS6oCnrRqQs';
-const GEMINI_KEY = 'AIzaSyApqZ9uAyN5rHQmVsDhxLPXRpiKIhOmu18';
+// Gemini key is now server-side in /api/chat.js
 
 // VIP Users - Always Elite, no subscription needed
 const VIP_EMAILS = [
@@ -422,23 +422,24 @@ function FloatingChat({
     const brainRotMode = muzzPersonality;
     
     const systemPrompt = brainRotMode 
-    ? `You are Muzz 🦘, a friendly Australian kangaroo financial advisor who drops gen-z slang.
+    ? `You are Muzz 🦘, a friendly Australian kangaroo financial advisor who occasionally drops gen-z slang.
 
 Your personality:
-- SPRINKLE some Aussie slang (mate, legend, no worries)
-- MAX 3 brain rot terms per response from: W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay, big stein, no diddy, on kirk, kirky jerkey ahhh, give me penguin vibes, WILSONN!!!!!, 67 😝, Lowwww taperrrrrr fadeeeee
-- SHUFFLE around different brainrot terms
+- Primarily use Aussie slang (mate, legend, ripper, no worries, crikey)
+- Sprinkle in MAX 2 brain rot terms per response from: sigma, W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay
+- DON'T overdo the brain rot - keep it natural, not every sentence
 - Keep responses SHORT - 1-3 sentences max. Be punchy.
 - Still give legit financial advice
+- Use emojis sparingly: 🦘💀🔥
 
 ${financialContext}
 
-IMPORTANT: Maximum 3 brain rot terms per response. Keep it mostly normal chat with using gen-z brainrot terms and some aussie terms. Short and punchy. Be Muzz! 🦘`
+IMPORTANT: Maximum 2 brain rot terms per response. Keep it mostly normal Aussie chat with a sprinkle of gen-z. Short and punchy. Be Muzz! 🦘`
     : `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
 
 Your personality:
-- Funny, encouraging, and supportive mate
-- Use Aussie slang naturally (mate, legend, no worries)
+- Warm, encouraging, and supportive mate
+- Use Aussie slang naturally (mate, legend, ripper, no worries, fair dinkum, etc.)
 - Keep responses concise but helpful (2-3 sentences, short and punchy)
 - Give practical, actionable advice
 - Celebrate wins, no matter how small
@@ -449,18 +450,16 @@ ${financialContext}
 Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
     
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemPrompt }] },
-          contents: [{ role: "user", parts: [{ text: msg }] }],
-          generationConfig: { temperature: 0.8, maxOutputTokens: 800 }
+          systemInstruction: systemPrompt,
+          contents: [{ role: "user", parts: [{ text: msg }] }]
         })
       });
       const data = await response.json();
-      console.log('Gemini response:', JSON.stringify(data).substring(0, 500));
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No worries mate, give it another go! 🦘";
+      const reply = data.reply || "No worries mate, give it another go! 🦘";
       setChatMessages(prev => [...prev, { role: "muzz", text: reply }]);
       incrementAiUsage();
     } catch (e) {
@@ -1017,23 +1016,21 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
       });
       geminiContents.push({ role: 'user', parts: [{ text: msg }] });
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemPrompt }] },
-          contents: geminiContents,
-          generationConfig: { temperature: 0.8, maxOutputTokens: 800 }
+          systemInstruction: systemPrompt,
+          contents: geminiContents
         })
       });
 
       const data = await response.json();
-      console.log('Gemini home response:', JSON.stringify(data).substring(0, 500));
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No worries, give me another crack at that question!";
+      const reply = data.reply || "No worries, give me another crack at that question!";
       setChatMessages(prev => [...prev, { role: 'muzz', text: reply }]);
       incrementAiUsage();
     } catch (e) {
-      setChatMessages(prev => [...prev, { role: 'muzz', text: `Aw mate, hit a snag there: ${e.message}. Give it another go!` }]);
+      setChatMessages(prev => [...prev, { role: 'muzz', text: `Aw mate, hit a snag there. Give it another go!` }]);
     }
     
     setIsTyping(false);
