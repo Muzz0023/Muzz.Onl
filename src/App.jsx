@@ -701,6 +701,10 @@ function MuzzApp() {
   });
   const [dietSubTab, setDietSubTab] = useState('groceries');
   const [expandedDietPlan, setExpandedDietPlan] = useState(null);
+  const [customDietPlans, setCustomDietPlans] = useState([]);
+  const [editingDietPlan, setEditingDietPlan] = useState(null);
+  const [customDiets, setCustomDiets] = useState([]);
+  const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
   const [gymSubTab, setGymSubTab] = useState('steps');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
@@ -829,6 +833,8 @@ function MuzzApp() {
           if (d.businessSubscriptions) setBusinessSubscriptions(d.businessSubscriptions);
           if (d.muzzPersonality !== undefined) setMuzzPersonality(d.muzzPersonality);
           if (d.funnyGreetings !== undefined) setFunnyGreetings(d.funnyGreetings);
+          if (d.customDietPlans) setCustomDietPlans(d.customDietPlans);
+          if (d.customDiets) setCustomDiets(d.customDiets);
           if (d.monthlySalary) setMonthlySalary(d.monthlySalary);
           if (d.monthlySalaryStr) setMonthlySalaryStr(d.monthlySalaryStr);
           if (d.assets) setAssets(d.assets);
@@ -885,6 +891,7 @@ function MuzzApp() {
           businessSubscriptions,
           muzzPersonality,
           funnyGreetings,
+          customDietPlans,
           monthlySalary,
           monthlySalaryStr,
           assets,
@@ -933,7 +940,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDietPlans, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1816,6 +1823,16 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
             >
               Diet Plans
             </button>
+            <button
+              onClick={() => setDietSubTab('custom')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                dietSubTab === 'custom'
+                  ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              My Diets
+            </button>
           </div>
 
           {/* Groceries Tab */}
@@ -2327,6 +2344,161 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                           <div className={`mt-3 p-3 rounded-xl bg-gradient-to-r ${plan.color} text-white text-center text-sm font-medium`}>
                             Total: {plan.calories}
                           </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* My Diets Tab */}
+          {dietSubTab === 'custom' && (
+            <div className="space-y-4">
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold">My Custom Diets</h2>
+                    <p className="text-sm text-gray-500 mt-1">Build your own meal plans</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newDiet = {
+                        id: Date.now(),
+                        name: '',
+                        goal: '',
+                        meals: [{ id: Date.now(), time: 'Breakfast', meal: '', calories: '' }]
+                      };
+                      setCustomDiets(prev => [...prev, newDiet]);
+                      setExpandedCustomDiet(newDiet.id);
+                    }}
+                    className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all"
+                  >
+                    + New Diet
+                  </button>
+                </div>
+                <div className="p-6 space-y-4">
+                  {customDiets.length === 0 && (
+                    <div className="text-center py-12 text-gray-400">
+                      <div className="text-4xl mb-3">🍽️</div>
+                      <p className="font-medium">No custom diets yet</p>
+                      <p className="text-sm mt-1">Tap "+ New Diet" to create your first meal plan</p>
+                    </div>
+                  )}
+                  {customDiets.map((diet) => (
+                    <div key={diet.id} className={`rounded-2xl border overflow-hidden transition-all ${expandedCustomDiet === diet.id ? 'shadow-md ring-2 ring-pink-200' : ''}`}>
+                      <button
+                        onClick={() => setExpandedCustomDiet(expandedCustomDiet === diet.id ? null : diet.id)}
+                        className="w-full p-4 flex items-center justify-between bg-pink-50 hover:brightness-95 transition-all"
+                      >
+                        <div className="text-left">
+                          <div className="font-semibold text-gray-800 text-lg">{diet.name || 'Untitled Diet'}</div>
+                          <div className="text-sm text-gray-500">{diet.goal || 'No goal set'} — {diet.meals.length} meal{diet.meals.length !== 1 ? 's' : ''}</div>
+                        </div>
+                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedCustomDiet === diet.id ? 'rotate-180' : ''}`}>
+                          ▼
+                        </div>
+                      </button>
+                      {expandedCustomDiet === diet.id && (
+                        <div className="bg-white p-4 space-y-4 border-t">
+                          {/* Diet Name & Goal */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Diet Name</label>
+                              <input
+                                type="text"
+                                value={diet.name}
+                                onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, name: e.target.value } : d))}
+                                placeholder="e.g. My Bulk Plan"
+                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-pink-500"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Goal</label>
+                              <input
+                                type="text"
+                                value={diet.goal}
+                                onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, goal: e.target.value } : d))}
+                                placeholder="e.g. Gain muscle, lose fat"
+                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-pink-500"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Meals */}
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <label className="text-xs font-semibold text-gray-500 uppercase">Meals</label>
+                              <button
+                                onClick={() => {
+                                  const newMeal = { id: Date.now(), time: '', meal: '', calories: '' };
+                                  setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: [...d.meals, newMeal] } : d));
+                                }}
+                                className="text-xs font-medium text-pink-500 hover:text-pink-700"
+                              >
+                                + Add Meal
+                              </button>
+                            </div>
+                            {diet.meals.map((meal, mIdx) => (
+                              <div key={meal.id} className="p-3 bg-gray-50 rounded-xl space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-gray-400 font-medium">Meal {mIdx + 1}</span>
+                                  {diet.meals.length > 1 && (
+                                    <button
+                                      onClick={() => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.filter(m => m.id !== meal.id) } : d))}
+                                      className="text-xs text-red-400 hover:text-red-600"
+                                    >
+                                      Remove
+                                    </button>
+                                  )}
+                                </div>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <input
+                                    type="text"
+                                    value={meal.time}
+                                    onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, time: e.target.value } : m) } : d))}
+                                    placeholder="Time (e.g. 7am)"
+                                    className="px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={meal.meal}
+                                    onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, meal: e.target.value } : m) } : d))}
+                                    placeholder="What to eat..."
+                                    className="col-span-1 px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={meal.calories}
+                                    onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, calories: e.target.value } : m) } : d))}
+                                    placeholder="Calories"
+                                    className="px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Total Calories */}
+                          {diet.meals.some(m => m.calories) && (
+                            <div className="p-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white text-center text-sm font-medium">
+                              Total: ~{diet.meals.reduce((sum, m) => sum + (parseInt(m.calories) || 0), 0).toLocaleString()} cal
+                            </div>
+                          )}
+
+                          {/* Delete Diet */}
+                          <button
+                            onClick={() => {
+                              if (confirm('Delete this diet plan?')) {
+                                setCustomDiets(prev => prev.filter(d => d.id !== diet.id));
+                                setExpandedCustomDiet(null);
+                              }
+                            }}
+                            className="w-full py-2 text-sm text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                          >
+                            Delete this diet
+                          </button>
                         </div>
                       )}
                     </div>
@@ -7327,7 +7499,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                 }}
                                 placeholder="Y/N"
                                 className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                              />
+                          />
                             </td>
                             <td className="py-2 px-4">
                               <select
@@ -9114,4 +9286,6 @@ export default function App() {
       <AppContent />
     </AuthProvider>
   );
+}
+;
 }
