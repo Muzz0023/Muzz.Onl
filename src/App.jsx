@@ -425,21 +425,20 @@ function FloatingChat({
     ? `You are Muzz 🦘, a friendly Australian kangaroo financial advisor who occasionally drops gen-z slang.
 
 Your personality:
-- Primarily use Aussie slang (mate, legend, ripper, no worries, crikey)
-- Sprinkle in MAX 2 brain rot terms per response from: sigma, W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay
-- DON'T overdo the brain rot - keep it natural, not every sentence
+- Sprinkle some Aussie slang (mate, legend, no worries)
+- Sprinkle in MAX 2 brain rot terms per response from: W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay, big stein, no diddy, on kirk, kirky jerkey, WILSON!!!, 67, Lowwww Taperrr Fadeee, Locked in alien ahhh 
+- SHUFFLE the brain rot
 - Keep responses SHORT - 1-3 sentences max. Be punchy.
 - Still give legit financial advice
-- Use emojis sparingly: 🦘💀🔥
 
 ${financialContext}
 
-IMPORTANT: Maximum 2 brain rot terms per response. Keep it mostly normal Aussie chat with a sprinkle of gen-z. Short and punchy. Be Muzz! 🦘`
+IMPORTANT: Maximum 2 brain rot terms per response. Use some Aussie chat with use of gen-z brainrot. Short and punchy. Be Muzz! 🦘`
     : `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
 
 Your personality:
-- Warm, encouraging, and supportive mate
-- Use Aussie slang naturally (mate, legend, ripper, no worries, fair dinkum, etc.)
+- Funny, encouraging, and supportive mate
+- Use Aussie slang naturally (mate, legend, no worries)
 - Keep responses concise but helpful (2-3 sentences, short and punchy)
 - Give practical, actionable advice
 - Celebrate wins, no matter how small
@@ -701,6 +700,7 @@ function MuzzApp() {
     }
   });
   const [dietSubTab, setDietSubTab] = useState('groceries');
+  const [expandedDietPlan, setExpandedDietPlan] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
   const [gymSubTab, setGymSubTab] = useState('steps');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
@@ -2216,155 +2216,125 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
           })()}
 
           {/* Diet Plans Tab */}
-          {dietSubTab === 'plans' && (() => {
-            const dietPlans = [
-              {
-                id: 'bulk',
-                name: 'Bulk Mode 💪',
-                goal: 'Build Muscle & Gain Size',
-                calories: '~2,800–3,200 cal/day',
-                color: 'from-red-500 to-orange-500',
-                bgColor: 'bg-red-50',
-                meals: [
-                  { time: 'Breakfast (7am)', meal: '4 eggs scrambled, 2 toast w/ avocado, banana smoothie w/ protein powder & oats', cal: '~750 cal' },
-                  { time: 'Snack (10am)', meal: 'Greek yoghurt w/ granola & mixed berries, handful of almonds', cal: '~350 cal' },
-                  { time: 'Lunch (12:30pm)', meal: '200g chicken breast, 1.5 cups brown rice, broccoli & sweet potato', cal: '~700 cal' },
-                  { time: 'Snack (3pm)', meal: 'Protein shake, peanut butter on rice cakes, banana', cal: '~400 cal' },
-                  { time: 'Dinner (6:30pm)', meal: '250g steak or salmon, large potato, mixed salad w/ olive oil dressing', cal: '~750 cal' },
-                  { time: 'Before Bed', meal: 'Cottage cheese or casein shake, small handful walnuts', cal: '~250 cal' }
-                ]
-              },
-              {
-                id: 'cut',
-                name: 'Cut Mode 🔪',
-                goal: 'Lose Fat & Get Lean',
-                calories: '~1,600–1,900 cal/day',
-                color: 'from-blue-500 to-cyan-500',
-                bgColor: 'bg-blue-50',
-                meals: [
-                  { time: 'Breakfast (7am)', meal: '3 egg whites + 1 whole egg omelette w/ spinach & tomato, 1 slice wholegrain toast', cal: '~300 cal' },
-                  { time: 'Snack (10am)', meal: 'Apple with 1 tbsp almond butter', cal: '~200 cal' },
-                  { time: 'Lunch (12:30pm)', meal: '150g grilled chicken, large mixed salad, half cup quinoa, lemon vinaigrette', cal: '~450 cal' },
-                  { time: 'Snack (3pm)', meal: 'Protein shake with water, small handful of berries', cal: '~200 cal' },
-                  { time: 'Dinner (6:30pm)', meal: '180g white fish or turkey mince, steamed veggies, small sweet potato', cal: '~450 cal' },
-                  { time: 'Evening (optional)', meal: 'Herbal tea, sugar-free jelly', cal: '~20 cal' }
-                ]
-              },
-              {
-                id: 'maintain',
-                name: 'Maintain Mode ⚖️',
-                goal: 'Stay Balanced & Healthy',
-                calories: '~2,200–2,500 cal/day',
-                color: 'from-green-500 to-emerald-500',
-                bgColor: 'bg-green-50',
-                meals: [
-                  { time: 'Breakfast (7am)', meal: 'Overnight oats w/ protein powder, chia seeds, banana & honey', cal: '~500 cal' },
-                  { time: 'Snack (10am)', meal: 'Trail mix (nuts, dried fruit, dark choc chips), small coffee', cal: '~250 cal' },
-                  { time: 'Lunch (12:30pm)', meal: '180g chicken or tuna wrap w/ salad, hummus, and cheese', cal: '~550 cal' },
-                  { time: 'Snack (3pm)', meal: 'Greek yoghurt w/ honey, handful of almonds', cal: '~250 cal' },
-                  { time: 'Dinner (6:30pm)', meal: '200g lean protein (chicken/fish/beef), 1 cup rice or pasta, roasted veggies', cal: '~650 cal' },
-                  { time: 'Evening', meal: 'Piece of fruit or small protein bar', cal: '~150 cal' }
-                ]
-              },
-              {
-                id: 'vegan',
-                name: 'Plant-Based 🌱',
-                goal: 'Vegan / Vegetarian Friendly',
-                calories: '~2,000–2,400 cal/day',
-                color: 'from-lime-500 to-green-600',
-                bgColor: 'bg-lime-50',
-                meals: [
-                  { time: 'Breakfast (7am)', meal: 'Smoothie bowl: frozen acai, banana, spinach, plant protein, granola, coconut flakes', cal: '~500 cal' },
-                  { time: 'Snack (10am)', meal: 'Hummus w/ carrot & celery sticks, rice cakes', cal: '~250 cal' },
-                  { time: 'Lunch (12:30pm)', meal: 'Buddha bowl: chickpeas, quinoa, roasted sweet potato, avocado, tahini dressing', cal: '~600 cal' },
-                  { time: 'Snack (3pm)', meal: 'Peanut butter banana toast on sourdough, plant milk latte', cal: '~300 cal' },
-                  { time: 'Dinner (6:30pm)', meal: 'Tofu stir-fry w/ mixed veggies, brown rice, soy & sesame sauce', cal: '~550 cal' },
-                  { time: 'Evening', meal: 'Dark chocolate squares, handful of mixed nuts', cal: '~200 cal' }
-                ]
-              },
-              {
-                id: 'highprotein',
-                name: 'High Protein 🥩',
-                goal: 'Max Protein Intake',
-                calories: '~2,400–2,800 cal/day',
-                color: 'from-amber-500 to-yellow-600',
-                bgColor: 'bg-amber-50',
-                meals: [
-                  { time: 'Breakfast (7am)', meal: '4 eggs (any style), 100g smoked salmon, 1 slice toast, avocado', cal: '~600 cal' },
-                  { time: 'Snack (10am)', meal: 'Protein shake (40g whey), beef jerky (50g)', cal: '~350 cal' },
-                  { time: 'Lunch (12:30pm)', meal: '250g grilled chicken breast, 1 cup rice, steamed broccoli & green beans', cal: '~650 cal' },
-                  { time: 'Snack (3pm)', meal: '200g cottage cheese, tuna & crackers', cal: '~300 cal' },
-                  { time: 'Dinner (6:30pm)', meal: '250g lean beef mince bolognese w/ wholemeal pasta, side salad', cal: '~700 cal' },
-                  { time: 'Before Bed', meal: 'Casein protein shake or 200g Greek yoghurt', cal: '~200 cal' }
-                ]
-              },
-              {
-                id: 'budget',
-                name: 'Budget Friendly 💰',
-                goal: 'Eat Well on a Budget',
-                calories: '~2,000–2,400 cal/day',
-                color: 'from-teal-500 to-cyan-600',
-                bgColor: 'bg-teal-50',
-                meals: [
-                  { time: 'Breakfast (7am)', meal: 'Oats w/ banana, peanut butter & honey. 2 boiled eggs', cal: '~500 cal' },
-                  { time: 'Snack (10am)', meal: 'Toast w/ vegemite, piece of fruit', cal: '~200 cal' },
-                  { time: 'Lunch (12:30pm)', meal: 'Tuna & rice bowl, frozen mixed veggies, soy sauce', cal: '~500 cal' },
-                  { time: 'Snack (3pm)', meal: 'Peanut butter sandwich on wholemeal, glass of milk', cal: '~350 cal' },
-                  { time: 'Dinner (6:30pm)', meal: 'Chicken thigh bake w/ potato, onion, frozen veggies & gravy', cal: '~600 cal' },
-                  { time: 'Evening', meal: 'Bowl of cereal w/ milk', cal: '~200 cal' }
-                ]
-              }
-            ];
-
-            const [expandedPlan, setExpandedPlan] = React.useState(null);
-
-            return (
-              <div className="space-y-4">
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                  <div className="p-6 border-b">
-                    <h2 className="text-xl font-semibold">Prebuilt Diet Plans</h2>
-                    <p className="text-sm text-gray-500 mt-1">Tap a plan to see the full daily meal breakdown</p>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    {dietPlans.map((plan) => (
-                      <div key={plan.id} className={`rounded-2xl border overflow-hidden transition-all ${expandedPlan === plan.id ? 'shadow-md' : ''}`}>
-                        <button
-                          onClick={() => setExpandedPlan(expandedPlan === plan.id ? null : plan.id)}
-                          className={`w-full p-4 flex items-center justify-between ${plan.bgColor} hover:brightness-95 transition-all`}
-                        >
-                          <div className="text-left">
-                            <div className="font-semibold text-gray-800 text-lg">{plan.name}</div>
-                            <div className="text-sm text-gray-500">{plan.goal} — {plan.calories}</div>
-                          </div>
-                          <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedPlan === plan.id ? 'rotate-180' : ''}`}>
-                            ▼
-                          </div>
-                        </button>
-                        {expandedPlan === plan.id && (
-                          <div className="bg-white p-4 space-y-3 border-t">
-                            {plan.meals.map((meal, idx) => (
-                              <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase">{meal.time}</span>
-                                    <span className="text-xs font-medium text-orange-500">{meal.cal}</span>
-                                  </div>
-                                  <p className="text-sm text-gray-700">{meal.meal}</p>
+          {dietSubTab === 'plans' && (
+            <div className="space-y-4">
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-semibold">Prebuilt Diet Plans</h2>
+                  <p className="text-sm text-gray-500 mt-1">Tap a plan to see the full daily meal breakdown</p>
+                </div>
+                <div className="p-6 space-y-4">
+                  {[
+                    {
+                      id: 'bulk', name: 'Bulk Mode 💪', goal: 'Build Muscle & Gain Size', calories: '~2,800–3,200 cal/day',
+                      color: 'from-red-500 to-orange-500', bgColor: 'bg-red-50',
+                      meals: [
+                        { time: 'Breakfast (7am)', meal: '4 eggs scrambled, 2 toast w/ avocado, banana smoothie w/ protein powder & oats', cal: '~750 cal' },
+                        { time: 'Snack (10am)', meal: 'Greek yoghurt w/ granola & mixed berries, handful of almonds', cal: '~350 cal' },
+                        { time: 'Lunch (12:30pm)', meal: '200g chicken breast, 1.5 cups brown rice, broccoli & sweet potato', cal: '~700 cal' },
+                        { time: 'Snack (3pm)', meal: 'Protein shake, peanut butter on rice cakes, banana', cal: '~400 cal' },
+                        { time: 'Dinner (6:30pm)', meal: '250g steak or salmon, large potato, mixed salad w/ olive oil dressing', cal: '~750 cal' },
+                        { time: 'Before Bed', meal: 'Cottage cheese or casein shake, small handful walnuts', cal: '~250 cal' }
+                      ]
+                    },
+                    {
+                      id: 'cut', name: 'Cut Mode 🔪', goal: 'Lose Fat & Get Lean', calories: '~1,600–1,900 cal/day',
+                      color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50',
+                      meals: [
+                        { time: 'Breakfast (7am)', meal: '3 egg whites + 1 whole egg omelette w/ spinach & tomato, 1 slice wholegrain toast', cal: '~300 cal' },
+                        { time: 'Snack (10am)', meal: 'Apple with 1 tbsp almond butter', cal: '~200 cal' },
+                        { time: 'Lunch (12:30pm)', meal: '150g grilled chicken, large mixed salad, half cup quinoa, lemon vinaigrette', cal: '~450 cal' },
+                        { time: 'Snack (3pm)', meal: 'Protein shake with water, small handful of berries', cal: '~200 cal' },
+                        { time: 'Dinner (6:30pm)', meal: '180g white fish or turkey mince, steamed veggies, small sweet potato', cal: '~450 cal' },
+                        { time: 'Evening (optional)', meal: 'Herbal tea, sugar-free jelly', cal: '~20 cal' }
+                      ]
+                    },
+                    {
+                      id: 'maintain', name: 'Maintain Mode ⚖️', goal: 'Stay Balanced & Healthy', calories: '~2,200–2,500 cal/day',
+                      color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-50',
+                      meals: [
+                        { time: 'Breakfast (7am)', meal: 'Overnight oats w/ protein powder, chia seeds, banana & honey', cal: '~500 cal' },
+                        { time: 'Snack (10am)', meal: 'Trail mix (nuts, dried fruit, dark choc chips), small coffee', cal: '~250 cal' },
+                        { time: 'Lunch (12:30pm)', meal: '180g chicken or tuna wrap w/ salad, hummus, and cheese', cal: '~550 cal' },
+                        { time: 'Snack (3pm)', meal: 'Greek yoghurt w/ honey, handful of almonds', cal: '~250 cal' },
+                        { time: 'Dinner (6:30pm)', meal: '200g lean protein (chicken/fish/beef), 1 cup rice or pasta, roasted veggies', cal: '~650 cal' },
+                        { time: 'Evening', meal: 'Piece of fruit or small protein bar', cal: '~150 cal' }
+                      ]
+                    },
+                    {
+                      id: 'vegan', name: 'Plant-Based 🌱', goal: 'Vegan / Vegetarian Friendly', calories: '~2,000–2,400 cal/day',
+                      color: 'from-lime-500 to-green-600', bgColor: 'bg-lime-50',
+                      meals: [
+                        { time: 'Breakfast (7am)', meal: 'Smoothie bowl: frozen acai, banana, spinach, plant protein, granola, coconut flakes', cal: '~500 cal' },
+                        { time: 'Snack (10am)', meal: 'Hummus w/ carrot & celery sticks, rice cakes', cal: '~250 cal' },
+                        { time: 'Lunch (12:30pm)', meal: 'Buddha bowl: chickpeas, quinoa, roasted sweet potato, avocado, tahini dressing', cal: '~600 cal' },
+                        { time: 'Snack (3pm)', meal: 'Peanut butter banana toast on sourdough, plant milk latte', cal: '~300 cal' },
+                        { time: 'Dinner (6:30pm)', meal: 'Tofu stir-fry w/ mixed veggies, brown rice, soy & sesame sauce', cal: '~550 cal' },
+                        { time: 'Evening', meal: 'Dark chocolate squares, handful of mixed nuts', cal: '~200 cal' }
+                      ]
+                    },
+                    {
+                      id: 'highprotein', name: 'High Protein 🥩', goal: 'Max Protein Intake', calories: '~2,400–2,800 cal/day',
+                      color: 'from-amber-500 to-yellow-600', bgColor: 'bg-amber-50',
+                      meals: [
+                        { time: 'Breakfast (7am)', meal: '4 eggs (any style), 100g smoked salmon, 1 slice toast, avocado', cal: '~600 cal' },
+                        { time: 'Snack (10am)', meal: 'Protein shake (40g whey), beef jerky (50g)', cal: '~350 cal' },
+                        { time: 'Lunch (12:30pm)', meal: '250g grilled chicken breast, 1 cup rice, steamed broccoli & green beans', cal: '~650 cal' },
+                        { time: 'Snack (3pm)', meal: '200g cottage cheese, tuna & crackers', cal: '~300 cal' },
+                        { time: 'Dinner (6:30pm)', meal: '250g lean beef mince bolognese w/ wholemeal pasta, side salad', cal: '~700 cal' },
+                        { time: 'Before Bed', meal: 'Casein protein shake or 200g Greek yoghurt', cal: '~200 cal' }
+                      ]
+                    },
+                    {
+                      id: 'budget', name: 'Budget Friendly 💰', goal: 'Eat Well on a Budget', calories: '~2,000–2,400 cal/day',
+                      color: 'from-teal-500 to-cyan-600', bgColor: 'bg-teal-50',
+                      meals: [
+                        { time: 'Breakfast (7am)', meal: 'Oats w/ banana, peanut butter & honey. 2 boiled eggs', cal: '~500 cal' },
+                        { time: 'Snack (10am)', meal: 'Toast w/ vegemite, piece of fruit', cal: '~200 cal' },
+                        { time: 'Lunch (12:30pm)', meal: 'Tuna & rice bowl, frozen mixed veggies, soy sauce', cal: '~500 cal' },
+                        { time: 'Snack (3pm)', meal: 'Peanut butter sandwich on wholemeal, glass of milk', cal: '~350 cal' },
+                        { time: 'Dinner (6:30pm)', meal: 'Chicken thigh bake w/ potato, onion, frozen veggies & gravy', cal: '~600 cal' },
+                        { time: 'Evening', meal: 'Bowl of cereal w/ milk', cal: '~200 cal' }
+                      ]
+                    }
+                  ].map((plan) => (
+                    <div key={plan.id} className={`rounded-2xl border overflow-hidden transition-all ${expandedDietPlan === plan.id ? 'shadow-md' : ''}`}>
+                      <button
+                        onClick={() => setExpandedDietPlan(expandedDietPlan === plan.id ? null : plan.id)}
+                        className={`w-full p-4 flex items-center justify-between ${plan.bgColor} hover:brightness-95 transition-all`}
+                      >
+                        <div className="text-left">
+                          <div className="font-semibold text-gray-800 text-lg">{plan.name}</div>
+                          <div className="text-sm text-gray-500">{plan.goal} — {plan.calories}</div>
+                        </div>
+                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedDietPlan === plan.id ? 'rotate-180' : ''}`}>
+                          ▼
+                        </div>
+                      </button>
+                      {expandedDietPlan === plan.id && (
+                        <div className="bg-white p-4 space-y-3 border-t">
+                          {plan.meals.map((meal, idx) => (
+                            <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase">{meal.time}</span>
+                                  <span className="text-xs font-medium text-orange-500">{meal.cal}</span>
                                 </div>
+                                <p className="text-sm text-gray-700">{meal.meal}</p>
                               </div>
-                            ))}
-                            <div className={`mt-3 p-3 rounded-xl bg-gradient-to-r ${plan.color} text-white text-center text-sm font-medium`}>
-                              Total: {plan.calories}
                             </div>
+                          ))}
+                          <div className={`mt-3 p-3 rounded-xl bg-gradient-to-r ${plan.color} text-white text-center text-sm font-medium`}>
+                            Total: {plan.calories}
                           </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
-            );
-          })()}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -4159,7 +4129,6 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               <div className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><Calendar className="w-4 h-4 text-pink-500" />Coming Up</div>
               <div className="space-y-2">
                 {(() => {
-                  // Sort birthdays by nearest upcoming date
                   const now = new Date();
                   now.setHours(0, 0, 0, 0);
                   const sortedBdays = [...birthdays].filter(b => b.date && b.name).map(b => {
@@ -4167,20 +4136,18 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                     bday.setFullYear(now.getFullYear());
                     if (bday < now) bday.setFullYear(now.getFullYear() + 1);
                     const diff = Math.ceil((bday - now) / (1000 * 60 * 60 * 24));
-                    return { ...b, nextDate: bday, daysAway: diff };
+                    return { ...b, daysAway: diff };
                   }).sort((a, b) => a.daysAway - b.daysAway);
 
-                  // Sort reminders by nearest upcoming date
                   const sortedRems = [...reminders].filter(r => r.date && r.title).map(r => {
                     const rDate = new Date(r.date);
                     const diff = Math.ceil((rDate - now) / (1000 * 60 * 60 * 24));
                     return { ...r, daysAway: diff };
                   }).filter(r => r.daysAway >= 0).sort((a, b) => a.daysAway - b.daysAway);
 
-                  // Merge and take top 5 soonest events
                   const allEvents = [
-                    ...sortedBdays.map(b => ({ type: 'birthday', name: b.name, daysAway: b.daysAway, nextDate: b.nextDate })),
-                    ...sortedRems.map(r => ({ type: 'reminder', name: r.title, daysAway: r.daysAway, date: new Date(r.date) }))
+                    ...sortedBdays.map(b => ({ type: 'birthday', name: b.name, daysAway: b.daysAway })),
+                    ...sortedRems.map(r => ({ type: 'reminder', name: r.title, daysAway: r.daysAway }))
                   ].sort((a, b) => a.daysAway - b.daysAway).slice(0, 5);
 
                   if (allEvents.length === 0) return <div className="text-gray-400 text-center py-4">Nothing scheduled</div>;
