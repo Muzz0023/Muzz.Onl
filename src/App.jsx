@@ -2450,7 +2450,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                     </button>
                                   )}
                                 </div>
-                                <div className="grid grid-cols-3 gap-2">
+                                <div className="grid grid-cols-2 gap-2">
                                   <input
                                     type="text"
                                     value={meal.time}
@@ -2463,24 +2463,81 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                     value={meal.meal}
                                     onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, meal: e.target.value } : m) } : d))}
                                     placeholder="What to eat..."
-                                    className="col-span-1 px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
-                                  />
-                                  <input
-                                    type="text"
-                                    value={meal.calories}
-                                    onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, calories: e.target.value } : m) } : d))}
-                                    placeholder="Calories"
                                     className="px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
                                   />
+                                </div>
+                                <div className="grid grid-cols-4 gap-2 mt-2">
+                                  <div>
+                                    <label className="text-[10px] text-gray-400 font-medium">Calories</label>
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      value={meal.calories}
+                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, calories: e.target.value } : m) } : d))}
+                                      placeholder="kcal"
+                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-[10px] text-blue-400 font-medium">Protein</label>
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      value={meal.protein || ''}
+                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, protein: e.target.value } : m) } : d))}
+                                      placeholder="g"
+                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-blue-500"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-[10px] text-amber-500 font-medium">Carbs</label>
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      value={meal.carbs || ''}
+                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, carbs: e.target.value } : m) } : d))}
+                                      placeholder="g"
+                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-amber-500"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-[10px] text-green-500 font-medium">Fats</label>
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      value={meal.fats || ''}
+                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, fats: e.target.value } : m) } : d))}
+                                      placeholder="g"
+                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-green-500"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             ))}
                           </div>
 
-                          {/* Total Calories */}
-                          {diet.meals.some(m => m.calories) && (
-                            <div className="p-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white text-center text-sm font-medium">
-                              Total: ~{diet.meals.reduce((sum, m) => sum + (parseInt(m.calories) || 0), 0).toLocaleString()} cal
+                          {/* Total Macros */}
+                          {diet.meals.some(m => m.calories || m.protein || m.carbs || m.fats) && (
+                            <div className="p-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+                              <div className="text-center text-sm font-semibold mb-2">Daily Totals</div>
+                              <div className="grid grid-cols-4 gap-2 text-center">
+                                <div>
+                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.calories) || 0), 0).toLocaleString()}</div>
+                                  <div className="text-[10px] text-white/70">Calories</div>
+                                </div>
+                                <div>
+                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.protein) || 0), 0)}g</div>
+                                  <div className="text-[10px] text-white/70">Protein</div>
+                                </div>
+                                <div>
+                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.carbs) || 0), 0)}g</div>
+                                  <div className="text-[10px] text-white/70">Carbs</div>
+                                </div>
+                                <div>
+                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.fats) || 0), 0)}g</div>
+                                  <div className="text-[10px] text-white/70">Fats</div>
+                                </div>
+                              </div>
                             </div>
                           )}
 
