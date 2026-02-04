@@ -117,22 +117,22 @@ const supabase = {
   },
   
   async saveUserData(userId, data) {
-    // Try upsert first
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
-      method: 'POST',
-      headers: { ...this.headers(), 'Prefer': 'resolution=merge-duplicates' },
-      body: JSON.stringify({ user_id: userId, data_json: data, updated_at: new Date().toISOString() })
+    // Try PATCH first (update existing row)
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+      method: 'PATCH',
+      headers: { ...this.headers(), 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ data_json: data, updated_at: new Date().toISOString() })
     });
     if (!r.ok) {
-      console.error('Save upsert failed:', r.status, await r.text());
-      // Fallback: try PATCH (update existing row)
-      const r2 = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
-        method: 'PATCH',
+      console.error('Save patch failed:', r.status, await r.text());
+      // Fallback: try INSERT for new users
+      const r2 = await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
+        method: 'POST',
         headers: { ...this.headers(), 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ data_json: data, updated_at: new Date().toISOString() })
+        body: JSON.stringify({ user_id: userId, data_json: data, updated_at: new Date().toISOString() })
       });
       if (!r2.ok) {
-        console.error('Save patch also failed:', r2.status, await r2.text());
+        console.error('Save insert also failed:', r2.status, await r2.text());
       }
     }
   }
