@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle } from 'lucide-react';
 
 // ============================================
 // SUPABASE & GEMINI CONFIGURATION
@@ -14,6 +14,7 @@ const VIP_EMAILS = [
   'sarah.addison78@gmail.com',
   'cooperkb05@gmail.com',
   'kirstykb44@gmail.com',
+  'tylarjohn@gmail.com',
 ];
 
 // Elite limits
@@ -116,11 +117,24 @@ const supabase = {
   },
   
   async saveUserData(userId, data) {
-    await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
+    // Try upsert first
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
       method: 'POST',
       headers: { ...this.headers(), 'Prefer': 'resolution=merge-duplicates' },
       body: JSON.stringify({ user_id: userId, data_json: data, updated_at: new Date().toISOString() })
     });
+    if (!r.ok) {
+      console.error('Save upsert failed:', r.status, await r.text());
+      // Fallback: try PATCH (update existing row)
+      const r2 = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+        method: 'PATCH',
+        headers: { ...this.headers(), 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ data_json: data, updated_at: new Date().toISOString() })
+      });
+      if (!r2.ok) {
+        console.error('Save patch also failed:', r2.status, await r2.text());
+      }
+    }
   }
 };
 
@@ -419,7 +433,7 @@ ${financialContext}
 Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
     
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -539,6 +553,10 @@ function MuzzApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
+  const [feedbackType, setFeedbackType] = useState('feedback');
+  const [feedbackMsg, setFeedbackMsg] = useState('');
+  const [feedbackSent, setFeedbackSent] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
   const [businessSubscriptions, setBusinessSubscriptions] = useState([]);
   const [billsType, setBillsType] = useState('personal');
@@ -840,6 +858,7 @@ function MuzzApp() {
   useEffect(() => {
     if (!userId || !dataLoaded) return;
     
+    setSaveStatus('saving');
     const saveData = async () => {
       try {
         const allData = {
@@ -883,8 +902,12 @@ function MuzzApp() {
           stripeElite
         };
         await supabase.saveUserData(userId, allData);
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
       } catch (e) {
         console.error('Save error:', e);
+        setSaveStatus('error');
+        setTimeout(() => setSaveStatus('idle'), 3000);
       }
     };
     
@@ -957,7 +980,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
       
       const fullPrompt = systemPrompt + '\n\nConversation so far:\n' + conversationHistory + '\n\nUser: ' + msg + '\n\nMuzz:';
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1023,7 +1046,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
 
   // Free features: home, tasks, reminders, diet, custom1
   // Elite features: gym, bills, assets, investments, custom2, custom3
-  const freeFeatures = ['home', 'tasks', 'reminders', 'diet', 'custom1', 'upgrade'];
+  const freeFeatures = ['home', 'tasks', 'reminders', 'diet', 'custom1', 'upgrade', 'feedback'];
   const isFeatureLocked = (id) => !isElite && !freeFeatures.includes(id);
 
   // Sidebar navigation items
@@ -1037,6 +1060,7 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
     ...customCategories.map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: i > 0 })),
+    { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
     { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
   ];
 
@@ -1125,6 +1149,17 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
           </div>
         </div>
         <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all"><Menu className="w-5 h-5" /></button>
+        {saveStatus !== 'idle' && (
+          <div className={`fixed top-4 right-4 z-30 px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium transition-all ${
+            saveStatus === 'saving' ? 'bg-amber-100 text-amber-700' : 
+            saveStatus === 'saved' ? 'bg-green-100 text-green-700' : 
+            'bg-red-100 text-red-700'
+          }`}>
+            {saveStatus === 'saving' && <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>}
+            {saveStatus === 'saved' && <><CheckCircle2 className="w-4 h-4" /> Saved</>}
+            {saveStatus === 'error' && <><X className="w-4 h-4" /> Save failed</>}
+          </div>
+        )}
       </div>
     );
   };
@@ -5329,6 +5364,88 @@ Remember: You're chatting in a friendly app, not writing formal advice. Be helpf
               </div>
             );
           })()}
+        </div>
+      </div>
+    );
+  }
+
+  // FEEDBACK & SUPPORT VIEW
+  if (activeView === 'feedback') {
+
+    const handleSendFeedback = () => {
+      if (!feedbackMsg.trim()) return;
+      const subject = feedbackType === 'feedback' ? 'Muzz App Feedback' : feedbackType === 'bug' ? 'Muzz Bug Report' : 'Muzz Support Request';
+      const body = encodeURIComponent(`From: ${userEmail}\nType: ${feedbackType}\n\n${feedbackMsg}`);
+      window.open(`mailto:lauchy23@outlook.com?subject=${encodeURIComponent(subject)}&body=${body}`);
+      setFeedbackSent(true);
+      setFeedbackMsg('');
+      setTimeout(() => setFeedbackSent(false), 3000);
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-24">
+        <Sidebar />
+        <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
+            <p className="text-white/80">We'd love to hear from you, legend.</p>
+          </div>
+        </div>
+        <div className="max-w-2xl mx-auto px-4 -mt-6">
+          <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
+            <div className="flex gap-2 mb-6">
+              {[{ id: 'feedback', label: '💡 Feedback', desc: 'Ideas & suggestions' }, { id: 'bug', label: '🐛 Bug Report', desc: 'Something broken?' }, { id: 'support', label: '🆘 Support', desc: 'Need help?' }].map(t => (
+                <button key={t.id} onClick={() => setFeedbackType(t.id)} className={`flex-1 p-3 rounded-2xl text-center transition-all ${feedbackType === t.id ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                  <div className="text-lg font-bold">{t.label}</div>
+                  <div className={`text-xs mt-1 ${feedbackType === t.id ? 'text-white/80' : 'text-gray-400'}`}>{t.desc}</div>
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={feedbackMsg}
+              onChange={e => setFeedbackMsg(e.target.value)}
+              placeholder={feedbackType === 'feedback' ? "What features would you love to see? What could be better?" : feedbackType === 'bug' ? "Describe the bug — what happened and what did you expect?" : "What do you need help with?"}
+              className="w-full p-4 border-2 border-gray-200 rounded-2xl h-40 resize-none focus:outline-none focus:border-orange-400 transition-colors text-sm"
+            />
+            <button onClick={handleSendFeedback} disabled={!feedbackMsg.trim()} className="w-full mt-4 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl font-bold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+              <Send className="w-4 h-4" /> Send {feedbackType === 'feedback' ? 'Feedback' : feedbackType === 'bug' ? 'Bug Report' : 'Support Request'}
+            </button>
+            {feedbackSent && (
+              <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-2xl text-center text-sm font-medium flex items-center justify-center gap-2">
+                <CheckCircle2 className="w-4 h-4" /> Thanks legend! Your message is on its way 🦘
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
+            <h3 className="font-bold text-gray-800 text-lg mb-4">📬 Contact Us Directly</h3>
+            <a href="mailto:lauchy23@outlook.com" className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+              <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center"><Mail className="w-5 h-5 text-white" /></div>
+              <div>
+                <div className="font-medium text-gray-800">Email Support</div>
+                <div className="text-sm text-gray-500">lauchy23@outlook.com</div>
+              </div>
+            </a>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-xl p-6">
+            <h3 className="font-bold text-gray-800 text-lg mb-4">❓ FAQ</h3>
+            <div className="space-y-3">
+              {[
+                { q: "How do I upgrade to Elite?", a: "Head to the 'Upgrade to Elite' section in the sidebar. It's $5/month and unlocks all features!" },
+                { q: "Is my data safe?", a: "Your data is stored securely in the cloud and only you can access it." },
+                { q: "How do I cancel my subscription?", a: "Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period." },
+                { q: "Can I use Muzz on my phone?", a: "Yeah mate! Muzz works on any device with a browser. Just go to muzz.onl." },
+              ].map((faq, i) => (
+                <details key={i} className="group">
+                  <summary className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors font-medium text-gray-700 text-sm">
+                    <HelpCircle className="w-4 h-4 text-orange-400 flex-shrink-0" /> {faq.q}
+                  </summary>
+                  <div className="px-4 py-2 text-sm text-gray-500 ml-6">{faq.a}</div>
+                </details>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
