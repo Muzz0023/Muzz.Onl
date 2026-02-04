@@ -433,15 +433,17 @@ ${financialContext}
 Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
     
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: systemPrompt + "\n\nUser: " + msg + "\n\nMuzz:" }] }],
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ role: "user", parts: [{ text: msg }] }],
           generationConfig: { temperature: 0.8, maxOutputTokens: 800 }
         })
       });
       const data = await response.json();
+      console.log('Gemini response:', JSON.stringify(data).substring(0, 500));
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No worries mate, give it another go! 🦘";
       setChatMessages(prev => [...prev, { role: "muzz", text: reply }]);
       incrementAiUsage();
@@ -973,23 +975,28 @@ ${financialContext}
 Remember: You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
 
     try {
-      // Build conversation history for context
-      const conversationHistory = chatMessages.slice(-10).map(m => 
-        `${m.role === 'user' ? 'User' : 'Muzz'}: ${m.text}`
-      ).join('\n');
+      // Build conversation history as proper Gemini multi-turn format
+      const geminiContents = [];
+      chatMessages.slice(-10).forEach(m => {
+        geminiContents.push({
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.text }]
+        });
+      });
+      geminiContents.push({ role: 'user', parts: [{ text: msg }] });
       
-      const fullPrompt = systemPrompt + '\n\nConversation so far:\n' + conversationHistory + '\n\nUser: ' + msg + '\n\nMuzz:';
-      
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: fullPrompt }] }],
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: geminiContents,
           generationConfig: { temperature: 0.8, maxOutputTokens: 800 }
         })
       });
 
       const data = await response.json();
+      console.log('Gemini home response:', JSON.stringify(data).substring(0, 500));
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No worries, give me another crack at that question!";
       setChatMessages(prev => [...prev, { role: 'muzz', text: reply }]);
       incrementAiUsage();
