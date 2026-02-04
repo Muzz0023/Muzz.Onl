@@ -701,8 +701,6 @@ function MuzzApp() {
   });
   const [dietSubTab, setDietSubTab] = useState('groceries');
   const [expandedDietPlan, setExpandedDietPlan] = useState(null);
-  const [customDietPlans, setCustomDietPlans] = useState([]);
-  const [editingDietPlan, setEditingDietPlan] = useState(null);
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
@@ -833,7 +831,6 @@ function MuzzApp() {
           if (d.businessSubscriptions) setBusinessSubscriptions(d.businessSubscriptions);
           if (d.muzzPersonality !== undefined) setMuzzPersonality(d.muzzPersonality);
           if (d.funnyGreetings !== undefined) setFunnyGreetings(d.funnyGreetings);
-          if (d.customDietPlans) setCustomDietPlans(d.customDietPlans);
           if (d.customDiets) setCustomDiets(d.customDiets);
           if (d.monthlySalary) setMonthlySalary(d.monthlySalary);
           if (d.monthlySalaryStr) setMonthlySalaryStr(d.monthlySalaryStr);
@@ -891,7 +888,7 @@ function MuzzApp() {
           businessSubscriptions,
           muzzPersonality,
           funnyGreetings,
-          customDietPlans,
+          customDiets,
           monthlySalary,
           monthlySalaryStr,
           assets,
@@ -940,7 +937,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDietPlans, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -9286,6 +9283,4 @@ export default function App() {
       <AppContent />
     </AuthProvider>
   );
-}
-;
 }
