@@ -15,7 +15,7 @@ const VIP_EMAILS = [
   'cooperkb05@gmail.com',
   'kirstykb44@gmail.com',
   'tylarjohn@gmail.com',
-  'barbarafremlin370@msn.com',
+  'barbarafremlin370@msn.com'
 ];
 
 // Elite limits
@@ -3227,9 +3227,14 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                     const blocks = section.content?.blocks || [{ id: 1, type: 'text', text: '' }];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, text: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
-                                    // Auto-expand on typing
-                                    e.target.style.height = 'auto';
-                                    e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
+                                  }}
+                                  onInput={(e) => {
+                                    // Only expand, never shrink (prevents scroll jump on backspace)
+                                    const newHeight = Math.max(200, e.target.scrollHeight);
+                                    const currentHeight = parseInt(e.target.style.height) || 200;
+                                    if (newHeight > currentHeight) {
+                                      e.target.style.height = newHeight + 'px';
+                                    }
                                   }}
                                   placeholder="Write your notes here..."
                                   className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-amber-500 resize-none overflow-hidden"
@@ -8469,9 +8474,14 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                       onChange={(e) => {
                         const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
                         setInvestmentNotes(notes.map(n => n.id === note.id ? { ...n, text: e.target.value } : n));
-                        // Auto-expand on typing
-                        e.target.style.height = 'auto';
-                        e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
+                      }}
+                      onInput={(e) => {
+                        // Only expand, never shrink (prevents scroll jump on backspace)
+                        const newHeight = Math.max(300, e.target.scrollHeight);
+                        const currentHeight = parseInt(e.target.style.height) || 300;
+                        if (newHeight > currentHeight) {
+                          e.target.style.height = newHeight + 'px';
+                        }
                       }}
                       placeholder="Write your notes here..."
                       className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
