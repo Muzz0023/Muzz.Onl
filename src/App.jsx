@@ -15,6 +15,7 @@ const VIP_EMAILS = [
   'cooperkb05@gmail.com',
   'kirstykb44@gmail.com',
   'tylarjohn@gmail.com',
+  'barbarafremlin370@msn.com',
 ];
 
 // Elite limits
