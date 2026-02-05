@@ -6943,6 +6943,16 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               >
                 Accounting Guide
               </button>
+              <button
+                onClick={() => setInvestmentsSubTab('sp500')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  investmentsSubTab === 'sp500'
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                S&P 500 Guide
+              </button>
             </div>
           </div>
         </div>
@@ -9280,6 +9290,354 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                 </div>
               </div>
 
+            </>
+          )}
+
+          {/* S&P 500 Guide */}
+          {investmentsSubTab === 'sp500' && (
+            <>
+              {/* Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-6 text-white">
+                <div className="flex items-center gap-4">
+                  <div className="text-5xl">📈</div>
+                  <div>
+                    <h2 className="text-2xl font-bold">S&P 500 & Buffett's Investing Wisdom</h2>
+                    <p className="text-blue-200">Lessons from Berkshire Hathaway's annual letters</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Buffett's Definition of Investing */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <h2 className="text-xl font-semibold">🧠 Buffett's Definition of Investing (2011)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                    <p className="text-sm text-gray-700 italic font-medium">"Investing is giving up purchasing power today, with a reasoned expectation of receiving MORE purchasing power — after taxes — in the future."</p>
+                  </div>
+                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                    <h3 className="text-md font-bold text-red-800 mb-2">Buffett's REAL Definition of Risk</h3>
+                    <p className="text-sm text-gray-700">Not volatility. Not beta.</p>
+                    <p className="text-sm text-gray-700 font-semibold mt-1">Risk = The chance your investment won't protect (or grow) your purchasing power over time.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Buffett's Will Instructions */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
+                  <h2 className="text-xl font-semibold">📜 Buffett's Personal Will Instructions (2013)</h2>
+                </div>
+                <div className="p-6">
+                  <p className="text-sm text-gray-600 mb-4">For his wife's trust, Buffett instructed:</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200 text-center">
+                      <div className="text-3xl font-bold text-blue-600">10%</div>
+                      <div className="text-sm text-gray-600 mt-1">Short-term government bonds</div>
+                    </div>
+                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200 text-center">
+                      <div className="text-3xl font-bold text-green-600">90%</div>
+                      <div className="text-sm text-gray-600 mt-1">Very low-cost S&P 500 index fund (Vanguard)</div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-3 italic">He believes this mix will beat most professionals.</p>
+                </div>
+              </div>
+
+              {/* S&P 500 Performance 1964-2014 */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
+                  <h2 className="text-xl font-semibold">📊 The Tailwind: S&P 500 vs the Dollar (1964–2014)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
+                      <h3 className="text-md font-bold text-green-800 mb-2">S&P 500 Performance</h3>
+                      <p className="text-sm text-gray-700">Rose from <strong>84 → 2,059</strong></p>
+                      <p className="text-sm text-gray-700">Including reinvested dividends:</p>
+                      <p className="text-2xl font-bold text-green-600 mt-1">11,196% total return</p>
+                    </div>
+                    <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                      <h3 className="text-md font-bold text-red-800 mb-2">Dollar Purchasing Power</h3>
+                      <p className="text-sm text-gray-700">Fell <strong>87%</strong> over same period</p>
+                      <p className="text-sm text-gray-700">What cost $0.13 in 1965 costs $1.00 in 2014</p>
+                    </div>
+                  </div>
+                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
+                    <p className="text-sm text-gray-700 font-medium">Over the long run, it has been far safer to own a diversified collection of American businesses than to hold currency-based assets like Treasuries or cash. This was true through the Great Depression, two world wars, and Buffett expects it for the next century.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Voting Machine vs Weighing Machine */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-purple-50 to-violet-50">
+                  <h2 className="text-xl font-semibold">⚖️ Voting Machine vs Weighing Machine (2017)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                      <h3 className="text-md font-bold text-red-800 mb-2">Short Term</h3>
+                      <p className="text-sm text-gray-700">Market is a <strong>voting machine</strong> (popularity contest). Stock prices surge and swoon seemingly unconnected to underlying value.</p>
+                    </div>
+                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
+                      <h3 className="text-md font-bold text-green-800 mb-2">Long Term</h3>
+                      <p className="text-sm text-gray-700">Market is a <strong>weighing machine</strong> (business reality). Retained earnings + ROE + moat + management shows up in price.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Berkshire Drawdowns */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
+                  <h2 className="text-xl font-semibold">📉 Berkshire's Major Drawdowns — Price Crashes Are Normal</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead><tr className="border-b-2">
+                        <th className="text-left py-2 px-3">Period</th>
+                        <th className="text-right py-2 px-3">High</th>
+                        <th className="text-right py-2 px-3">Low</th>
+                        <th className="text-right py-2 px-3">Decline</th>
+                      </tr></thead>
+                      <tbody>
+                        {[
+                          { period: 'Mar 1973 – Jan 1975', high: '$93', low: '$38', decline: '-59.1%' },
+                          { period: 'Oct 2 – Oct 27, 1987', high: '$4,250', low: '$2,675', decline: '-37.1%' },
+                          { period: 'Jun 1998 – Mar 2000', high: '$80,900', low: '$41,300', decline: '-48.9%' },
+                          { period: 'Sep 2008 – Mar 2009', high: '$147,000', low: '$72,400', decline: '-50.7%' }
+                        ].map((row, i) => (
+                          <tr key={i} className="border-b">
+                            <td className="py-2 px-3 text-gray-700">{row.period}</td>
+                            <td className="py-2 px-3 text-right text-green-600 font-medium">{row.high}</td>
+                            <td className="py-2 px-3 text-right text-red-600 font-medium">{row.low}</td>
+                            <td className="py-2 px-3 text-right text-red-600 font-bold">{row.decline}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                    <p className="text-sm text-gray-700 font-medium">Even Berkshire, with 50+ years of compounding and great businesses, has had multiple 40–60% price crashes. Big drawdowns are normal — intrinsic value compounded steadily underneath.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Never Use Debt */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-red-50 to-pink-50">
+                  <h2 className="text-xl font-semibold">🚫 The Strongest Argument Against Using Debt in Stocks</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                    <p className="text-sm text-gray-700 italic font-medium">"This table offers the strongest argument I can muster against ever using borrowed money to own stocks."</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-700">• You can't predict how far or how fast stocks can fall short-term</p>
+                    <p className="text-sm text-gray-700">• Even small borrowings can wreck your decision-making — headlines + crashing values = fear = panic selling</p>
+                    <p className="text-sm text-gray-700">• An unsettled mind makes bad decisions at the worst possible time</p>
+                  </div>
+                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                    <p className="text-sm text-gray-700 italic">"The light can at any time go from green to red without pausing at yellow."</p>
+                    <p className="text-sm text-gray-700 font-semibold mt-2">Rule: No margin. No leverage. Keep yourself structurally calm and unforced.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Crashes as Opportunities */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
+                  <h2 className="text-xl font-semibold">💎 Crashes as Opportunities (If You're Not in Debt)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <p className="text-sm text-gray-700">For the unleveraged investor, big drops are "extraordinary opportunities" — a chance to buy great businesses at bargain prices.</p>
+                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
+                    <p className="text-sm text-gray-700 font-medium mb-2">The mindset you need (from Kipling's "If"):</p>
+                    <p className="text-sm text-gray-700">• Keep your head while others lose theirs</p>
+                    <p className="text-sm text-gray-700">• Be patient and not worn out by waiting</p>
+                    <p className="text-sm text-gray-700">• Think clearly but don't over-obsess</p>
+                    <p className="text-sm text-gray-700">• Trust yourself when others doubt you</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* The Bet */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
+                  <h2 className="text-xl font-semibold">🏆 The Bet: S&P 500 vs Hedge Funds (2007–2017)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <p className="text-sm text-gray-700">Buffett bet that a zero-fee S&P 500 index fund would beat five fund-of-funds (each holding 200+ hedge funds) over 10 years.</p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead><tr className="border-b-2 bg-gray-50">
+                        <th className="text-left py-2 px-2">Investment</th>
+                        <th className="text-right py-2 px-2">10-Year Return</th>
+                        <th className="text-right py-2 px-2">Avg/Year</th>
+                      </tr></thead>
+                      <tbody>
+                        {[
+                          { name: 'Fund A', ret: '21.7%', avg: '2.0%' },
+                          { name: 'Fund B', ret: '42.3%', avg: '3.6%' },
+                          { name: 'Fund C', ret: '87.7%', avg: '6.5%' },
+                          { name: 'Fund D (9yr)', ret: '2.8%', avg: '0.3%' },
+                          { name: 'Fund E', ret: '27.0%', avg: '2.4%' },
+                          { name: 'S&P 500 Index', ret: '125.8%', avg: '8.5%' }
+                        ].map((row, i) => (
+                          <tr key={i} className={`border-b ${row.name === 'S&P 500 Index' ? 'bg-green-50 font-bold' : ''}`}>
+                            <td className="py-2 px-2">{row.name}</td>
+                            <td className={`py-2 px-2 text-right ${row.name === 'S&P 500 Index' ? 'text-green-600' : 'text-gray-600'}`}>{row.ret}</td>
+                            <td className={`py-2 px-2 text-right ${row.name === 'S&P 500 Index' ? 'text-green-600' : 'text-gray-600'}`}>{row.avg}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                    <p className="text-sm text-gray-700 italic font-medium">"Performance comes, performance goes. Fees never falter."</p>
+                    <p className="text-sm text-gray-700 mt-2">~60% of gross gains from the hedge fund basket were consumed in two layers of fees. Investors lost. Managers got rich.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Why Hedge Funds Fail */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
+                  <h2 className="text-xl font-semibold">❌ Why Almost All Hedge Funds Fail Long-Term</h2>
+                </div>
+                <div className="p-6 space-y-3">
+                  <div className="bg-red-50 rounded-xl p-3 border border-red-200">
+                    <p className="text-sm text-gray-700"><strong>1. Size:</strong> Good performance attracts money, size explodes — big money is harder to compound.</p>
+                  </div>
+                  <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
+                    <p className="text-sm text-gray-700"><strong>2. Luck mistaken for skill:</strong> A manager could be lucky for 3, 5, even 10 years.</p>
+                  </div>
+                  <div className="bg-orange-50 rounded-xl p-3 border border-orange-200">
+                    <p className="text-sm text-gray-700"><strong>3. Fee incentive:</strong> More AUM = more fees, so managers keep growing, lowering future returns.</p>
+                  </div>
+                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200 mt-2">
+                    <p className="text-sm text-gray-700 italic font-medium">"What is easy with millions becomes impossible with billions."</p>
+                  </div>
+                  <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
+                    <p className="text-sm text-gray-700"><strong>Why active investors lose:</strong> Active investors, in aggregate, ARE the market. Passive investors match the market. Active investors have far higher costs. Therefore passive investors MUST win. It's simple arithmetic, not theory.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* The American Tailwind */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <h2 className="text-xl font-semibold">🇺🇸 The American Tailwind (2018)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <p className="text-sm text-gray-700">Buffett made his first investment on March 11, 1942 at age 11 — $114.75 for 3 shares of Cities Service. He traces what happened across 77 years.</p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead><tr className="border-b-2 bg-gray-50">
+                        <th className="text-left py-2 px-3">Scenario (starting 1942)</th>
+                        <th className="text-right py-2 px-3">Result by 2019</th>
+                      </tr></thead>
+                      <tbody>
+                        {[
+                          { scenario: 'S&P 500 Index Fund (no fee)', result: '$606,811', highlight: true },
+                          { scenario: 'S&P 500 at $1M scale', result: '$5.3 Billion', highlight: true },
+                          { scenario: 'Same $1M but paying 1% yearly fees', result: '$2.65 Billion', highlight: false },
+                          { scenario: 'Buy 3.25 oz of gold', result: '$4,200', highlight: false }
+                        ].map((row, i) => (
+                          <tr key={i} className={`border-b ${row.highlight ? 'bg-green-50' : ''}`}>
+                            <td className="py-2 px-3 text-gray-700">{row.scenario}</td>
+                            <td className={`py-2 px-3 text-right font-bold ${row.highlight ? 'text-green-600' : 'text-gray-600'}`}>{row.result}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                    <p className="text-sm text-gray-700 italic font-medium">"The magical metal was no match for the American mettle."</p>
+                    <p className="text-sm text-gray-700 mt-2">Gold gained less than 1% of what American business produced over the same period.</p>
+                  </div>
+                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                    <p className="text-sm text-gray-700">America prospered under 7 Republican and 7 Democratic presidents from 1942–2019. Despite high inflation, 21% prime rates, wars, housing collapse, financial panic, and presidential resignation — U.S. household wealth reached $108 trillion.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Buffett's Recommendation */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
+                  <h2 className="text-xl font-semibold">✅ Buffett's Recommendation (60 Years Straight)</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="bg-green-50 rounded-2xl p-5 border-2 border-green-300 text-center">
+                    <p className="text-lg font-bold text-green-700">"Buy a low-cost S&P 500 index fund."</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-700">• Middle-class people follow the advice</p>
+                    <p className="text-sm text-gray-700">• Rich people almost NEVER follow it</p>
+                    <p className="text-sm text-gray-700">• Institutions never follow it</p>
+                    <p className="text-sm text-gray-500 mt-2">Because they want special treatment, complex solutions, fancy "styles," and Wall Street relationships — even though an index fund is almost always the best answer.</p>
+                  </div>
+                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                    <p className="text-sm text-gray-700 font-medium">On Jack Bogle (creator of index funds):</p>
+                    <p className="text-sm text-gray-700 italic">"If a statue is ever erected to honor the person who has done the most for investors, it should be Jack Bogle."</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ultimate Lessons */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-orange-50">
+                  <h2 className="text-xl font-semibold">⭐ Ultimate Lessons</h2>
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {[
+                      { emoji: '📉', text: 'Low-cost index funds beat most professionals' },
+                      { emoji: '💸', text: 'Fees are the biggest enemy of investment returns' },
+                      { emoji: '🧘', text: 'Simple > Complex' },
+                      { emoji: '📈', text: 'Long-term stocks > Long-term bonds' },
+                      { emoji: '⚡', text: 'Volatility ≠ Risk — failing to protect purchasing power = risk' },
+                      { emoji: '🪑', text: 'Activity kills returns — inactivity builds wealth' },
+                      { emoji: '🎯', text: 'Big, obvious decisions outperform constant tinkering' },
+                      { emoji: '🇺🇸', text: 'Bet on America — compounding over decades is unstoppable' }
+                    ].map((lesson, i) => (
+                      <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                        <span className="text-xl">{lesson.emoji}</span>
+                        <p className="text-sm text-gray-700 font-medium">{lesson.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Classic Quotes */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b bg-gradient-to-r from-slate-50 to-gray-100">
+                  <h2 className="text-xl font-semibold">💬 Classic Buffett Lines</h2>
+                </div>
+                <div className="p-6 space-y-3">
+                  {[
+                    "When trillions are managed by Wall Streeters charging high fees, the managers are the ones who reap outsized profits — not the clients.",
+                    "Both small and large investors should stick with low-cost index funds.",
+                    "When a person with money meets a person with experience, the one with experience ends up with the money, and the one with money leaves with experience.",
+                    "It is beyond arrogance for businesses or individuals to boast that they have done it alone.",
+                    "Big, easy decisions > thousands of tiny ones. After that kindergarten-like analysis, we made the switch and relaxed."
+                  ].map((quote, i) => (
+                    <div key={i} className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                      <p className="text-sm text-gray-700 italic">"{quote}"</p>
+                      <p className="text-xs text-gray-400 mt-1">— Warren Buffett</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Muzz Note */}
+              <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-3xl p-6 border border-amber-200">
+                <p className="text-amber-900 font-semibold">🦘 Muzz's Note: "This info is pulled from Berkshire Hathaway's actual annual letters. It's not financial advice — it's education from one of the greatest investors of all time. Do your own research, but use this as a solid foundation for understanding long-term investing. You've got this, legend!"</p>
+              </div>
             </>
           )}
         </div>
