@@ -701,6 +701,10 @@ function MuzzApp() {
   });
   const [dietSubTab, setDietSubTab] = useState('groceries');
   const [expandedDietPlan, setExpandedDietPlan] = useState(null);
+  const [trackedStocks, setTrackedStocks] = useState([]);
+  const [livePrices, setLivePrices] = useState({});
+  const [pricesLoading, setPricesLoading] = useState(false);
+  const [pricesLastUpdated, setPricesLastUpdated] = useState(null);
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
@@ -832,6 +836,7 @@ function MuzzApp() {
           if (d.muzzPersonality !== undefined) setMuzzPersonality(d.muzzPersonality);
           if (d.funnyGreetings !== undefined) setFunnyGreetings(d.funnyGreetings);
           if (d.customDiets) setCustomDiets(d.customDiets);
+          if (d.trackedStocks) setTrackedStocks(d.trackedStocks);
           if (d.monthlySalary) setMonthlySalary(d.monthlySalary);
           if (d.monthlySalaryStr) setMonthlySalaryStr(d.monthlySalaryStr);
           if (d.assets) setAssets(d.assets);
@@ -889,6 +894,7 @@ function MuzzApp() {
           muzzPersonality,
           funnyGreetings,
           customDiets,
+          trackedStocks,
           monthlySalary,
           monthlySalaryStr,
           assets,
@@ -937,7 +943,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -6953,6 +6959,16 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               >
                 S&P 500 Guide
               </button>
+              <button
+                onClick={() => setInvestmentsSubTab('liveprices')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  investmentsSubTab === 'liveprices'
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                Live Prices
+              </button>
             </div>
           </div>
         </div>
@@ -9640,6 +9656,251 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               </div>
             </>
           )}
+
+          {/* Live Prices Tab */}
+          {investmentsSubTab === 'liveprices' && (() => {
+            const fetchPrices = async () => {
+              const tickers = trackedStocks.filter(s => s.ticker).map(s => s.ticker.toUpperCase());
+              if (tickers.length === 0) return;
+              setPricesLoading(true);
+              try {
+                const response = await fetch('/api/stocks', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ tickers })
+                });
+                const data = await response.json();
+                if (data.prices) {
+                  setLivePrices(data.prices);
+                  setPricesLastUpdated(new Date().toLocaleTimeString());
+                }
+              } catch (err) {
+                console.error('Failed to fetch prices:', err);
+              }
+              setPricesLoading(false);
+            };
+
+            const totalCost = trackedStocks.reduce((sum, s) => {
+              const qty = parseFloat(s.shares) || 0;
+              const avg = parseFloat(s.avgCost) || 0;
+              return sum + (qty * avg);
+            }, 0);
+
+            const totalValue = trackedStocks.reduce((sum, s) => {
+              const qty = parseFloat(s.shares) || 0;
+              const price = livePrices[s.ticker?.toUpperCase()]?.c || 0;
+              return sum + (qty * price);
+            }, 0);
+
+            const totalPL = totalValue - totalCost;
+            const totalPLPercent = totalCost > 0 ? ((totalPL / totalCost) * 100) : 0;
+
+            return (
+              <div className="space-y-4">
+                {/* Header Card */}
+                <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-3xl p-6 text-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-2xl font-bold">Live Stock Prices</h2>
+                      <p className="text-emerald-100 text-sm">Track your holdings with real-time US market data</p>
+                      {pricesLastUpdated && <p className="text-emerald-200 text-xs mt-1">Last updated: {pricesLastUpdated}</p>}
+                    </div>
+                    <button
+                      onClick={fetchPrices}
+                      disabled={pricesLoading}
+                      className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all disabled:opacity-50"
+                    >
+                      {pricesLoading ? '⏳ Loading...' : '🔄 Refresh Prices'}
+                    </button>
+                  </div>
+                  {trackedStocks.length > 0 && totalCost > 0 && (
+                    <div className="mt-4 grid grid-cols-3 gap-4">
+                      <div className="bg-white/10 rounded-xl p-3 text-center">
+                        <div className="text-xs text-emerald-200">Total Cost</div>
+                        <div className="text-lg font-bold">${totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                      </div>
+                      <div className="bg-white/10 rounded-xl p-3 text-center">
+                        <div className="text-xs text-emerald-200">Current Value</div>
+                        <div className="text-lg font-bold">${totalValue > 0 ? totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</div>
+                      </div>
+                      <div className={`rounded-xl p-3 text-center ${totalPL >= 0 ? 'bg-white/10' : 'bg-red-500/30'}`}>
+                        <div className="text-xs text-emerald-200">Profit/Loss</div>
+                        <div className={`text-lg font-bold ${totalPL >= 0 ? 'text-white' : 'text-red-200'}`}>
+                          {totalValue > 0 ? `${totalPL >= 0 ? '+' : ''}$${totalPL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${totalPLPercent >= 0 ? '+' : ''}${totalPLPercent.toFixed(2)}%)` : '—'}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Add Stock */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6 border-b flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold">Your Holdings</h2>
+                      <p className="text-sm text-gray-500 mt-1">Add your stocks, then hit Refresh to get live prices</p>
+                    </div>
+                    <button
+                      onClick={() => setTrackedStocks(prev => [...prev, { id: Date.now(), ticker: '', shares: '', avgCost: '' }])}
+                      className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all"
+                    >
+                      + Add Stock
+                    </button>
+                  </div>
+                  <div className="p-6">
+                    {trackedStocks.length === 0 && (
+                      <div className="text-center py-12 text-gray-400">
+                        <div className="text-4xl mb-3">📊</div>
+                        <p className="font-medium">No stocks tracked yet</p>
+                        <p className="text-sm mt-1">Add a stock with its ticker symbol, number of shares, and your average buy cost</p>
+                      </div>
+                    )}
+                    {trackedStocks.length > 0 && (
+                      <div className="space-y-3">
+                        {/* Header Row */}
+                        <div className="grid grid-cols-12 gap-2 px-3 text-xs font-semibold text-gray-400 uppercase">
+                          <div className="col-span-2">Ticker</div>
+                          <div className="col-span-2">Shares</div>
+                          <div className="col-span-2">Avg Cost</div>
+                          <div className="col-span-2">Live Price</div>
+                          <div className="col-span-3">Profit/Loss</div>
+                          <div className="col-span-1"></div>
+                        </div>
+                        {trackedStocks.map((stock) => {
+                          const ticker = stock.ticker?.toUpperCase();
+                          const priceData = livePrices[ticker];
+                          const currentPrice = priceData?.c || 0;
+                          const shares = parseFloat(stock.shares) || 0;
+                          const avgCost = parseFloat(stock.avgCost) || 0;
+                          const costBasis = shares * avgCost;
+                          const marketValue = shares * currentPrice;
+                          const pl = marketValue - costBasis;
+                          const plPercent = costBasis > 0 ? ((pl / costBasis) * 100) : 0;
+                          const dailyChange = priceData ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
+
+                          return (
+                            <div key={stock.id} className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50 rounded-xl">
+                              <div className="col-span-2">
+                                <input
+                                  type="text"
+                                  value={stock.ticker}
+                                  onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, ticker: e.target.value.toUpperCase() } : s))}
+                                  placeholder="AAPL"
+                                  className="w-full px-2 py-1.5 border rounded-lg text-sm font-bold uppercase focus:outline-none focus:border-green-500"
+                                />
+                              </div>
+                              <div className="col-span-2">
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={stock.shares}
+                                  onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
+                                  placeholder="Qty"
+                                  className="w-full px-2 py-1.5 border rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                />
+                              </div>
+                              <div className="col-span-2">
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={stock.avgCost}
+                                  onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
+                                  placeholder="$0.00"
+                                  className="w-full px-2 py-1.5 border rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                />
+                              </div>
+                              <div className="col-span-2 text-center">
+                                {currentPrice > 0 ? (
+                                  <div>
+                                    <div className="text-sm font-bold">${currentPrice.toFixed(2)}</div>
+                                    <div className={`text-xs font-medium ${dailyChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                      {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-xs text-gray-400">Hit refresh</span>
+                                )}
+                              </div>
+                              <div className="col-span-3 text-center">
+                                {currentPrice > 0 && costBasis > 0 ? (
+                                  <div>
+                                    <div className={`text-sm font-bold ${pl >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                      {pl >= 0 ? '+' : ''}${pl.toFixed(2)}
+                                    </div>
+                                    <div className={`text-xs font-medium ${pl >= 0 ? 'text-green-500' : 'text-red-400'}`}>
+                                      {plPercent >= 0 ? '+' : ''}{plPercent.toFixed(2)}%
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-xs text-gray-400">—</span>
+                                )}
+                              </div>
+                              <div className="col-span-1 text-right">
+                                <button
+                                  onClick={() => setTrackedStocks(prev => prev.filter(s => s.id !== stock.id))}
+                                  className="text-red-400 hover:text-red-600 text-sm"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Popular Tickers Reference */}
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-6 border-b">
+                    <h2 className="text-xl font-semibold">📋 Popular Ticker Symbols</h2>
+                    <p className="text-sm text-gray-500 mt-1">Use these when adding stocks above</p>
+                  </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {[
+                        { ticker: 'SPY', name: 'S&P 500 ETF' },
+                        { ticker: 'QQQ', name: 'Nasdaq 100 ETF' },
+                        { ticker: 'DIA', name: 'Dow Jones ETF' },
+                        { ticker: 'VOO', name: 'Vanguard S&P 500' },
+                        { ticker: 'AAPL', name: 'Apple' },
+                        { ticker: 'MSFT', name: 'Microsoft' },
+                        { ticker: 'GOOGL', name: 'Google' },
+                        { ticker: 'AMZN', name: 'Amazon' },
+                        { ticker: 'TSLA', name: 'Tesla' },
+                        { ticker: 'NVDA', name: 'Nvidia' },
+                        { ticker: 'META', name: 'Meta' },
+                        { ticker: 'BRK.B', name: 'Berkshire B' },
+                        { ticker: 'JPM', name: 'JPMorgan' },
+                        { ticker: 'V', name: 'Visa' },
+                        { ticker: 'JNJ', name: 'Johnson & Johnson' },
+                        { ticker: 'WMT', name: 'Walmart' }
+                      ].map((s, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            if (!trackedStocks.find(t => t.ticker?.toUpperCase() === s.ticker)) {
+                              setTrackedStocks(prev => [...prev, { id: Date.now() + i, ticker: s.ticker, shares: '', avgCost: '' }]);
+                            }
+                          }}
+                          className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl hover:bg-green-50 hover:border-green-200 border transition-all text-left"
+                        >
+                          <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded">{s.ticker}</span>
+                          <span className="text-xs text-gray-600 truncate">{s.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Info Note */}
+                <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-3xl p-6 border border-amber-200">
+                  <p className="text-amber-900 font-semibold">🦘 Muzz's Note: "Prices are sourced from Finnhub and may be up to 15 minutes delayed for some exchanges. This is for tracking purposes only — not financial advice. Always do your own research, legend!"</p>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     );
