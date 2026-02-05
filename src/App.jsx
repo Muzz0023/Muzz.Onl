@@ -1221,8 +1221,11 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
     const sortedBirthdays = [...birthdays].sort((a, b) => {
       if (!a.date || !b.date) return 0;
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
       const aDate = new Date(a.date);
       const bDate = new Date(b.date);
+      aDate.setHours(0, 0, 0, 0);
+      bDate.setHours(0, 0, 0, 0);
       aDate.setFullYear(today.getFullYear());
       bDate.setFullYear(today.getFullYear());
       if (aDate < today) aDate.setFullYear(today.getFullYear() + 1);
@@ -1239,10 +1242,12 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
     const getUpcomingText = (dateStr) => {
       if (!dateStr) return '';
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
       const bday = new Date(dateStr);
+      bday.setHours(0, 0, 0, 0);
       bday.setFullYear(today.getFullYear());
       if (bday < today) bday.setFullYear(today.getFullYear() + 1);
-      const diff = Math.ceil((bday - today) / (1000 * 60 * 60 * 24));
+      const diff = Math.round((bday - today) / (1000 * 60 * 60 * 24));
       if (diff === 0) return '🎉 Today!';
       if (diff === 1) return '🎉 Tomorrow!';
       if (diff <= 7) return `🎂 In ${diff} days`;
@@ -4359,15 +4364,17 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                   now.setHours(0, 0, 0, 0);
                   const sortedBdays = [...birthdays].filter(b => b.date && b.name).map(b => {
                     const bday = new Date(b.date);
+                    bday.setHours(0, 0, 0, 0);
                     bday.setFullYear(now.getFullYear());
                     if (bday < now) bday.setFullYear(now.getFullYear() + 1);
-                    const diff = Math.ceil((bday - now) / (1000 * 60 * 60 * 24));
+                    const diff = Math.round((bday - now) / (1000 * 60 * 60 * 24));
                     return { ...b, daysAway: diff };
                   }).sort((a, b) => a.daysAway - b.daysAway);
 
                   const sortedRems = [...reminders].filter(r => r.date && r.title).map(r => {
                     const rDate = new Date(r.date);
-                    const diff = Math.ceil((rDate - now) / (1000 * 60 * 60 * 24));
+                    rDate.setHours(0, 0, 0, 0);
+                    const diff = Math.round((rDate - now) / (1000 * 60 * 60 * 24));
                     return { ...r, daysAway: diff };
                   }).filter(r => r.daysAway >= 0).sort((a, b) => a.daysAway - b.daysAway);
 
