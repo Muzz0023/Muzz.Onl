@@ -1117,7 +1117,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
   const totalMonthly = subscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0) + businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
   const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
   const totalStocks = stocks.reduce((sum, s) => sum + (parseFloat(s.currentValue) || 0), 0);
-  const netWorth = totalAssets;
+  const netWorth = totalAssets + totalStocks;
   const salaryNum = parseFloat(monthlySalary) || 0;
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
 
@@ -3228,7 +3228,18 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                     updateSection(section.id, { content: { blocks: newBlocks } });
                                   }}
                                   placeholder="Write your notes here..."
-                                  className="w-full min-h-[100px] px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-amber-500 resize-y"
+                                  className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-amber-500 resize-none overflow-hidden"
+                                  style={{ minHeight: '200px', height: 'auto' }}
+                                  onInput={(e) => {
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
+                                  }}
+                                  ref={(el) => {
+                                    if (el) {
+                                      el.style.height = 'auto';
+                                      el.style.height = Math.max(200, el.scrollHeight) + 'px';
+                                    }
+                                  }}
                                 />
                                 {(section.content?.blocks?.length > 1 || blockIndex > 0) && (
                                   <button
@@ -8429,20 +8440,70 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
 
           {investmentsSubTab === 'notes' && (
             <>
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Investment Notes</h2>
-                  <p className="text-sm text-gray-500">Write down your thoughts, strategies, and reminders</p>
+              {/* Render each note section */}
+              {(Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }]).map((note, noteIndex) => (
+                <div key={note.id} className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-4">
+                  <div className="p-6 border-b flex items-center justify-between">
+                    <div className="flex-1">
+                      <input
+                        value={note.title || ''}
+                        onChange={(e) => {
+                          const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
+                          setInvestmentNotes(notes.map(n => n.id === note.id ? { ...n, title: e.target.value } : n));
+                        }}
+                        placeholder="Note title..."
+                        className="text-xl font-semibold w-full focus:outline-none"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">Write down your thoughts, strategies, and reminders</p>
+                    </div>
+                    {(Array.isArray(investmentNotes) ? investmentNotes : []).length > 1 && (
+                      <button
+                        onClick={() => {
+                          if (confirm('Delete this note section?')) {
+                            setInvestmentNotes(prev => (Array.isArray(prev) ? prev : []).filter(n => n.id !== note.id));
+                          }
+                        }}
+                        className="text-red-400 hover:text-red-600 ml-3 text-sm"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <textarea
+                      value={note.text || ''}
+                      onChange={(e) => {
+                        const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
+                        setInvestmentNotes(notes.map(n => n.id === note.id ? { ...n, text: e.target.value } : n));
+                      }}
+                      placeholder="Write your notes here..."
+                      className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
+                      style={{ minHeight: '300px', height: 'auto' }}
+                      onInput={(e) => {
+                        e.target.style.height = 'auto';
+                        e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
+                      }}
+                      ref={(el) => {
+                        if (el) {
+                          el.style.height = 'auto';
+                          el.style.height = Math.max(300, el.scrollHeight) + 'px';
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="p-6">
-                  <textarea
-                    value={investmentNotes}
-                    onChange={(e) => setInvestmentNotes(e.target.value)}
-                    placeholder="Write your investment notes here..."
-                    className="w-full h-96 px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none"
-                  />
-                </div>
-              </div>
+              ))}
+
+              {/* Add New Note Section Button */}
+              <button
+                onClick={() => {
+                  const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
+                  setInvestmentNotes([...notes, { id: Date.now(), title: '', text: '' }]);
+                }}
+                className="w-full py-4 border-2 border-dashed border-gray-300 rounded-3xl text-gray-400 hover:text-green-600 hover:border-green-400 transition-colors flex items-center justify-center gap-2"
+              >
+                <Plus className="w-5 h-5" /> Add Another Note Section
+              </button>
             </>
           )}
 
