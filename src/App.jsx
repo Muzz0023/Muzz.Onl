@@ -3226,20 +3226,13 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                     const blocks = section.content?.blocks || [{ id: 1, type: 'text', text: '' }];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, text: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
-                                  }}
-                                  placeholder="Write your notes here..."
-                                  className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-amber-500 resize-none overflow-hidden"
-                                  style={{ minHeight: '200px', height: 'auto' }}
-                                  onInput={(e) => {
+                                    // Auto-expand on typing
                                     e.target.style.height = 'auto';
                                     e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
                                   }}
-                                  ref={(el) => {
-                                    if (el) {
-                                      el.style.height = 'auto';
-                                      el.style.height = Math.max(200, el.scrollHeight) + 'px';
-                                    }
-                                  }}
+                                  placeholder="Write your notes here..."
+                                  className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-amber-500 resize-none overflow-hidden"
+                                  style={{ minHeight: '200px' }}
                                 />
                                 {(section.content?.blocks?.length > 1 || blockIndex > 0) && (
                                   <button
@@ -8475,20 +8468,13 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                       onChange={(e) => {
                         const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
                         setInvestmentNotes(notes.map(n => n.id === note.id ? { ...n, text: e.target.value } : n));
-                      }}
-                      placeholder="Write your notes here..."
-                      className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
-                      style={{ minHeight: '300px', height: 'auto' }}
-                      onInput={(e) => {
+                        // Auto-expand on typing
                         e.target.style.height = 'auto';
                         e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
                       }}
-                      ref={(el) => {
-                        if (el) {
-                          el.style.height = 'auto';
-                          el.style.height = Math.max(300, el.scrollHeight) + 'px';
-                        }
-                      }}
+                      placeholder="Write your notes here..."
+                      className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
+                      style={{ minHeight: '300px' }}
                     />
                   </div>
                 </div>
