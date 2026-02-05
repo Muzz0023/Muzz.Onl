@@ -9660,7 +9660,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
           {/* Live Prices Tab */}
           {investmentsSubTab === 'liveprices' && (() => {
             const fetchPrices = async () => {
-              const tickers = trackedStocks.filter(s => s.ticker).map(s => s.ticker.toUpperCase());
+              const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
               if (tickers.length === 0) return;
               setPricesLoading(true);
               try {
@@ -9669,6 +9669,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ tickers })
                 });
+                if (!response.ok) throw new Error('API error');
                 const data = await response.json();
                 if (data.prices) {
                   setLivePrices(data.prices);
@@ -9676,6 +9677,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                 }
               } catch (err) {
                 console.error('Failed to fetch prices:', err);
+                alert('Failed to fetch stock prices. Check your connection or try again.');
               }
               setPricesLoading(false);
             };
@@ -9688,7 +9690,8 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
 
             const totalValue = trackedStocks.reduce((sum, s) => {
               const qty = parseFloat(s.shares) || 0;
-              const price = livePrices[s.ticker?.toUpperCase()]?.c || 0;
+              const ticker = s.ticker?.toUpperCase() || '';
+              const price = (ticker && livePrices[ticker]?.c) || 0;
               return sum + (qty * price);
             }, 0);
 
@@ -9767,8 +9770,8 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                           <div className="col-span-1"></div>
                         </div>
                         {trackedStocks.map((stock) => {
-                          const ticker = stock.ticker?.toUpperCase();
-                          const priceData = livePrices[ticker];
+                          const ticker = stock.ticker?.toUpperCase() || '';
+                          const priceData = ticker ? livePrices[ticker] : null;
                           const currentPrice = priceData?.c || 0;
                           const shares = parseFloat(stock.shares) || 0;
                           const avgCost = parseFloat(stock.avgCost) || 0;
@@ -9776,7 +9779,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                           const marketValue = shares * currentPrice;
                           const pl = marketValue - costBasis;
                           const plPercent = costBasis > 0 ? ((pl / costBasis) * 100) : 0;
-                          const dailyChange = priceData ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
+                          const dailyChange = (priceData && priceData.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
 
                           return (
                             <div key={stock.id} className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50 rounded-xl">
