@@ -1117,7 +1117,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
   const totalMonthly = subscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0) + businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
   const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
   const totalStocks = stocks.reduce((sum, s) => sum + (parseFloat(s.currentValue) || 0), 0);
-  const netWorth = totalAssets + totalStocks;
+  const netWorth = totalAssets;
   const salaryNum = parseFloat(monthlySalary) || 0;
   const savingsRate = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100) : 0;
 
