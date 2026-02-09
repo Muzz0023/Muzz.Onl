@@ -1545,13 +1545,6 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                             placeholder="What needs to be done today?"
                             className={`flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 ${task.completed ? 'line-through text-gray-400' : ''}`}
                           />
-                          <input
-                            type="text"
-                            value={task?.streak || ''}
-                            onChange={(e) => setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, streak: e.target.value } : t))}
-                            placeholder="🔥 streak"
-                            className="w-20 px-2 py-1 border rounded-lg text-xs text-center text-green-500 focus:outline-none focus:border-green-500"
-                          />
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
                             className="text-red-400 hover:text-red-600 text-sm"
@@ -4276,11 +4269,10 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
         
         {/* Stats Grid */}
         <div className="max-w-4xl mx-auto px-6 -mt-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
             <StatCard icon={Wallet} label="Monthly Bills" value={"$" + totalMonthly.toFixed(0)} color="blue" onClick={() => setActiveView("varied")} />
             <StatCard icon={Target} label="Savings Rate" value={savingsRate.toFixed(0) + "%"} color="green" onClick={() => setActiveView("varied")} />
             <StatCard icon={TrendingUp} label="Portfolio" value={"$" + totalStocks.toLocaleString()} color="purple" onClick={() => setActiveView("investments")} />
-            <StatCard icon={Flame} label="Day Streak" value={currentStreak} color="orange" />
           </div>
           
           {/* Achievements & Coming Up */}
@@ -4311,11 +4303,6 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                     { id: "saver_20", icon: "🌿", title: "Growing Saver", current: savingsRate, target: 20, unit: "%", category: "savings" },
                     { id: "super_saver", icon: "💪", title: "Super Saver", current: savingsRate, target: 50, unit: "%", category: "savings" },
                     { id: "mega_saver", icon: "🦸", title: "Mega Saver", current: savingsRate, target: 70, unit: "%", category: "savings" },
-                    
-                    // Streak
-                    { id: "week_streak", icon: "🔥", title: "Week Warrior", current: currentStreak, target: 7, unit: " days", category: "streak" },
-                    { id: "month_streak", icon: "⚡", title: "Month Master", current: currentStreak, target: 30, unit: " days", category: "streak" },
-                    { id: "quarter_streak", icon: "🌟", title: "Quarter Champion", current: currentStreak, target: 90, unit: " days", category: "streak" },
                     
                     // Portfolio
                     { id: "first_stock", icon: "📈", title: "First Investment", current: stocks.length, target: 1, unit: " stocks", category: "investing" },
