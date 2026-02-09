@@ -578,6 +578,7 @@ function MuzzApp() {
   const [billsType, setBillsType] = useState('personal');
   const [muzzPersonality, setMuzzPersonality] = useState(true);
   const [funnyGreetings, setFunnyGreetings] = useState(false);
+  const [dashFunnyGreeting] = useState(() => loginGreetings[Math.floor(Math.random() * loginGreetings.length)]);
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatExpanded, setIsChatExpanded] = useState(true);
 
@@ -4205,7 +4206,6 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
   if (activeView === 'home') {
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "G'morning" : hour < 17 ? "G'day" : "G'evening";
-    const dashFunnyGreeting = funnyGreetings ? loginGreetings[Math.floor(Math.random() * loginGreetings.length)] : null;
     
     return (
       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white pb-24">
@@ -4218,7 +4218,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               <div className="flex-1">
                 <div className="text-white/80 text-sm">{greeting}, {isElite && eliteName ? eliteName : 'mate'}!</div>
                 <div className="flex items-center gap-2">
-                  <div className="text-2xl font-bold text-white">{dashFunnyGreeting || 'Welcome back legend!'}</div>
+                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : 'Welcome back legend!'}</div>
                   {isElite && (
                     <div className="flex items-center gap-1 bg-white/20 backdrop-blur px-2.5 py-1 rounded-full">
                       <svg width="16" height="16" viewBox="0 0 24 32" fill="none">
