@@ -3226,23 +3226,17 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                     const blocks = section.content?.blocks || [{ id: 1, type: 'text', text: '' }];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, text: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
+                                    // Auto-expand while typing
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
                                   }}
-                                  ref={(el) => {
-                                    // Auto-size on load to fit existing content
-                                    if (el) {
-                                      el.style.height = 'auto';
-                                      el.style.height = Math.max(200, el.scrollHeight) + 'px';
+                                  onClick={(e) => {
+                                    // Size correctly when clicked (for existing content)
+                                    if (!e.target.dataset.sized) {
+                                      e.target.style.height = 'auto';
+                                      e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
+                                      e.target.dataset.sized = 'true';
                                     }
-                                  }}
-                                  onFocus={(e) => {
-                                    // Re-calculate on focus in case content changed
-                                    e.target.style.height = 'auto';
-                                    e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
-                                  }}
-                                  onInput={(e) => {
-                                    // Auto-expand as user types
-                                    e.target.style.height = 'auto';
-                                    e.target.style.height = Math.max(200, e.target.scrollHeight) + 'px';
                                   }}
                                   placeholder="Write your notes here..."
                                   className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-amber-500 resize-none overflow-hidden"
@@ -8482,23 +8476,17 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                       onChange={(e) => {
                         const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
                         setInvestmentNotes(notes.map(n => n.id === note.id ? { ...n, text: e.target.value } : n));
+                        // Auto-expand while typing
+                        e.target.style.height = 'auto';
+                        e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
                       }}
-                      ref={(el) => {
-                        // Auto-size on load to fit existing content
-                        if (el) {
-                          el.style.height = 'auto';
-                          el.style.height = Math.max(300, el.scrollHeight) + 'px';
+                      onClick={(e) => {
+                        // Size correctly when clicked (for existing content)
+                        if (!e.target.dataset.sized) {
+                          e.target.style.height = 'auto';
+                          e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
+                          e.target.dataset.sized = 'true';
                         }
-                      }}
-                      onFocus={(e) => {
-                        // Re-calculate on focus in case content changed
-                        e.target.style.height = 'auto';
-                        e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
-                      }}
-                      onInput={(e) => {
-                        // Auto-expand as user types
-                        e.target.style.height = 'auto';
-                        e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
                       }}
                       placeholder="Write your notes here..."
                       className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
