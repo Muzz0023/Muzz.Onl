@@ -1,0 +1,39 @@
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.muzz.app',
+  appName: 'Muzz',
+  webDir: 'dist',
+  server: {
+    androidScheme: 'https',
+  },
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 2000,
+      launchAutoHide: true,
+      backgroundColor: '#F59E0B',
+      showSpinner: false,
+      splashFullScreen: true,
+      splashImmersive: true,
+    },
+    StatusBar: {
+      style: 'LIGHT',
+      backgroundColor: '#F59E0B',
+    },
+    Keyboard: {
+      resize: 'body',
+      style: 'LIGHT',
+    },
+  },
+  ios: {
+    contentInset: 'automatic',
+    preferredContentMode: 'mobile',
+    scheme: 'Muzz',
+  },
+  android: {
+    allowMixedContent: true,
+    backgroundColor: '#F59E0B',
+  },
+};
+
+export default config;
