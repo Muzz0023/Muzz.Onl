@@ -2,6 +2,13 @@ import React, { useState, useEffect, useRef, createContext, useContext } from 'r
 import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle } from 'lucide-react';
 
 // ============================================
+// API HELPER FOR NATIVE APP SUPPORT
+// ============================================
+const isNative = typeof window !== 'undefined' && window.Capacitor?.isNativePlatform();
+const API_BASE = isNative ? 'https://muzz.onl' : '';
+const api = (path) => `${API_BASE}${path}`;
+
+// ============================================
 // SUPABASE & GEMINI CONFIGURATION
 // ============================================
 const SUPABASE_URL = 'https://lheniesboruihwmmkans.supabase.co';
@@ -449,7 +456,7 @@ ${financialContext}
 Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
     
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(api('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -739,7 +746,7 @@ function MuzzApp() {
     if (!userEmail || isVIP) return;
     const checkSub = async () => {
       try {
-        const res = await fetch('/api/check-subscription', {
+        const res = await fetch(api('/api/check-subscription'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userEmail }),
@@ -759,7 +766,7 @@ function MuzzApp() {
   // Handle Stripe checkout
   const handleUpgrade = async () => {
     try {
-      const res = await fetch('/api/create-checkout-session', {
+      const res = await fetch(api('/api/create-checkout-session'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, userEmail }),
@@ -779,7 +786,7 @@ function MuzzApp() {
   const handleCancelSubscription = async () => {
     if (!confirm('Are you sure you want to cancel? You\'ll keep Elite access until the end of your billing period.')) return;
     try {
-      const res = await fetch('/api/manage-subscription', {
+      const res = await fetch(api('/api/manage-subscription'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userEmail, action: 'cancel' }),
@@ -797,7 +804,7 @@ function MuzzApp() {
   // Handle subscription reactivation
   const handleReactivateSubscription = async () => {
     try {
-      const res = await fetch('/api/manage-subscription', {
+      const res = await fetch(api('/api/manage-subscription'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userEmail, action: 'reactivate' }),
@@ -1030,7 +1037,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
       });
       geminiContents.push({ role: 'user', parts: [{ text: msg }] });
       
-      const response = await fetch('/api/chat', {
+      const response = await fetch(api('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -7237,7 +7244,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                         if (tickers.length === 0) return;
                         setPricesLoading(true);
                         try {
-                          const response = await fetch('/api/stocks', {
+                          const response = await fetch(api('/api/stocks'), {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ tickers })
