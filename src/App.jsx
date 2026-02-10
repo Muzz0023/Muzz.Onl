@@ -7138,103 +7138,99 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                   <p className="text-sm text-gray-500">Individual stocks, ETFs, index funds</p>
                 </div>
 
-                {/* Stocks Table */}
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b bg-gray-50">
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 w-8">#</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">STOCK/ETF</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">INDUSTRY</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">INVESTED</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">VALUE</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">GAIN/LOSS</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">HELD</th>
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {stocks.map((stock, index) => {
-                        const gainLoss = (stock?.currentValue || 0) - (stock?.invested || 0);
-                        const gainLossPercent = stock?.invested > 0 ? ((gainLoss / stock.invested) * 100) : 0;
-                        return (
-                          <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                            <td className="py-3 px-4 text-gray-400 text-sm">{index + 1}</td>
-                            <td className="py-2 px-4">
+                {/* Stocks Cards */}
+                <div className="p-4 space-y-3">
+                  {stocks.map((stock, index) => {
+                    const gainLoss = (stock?.currentValue || 0) - (stock?.invested || 0);
+                    const gainLossPercent = stock?.invested > 0 ? ((gainLoss / stock.invested) * 100) : 0;
+                    return (
+                      <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                        {/* Row 1: Name + Delete */}
+                        <div className="flex items-start gap-3 mb-3">
+                          <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                          <input
+                            type="text"
+                            value={stock?.name || ''}
+                            onChange={(e) => updateStock(index, 'name', e.target.value)}
+                            placeholder="Stock/ETF name (e.g. VAS)"
+                            className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-green-500"
+                          />
+                          <button
+                            onClick={() => setStocks(prev => prev.filter((_, i) => i !== index))}
+                            className="text-red-400 hover:text-red-600 text-lg mt-1"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        
+                        {/* Row 2: Industry */}
+                        <div className="mb-3">
+                          <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                          <select
+                            value={stock?.industry || ''}
+                            onChange={(e) => updateStock(index, 'industry', e.target.value)}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          >
+                            {industries.map(ind => (
+                              <option key={ind.id} value={ind.id}>{ind.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        
+                        {/* Row 3: Invested + Current Value */}
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                          <div>
+                            <label className="text-xs text-gray-500 mb-1 block">Invested</label>
+                            <div className="flex items-center">
+                              <span className="text-gray-400 mr-1">$</span>
                               <input
                                 type="text"
-                                value={stock?.name || ''}
-                                onChange={(e) => updateStock(index, 'name', e.target.value)}
-                                placeholder="VAS"
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                inputMode="decimal"
+                                value={stock?.investedStr || ''}
+                                onChange={(e) => updateStock(index, 'invested', e.target.value)}
+                                placeholder="0"
+                                className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
                               />
-                            </td>
-                            <td className="py-2 px-4">
-                              <select
-                                value={stock?.industry || ''}
-                                onChange={(e) => updateStock(index, 'industry', e.target.value)}
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500 appearance-none cursor-pointer"
-                              >
-                                {industries.map(ind => (
-                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
-                                ))}
-                              </select>
-                            </td>
-                            <td className="py-2 px-4">
-                              <div className="flex items-center justify-end">
-                                <span className="text-gray-400 mr-1">$</span>
-                                <input
-                                  type="text"
-                                  inputMode="decimal"
-                                  value={stock?.investedStr || ''}
-                                  onChange={(e) => updateStock(index, 'invested', e.target.value)}
-                                  placeholder="0"
-                                  className="w-20 px-3 py-2 border rounded-lg text-sm text-right focus:outline-none focus:border-green-500"
-                                />
-                              </div>
-                            </td>
-                            <td className="py-2 px-4">
-                              <div className="flex items-center justify-end">
-                                <span className="text-gray-400 mr-1">$</span>
-                                <input
-                                  type="text"
-                                  inputMode="decimal"
-                                  value={stock?.currentValueStr || ''}
-                                  onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
-                                  placeholder="0"
-                                  className="w-20 px-3 py-2 border rounded-lg text-sm text-right focus:outline-none focus:border-green-500"
-                                />
-                              </div>
-                            </td>
-                            <td className="py-3 px-4 text-right">
-                              {stock?.invested > 0 && (
-                                <span className={`text-sm font-medium ${gainLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                  {gainLoss >= 0 ? '+' : ''}{gainLossPercent.toFixed(1)}%
-                                </span>
-                              )}
-                            </td>
-                            <td className="py-2 px-4">
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500 mb-1 block">Current Value</label>
+                            <div className="flex items-center">
+                              <span className="text-gray-400 mr-1">$</span>
                               <input
                                 type="text"
-                                value={stock?.heldFor || ''}
-                                onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
-                                placeholder="e.g. 2y 3m"
-                                className="w-20 px-2 py-2 border rounded-lg text-xs text-center focus:outline-none focus:border-green-500"
+                                inputMode="decimal"
+                                value={stock?.currentValueStr || ''}
+                                onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
+                                placeholder="0"
+                                className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
                               />
-                            </td>
-                            <td className="py-2 px-2">
-                              <button
-                                onClick={() => setStocks(prev => prev.filter((_, i) => i !== index))}
-                                className="text-red-400 hover:text-red-600 text-sm"
-                              >
-                                ✕
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Row 4: Gain/Loss + Held For */}
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs text-gray-500 mb-1 block">Gain/Loss</label>
+                            <div className={`px-3 py-2 rounded-xl text-sm font-medium ${gainLoss >= 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                              {stock?.invested > 0 ? `${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : '—'}
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500 mb-1 block">Held For</label>
+                            <input
+                              type="text"
+                              value={stock?.heldFor || ''}
+                              onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
+                              placeholder="e.g. 2y 3m"
+                              className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="p-4 border-t">
                   <button
@@ -7334,17 +7330,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                         ) : null;
                       })()}
 
-                      {/* Column Headers */}
-                      <div className="grid grid-cols-12 gap-2 px-3 text-[10px] font-semibold text-gray-400 uppercase">
-                        <div className="col-span-2">Ticker</div>
-                        <div className="col-span-2">Shares</div>
-                        <div className="col-span-2">Avg Cost</div>
-                        <div className="col-span-2">Live Price</div>
-                        <div className="col-span-3">Profit/Loss</div>
-                        <div className="col-span-1"></div>
-                      </div>
-
-                      {/* Stock Rows */}
+                      {/* Stock Cards */}
                       {trackedStocks.map((stock) => {
                         const ticker = stock.ticker?.toUpperCase() || '';
                         const priceData = ticker ? livePrices[ticker] : null;
@@ -7358,69 +7344,80 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                         const dailyChange = (priceData && priceData.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
 
                         return (
-                          <div key={stock.id} className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50 rounded-xl">
-                            <div className="col-span-2">
+                          <div key={stock.id} className="border-2 rounded-2xl p-4 bg-white">
+                            {/* Row 1: Ticker + Delete */}
+                            <div className="flex items-start gap-3 mb-3">
                               <input
                                 type="text"
                                 value={stock.ticker}
                                 onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, ticker: e.target.value.toUpperCase() } : s))}
                                 placeholder="AAPL"
-                                className="w-full px-2 py-1.5 border rounded-lg text-sm font-bold uppercase focus:outline-none focus:border-green-500"
+                                className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold uppercase focus:outline-none focus:border-green-500"
                               />
-                            </div>
-                            <div className="col-span-2">
-                              <input
-                                type="text"
-                                inputMode="decimal"
-                                value={stock.shares}
-                                onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
-                                placeholder="Qty"
-                                className="w-full px-2 py-1.5 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                              />
-                            </div>
-                            <div className="col-span-2">
-                              <input
-                                type="text"
-                                inputMode="decimal"
-                                value={stock.avgCost}
-                                onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
-                                placeholder="$0.00"
-                                className="w-full px-2 py-1.5 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                              />
-                            </div>
-                            <div className="col-span-2 text-center">
-                              {currentPrice > 0 ? (
-                                <div>
-                                  <div className="text-sm font-bold">${currentPrice.toFixed(2)}</div>
-                                  <div className={`text-[10px] font-medium ${dailyChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                                    {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
-                                  </div>
-                                </div>
-                              ) : (
-                                <span className="text-xs text-gray-400">—</span>
-                              )}
-                            </div>
-                            <div className="col-span-3 text-center">
-                              {currentPrice > 0 && costBasis > 0 ? (
-                                <div>
-                                  <div className={`text-sm font-bold ${pl >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                                    {pl >= 0 ? '+' : ''}${pl.toFixed(2)}
-                                  </div>
-                                  <div className={`text-[10px] font-medium ${pl >= 0 ? 'text-green-500' : 'text-red-400'}`}>
-                                    {plPercent >= 0 ? '+' : ''}{plPercent.toFixed(2)}%
-                                  </div>
-                                </div>
-                              ) : (
-                                <span className="text-xs text-gray-400">—</span>
-                              )}
-                            </div>
-                            <div className="col-span-1 text-right">
                               <button
                                 onClick={() => setTrackedStocks(prev => prev.filter(s => s.id !== stock.id))}
-                                className="text-red-400 hover:text-red-600 text-sm"
+                                className="text-red-400 hover:text-red-600 text-lg mt-1"
                               >
                                 ✕
                               </button>
+                            </div>
+                            
+                            {/* Row 2: Shares + Avg Cost */}
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                              <div>
+                                <label className="text-xs text-gray-500 mb-1 block">Shares</label>
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={stock.shares}
+                                  onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
+                                  placeholder="0"
+                                  className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-500 mb-1 block">Avg Cost</label>
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={stock.avgCost}
+                                  onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
+                                  placeholder="$0.00"
+                                  className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                />
+                              </div>
+                            </div>
+                            
+                            {/* Row 3: Live Price + Profit/Loss */}
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="text-xs text-gray-500 mb-1 block">Live Price</label>
+                                {currentPrice > 0 ? (
+                                  <div className="px-3 py-2 rounded-xl bg-gray-50">
+                                    <div className="text-sm font-bold">${currentPrice.toFixed(2)}</div>
+                                    <div className={`text-xs font-medium ${dailyChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                      {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="px-3 py-2 rounded-xl bg-gray-50 text-gray-400 text-sm">—</div>
+                                )}
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-500 mb-1 block">Profit/Loss</label>
+                                {currentPrice > 0 && costBasis > 0 ? (
+                                  <div className={`px-3 py-2 rounded-xl ${pl >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
+                                    <div className={`text-sm font-bold ${pl >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                      {pl >= 0 ? '+' : ''}${pl.toFixed(2)}
+                                    </div>
+                                    <div className={`text-xs font-medium ${pl >= 0 ? 'text-green-500' : 'text-red-400'}`}>
+                                      {plPercent >= 0 ? '+' : ''}{plPercent.toFixed(2)}%
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="px-3 py-2 rounded-xl bg-gray-50 text-gray-400 text-sm">—</div>
+                                )}
+                              </div>
                             </div>
                           </div>
                         );
@@ -7775,174 +7772,166 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b bg-gray-50">
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 w-8">#</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TICKER</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TOLL BOOTH ECONOMICS?</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">CAPITAL INTENSITY</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">GROWTH PROSPECTS</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">INDUSTRY</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">HOLDING STATUS</th>
-                        {researchColumns.map(col => (
-                          <th key={col.id} className="text-left py-3 px-4 text-xs font-semibold text-gray-500">
-                            <div className="flex items-center gap-2">
-                              {col.name}
-                              <button
-                                onClick={() => setResearchColumns(prev => prev.filter(c => c.id !== col.id))}
-                                className="text-red-400 hover:text-red-600"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          </th>
-                        ))}
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {holdingsResearch.map((holding, index) => (
-                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-3 px-4 text-gray-400 text-sm">{index + 1}</td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={holding?.ticker || ''}
-                              onChange={(e) => {
-                                setHoldingsResearch(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], ticker: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="BRK"
-                              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                            </td>
-                            <td className="py-2 px-4">
+                <div className="p-4 space-y-3">
+                  {holdingsResearch.map((holding, index) => (
+                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                      {/* Row 1: Ticker + Delete */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                        <input
+                          type="text"
+                          value={holding?.ticker || ''}
+                          onChange={(e) => {
+                            setHoldingsResearch(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], ticker: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Ticker (e.g. BRK)"
+                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
+                        />
+                        <button
+                          onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
+                          className="text-red-400 hover:text-red-600 text-lg mt-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      
+                      {/* Row 2: Toll Booth */}
+                      <div className="mb-3">
+                        <label className="text-xs text-gray-500 mb-1 block">Toll Booth Economics?</label>
+                        <input
+                          type="text"
+                          value={holding?.tollBooth || ''}
+                          onChange={(e) => {
+                            setHoldingsResearch(prev => {
+                              const updated = [...prev];
+                              if (!updated[index]) updated[index] = {};
+                              updated[index] = { ...updated[index], tollBooth: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Y/N"
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                        />
+                      </div>
+                      
+                      {/* Row 3: Capital + Growth */}
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Capital Intensity</label>
+                          <select
+                            value={holding?.capitalIntensity || ''}
+                            onChange={(e) => {
+                              setHoldingsResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], capitalIntensity: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          >
+                            <option value="">Select</option>
+                            <option value="Toll-Like Capital Intensity">Toll-Like</option>
+                            <option value="Lean Capital Intensity">Lean</option>
+                            <option value="Heavy Capital Intensity">Heavy</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Growth Prospects</label>
+                          <select
+                            value={holding?.growthProspects || ''}
+                            onChange={(e) => {
+                              setHoldingsResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], growthProspects: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          >
+                            <option value="">Select</option>
+                            <option value="Very Low Growth">Very Low</option>
+                            <option value="Low Growth">Low</option>
+                            <option value="Medium Growth">Medium</option>
+                            <option value="High Growth">High</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {/* Row 4: Industry + Status */}
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                          <select
+                            value={holding?.industry || ''}
+                            onChange={(e) => {
+                              setHoldingsResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], industry: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          >
+                            {industries.map(ind => (
+                              <option key={ind.id} value={ind.id}>{ind.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Holding Status</label>
+                          <select
+                            value={holding?.status || ''}
+                            onChange={(e) => {
+                              setHoldingsResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], status: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          >
+                            <option value="">Select</option>
+                            <option value="New">New</option>
+                            <option value="Old">Old</option>
+                            <option value="Reserve">Reserve</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {/* Custom Columns */}
+                      {researchColumns.length > 0 && (
+                        <div className="space-y-3 pt-3 border-t">
+                          {researchColumns.map(col => (
+                            <div key={col.id}>
+                              <label className="text-xs text-gray-500 mb-1 block">{col.name}</label>
                               <input
                                 type="text"
-                                value={holding?.tollBooth || ''}
+                                value={holding?.[col.id] || ''}
                                 onChange={(e) => {
                                   setHoldingsResearch(prev => {
                                     const updated = [...prev];
                                     if (!updated[index]) updated[index] = {};
-                                    updated[index] = { ...updated[index], tollBooth: e.target.value };
+                                    updated[index] = { ...updated[index], [col.id]: e.target.value };
                                     return updated;
                                   });
                                 }}
-                                placeholder="Y/N"
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                          />
-                            </td>
-                            <td className="py-2 px-4">
-                              <select
-                                value={holding?.capitalIntensity || ''}
-                                onChange={(e) => {
-                                  setHoldingsResearch(prev => {
-                                    const updated = [...prev];
-                                    if (!updated[index]) updated[index] = {};
-                                    updated[index] = { ...updated[index], capitalIntensity: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500 appearance-none cursor-pointer"
-                              >
-                                <option value="">Select</option>
-                                <option value="Toll-Like Capital Intensity">Toll-Like</option>
-                                <option value="Lean Capital Intensity">Lean</option>
-                                <option value="Heavy Capital Intensity">Heavy</option>
-                              </select>
-                            </td>
-                            <td className="py-2 px-4">
-                              <select
-                                value={holding?.growthProspects || ''}
-                                onChange={(e) => {
-                                  setHoldingsResearch(prev => {
-                                    const updated = [...prev];
-                                    if (!updated[index]) updated[index] = {};
-                                    updated[index] = { ...updated[index], growthProspects: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500 appearance-none cursor-pointer"
-                              >
-                                <option value="">Select</option>
-                                <option value="Very Low Growth">Very Low Growth</option>
-                                <option value="Low Growth">Low Growth</option>
-                                <option value="Medium Growth">Medium Growth</option>
-                                <option value="High Growth">High Growth</option>
-                              </select>
-                            </td>
-                            <td className="py-2 px-4">
-                              <select
-                                value={holding?.industry || ''}
-                                onChange={(e) => {
-                                  setHoldingsResearch(prev => {
-                                    const updated = [...prev];
-                                    if (!updated[index]) updated[index] = {};
-                                    updated[index] = { ...updated[index], industry: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500 appearance-none cursor-pointer"
-                              >
-                                {industries.map(ind => (
-                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
-                                ))}
-                              </select>
-                            </td>
-                            <td className="py-2 px-4">
-                              <select
-                                value={holding?.status || ''}
-                                onChange={(e) => {
-                                  setHoldingsResearch(prev => {
-                                    const updated = [...prev];
-                                    if (!updated[index]) updated[index] = {};
-                                    updated[index] = { ...updated[index], status: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500 appearance-none cursor-pointer"
-                              >
-                                <option value="">Select</option>
-                                <option value="New">New</option>
-                                <option value="Old">Old</option>
-                                <option value="Reserve">Reserve</option>
-                              </select>
-                            </td>
-                            {researchColumns.map(col => (
-                              <td key={col.id} className="py-2 px-4">
-                                <input
-                                  type="text"
-                                  value={holding?.[col.id] || ''}
-                                  onChange={(e) => {
-                                    setHoldingsResearch(prev => {
-                                      const updated = [...prev];
-                                      if (!updated[index]) updated[index] = {};
-                                      updated[index] = { ...updated[index], [col.id]: e.target.value };
-                                      return updated;
-                                    });
-                                  }}
-                                  placeholder="-"
-                                  className="w-full min-w-[120px] px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                                />
-                              </td>
-                            ))}
-                            <td className="py-2 px-2">
-                              <button
-                                onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
-                                className="text-red-400 hover:text-red-600 text-sm"
-                              >
-                                ✕
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                                placeholder="-"
+                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
                 <div className="p-4 border-t">
                   <button
@@ -8005,65 +7994,59 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                     )}
                   </div>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b bg-gray-50">
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 w-8">#</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TICKER</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">FUTURE PREDICTABILITY</th>
-                        {economicsColumns.map(col => (
-                          <th key={col.id} className="text-left py-3 px-4 text-xs font-semibold text-gray-500">
-                            <div className="flex items-center gap-2">
-                              {col.name}
-                              <button
-                                onClick={() => setEconomicsColumns(prev => prev.filter(c => c.id !== col.id))}
-                                className="text-red-400 hover:text-red-600"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          </th>
-                        ))}
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {companyEconomics.map((company, index) => (
-                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-3 px-4 text-gray-400 text-sm">{index + 1}</td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={company?.ticker || ''}
-                              onChange={(e) => {
-                                setCompanyEconomics(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], ticker: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="AAPL"
-                              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={company?.economics || ''}
-                              onChange={(e) => {
-                                setCompanyEconomics(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], economics: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="-"
-                              className="w-full min-w-[200px] px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
+                <div className="p-4 space-y-3">
+                  {companyEconomics.map((company, index) => (
+                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                      {/* Row 1: Ticker + Delete */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                        <input
+                          type="text"
+                          value={company?.ticker || ''}
+                          onChange={(e) => {
+                            setCompanyEconomics(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], ticker: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Ticker (e.g. AAPL)"
+                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
+                        />
+                        <button
+                          onClick={() => setCompanyEconomics(prev => prev.filter((_, i) => i !== index))}
+                          className="text-red-400 hover:text-red-600 text-lg mt-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      
+                      {/* Row 2: Future Predictability */}
+                      <div className="mb-3">
+                        <label className="text-xs text-gray-500 mb-1 block">Future Predictability</label>
+                        <textarea
+                          value={company?.economics || ''}
+                          onChange={(e) => {
+                            setCompanyEconomics(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], economics: e.target.value };
+                              return updated;
+                            });
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          placeholder="Notes on future predictability..."
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
+                          rows={2}
+                        />
+                      </div>
+                      
+                      {/* Custom Columns */}
+                      {economicsColumns.length > 0 && (
+                        <div className="space-y-3 pt-3 border-t">
                           {economicsColumns.map(col => (
-                            <td key={col.id} className="py-2 px-4">
+                            <div key={col.id}>
+                              <label className="text-xs text-gray-500 mb-1 block">{col.name}</label>
                               <input
                                 type="text"
                                 value={company?.[col.id] || ''}
@@ -8075,22 +8058,14 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                   });
                                 }}
                                 placeholder="-"
-                                className="w-full min-w-[120px] px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
                               />
-                            </td>
+                            </div>
                           ))}
-                          <td className="py-2 px-2">
-                            <button
-                              onClick={() => setCompanyEconomics(prev => prev.filter((_, i) => i !== index))}
-                              className="text-red-400 hover:text-red-600 text-sm"
-                            >
-                              ✕
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
                 <div className="p-4 border-t">
                   <button
@@ -8153,65 +8128,59 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                     )}
                   </div>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b bg-gray-50">
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 w-8">#</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TICKER</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">BIGGEST RISK</th>
-                        {risksColumns.map(col => (
-                          <th key={col.id} className="text-left py-3 px-4 text-xs font-semibold text-gray-500">
-                            <div className="flex items-center gap-2">
-                              {col.name}
-                              <button
-                                onClick={() => setRisksColumns(prev => prev.filter(c => c.id !== col.id))}
-                                className="text-red-400 hover:text-red-600"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          </th>
-                        ))}
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {biggestRisks.map((risk, index) => (
-                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-3 px-4 text-gray-400 text-sm">{index + 1}</td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={risk?.ticker || ''}
-                              onChange={(e) => {
-                                setBiggestRisks(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], ticker: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="AAPL"
-                              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={risk?.biggestRisk || ''}
-                              onChange={(e) => {
-                                setBiggestRisks(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], biggestRisk: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="-"
-                              className="w-full min-w-[200px] px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
+                <div className="p-4 space-y-3">
+                  {biggestRisks.map((risk, index) => (
+                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                      {/* Row 1: Ticker + Delete */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                        <input
+                          type="text"
+                          value={risk?.ticker || ''}
+                          onChange={(e) => {
+                            setBiggestRisks(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], ticker: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Ticker (e.g. AAPL)"
+                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
+                        />
+                        <button
+                          onClick={() => setBiggestRisks(prev => prev.filter((_, i) => i !== index))}
+                          className="text-red-400 hover:text-red-600 text-lg mt-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      
+                      {/* Row 2: Biggest Risk */}
+                      <div className="mb-3">
+                        <label className="text-xs text-gray-500 mb-1 block">Biggest Risk</label>
+                        <textarea
+                          value={risk?.biggestRisk || ''}
+                          onChange={(e) => {
+                            setBiggestRisks(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], biggestRisk: e.target.value };
+                              return updated;
+                            });
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          placeholder="What's the biggest risk for this company?"
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
+                          rows={2}
+                        />
+                      </div>
+                      
+                      {/* Custom Columns */}
+                      {risksColumns.length > 0 && (
+                        <div className="space-y-3 pt-3 border-t">
                           {risksColumns.map(col => (
-                            <td key={col.id} className="py-2 px-4">
+                            <div key={col.id}>
+                              <label className="text-xs text-gray-500 mb-1 block">{col.name}</label>
                               <input
                                 type="text"
                                 value={risk?.[col.id] || ''}
@@ -8223,22 +8192,14 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                   });
                                 }}
                                 placeholder="-"
-                                className="w-full min-w-[120px] px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
                               />
-                            </td>
+                            </div>
                           ))}
-                          <td className="py-2 px-2">
-                            <button
-                              onClick={() => setBiggestRisks(prev => prev.filter((_, i) => i !== index))}
-                              className="text-red-400 hover:text-red-600 text-sm"
-                            >
-                              ✕
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
                 <div className="p-4 border-t">
                   <button
@@ -8538,82 +8499,76 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                   <p className="text-sm text-gray-500">Track companies you've passed on and why</p>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b bg-gray-50">
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 w-8">#</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TICKER</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">INDUSTRY</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">REASON FOR DECLINE</th>
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {declinedCompanies.map((company, index) => (
-                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-3 px-4 text-gray-400 text-sm">{index + 1}</td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={company?.ticker || ''}
-                              onChange={(e) => {
-                                setDeclinedCompanies(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], ticker: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="TSLA"
-                              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="py-2 px-4">
-                            <select
-                              value={company?.industry || ''}
-                              onChange={(e) => {
-                                setDeclinedCompanies(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], industry: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500 appearance-none cursor-pointer"
-                            >
-                              {industries.map(ind => (
-                                <option key={ind.id} value={ind.id}>{ind.name}</option>
-                              ))}
-                            </select>
-                          </td>
-                          <td className="py-2 px-4">
-                            <input
-                              type="text"
-                              value={company?.reason || ''}
-                              onChange={(e) => {
-                                setDeclinedCompanies(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], reason: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="-"
-                              className="w-full min-w-[200px] px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="py-2 px-2">
-                            <button
-                              onClick={() => {
-                                setDeclinedCompanies(prev => prev.filter((_, i) => i !== index));
-                              }}
-                              className="text-red-400 hover:text-red-600 text-sm"
-                            >
-                              ✕
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="p-4 space-y-3">
+                  {declinedCompanies.map((company, index) => (
+                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                      {/* Row 1: Ticker + Delete */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                        <input
+                          type="text"
+                          value={company?.ticker || ''}
+                          onChange={(e) => {
+                            setDeclinedCompanies(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], ticker: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Ticker (e.g. TSLA)"
+                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
+                        />
+                        <button
+                          onClick={() => {
+                            setDeclinedCompanies(prev => prev.filter((_, i) => i !== index));
+                          }}
+                          className="text-red-400 hover:text-red-600 text-lg mt-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      
+                      {/* Row 2: Industry */}
+                      <div className="mb-3">
+                        <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                        <select
+                          value={company?.industry || ''}
+                          onChange={(e) => {
+                            setDeclinedCompanies(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], industry: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                        >
+                          {industries.map(ind => (
+                            <option key={ind.id} value={ind.id}>{ind.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      {/* Row 3: Reason */}
+                      <div>
+                        <label className="text-xs text-gray-500 mb-1 block">Reason for Decline</label>
+                        <textarea
+                          value={company?.reason || ''}
+                          onChange={(e) => {
+                            setDeclinedCompanies(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], reason: e.target.value };
+                              return updated;
+                            });
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          placeholder="Why did you pass on this company?"
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <div className="p-4 border-t">
                   <button
