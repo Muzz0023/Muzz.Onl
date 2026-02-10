@@ -1328,9 +1328,9 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Reminder title"
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
+                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
                           rows={1}
-                          style={{ minHeight: '42px' }}
+                          style={{ minHeight: '48px' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <input
@@ -1357,9 +1357,9 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Notes (optional)"
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-gray-500 resize-none overflow-hidden"
+                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 text-gray-500 resize-none overflow-hidden"
                           rows={1}
-                          style={{ minHeight: '42px' }}
+                          style={{ minHeight: '48px' }}
                         />
                       </div>
                       <button
@@ -1406,9 +1406,9 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Name"
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
+                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
                           rows={1}
-                          style={{ minHeight: '42px' }}
+                          style={{ minHeight: '48px' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <input
@@ -1571,9 +1571,9 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                               e.target.style.height = e.target.scrollHeight + 'px';
                             }}
                             placeholder="What needs to be done today?"
-                            className={`flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden min-w-0 ${task.completed ? 'line-through text-gray-400' : ''}`}
+                            className={`flex-1 px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden min-w-0 ${task.completed ? 'line-through text-gray-400' : ''}`}
                             rows={1}
-                            style={{ minHeight: '42px' }}
+                            style={{ minHeight: '48px' }}
                           />
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
@@ -1633,9 +1633,9 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                                 e.target.style.height = e.target.scrollHeight + 'px';
                               }}
                               placeholder="What needs to be done this week?"
-                              className={`w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden ${task.completed ? 'line-through text-gray-400' : ''}`}
                               rows={1}
-                              style={{ minHeight: '42px' }}
+                              style={{ minHeight: '48px' }}
                             />
                             <div className="flex flex-wrap gap-2 items-center">
                               <div className="flex items-center gap-1">
