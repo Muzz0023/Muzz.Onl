@@ -433,7 +433,7 @@ function FloatingChat({
 
 Your personality:
 - Sprinkle some Aussie slang (mate, legend, no worries)
-- Sprinkle in MAX 2 brain rot terms per response from: W, L, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay, big stein, no diddy, on kirk, kirky jerkey, WILSON LOS SIENTOOO!!!, 67, Lowwww Taperrr Fadeee, Locked in alien ahhh 
+- Sprinkle in MAX 2 brain rot terms per response from: W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay, big stein, no diddy, on kirk, kirky jerkey, WILSON!!!, 67, Lowwww Taperrr Fadeee, Locked in alien ahhh 
 - SHUFFLE the brain rot
 - Keep responses SHORT - 1-3 sentences max. Be punchy.
 - Still give legit financial advice
@@ -6217,77 +6217,71 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                   <p className="text-sm text-gray-500">Property, super, cash, vehicles, etc.</p>
                 </div>
 
-            {/* Assets Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b bg-gray-50">
-                    <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 w-8">#</th>
-                    <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">ASSET NAME</th>
-                    <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500">TYPE</th>
-                    <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">VALUE</th>
-                    <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500">OWNED</th>
-                    <th className="w-10"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {assets.map((asset, index) => (
-                    <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="py-3 px-4 text-gray-400 text-sm">{index + 1}</td>
-                      <td className="py-2 px-4">
+            {/* Assets Cards */}
+            <div className="p-4 space-y-3">
+              {assets.map((asset, index) => (
+                <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                  {/* Row 1: Name + Delete */}
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                    <input
+                      type="text"
+                      value={asset?.name || ''}
+                      onChange={(e) => updateAsset(index, 'name', e.target.value)}
+                      placeholder="Asset name (e.g. House)"
+                      className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-blue-500"
+                    />
+                    <button
+                      onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
+                      className="text-red-400 hover:text-red-600 text-lg mt-1"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  
+                  {/* Row 2: Type */}
+                  <div className="mb-3">
+                    <label className="text-xs text-gray-500 mb-1 block">Type</label>
+                    <select
+                      value={asset?.category || ''}
+                      onChange={(e) => updateAsset(index, 'category', e.target.value)}
+                      className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                    >
+                      {assetCategories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  {/* Row 3: Value + Owned For */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Value</label>
+                      <div className="flex items-center">
+                        <span className="text-gray-400 mr-1">$</span>
                         <input
                           type="text"
-                          value={asset?.name || ''}
-                          onChange={(e) => updateAsset(index, 'name', e.target.value)}
-                          placeholder="House"
-                          className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-500"
+                          inputMode="decimal"
+                          value={asset?.valueStr || ''}
+                          onChange={(e) => updateAsset(index, 'value', e.target.value)}
+                          placeholder="0"
+                          className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
                         />
-                      </td>
-                      <td className="py-2 px-4">
-                        <select
-                          value={asset?.category || ''}
-                          onChange={(e) => updateAsset(index, 'category', e.target.value)}
-                          className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-500 appearance-none cursor-pointer"
-                        >
-                          {assetCategories.map(cat => (
-                            <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="py-2 px-4">
-                        <div className="flex items-center justify-end">
-                          <span className="text-gray-400 mr-1">$</span>
-                          <input
-                            type="text"
-                            inputMode="decimal"
-                            value={asset?.valueStr || ''}
-                            onChange={(e) => updateAsset(index, 'value', e.target.value)}
-                            placeholder="0"
-                            className="w-24 px-3 py-2 border rounded-lg text-sm text-right focus:outline-none focus:border-blue-500"
-                          />
-                        </div>
-                      </td>
-                      <td className="py-2 px-4">
-                        <input
-                          type="text"
-                          value={asset?.ownedFor || ''}
-                          onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
-                          placeholder="e.g. 1y 5m"
-                          className="w-20 px-2 py-2 border rounded-lg text-xs text-center focus:outline-none focus:border-blue-500"
-                        />
-                      </td>
-                      <td className="py-2 px-2">
-                        <button
-                          onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
-                          className="text-red-400 hover:text-red-600 text-sm"
-                        >
-                          ✕
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">Owned For</label>
+                      <input
+                        type="text"
+                        value={asset?.ownedFor || ''}
+                        onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
+                        placeholder="e.g. 1y 5m"
+                        className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
             <div className="p-4 border-t">
               <button
