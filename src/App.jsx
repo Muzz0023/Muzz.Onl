@@ -1319,15 +1319,20 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                 sortedReminders.map(reminder => (
                   <div key={reminder.id} className="p-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-start gap-3">
-                      <div className="flex-1 space-y-2">
+                      <div className="flex-1 space-y-2 min-w-0">
+                        <textarea
+                          value={reminder.title}
+                          onChange={(e) => {
+                            setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r));
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          placeholder="Reminder title"
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
+                          rows={1}
+                          style={{ minHeight: '42px' }}
+                        />
                         <div className="flex flex-wrap gap-3 items-center">
-                          <input
-                            type="text"
-                            value={reminder.title}
-                            onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r))}
-                            placeholder="Reminder title"
-                            className="flex-1 min-w-[200px] px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          />
                           <input
                             type="date"
                             value={reminder.date}
@@ -1344,12 +1349,17 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                             </span>
                           )}
                         </div>
-                        <input
-                          type="text"
+                        <textarea
                           value={reminder.notes}
-                          onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, notes: e.target.value } : r))}
+                          onChange={(e) => {
+                            setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, notes: e.target.value } : r));
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
                           placeholder="Notes (optional)"
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-gray-500"
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-gray-500 resize-none overflow-hidden"
+                          rows={1}
+                          style={{ minHeight: '42px' }}
                         />
                       </div>
                       <button
@@ -1386,37 +1396,44 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               ) : (
                 sortedBirthdays.map(bday => (
                   <div key={bday.id} className="p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 flex flex-wrap gap-3 items-center">
-                        <input
-                          type="text"
+                    <div className="flex items-start gap-3">
+                      <div className="flex-1 space-y-2 min-w-0">
+                        <textarea
                           value={bday.name}
-                          onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, name: e.target.value } : b))}
+                          onChange={(e) => {
+                            setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, name: e.target.value } : b));
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
                           placeholder="Name"
-                          className="flex-1 min-w-[150px] px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
+                          rows={1}
+                          style={{ minHeight: '42px' }}
                         />
-                        <input
-                          type="date"
-                          value={bday.date}
-                          onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: e.target.value } : b))}
-                          className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                        />
-                        <select
-                          value={bday.category}
-                          onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, category: e.target.value } : b))}
-                          className={`px-3 py-2 rounded-xl text-sm font-medium border-2 ${
-                            bday.category === 'family' ? 'bg-purple-100 text-purple-700 border-purple-200' :
-                            'bg-blue-100 text-blue-700 border-blue-200'
-                          }`}
-                        >
-                          <option value="friend">Friend</option>
-                          <option value="family">Family</option>
-                        </select>
-                        {getUpcomingText(bday.date) && (
-                          <span className={`text-sm font-medium ${getUpcomingText(bday.date).includes('Today') || getUpcomingText(bday.date).includes('Tomorrow') ? 'text-green-600' : 'text-orange-500'}`}>
-                            {getUpcomingText(bday.date)}
-                          </span>
-                        )}
+                        <div className="flex flex-wrap gap-3 items-center">
+                          <input
+                            type="date"
+                            value={bday.date}
+                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: e.target.value } : b))}
+                            className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <select
+                            value={bday.category}
+                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, category: e.target.value } : b))}
+                            className={`px-3 py-2 rounded-xl text-sm font-medium border-2 ${
+                              bday.category === 'family' ? 'bg-purple-100 text-purple-700 border-purple-200' :
+                              'bg-blue-100 text-blue-700 border-blue-200'
+                            }`}
+                          >
+                            <option value="friend">Friend</option>
+                            <option value="family">Family</option>
+                          </select>
+                          {getUpcomingText(bday.date) && (
+                            <span className={`text-sm font-medium ${getUpcomingText(bday.date).includes('Today') || getUpcomingText(bday.date).includes('Tomorrow') ? 'text-green-600' : 'text-orange-500'}`}>
+                              {getUpcomingText(bday.date)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <button
                         onClick={() => setBirthdays(prev => prev.filter(b => b.id !== bday.id))}
@@ -1546,12 +1563,17 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                           >
                             {task.completed && <span className="text-white text-xs">✓</span>}
                           </button>
-                          <input
-                            type="text"
+                          <textarea
                             value={task.text}
-                            onChange={(e) => setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t))}
+                            onChange={(e) => {
+                              setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
+                              e.target.style.height = 'auto';
+                              e.target.style.height = e.target.scrollHeight + 'px';
+                            }}
                             placeholder="What needs to be done today?"
-                            className={`flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 ${task.completed ? 'line-through text-gray-400' : ''}`}
+                            className={`flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden min-w-0 ${task.completed ? 'line-through text-gray-400' : ''}`}
+                            rows={1}
+                            style={{ minHeight: '42px' }}
                           />
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
@@ -1602,13 +1624,18 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                           >
                             {task.completed && <span className="text-white text-xs">✓</span>}
                           </button>
-                          <div className="flex-1 space-y-2">
-                            <input
-                              type="text"
+                          <div className="flex-1 space-y-2 min-w-0">
+                            <textarea
                               value={task.text}
-                              onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t))}
+                              onChange={(e) => {
+                                setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
+                                e.target.style.height = 'auto';
+                                e.target.style.height = e.target.scrollHeight + 'px';
+                              }}
                               placeholder="What needs to be done this week?"
-                              className={`w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              className={`w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none overflow-hidden ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              rows={1}
+                              style={{ minHeight: '42px' }}
                             />
                             <div className="flex flex-wrap gap-2 items-center">
                               <div className="flex items-center gap-1">
