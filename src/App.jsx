@@ -1878,119 +1878,111 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                 <h2 className="text-xl font-semibold">🛒 Groceries</h2>
                 <p className="text-sm text-gray-500">Track your groceries and nutrition info</p>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-8"></th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600">Item Name</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-20">Qty</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-20">Serves</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-24">Protein/Serve</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-24">Carbs/Serve</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-24">Fat/Serve</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-24">Cal/Serve</th>
-                      <th className="px-3 py-3 text-left font-medium text-gray-600 w-10"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {groceries.length === 0 ? (
-                      <tr>
-                        <td colSpan="9" className="p-8 text-center text-gray-500">
-                          No grocery items. Add one below!
-                        </td>
-                      </tr>
-                    ) : (
-                      groceries.map(item => (
-                        <tr key={item.id} className={`hover:bg-gray-50 ${item.checked ? 'opacity-60' : ''}`}>
-                          <td className="px-3 py-2">
-                            <button
-                              onClick={() => updateGrocery(item.id, 'checked', !item.checked)}
-                              className={`w-5 h-5 rounded flex-shrink-0 flex items-center justify-center ${
-                                item.checked 
-                                  ? 'bg-green-500' 
-                                  : 'border-2 border-gray-300 hover:border-green-500'
-                              }`}
-                            >
-                              {item.checked && <span className="text-white text-xs">✓</span>}
-                            </button>
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.item}
-                              onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
-                              placeholder="Item name"
-                              className={`w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500 ${item.checked ? 'line-through text-gray-400' : ''}`}
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.quantity}
-                              onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
-                              placeholder="0"
-                              className="w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.serves}
-                              onChange={(e) => updateGrocery(item.id, 'serves', e.target.value)}
-                              placeholder="0"
-                              className="w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.proteinPerServe}
-                              onChange={(e) => updateGrocery(item.id, 'proteinPerServe', e.target.value)}
-                              placeholder="0g"
-                              className="w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.carbsPerServe}
-                              onChange={(e) => updateGrocery(item.id, 'carbsPerServe', e.target.value)}
-                              placeholder="0g"
-                              className="w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.fatPerServe}
-                              onChange={(e) => updateGrocery(item.id, 'fatPerServe', e.target.value)}
-                              placeholder="0g"
-                              className="w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <input
-                              type="text"
-                              value={item.caloriesPerServe}
-                              onChange={(e) => updateGrocery(item.id, 'caloriesPerServe', e.target.value)}
-                              placeholder="0"
-                              className="w-full px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-green-500"
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <button
-                              onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))}
-                              className="text-red-400 hover:text-red-600 text-sm"
-                            >
-                              ✕
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+              <div className="p-4 space-y-3">
+                {groceries.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500">
+                    No grocery items. Add one below!
+                  </div>
+                ) : (
+                  groceries.map(item => (
+                    <div key={item.id} className={`border-2 rounded-2xl p-4 ${item.checked ? 'opacity-60 bg-gray-50' : 'bg-white'}`}>
+                      {/* Row 1: Checkbox + Name + Delete */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <button
+                          onClick={() => updateGrocery(item.id, 'checked', !item.checked)}
+                          className={`w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center mt-1 ${
+                            item.checked 
+                              ? 'bg-green-500' 
+                              : 'border-2 border-gray-300 hover:border-green-500'
+                          }`}
+                        >
+                          {item.checked && <span className="text-white text-sm">✓</span>}
+                        </button>
+                        <input
+                          type="text"
+                          value={item.item}
+                          onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
+                          placeholder="Item name"
+                          className={`flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-green-500 ${item.checked ? 'line-through text-gray-400' : ''}`}
+                        />
+                        <button
+                          onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))}
+                          className="text-red-400 hover:text-red-600 text-lg mt-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      
+                      {/* Row 2: Quantity + Serves */}
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Quantity</label>
+                          <input
+                            type="text"
+                            value={item.quantity}
+                            onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
+                            placeholder="0"
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Serves</label>
+                          <input
+                            type="text"
+                            value={item.serves}
+                            onChange={(e) => updateGrocery(item.id, 'serves', e.target.value)}
+                            placeholder="0"
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Row 3: Nutrition - 4 columns */}
+                      <div className="grid grid-cols-4 gap-2">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Protein</label>
+                          <input
+                            type="text"
+                            value={item.proteinPerServe}
+                            onChange={(e) => updateGrocery(item.id, 'proteinPerServe', e.target.value)}
+                            placeholder="0g"
+                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Carbs</label>
+                          <input
+                            type="text"
+                            value={item.carbsPerServe}
+                            onChange={(e) => updateGrocery(item.id, 'carbsPerServe', e.target.value)}
+                            placeholder="0g"
+                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Fat</label>
+                          <input
+                            type="text"
+                            value={item.fatPerServe}
+                            onChange={(e) => updateGrocery(item.id, 'fatPerServe', e.target.value)}
+                            placeholder="0g"
+                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Cals</label>
+                          <input
+                            type="text"
+                            value={item.caloriesPerServe}
+                            onChange={(e) => updateGrocery(item.id, 'caloriesPerServe', e.target.value)}
+                            placeholder="0"
+                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
               <div className="p-4 border-t">
                 <button
