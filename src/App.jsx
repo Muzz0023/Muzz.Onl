@@ -2,6 +2,16 @@ import React, { useState, useEffect, useRef, createContext, useContext } from 'r
 import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle } from 'lucide-react';
 
 // ============================================
+// MOBILE KEYBOARD HELPER
+// ============================================
+const scrollInputIntoView = (e) => {
+  // Small delay to let keyboard open first
+  setTimeout(() => {
+    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+};
+
+// ============================================
 // API HELPER FOR NATIVE APP SUPPORT
 // ============================================
 const isNative = typeof window !== 'undefined' && window.Capacitor?.isNativePlatform();
@@ -1783,6 +1793,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </button>
                           <textarea
                             value={task.text}
+                            onFocus={scrollInputIntoView}
                             onChange={(e) => {
                               setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                               e.target.style.height = 'auto';
@@ -1845,6 +1856,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="flex-1 space-y-2 min-w-0">
                             <textarea
                               value={task.text}
+                              onFocus={scrollInputIntoView}
                               onChange={(e) => {
                                 setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                                 e.target.style.height = 'auto';
@@ -1861,6 +1873,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <input
                                   type="date"
                                   value={task.startDate || ''}
+                                  onFocus={scrollInputIntoView}
                                   onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, startDate: e.target.value } : t))}
                                   className="px-3 py-1 rounded-full text-xs border bg-gray-50"
                                 />
@@ -1870,6 +1883,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <input
                                   type="date"
                                   value={task.dueDate || ''}
+                                  onFocus={scrollInputIntoView}
                                   onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, dueDate: e.target.value } : t))}
                                   className="px-3 py-1 rounded-full text-xs border bg-gray-50"
                                 />
@@ -2119,6 +2133,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <input
                           type="text"
                           value={item.item}
+                          onFocus={scrollInputIntoView}
                           onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
                           placeholder="Item name"
                           className={`flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-green-500 ${item.checked ? 'line-through text-gray-400' : ''}`}
@@ -2138,6 +2153,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <input
                             type="text"
                             value={item.quantity}
+                            onFocus={scrollInputIntoView}
                             onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
                             placeholder="0"
                             className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
@@ -2148,6 +2164,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <input
                             type="text"
                             value={item.serves}
+                            onFocus={scrollInputIntoView}
                             onChange={(e) => updateGrocery(item.id, 'serves', e.target.value)}
                             placeholder="0"
                             className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
@@ -2162,6 +2179,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <input
                             type="text"
                             value={item.proteinPerServe}
+                            onFocus={scrollInputIntoView}
                             onChange={(e) => updateGrocery(item.id, 'proteinPerServe', e.target.value)}
                             placeholder="0g"
                             className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
@@ -6445,6 +6463,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <input
                       type="text"
                       value={asset?.name || ''}
+                      onFocus={scrollInputIntoView}
                       onChange={(e) => updateAsset(index, 'name', e.target.value)}
                       placeholder="Asset name (e.g. House)"
                       className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-blue-500"
@@ -6462,6 +6481,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <label className="text-xs text-gray-500 mb-1 block">Type</label>
                     <select
                       value={asset?.category || ''}
+                      onFocus={scrollInputIntoView}
                       onChange={(e) => updateAsset(index, 'category', e.target.value)}
                       className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
                     >
@@ -6481,6 +6501,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           type="text"
                           inputMode="decimal"
                           value={asset?.valueStr || ''}
+                          onFocus={scrollInputIntoView}
                           onChange={(e) => updateAsset(index, 'value', e.target.value)}
                           placeholder="0"
                           className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
@@ -6492,6 +6513,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <input
                         type="text"
                         value={asset?.ownedFor || ''}
+                        onFocus={scrollInputIntoView}
                         onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
                         placeholder="e.g. 1y 5m"
                         className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
@@ -7363,6 +7385,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <input
                             type="text"
                             value={stock?.name || ''}
+                            onFocus={scrollInputIntoView}
                             onChange={(e) => updateStock(index, 'name', e.target.value)}
                             placeholder="Stock/ETF name (e.g. VAS)"
                             className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-green-500"
@@ -7380,6 +7403,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <label className="text-xs text-gray-500 mb-1 block">Industry</label>
                           <select
                             value={stock?.industry || ''}
+                            onFocus={scrollInputIntoView}
                             onChange={(e) => updateStock(index, 'industry', e.target.value)}
                             className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
                           >
@@ -7399,6 +7423,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 type="text"
                                 inputMode="decimal"
                                 value={stock?.investedStr || ''}
+                                onFocus={scrollInputIntoView}
                                 onChange={(e) => updateStock(index, 'invested', e.target.value)}
                                 placeholder="0"
                                 className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
@@ -7413,6 +7438,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 type="text"
                                 inputMode="decimal"
                                 value={stock?.currentValueStr || ''}
+                                onFocus={scrollInputIntoView}
                                 onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
                                 placeholder="0"
                                 className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
