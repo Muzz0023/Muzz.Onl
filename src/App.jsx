@@ -139,7 +139,9 @@ const supabase = {
         body: JSON.stringify({ user_id: userId, data_json: data, updated_at: new Date().toISOString() })
       });
       if (!r2.ok) {
-        console.error('Save insert also failed:', r2.status, await r2.text());
+        const errorText = await r2.text();
+        console.error('Save insert also failed:', r2.status, errorText);
+        throw new Error(`Save failed: ${r2.status}`);
       }
     }
   }
@@ -264,16 +266,16 @@ function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-start justify-center p-4 pt-12 md:pt-4 md:items-center">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-5xl mx-auto mb-4 animate-bounce">🦘</div>
-          <h1 className="text-4xl font-bold text-white mb-2">Muzz</h1>
-          <p className="text-white/80">Your Aussie money mate</p>
+        <div className="text-center mb-6 md:mb-8">
+          <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-4xl md:text-5xl mx-auto mb-3 md:mb-4">🦘</div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 md:mb-2">Muzz</h1>
+          <p className="text-white/80 text-sm md:text-base">Your Aussie money mate</p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
             {isLogin ? 'Welcome back legend 🦘' : 'Create account'}
           </h2>
 
@@ -331,17 +333,17 @@ function AuthScreen() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-4 md:mt-6 text-center">
             <button
               onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="text-orange-600 hover:text-orange-700 font-medium"
+              className="text-orange-600 hover:text-orange-700 font-medium text-sm md:text-base"
             >
               {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
             </button>
           </div>
         </div>
 
-        <p className="text-center text-white/60 text-sm mt-6">
+        <p className="text-center text-white/60 text-xs md:text-sm mt-4 md:mt-6">
           Your data is securely stored in the cloud ☁️
         </p>
       </div>
@@ -429,31 +431,35 @@ function FloatingChat({
     const brainRotMode = muzzPersonality;
     
     const systemPrompt = brainRotMode 
-    ? `You are Muzz 🦘, a friendly Australian kangaroo financial advisor who occasionally drops gen-z slang.
+    ? `You are Muzz 🦘, a friendly Australian kangaroo financial advisor.
 
 Your personality:
-- Sprinkle some Aussie slang (mate, legend, no worries)
-- Sprinkle in MAX 2 brain rot terms per response from: W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay, big stein, no diddy, on kirk, kirky jerkey, WILSON!!!, 67, Lowwww Taperrr Fadeee, Locked in alien ahhh 
-- SHUFFLE the brain rot
-- Keep responses SHORT - 1-3 sentences max. Be punchy.
-- Still give legit financial advice
+- Use Aussie slang occasionally (mate, legend, no worries, reckon)
+- You can use ONE gen-z term per response MAX from: W, L, no cap, fr, bussin, lowkey, based, bet, aura, slay
+- Keep responses SHORT - 2-3 sentences max
+- Give legit financial advice
+- NEVER say "g'day mate" more than once in a conversation
+- NEVER repeat the same slang twice in a row
+- Vary your greetings and phrases
 
 ${financialContext}
 
-IMPORTANT: Maximum 2 brain rot terms per response. Use some Aussie chat with use of gen-z brainrot. Short and punchy. Be Muzz! 🦘`
+IMPORTANT: Be natural and varied. Don't spam the same phrases. Keep it short and punchy! 🦘`
     : `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
 
 Your personality:
-- Funny, encouraging, and supportive mate
-- Use Aussie slang naturally (mate, legend, no worries)
-- Keep responses concise but helpful (2-3 sentences, short and punchy)
+- Friendly, encouraging, and supportive
+- Use Aussie slang sparingly and naturally (mate, legend, no worries, reckon)
+- Keep responses concise (2-3 sentences max)
 - Give practical, actionable advice
 - Celebrate wins, no matter how small
-- Be honest but kind about areas needing improvement
+- NEVER say "g'day mate" more than once in a conversation
+- NEVER repeat the same phrases over and over
+- Vary your language and greetings
 
 ${financialContext}
 
-Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
+Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedly. Keep it short, helpful, and real! 🦘`;
     
     try {
       const response = await fetch(api('/api/chat'), {
@@ -880,11 +886,16 @@ function MuzzApp() {
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.stripeElite) setStripeElite(d.stripeElite);
+          // Only set dataLoaded true AFTER data is successfully loaded
+          setDataLoaded(true);
+        } else {
+          // No existing data - this is a new user, safe to enable saving
+          setDataLoaded(true);
         }
       } catch (e) {
-        console.log('Starting fresh or load error:', e);
+        console.error('Load error - NOT enabling saves to prevent data loss:', e);
+        // DO NOT set dataLoaded true on error - this prevents empty data from overwriting real data
       }
-      setDataLoaded(true);
     };
     loadData();
   }, [userId]);
@@ -998,33 +1009,33 @@ ${salaryNum > 0 ? `- Bills as % of Income: ${((totalBills / salaryNum) * 100).to
     const brainRotMode = muzzPersonality;
 
     const systemPrompt = brainRotMode
-    ? `You are Muzz, a friendly Australian kangaroo financial advisor who occasionally drops gen-z slang. You live inside a budgeting app called "Muzz".
+    ? `You are Muzz, a friendly Australian kangaroo financial advisor. You live inside a budgeting app called "Muzz".
 
 PERSONALITY:
-- Primarily use Aussie slang (mate, legend, ripper, no worries, crikey, arvo)
-- Sprinkle in MAX 2 brain rot terms per response from: sigma, W, L, no cap, fr, bussin, lowkey, highkey, based, sus, vibe, bet, NPC, aura, rizz, slay
-- DON'T overdo the brain rot - keep it natural, not every sentence
-- Keep responses SHORT - 1-3 sentences max. Be punchy.
-- Still give legit advice - you can discuss ANY topic
-- Use emojis sparingly: 🦘💀🔥
+- Use Aussie slang naturally (mate, legend, ripper, no worries)
+- You can use ONE gen-z term per response MAX: W, L, no cap, fr, bussin, lowkey, based, bet, aura
+- Keep responses SHORT - 2-3 sentences max
+- Give legit advice on ANY topic
+- NEVER say "g'day mate" or "no cap" in every response - vary your language
+- NEVER repeat the same phrases over and over
 
 ${financialContext}
 
-IMPORTANT: Maximum 2 brain rot terms per response. Keep it mostly normal Aussie chat with a sprinkle of gen-z. Short and punchy. Be Muzz! 🦘`
-    : `You are Muzz, a friendly Australian kangaroo who's a financial advisor and budgeting expert. You live inside a budgeting app called "Muzz" that helps Aussies manage their money.
+IMPORTANT: Be natural and varied. Don't spam the same slang repeatedly. Short and punchy! 🦘`
+    : `You are Muzz, a friendly Australian kangaroo who's a financial advisor and budgeting expert. You live inside a budgeting app called "Muzz".
 
 PERSONALITY:
-- You're warm, encouraging, and use casual Aussie slang naturally (mate, legend, ripper, no worries, crikey, arvo, etc.)
-- You're knowledgeable about personal finance, investing (especially value investing), and budgeting
-- You give practical, actionable advice without being preachy
-- You celebrate wins and encourage people when they're struggling
-- You use the occasional kangaroo emoji 🦘 but don't overdo it
-- Keep responses SHORT and conversational (1-3 sentences, be punchy not long)
-- You can discuss ANY topic, not just finance - you're a full AI assistant
+- Warm, encouraging, casual Aussie slang (mate, legend, no worries)
+- Knowledgeable about personal finance and investing
+- Give practical, actionable advice
+- Keep responses SHORT (2-3 sentences max)
+- Can discuss ANY topic, not just finance
+- NEVER say "g'day mate" in every message - vary your greetings
+- NEVER repeat the same phrases over and over
 
 ${financialContext}
 
-Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal advice. Be helpful, be real, be Muzz! 🦘`;
+Remember: Be natural and varied. Don't spam the same phrases. Keep it short, helpful, and real! 🦘`;
 
     try {
       // Build conversation history as proper Gemini multi-turn format
@@ -6910,11 +6921,11 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
                 <h1 className="text-4xl font-semibold">Investments Management</h1>
               </div>
             </div>
-            {/* Sub-tabs */}
-            <div className="flex gap-2 mt-4">
+            {/* Sub-tabs - scrollable on mobile */}
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-2 -mx-2 px-2">
               <button
                 onClick={() => setInvestmentsSubTab('portfolio')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'portfolio'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6924,17 +6935,17 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('research')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   (investmentsSubTab === 'research' || investmentsSubTab === 'declined' || investmentsSubTab === 'economics' || investmentsSubTab === 'risks')
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                Stocks Research
+                Research
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('goals')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'goals'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6944,7 +6955,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('notes')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'notes'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6954,7 +6965,7 @@ Remember: Keep it SHORT. You're chatting in a friendly app, not writing formal a
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('knowledge')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   (investmentsSubTab === 'knowledge' || investmentsSubTab === 'books')
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
