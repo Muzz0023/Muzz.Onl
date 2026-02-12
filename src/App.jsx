@@ -77,6 +77,15 @@ const supabase = {
     localStorage.removeItem('muzz_auth');
   },
 
+  async resetPassword(email) {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+      method: 'POST',
+      headers: this.headers(false),
+      body: JSON.stringify({ email })
+    });
+    return r.ok;
+  },
+
   async refreshSession() {
     try {
       const s = localStorage.getItem('muzz_auth');
@@ -235,11 +244,13 @@ const signupGreetings = [
 function AuthScreen() {
   const { signIn, signUp } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
+  const [showResetPassword, setShowResetPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [greeting] = useState(() => 
     isLogin 
       ? loginGreetings[Math.floor(Math.random() * loginGreetings.length)]
@@ -249,6 +260,7 @@ function AuthScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     setLoading(true);
     
     try {
@@ -264,6 +276,98 @@ function AuthScreen() {
     }
     setLoading(false);
   };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      setError('Please enter your email address');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      const success = await supabase.resetPassword(email);
+      if (success) {
+        setSuccessMessage('Password reset email sent! Check your inbox.');
+        setTimeout(() => {
+          setShowResetPassword(false);
+          setSuccessMessage('');
+        }, 3000);
+      } else {
+        setError('Failed to send reset email. Please try again.');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    }
+    setLoading(false);
+  };
+
+  // Reset Password Screen
+  if (showResetPassword) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-start justify-center p-4 pt-12 md:pt-4 md:items-center">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-6 md:mb-8">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-4xl md:text-5xl mx-auto mb-3 md:mb-4">🦘</div>
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 md:mb-2">Muzz</h1>
+            <p className="text-white/80 text-sm md:text-base">Reset your password</p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
+              Forgot password? 🔐
+            </h2>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">
+                {error}
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-4 text-sm">
+                {successMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    required
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+              >
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+            </form>
+
+            <div className="mt-4 md:mt-6 text-center">
+              <button
+                onClick={() => { setShowResetPassword(false); setError(''); setSuccessMessage(''); }}
+                className="text-orange-600 hover:text-orange-700 font-medium text-sm md:text-base"
+              >
+                ← Back to Sign In
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-start justify-center p-4 pt-12 md:pt-4 md:items-center">
@@ -333,10 +437,18 @@ function AuthScreen() {
             </button>
           </form>
 
-          <div className="mt-4 md:mt-6 text-center">
+          <div className="mt-4 md:mt-6 text-center space-y-2">
+            {isLogin && (
+              <button
+                onClick={() => { setShowResetPassword(true); setError(''); }}
+                className="text-gray-500 hover:text-gray-700 text-sm"
+              >
+                Forgot password?
+              </button>
+            )}
             <button
               onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="text-orange-600 hover:text-orange-700 font-medium text-sm md:text-base"
+              className="block w-full text-orange-600 hover:text-orange-700 font-medium text-sm md:text-base"
             >
               {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
             </button>
@@ -1205,6 +1317,101 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               })}
             </nav>
             <div className="pt-4 border-t border-gray-200 mt-4">
+              {/* Backup/Export Section */}
+              <div className="mb-3 space-y-2">
+                <button 
+                  onClick={() => {
+                    const allData = {
+                      subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets,
+                      trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings,
+                      smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals,
+                      investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns,
+                      biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks,
+                      dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
+                      waterIntake, dailySteps, workoutPlan, customCategories, eliteName
+                    };
+                    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `muzz-backup-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    setSidebarOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-blue-600 transition-all"
+                >
+                  <Save className="w-5 h-5" />
+                  <span className="font-medium">Export Backup</span>
+                </button>
+                <label className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-green-600 transition-all cursor-pointer">
+                  <input
+                    type="file"
+                    accept=".json"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        try {
+                          const data = JSON.parse(event.target.result);
+                          if (confirm('This will replace all your current data with the backup. Are you sure?')) {
+                            if (data.subscriptions) setSubscriptions(data.subscriptions);
+                            if (data.businessSubscriptions) setBusinessSubscriptions(data.businessSubscriptions);
+                            if (data.muzzPersonality !== undefined) setMuzzPersonality(data.muzzPersonality);
+                            if (data.funnyGreetings !== undefined) setFunnyGreetings(data.funnyGreetings);
+                            if (data.customDiets) setCustomDiets(data.customDiets);
+                            if (data.trackedStocks) setTrackedStocks(data.trackedStocks);
+                            if (data.monthlySalary) setMonthlySalary(data.monthlySalary);
+                            if (data.monthlySalaryStr) setMonthlySalaryStr(data.monthlySalaryStr);
+                            if (data.assets) setAssets(data.assets);
+                            if (data.stocks) setStocks(data.stocks);
+                            if (data.investmentSettings) setInvestmentSettings(data.investmentSettings);
+                            if (data.smallGoals) setSmallGoals(data.smallGoals);
+                            if (data.bigGoals) setBigGoals(data.bigGoals);
+                            if (data.holdingsResearch) setHoldingsResearch(data.holdingsResearch);
+                            if (data.investmentSmallGoals) setInvestmentSmallGoals(data.investmentSmallGoals);
+                            if (data.investmentBigGoals) setInvestmentBigGoals(data.investmentBigGoals);
+                            if (data.investmentNotes) setInvestmentNotes(data.investmentNotes);
+                            if (data.declinedCompanies) setDeclinedCompanies(data.declinedCompanies);
+                            if (data.companyEconomics) setCompanyEconomics(data.companyEconomics);
+                            if (data.economicsColumns) setEconomicsColumns(data.economicsColumns);
+                            if (data.researchColumns) setResearchColumns(data.researchColumns);
+                            if (data.biggestRisks) setBiggestRisks(data.biggestRisks);
+                            if (data.risksColumns) setRisksColumns(data.risksColumns);
+                            if (data.billSmallGoals) setBillSmallGoals(data.billSmallGoals);
+                            if (data.billBigGoals) setBillBigGoals(data.billBigGoals);
+                            if (data.debts) setDebts(data.debts);
+                            if (data.calendarBills) setCalendarBills(data.calendarBills);
+                            if (data.tasks) setTasks(data.tasks);
+                            if (data.dailyTasks) setDailyTasks(data.dailyTasks);
+                            if (data.weeklyTasks) setWeeklyTasks(data.weeklyTasks);
+                            if (data.dailyRotation) setDailyRotation(data.dailyRotation);
+                            if (data.birthdays) setBirthdays(data.birthdays);
+                            if (data.reminders) setReminders(data.reminders);
+                            if (data.groceries) setGroceries(data.groceries);
+                            if (data.dailyMeals) setDailyMeals(data.dailyMeals);
+                            if (data.waterIntake) setWaterIntake(data.waterIntake);
+                            if (data.dailySteps) setDailySteps(data.dailySteps);
+                            if (data.workoutPlan) setWorkoutPlan(data.workoutPlan);
+                            if (data.customCategories) setCustomCategories(data.customCategories);
+                            if (data.eliteName) setEliteName(data.eliteName);
+                            alert('Backup restored successfully!');
+                            setSidebarOpen(false);
+                          }
+                        } catch (err) {
+                          alert('Invalid backup file. Please select a valid Muzz backup JSON file.');
+                        }
+                      };
+                      reader.readAsText(file);
+                      e.target.value = '';
+                    }}
+                  />
+                  <Plus className="w-5 h-5" />
+                  <span className="font-medium">Import Backup</span>
+                </label>
+              </div>
               <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 transition-all mb-3">
                 <LogOut className="w-5 h-5" />
                 <span className="font-medium">Sign Out</span>
