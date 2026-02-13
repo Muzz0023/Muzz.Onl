@@ -1561,6 +1561,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div className="flex items-start gap-3">
                       <div className="flex-1 space-y-2 min-w-0">
                         <textarea
+                          ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                           value={reminder.title}
                           onFocus={handleTextareaFocus}
                           onChange={(e) => {
@@ -1602,6 +1603,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
                         </div>
                         <textarea
+                          ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                           value={reminder.notes}
                           onFocus={handleTextareaFocus}
                           onChange={(e) => {
@@ -1651,16 +1653,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div className="flex items-start gap-3">
                       <div className="flex-1 space-y-2 min-w-0">
                         <textarea
+                          ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                           value={bday.name}
+                          onFocus={handleTextareaFocus}
                           onChange={(e) => {
                             setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, name: e.target.value } : b));
                             e.target.style.height = 'auto';
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Name"
-                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
-                          rows={1}
-                          style={{ minHeight: '48px' }}
+                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none"
+                          style={{ minHeight: '48px', overflow: 'hidden' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <div className="flex items-center gap-2">
@@ -1819,7 +1822,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="flex items-start gap-3">
                           <button
                             onClick={() => toggleDailyTask(task.id)}
-                            className={`w-6 h-6 mt-1 rounded-full flex-shrink-0 flex items-center justify-center ${
+                            className={`w-6 h-6 mt-3 rounded-full flex-shrink-0 flex items-center justify-center ${
                               task.completed 
                                 ? 'bg-green-500' 
                                 : 'border-2 border-gray-300 hover:border-blue-500'
@@ -1830,15 +1833,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="flex-1 min-w-0">
                             <textarea
                               value={task.text}
-                              onFocus={handleTextareaFocus}
+                              onFocus={scrollInputIntoView}
                               onChange={(e) => {
                                 setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
-                                e.target.style.height = 'auto';
-                                e.target.style.height = e.target.scrollHeight + 'px';
                               }}
                               placeholder="What needs to be done today?"
                               className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none ${task.completed ? 'line-through text-gray-400' : ''}`}
-                              style={{ minHeight: '48px', overflow: 'hidden' }}
+                              rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
+                              style={{ minHeight: '70px' }}
                             />
                           </div>
                           <button
@@ -1882,7 +1884,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="flex items-start gap-3">
                           <button
                             onClick={() => toggleWeeklyTask(task.id)}
-                            className={`mt-1 w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center ${
+                            className={`mt-3 w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center ${
                               task.completed 
                                 ? 'bg-green-500' 
                                 : 'border-2 border-gray-300 hover:border-blue-500'
@@ -1893,15 +1895,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="flex-1 space-y-2 min-w-0">
                             <textarea
                               value={task.text}
-                              onFocus={handleTextareaFocus}
+                              onFocus={scrollInputIntoView}
                               onChange={(e) => {
                                 setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
-                                e.target.style.height = 'auto';
-                                e.target.style.height = e.target.scrollHeight + 'px';
                               }}
                               placeholder="What needs to be done this week?"
                               className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none ${task.completed ? 'line-through text-gray-400' : ''}`}
-                              style={{ minHeight: '48px', overflow: 'hidden' }}
+                              rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
+                              style={{ minHeight: '70px' }}
                             />
                             <div className="flex flex-wrap gap-2 items-center">
                               <div className="flex items-center gap-1">
