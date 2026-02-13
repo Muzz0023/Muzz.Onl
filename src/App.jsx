@@ -1293,7 +1293,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div>
         <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
         <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
-          <div className="p-6 h-full flex flex-col overflow-y-auto">
+          <div className="p-6 h-full flex flex-col overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">🦘</div>
@@ -1561,12 +1561,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           style={{ minHeight: '48px' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
-                          <input
-                            type="date"
-                            value={reminder.date}
-                            onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
-                            className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          />
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="date"
+                              value={reminder.date}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
+                              className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                            />
+                            {reminder.date && (
+                              <button
+                                onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: '' } : r))}
+                                className="text-gray-400 hover:text-red-500 text-sm"
+                                title="Clear date"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
                           {getReminderUpcoming(reminder.date) && (
                             <span className={`text-sm font-medium ${
                               getReminderUpcoming(reminder.date) === 'Overdue' ? 'text-red-600' :
@@ -1639,12 +1651,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           style={{ minHeight: '48px' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
-                          <input
-                            type="date"
-                            value={bday.date}
-                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: e.target.value } : b))}
-                            className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          />
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="date"
+                              value={bday.date}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: e.target.value } : b))}
+                              className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                            />
+                            {bday.date && (
+                              <button
+                                onClick={() => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: '' } : b))}
+                                className="text-gray-400 hover:text-red-500 text-sm"
+                                title="Clear date"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
                           <select
                             value={bday.category}
                             onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, category: e.target.value } : b))}
