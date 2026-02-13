@@ -11,6 +11,18 @@ const scrollInputIntoView = (e) => {
   }, 300);
 };
 
+// Auto-resize textarea to show full content
+const autoResizeTextarea = (e) => {
+  e.target.style.height = 'auto';
+  e.target.style.height = e.target.scrollHeight + 'px';
+};
+
+// Combined handler for textarea focus
+const handleTextareaFocus = (e) => {
+  scrollInputIntoView(e);
+  autoResizeTextarea(e);
+};
+
 // ============================================
 // API HELPER FOR NATIVE APP SUPPORT
 // ============================================
@@ -1550,15 +1562,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="flex-1 space-y-2 min-w-0">
                         <textarea
                           value={reminder.title}
+                          onFocus={handleTextareaFocus}
                           onChange={(e) => {
                             setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r));
                             e.target.style.height = 'auto';
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Reminder title"
-                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
-                          rows={1}
-                          style={{ minHeight: '48px' }}
+                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none"
+                          style={{ minHeight: '48px', overflow: 'hidden' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <div className="flex items-center gap-2">
@@ -1591,15 +1603,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <textarea
                           value={reminder.notes}
+                          onFocus={handleTextareaFocus}
                           onChange={(e) => {
                             setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, notes: e.target.value } : r));
                             e.target.style.height = 'auto';
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Notes (optional)"
-                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 text-gray-500 resize-none overflow-hidden"
-                          rows={1}
-                          style={{ minHeight: '48px' }}
+                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 text-gray-500 resize-none"
+                          style={{ minHeight: '48px', overflow: 'hidden' }}
                         />
                       </div>
                       <button
@@ -1804,10 +1816,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   ) : (
                     dailyTasks.map(task => (
                       <div key={task.id} className={`p-4 hover:bg-gray-50 transition-colors ${task.completed ? 'opacity-60' : ''}`}>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-start gap-3">
                           <button
                             onClick={() => toggleDailyTask(task.id)}
-                            className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center ${
+                            className={`w-6 h-6 mt-1 rounded-full flex-shrink-0 flex items-center justify-center ${
                               task.completed 
                                 ? 'bg-green-500' 
                                 : 'border-2 border-gray-300 hover:border-blue-500'
@@ -1815,19 +1827,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           >
                             {task.completed && <span className="text-white text-xs">✓</span>}
                           </button>
-                          <textarea
-                            value={task.text}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => {
-                              setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
-                              e.target.style.height = 'auto';
-                              e.target.style.height = e.target.scrollHeight + 'px';
-                            }}
-                            placeholder="What needs to be done today?"
-                            className={`flex-1 px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden min-w-0 ${task.completed ? 'line-through text-gray-400' : ''}`}
-                            rows={1}
-                            style={{ minHeight: '48px' }}
-                          />
+                          <div className="flex-1 min-w-0">
+                            <textarea
+                              value={task.text}
+                              onFocus={handleTextareaFocus}
+                              onChange={(e) => {
+                                setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
+                                e.target.style.height = 'auto';
+                                e.target.style.height = e.target.scrollHeight + 'px';
+                              }}
+                              placeholder="What needs to be done today?"
+                              className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              style={{ minHeight: '48px', overflow: 'hidden' }}
+                            />
+                          </div>
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
                             className="text-red-400 hover:text-red-600 text-sm"
@@ -1869,7 +1882,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="flex items-start gap-3">
                           <button
                             onClick={() => toggleWeeklyTask(task.id)}
-                            className={`mt-1 w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center ${
+                            className={`mt-1 w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center ${
                               task.completed 
                                 ? 'bg-green-500' 
                                 : 'border-2 border-gray-300 hover:border-blue-500'
@@ -1880,16 +1893,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="flex-1 space-y-2 min-w-0">
                             <textarea
                               value={task.text}
-                              onFocus={scrollInputIntoView}
+                              onFocus={handleTextareaFocus}
                               onChange={(e) => {
                                 setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                                 e.target.style.height = 'auto';
                                 e.target.style.height = e.target.scrollHeight + 'px';
                               }}
                               placeholder="What needs to be done this week?"
-                              className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none overflow-hidden ${task.completed ? 'line-through text-gray-400' : ''}`}
-                              rows={1}
-                              style={{ minHeight: '48px' }}
+                              className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              style={{ minHeight: '48px', overflow: 'hidden' }}
                             />
                             <div className="flex flex-wrap gap-2 items-center">
                               <div className="flex items-center gap-1">
