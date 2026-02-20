@@ -1471,20 +1471,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
         <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all"><Menu className="w-5 h-5" /></button>
-        {saveStatus !== 'idle' && (
-          <div className={`fixed top-4 right-4 z-30 px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium transition-all ${
-            saveStatus === 'saving' ? 'bg-amber-100 text-amber-700' : 
-            saveStatus === 'saved' ? 'bg-green-100 text-green-700' : 
-            'bg-red-100 text-red-700'
-          }`}>
-            {saveStatus === 'saving' && <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>}
-            {saveStatus === 'saved' && <><CheckCircle2 className="w-4 h-4" /> Saved</>}
-            {saveStatus === 'error' && <><X className="w-4 h-4" /> Save failed</>}
-          </div>
-        )}
       </div>
     );
   };
+
+  // Save status indicator (separate from Sidebar to prevent scroll reset)
+  const SaveIndicator = () => (
+    saveStatus !== 'idle' ? (
+      <div className={`fixed top-4 right-4 z-30 px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium transition-all ${
+        saveStatus === 'saving' ? 'bg-amber-100 text-amber-700' : 
+        saveStatus === 'saved' ? 'bg-green-100 text-green-700' : 
+        'bg-red-100 text-red-700'
+      }`}>
+        {saveStatus === 'saving' && <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>}
+        {saveStatus === 'saved' && <><CheckCircle2 className="w-4 h-4" /> Saved</>}
+        {saveStatus === 'error' && <><X className="w-4 h-4" /> Save failed</>}
+      </div>
+    ) : null
+  );
 
   // REMINDERS VIEW
   if (activeView === 'reminders') {
@@ -1550,6 +1554,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-white border-b">
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
@@ -1764,6 +1769,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50 pb-24">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-gradient-to-r from-purple-500 to-indigo-600 pt-16 pb-6 px-6">
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
@@ -2084,6 +2090,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-white border-b">
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
@@ -2976,6 +2983,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-white border-b">
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
@@ -3320,6 +3328,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         
         {/* Header */}
         <div className={`bg-gradient-to-r ${getGradient()} text-white`}>
@@ -4519,6 +4528,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white pb-24">
         <Sidebar />
+        <SaveIndicator />
         {/* Header with Net Worth */}
         <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-8 px-6">
           <div className="max-w-4xl mx-auto">
@@ -4821,6 +4831,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-white border-b">
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
@@ -6167,6 +6178,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-24">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
@@ -6238,6 +6250,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white pb-24">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
           <div className="max-w-3xl mx-auto text-center">
             <svg width="64" height="80" viewBox="0 0 24 32" fill="none" className="mx-auto mb-4">
@@ -6441,6 +6454,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-white border-b">
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
@@ -7222,6 +7236,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
+        <SaveIndicator />
         <div className="bg-white border-b">
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
@@ -10243,6 +10258,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <Sidebar />
+        <SaveIndicator />
       <div className="bg-gradient-to-r from-amber-400 to-orange-500 pt-16 pb-6 px-6">
         <div className="max-w-4xl mx-auto">
           <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
