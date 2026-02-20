@@ -1328,8 +1328,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
           <div 
             ref={sidebarScrollRef} 
-            className="p-6 h-full flex flex-col overflow-y-scroll overscroll-none"
-            style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'auto' }}
+            className="p-6 h-full flex flex-col overflow-y-auto overscroll-contain"
+            style={{ WebkitOverflowScrolling: 'touch' }}
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
