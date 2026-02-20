@@ -1311,59 +1311,42 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const Sidebar = () => {
     return (
       <div>
-        <div 
-          className={sidebarOpen ? "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} 
-          onClick={() => setSidebarOpen(false)}
-          style={{ touchAction: 'none' }}
-        />
+        <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
         <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
-          <div className="h-full flex flex-col">
-            {/* Fixed Header */}
-            <div className="p-6 pb-3 flex-shrink-0">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">🦘</div>
-                  <div><div className="font-bold text-gray-900">Muzz</div><div className="text-xs text-gray-500">Your money mate</div></div>
-                </div>
-                <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors"><X className="w-5 h-5" /></button>
+          <div className="p-6 h-full flex flex-col overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">🦘</div>
+                <div><div className="font-bold text-gray-900">Muzz</div><div className="text-xs text-gray-500">Your money mate</div></div>
               </div>
-              {currentStreak > 0 && (
-                <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl p-3 flex items-center gap-3">
-                  <Flame className="w-6 h-6 text-orange-500" />
-                  <div className="text-sm font-semibold text-orange-800">{currentStreak} Day Streak!</div>
-                </div>
-              )}
+              <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors"><X className="w-5 h-5" /></button>
             </div>
-            
-            {/* Scrollable Nav */}
-            <div 
-              className="flex-1 overflow-y-auto overscroll-contain px-6" 
-              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
-              onTouchMove={(e) => e.stopPropagation()}
-            >
-              <nav className="space-y-1 pb-4">
-                {navItems.map(item => {
-                  const locked = item.eliteOnly && !isElite;
-                  return (
-                    <button key={item.id} onClick={() => { 
-                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
-                      setSidebarOpen(false); 
-                    }}
-                      className={activeView === item.id ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg transition-all" : locked ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-400 transition-all" : item.id === 'upgrade' ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-amber-50 text-amber-600 transition-all border border-amber-200" : "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-600 transition-all"}>
-                      <item.icon className="w-5 h-5" />
-                      <span className="font-medium flex-1 text-left">{item.label}</span>
-                      {locked && <Lock className="w-4 h-4 text-gray-400" />}
-                      {item.id === 'upgrade' && !isElite && (
-                        <svg width="14" height="14" viewBox="0 0 24 32" fill="none"><path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F59E0B" /><path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" /></svg>
-                      )}
-                    </button>
-                  );
-                })}
-              </nav>
-            </div>
-            
-            {/* Fixed Footer */}
-            <div className="p-6 pt-4 border-t border-gray-200 flex-shrink-0">
+            {currentStreak > 0 && (
+              <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl p-3 mb-6 flex items-center gap-3">
+                <Flame className="w-6 h-6 text-orange-500" />
+                <div className="text-sm font-semibold text-orange-800">{currentStreak} Day Streak!</div>
+              </div>
+            )}
+            <nav className="flex-1 space-y-1">
+              {navItems.map(item => {
+                const locked = item.eliteOnly && !isElite;
+                return (
+                  <button key={item.id} onClick={() => { 
+                    if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
+                    setSidebarOpen(false); 
+                  }}
+                    className={activeView === item.id ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg transition-all" : locked ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-400 transition-all" : item.id === 'upgrade' ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-amber-50 text-amber-600 transition-all border border-amber-200" : "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-600 transition-all"}>
+                    <item.icon className="w-5 h-5" />
+                    <span className="font-medium flex-1 text-left">{item.label}</span>
+                    {locked && <Lock className="w-4 h-4 text-gray-400" />}
+                    {item.id === 'upgrade' && !isElite && (
+                      <svg width="14" height="14" viewBox="0 0 24 32" fill="none"><path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F59E0B" /><path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" /></svg>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+            <div className="pt-4 border-t border-gray-200 mt-4">
               {/* Backup/Export Section */}
               <div className="mb-3 space-y-2">
                 <button 
