@@ -729,6 +729,13 @@ function MuzzApp() {
   const [chatMessages, setChatMessages] = useState([]);
   const [isChatExpanded, setIsChatExpanded] = useState(true);
 
+  // Scroll input into view when keyboard opens (for mobile)
+  const scrollInputIntoView = (e) => {
+    setTimeout(() => {
+      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  };
+
   // Auth & Elite status (must be before AI limits)
   const { user: authUser, signOut } = useAuth();
   const userId = authUser?.id;
@@ -800,6 +807,7 @@ function MuzzApp() {
   const [billsSubTab, setBillsSubTab] = useState('bills');
   const [calendarBills, setCalendarBills] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
   const [newBillDate, setNewBillDate] = useState('');
   const [newBillName, setNewBillName] = useState('');
   const [newBillAmount, setNewBillAmount] = useState('');
@@ -1561,23 +1569,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div className="flex items-start gap-3">
                       <div className="flex-1 space-y-2 min-w-0">
                         <textarea
-                          ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
                           value={reminder.title}
-                          onFocus={handleTextareaFocus}
+                          onFocus={scrollInputIntoView}
                           onChange={(e) => {
                             setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r));
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Reminder title"
                           className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none"
-                          style={{ minHeight: '48px', overflow: 'hidden' }}
+                          rows={Math.max(2, Math.ceil((reminder.title?.length || 0) / 35))}
+                          style={{ minHeight: '60px' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <div className="flex items-center gap-2">
                             <input
                               type="date"
-                              value={reminder.date}
+                              value={reminder.date || ''}
                               onFocus={scrollInputIntoView}
                               onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
                               className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
@@ -1602,19 +1608,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </span>
                           )}
                         </div>
-                        <textarea
-                          ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
-                          value={reminder.notes}
-                          onFocus={handleTextareaFocus}
-                          onChange={(e) => {
-                            setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, notes: e.target.value } : r));
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
-                          }}
-                          placeholder="Notes (optional)"
-                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 text-gray-500 resize-none"
-                          style={{ minHeight: '48px', overflow: 'hidden' }}
-                        />
                       </div>
                       <button
                         onClick={() => setReminders(prev => prev.filter(r => r.id !== reminder.id))}
@@ -4053,22 +4046,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     updateSection(section.id, { content: { blocks } });
                                   }} className="text-xs text-red-400">Delete</button>
                                 </div>
-                                <input type="text" value={block.name || ''} onChange={(e) => {
+                                <input type="text" value={block.name || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                   const blocks = section.content?.blocks || [];
                                   const newBlocks = blocks.map(b => b.id === block.id ? { ...b, name: e.target.value } : b);
                                   updateSection(section.id, { content: { blocks: newBlocks } });
-                                }} placeholder="Name..." className="w-full px-2 py-1 bg-white border border-fuchsia-200 rounded text-sm font-medium mb-2 focus:outline-none" />
-                                <div className="flex gap-2">
-                                  <input type="tel" value={block.phone || ''} onChange={(e) => {
+                                }} placeholder="Name..." className="w-full px-3 py-2 bg-white border-2 border-fuchsia-200 rounded-xl text-sm font-medium mb-2 focus:outline-none focus:border-fuchsia-400" />
+                                <div className="space-y-2">
+                                  <input type="tel" value={block.phone || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                     const blocks = section.content?.blocks || [];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, phone: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
-                                  }} placeholder="📞 Phone" className="flex-1 px-2 py-1 bg-white border border-fuchsia-200 rounded text-sm focus:outline-none" />
-                                  <input type="email" value={block.email || ''} onChange={(e) => {
+                                  }} placeholder="📞 Phone" className="w-full px-3 py-2 bg-white border-2 border-fuchsia-200 rounded-xl text-sm focus:outline-none focus:border-fuchsia-400" />
+                                  <input type="email" value={block.email || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                     const blocks = section.content?.blocks || [];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, email: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
-                                  }} placeholder="✉️ Email" className="flex-1 px-2 py-1 bg-white border border-fuchsia-200 rounded text-sm focus:outline-none" />
+                                  }} placeholder="✉️ Email" className="w-full px-3 py-2 bg-white border-2 border-fuchsia-200 rounded-xl text-sm focus:outline-none focus:border-fuchsia-400" />
                                 </div>
                               </div>
                             )}
@@ -4083,16 +4076,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     updateSection(section.id, { content: { blocks } });
                                   }} className="text-xs text-red-400">Delete</button>
                                 </div>
-                                <input type="text" value={block.name || ''} onChange={(e) => {
+                                <input type="text" value={block.name || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                   const blocks = section.content?.blocks || [];
                                   const newBlocks = blocks.map(b => b.id === block.id ? { ...b, name: e.target.value } : b);
                                   updateSection(section.id, { content: { blocks: newBlocks } });
-                                }} placeholder="Location name..." className="w-full px-2 py-1 bg-white border border-red-200 rounded text-sm font-medium mb-2 focus:outline-none" />
-                                <textarea value={block.address || ''} onChange={(e) => {
+                                }} placeholder="Location name..." className="w-full px-3 py-2 bg-white border-2 border-red-200 rounded-xl text-sm font-medium mb-2 focus:outline-none focus:border-red-400" />
+                                <textarea value={block.address || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                   const blocks = section.content?.blocks || [];
                                   const newBlocks = blocks.map(b => b.id === block.id ? { ...b, address: e.target.value } : b);
                                   updateSection(section.id, { content: { blocks: newBlocks } });
-                                }} placeholder="Address..." className="w-full px-2 py-1 bg-white border border-red-200 rounded text-sm focus:outline-none resize-none h-12" />
+                                }} placeholder="Address..." className="w-full px-3 py-2 bg-white border-2 border-red-200 rounded-xl text-sm focus:outline-none focus:border-red-400 resize-none" rows={2} />
                               </div>
                             )}
                             
@@ -4106,22 +4099,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     updateSection(section.id, { content: { blocks } });
                                   }} className="text-xs text-red-400">Delete</button>
                                 </div>
-                                <input type="text" value={block.title || ''} onChange={(e) => {
+                                <input type="text" value={block.title || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                   const blocks = section.content?.blocks || [];
                                   const newBlocks = blocks.map(b => b.id === block.id ? { ...b, title: e.target.value } : b);
                                   updateSection(section.id, { content: { blocks: newBlocks } });
-                                }} placeholder="Reminder..." className="w-full px-2 py-1 bg-white border border-amber-200 rounded text-sm font-medium mb-2 focus:outline-none" />
-                                <div className="flex gap-2">
-                                  <input type="date" value={block.date || ''} onChange={(e) => {
+                                }} placeholder="Reminder..." className="w-full px-3 py-2 bg-white border-2 border-amber-200 rounded-xl text-sm font-medium mb-2 focus:outline-none focus:border-amber-400" />
+                                <div className="space-y-2">
+                                  <input type="date" value={block.date || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                     const blocks = section.content?.blocks || [];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, date: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
-                                  }} className="flex-1 px-2 py-1 bg-white border border-amber-200 rounded text-sm focus:outline-none" />
-                                  <input type="time" value={block.time || ''} onChange={(e) => {
+                                  }} className="w-full px-3 py-2 bg-white border-2 border-amber-200 rounded-xl text-sm focus:outline-none focus:border-amber-400" />
+                                  <input type="time" value={block.time || ''} onFocus={scrollInputIntoView} onChange={(e) => {
                                     const blocks = section.content?.blocks || [];
                                     const newBlocks = blocks.map(b => b.id === block.id ? { ...b, time: e.target.value } : b);
                                     updateSection(section.id, { content: { blocks: newBlocks } });
-                                  }} className="w-28 px-2 py-1 bg-white border border-amber-200 rounded text-sm focus:outline-none" />
+                                  }} className="w-full px-3 py-2 bg-white border-2 border-amber-200 rounded-xl text-sm focus:outline-none focus:border-amber-400" />
                                 </div>
                               </div>
                             )}
@@ -5457,43 +5450,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {billsSubTab === 'calendar' && (
             <>
-              {/* Calendar View - Click on any day to add bills */}
+              {/* Calendar View - Mobile Optimized */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <div className="flex items-center justify-between">
+                <div className="p-4 border-b">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <h2 className="text-xl font-semibold">Bills Calendar</h2>
-                      <p className="text-sm text-gray-500">Click on any day to add or edit bills</p>
+                      <p className="text-sm text-gray-500">Track when bills are due</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1))}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-lg"
                       >
                         ←
                       </button>
-                      <span className="font-medium min-w-[140px] text-center">
-                        {calendarMonth.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' })}
+                      <span className="font-medium min-w-[120px] text-center text-sm">
+                        {calendarMonth.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' })}
                       </span>
                       <button
                         onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1))}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-lg"
                       >
                         →
                       </button>
                     </div>
                   </div>
                 </div>
-                <div className="p-4">
-                  {/* Day headers */}
+                <div className="p-3">
+                  {/* Day headers - abbreviated for mobile */}
                   <div className="grid grid-cols-7 gap-1 mb-2">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-center text-xs font-semibold text-gray-500 py-2">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                      <div key={i} className="text-center text-xs font-semibold text-gray-500 py-1">
                         {day}
                       </div>
                     ))}
                   </div>
-                  {/* Calendar grid - Clickable days */}
+                  {/* Calendar grid - Compact for mobile */}
                   {(() => {
                     const year = calendarMonth.getFullYear();
                     const month = calendarMonth.getMonth();
@@ -5501,12 +5494,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const daysInMonth = new Date(year, month + 1, 0).getDate();
                     const days = [];
                     
-                    // Empty cells before first day
                     for (let i = 0; i < firstDay; i++) {
-                      days.push(<div key={`empty-${i}`} className="min-h-[100px]"></div>);
+                      days.push(<div key={`empty-${i}`} className="h-12"></div>);
                     }
                     
-                    // Days of month - Each day is clickable and editable
                     for (let day = 1; day <= daysInMonth; day++) {
                       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                       const dayBills = calendarBills[dateKey] || [];
@@ -5514,82 +5505,117 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
                       
                       days.push(
-                        <div 
-                          key={day} 
-                          className={`min-h-[100px] border rounded-xl p-2 ${isToday ? 'bg-orange-50 border-orange-300 ring-2 ring-orange-200' : 'bg-gray-50 border-gray-200'} hover:border-orange-400 hover:shadow-md transition-all cursor-pointer group`}
+                        <button 
+                          key={day}
+                          onClick={() => setSelectedCalendarDate(dateKey)}
+                          className={`h-12 rounded-lg flex flex-col items-center justify-center ${
+                            isToday ? 'bg-orange-100 border-2 border-orange-400' : 
+                            totalForDay > 0 ? 'bg-red-50 border border-red-200' : 
+                            'bg-gray-50 border border-gray-200'
+                          } hover:border-orange-400 transition-all`}
                         >
-                          <div className="flex justify-between items-start mb-1">
-                            <span className={`text-sm font-bold ${isToday ? 'text-orange-600' : 'text-gray-700'}`}>{day}</span>
-                            {totalForDay > 0 && (
-                              <span className="text-xs font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">${totalForDay.toFixed(0)}</span>
-                            )}
-                          </div>
-                          {/* Existing bills */}
-                          <div className="space-y-1 mb-1">
-                            {dayBills.map((bill, idx) => (
-                              <div key={idx} className="text-xs bg-white rounded-lg px-2 py-1 border flex items-center justify-between group/item">
-                                <span className="truncate flex-1">{bill.name}: ${bill.amount}</span>
-                                <button 
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCalendarBills(prev => {
-                                      const updated = { ...prev };
-                                      updated[dateKey] = updated[dateKey].filter((_, i) => i !== idx);
-                                      if (updated[dateKey].length === 0) delete updated[dateKey];
-                                      return updated;
-                                    });
-                                  }}
-                                  className="text-red-400 hover:text-red-600 ml-1 opacity-0 group-hover/item:opacity-100 transition-opacity"
-                                >
-                                  ×
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                          {/* Quick add input - appears on hover/focus */}
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <input
-                              type="text"
-                              placeholder="+ Add bill (e.g. Rent 500)"
-                              className="w-full text-xs px-2 py-1 border rounded-lg focus:outline-none focus:border-orange-400 bg-white"
-                              onClick={(e) => e.stopPropagation()}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' && e.target.value.trim()) {
-                                  const input = e.target.value.trim();
-                                  // Parse "Name Amount" format
-                                  const match = input.match(/^(.+?)\s+(\d+\.?\d*)$/);
-                                  if (match) {
-                                    const [, name, amount] = match;
-                                    setCalendarBills(prev => ({
-                                      ...prev,
-                                      [dateKey]: [...(prev[dateKey] || []), { name: name.trim(), amount }]
-                                    }));
-                                    e.target.value = '';
-                                  } else {
-                                    // Just name, no amount
-                                    setCalendarBills(prev => ({
-                                      ...prev,
-                                      [dateKey]: [...(prev[dateKey] || []), { name: input, amount: '0' }]
-                                    }));
-                                    e.target.value = '';
-                                  }
-                                }
-                              }}
-                            />
-                          </div>
-                        </div>
+                          <span className={`text-sm font-semibold ${isToday ? 'text-orange-600' : 'text-gray-700'}`}>{day}</span>
+                          {totalForDay > 0 && (
+                            <span className="text-[10px] font-bold text-red-500">${totalForDay}</span>
+                          )}
+                        </button>
                       );
                     }
                     
-                    return <div className="grid grid-cols-7 gap-2">{days}</div>;
+                    return <div className="grid grid-cols-7 gap-1">{days}</div>;
                   })()}
                 </div>
               </div>
 
+              {/* Add/Edit Bill Modal for Selected Date */}
+              {selectedCalendarDate && (
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                  <div className="p-4 border-b flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-semibold">
+                        {new Date(selectedCalendarDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
+                      </h2>
+                      <p className="text-sm text-gray-500">Add or manage bills</p>
+                    </div>
+                    <button onClick={() => setSelectedCalendarDate(null)} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {/* Add new bill form */}
+                    <div className="space-y-2 p-3 bg-gray-50 rounded-xl">
+                      <input
+                        type="text"
+                        placeholder="Bill name (e.g. Netflix)"
+                        className="w-full px-3 py-2 border-2 rounded-xl text-base focus:outline-none focus:border-orange-400"
+                        id="newBillName"
+                        onFocus={scrollInputIntoView}
+                      />
+                      <div className="flex items-center border-2 rounded-xl bg-white overflow-hidden focus-within:border-orange-400">
+                        <span className="pl-3 text-gray-400">$</span>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          className="flex-1 px-2 py-2 text-base focus:outline-none"
+                          id="newBillAmount"
+                          onFocus={scrollInputIntoView}
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const name = document.getElementById('newBillName').value.trim();
+                          const amount = document.getElementById('newBillAmount').value;
+                          
+                          if (name) {
+                            setCalendarBills(prev => ({
+                              ...prev,
+                              [selectedCalendarDate]: [...(prev[selectedCalendarDate] || []), { name, amount: amount || '0' }]
+                            }));
+                            document.getElementById('newBillName').value = '';
+                            document.getElementById('newBillAmount').value = '';
+                          }
+                        }}
+                        className="w-full py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-medium"
+                      >
+                        + Add Bill
+                      </button>
+                    </div>
+                    
+                    {/* Bills for selected day */}
+                    {(calendarBills[selectedCalendarDate] || []).length > 0 && (
+                      <div className="space-y-2">
+                        <h3 className="text-sm font-semibold text-gray-600">Bills on this day:</h3>
+                        {(calendarBills[selectedCalendarDate] || []).map((bill, idx) => (
+                          <div key={idx} className="flex items-center justify-between p-3 bg-white border-2 rounded-xl">
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium truncate">{bill.name}</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-red-600">${parseFloat(bill.amount || 0).toFixed(2)}</span>
+                              <button
+                                onClick={() => {
+                                  setCalendarBills(prev => {
+                                    const updated = { ...prev };
+                                    updated[selectedCalendarDate] = updated[selectedCalendarDate].filter((_, i) => i !== idx);
+                                    if (updated[selectedCalendarDate].length === 0) delete updated[selectedCalendarDate];
+                                    return updated;
+                                  });
+                                }}
+                                className="text-red-400 hover:text-red-600"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Bills List for Current Month */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Bills This Month</h2>
+                <div className="p-4 border-b">
+                  <h2 className="text-lg font-semibold">Bills This Month</h2>
                   <p className="text-sm text-gray-500">
                     Total: ${Object.entries(calendarBills)
                       .filter(([date]) => {
@@ -5609,15 +5635,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     .sort(([a], [b]) => new Date(a) - new Date(b))
                     .map(([date, bills]) => (
                       bills.map((bill, idx) => (
-                        <div key={`${date}-${idx}`} className="flex items-center justify-between p-4 hover:bg-gray-50">
-                          <div className="flex items-center gap-3">
-                            <div className="text-sm text-gray-500 w-20">
-                              {new Date(date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                        <div key={`${date}-${idx}`} className="flex items-center justify-between p-3 hover:bg-gray-50">
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="text-xs text-gray-500 w-14 flex-shrink-0">
+                              {new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
                             </div>
-                            <div className="font-medium">{bill.name}</div>
+                            <div className="font-medium truncate">{bill.name}</div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="font-semibold text-red-600">${parseFloat(bill.amount).toFixed(2)}</span>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <span className="font-semibold text-red-600">${parseFloat(bill.amount || 0).toFixed(2)}</span>
                             <button
                               onClick={() => {
                                 setCalendarBills(prev => {
@@ -5639,8 +5665,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const d = new Date(date);
                     return d.getMonth() === calendarMonth.getMonth() && d.getFullYear() === calendarMonth.getFullYear();
                   }).length === 0 && (
-                    <div className="p-8 text-center text-gray-500">
-                      No bills scheduled this month. Click on any day above to add one!
+                    <div className="p-6 text-center text-gray-500">
+                      No bills scheduled. Tap a day above to add one!
                     </div>
                   )}
                 </div>
@@ -6174,7 +6200,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { q: "How do I upgrade to Elite?", a: "Head to the 'Upgrade to Elite' section in the sidebar. It's $5/month and unlocks all features!" },
                 { q: "Is my data safe?", a: "Your data is stored securely in the cloud and only you can access it." },
                 { q: "How do I cancel my subscription?", a: "Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period." },
-                { q: "Can I use Muzz on my phone?", a: "Yeah mate! Muzz works on any device with a browser. Just go to muzz.onl." },
+                { q: "Can I use Muzz on my phone?", a: "Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl." },
               ].map((faq, i) => (
                 <details key={i} className="group">
                   <summary className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors font-medium text-gray-700 text-sm">
@@ -7241,23 +7267,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('accounting')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'accounting'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                Accounting Guide
+                Accounting
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('sp500')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'sp500'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                S&P 500 Guide
+                S&P 500
               </button>
             </div>
           </div>
