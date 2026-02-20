@@ -714,6 +714,7 @@ function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
@@ -1307,13 +1308,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     setAchievements(a);
   }, [netWorth, savingsRate, currentStreak, stocks]);
 
+  // Lock body scroll when sidebar is open
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [sidebarOpen]);
+
   // Sidebar Component - New Visual Style (Orange/Amber theme)
   const Sidebar = () => {
     return (
       <div>
         <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
         <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
-          <div className="p-6 h-full flex flex-col overflow-y-auto">
+          <div 
+            ref={sidebarScrollRef} 
+            className="p-6 h-full flex flex-col overflow-y-scroll overscroll-none"
+            style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'auto' }}
+          >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">🦘</div>
