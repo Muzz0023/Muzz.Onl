@@ -866,6 +866,7 @@ function MuzzApp() {
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
   const [gymSubTab, setGymSubTab] = useState('steps');
+  const [sleepData, setSleepData] = useState({});
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [holdingsResearch, setHoldingsResearch] = useState([]);
@@ -1026,6 +1027,7 @@ function MuzzApp() {
           if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
+          if (d.sleepData) setSleepData(d.sleepData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.stripeElite) setStripeElite(d.stripeElite);
@@ -1089,6 +1091,7 @@ function MuzzApp() {
           waterIntake,
           dailySteps,
           workoutPlan,
+          sleepData,
           customCategories,
           eliteName,
           stripeElite
@@ -1105,7 +1108,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1266,7 +1269,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
-    { id: "gym", label: "Fitness", icon: Dumbbell, eliteOnly: true },
+    { id: "gym", label: "Health", icon: Dumbbell, eliteOnly: true },
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
@@ -1375,7 +1378,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns,
                       biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks,
                       dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
-                      waterIntake, dailySteps, workoutPlan, customCategories, eliteName
+                      waterIntake, dailySteps, workoutPlan, sleepData, customCategories, eliteName
                     };
                     const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -1442,6 +1445,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             if (data.waterIntake) setWaterIntake(data.waterIntake);
                             if (data.dailySteps) setDailySteps(data.dailySteps);
                             if (data.workoutPlan) setWorkoutPlan(data.workoutPlan);
+                            if (data.sleepData) setSleepData(data.sleepData);
                             if (data.customCategories) setCustomCategories(data.customCategories);
                             if (data.eliteName) setEliteName(data.eliteName);
                             alert('Backup restored successfully!');
@@ -2888,7 +2892,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
   // GYM MANAGEMENT VIEW
   if (activeView === 'gym') {
-    if (!isElite) return <LockedFeature featureName="Fitness" setActiveView={setActiveView} />;
+    if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
     const today = new Date().toISOString().split('T')[0];
 
     // Get all days of the current week (Monday to Sunday)
@@ -2989,7 +2993,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex items-center justify-between">
               <div className="pl-12">
                 <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
-                <h1 className="text-4xl font-semibold">Gym Management</h1>
+                <h1 className="text-4xl font-semibold">Health Management</h1>
               </div>
             </div>
           </div>
@@ -2999,6 +3003,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Sub-tabs */}
           <div className="flex gap-2 flex-wrap">
             <button
+              onClick={() => setGymSubTab('sleep')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                gymSubTab === 'sleep'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              🌙 Sleep
+            </button>
+            <button
               onClick={() => setGymSubTab('steps')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 gymSubTab === 'steps'
@@ -3006,7 +3020,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              Weekly Steps
+              👟 Weekly Steps
             </button>
             <button
               onClick={() => setGymSubTab('plan')}
@@ -3016,9 +3030,279 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              Workout Plan
+              💪 Workout Plan
             </button>
           </div>
+
+          {/* Sleep Tracker Tab */}
+          {gymSubTab === 'sleep' && (
+            <div className="space-y-4">
+              {/* Sleep Stats Header */}
+              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold">🌙 Sleep Tracker</h2>
+                    <p className="text-indigo-100 mt-1">Track your sleep patterns</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (confirm('Reset all sleep data for this week?')) {
+                        const newSleepData = { ...sleepData };
+                        weekDays.forEach(day => {
+                          delete newSleepData[day.date];
+                        });
+                        setSleepData(newSleepData);
+                      }
+                    }}
+                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
+                  >
+                    Reset Week
+                  </button>
+                </div>
+                {/* Weekly Summary */}
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="text-2xl font-bold">
+                      {(() => {
+                        const weekSleep = weekDays.map(d => sleepData[d.date]?.hoursSlept || 0).filter(h => h > 0);
+                        return weekSleep.length > 0 ? (weekSleep.reduce((a,b) => a+b, 0) / weekSleep.length).toFixed(1) : '-';
+                      })()}
+                    </div>
+                    <div className="text-xs text-indigo-200">Avg Hours</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="text-2xl font-bold">
+                      {weekDays.filter(d => sleepData[d.date]?.bedTime && sleepData[d.date]?.wakeTime).length}
+                    </div>
+                    <div className="text-xs text-indigo-200">Days Tracked</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="text-2xl font-bold">
+                      {(() => {
+                        const dreams = weekDays.filter(d => sleepData[d.date]?.dreamType === 'dream').length;
+                        const nightmares = weekDays.filter(d => sleepData[d.date]?.dreamType === 'nightmare').length;
+                        return `${dreams}/${nightmares}`;
+                      })()}
+                    </div>
+                    <div className="text-xs text-indigo-200">Dreams/Nightmares</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Daily Sleep Cards */}
+              {weekDays.map(day => {
+                const dayData = sleepData[day.date] || {};
+                
+                // Calculate hours slept
+                const calculateHours = (bed, wake) => {
+                  if (!bed || !wake) return 0;
+                  const [bedH, bedM] = bed.split(':').map(Number);
+                  const [wakeH, wakeM] = wake.split(':').map(Number);
+                  let bedMins = bedH * 60 + bedM;
+                  let wakeMins = wakeH * 60 + wakeM;
+                  if (wakeMins < bedMins) wakeMins += 24 * 60; // crossed midnight
+                  return ((wakeMins - bedMins) / 60).toFixed(1);
+                };
+                
+                const hoursSlept = calculateHours(dayData.bedTime, dayData.wakeTime);
+                
+                return (
+                  <div 
+                    key={day.date} 
+                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
+                      day.isToday ? 'border-indigo-400 ring-2 ring-indigo-100' : 'border-gray-100'
+                    }`}
+                  >
+                    {/* Day Header */}
+                    <div className={`px-4 py-3 flex items-center justify-between ${
+                      day.isToday ? 'bg-indigo-50' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
+                          day.isToday ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 border'
+                        }`}>
+                          {day.dateNum}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-800">{day.dayName}</div>
+                          <div className="text-xs text-gray-500">{day.month}</div>
+                        </div>
+                        {day.isToday && (
+                          <span className="px-2 py-0.5 bg-indigo-500 text-white text-xs rounded-full">Today</span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {hoursSlept > 0 && (
+                          <div className={`px-3 py-1 rounded-full text-sm font-bold ${
+                            hoursSlept >= 7 ? 'bg-green-100 text-green-700' :
+                            hoursSlept >= 5 ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            {hoursSlept}h
+                          </div>
+                        )}
+                        <button
+                          onClick={() => {
+                            const newSleepData = { ...sleepData };
+                            delete newSleepData[day.date];
+                            setSleepData(newSleepData);
+                          }}
+                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                          title="Clear day"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Sleep Details */}
+                    <div className="p-4 space-y-4">
+                      {/* Time Row */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-xs text-gray-500 font-medium mb-1 block">🛏️ Bedtime</label>
+                          <input
+                            type="time"
+                            value={dayData.bedTime || ''}
+                            onChange={(e) => {
+                              const newHours = calculateHours(e.target.value, dayData.wakeTime);
+                              setSleepData(prev => ({
+                                ...prev,
+                                [day.date]: { ...prev[day.date], bedTime: e.target.value, hoursSlept: parseFloat(newHours) }
+                              }));
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-indigo-400"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 font-medium mb-1 block">☀️ Wake Time</label>
+                          <input
+                            type="time"
+                            value={dayData.wakeTime || ''}
+                            onChange={(e) => {
+                              const newHours = calculateHours(dayData.bedTime, e.target.value);
+                              setSleepData(prev => ({
+                                ...prev,
+                                [day.date]: { ...prev[day.date], wakeTime: e.target.value, hoursSlept: parseFloat(newHours) }
+                              }));
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-indigo-400"
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Night Wakings & Quality Row */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-xs text-gray-500 font-medium mb-1 block">😴 Night Wakings</label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSleepData(prev => ({
+                                ...prev,
+                                [day.date]: { ...prev[day.date], nightWakings: Math.max(0, (prev[day.date]?.nightWakings || 0) - 1) }
+                              }))}
+                              className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 font-bold text-lg"
+                            >
+                              -
+                            </button>
+                            <div className="flex-1 text-center font-bold text-xl">
+                              {dayData.nightWakings || 0}
+                            </div>
+                            <button
+                              onClick={() => setSleepData(prev => ({
+                                ...prev,
+                                [day.date]: { ...prev[day.date], nightWakings: (prev[day.date]?.nightWakings || 0) + 1 }
+                              }))}
+                              className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 font-bold text-lg"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 font-medium mb-1 block">🌅 Woke at Dawn?</label>
+                          <button
+                            onClick={() => setSleepData(prev => ({
+                              ...prev,
+                              [day.date]: { ...prev[day.date], wokeAtDawn: !prev[day.date]?.wokeAtDawn }
+                            }))}
+                            className={`w-full py-2 rounded-xl font-medium transition-all ${
+                              dayData.wokeAtDawn 
+                                ? 'bg-orange-100 text-orange-700 border-2 border-orange-300' 
+                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
+                            }`}
+                          >
+                            {dayData.wokeAtDawn ? '✓ Yes' : 'No'}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* Dream Type Row */}
+                      <div>
+                        <label className="text-xs text-gray-500 font-medium mb-2 block">💭 Dreams</label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setSleepData(prev => ({
+                              ...prev,
+                              [day.date]: { ...prev[day.date], dreamType: prev[day.date]?.dreamType === 'nothing' ? '' : 'nothing' }
+                            }))}
+                            className={`flex-1 py-2 rounded-xl font-medium transition-all ${
+                              dayData.dreamType === 'nothing'
+                                ? 'bg-gray-200 text-gray-700 border-2 border-gray-400'
+                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
+                            }`}
+                          >
+                            😶 Nothing
+                          </button>
+                          <button
+                            onClick={() => setSleepData(prev => ({
+                              ...prev,
+                              [day.date]: { ...prev[day.date], dreamType: prev[day.date]?.dreamType === 'dream' ? '' : 'dream' }
+                            }))}
+                            className={`flex-1 py-2 rounded-xl font-medium transition-all ${
+                              dayData.dreamType === 'dream'
+                                ? 'bg-purple-100 text-purple-700 border-2 border-purple-400'
+                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
+                            }`}
+                          >
+                            ✨ Dream
+                          </button>
+                          <button
+                            onClick={() => setSleepData(prev => ({
+                              ...prev,
+                              [day.date]: { ...prev[day.date], dreamType: prev[day.date]?.dreamType === 'nightmare' ? '' : 'nightmare' }
+                            }))}
+                            className={`flex-1 py-2 rounded-xl font-medium transition-all ${
+                              dayData.dreamType === 'nightmare'
+                                ? 'bg-red-100 text-red-700 border-2 border-red-400'
+                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
+                            }`}
+                          >
+                            👻 Nightmare
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* Notes */}
+                      <div>
+                        <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Notes</label>
+                        <input
+                          type="text"
+                          value={dayData.notes || ''}
+                          onChange={(e) => setSleepData(prev => ({
+                            ...prev,
+                            [day.date]: { ...prev[day.date], notes: e.target.value }
+                          }))}
+                          placeholder="How did you sleep? Any thoughts..."
+                          className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-indigo-400"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Weekly Steps Tab */}
           {gymSubTab === 'steps' && (
@@ -4749,8 +5033,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button onClick={() => setActiveView('gym')} className="bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all text-left">
               <Dumbbell className="w-6 h-6 text-green-500 mb-2" />
-              <div className="font-medium text-gray-800">Fitness</div>
-              <div className="text-xs text-gray-500">{workoutPlan.stepsGoal.toLocaleString()} step goal</div>
+              <div className="font-medium text-gray-800">Health</div>
+              <div className="text-xs text-gray-500">Sleep & Fitness</div>
             </button>
             <button onClick={() => setActiveView('assets')} className="bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all text-left">
               <DollarSign className="w-6 h-6 text-blue-500 mb-2" />
@@ -6312,7 +6596,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: '1 Custom Category', free: true, elite: true },
                 { feature: 'AI Chat (10 msgs/day)', free: true, elite: false },
                 { feature: 'AI Chat (30 msgs/day)', free: false, elite: true },
-                { feature: 'Fitness & Gym Tracker', free: false, elite: true },
+                { feature: 'Health & Sleep Tracker', free: false, elite: true },
                 { feature: 'Bills & Debt Tracker', free: false, elite: true },
                 { feature: 'Assets Management', free: false, elite: true },
                 { feature: 'Investment Portfolio', free: false, elite: true },
