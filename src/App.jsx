@@ -5341,6 +5341,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "G'morning" : hour < 17 ? "G'day" : "G'evening";
     
+    // Get today's date for stats
+    const today = new Date().toISOString().split('T')[0];
+    const todaySleep = sleepData[today] || {};
+    const todayMood = mentalHealthData[today] || {};
+    const todayShift = timesheetData.shifts?.[today] || {};
+    
+    // Yesterday's sleep (for "last night")
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayKey = yesterday.toISOString().split('T')[0];
+    const lastNightSleep = sleepData[yesterdayKey] || {};
+    
+    // Weekly work hours
+    const getWeekDays = () => {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(monday);
+        day.setDate(monday.getDate() + i);
+        days.push(day.toISOString().split('T')[0]);
+      }
+      return days;
+    };
+    const weekDays = getWeekDays();
+    const weeklyWorkHours = weekDays.reduce((sum, date) => {
+      const shift = timesheetData.shifts?.[date] || {};
+      return sum + (parseFloat(shift.normalHours) || 0) + (parseFloat(shift.timeHalfHours) || 0) + (parseFloat(shift.doubleHours) || 0) + (parseFloat(shift.doubleHalfHours) || 0);
+    }, 0);
+    const weeklyWorkPay = weekDays.reduce((sum, date) => {
+      const shift = timesheetData.shifts?.[date] || {};
+      const rate = timesheetData.hourlyRate || 0;
+      return sum + ((parseFloat(shift.normalHours) || 0) * rate) + ((parseFloat(shift.timeHalfHours) || 0) * rate * 1.5) + ((parseFloat(shift.doubleHours) || 0) * rate * 2) + ((parseFloat(shift.doubleHalfHours) || 0) * rate * 2.5);
+    }, 0);
+    
+    // Mood emoji lookup
+    const moodEmojis = { great: '😊', good: '😌', okay: '😐', low: '😔', sad: '😢', angry: '😡' };
+    
     return (
       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white pb-24">
         <Sidebar />
@@ -5402,12 +5442,118 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
         
+        {/* Today's Summary - NEW */}
+        <div className="max-w-4xl mx-auto px-6 -mt-4 mb-6">
+          <div className="bg-white rounded-2xl shadow-lg border p-4">
+            <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+              <span className="text-lg">📊</span> Today's Summary
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {/* Last Night's Sleep */}
+              <button 
+                onClick={() => setActiveView('gym')}
+                className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-indigo-100"
+              >
+                <div className="text-2xl mb-1">🌙</div>
+                <div className="text-xs text-indigo-600 font-medium">Last Night</div>
+                <div className="text-xl font-bold text-indigo-700">
+                  {lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}
+                </div>
+                <div className="text-xs text-indigo-500">
+                  {lastNightSleep.hoursSlept >= 7 ? 'Great sleep! 💪' : lastNightSleep.hoursSlept >= 5 ? 'Okay sleep' : lastNightSleep.hoursSlept ? 'Need more 😴' : 'Not logged'}
+                </div>
+              </button>
+              
+              {/* Today's Mood */}
+              <button 
+                onClick={() => setActiveView('gym')}
+                className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-pink-100"
+              >
+                <div className="text-2xl mb-1">🧠</div>
+                <div className="text-xs text-pink-600 font-medium">Mood</div>
+                <div className="text-xl font-bold text-pink-700">
+                  {todayMood.mood ? moodEmojis[todayMood.mood] : '—'}
+                </div>
+                <div className="text-xs text-pink-500">
+                  {todayMood.mood ? `Energy: ${todayMood.energy || '?'}/5` : 'Not logged'}
+                </div>
+              </button>
+              
+              {/* Weekly Work */}
+              <button 
+                onClick={() => setActiveView('work')}
+                className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-blue-100"
+              >
+                <div className="text-2xl mb-1">💼</div>
+                <div className="text-xs text-blue-600 font-medium">This Week</div>
+                <div className="text-xl font-bold text-blue-700">
+                  {weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(1)}h` : '—'}
+                </div>
+                <div className="text-xs text-blue-500">
+                  {weeklyWorkPay > 0 ? `$${weeklyWorkPay.toFixed(0)} earned` : 'No shifts logged'}
+                </div>
+              </button>
+              
+              {/* Tasks Today */}
+              <button 
+                onClick={() => setActiveView('tasks')}
+                className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-purple-100"
+              >
+                <div className="text-2xl mb-1">✅</div>
+                <div className="text-xs text-purple-600 font-medium">Tasks</div>
+                <div className="text-xl font-bold text-purple-700">
+                  {dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}
+                </div>
+                <div className="text-xs text-purple-500">
+                  {dailyTasks.length === 0 ? 'No tasks' : dailyTasks.filter(t => t.completed).length === dailyTasks.length ? 'All done! 🎉' : 'Keep going!'}
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Stats Grid */}
-        <div className="max-w-4xl mx-auto px-6 -mt-4">
+        <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
             <StatCard icon={Wallet} label="Monthly Bills" value={"$" + totalMonthly.toFixed(0)} color="blue" onClick={() => setActiveView("varied")} />
             <StatCard icon={Target} label="Savings Rate" value={savingsRate.toFixed(0) + "%"} color="green" onClick={() => setActiveView("varied")} />
             <StatCard icon={TrendingUp} label="Portfolio" value={"$" + totalStocks.toLocaleString()} color="purple" onClick={() => setActiveView("investments")} />
+          </div>
+          
+          {/* Quick Access Cards - NEW LAYOUT */}
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6">
+            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">🌙</span>
+              <span className="text-xs font-medium text-gray-600">Sleep</span>
+            </button>
+            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">🧠</span>
+              <span className="text-xs font-medium text-gray-600">Mood</span>
+            </button>
+            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">👟</span>
+              <span className="text-xs font-medium text-gray-600">Steps</span>
+            </button>
+            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">💪</span>
+              <span className="text-xs font-medium text-gray-600">Workout</span>
+            </button>
+            <button onClick={() => setActiveView('work')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">💼</span>
+              <span className="text-xs font-medium text-gray-600">Work</span>
+            </button>
+            <button onClick={() => setActiveView('diet')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">🥗</span>
+              <span className="text-xs font-medium text-gray-600">Diet</span>
+            </button>
+            <button onClick={() => setActiveView('varied')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">💳</span>
+              <span className="text-xs font-medium text-gray-600">Bills</span>
+            </button>
+            <button onClick={() => setActiveView('investments')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">📈</span>
+              <span className="text-xs font-medium text-gray-600">Invest</span>
+            </button>
           </div>
           
           {/* Achievements & Coming Up */}
