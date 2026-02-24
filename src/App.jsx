@@ -3118,15 +3118,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       day.isToday ? 'bg-indigo-50' : 'bg-gray-50'
                     }`}>
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
-                          day.isToday ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 border'
-                        }`}>
-                          {day.dateNum}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-800">{day.dayName}</div>
-                          <div className="text-xs text-gray-500">{day.month}</div>
-                        </div>
+                        <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
                         {day.isToday && (
                           <span className="px-2 py-0.5 bg-indigo-500 text-white text-xs rounded-full">Today</span>
                         )}
