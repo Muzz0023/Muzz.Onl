@@ -3328,9 +3328,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div key={day.date} className={`bg-white rounded-3xl shadow-sm border overflow-hidden ${day.isToday ? 'ring-2 ring-blue-500' : ''}`}>
                     <div className="p-4">
                       <div className="flex items-center gap-4 mb-3">
-                        <div className={`w-14 h-14 rounded-xl flex flex-col items-center justify-center ${day.isToday ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                          <span className="text-xs font-medium">{day.dayShort}</span>
-                          <span className="text-lg font-bold leading-none">{day.dateNum}</span>
+                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${day.isToday ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                          <span className="text-sm font-bold">{day.dayShort}</span>
                         </div>
                         
                         <div className="flex-1">
