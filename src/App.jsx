@@ -5064,7 +5064,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return sum + calculateHours(shift.startTime, shift.endTime, shift.breakMins);
     }, 0);
     
-    const weeklyPay = weeklyHours * (timesheetData.hourlyRate || 0);
+    const weeklyPay = weekDays.reduce((sum, day) => {
+      const shift = timesheetData.shifts?.[day.date] || {};
+      const hours = calculateHours(shift.startTime, shift.endTime, shift.breakMins);
+      const rate = shift.payRate || 1;
+      return sum + (hours * (timesheetData.hourlyRate || 0) * rate);
+    }, 0);
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -5136,7 +5141,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
               <div className="bg-white/10 rounded-xl p-4 text-center">
                 <div className="text-3xl font-bold">${weeklyPay.toFixed(2)}</div>
-                <div className="text-sm text-blue-200">Estimated Pay</div>
+                <div className="text-sm text-blue-200">Estimated Pay (before tax)</div>
               </div>
             </div>
           </div>
@@ -5145,7 +5150,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {weekDays.map(day => {
             const shift = timesheetData.shifts?.[day.date] || {};
             const hoursWorked = calculateHours(shift.startTime, shift.endTime, shift.breakMins);
-            const dayPay = hoursWorked * (timesheetData.hourlyRate || 0);
+            const dayPay = hoursWorked * (timesheetData.hourlyRate || 0) * (shift.payRate || 1);
             
             return (
               <div 
@@ -5244,6 +5249,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         placeholder="0"
                         className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
                       />
+                    </div>
+                  </div>
+                  
+                  {/* Pay Rate Row */}
+                  <div>
+                    <label className="text-xs text-gray-500 font-medium mb-2 block">💰 Pay Rate</label>
+                    <div className="flex gap-2">
+                      {[
+                        { value: 1, label: '1x', desc: 'Normal' },
+                        { value: 1.5, label: '1.5x', desc: 'Time & Half' },
+                        { value: 2, label: '2x', desc: 'Double' },
+                        { value: 2.5, label: '2.5x', desc: 'Double + Half' }
+                      ].map(rate => (
+                        <button
+                          key={rate.value}
+                          onClick={() => {
+                            setTimesheetData(prev => ({
+                              ...prev,
+                              shifts: {
+                                ...prev.shifts,
+                                [day.date]: { ...prev.shifts?.[day.date], payRate: rate.value }
+                              }
+                            }));
+                          }}
+                          className={`flex-1 py-2 rounded-xl font-medium text-sm transition-all ${
+                            (shift.payRate || 1) === rate.value
+                              ? rate.value === 1 ? 'bg-blue-100 text-blue-700 border-2 border-blue-400' :
+                                rate.value === 1.5 ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-400' :
+                                rate.value === 2 ? 'bg-orange-100 text-orange-700 border-2 border-orange-400' :
+                                'bg-red-100 text-red-700 border-2 border-red-400'
+                              : 'bg-gray-100 text-gray-500 border-2 border-transparent'
+                          }`}
+                        >
+                          <div>{rate.label}</div>
+                          <div className="text-xs opacity-70">{rate.desc}</div>
+                        </button>
+                      ))}
                     </div>
                   </div>
                   
