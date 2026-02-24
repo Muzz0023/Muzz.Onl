@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase } from 'lucide-react';
 
 // ============================================
 // MOBILE KEYBOARD HELPER
@@ -868,6 +868,7 @@ function MuzzApp() {
   const [gymSubTab, setGymSubTab] = useState('sleep');
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
+  const [timesheetData, setTimesheetData] = useState({ hourlyRate: 0, hourlyRateStr: '', shifts: {} });
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [holdingsResearch, setHoldingsResearch] = useState([]);
@@ -1030,6 +1031,7 @@ function MuzzApp() {
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
           if (d.sleepData) setSleepData(d.sleepData);
           if (d.mentalHealthData) setMentalHealthData(d.mentalHealthData);
+          if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.stripeElite) setStripeElite(d.stripeElite);
@@ -1095,6 +1097,7 @@ function MuzzApp() {
           workoutPlan,
           sleepData,
           mentalHealthData,
+          timesheetData,
           customCategories,
           eliteName,
           stripeElite
@@ -1111,7 +1114,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1273,6 +1276,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
     { id: "gym", label: "Health", icon: Dumbbell, eliteOnly: true },
+    { id: "work", label: "Work", icon: Briefcase, eliteOnly: true },
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
@@ -1381,7 +1385,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns,
                       biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks,
                       dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
-                      waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, customCategories, eliteName
+                      waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName
                     };
                     const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -1450,6 +1454,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             if (data.workoutPlan) setWorkoutPlan(data.workoutPlan);
                             if (data.sleepData) setSleepData(data.sleepData);
                             if (data.mentalHealthData) setMentalHealthData(data.mentalHealthData);
+                            if (data.timesheetData) setTimesheetData(data.timesheetData);
                             if (data.customCategories) setCustomCategories(data.customCategories);
                             if (data.eliteName) setEliteName(data.eliteName);
                             alert('Backup restored successfully!');
@@ -5012,6 +5017,264 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
+  // WORK VIEW
+  if (activeView === 'work') {
+    if (!isElite) return <LockedFeature featureName="Work" setActiveView={setActiveView} />;
+    
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Get all days of the current week (Monday to Sunday)
+    const getWeekDays = () => {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(monday);
+        day.setDate(monday.getDate() + i);
+        days.push({
+          date: day.toISOString().split('T')[0],
+          dayName: day.toLocaleDateString('en-AU', { weekday: 'long' }),
+          dayShort: day.toLocaleDateString('en-AU', { weekday: 'short' }),
+          isToday: day.toISOString().split('T')[0] === today
+        });
+      }
+      return days;
+    };
+
+    const weekDays = getWeekDays();
+    
+    // Calculate hours worked
+    const calculateHours = (start, end, breakMins) => {
+      if (!start || !end) return 0;
+      const [startH, startM] = start.split(':').map(Number);
+      const [endH, endM] = end.split(':').map(Number);
+      let startMins = startH * 60 + startM;
+      let endMins = endH * 60 + endM;
+      if (endMins < startMins) endMins += 24 * 60; // overnight shift
+      const totalMins = endMins - startMins - (breakMins || 0);
+      return Math.max(0, totalMins / 60);
+    };
+    
+    // Calculate weekly totals
+    const weeklyHours = weekDays.reduce((sum, day) => {
+      const shift = timesheetData.shifts?.[day.date] || {};
+      return sum + calculateHours(shift.startTime, shift.endTime, shift.breakMins);
+    }, 0);
+    
+    const weeklyPay = weeklyHours * (timesheetData.hourlyRate || 0);
+
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-white border-b">
+          <div className="max-w-5xl mx-auto px-6 py-6">
+            <div className="flex items-center justify-between">
+              <div className="pl-12">
+                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <h1 className="text-4xl font-semibold">Work & Timesheet</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+          {/* Weekly Summary Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-2xl font-bold">💼 Weekly Timesheet</h2>
+                <p className="text-blue-100 mt-1">Track your work hours</p>
+              </div>
+              <button
+                onClick={() => {
+                  if (confirm('Reset all shifts for this week?')) {
+                    const newShifts = { ...timesheetData.shifts };
+                    weekDays.forEach(day => {
+                      delete newShifts[day.date];
+                    });
+                    setTimesheetData(prev => ({ ...prev, shifts: newShifts }));
+                  }
+                }}
+                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
+              >
+                Reset Week
+              </button>
+            </div>
+            
+            {/* Hourly Rate Setting */}
+            <div className="flex items-center gap-3 mb-4 p-3 bg-white/10 rounded-xl">
+              <span className="text-blue-100">Hourly Rate:</span>
+              <div className="flex items-center bg-white/20 rounded-lg px-3 py-1">
+                <span className="text-white">$</span>
+                <input
+                  type="text"
+                  value={timesheetData.hourlyRateStr || ''}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9.]/g, '');
+                    setTimesheetData(prev => ({ 
+                      ...prev, 
+                      hourlyRateStr: val,
+                      hourlyRate: parseFloat(val) || 0 
+                    }));
+                  }}
+                  placeholder="0.00"
+                  className="w-20 bg-transparent text-white placeholder-blue-200 focus:outline-none text-center"
+                />
+                <span className="text-blue-200">/hr</span>
+              </div>
+            </div>
+            
+            {/* Weekly Stats */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/10 rounded-xl p-4 text-center">
+                <div className="text-3xl font-bold">{weeklyHours.toFixed(1)}</div>
+                <div className="text-sm text-blue-200">Hours This Week</div>
+              </div>
+              <div className="bg-white/10 rounded-xl p-4 text-center">
+                <div className="text-3xl font-bold">${weeklyPay.toFixed(2)}</div>
+                <div className="text-sm text-blue-200">Estimated Pay</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Daily Shift Cards */}
+          {weekDays.map(day => {
+            const shift = timesheetData.shifts?.[day.date] || {};
+            const hoursWorked = calculateHours(shift.startTime, shift.endTime, shift.breakMins);
+            const dayPay = hoursWorked * (timesheetData.hourlyRate || 0);
+            
+            return (
+              <div 
+                key={day.date} 
+                className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
+                  day.isToday ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-100'
+                }`}
+              >
+                {/* Day Header */}
+                <div className={`px-4 py-3 flex items-center justify-between ${
+                  day.isToday ? 'bg-blue-50' : 'bg-gray-50'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
+                    {day.isToday && (
+                      <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full">Today</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {hoursWorked > 0 && (
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
+                          {hoursWorked.toFixed(1)}h
+                        </span>
+                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">
+                          ${dayPay.toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                    <button
+                      onClick={() => {
+                        const newShifts = { ...timesheetData.shifts };
+                        delete newShifts[day.date];
+                        setTimesheetData(prev => ({ ...prev, shifts: newShifts }));
+                      }}
+                      className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                      title="Clear day"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Shift Details */}
+                <div className="p-4 space-y-4">
+                  {/* Time Row */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-xs text-gray-500 font-medium mb-1 block">🕐 Start Time</label>
+                      <input
+                        type="time"
+                        value={shift.startTime || ''}
+                        onChange={(e) => {
+                          setTimesheetData(prev => ({
+                            ...prev,
+                            shifts: {
+                              ...prev.shifts,
+                              [day.date]: { ...prev.shifts?.[day.date], startTime: e.target.value }
+                            }
+                          }));
+                        }}
+                        className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 font-medium mb-1 block">🕐 End Time</label>
+                      <input
+                        type="time"
+                        value={shift.endTime || ''}
+                        onChange={(e) => {
+                          setTimesheetData(prev => ({
+                            ...prev,
+                            shifts: {
+                              ...prev.shifts,
+                              [day.date]: { ...prev.shifts?.[day.date], endTime: e.target.value }
+                            }
+                          }));
+                        }}
+                        className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 font-medium mb-1 block">☕ Break (mins)</label>
+                      <input
+                        type="number"
+                        value={shift.breakMins || ''}
+                        onChange={(e) => {
+                          setTimesheetData(prev => ({
+                            ...prev,
+                            shifts: {
+                              ...prev.shifts,
+                              [day.date]: { ...prev.shifts?.[day.date], breakMins: parseInt(e.target.value) || 0 }
+                            }
+                          }));
+                        }}
+                        placeholder="0"
+                        className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Notes */}
+                  <div>
+                    <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Notes</label>
+                    <input
+                      type="text"
+                      value={shift.notes || ''}
+                      onChange={(e) => {
+                        setTimesheetData(prev => ({
+                          ...prev,
+                          shifts: {
+                            ...prev.shifts,
+                            [day.date]: { ...prev.shifts?.[day.date], notes: e.target.value }
+                          }
+                        }));
+                      }}
+                      placeholder="What did you work on..."
+                      className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-400"
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
 
   // HOME VIEW
   if (activeView === 'home') {
@@ -6806,6 +7069,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'AI Chat (10 msgs/day)', free: true, elite: false },
                 { feature: 'AI Chat (30 msgs/day)', free: false, elite: true },
                 { feature: 'Health & Sleep Tracker', free: false, elite: true },
+                { feature: 'Work & Timesheet', free: false, elite: true },
                 { feature: 'Bills & Debt Tracker', free: false, elite: true },
                 { feature: 'Assets Management', free: false, elite: true },
                 { feature: 'Investment Portfolio', free: false, elite: true },
