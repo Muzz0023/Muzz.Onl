@@ -5061,14 +5061,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // Calculate weekly totals
     const weeklyHours = weekDays.reduce((sum, day) => {
       const shift = timesheetData.shifts?.[day.date] || {};
-      return sum + calculateHours(shift.startTime, shift.endTime, shift.breakMins);
+      const normalHrs = parseFloat(shift.normalHours) || 0;
+      const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
+      const doubleHrs = parseFloat(shift.doubleHours) || 0;
+      const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
+      return sum + normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
     }, 0);
     
     const weeklyPay = weekDays.reduce((sum, day) => {
       const shift = timesheetData.shifts?.[day.date] || {};
-      const hours = calculateHours(shift.startTime, shift.endTime, shift.breakMins);
-      const rate = shift.payRate || 1;
-      return sum + (hours * (timesheetData.hourlyRate || 0) * rate);
+      const normalHrs = parseFloat(shift.normalHours) || 0;
+      const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
+      const doubleHrs = parseFloat(shift.doubleHours) || 0;
+      const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
+      const hourlyRate = timesheetData.hourlyRate || 0;
+      return sum + (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
     }, 0);
 
     return (
@@ -5149,8 +5156,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Daily Shift Cards */}
           {weekDays.map(day => {
             const shift = timesheetData.shifts?.[day.date] || {};
-            const hoursWorked = calculateHours(shift.startTime, shift.endTime, shift.breakMins);
-            const dayPay = hoursWorked * (timesheetData.hourlyRate || 0) * (shift.payRate || 1);
+            const normalHrs = parseFloat(shift.normalHours) || 0;
+            const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
+            const doubleHrs = parseFloat(shift.doubleHours) || 0;
+            const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
+            const totalHours = normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
+            const hourlyRate = timesheetData.hourlyRate || 0;
+            const dayPay = (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
             
             return (
               <div 
@@ -5170,10 +5182,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
                   <div className="flex items-center gap-3">
-                    {hoursWorked > 0 && (
+                    {totalHours > 0 && (
                       <div className="flex items-center gap-2">
                         <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
-                          {hoursWorked.toFixed(1)}h
+                          {totalHours.toFixed(1)}h
                         </span>
                         <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">
                           ${dayPay.toFixed(2)}
@@ -5196,96 +5208,102 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 {/* Shift Details */}
                 <div className="p-4 space-y-4">
-                  {/* Time Row */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="text-xs text-gray-500 font-medium mb-1 block">🕐 Start Time</label>
-                      <input
-                        type="time"
-                        value={shift.startTime || ''}
-                        onChange={(e) => {
-                          setTimesheetData(prev => ({
-                            ...prev,
-                            shifts: {
-                              ...prev.shifts,
-                              [day.date]: { ...prev.shifts?.[day.date], startTime: e.target.value }
-                            }
-                          }));
-                        }}
-                        className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-500 font-medium mb-1 block">🕐 End Time</label>
-                      <input
-                        type="time"
-                        value={shift.endTime || ''}
-                        onChange={(e) => {
-                          setTimesheetData(prev => ({
-                            ...prev,
-                            shifts: {
-                              ...prev.shifts,
-                              [day.date]: { ...prev.shifts?.[day.date], endTime: e.target.value }
-                            }
-                          }));
-                        }}
-                        className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-500 font-medium mb-1 block">☕ Break (mins)</label>
-                      <input
-                        type="number"
-                        value={shift.breakMins || ''}
-                        onChange={(e) => {
-                          setTimesheetData(prev => ({
-                            ...prev,
-                            shifts: {
-                              ...prev.shifts,
-                              [day.date]: { ...prev.shifts?.[day.date], breakMins: parseInt(e.target.value) || 0 }
-                            }
-                          }));
-                        }}
-                        placeholder="0"
-                        className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-blue-400"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Pay Rate Row */}
-                  <div>
-                    <label className="text-xs text-gray-500 font-medium mb-2 block">💰 Pay Rate</label>
-                    <div className="flex gap-2">
-                      {[
-                        { value: 1, label: '1x', desc: 'Normal' },
-                        { value: 1.5, label: '1.5x', desc: 'Time & Half' },
-                        { value: 2, label: '2x', desc: 'Double' },
-                        { value: 2.5, label: '2.5x', desc: 'Double + Half' }
-                      ].map(rate => (
-                        <button
-                          key={rate.value}
-                          onClick={() => {
+                  {/* Hours Input Grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Normal Hours */}
+                    <div className="bg-blue-50 rounded-xl p-3">
+                      <label className="text-xs text-blue-600 font-medium mb-1 block">1x Normal</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          step="0.5"
+                          value={shift.normalHours || ''}
+                          onChange={(e) => {
                             setTimesheetData(prev => ({
                               ...prev,
                               shifts: {
                                 ...prev.shifts,
-                                [day.date]: { ...prev.shifts?.[day.date], payRate: rate.value }
+                                [day.date]: { ...prev.shifts?.[day.date], normalHours: e.target.value }
                               }
                             }));
                           }}
-                          className={`flex-1 py-2 rounded-xl font-medium text-sm transition-all ${
-                            (shift.payRate || 1) === rate.value
-                              ? rate.value === 1 ? 'bg-blue-100 text-blue-700 border-2 border-blue-400' :
-                                rate.value === 1.5 ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-400' :
-                                rate.value === 2 ? 'bg-orange-100 text-orange-700 border-2 border-orange-400' :
-                                'bg-red-100 text-red-700 border-2 border-red-400'
-                              : 'bg-gray-100 text-gray-500 border-2 border-transparent'
-                          }`}
-                        >
-                          <div>{rate.label}</div>
-                          <div className="text-xs opacity-70">{rate.desc}</div>
-                        </button>
-                      ))}
+                          placeholder="0"
+                          className="w-full px-3 py-2 border-2 border-blue-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-blue-400 bg-white"
+                        />
+                        <span className="text-blue-600 font-medium">hrs</span>
+                      </div>
+                    </div>
+                    
+                    {/* Time & Half Hours */}
+                    <div className="bg-yellow-50 rounded-xl p-3">
+                      <label className="text-xs text-yellow-600 font-medium mb-1 block">1.5x Time & Half</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          step="0.5"
+                          value={shift.timeHalfHours || ''}
+                          onChange={(e) => {
+                            setTimesheetData(prev => ({
+                              ...prev,
+                              shifts: {
+                                ...prev.shifts,
+                                [day.date]: { ...prev.shifts?.[day.date], timeHalfHours: e.target.value }
+                              }
+                            }));
+                          }}
+                          placeholder="0"
+                          className="w-full px-3 py-2 border-2 border-yellow-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-yellow-400 bg-white"
+                        />
+                        <span className="text-yellow-600 font-medium">hrs</span>
+                      </div>
+                    </div>
+                    
+                    {/* Double Time Hours */}
+                    <div className="bg-orange-50 rounded-xl p-3">
+                      <label className="text-xs text-orange-600 font-medium mb-1 block">2x Double Time</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          step="0.5"
+                          value={shift.doubleHours || ''}
+                          onChange={(e) => {
+                            setTimesheetData(prev => ({
+                              ...prev,
+                              shifts: {
+                                ...prev.shifts,
+                                [day.date]: { ...prev.shifts?.[day.date], doubleHours: e.target.value }
+                              }
+                            }));
+                          }}
+                          placeholder="0"
+                          className="w-full px-3 py-2 border-2 border-orange-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-orange-400 bg-white"
+                        />
+                        <span className="text-orange-600 font-medium">hrs</span>
+                      </div>
+                    </div>
+                    
+                    {/* Double + Half Hours */}
+                    <div className="bg-red-50 rounded-xl p-3">
+                      <label className="text-xs text-red-600 font-medium mb-1 block">2.5x Double & Half</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          step="0.5"
+                          value={shift.doubleHalfHours || ''}
+                          onChange={(e) => {
+                            setTimesheetData(prev => ({
+                              ...prev,
+                              shifts: {
+                                ...prev.shifts,
+                                [day.date]: { ...prev.shifts?.[day.date], doubleHalfHours: e.target.value }
+                              }
+                            }));
+                          }}
+                          placeholder="0"
+                          className="w-full px-3 py-2 border-2 border-red-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-red-400 bg-white"
+                        />
+                        <span className="text-red-600 font-medium">hrs</span>
+                      </div>
                     </div>
                   </div>
                   
