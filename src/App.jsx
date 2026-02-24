@@ -865,8 +865,9 @@ function MuzzApp() {
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
-  const [gymSubTab, setGymSubTab] = useState('steps');
+  const [gymSubTab, setGymSubTab] = useState('sleep');
   const [sleepData, setSleepData] = useState({});
+  const [mentalHealthData, setMentalHealthData] = useState({});
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [holdingsResearch, setHoldingsResearch] = useState([]);
@@ -1028,6 +1029,7 @@ function MuzzApp() {
           if (d.dailySteps) setDailySteps(d.dailySteps);
           if (d.workoutPlan) setWorkoutPlan(d.workoutPlan);
           if (d.sleepData) setSleepData(d.sleepData);
+          if (d.mentalHealthData) setMentalHealthData(d.mentalHealthData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.stripeElite) setStripeElite(d.stripeElite);
@@ -1092,6 +1094,7 @@ function MuzzApp() {
           dailySteps,
           workoutPlan,
           sleepData,
+          mentalHealthData,
           customCategories,
           eliteName,
           stripeElite
@@ -1108,7 +1111,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1378,7 +1381,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns,
                       biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks,
                       dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
-                      waterIntake, dailySteps, workoutPlan, sleepData, customCategories, eliteName
+                      waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, customCategories, eliteName
                     };
                     const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -1446,6 +1449,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             if (data.dailySteps) setDailySteps(data.dailySteps);
                             if (data.workoutPlan) setWorkoutPlan(data.workoutPlan);
                             if (data.sleepData) setSleepData(data.sleepData);
+                            if (data.mentalHealthData) setMentalHealthData(data.mentalHealthData);
                             if (data.customCategories) setCustomCategories(data.customCategories);
                             if (data.eliteName) setEliteName(data.eliteName);
                             alert('Backup restored successfully!');
@@ -3013,6 +3017,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               🌙 Sleep
             </button>
             <button
+              onClick={() => setGymSubTab('mental')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                gymSubTab === 'mental'
+                  ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              🧠 Mental Health
+            </button>
+            <button
               onClick={() => setGymSubTab('steps')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 gymSubTab === 'steps'
@@ -3287,6 +3301,210 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           }))}
                           placeholder="How did you sleep? Any thoughts..."
                           className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-indigo-400"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Mental Health Tab */}
+          {gymSubTab === 'mental' && (
+            <div className="space-y-4">
+              {/* Mental Health Header */}
+              <div className="bg-gradient-to-r from-pink-500 to-rose-600 rounded-2xl p-6 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold">🧠 Mental Health</h2>
+                    <p className="text-pink-100 mt-1">Track your mood & wellbeing</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (confirm('Reset all mental health data for this week?')) {
+                        const newData = { ...mentalHealthData };
+                        weekDays.forEach(day => {
+                          delete newData[day.date];
+                        });
+                        setMentalHealthData(newData);
+                      }
+                    }}
+                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
+                  >
+                    Reset Week
+                  </button>
+                </div>
+                {/* Weekly Summary */}
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="text-2xl font-bold">
+                      {weekDays.filter(d => mentalHealthData[d.date]?.mood).length}
+                    </div>
+                    <div className="text-xs text-pink-200">Days Logged</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="text-2xl font-bold">
+                      {(() => {
+                        const moods = weekDays.map(d => mentalHealthData[d.date]?.energy).filter(e => e);
+                        return moods.length > 0 ? (moods.reduce((a,b) => a+b, 0) / moods.length).toFixed(1) : '-';
+                      })()}
+                    </div>
+                    <div className="text-xs text-pink-200">Avg Energy</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="text-2xl font-bold">
+                      {(() => {
+                        const stress = weekDays.map(d => mentalHealthData[d.date]?.stress).filter(s => s);
+                        return stress.length > 0 ? (stress.reduce((a,b) => a+b, 0) / stress.length).toFixed(1) : '-';
+                      })()}
+                    </div>
+                    <div className="text-xs text-pink-200">Avg Stress</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Daily Mental Health Cards */}
+              {weekDays.map(day => {
+                const dayData = mentalHealthData[day.date] || {};
+                const moods = [
+                  { emoji: '😊', label: 'Great', value: 'great' },
+                  { emoji: '😌', label: 'Good', value: 'good' },
+                  { emoji: '😐', label: 'Okay', value: 'okay' },
+                  { emoji: '😔', label: 'Low', value: 'low' },
+                  { emoji: '😢', label: 'Sad', value: 'sad' },
+                  { emoji: '😡', label: 'Angry', value: 'angry' }
+                ];
+                
+                return (
+                  <div 
+                    key={day.date} 
+                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
+                      day.isToday ? 'border-pink-400 ring-2 ring-pink-100' : 'border-gray-100'
+                    }`}
+                  >
+                    {/* Day Header */}
+                    <div className={`px-4 py-3 flex items-center justify-between ${
+                      day.isToday ? 'bg-pink-50' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
+                        {day.isToday && (
+                          <span className="px-2 py-0.5 bg-pink-500 text-white text-xs rounded-full">Today</span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {dayData.mood && (
+                          <span className="text-2xl">{moods.find(m => m.value === dayData.mood)?.emoji}</span>
+                        )}
+                        <button
+                          onClick={() => {
+                            const newData = { ...mentalHealthData };
+                            delete newData[day.date];
+                            setMentalHealthData(newData);
+                          }}
+                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                          title="Clear day"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Mental Health Details */}
+                    <div className="p-4 space-y-4">
+                      {/* Mood Selection */}
+                      <div>
+                        <label className="text-xs text-gray-500 font-medium mb-2 block">How are you feeling?</label>
+                        <div className="flex gap-2 flex-wrap">
+                          {moods.map(mood => (
+                            <button
+                              key={mood.value}
+                              onClick={() => setMentalHealthData(prev => ({
+                                ...prev,
+                                [day.date]: { ...prev[day.date], mood: prev[day.date]?.mood === mood.value ? '' : mood.value }
+                              }))}
+                              className={`flex flex-col items-center p-2 rounded-xl transition-all ${
+                                dayData.mood === mood.value
+                                  ? 'bg-pink-100 border-2 border-pink-400 scale-105'
+                                  : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                              }`}
+                            >
+                              <span className="text-2xl">{mood.emoji}</span>
+                              <span className="text-xs text-gray-600 mt-1">{mood.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Energy & Stress Row */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-xs text-gray-500 font-medium mb-2 block">⚡ Energy Level</label>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map(level => (
+                              <button
+                                key={level}
+                                onClick={() => setMentalHealthData(prev => ({
+                                  ...prev,
+                                  [day.date]: { ...prev[day.date], energy: prev[day.date]?.energy === level ? 0 : level }
+                                }))}
+                                className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
+                                  dayData.energy >= level
+                                    ? 'bg-yellow-400 text-yellow-900'
+                                    : 'bg-gray-100 text-gray-400'
+                                }`}
+                              >
+                                {level}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>Low</span>
+                            <span>High</span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 font-medium mb-2 block">😰 Stress Level</label>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map(level => (
+                              <button
+                                key={level}
+                                onClick={() => setMentalHealthData(prev => ({
+                                  ...prev,
+                                  [day.date]: { ...prev[day.date], stress: prev[day.date]?.stress === level ? 0 : level }
+                                }))}
+                                className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
+                                  dayData.stress >= level
+                                    ? level <= 2 ? 'bg-green-400 text-green-900' :
+                                      level <= 3 ? 'bg-yellow-400 text-yellow-900' :
+                                      'bg-red-400 text-red-900'
+                                    : 'bg-gray-100 text-gray-400'
+                                }`}
+                              >
+                                {level}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>Calm</span>
+                            <span>Stressed</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Journal Entry */}
+                      <div>
+                        <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Journal / Thoughts</label>
+                        <textarea
+                          value={dayData.journal || ''}
+                          onChange={(e) => setMentalHealthData(prev => ({
+                            ...prev,
+                            [day.date]: { ...prev[day.date], journal: e.target.value }
+                          }))}
+                          placeholder="How was your day? What's on your mind..."
+                          className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-pink-400 resize-none"
+                          rows={3}
                         />
                       </div>
                     </div>
