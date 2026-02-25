@@ -1826,7 +1826,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Sub-tabs */}
           <div className="flex gap-2 flex-wrap">
             <button
-              onClick={() => setTasksSubTab('general')}
+              onClick={() => setTasksSubTab('daily')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 tasksSubTab === 'daily'
                   ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
