@@ -2417,13 +2417,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div key={day.date} className={`bg-white rounded-3xl shadow-sm border overflow-hidden ${day.isToday ? 'ring-2 ring-orange-500' : ''}`}>
                     <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center ${day.isToday ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                          <span className="text-xs font-medium">{day.dayShort}</span>
-                          <span className="text-lg font-bold leading-none">{day.dateNum}</span>
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${day.isToday ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                          <span className="text-sm font-bold">{day.dayShort}</span>
                         </div>
                         <div>
                           <h3 className="font-semibold text-gray-800">{day.dayName}</h3>
-                          <p className="text-xs text-gray-500">{day.dateNum} {day.month} {day.isToday && '• Today'}</p>
+                          {day.isToday && <p className="text-xs text-orange-500 font-medium">Today</p>}
                         </div>
                       </div>
                       <button
