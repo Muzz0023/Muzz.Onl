@@ -816,6 +816,7 @@ function MuzzApp() {
   const [tasksSubTab, setTasksSubTab] = useState('daily');
   const [dailyTasks, setDailyTasks] = useState([]);
   const [weeklyTasks, setWeeklyTasks] = useState([]);
+  const [generalTasks, setGeneralTasks] = useState([]);
   const [dailyRotation, setDailyRotation] = useState([
     { time: '1am', activity: '-' },
     { time: '2am', activity: '-' },
@@ -1021,6 +1022,7 @@ function MuzzApp() {
           if (d.tasks) setTasks(d.tasks);
           if (d.dailyTasks) setDailyTasks(d.dailyTasks);
           if (d.weeklyTasks) setWeeklyTasks(d.weeklyTasks);
+          if (d.generalTasks) setGeneralTasks(d.generalTasks);
           if (d.dailyRotation) setDailyRotation(d.dailyRotation);
           if (d.birthdays) setBirthdays(d.birthdays);
           if (d.reminders) setReminders(d.reminders);
@@ -1087,6 +1089,7 @@ function MuzzApp() {
           tasks,
           dailyTasks,
           weeklyTasks,
+          generalTasks,
           dailyRotation,
           birthdays,
           reminders,
@@ -1114,7 +1117,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1330,50 +1333,79 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
   }, [sidebarOpen]);
 
-  // Sidebar Component - New Visual Style (Orange/Amber theme)
+  // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
     return (
       <div>
-        <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
-        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
+        <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
+        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
           <div 
             ref={sidebarScrollRef} 
-            className="p-6 h-full flex flex-col overflow-y-auto overscroll-contain"
+            className="px-4 py-6 h-full flex flex-col overflow-y-auto overscroll-contain"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            <div className="flex items-center justify-between mb-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8 px-2">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">🦘</div>
-                <div><div className="font-bold text-gray-900">Muzz</div><div className="text-xs text-gray-500">Your money mate</div></div>
+                <div className="w-11 h-11 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-xl shadow-sm">🦘</div>
+                <div>
+                  <div className="font-semibold text-gray-900 text-lg">Muzz</div>
+                  <div className="text-xs text-gray-400 font-medium">Life OS</div>
+                </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors"><X className="w-5 h-5" /></button>
+              <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
             </div>
+            
+            {/* Streak Badge */}
             {currentStreak > 0 && (
-              <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl p-3 mb-6 flex items-center gap-3">
-                <Flame className="w-6 h-6 text-orange-500" />
-                <div className="text-sm font-semibold text-orange-800">{currentStreak} Day Streak!</div>
+              <div className="mx-2 mb-6 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-3 flex items-center gap-3 border border-orange-100">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center">
+                  <Flame className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-gray-800">{currentStreak} Day Streak</div>
+                  <div className="text-xs text-gray-500">Keep it going!</div>
+                </div>
               </div>
             )}
-            <nav className="flex-1 space-y-1">
+            
+            {/* Navigation */}
+            <nav className="flex-1 space-y-1 px-1">
               {navItems.map(item => {
                 const locked = item.eliteOnly && !isElite;
+                const isActive = activeView === item.id;
                 return (
-                  <button key={item.id} onClick={() => { 
-                    if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
-                    setSidebarOpen(false); 
-                  }}
-                    className={activeView === item.id ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg transition-all" : locked ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-400 transition-all" : item.id === 'upgrade' ? "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-amber-50 text-amber-600 transition-all border border-amber-200" : "w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-600 transition-all"}>
-                    <item.icon className="w-5 h-5" />
-                    <span className="font-medium flex-1 text-left">{item.label}</span>
-                    {locked && <Lock className="w-4 h-4 text-gray-400" />}
+                  <button 
+                    key={item.id} 
+                    onClick={() => { 
+                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
+                      setSidebarOpen(false); 
+                    }}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                      isActive 
+                        ? 'bg-orange-500 text-white shadow-sm' 
+                        : locked 
+                          ? 'text-gray-400 hover:bg-gray-50' 
+                          : item.id === 'upgrade' 
+                            ? 'text-orange-600 hover:bg-orange-50 border border-orange-200' 
+                            : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
+                    <span className="font-medium flex-1 text-left text-sm">{item.label}</span>
+                    {locked && <Lock className="w-4 h-4" />}
                     {item.id === 'upgrade' && !isElite && (
-                      <svg width="14" height="14" viewBox="0 0 24 32" fill="none"><path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F59E0B" /><path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" /></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 32" fill="none"><path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F59E0B" /><path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" /></svg>
                     )}
                   </button>
                 );
               })}
             </nav>
-            <div className="pt-4 border-t border-gray-200 mt-4">
+            
+            {/* Footer */}
+            <div className="pt-4 mt-4 border-t border-gray-100 space-y-1 px-1">
               {/* Backup/Export Section */}
               <div className="mb-3 space-y-2">
                 <button 
@@ -1384,7 +1416,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals,
                       investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns,
                       biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks,
-                      dailyTasks, weeklyTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
+                      dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
                       waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName
                     };
                     const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
@@ -1444,6 +1476,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             if (data.tasks) setTasks(data.tasks);
                             if (data.dailyTasks) setDailyTasks(data.dailyTasks);
                             if (data.weeklyTasks) setWeeklyTasks(data.weeklyTasks);
+                            if (data.generalTasks) setGeneralTasks(data.generalTasks);
                             if (data.dailyRotation) setDailyRotation(data.dailyRotation);
                             if (data.birthdays) setBirthdays(data.birthdays);
                             if (data.reminders) setReminders(data.reminders);
@@ -1468,22 +1501,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       e.target.value = '';
                     }}
                   />
-                  <Plus className="w-5 h-5" />
-                  <span className="font-medium">Import Backup</span>
+                  <Plus className="w-4 h-4" />
+                  <span className="font-medium text-sm">Import</span>
                 </label>
               </div>
-              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 transition-all mb-3">
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium">Sign Out</span>
+              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-500 transition-all">
+                <LogOut className="w-4 h-4" />
+                <span className="font-medium text-sm">Sign Out</span>
               </button>
-              <div className="flex items-center justify-center gap-2 text-gray-400">
-                <span className="text-2xl">🦘</span>
-                <span className="text-sm font-medium">Muzz v2.0</span>
+              <div className="flex items-center justify-center gap-2 text-gray-300 mt-4 pt-4 border-t border-gray-100">
+                <span className="text-xs font-medium">Muzz v3.0</span>
               </div>
             </div>
           </div>
         </div>
-        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all"><Menu className="w-5 h-5" /></button>
+        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 bg-white/90 backdrop-blur-lg rounded-2xl shadow-sm hover:shadow-md transition-all border border-gray-100"><Menu className="w-5 h-5 text-gray-600" /></button>
       </div>
     );
   };
@@ -1491,14 +1523,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // Save status indicator (separate from Sidebar to prevent scroll reset)
   const SaveIndicator = () => (
     saveStatus !== 'idle' ? (
-      <div className={`fixed top-4 right-4 z-30 px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium transition-all ${
-        saveStatus === 'saving' ? 'bg-amber-100 text-amber-700' : 
-        saveStatus === 'saved' ? 'bg-green-100 text-green-700' : 
-        'bg-red-100 text-red-700'
+      <div className={`fixed top-4 right-4 z-30 px-3 py-2 rounded-2xl shadow-sm flex items-center gap-2 text-xs font-medium transition-all backdrop-blur-lg ${
+        saveStatus === 'saving' ? 'bg-orange-50/90 text-orange-600 border border-orange-100' : 
+        saveStatus === 'saved' ? 'bg-green-50/90 text-green-600 border border-green-100' : 
+        'bg-red-50/90 text-red-600 border border-red-100'
       }`}>
-        {saveStatus === 'saving' && <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>}
-        {saveStatus === 'saved' && <><CheckCircle2 className="w-4 h-4" /> Saved</>}
-        {saveStatus === 'error' && <><X className="w-4 h-4" /> Save failed</>}
+        {saveStatus === 'saving' && <><Loader2 className="w-3 h-3 animate-spin" /> Saving...</>}
+        {saveStatus === 'saved' && <><CheckCircle2 className="w-3 h-3" /> Saved</>}
+        {saveStatus === 'error' && <><X className="w-3 h-3" /> Failed</>}
       </div>
     ) : null
   );
@@ -1794,6 +1826,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Sub-tabs */}
           <div className="flex gap-2 flex-wrap">
             <button
+              onClick={() => setTasksSubTab('general')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                tasksSubTab === 'general'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              General Tasks
+            </button>
+            <button
               onClick={() => setTasksSubTab('daily')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 tasksSubTab === 'daily'
@@ -1824,6 +1866,62 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               Daily Rotation
             </button>
           </div>
+
+          {/* General Tasks */}
+          {tasksSubTab === 'general' && (
+            <>
+              <button
+                onClick={() => setGeneralTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, dateAdded: new Date().toISOString() }])}
+                className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+              >
+                + Add General Task
+              </button>
+
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-semibold">General Tasks</h2>
+                  <p className="text-sm text-gray-500">Ongoing tasks with no time limit</p>
+                </div>
+                <div className="divide-y">
+                  {generalTasks.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500">
+                      No general tasks. Add one above!
+                    </div>
+                  ) : (
+                    generalTasks.map(task => (
+                      <div key={task.id} className={`p-4 hover:bg-gray-50 transition-colors ${task.completed ? 'opacity-60' : ''}`}>
+                        <div className="flex items-start gap-3">
+                          <button
+                            onClick={() => setGeneralTasks(prev => prev.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t))}
+                            className={`mt-1 w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                              task.completed 
+                                ? 'bg-green-500 border-green-500 text-white' 
+                                : 'border-gray-300 hover:border-green-400'
+                            }`}
+                          >
+                            {task.completed && <CheckCircle2 className="w-4 h-4" />}
+                          </button>
+                          <textarea
+                            value={task.text}
+                            onChange={(e) => setGeneralTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t))}
+                            placeholder="Enter task..."
+                            className={`flex-1 resize-none border-0 focus:outline-none focus:ring-0 text-gray-700 bg-transparent min-h-[70px] ${task.completed ? 'line-through' : ''}`}
+                            rows={2}
+                          />
+                          <button
+                            onClick={() => setGeneralTasks(prev => prev.filter(t => t.id !== task.id))}
+                            className="text-gray-400 hover:text-red-500 transition-colors mt-1"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Daily Tasks */}
           {tasksSubTab === 'daily' && (
@@ -3229,22 +3327,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               +
                             </button>
                           </div>
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 font-medium mb-1 block">🌅 Woke at Dawn?</label>
-                          <button
-                            onClick={() => setSleepData(prev => ({
-                              ...prev,
-                              [day.date]: { ...prev[day.date], wokeAtDawn: !prev[day.date]?.wokeAtDawn }
-                            }))}
-                            className={`w-full py-2 rounded-xl font-medium transition-all ${
-                              dayData.wokeAtDawn 
-                                ? 'bg-orange-100 text-orange-700 border-2 border-orange-300' 
-                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
-                            }`}
-                          >
-                            {dayData.wokeAtDawn ? '✓ Yes' : 'No'}
-                          </button>
                         </div>
                       </div>
                       
@@ -5382,229 +5464,216 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const moodEmojis = { great: '😊', good: '😌', okay: '😐', low: '😔', sad: '😢', angry: '😡' };
     
     return (
-      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white pb-24">
+      <div className="min-h-screen bg-gray-50 pb-24">
         <Sidebar />
         <SaveIndicator />
-        {/* Header with Net Worth */}
-        <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-8 px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-3xl">🦘</div>
+        
+        {/* Clean Header */}
+        <div className="bg-white border-b border-gray-100">
+          <div className="max-w-4xl mx-auto px-6 pt-16 pb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-2xl shadow-sm">🦘</div>
               <div className="flex-1">
-                <div className="text-white/80 text-sm">{greeting}, {isElite && eliteName ? eliteName : 'mate'}!</div>
+                <div className="text-gray-500 text-sm font-medium">{greeting}</div>
                 <div className="flex items-center gap-2">
-                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : 'Welcome back legend!'}</div>
+                  <div className="text-xl font-semibold text-gray-900">{isElite && eliteName ? eliteName : 'Welcome back'}</div>
                   {isElite && (
-                    <div className="flex items-center gap-1 bg-white/20 backdrop-blur px-2.5 py-1 rounded-full">
-                      <svg width="16" height="16" viewBox="0 0 24 32" fill="none">
-                        <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGrad)" />
+                    <div className="flex items-center gap-1 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-200">
+                      <svg width="12" height="12" viewBox="0 0 24 32" fill="none">
+                        <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F97316" />
                         <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" />
-                        <defs><linearGradient id="eliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
                       </svg>
-                      <span className="text-xs font-bold text-white">ELITE</span>
+                      <span className="text-xs font-semibold text-orange-600">ELITE</span>
                     </div>
                   )}
                 </div>
               </div>
             </div>
-            {isElite && !eliteName && (
-              <div className="bg-white/20 backdrop-blur rounded-2xl p-3 mb-4 flex items-center gap-3">
-                <span className="text-white text-sm">Set your name for personalised greetings:</span>
-                <input
-                  type="text"
-                  placeholder="Your name..."
-                  className="flex-1 px-3 py-1.5 rounded-lg text-sm bg-white/30 text-white placeholder-white/60 focus:outline-none focus:bg-white/40"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && e.target.value.trim()) {
-                      setEliteName(e.target.value.trim());
-                    }
-                  }}
-                />
-              </div>
-            )}
-            {!isElite && (
-              <div onClick={() => setActiveView('upgrade')} className="bg-white/20 backdrop-blur rounded-2xl p-3 mb-4 flex items-center justify-between cursor-pointer hover:bg-white/30 transition-colors">
-                <div className="flex items-center gap-2">
-                  <svg width="20" height="20" viewBox="0 0 24 32" fill="none">
-                    <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGrad2)" />
-                    <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" />
-                    <defs><linearGradient id="eliteGrad2" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
-                  </svg>
-                  <span className="text-white text-sm font-medium">Upgrade to Elite — $5/mo</span>
-                </div>
-                <span className="text-white/70 text-sm">→</span>
-              </div>
-            )}
-            <div className="bg-white/20 backdrop-blur rounded-2xl p-4">
-              <div className="text-white/80 text-sm">Net Worth</div>
-              <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
-            </div>
           </div>
         </div>
         
-        {/* Today's Summary - NEW */}
-        <div className="max-w-4xl mx-auto px-6 -mt-4 mb-6">
-          <div className="bg-white rounded-2xl shadow-lg border p-4">
-            <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-              <span className="text-lg">📊</span> Today's Summary
-            </h3>
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+          {/* Net Worth Card */}
+          <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-6 text-white shadow-sm">
+            <div className="text-orange-100 text-sm font-medium mb-1">Net Worth</div>
+            <div className="text-4xl font-bold tracking-tight">${netWorth.toLocaleString()}</div>
+            <div className="mt-4 flex gap-6">
+              <div>
+                <div className="text-orange-200 text-xs">Monthly Bills</div>
+                <div className="text-lg font-semibold">${totalMonthly.toFixed(0)}</div>
+              </div>
+              <div>
+                <div className="text-orange-200 text-xs">Savings Rate</div>
+                <div className="text-lg font-semibold">{savingsRate.toFixed(0)}%</div>
+              </div>
+              <div>
+                <div className="text-orange-200 text-xs">Portfolio</div>
+                <div className="text-lg font-semibold">${totalStocks.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Elite Name or Upgrade */}
+          {isElite && !eliteName && (
+            <div className="bg-white rounded-2xl p-4 border border-gray-100 flex items-center gap-3">
+              <span className="text-gray-600 text-sm">Set your name:</span>
+              <input
+                type="text"
+                placeholder="Your name..."
+                className="flex-1 px-3 py-2 rounded-xl text-sm bg-gray-50 border border-gray-200 focus:outline-none focus:border-orange-400"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.target.value.trim()) {
+                    setEliteName(e.target.value.trim());
+                  }
+                }}
+              />
+            </div>
+          )}
+          {!isElite && (
+            <button onClick={() => setActiveView('upgrade')} className="w-full bg-white rounded-2xl p-4 border border-gray-100 flex items-center justify-between hover:border-orange-200 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                  <svg width="18" height="18" viewBox="0 0 24 32" fill="none">
+                    <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F97316" />
+                    <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-gray-900">Upgrade to Elite</div>
+                  <div className="text-xs text-gray-500">Unlock all features • $5/mo</div>
+                </div>
+              </div>
+              <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90" />
+            </button>
+          )}
+          
+          {/* Today's Summary */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3 px-1">Today</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {/* Last Night's Sleep */}
-              <button 
-                onClick={() => setActiveView('gym')}
-                className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-indigo-100"
-              >
-                <div className="text-2xl mb-1">🌙</div>
-                <div className="text-xs text-indigo-600 font-medium">Last Night</div>
-                <div className="text-xl font-bold text-indigo-700">
-                  {lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}
+              <button onClick={() => setActiveView('gym')} className="bg-white rounded-2xl p-4 border border-gray-100 text-left hover:border-gray-200 transition-all">
+                <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-lg">🌙</span>
                 </div>
-                <div className="text-xs text-indigo-500">
-                  {lastNightSleep.hoursSlept >= 7 ? 'Great sleep! 💪' : lastNightSleep.hoursSlept >= 5 ? 'Okay sleep' : lastNightSleep.hoursSlept ? 'Need more 😴' : 'Not logged'}
-                </div>
+                <div className="text-xs text-gray-500 font-medium">Last Night</div>
+                <div className="text-xl font-semibold text-gray-900">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
               </button>
               
-              {/* Today's Mood */}
-              <button 
-                onClick={() => setActiveView('gym')}
-                className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-pink-100"
-              >
-                <div className="text-2xl mb-1">🧠</div>
-                <div className="text-xs text-pink-600 font-medium">Mood</div>
-                <div className="text-xl font-bold text-pink-700">
-                  {todayMood.mood ? moodEmojis[todayMood.mood] : '—'}
+              <button onClick={() => setActiveView('gym')} className="bg-white rounded-2xl p-4 border border-gray-100 text-left hover:border-gray-200 transition-all">
+                <div className="w-10 h-10 bg-pink-50 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-lg">🧠</span>
                 </div>
-                <div className="text-xs text-pink-500">
-                  {todayMood.mood ? `Energy: ${todayMood.energy || '?'}/5` : 'Not logged'}
-                </div>
+                <div className="text-xs text-gray-500 font-medium">Mood</div>
+                <div className="text-xl font-semibold text-gray-900">{todayMood.mood ? moodEmojis[todayMood.mood] : '—'}</div>
               </button>
               
-              {/* Weekly Work */}
-              <button 
-                onClick={() => setActiveView('work')}
-                className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-blue-100"
-              >
-                <div className="text-2xl mb-1">💼</div>
-                <div className="text-xs text-blue-600 font-medium">This Week</div>
-                <div className="text-xl font-bold text-blue-700">
-                  {weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(1)}h` : '—'}
+              <button onClick={() => setActiveView('work')} className="bg-white rounded-2xl p-4 border border-gray-100 text-left hover:border-gray-200 transition-all">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-lg">💼</span>
                 </div>
-                <div className="text-xs text-blue-500">
-                  {weeklyWorkPay > 0 ? `$${weeklyWorkPay.toFixed(0)} earned` : 'No shifts logged'}
-                </div>
+                <div className="text-xs text-gray-500 font-medium">This Week</div>
+                <div className="text-xl font-semibold text-gray-900">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : '—'}</div>
               </button>
               
-              {/* Tasks Today */}
-              <button 
-                onClick={() => setActiveView('tasks')}
-                className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-purple-100"
-              >
-                <div className="text-2xl mb-1">✅</div>
-                <div className="text-xs text-purple-600 font-medium">Tasks</div>
-                <div className="text-xl font-bold text-purple-700">
-                  {dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}
+              <button onClick={() => setActiveView('tasks')} className="bg-white rounded-2xl p-4 border border-gray-100 text-left hover:border-gray-200 transition-all">
+                <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-lg">✅</span>
                 </div>
-                <div className="text-xs text-purple-500">
-                  {dailyTasks.length === 0 ? 'No tasks' : dailyTasks.filter(t => t.completed).length === dailyTasks.length ? 'All done! 🎉' : 'Keep going!'}
-                </div>
+                <div className="text-xs text-gray-500 font-medium">Tasks</div>
+                <div className="text-xl font-semibold text-gray-900">{dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}</div>
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-            <StatCard icon={Wallet} label="Monthly Bills" value={"$" + totalMonthly.toFixed(0)} color="blue" onClick={() => setActiveView("varied")} />
-            <StatCard icon={Target} label="Savings Rate" value={savingsRate.toFixed(0) + "%"} color="green" onClick={() => setActiveView("varied")} />
-            <StatCard icon={TrendingUp} label="Portfolio" value={"$" + totalStocks.toLocaleString()} color="purple" onClick={() => setActiveView("investments")} />
-          </div>
           
-          {/* Quick Access Cards - NEW LAYOUT */}
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6">
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">🌙</span>
-              <span className="text-xs font-medium text-gray-600">Sleep</span>
-            </button>
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">🧠</span>
-              <span className="text-xs font-medium text-gray-600">Mood</span>
-            </button>
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">👟</span>
-              <span className="text-xs font-medium text-gray-600">Steps</span>
-            </button>
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">💪</span>
-              <span className="text-xs font-medium text-gray-600">Workout</span>
-            </button>
-            <button onClick={() => setActiveView('work')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">💼</span>
-              <span className="text-xs font-medium text-gray-600">Work</span>
-            </button>
-            <button onClick={() => setActiveView('diet')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">🥗</span>
-              <span className="text-xs font-medium text-gray-600">Diet</span>
-            </button>
-            <button onClick={() => setActiveView('varied')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">💳</span>
-              <span className="text-xs font-medium text-gray-600">Bills</span>
-            </button>
-            <button onClick={() => setActiveView('investments')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">📈</span>
-              <span className="text-xs font-medium text-gray-600">Invest</span>
-            </button>
+          {/* Quick Access */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3 px-1">Quick Access</h3>
+            <div className="grid grid-cols-4 gap-2">
+              <button onClick={() => setActiveView('gym')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">🌙</span>
+                <span className="text-xs font-medium text-gray-600">Sleep</span>
+              </button>
+              <button onClick={() => setActiveView('gym')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">🧠</span>
+                <span className="text-xs font-medium text-gray-600">Mood</span>
+              </button>
+              <button onClick={() => setActiveView('work')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">💼</span>
+                <span className="text-xs font-medium text-gray-600">Work</span>
+              </button>
+              <button onClick={() => setActiveView('diet')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">🥗</span>
+                <span className="text-xs font-medium text-gray-600">Diet</span>
+              </button>
+              <button onClick={() => setActiveView('varied')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">💳</span>
+                <span className="text-xs font-medium text-gray-600">Bills</span>
+              </button>
+              <button onClick={() => setActiveView('assets')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">🏠</span>
+                <span className="text-xs font-medium text-gray-600">Assets</span>
+              </button>
+              <button onClick={() => setActiveView('investments')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">📈</span>
+                <span className="text-xs font-medium text-gray-600">Invest</span>
+              </button>
+              <button onClick={() => setActiveView('tasks')} className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center hover:border-gray-200 transition-all">
+                <span className="text-2xl mb-1">✅</span>
+                <span className="text-xs font-medium text-gray-600">Tasks</span>
+              </button>
+            </div>
           </div>
           
           {/* Achievements & Coming Up */}
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white rounded-2xl p-4 border shadow-sm">
-              <div className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><Award className="w-4 h-4 text-amber-500" />Achievements</div>
-              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                {(() => {
-                  const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
-                  const totalDailyTasks = dailyTasks.length;
-                  const achievementData = [
-                    // Net Worth Milestones
-                    { id: "first_1k", icon: "💰", title: "First $1K", current: netWorth, target: 1000, unit: "$", category: "wealth" },
-                    { id: "5k_club", icon: "💵", title: "$5K Club", current: netWorth, target: 5000, unit: "$", category: "wealth" },
-                    { id: "10k_club", icon: "🏆", title: "$10K Club", current: netWorth, target: 10000, unit: "$", category: "wealth" },
-                    { id: "25k_club", icon: "💎", title: "$25K Club", current: netWorth, target: 25000, unit: "$", category: "wealth" },
-                    { id: "50k_club", icon: "👑", title: "$50K Club", current: netWorth, target: 50000, unit: "$", category: "wealth" },
-                    { id: "100k_club", icon: "🚀", title: "$100K Club", current: netWorth, target: 100000, unit: "$", category: "wealth" },
-                    { id: "250k_club", icon: "⭐", title: "$250K Club", current: netWorth, target: 250000, unit: "$", category: "wealth" },
-                    { id: "500k_club", icon: "🌟", title: "$500K Club", current: netWorth, target: 500000, unit: "$", category: "wealth" },
-                    { id: "1m_club", icon: "🎯", title: "Millionaire", current: netWorth, target: 1000000, unit: "$", category: "wealth" },
-                    { id: "10m_club", icon: "🏰", title: "Deca-Millionaire", current: netWorth, target: 10000000, unit: "$", category: "wealth" },
-                    { id: "100m_club", icon: "🛸", title: "Centi-Millionaire", current: netWorth, target: 100000000, unit: "$", category: "wealth" },
-                    { id: "1b_club", icon: "🌍", title: "Billionaire", current: netWorth, target: 1000000000, unit: "$", category: "wealth" },
-                    
-                    // Savings Rate
-                    { id: "saver_10", icon: "🌱", title: "Baby Saver", current: savingsRate, target: 10, unit: "%", category: "savings" },
-                    { id: "saver_20", icon: "🌿", title: "Growing Saver", current: savingsRate, target: 20, unit: "%", category: "savings" },
-                    { id: "super_saver", icon: "💪", title: "Super Saver", current: savingsRate, target: 50, unit: "%", category: "savings" },
-                    { id: "mega_saver", icon: "🦸", title: "Mega Saver", current: savingsRate, target: 70, unit: "%", category: "savings" },
-                    
-                    // Portfolio
-                    { id: "first_stock", icon: "📈", title: "First Investment", current: stocks.length, target: 1, unit: " stocks", category: "investing" },
-                    { id: "diversified", icon: "🎯", title: "Diversified", current: stocks.length, target: 5, unit: " stocks", category: "investing" },
-                    { id: "portfolio_pro", icon: "📊", title: "Portfolio Pro", current: stocks.length, target: 10, unit: " stocks", category: "investing" },
-                    { id: "stock_enthusiast", icon: "💹", title: "Stock Enthusiast", current: stocks.length, target: 15, unit: " stocks", category: "investing" },
-                    { id: "market_veteran", icon: "🦈", title: "Market Veteran", current: stocks.length, target: 20, unit: " stocks", category: "investing" },
-                    { id: "wall_street_wolf", icon: "🐺", title: "Wall Street Wolf", current: stocks.length, target: 25, unit: " stocks", category: "investing" },
-                    
-                    // Tasks
-                    { id: "task_starter", icon: "✅", title: "Task Starter", current: completedDailyTasks, target: 1, unit: " tasks", category: "productivity" },
-                    { id: "task_master", icon: "🎖️", title: "Task Master", current: completedDailyTasks, target: 5, unit: " tasks", category: "productivity" },
-                    
-                    // Assets
-                    { id: "asset_owner", icon: "🏠", title: "Asset Owner", current: assets.length, target: 1, unit: " assets", category: "assets" },
-                    { id: "asset_collector", icon: "🏰", title: "Asset Collector", current: assets.length, target: 5, unit: " assets", category: "assets" },
-                    { id: "asset_stacker", icon: "🏗️", title: "Asset Stacker", current: assets.length, target: 10, unit: " assets", category: "assets" },
-                    { id: "asset_hoarder", icon: "🗄️", title: "Asset Hoarder", current: assets.length, target: 15, unit: " assets", category: "assets" },
-                    { id: "asset_mogul", icon: "🎩", title: "Asset Mogul", current: assets.length, target: 20, unit: " assets", category: "assets" },
-                    { id: "asset_tycoon", icon: "💼", title: "Asset Tycoon", current: assets.length, target: 25, unit: " assets", category: "assets" },
-                  ];
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3 px-1">Achievements</h3>
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div className="max-h-[350px] overflow-y-auto divide-y divide-gray-50">
+                  {(() => {
+                    const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
+                    const totalDailyTasks = dailyTasks.length;
+                    const achievementData = [
+                      // Net Worth Milestones
+                      { id: "first_1k", icon: "💰", title: "First $1K", current: netWorth, target: 1000, unit: "$", category: "wealth" },
+                      { id: "5k_club", icon: "💵", title: "$5K Club", current: netWorth, target: 5000, unit: "$", category: "wealth" },
+                      { id: "10k_club", icon: "🏆", title: "$10K Club", current: netWorth, target: 10000, unit: "$", category: "wealth" },
+                      { id: "25k_club", icon: "💎", title: "$25K Club", current: netWorth, target: 25000, unit: "$", category: "wealth" },
+                      { id: "50k_club", icon: "👑", title: "$50K Club", current: netWorth, target: 50000, unit: "$", category: "wealth" },
+                      { id: "100k_club", icon: "🚀", title: "$100K Club", current: netWorth, target: 100000, unit: "$", category: "wealth" },
+                      { id: "250k_club", icon: "⭐", title: "$250K Club", current: netWorth, target: 250000, unit: "$", category: "wealth" },
+                      { id: "500k_club", icon: "🌟", title: "$500K Club", current: netWorth, target: 500000, unit: "$", category: "wealth" },
+                      { id: "1m_club", icon: "🎯", title: "Millionaire", current: netWorth, target: 1000000, unit: "$", category: "wealth" },
+                      { id: "10m_club", icon: "🏰", title: "Deca-Millionaire", current: netWorth, target: 10000000, unit: "$", category: "wealth" },
+                      { id: "100m_club", icon: "🛸", title: "Centi-Millionaire", current: netWorth, target: 100000000, unit: "$", category: "wealth" },
+                      { id: "1b_club", icon: "🌍", title: "Billionaire", current: netWorth, target: 1000000000, unit: "$", category: "wealth" },
+                      
+                      // Savings Rate
+                      { id: "saver_10", icon: "🌱", title: "Baby Saver", current: savingsRate, target: 10, unit: "%", category: "savings" },
+                      { id: "saver_20", icon: "🌿", title: "Growing Saver", current: savingsRate, target: 20, unit: "%", category: "savings" },
+                      { id: "super_saver", icon: "💪", title: "Super Saver", current: savingsRate, target: 50, unit: "%", category: "savings" },
+                      { id: "mega_saver", icon: "🦸", title: "Mega Saver", current: savingsRate, target: 70, unit: "%", category: "savings" },
+                      
+                      // Portfolio
+                      { id: "first_stock", icon: "📈", title: "First Investment", current: stocks.length, target: 1, unit: " stocks", category: "investing" },
+                      { id: "diversified", icon: "🎯", title: "Diversified", current: stocks.length, target: 5, unit: " stocks", category: "investing" },
+                      { id: "portfolio_pro", icon: "📊", title: "Portfolio Pro", current: stocks.length, target: 10, unit: " stocks", category: "investing" },
+                      { id: "stock_enthusiast", icon: "💹", title: "Stock Enthusiast", current: stocks.length, target: 15, unit: " stocks", category: "investing" },
+                      { id: "market_veteran", icon: "🦈", title: "Market Veteran", current: stocks.length, target: 20, unit: " stocks", category: "investing" },
+                      { id: "wall_street_wolf", icon: "🐺", title: "Wall Street Wolf", current: stocks.length, target: 25, unit: " stocks", category: "investing" },
+                      
+                      // Tasks
+                      { id: "task_starter", icon: "✅", title: "Task Starter", current: completedDailyTasks, target: 1, unit: " tasks", category: "productivity" },
+                      { id: "task_master", icon: "🎖️", title: "Task Master", current: completedDailyTasks, target: 5, unit: " tasks", category: "productivity" },
+                      
+                      // Assets
+                      { id: "asset_owner", icon: "🏠", title: "Asset Owner", current: assets.length, target: 1, unit: " assets", category: "assets" },
+                      { id: "asset_collector", icon: "🏰", title: "Asset Collector", current: assets.length, target: 5, unit: " assets", category: "assets" },
+                      { id: "asset_stacker", icon: "🏗️", title: "Asset Stacker", current: assets.length, target: 10, unit: " assets", category: "assets" },
+                      { id: "asset_hoarder", icon: "🗄️", title: "Asset Hoarder", current: assets.length, target: 15, unit: " assets", category: "assets" },
+                      { id: "asset_mogul", icon: "🎩", title: "Asset Mogul", current: assets.length, target: 20, unit: " assets", category: "assets" },
+                      { id: "asset_tycoon", icon: "💼", title: "Asset Tycoon", current: assets.length, target: 25, unit: " assets", category: "assets" },
+                    ];
                   
                   // Sort: incomplete first (by progress desc), then complete
                   const sorted = [...achievementData].sort((a, b) => {
@@ -5621,104 +5690,83 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const progress = Math.min((a.current / a.target) * 100, 100);
                     const isComplete = progress >= 100;
                     return (
-                      <div key={a.id} className={`p-3 rounded-xl border ${isComplete ? 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200' : 'bg-gray-50 border-gray-200'}`}>
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className={`text-2xl ${isComplete ? '' : 'grayscale opacity-60'}`}>{a.icon}</div>
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-800">{a.title}</div>
-                            <div className="text-xs text-gray-500">
-                              {isComplete ? '🎉 Complete!' : `${a.unit === "$" ? "$" : ""}${a.current.toLocaleString(undefined, {maximumFractionDigits: 0})}${a.unit !== "$" ? a.unit : ""} / ${a.unit === "$" ? "$" : ""}${a.target.toLocaleString()}${a.unit !== "$" ? a.unit : ""}`}
-                            </div>
+                      <div key={a.id} className={`px-4 py-3 flex items-center gap-3 ${isComplete ? 'bg-orange-50/50' : ''}`}>
+                        <div className={`text-xl ${isComplete ? '' : 'grayscale opacity-50'}`}>{a.icon}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <div className="font-medium text-gray-800 text-sm">{a.title}</div>
+                            {isComplete && <span className="text-xs text-orange-600 font-medium">✓</span>}
                           </div>
-                          {isComplete && <Trophy className="w-5 h-5 text-amber-500" />}
+                          <div className="mt-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all ${isComplete ? 'bg-orange-500' : 'bg-gray-300'}`}
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
                         </div>
-                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-gradient-to-r from-amber-400 to-orange-500' : 'bg-gradient-to-r from-gray-300 to-gray-400'}`}
-                            style={{ width: `${progress}%` }}
-                          />
-                        </div>
-                        {!isComplete && <div className="text-xs text-right text-gray-400 mt-1">{progress.toFixed(0)}%</div>}
                       </div>
                     );
                   });
                 })()}
               </div>
+              </div>
             </div>
             
-            <div className="bg-white rounded-2xl p-4 border shadow-sm">
-              <div className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><Calendar className="w-4 h-4 text-pink-500" />Coming Up</div>
-              <div className="space-y-2">
-                {(() => {
-                  const now = new Date();
-                  now.setHours(0, 0, 0, 0);
-                  const sortedBdays = [...birthdays].filter(b => b.date && b.name).map(b => {
-                    const bday = new Date(b.date);
-                    bday.setHours(0, 0, 0, 0);
-                    bday.setFullYear(now.getFullYear());
-                    if (bday < now) bday.setFullYear(now.getFullYear() + 1);
-                    const diff = Math.round((bday - now) / (1000 * 60 * 60 * 24));
-                    return { ...b, daysAway: diff };
-                  }).sort((a, b) => a.daysAway - b.daysAway);
+            <div>
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3 px-1">Coming Up</h3>
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div className="divide-y divide-gray-50">
+                  {(() => {
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    const sortedBdays = [...birthdays].filter(b => b.date && b.name).map(b => {
+                      const bday = new Date(b.date);
+                      bday.setHours(0, 0, 0, 0);
+                      bday.setFullYear(now.getFullYear());
+                      if (bday < now) bday.setFullYear(now.getFullYear() + 1);
+                      const diff = Math.round((bday - now) / (1000 * 60 * 60 * 24));
+                      return { ...b, daysAway: diff };
+                    }).sort((a, b) => a.daysAway - b.daysAway);
 
-                  const sortedRems = [...reminders].filter(r => r.date && r.title).map(r => {
-                    const rDate = new Date(r.date);
-                    rDate.setHours(0, 0, 0, 0);
-                    const diff = Math.round((rDate - now) / (1000 * 60 * 60 * 24));
-                    return { ...r, daysAway: diff };
-                  }).filter(r => r.daysAway >= 0).sort((a, b) => a.daysAway - b.daysAway);
+                    const sortedRems = [...reminders].filter(r => r.date && r.title).map(r => {
+                      const rDate = new Date(r.date);
+                      rDate.setHours(0, 0, 0, 0);
+                      const diff = Math.round((rDate - now) / (1000 * 60 * 60 * 24));
+                      return { ...r, daysAway: diff };
+                    }).filter(r => r.daysAway >= 0).sort((a, b) => a.daysAway - b.daysAway);
 
-                  const allEvents = [
-                    ...sortedBdays.map(b => ({ type: 'birthday', name: b.name, daysAway: b.daysAway })),
-                    ...sortedRems.map(r => ({ type: 'reminder', name: r.title, daysAway: r.daysAway }))
-                  ].sort((a, b) => a.daysAway - b.daysAway).slice(0, 5);
+                    const allEvents = [
+                      ...sortedBdays.map(b => ({ type: 'birthday', name: b.name, daysAway: b.daysAway })),
+                      ...sortedRems.map(r => ({ type: 'reminder', name: r.title, daysAway: r.daysAway }))
+                    ].sort((a, b) => a.daysAway - b.daysAway).slice(0, 5);
 
-                  if (allEvents.length === 0) return <div className="text-gray-400 text-center py-4">Nothing scheduled</div>;
+                    if (allEvents.length === 0) return <div className="text-gray-400 text-center py-8 text-sm">Nothing scheduled</div>;
 
-                  return allEvents.map((ev, i) => (
-                    <div key={i} className={`p-2 ${ev.type === 'birthday' ? 'bg-pink-50' : 'bg-blue-50'} rounded-xl flex items-center justify-between`}>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{ev.type === 'birthday' ? '🎂' : '🔔'}</span>
-                        <span className="text-sm font-medium">{ev.name}</span>
+                    return allEvents.map((ev, i) => (
+                      <div key={i} className="px-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">{ev.type === 'birthday' ? '🎂' : '🔔'}</span>
+                          <span className="text-sm font-medium text-gray-800">{ev.name}</span>
+                        </div>
+                        <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                          ev.daysAway === 0 ? 'bg-green-100 text-green-600' : 
+                          ev.daysAway <= 7 ? 'bg-orange-100 text-orange-600' : 
+                          'bg-gray-100 text-gray-500'
+                        }`}>
+                          {ev.daysAway === 0 ? 'Today' : ev.daysAway === 1 ? 'Tomorrow' : `${ev.daysAway}d`}
+                        </span>
                       </div>
-                      <span className={`text-xs font-medium ${ev.daysAway === 0 ? 'text-green-600' : ev.daysAway <= 7 ? 'text-orange-500' : 'text-gray-400'}`}>
-                        {ev.daysAway === 0 ? 'Today!' : ev.daysAway === 1 ? 'Tomorrow' : `${ev.daysAway}d`}
-                      </span>
-                    </div>
-                  ));
-                })()}
+                    ));
+                  })()}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Daily Quote */}
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-5 text-white mb-6">
-            <div className="text-lg italic mb-2">"{todayQuote.quote}"</div>
-            <div className="text-sm text-slate-400">— {todayQuote.author}</div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <button onClick={() => setActiveView('tasks')} className="bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all text-left">
-              <CheckCircle2 className="w-6 h-6 text-purple-500 mb-2" />
-              <div className="font-medium text-gray-800">Tasks</div>
-              <div className="text-xs text-gray-500">{dailyTasks.filter(t => t.completed).length}/{dailyTasks.length} done</div>
-            </button>
-            <button onClick={() => setActiveView('diet')} className="bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all text-left">
-              <ShoppingCart className="w-6 h-6 text-orange-500 mb-2" />
-              <div className="font-medium text-gray-800">Diet</div>
-              <div className="text-xs text-gray-500">{groceries.length} items</div>
-            </button>
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all text-left">
-              <Dumbbell className="w-6 h-6 text-green-500 mb-2" />
-              <div className="font-medium text-gray-800">Health</div>
-              <div className="text-xs text-gray-500">Sleep & Fitness</div>
-            </button>
-            <button onClick={() => setActiveView('assets')} className="bg-white rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all text-left">
-              <DollarSign className="w-6 h-6 text-blue-500 mb-2" />
-              <div className="font-medium text-gray-800">Assets</div>
-              <div className="text-xs text-gray-500">${totalAssets.toLocaleString()}</div>
-            </button>
+          <div className="bg-gray-900 rounded-2xl p-5 text-white">
+            <div className="text-base italic mb-2 text-gray-100">"{todayQuote.quote}"</div>
+            <div className="text-sm text-gray-500">— {todayQuote.author}</div>
           </div>
         </div>
         
