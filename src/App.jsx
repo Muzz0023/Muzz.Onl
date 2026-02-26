@@ -869,7 +869,13 @@ function MuzzApp() {
   const [gymSubTab, setGymSubTab] = useState('sleep');
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
-  const [timesheetData, setTimesheetData] = useState({ hourlyRate: 0, hourlyRateStr: '', shifts: {} });
+  const [timesheetData, setTimesheetData] = useState({
+    jobs: [
+      { id: 1, name: 'Job 1', hourlyRate: 0, hourlyRateStr: '', shifts: {} },
+    ],
+    activeJobId: 1
+  });
+  const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [holdingsResearch, setHoldingsResearch] = useState([]);
@@ -5127,37 +5133,74 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     const weekDays = getWeekDays();
     
-    // Calculate hours worked
-    const calculateHours = (start, end, breakMins) => {
-      if (!start || !end) return 0;
-      const [startH, startM] = start.split(':').map(Number);
-      const [endH, endM] = end.split(':').map(Number);
-      let startMins = startH * 60 + startM;
-      let endMins = endH * 60 + endM;
-      if (endMins < startMins) endMins += 24 * 60; // overnight shift
-      const totalMins = endMins - startMins - (breakMins || 0);
-      return Math.max(0, totalMins / 60);
+    // Migrate old data format if needed
+    const jobs = timesheetData.jobs || [{ id: 1, name: 'Job 1', hourlyRate: timesheetData.hourlyRate || 0, hourlyRateStr: timesheetData.hourlyRateStr || '', shifts: timesheetData.shifts || {} }];
+    const activeJobId = timesheetData.activeJobId || 1;
+    const activeJob = jobs.find(j => j.id === activeJobId) || jobs[0];
+    
+    // Calculate totals for a specific job
+    const calcJobTotals = (job) => {
+      const hours = weekDays.reduce((sum, day) => {
+        const shift = job.shifts?.[day.date] || {};
+        return sum + (parseFloat(shift.normalHours) || 0) + (parseFloat(shift.timeHalfHours) || 0) + (parseFloat(shift.doubleHours) || 0) + (parseFloat(shift.doubleHalfHours) || 0);
+      }, 0);
+      const pay = weekDays.reduce((sum, day) => {
+        const shift = job.shifts?.[day.date] || {};
+        const rate = job.hourlyRate || 0;
+        return sum + ((parseFloat(shift.normalHours) || 0) * rate) + ((parseFloat(shift.timeHalfHours) || 0) * rate * 1.5) + ((parseFloat(shift.doubleHours) || 0) * rate * 2) + ((parseFloat(shift.doubleHalfHours) || 0) * rate * 2.5);
+      }, 0);
+      return { hours, pay };
     };
     
-    // Calculate weekly totals
-    const weeklyHours = weekDays.reduce((sum, day) => {
-      const shift = timesheetData.shifts?.[day.date] || {};
-      const normalHrs = parseFloat(shift.normalHours) || 0;
-      const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
-      const doubleHrs = parseFloat(shift.doubleHours) || 0;
-      const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
-      return sum + normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
-    }, 0);
+    // Calculate grand totals across all jobs
+    const grandTotals = jobs.reduce((acc, job) => {
+      const { hours, pay } = calcJobTotals(job);
+      return { hours: acc.hours + hours, pay: acc.pay + pay };
+    }, { hours: 0, pay: 0 });
     
-    const weeklyPay = weekDays.reduce((sum, day) => {
-      const shift = timesheetData.shifts?.[day.date] || {};
-      const normalHrs = parseFloat(shift.normalHours) || 0;
-      const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
-      const doubleHrs = parseFloat(shift.doubleHours) || 0;
-      const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
-      const hourlyRate = timesheetData.hourlyRate || 0;
-      return sum + (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
-    }, 0);
+    const activeJobTotals = calcJobTotals(activeJob);
+    
+    // Update job data
+    const updateJob = (jobId, field, value) => {
+      setTimesheetData(prev => ({
+        ...prev,
+        jobs: (prev.jobs || jobs).map(j => j.id === jobId ? { ...j, [field]: value } : j)
+      }));
+    };
+    
+    // Update shift for active job
+    const updateShift = (date, field, value) => {
+      setTimesheetData(prev => ({
+        ...prev,
+        jobs: (prev.jobs || jobs).map(j => j.id === activeJobId ? {
+          ...j,
+          shifts: { ...j.shifts, [date]: { ...j.shifts?.[date], [field]: value } }
+        } : j)
+      }));
+    };
+    
+    // Add new job
+    const addJob = () => {
+      if (jobs.length >= 5) return alert('Maximum 5 jobs allowed');
+      const newId = Math.max(...jobs.map(j => j.id)) + 1;
+      setTimesheetData(prev => ({
+        ...prev,
+        jobs: [...(prev.jobs || jobs), { id: newId, name: `Job ${newId}`, hourlyRate: 0, hourlyRateStr: '', shifts: {} }],
+        activeJobId: newId
+      }));
+    };
+    
+    // Delete job
+    const deleteJob = (jobId) => {
+      if (jobs.length <= 1) return alert('Must have at least one job');
+      if (!confirm('Delete this job and all its timesheet data?')) return;
+      const newJobs = jobs.filter(j => j.id !== jobId);
+      setTimesheetData(prev => ({
+        ...prev,
+        jobs: newJobs,
+        activeJobId: newJobs[0].id
+      }));
+    };
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -5175,242 +5218,261 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          {/* Weekly Summary Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-2xl font-bold">💼 Weekly Timesheet</h2>
-                <p className="text-blue-100 mt-1">Track your work hours</p>
-              </div>
+          {/* Sub-tabs: Summary & Jobs */}
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setWorkSubTab('summary')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                workSubTab === 'summary'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              📊 Total Summary
+            </button>
+            {jobs.map(job => (
               <button
+                key={job.id}
                 onClick={() => {
-                  if (confirm('Reset all shifts for this week?')) {
-                    const newShifts = { ...timesheetData.shifts };
-                    weekDays.forEach(day => {
-                      delete newShifts[day.date];
-                    });
-                    setTimesheetData(prev => ({ ...prev, shifts: newShifts }));
-                  }
+                  setTimesheetData(prev => ({ ...prev, activeJobId: job.id }));
+                  setWorkSubTab('timesheet');
                 }}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
-              >
-                Reset Week
-              </button>
-            </div>
-            
-            {/* Hourly Rate Setting */}
-            <div className="flex items-center gap-3 mb-4 p-3 bg-white/10 rounded-xl">
-              <span className="text-blue-100">Hourly Rate:</span>
-              <div className="flex items-center bg-white/20 rounded-lg px-3 py-1">
-                <span className="text-white">$</span>
-                <input
-                  type="text"
-                  value={timesheetData.hourlyRateStr || ''}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9.]/g, '');
-                    setTimesheetData(prev => ({ 
-                      ...prev, 
-                      hourlyRateStr: val,
-                      hourlyRate: parseFloat(val) || 0 
-                    }));
-                  }}
-                  placeholder="0.00"
-                  className="w-20 bg-transparent text-white placeholder-blue-200 focus:outline-none text-center"
-                />
-                <span className="text-blue-200">/hr</span>
-              </div>
-            </div>
-            
-            {/* Weekly Stats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/10 rounded-xl p-4 text-center">
-                <div className="text-3xl font-bold">{weeklyHours.toFixed(1)}</div>
-                <div className="text-sm text-blue-200">Hours This Week</div>
-              </div>
-              <div className="bg-white/10 rounded-xl p-4 text-center">
-                <div className="text-3xl font-bold">${weeklyPay.toFixed(2)}</div>
-                <div className="text-sm text-blue-200">Estimated Pay (before tax)</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Daily Shift Cards */}
-          {weekDays.map(day => {
-            const shift = timesheetData.shifts?.[day.date] || {};
-            const normalHrs = parseFloat(shift.normalHours) || 0;
-            const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
-            const doubleHrs = parseFloat(shift.doubleHours) || 0;
-            const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
-            const totalHours = normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
-            const hourlyRate = timesheetData.hourlyRate || 0;
-            const dayPay = (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
-            
-            return (
-              <div 
-                key={day.date} 
-                className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
-                  day.isToday ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-100'
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  workSubTab === 'timesheet' && activeJobId === job.id
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                {/* Day Header */}
-                <div className={`px-4 py-3 flex items-center justify-between ${
-                  day.isToday ? 'bg-blue-50' : 'bg-gray-50'
-                }`}>
+                💼 {job.name}
+              </button>
+            ))}
+            {jobs.length < 5 && (
+              <button
+                onClick={addJob}
+                className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+              >
+                + Add Job
+              </button>
+            )}
+          </div>
+
+          {/* Total Summary Tab */}
+          {workSubTab === 'summary' && (
+            <div className="space-y-6">
+              {/* Grand Total Card */}
+              <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white">
+                <h2 className="text-2xl font-bold mb-4">📊 All Jobs - Weekly Total</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/10 rounded-xl p-4 text-center">
+                    <div className="text-4xl font-bold">{grandTotals.hours.toFixed(1)}</div>
+                    <div className="text-sm text-green-200">Total Hours</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4 text-center">
+                    <div className="text-4xl font-bold">${grandTotals.pay.toFixed(2)}</div>
+                    <div className="text-sm text-green-200">Total Pay (before tax)</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Per-Job Breakdown */}
+              <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                <div className="p-4 border-b bg-gray-50">
+                  <h3 className="font-semibold text-gray-800">Breakdown by Job</h3>
+                </div>
+                <div className="divide-y">
+                  {jobs.map(job => {
+                    const { hours, pay } = calcJobTotals(job);
+                    return (
+                      <div key={job.id} className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <span className="text-lg">💼</span>
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-800">{job.name}</div>
+                            <div className="text-xs text-gray-500">${job.hourlyRate || 0}/hr</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 text-right">
+                          <div>
+                            <div className="font-bold text-gray-800">{hours.toFixed(1)}h</div>
+                            <div className="text-xs text-gray-500">Hours</div>
+                          </div>
+                          <div>
+                            <div className="font-bold text-green-600">${pay.toFixed(2)}</div>
+                            <div className="text-xs text-gray-500">Pay</div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Total Row */}
+                <div className="p-4 bg-gray-50 border-t flex items-center justify-between">
+                  <div className="font-bold text-gray-800">TOTAL</div>
+                  <div className="flex items-center gap-4 text-right">
+                    <div className="font-bold text-gray-800">{grandTotals.hours.toFixed(1)}h</div>
+                    <div className="font-bold text-green-600">${grandTotals.pay.toFixed(2)}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Individual Job Timesheet Tab */}
+          {workSubTab === 'timesheet' && (
+            <div className="space-y-6">
+              {/* Job Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
-                    {day.isToday && (
-                      <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full">Today</span>
+                    <input
+                      type="text"
+                      value={activeJob.name}
+                      onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
+                      className="text-2xl font-bold bg-transparent border-b border-white/30 focus:outline-none focus:border-white"
+                    />
+                    {jobs.length > 1 && (
+                      <button
+                        onClick={() => deleteJob(activeJobId)}
+                        className="p-1 text-white/60 hover:text-red-300 transition-colors"
+                        title="Delete job"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
-                    {totalHours > 0 && (
-                      <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
-                          {totalHours.toFixed(1)}h
-                        </span>
-                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">
-                          ${dayPay.toFixed(2)}
-                        </span>
-                      </div>
-                    )}
-                    <button
-                      onClick={() => {
-                        const newShifts = { ...timesheetData.shifts };
-                        delete newShifts[day.date];
-                        setTimesheetData(prev => ({ ...prev, shifts: newShifts }));
+                  <button
+                    onClick={() => {
+                      if (confirm('Reset all shifts for this week?')) {
+                        const newShifts = { ...activeJob.shifts };
+                        weekDays.forEach(day => { delete newShifts[day.date]; });
+                        updateJob(activeJobId, 'shifts', newShifts);
+                      }
+                    }}
+                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
+                  >
+                    Reset Week
+                  </button>
+                </div>
+                
+                {/* Hourly Rate */}
+                <div className="flex items-center gap-3 mb-4 p-3 bg-white/10 rounded-xl">
+                  <span className="text-blue-100">Hourly Rate:</span>
+                  <div className="flex items-center bg-white/20 rounded-lg px-3 py-1">
+                    <span className="text-white">$</span>
+                    <input
+                      type="text"
+                      value={activeJob.hourlyRateStr || ''}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9.]/g, '');
+                        updateJob(activeJobId, 'hourlyRateStr', val);
+                        updateJob(activeJobId, 'hourlyRate', parseFloat(val) || 0);
                       }}
-                      className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                      title="Clear day"
-                    >
-                      ✕
-                    </button>
+                      placeholder="0.00"
+                      className="w-20 bg-transparent text-white placeholder-blue-200 focus:outline-none text-center"
+                    />
+                    <span className="text-blue-200">/hr</span>
                   </div>
                 </div>
                 
-                {/* Shift Details */}
-                <div className="p-4 space-y-4">
-                  {/* Hours Input Grid */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {/* Normal Hours */}
-                    <div className="bg-blue-50 rounded-xl p-3">
-                      <label className="text-xs text-blue-600 font-medium mb-1 block">1x Normal</label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          step="0.5"
-                          value={shift.normalHours || ''}
-                          onChange={(e) => {
-                            setTimesheetData(prev => ({
-                              ...prev,
-                              shifts: {
-                                ...prev.shifts,
-                                [day.date]: { ...prev.shifts?.[day.date], normalHours: e.target.value }
-                              }
-                            }));
-                          }}
-                          placeholder="0"
-                          className="w-full px-3 py-2 border-2 border-blue-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-blue-400 bg-white"
-                        />
-                        <span className="text-blue-600 font-medium">hrs</span>
-                      </div>
-                    </div>
-                    
-                    {/* Time & Half Hours */}
-                    <div className="bg-yellow-50 rounded-xl p-3">
-                      <label className="text-xs text-yellow-600 font-medium mb-1 block">1.5x Time & Half</label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          step="0.5"
-                          value={shift.timeHalfHours || ''}
-                          onChange={(e) => {
-                            setTimesheetData(prev => ({
-                              ...prev,
-                              shifts: {
-                                ...prev.shifts,
-                                [day.date]: { ...prev.shifts?.[day.date], timeHalfHours: e.target.value }
-                              }
-                            }));
-                          }}
-                          placeholder="0"
-                          className="w-full px-3 py-2 border-2 border-yellow-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-yellow-400 bg-white"
-                        />
-                        <span className="text-yellow-600 font-medium">hrs</span>
-                      </div>
-                    </div>
-                    
-                    {/* Double Time Hours */}
-                    <div className="bg-orange-50 rounded-xl p-3">
-                      <label className="text-xs text-orange-600 font-medium mb-1 block">2x Double Time</label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          step="0.5"
-                          value={shift.doubleHours || ''}
-                          onChange={(e) => {
-                            setTimesheetData(prev => ({
-                              ...prev,
-                              shifts: {
-                                ...prev.shifts,
-                                [day.date]: { ...prev.shifts?.[day.date], doubleHours: e.target.value }
-                              }
-                            }));
-                          }}
-                          placeholder="0"
-                          className="w-full px-3 py-2 border-2 border-orange-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-orange-400 bg-white"
-                        />
-                        <span className="text-orange-600 font-medium">hrs</span>
-                      </div>
-                    </div>
-                    
-                    {/* Double + Half Hours */}
-                    <div className="bg-red-50 rounded-xl p-3">
-                      <label className="text-xs text-red-600 font-medium mb-1 block">2.5x Double & Half</label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          step="0.5"
-                          value={shift.doubleHalfHours || ''}
-                          onChange={(e) => {
-                            setTimesheetData(prev => ({
-                              ...prev,
-                              shifts: {
-                                ...prev.shifts,
-                                [day.date]: { ...prev.shifts?.[day.date], doubleHalfHours: e.target.value }
-                              }
-                            }));
-                          }}
-                          placeholder="0"
-                          className="w-full px-3 py-2 border-2 border-red-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-red-400 bg-white"
-                        />
-                        <span className="text-red-600 font-medium">hrs</span>
-                      </div>
-                    </div>
+                {/* Weekly Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/10 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold">{activeJobTotals.hours.toFixed(1)}</div>
+                    <div className="text-sm text-blue-200">Hours This Week</div>
                   </div>
-                  
-                  {/* Notes */}
-                  <div>
-                    <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Notes</label>
-                    <input
-                      type="text"
-                      value={shift.notes || ''}
-                      onChange={(e) => {
-                        setTimesheetData(prev => ({
-                          ...prev,
-                          shifts: {
-                            ...prev.shifts,
-                            [day.date]: { ...prev.shifts?.[day.date], notes: e.target.value }
-                          }
-                        }));
-                      }}
-                      placeholder="What did you work on..."
-                      className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-400"
-                    />
+                  <div className="bg-white/10 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold">${activeJobTotals.pay.toFixed(2)}</div>
+                    <div className="text-sm text-blue-200">Estimated Pay (before tax)</div>
                   </div>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Daily Shift Cards */}
+              {weekDays.map(day => {
+                const shift = activeJob.shifts?.[day.date] || {};
+                const normalHrs = parseFloat(shift.normalHours) || 0;
+                const timeHalfHrs = parseFloat(shift.timeHalfHours) || 0;
+                const doubleHrs = parseFloat(shift.doubleHours) || 0;
+                const doubleHalfHrs = parseFloat(shift.doubleHalfHours) || 0;
+                const totalHours = normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
+                const hourlyRate = activeJob.hourlyRate || 0;
+                const dayPay = (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
+                
+                return (
+                  <div 
+                    key={day.date} 
+                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
+                      day.isToday ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-100'
+                    }`}
+                  >
+                    <div className={`px-4 py-3 flex items-center justify-between ${day.isToday ? 'bg-blue-50' : 'bg-gray-50'}`}>
+                      <div className="flex items-center gap-3">
+                        <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
+                        {day.isToday && <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full">Today</span>}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {totalHours > 0 && (
+                          <div className="flex items-center gap-2">
+                            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">{totalHours.toFixed(1)}h</span>
+                            <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">${dayPay.toFixed(2)}</span>
+                          </div>
+                        )}
+                        <button
+                          onClick={() => {
+                            const newShifts = { ...activeJob.shifts };
+                            delete newShifts[day.date];
+                            updateJob(activeJobId, 'shifts', newShifts);
+                          }}
+                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 space-y-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-blue-50 rounded-xl p-3">
+                          <label className="text-xs text-blue-600 font-medium mb-1 block">1x Normal</label>
+                          <div className="flex items-center gap-2">
+                            <input type="number" step="0.5" value={shift.normalHours || ''} onChange={(e) => updateShift(day.date, 'normalHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-blue-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-blue-400 bg-white" />
+                            <span className="text-blue-600 font-medium">hrs</span>
+                          </div>
+                        </div>
+                        <div className="bg-yellow-50 rounded-xl p-3">
+                          <label className="text-xs text-yellow-600 font-medium mb-1 block">1.5x Time & Half</label>
+                          <div className="flex items-center gap-2">
+                            <input type="number" step="0.5" value={shift.timeHalfHours || ''} onChange={(e) => updateShift(day.date, 'timeHalfHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-yellow-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-yellow-400 bg-white" />
+                            <span className="text-yellow-600 font-medium">hrs</span>
+                          </div>
+                        </div>
+                        <div className="bg-orange-50 rounded-xl p-3">
+                          <label className="text-xs text-orange-600 font-medium mb-1 block">2x Double Time</label>
+                          <div className="flex items-center gap-2">
+                            <input type="number" step="0.5" value={shift.doubleHours || ''} onChange={(e) => updateShift(day.date, 'doubleHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-orange-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-orange-400 bg-white" />
+                            <span className="text-orange-600 font-medium">hrs</span>
+                          </div>
+                        </div>
+                        <div className="bg-red-50 rounded-xl p-3">
+                          <label className="text-xs text-red-600 font-medium mb-1 block">2.5x Double & Half</label>
+                          <div className="flex items-center gap-2">
+                            <input type="number" step="0.5" value={shift.doubleHalfHours || ''} onChange={(e) => updateShift(day.date, 'doubleHalfHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-red-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-red-400 bg-white" />
+                            <span className="text-red-600 font-medium">hrs</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Notes</label>
+                        <input type="text" value={shift.notes || ''} onChange={(e) => updateShift(day.date, 'notes', e.target.value)} placeholder="What did you work on..." className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-400" />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -5449,14 +5511,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return days;
     };
     const weekDays = getWeekDays();
-    const weeklyWorkHours = weekDays.reduce((sum, date) => {
-      const shift = timesheetData.shifts?.[date] || {};
-      return sum + (parseFloat(shift.normalHours) || 0) + (parseFloat(shift.timeHalfHours) || 0) + (parseFloat(shift.doubleHours) || 0) + (parseFloat(shift.doubleHalfHours) || 0);
+    
+    // Calculate totals across all jobs
+    const jobs = timesheetData.jobs || [{ id: 1, name: 'Job 1', hourlyRate: timesheetData.hourlyRate || 0, shifts: timesheetData.shifts || {} }];
+    const weeklyWorkHours = jobs.reduce((total, job) => {
+      return total + weekDays.reduce((sum, date) => {
+        const shift = job.shifts?.[date] || {};
+        return sum + (parseFloat(shift.normalHours) || 0) + (parseFloat(shift.timeHalfHours) || 0) + (parseFloat(shift.doubleHours) || 0) + (parseFloat(shift.doubleHalfHours) || 0);
+      }, 0);
     }, 0);
-    const weeklyWorkPay = weekDays.reduce((sum, date) => {
-      const shift = timesheetData.shifts?.[date] || {};
-      const rate = timesheetData.hourlyRate || 0;
-      return sum + ((parseFloat(shift.normalHours) || 0) * rate) + ((parseFloat(shift.timeHalfHours) || 0) * rate * 1.5) + ((parseFloat(shift.doubleHours) || 0) * rate * 2) + ((parseFloat(shift.doubleHalfHours) || 0) * rate * 2.5);
+    const weeklyWorkPay = jobs.reduce((total, job) => {
+      const rate = job.hourlyRate || 0;
+      return total + weekDays.reduce((sum, date) => {
+        const shift = job.shifts?.[date] || {};
+        return sum + ((parseFloat(shift.normalHours) || 0) * rate) + ((parseFloat(shift.timeHalfHours) || 0) * rate * 1.5) + ((parseFloat(shift.doubleHours) || 0) * rate * 2) + ((parseFloat(shift.doubleHalfHours) || 0) * rate * 2.5);
+      }, 0);
     }, 0);
     
     // Mood emoji lookup
@@ -7160,7 +7229,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       if (!feedbackMsg.trim()) return;
       const subject = feedbackType === 'feedback' ? 'Muzz App Feedback' : feedbackType === 'bug' ? 'Muzz Bug Report' : 'Muzz Support Request';
       const body = encodeURIComponent(`From: ${userEmail}\nType: ${feedbackType}\n\n${feedbackMsg}`);
-      window.open(`mailto:lauchy23@outlook.com?subject=${encodeURIComponent(subject)}&body=${body}`);
+      window.open(`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(subject)}&body=${body}`);
       setFeedbackSent(true);
       setFeedbackMsg('');
       setTimeout(() => setFeedbackSent(false), 3000);
@@ -7204,11 +7273,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
             <h3 className="font-bold text-gray-800 text-lg mb-4">📬 Contact Us Directly</h3>
-            <a href="mailto:lauchy23@outlook.com" className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+            <a href="mailto:Muzz.onl@outlook.com" className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
               <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center"><Mail className="w-5 h-5 text-white" /></div>
               <div>
                 <div className="font-medium text-gray-800">Email Support</div>
-                <div className="text-sm text-gray-500">lauchy23@outlook.com</div>
+                <div className="text-sm text-gray-500">Muzz.onl@outlook.com</div>
               </div>
             </a>
           </div>
