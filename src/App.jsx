@@ -89,6 +89,69 @@ const RevenueCat = {
 };
 
 // ============================================
+// STARRY BACKGROUND COMPONENT
+// ============================================
+const StarryBackground = ({ children, keepOrangeHeader = true }) => {
+  return (
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      {/* Stars layer */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Small stars */}
+        {[...Array(80)].map((_, i) => (
+          <div
+            key={`star-${i}`}
+            className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animation: `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 2}s`
+            }}
+          />
+        ))}
+        {/* Medium stars */}
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={`star-m-${i}`}
+            className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-40"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animation: `twinkle ${3 + Math.random() * 4}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 3}s`
+            }}
+          />
+        ))}
+        {/* Large stars */}
+        {[...Array(10)].map((_, i) => (
+          <div
+            key={`star-l-${i}`}
+            className="absolute w-2 h-2 bg-white rounded-full opacity-30"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animation: `twinkle ${4 + Math.random() * 3}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+      {/* CSS for twinkle animation */}
+      <style>{`
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.2); }
+        }
+      `}</style>
+      {/* Content */}
+      <div className="relative z-10">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+// ============================================
 // MOBILE KEYBOARD HELPER
 // ============================================
 const scrollInputIntoView = (e) => {
@@ -870,6 +933,9 @@ function MuzzApp() {
   // Assets state
   const [assets, setAssets] = useState([]);
   const [stocks, setStocks] = useState([]);
+  const [futureStocks, setFutureStocks] = useState([]); // Future portfolio
+  const [futureResearch, setFutureResearch] = useState([]); // Future research
+  const [futureResearchColumns, setFutureResearchColumns] = useState([]);
   const [investmentSettings, setInvestmentSettings] = useState({
     yearlyContribution: '',
     expectedGrowthRate: '7',
@@ -1166,6 +1232,9 @@ function MuzzApp() {
           if (d.smallGoals) setSmallGoals(d.smallGoals);
           if (d.bigGoals) setBigGoals(d.bigGoals);
           if (d.holdingsResearch) setHoldingsResearch(d.holdingsResearch);
+          if (d.futureStocks) setFutureStocks(d.futureStocks);
+          if (d.futureResearch) setFutureResearch(d.futureResearch);
+          if (d.futureResearchColumns) setFutureResearchColumns(d.futureResearchColumns);
           if (d.investmentSmallGoals) setInvestmentSmallGoals(d.investmentSmallGoals);
           if (d.investmentBigGoals) setInvestmentBigGoals(d.investmentBigGoals);
           if (d.investmentNotes) setInvestmentNotes(d.investmentNotes);
@@ -1233,6 +1302,9 @@ function MuzzApp() {
           smallGoals,
           bigGoals,
           holdingsResearch,
+          futureStocks,
+          futureResearch,
+          futureResearchColumns,
           investmentSmallGoals,
           investmentBigGoals,
           investmentNotes,
@@ -1277,7 +1349,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -6431,11 +6503,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <tr key={idx} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-4 font-medium">
                           {sub.name}
-                          {sub.dateAdded && (
-                            <span className="ml-2 text-xs text-gray-400">
-                              ({getHoldingDuration(sub.dateAdded)})
-                            </span>
-                          )}
                         </td>
                         <td className="py-3 px-3 text-center text-gray-500">
                           {sub.dueDate || '-'}
@@ -8469,7 +8536,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                Portfolio
+                Current Portfolio
+              </button>
+              <button
+                onClick={() => setInvestmentsSubTab('futurePortfolio')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                  investmentsSubTab === 'futurePortfolio'
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                Future Portfolio
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('research')}
@@ -9219,6 +9296,256 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
+          {/* FUTURE PORTFOLIO TAB */}
+          {investmentsSubTab === 'futurePortfolio' && (
+            <>
+              {/* Future Portfolio Header */}
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white mb-6">
+                <h2 className="text-2xl font-bold mb-2">🔮 Future Portfolio</h2>
+                <p className="text-blue-100">Plan your future investments and see how they'd weight in your portfolio</p>
+              </div>
+
+              {/* Future Stocks Input */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-semibold">Planned Investments</h2>
+                  <p className="text-sm text-gray-500 mt-1">Add stocks you're considering for your future portfolio</p>
+                </div>
+                <div className="p-4 space-y-3">
+                  {[...futureStocks, {}].map((stock, index) => (
+                    <div key={index} className="flex gap-3 items-center">
+                      <span className="text-gray-400 text-sm w-6">{index + 1}.</span>
+                      <input
+                        type="text"
+                        value={stock?.name || ''}
+                        onChange={(e) => {
+                          setFutureStocks(prev => {
+                            const updated = [...prev];
+                            if (!updated[index]) updated[index] = { id: Date.now(), name: '', plannedAmount: 0, plannedAmountStr: '', industry: '' };
+                            updated[index] = { ...updated[index], name: e.target.value };
+                            return updated;
+                          });
+                        }}
+                        placeholder="Company/Stock name"
+                        className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                      />
+                      <input
+                        type="text"
+                        value={stock?.plannedAmountStr || ''}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9.]/g, '');
+                          setFutureStocks(prev => {
+                            const updated = [...prev];
+                            if (!updated[index]) updated[index] = { id: Date.now(), name: '', plannedAmount: 0, plannedAmountStr: '', industry: '' };
+                            updated[index] = { ...updated[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
+                            return updated;
+                          });
+                        }}
+                        placeholder="$0"
+                        className="w-28 px-3 py-2 border-2 rounded-xl text-sm text-right focus:outline-none focus:border-blue-500"
+                      />
+                      <select
+                        value={stock?.industry || ''}
+                        onChange={(e) => {
+                          setFutureStocks(prev => {
+                            const updated = [...prev];
+                            if (!updated[index]) updated[index] = { id: Date.now(), name: '', plannedAmount: 0, plannedAmountStr: '', industry: '' };
+                            updated[index] = { ...updated[index], industry: e.target.value };
+                            return updated;
+                          });
+                        }}
+                        className="w-36 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                      >
+                        {industries.map(ind => (
+                          <option key={ind.id} value={ind.id}>{ind.name}</option>
+                        ))}
+                      </select>
+                      {stock?.name && (
+                        <button
+                          onClick={() => setFutureStocks(prev => prev.filter((_, i) => i !== index))}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Future Portfolio Weighting */}
+              {(() => {
+                const filledFuture = futureStocks.filter(s => s && s.plannedAmount > 0);
+                const totalPlanned = filledFuture.reduce((sum, s) => sum + s.plannedAmount, 0);
+                
+                if (filledFuture.length === 0) return null;
+                
+                return (
+                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                    <div className="p-6 border-b">
+                      <h2 className="text-xl font-semibold">Portfolio Weighting</h2>
+                      <p className="text-sm text-gray-500">How each investment would weight in your future portfolio</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-gray-50 border-b">
+                            <th className="text-left py-3 px-4 font-semibold">Stock</th>
+                            <th className="text-left py-3 px-4 font-semibold">Industry</th>
+                            <th className="text-right py-3 px-4 font-semibold">Planned $</th>
+                            <th className="text-right py-3 px-4 font-semibold">Weight %</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
+                            const weight = totalPlanned > 0 ? ((stock.plannedAmount / totalPlanned) * 100) : 0;
+                            return (
+                              <tr key={idx} className="border-b hover:bg-gray-50">
+                                <td className="py-3 px-4 font-medium">{stock.name}</td>
+                                <td className="py-3 px-4 text-gray-500">{stock.industry || '-'}</td>
+                                <td className="py-3 px-4 text-right">${stock.plannedAmount.toLocaleString()}</td>
+                                <td className="py-3 px-4 text-right font-semibold text-blue-600">{weight.toFixed(1)}%</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                        <tfoot>
+                          <tr className="bg-blue-50 font-bold text-blue-900">
+                            <td className="py-3 px-4">Total</td>
+                            <td className="py-3 px-4"></td>
+                            <td className="py-3 px-4 text-right">${totalPlanned.toLocaleString()}</td>
+                            <td className="py-3 px-4 text-right">100%</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Future Industry Breakdown Pie */}
+              {(() => {
+                const filledFuture = futureStocks.filter(s => s && s.plannedAmount > 0);
+                const totalPlanned = filledFuture.reduce((sum, s) => sum + s.plannedAmount, 0);
+                
+                const futureByIndustry = industries
+                  .filter(ind => ind.id)
+                  .map(ind => ({
+                    name: ind.name,
+                    total: filledFuture.filter(s => s.industry === ind.id).reduce((sum, s) => sum + s.plannedAmount, 0)
+                  }))
+                  .filter(ind => ind.total > 0)
+                  .sort((a, b) => b.total - a.total);
+                
+                if (futureByIndustry.length === 0) return null;
+                
+                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
+                let currentAngle = 0;
+                
+                return (
+                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                    <div className="p-6 border-b">
+                      <h2 className="text-xl font-semibold">Industry Breakdown</h2>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
+                      {/* Pie Chart */}
+                      <svg width="200" height="200" viewBox="0 0 200 200">
+                        {futureByIndustry.map((ind, idx) => {
+                          const percentage = (ind.total / totalPlanned) * 100;
+                          const angle = (percentage / 100) * 360;
+                          const startAngle = currentAngle;
+                          currentAngle += angle;
+                          
+                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
+                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
+                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                          const largeArc = angle > 180 ? 1 : 0;
+                          
+                          return (
+                            <path
+                              key={idx}
+                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                              fill={colors[idx % colors.length]}
+                            />
+                          );
+                        })}
+                      </svg>
+                      {/* Legend */}
+                      <div className="flex-1 space-y-2">
+                        {futureByIndustry.map((ind, idx) => {
+                          const percentage = (ind.total / totalPlanned) * 100;
+                          return (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
+                              <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
+                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Future Research Notes */}
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mt-6">
+                <div className="p-6 border-b flex justify-between items-start">
+                  <div>
+                    <h2 className="text-xl font-semibold">Future Holdings Research</h2>
+                    <p className="text-sm text-gray-500 mt-1">Research notes for your planned investments</p>
+                  </div>
+                </div>
+                <div className="p-4 space-y-3">
+                  {[...futureResearch, {}].map((holding, index) => (
+                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                      <div className="flex items-start gap-3 mb-3">
+                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                        <input
+                          type="text"
+                          value={holding?.ticker || ''}
+                          onChange={(e) => {
+                            setFutureResearch(prev => {
+                              const updated = [...prev];
+                              if (!updated[index]) updated[index] = { ticker: '', notes: '' };
+                              updated[index] = { ...updated[index], ticker: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Ticker (e.g. AAPL)"
+                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-blue-500"
+                        />
+                        {holding?.ticker && (
+                          <button
+                            onClick={() => setFutureResearch(prev => prev.filter((_, i) => i !== index))}
+                            className="text-gray-400 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        )}
+                      </div>
+                      {holding?.ticker && (
+                        <textarea
+                          value={holding?.notes || ''}
+                          onChange={(e) => {
+                            setFutureResearch(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], notes: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Research notes..."
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 min-h-[100px]"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           {(investmentsSubTab === 'research' || investmentsSubTab === 'declined' || investmentsSubTab === 'economics' || investmentsSubTab === 'risks') && (
             <>
               {/* Inner tabs for Research sub-sections */}
@@ -9269,6 +9596,122 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {investmentsSubTab === 'research' && (
             <>
+              {/* Research Industry Pie Chart */}
+              {(() => {
+                const researchByIndustry = holdingsResearch
+                  .filter(h => h && h.ticker && h.industry)
+                  .reduce((acc, h) => {
+                    if (!acc[h.industry]) acc[h.industry] = [];
+                    acc[h.industry].push(h);
+                    return acc;
+                  }, {});
+                
+                const industryData = Object.entries(researchByIndustry)
+                  .map(([industry, stocks]) => ({ name: industry, count: stocks.length }))
+                  .sort((a, b) => b.count - a.count);
+                
+                const totalCount = industryData.reduce((sum, i) => sum + i.count, 0);
+                
+                if (industryData.length === 0) return null;
+                
+                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
+                let currentAngle = 0;
+                
+                return (
+                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                    <div className="p-6 border-b">
+                      <h2 className="text-xl font-semibold">📊 Research by Industry</h2>
+                      <p className="text-sm text-gray-500">Your research picks broken down by sector</p>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
+                      {/* Pie Chart */}
+                      <svg width="200" height="200" viewBox="0 0 200 200">
+                        {industryData.map((ind, idx) => {
+                          const percentage = (ind.count / totalCount) * 100;
+                          const angle = (percentage / 100) * 360;
+                          const startAngle = currentAngle;
+                          currentAngle += angle;
+                          
+                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
+                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
+                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                          const largeArc = angle > 180 ? 1 : 0;
+                          
+                          return (
+                            <path
+                              key={idx}
+                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                              fill={colors[idx % colors.length]}
+                            />
+                          );
+                        })}
+                      </svg>
+                      {/* Legend */}
+                      <div className="flex-1 space-y-2">
+                        {industryData.map((ind, idx) => {
+                          const percentage = (ind.count / totalCount) * 100;
+                          return (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
+                              <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
+                              <span className="text-sm text-gray-500">{ind.count} picks</span>
+                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Master Research Table */}
+              {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                  <div className="p-6 border-b">
+                    <h2 className="text-xl font-semibold">📋 Master Research Summary</h2>
+                    <p className="text-sm text-gray-500">All your research picks at a glance</p>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-gray-50 border-b">
+                          <th className="text-left py-3 px-4 font-semibold">Ticker</th>
+                          <th className="text-left py-3 px-4 font-semibold">Industry</th>
+                          <th className="text-center py-3 px-4 font-semibold">Toll Booth?</th>
+                          <th className="text-left py-3 px-4 font-semibold">Growth</th>
+                          <th className="text-left py-3 px-4 font-semibold">Moat</th>
+                          {researchColumns.map(col => (
+                            <th key={col.id} className="text-left py-3 px-4 font-semibold">{col.name}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {holdingsResearch.filter(h => h && h.ticker).map((holding, idx) => (
+                          <tr key={idx} className="border-b hover:bg-gray-50">
+                            <td className="py-3 px-4 font-bold">{holding.ticker}</td>
+                            <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
+                            <td className="py-3 px-4 text-center">{holding.tollBooth ? '✅' : '-'}</td>
+                            <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
+                            <td className="py-3 px-4 text-gray-600">{holding.moat || '-'}</td>
+                            {researchColumns.map(col => (
+                              <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr className="bg-purple-50 font-bold text-purple-900">
+                          <td className="py-3 px-4">Total</td>
+                          <td className="py-3 px-4" colSpan={4 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {/* Holdings Research */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b flex justify-between items-start">
@@ -9320,7 +9763,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="p-4 space-y-3">
                   {holdingsResearch.map((holding, index) => (
                     <div key={index} className="border-2 rounded-2xl p-4 bg-white">
-                      {/* Row 1: Ticker + Delete */}
+                      {/* Row 1: Ticker + Industry + Delete */}
                       <div className="flex items-start gap-3 mb-3">
                         <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
                         <input
@@ -9336,6 +9779,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           placeholder="Ticker (e.g. BRK)"
                           className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
                         />
+                        <select
+                          value={holding?.industry || ''}
+                          onChange={(e) => {
+                            setHoldingsResearch(prev => {
+                              const updated = [...prev];
+                              updated[index] = { ...updated[index], industry: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          className="w-40 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                        >
+                          {industries.map(ind => (
+                            <option key={ind.id} value={ind.id}>{ind.name}</option>
+                          ))}
+                        </select>
                         <button
                           onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
                           className="text-gray-400 hover:text-red-500 transition-colors">
