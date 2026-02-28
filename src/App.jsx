@@ -1664,10 +1664,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             {reminder.date && (
                               <button
                                 onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: '' } : r))}
-                                className="text-gray-400 hover:text-red-500 text-sm"
+                                className="text-gray-400 hover:text-red-500 transition-colors"
                                 title="Clear date"
                               >
-                                ✕
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             )}
                           </div>
@@ -1684,9 +1684,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                       <button
                         onClick={() => setReminders(prev => prev.filter(r => r.id !== reminder.id))}
-                        className="text-red-400 hover:text-red-600 text-sm mt-2"
+                        className="text-gray-400 hover:text-red-500 transition-colors mt-2"
                       >
-                        ✕
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
                   </div>
@@ -1743,10 +1743,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             {bday.date && (
                               <button
                                 onClick={() => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: '' } : b))}
-                                className="text-gray-400 hover:text-red-500 text-sm"
+                                className="text-gray-400 hover:text-red-500 transition-colors"
                                 title="Clear date"
                               >
-                                ✕
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             )}
                           </div>
@@ -1770,9 +1770,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                       <button
                         onClick={() => setBirthdays(prev => prev.filter(b => b.id !== bday.id))}
-                        className="text-red-400 hover:text-red-600 text-sm"
-                      >
-                        ✕
+                        className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
                   </div>
@@ -1922,9 +1921,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <button
                             onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
-                            className="text-red-400 hover:text-red-600 text-sm"
+                            className="text-gray-400 hover:text-red-500 transition-colors"
                           >
-                            ✕
+                            <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                       </div>
@@ -2006,9 +2005,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <button
                             onClick={() => setWeeklyTasks(prev => prev.filter(t => t.id !== task.id))}
-                            className="text-red-400 hover:text-red-600 text-sm mt-1"
+                            className="text-gray-400 hover:text-red-500 transition-colors mt-1"
                           >
-                            ✕
+                            <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                       </div>
@@ -2311,9 +2310,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))}
-                          className="text-red-400 hover:text-red-600 text-lg mt-1"
-                        >
-                          ✕
+                          className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                       
@@ -2463,9 +2461,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               />
                               <button
                                 onClick={() => deleteMealFromDay(day.date, meal.id)}
-                                className="text-red-400 hover:text-red-600 text-sm"
-                              >
-                                ✕
+                                className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                               </button>
                             </div>
                           </div>
@@ -3264,7 +3261,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                           title="Clear day"
                         >
-                          ✕
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -3498,7 +3495,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                           title="Clear day"
                         >
-                          ✕
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -3737,9 +3734,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => deleteWeekExercise(week, exercise.id)}
-                          className="text-red-400 hover:text-red-600 text-sm px-2"
-                        >
-                          ✕
+                          className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                     ))}
@@ -4100,7 +4096,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {section.collapsed ? '▼' : '▲'}
                   </button>
                   {/* Delete */}
-                  <button onClick={() => { deleteSection(section.id); showSaveFeedback(); }} className="text-white/70 hover:text-white">✕</button>
+                  <button onClick={() => { deleteSection(section.id); showSaveFeedback(); }} className="text-white/70 hover:text-white"><Trash2 className="w-4 h-4" /></button>
                 </div>
               </div>
 
@@ -4299,8 +4295,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                               });
                                               updateSection(section.id, { content: { blocks: newBlocks } });
                                             }}
-                                            className="text-red-400 hover:text-red-600 text-sm"
-                                          >✕</button>
+                                            className="text-gray-400 hover:text-red-500 transition-colors"
+                                          ><Trash2 className="w-4 h-4" /></button>
                                         </div>
                                       </div>
                                     </div>
@@ -4405,8 +4401,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                               });
                                               updateSection(section.id, { content: { blocks: newBlocks } });
                                             }}
-                                            className="text-red-400 hover:text-red-600 text-sm"
-                                          >✕</button>
+                                            className="text-gray-400 hover:text-red-500 transition-colors"
+                                          ><Trash2 className="w-4 h-4" /></button>
                                         </div>
                                         <div className="flex items-center gap-2">
                                           <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
@@ -4468,7 +4464,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                         const blocks = section.content?.blocks || [];
                                         const newBlocks = blocks.map(b => b.id === block.id ? { ...b, items: b.items.filter(l => l.id !== link.id) } : b);
                                         updateSection(section.id, { content: { blocks: newBlocks } });
-                                      }} className="text-red-400 hover:text-red-600 text-sm">✕</button>
+                                      }} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                                     </div>
                                   ))}
                                   <button onClick={() => {
@@ -4581,7 +4577,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                         const blocks = section.content?.blocks || [];
                                         const newBlocks = blocks.map(b => b.id === block.id ? { ...b, items: b.items.filter(it => it.id !== item.id) } : b);
                                         updateSection(section.id, { content: { blocks: newBlocks } });
-                                      }} className="text-red-400 hover:text-red-600 text-sm">✕</button>
+                                      }} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                                     </div>
                                   ))}
                                   <button onClick={() => {
@@ -4599,7 +4595,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <button onClick={() => {
                                   const blocks = section.content?.blocks?.filter(b => b.id !== block.id) || [];
                                   updateSection(section.id, { content: { blocks } });
-                                }} className="float-right text-xs text-red-400 hover:text-red-600">✕</button>
+                                }} className="float-right text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                                 <textarea value={block.text || ''} onChange={(e) => {
                                   const blocks = section.content?.blocks || [];
                                   const newBlocks = blocks.map(b => b.id === block.id ? { ...b, text: e.target.value } : b);
@@ -4620,7 +4616,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <button onClick={() => {
                                   const blocks = section.content?.blocks?.filter(b => b.id !== block.id) || [];
                                   updateSection(section.id, { content: { blocks } });
-                                }} className="text-xs text-gray-400 hover:text-red-400">✕</button>
+                                }} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                               </div>
                             )}
                             
@@ -4932,7 +4928,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             }}
                             className="bg-transparent text-sm focus:outline-none"
                           />
-                          <button onClick={() => updateSection(section.id, { content: section.content.filter(t => t.id !== task.id) })} className="text-red-400 hover:text-red-600">✕</button>
+                          <button onClick={() => updateSection(section.id, { content: section.content.filter(t => t.id !== task.id) })} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                         </div>
                       ))}
                       <button
@@ -5427,7 +5423,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           }}
                           className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                         >
-                          ✕
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -6099,8 +6095,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       } else {
                         setBusinessSubscriptions(prev => prev.filter((_, i) => i !== index));
                       }
-                    }} className="text-red-400 hover:text-red-600 text-sm ml-auto">
-                      ✕
+                    }} className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 ))}
@@ -6687,9 +6683,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     return updated;
                                   });
                                 }}
-                                className="text-red-400 hover:text-red-600"
-                              >
-                                ✕
+                                className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                               </button>
                             </div>
                           </div>
@@ -6741,9 +6736,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   return updated;
                                 });
                               }}
-                              className="text-red-400 hover:text-red-600 text-sm"
-                            >
-                              ✕
+                              className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
@@ -6794,9 +6788,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setBillSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-sm"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -6894,9 +6887,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setBillBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-sm"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -7017,7 +7009,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       placeholder="e.g. Car Loan, Credit Card, HECS..."
                       className="flex-1 px-3 py-2 border-2 rounded-xl text-sm font-medium focus:outline-none focus:border-red-500 bg-white"
                     />
-                    <button onClick={() => deleteDebt(debt.id)} className="text-red-400 hover:text-red-600">✕</button>
+                    <button onClick={() => deleteDebt(debt.id)} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-5 h-5" /></button>
                   </div>
 
                   {/* Row 2: Total + Paid */}
@@ -7625,9 +7617,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     />
                     <button
                       onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
-                      className="text-red-400 hover:text-red-600 text-lg mt-1"
-                    >
-                      ✕
+                      className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                   
@@ -7870,9 +7861,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-sm"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -7970,9 +7960,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-sm"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -8548,9 +8537,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setStocks(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-lg mt-1"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         
@@ -8750,9 +8738,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               />
                               <button
                                 onClick={() => setTrackedStocks(prev => prev.filter(s => s.id !== stock.id))}
-                                className="text-red-400 hover:text-red-600 text-lg mt-1"
-                              >
-                                ✕
+                                className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                               </button>
                             </div>
                             
@@ -9187,9 +9174,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
-                          className="text-red-400 hover:text-red-600 text-lg mt-1"
-                        >
-                          ✕
+                          className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                       
@@ -9409,9 +9395,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setCompanyEconomics(prev => prev.filter((_, i) => i !== index))}
-                          className="text-red-400 hover:text-red-600 text-lg mt-1"
-                        >
-                          ✕
+                          className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                       
@@ -9543,9 +9528,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setBiggestRisks(prev => prev.filter((_, i) => i !== index))}
-                          className="text-red-400 hover:text-red-600 text-lg mt-1"
-                        >
-                          ✕
+                          className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                       
@@ -9639,9 +9623,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setInvestmentSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-sm"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -9739,9 +9722,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           />
                           <button
                             onClick={() => setInvestmentBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-red-400 hover:text-red-600 text-sm"
-                          >
-                            ✕
+                            className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -9916,9 +9898,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           onClick={() => {
                             setDeclinedCompanies(prev => prev.filter((_, i) => i !== index));
                           }}
-                          className="text-red-400 hover:text-red-600 text-lg mt-1"
-                        >
-                          ✕
+                          className="text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                       
