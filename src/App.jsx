@@ -9360,14 +9360,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <option key={ind.id} value={ind.id}>{ind.name}</option>
                         ))}
                       </select>
-                      {(stock?.name || stock?.plannedAmount > 0) && (
-                        <button
-                          onClick={() => setFutureStocks(prev => prev.filter((_, i) => i !== index))}
-                          className="text-gray-400 hover:text-red-500 transition-colors"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setFutureStocks(prev => prev.filter((_, i) => i !== index))}
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -9682,7 +9680,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <th className="text-center py-3 px-4 font-semibold">Toll Booth?</th>
                           <th className="text-left py-3 px-4 font-semibold">Growth</th>
                           {researchColumns.map(col => (
-                            <th key={col.id} className="text-left py-3 px-4 font-semibold">{col.name}</th>
+                            <th key={col.id} className="text-left py-3 px-4 font-semibold">
+                              <div className="flex items-center gap-2">
+                                {col.name}
+                                <button
+                                  onClick={() => setResearchColumns(prev => prev.filter(c => c.id !== col.id))}
+                                  className="text-gray-400 hover:text-red-500 transition-colors"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </th>
                           ))}
                         </tr>
                       </thead>
@@ -9691,7 +9699,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <tr key={idx} className="border-b hover:bg-gray-50">
                             <td className="py-3 px-4 font-bold">{holding.ticker}</td>
                             <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
-                            <td className="py-3 px-4 text-center">{holding.tollBooth ? '✅' : '-'}</td>
+                            <td className="py-3 px-4 text-center">
+                              {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? '✅' : '❌'}
+                            </td>
                             <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
                             {researchColumns.map(col => (
                               <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
