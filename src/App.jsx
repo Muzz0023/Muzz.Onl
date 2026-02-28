@@ -11,14 +11,18 @@ const MONTHLY_PRODUCT_ID = 'muzz_elite_monthly';
 // RevenueCat helper for iOS purchases
 const RevenueCat = {
   initialized: false,
+  Purchases: null,
   
   async init() {
     if (this.initialized) return;
     if (typeof window === 'undefined' || !window.Capacitor?.isNativePlatform()) return;
     
     try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      await Purchases.configure({ apiKey: REVENUECAT_API_KEY });
+      // Dynamic import that Vite won't analyze
+      const moduleName = '@revenuecat/purchases-capacitor';
+      const module = await import(/* @vite-ignore */ moduleName);
+      this.Purchases = module.Purchases;
+      await this.Purchases.configure({ apiKey: REVENUECAT_API_KEY });
       this.initialized = true;
       console.log('RevenueCat initialized');
     } catch (err) {
@@ -27,10 +31,9 @@ const RevenueCat = {
   },
   
   async checkEliteStatus() {
-    if (!this.initialized) return false;
+    if (!this.initialized || !this.Purchases) return false;
     try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      const { customerInfo } = await Purchases.getCustomerInfo();
+      const { customerInfo } = await this.Purchases.getCustomerInfo();
       return customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
     } catch (err) {
       console.log('Error checking elite status:', err);
@@ -39,13 +42,12 @@ const RevenueCat = {
   },
   
   async purchaseElite() {
-    if (!this.initialized) {
+    if (!this.initialized || !this.Purchases) {
       alert('Purchases not available on this device');
       return { success: false };
     }
     try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      const { customerInfo } = await Purchases.purchaseProduct({ productIdentifier: MONTHLY_PRODUCT_ID });
+      const { customerInfo } = await this.Purchases.purchaseProduct({ productIdentifier: MONTHLY_PRODUCT_ID });
       const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
       return { success: isElite, customerInfo };
     } catch (err) {
@@ -59,13 +61,12 @@ const RevenueCat = {
   },
   
   async restorePurchases() {
-    if (!this.initialized) {
+    if (!this.initialized || !this.Purchases) {
       alert('Purchases not available on this device');
       return { success: false };
     }
     try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      const { customerInfo } = await Purchases.restorePurchases();
+      const { customerInfo } = await this.Purchases.restorePurchases();
       const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
       return { success: isElite, customerInfo };
     } catch (err) {
@@ -76,10 +77,9 @@ const RevenueCat = {
   },
   
   async getOfferings() {
-    if (!this.initialized) return null;
+    if (!this.initialized || !this.Purchases) return null;
     try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      const { offerings } = await Purchases.getOfferings();
+      const { offerings } = await this.Purchases.getOfferings();
       return offerings;
     } catch (err) {
       console.log('Error getting offerings:', err);
