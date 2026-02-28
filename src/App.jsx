@@ -9360,7 +9360,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <option key={ind.id} value={ind.id}>{ind.name}</option>
                         ))}
                       </select>
-                      {stock?.name && (
+                      {(stock?.name || stock?.plannedAmount > 0) && (
                         <button
                           onClick={() => setFutureStocks(prev => prev.filter((_, i) => i !== index))}
                           className="text-gray-400 hover:text-red-500 transition-colors"
@@ -9681,7 +9681,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <th className="text-left py-3 px-4 font-semibold">Industry</th>
                           <th className="text-center py-3 px-4 font-semibold">Toll Booth?</th>
                           <th className="text-left py-3 px-4 font-semibold">Growth</th>
-                          <th className="text-left py-3 px-4 font-semibold">Moat</th>
                           {researchColumns.map(col => (
                             <th key={col.id} className="text-left py-3 px-4 font-semibold">{col.name}</th>
                           ))}
@@ -9694,7 +9693,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
                             <td className="py-3 px-4 text-center">{holding.tollBooth ? '✅' : '-'}</td>
                             <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
-                            <td className="py-3 px-4 text-gray-600">{holding.moat || '-'}</td>
                             {researchColumns.map(col => (
                               <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
                             ))}
@@ -9704,7 +9702,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <tfoot>
                         <tr className="bg-purple-50 font-bold text-purple-900">
                           <td className="py-3 px-4">Total</td>
-                          <td className="py-3 px-4" colSpan={4 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
+                          <td className="py-3 px-4" colSpan={3 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
                         </tr>
                       </tfoot>
                     </table>
@@ -9763,7 +9761,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="p-4 space-y-3">
                   {holdingsResearch.map((holding, index) => (
                     <div key={index} className="border-2 rounded-2xl p-4 bg-white">
-                      {/* Row 1: Ticker + Industry + Delete */}
+                      {/* Row 1: Ticker + Delete */}
                       <div className="flex items-start gap-3 mb-3">
                         <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
                         <input
@@ -9779,21 +9777,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           placeholder="Ticker (e.g. BRK)"
                           className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
                         />
-                        <select
-                          value={holding?.industry || ''}
-                          onChange={(e) => {
-                            setHoldingsResearch(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], industry: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          className="w-40 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
-                        >
-                          {industries.map(ind => (
-                            <option key={ind.id} value={ind.id}>{ind.name}</option>
-                          ))}
-                        </select>
                         <button
                           onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
                           className="text-gray-400 hover:text-red-500 transition-colors">
