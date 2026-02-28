@@ -2,6 +2,93 @@ import React, { useState, useEffect, useRef, createContext, useContext } from 'r
 import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase } from 'lucide-react';
 
 // ============================================
+// REVENUECAT CONFIGURATION
+// ============================================
+const REVENUECAT_API_KEY = 'test_EwvtoVDqbkRhxhStkGWYGQHdeHZ';
+const ELITE_ENTITLEMENT_ID = 'Muzz.onl Pro';
+const MONTHLY_PRODUCT_ID = 'muzz_elite_monthly';
+
+// RevenueCat helper for iOS purchases
+const RevenueCat = {
+  initialized: false,
+  
+  async init() {
+    if (this.initialized) return;
+    if (typeof window === 'undefined' || !window.Capacitor?.isNativePlatform()) return;
+    
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      await Purchases.configure({ apiKey: REVENUECAT_API_KEY });
+      this.initialized = true;
+      console.log('RevenueCat initialized');
+    } catch (err) {
+      console.log('RevenueCat not available:', err);
+    }
+  },
+  
+  async checkEliteStatus() {
+    if (!this.initialized) return false;
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      const { customerInfo } = await Purchases.getCustomerInfo();
+      return customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
+    } catch (err) {
+      console.log('Error checking elite status:', err);
+      return false;
+    }
+  },
+  
+  async purchaseElite() {
+    if (!this.initialized) {
+      alert('Purchases not available on this device');
+      return { success: false };
+    }
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      const { customerInfo } = await Purchases.purchaseProduct({ productIdentifier: MONTHLY_PRODUCT_ID });
+      const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
+      return { success: isElite, customerInfo };
+    } catch (err) {
+      if (err.code === '1' || err.userCancelled) {
+        return { success: false, cancelled: true };
+      }
+      console.log('Purchase error:', err);
+      alert('Purchase failed. Please try again.');
+      return { success: false, error: err };
+    }
+  },
+  
+  async restorePurchases() {
+    if (!this.initialized) {
+      alert('Purchases not available on this device');
+      return { success: false };
+    }
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      const { customerInfo } = await Purchases.restorePurchases();
+      const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
+      return { success: isElite, customerInfo };
+    } catch (err) {
+      console.log('Restore error:', err);
+      alert('Could not restore purchases. Please try again.');
+      return { success: false, error: err };
+    }
+  },
+  
+  async getOfferings() {
+    if (!this.initialized) return null;
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      const { offerings } = await Purchases.getOfferings();
+      return offerings;
+    } catch (err) {
+      console.log('Error getting offerings:', err);
+      return null;
+    }
+  }
+};
+
+// ============================================
 // MOBILE KEYBOARD HELPER
 // ============================================
 const scrollInputIntoView = (e) => {
@@ -922,8 +1009,54 @@ function MuzzApp() {
     checkSub();
   }, [userEmail]);
 
+  // Initialize RevenueCat for iOS and check for existing purchases
+  useEffect(() => {
+    const initRevenueCat = async () => {
+      if (!isNative) return;
+      await RevenueCat.init();
+      
+      // Check if user already has Elite from Apple
+      const hasElite = await RevenueCat.checkEliteStatus();
+      if (hasElite && !isElite) {
+        // Sync to Supabase
+        await fetch(api('/api/sync-apple-purchase'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, userEmail }),
+        });
+        setStripeElite(true); // Using same flag for simplicity
+      }
+    };
+    initRevenueCat();
+  }, [userId, userEmail]);
+
   // Handle Stripe checkout
   const handleUpgrade = async () => {
+    // Check if on iOS native app - use RevenueCat
+    if (isNative && window.Capacitor?.getPlatform() === 'ios') {
+      try {
+        const result = await RevenueCat.purchaseElite();
+        if (result.success) {
+          // Update Supabase to mark user as Elite
+          await fetch(api('/api/sync-apple-purchase'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, userEmail }),
+          });
+          setIsElite(true);
+          alert('Welcome to Elite! 🎉');
+          setActiveView('home');
+        } else if (result.cancelled) {
+          // User cancelled - do nothing
+        }
+      } catch (e) {
+        console.log('Purchase error:', e);
+        alert('Purchase failed. Please try again.');
+      }
+      return;
+    }
+    
+    // Web - use Stripe
     try {
       const res = await fetch(api('/api/create-checkout-session'), {
         method: 'POST',
@@ -938,6 +1071,27 @@ function MuzzApp() {
       }
     } catch (e) {
       alert('Connection error. Please try again.');
+    }
+  };
+  
+  // Handle restore purchases (iOS)
+  const handleRestorePurchases = async () => {
+    if (!isNative) return;
+    try {
+      const result = await RevenueCat.restorePurchases();
+      if (result.success) {
+        await fetch(api('/api/sync-apple-purchase'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, userEmail }),
+        });
+        setIsElite(true);
+        alert('Purchases restored! Welcome back Elite! 🎉');
+      } else {
+        alert('No previous purchases found.');
+      }
+    } catch (e) {
+      alert('Could not restore purchases. Please try again.');
     }
   };
 
@@ -7394,9 +7548,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 onClick={handleUpgrade}
                 className="px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl text-lg font-bold shadow-lg hover:scale-105 transition-all"
               >
-                Become Elite — $5/month
+                {isNative ? 'Become Elite — $4.99/month' : 'Become Elite — $5/month'}
               </button>
               <p className="text-xs text-gray-400">Cancel anytime. Your data stays safe.</p>
+              
+              {/* Restore Purchases - iOS only */}
+              {isNative && (
+                <button
+                  onClick={handleRestorePurchases}
+                  className="text-sm text-orange-500 hover:text-orange-600 underline"
+                >
+                  Restore Previous Purchase
+                </button>
+              )}
             </div>
           )}
 
