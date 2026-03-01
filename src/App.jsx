@@ -9556,7 +9556,64 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 );
               })()}
 
-              {/* Future Industry Pie Chart */}
+              {/* Company Weighting Pie Chart */}
+              {(() => {
+                const filledFuture = futureResearch.filter(h => h && h.ticker && h.plannedAmount > 0);
+                const totalAmount = filledFuture.reduce((sum, h) => sum + (h.plannedAmount || 0), 0);
+                
+                if (filledFuture.length === 0) return null;
+                
+                const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
+                let currentAngle = 0;
+                
+                return (
+                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                    <div className="p-6 border-b">
+                      <h2 className="text-xl font-semibold">⚖️ Portfolio Company Weighting</h2>
+                      <p className="text-sm text-gray-500">Weight of each company in your future portfolio</p>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
+                      <svg width="200" height="200" viewBox="0 0 200 200">
+                        {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
+                          const percentage = totalAmount > 0 ? (stock.plannedAmount / totalAmount) * 100 : 0;
+                          const angle = (percentage / 100) * 360;
+                          const startAngle = currentAngle;
+                          currentAngle += angle;
+                          
+                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
+                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
+                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                          const largeArc = angle > 180 ? 1 : 0;
+                          
+                          return (
+                            <path
+                              key={idx}
+                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                              fill={colors[idx % colors.length]}
+                            />
+                          );
+                        })}
+                      </svg>
+                      <div className="flex-1 space-y-2">
+                        {filledFuture.sort((a, b) => b.plannedAmount - a.plannedAmount).map((stock, idx) => {
+                          const percentage = totalAmount > 0 ? (stock.plannedAmount / totalAmount) * 100 : 0;
+                          return (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
+                              <span className="text-sm text-gray-700 flex-1 font-medium">{stock.ticker}</span>
+                              <span className="text-sm text-gray-500">${stock.plannedAmount.toLocaleString()}</span>
+                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Industry Allocation Pie Chart */}
               {(() => {
                 const filledFuture = futureResearch.filter(h => h && h.ticker && h.industry);
                 
@@ -9569,24 +9626,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 const industryList = Object.entries(industryData)
                   .map(([name, data]) => ({ name, ...data }))
-                  .sort((a, b) => b.amount - a.amount);
+                  .sort((a, b) => b.count - a.count);
                 
-                const totalAmount = industryList.reduce((sum, i) => sum + i.amount, 0);
+                const totalCount = industryList.reduce((sum, i) => sum + i.count, 0);
                 
                 if (industryList.length === 0) return null;
                 
-                const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1'];
+                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1'];
                 let currentAngle = 0;
                 
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                     <div className="p-6 border-b">
-                      <h2 className="text-xl font-semibold">📊 Future Industry Allocation</h2>
+                      <h2 className="text-xl font-semibold">📊 Industry Allocation</h2>
+                      <p className="text-sm text-gray-500">Breakdown of your future portfolio by industry</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       <svg width="200" height="200" viewBox="0 0 200 200">
                         {industryList.map((ind, idx) => {
-                          const percentage = totalAmount > 0 ? (ind.amount / totalAmount) * 100 : 0;
+                          const percentage = totalCount > 0 ? (ind.count / totalCount) * 100 : 0;
                           const angle = (percentage / 100) * 360;
                           const startAngle = currentAngle;
                           currentAngle += angle;
@@ -9608,12 +9666,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </svg>
                       <div className="flex-1 space-y-2">
                         {industryList.map((ind, idx) => {
-                          const percentage = totalAmount > 0 ? (ind.amount / totalAmount) * 100 : 0;
+                          const percentage = totalCount > 0 ? (ind.count / totalCount) * 100 : 0;
                           return (
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span className="text-sm text-gray-500">${ind.amount.toLocaleString()}</span>
+                              <span className="text-sm text-gray-500">{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
