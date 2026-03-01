@@ -1833,7 +1833,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
         </div>
-        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-xl transition-all border border-slate-700/50"><Menu className="w-5 h-5 text-white /></button>
+        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-xl transition-all border border-slate-700/50"><Menu className="w-5 h-5 text-white" /></button>
       </div>
     );
   };
