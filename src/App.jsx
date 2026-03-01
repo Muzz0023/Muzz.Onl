@@ -4593,26 +4593,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   placeholder="Name this category..."
                   className="text-4xl font-bold bg-transparent focus:outline-none placeholder-white/50 flex-1"
                 />
-                {/* Color Picker Toggle */}
-                <div className="relative">
-                  <button 
-                    onClick={() => setShowColorPicker(!showColorPicker)}
-                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
-                  >
-                    🎨
-                  </button>
-                  {showColorPicker && (
-                    <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-xl p-3 flex gap-2 z-10">
-                      {colors.map(c => (
-                        <button
-                          key={c.name}
-                          onClick={() => { updateCategory({ color: c.name }); setShowColorPicker(false); }}
-                          className={`w-8 h-8 rounded-full bg-gradient-to-r ${c.gradient} hover:scale-110 transition-transform ${customCat.color === c.name ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
               </div>
               
               {/* Sub-Tabs */}
@@ -4623,7 +4603,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       onClick={() => updateCategory({ activeSubTab: tab.id })}
                       className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                         customCat.activeSubTab === tab.id
-                          ? 'bg-white text-gray-800'
+                          ? 'ring-2 ring-white text-white bg-white/10'
                           : 'bg-white/20 text-white hover:bg-white/30'
                       }`}
                     >
