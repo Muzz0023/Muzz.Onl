@@ -91,47 +91,73 @@ const RevenueCat = {
 // ============================================
 // STARRY BACKGROUND COMPONENT
 // ============================================
-const StarryBackground = ({ children, keepOrangeHeader = true }) => {
+const StarryBackground = ({ children }) => {
+  // Generate stable star positions using useMemo
+  const stars = React.useMemo(() => {
+    const smallStars = [...Array(100)].map((_, i) => ({
+      id: `s-${i}`,
+      left: `${(i * 17 + 7) % 100}%`,
+      top: `${(i * 23 + 11) % 100}%`,
+      duration: 2 + (i % 5) * 0.5,
+      delay: (i % 7) * 0.3
+    }));
+    const mediumStars = [...Array(40)].map((_, i) => ({
+      id: `m-${i}`,
+      left: `${(i * 31 + 13) % 100}%`,
+      top: `${(i * 29 + 19) % 100}%`,
+      duration: 3 + (i % 4) * 0.7,
+      delay: (i % 5) * 0.4
+    }));
+    const largeStars = [...Array(15)].map((_, i) => ({
+      id: `l-${i}`,
+      left: `${(i * 41 + 17) % 100}%`,
+      top: `${(i * 37 + 23) % 100}%`,
+      duration: 4 + (i % 3) * 0.8,
+      delay: (i % 4) * 0.5
+    }));
+    return { smallStars, mediumStars, largeStars };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative">
       {/* Stars layer */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {/* Small stars */}
-        {[...Array(80)].map((_, i) => (
+        {stars.smallStars.map((star) => (
           <div
-            key={`star-${i}`}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+            key={star.id}
+            className="absolute w-0.5 h-0.5 bg-white rounded-full star-twinkle"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`
+              left: star.left,
+              top: star.top,
+              animationDuration: `${star.duration}s`,
+              animationDelay: `${star.delay}s`
             }}
           />
         ))}
         {/* Medium stars */}
-        {[...Array(30)].map((_, i) => (
+        {stars.mediumStars.map((star) => (
           <div
-            key={`star-m-${i}`}
-            className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-40"
+            key={star.id}
+            className="absolute w-1 h-1 bg-blue-100 rounded-full star-twinkle"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${3 + Math.random() * 4}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 3}s`
+              left: star.left,
+              top: star.top,
+              animationDuration: `${star.duration}s`,
+              animationDelay: `${star.delay}s`
             }}
           />
         ))}
         {/* Large stars */}
-        {[...Array(10)].map((_, i) => (
+        {stars.largeStars.map((star) => (
           <div
-            key={`star-l-${i}`}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-30"
+            key={star.id}
+            className="absolute w-1.5 h-1.5 bg-purple-200 rounded-full star-twinkle-slow"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${4 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`
+              left: star.left,
+              top: star.top,
+              animationDuration: `${star.duration}s`,
+              animationDelay: `${star.delay}s`
             }}
           />
         ))}
@@ -139,12 +165,62 @@ const StarryBackground = ({ children, keepOrangeHeader = true }) => {
       {/* CSS for twinkle animation */}
       <style>{`
         @keyframes twinkle {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.2); }
+          0%, 100% { opacity: 0.2; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        @keyframes twinkleSlow {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.8; }
+        }
+        .star-twinkle {
+          animation: twinkle ease-in-out infinite;
+        }
+        .star-twinkle-slow {
+          animation: twinkleSlow ease-in-out infinite;
+        }
+        /* Dark mode text colors */
+        .dark-mode .text-gray-900, .dark-mode .text-gray-800, .dark-mode .text-gray-700 {
+          color: #f3f4f6 !important;
+        }
+        .dark-mode .text-gray-600, .dark-mode .text-gray-500 {
+          color: #9ca3af !important;
+        }
+        .dark-mode .bg-white {
+          background-color: rgba(30, 41, 59, 0.8) !important;
+          backdrop-filter: blur(12px);
+        }
+        .dark-mode .bg-gray-50 {
+          background-color: transparent !important;
+        }
+        .dark-mode .bg-gray-100 {
+          background-color: rgba(51, 65, 85, 0.5) !important;
+        }
+        .dark-mode .border, .dark-mode .border-b, .dark-mode .border-t {
+          border-color: rgba(71, 85, 105, 0.5) !important;
+        }
+        .dark-mode input, .dark-mode textarea, .dark-mode select {
+          background-color: rgba(30, 41, 59, 0.9) !important;
+          color: #f3f4f6 !important;
+          border-color: rgba(71, 85, 105, 0.7) !important;
+        }
+        .dark-mode input::placeholder, .dark-mode textarea::placeholder {
+          color: #6b7280 !important;
+        }
+        .dark-mode .hover\\:bg-gray-50:hover {
+          background-color: rgba(51, 65, 85, 0.5) !important;
+        }
+        .dark-mode table thead tr {
+          background-color: rgba(30, 41, 59, 0.9) !important;
+        }
+        .dark-mode table tbody tr {
+          background-color: transparent !important;
+        }
+        .dark-mode .shadow-sm, .dark-mode .shadow {
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
       `}</style>
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 dark-mode">
         {children}
       </div>
     </div>
@@ -1579,8 +1655,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const Sidebar = () => {
     return (
       <div>
-        <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
-        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 -translate-x-full transition-transform duration-300"}>
+        <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/50 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
+        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 translate-x-0 transition-transform duration-300 border-r border-slate-700/50" : "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 -translate-x-full transition-transform duration-300 border-r border-slate-700/50"}>
           <div 
             ref={sidebarScrollRef} 
             className="px-4 py-6 h-full flex flex-col overflow-y-auto overscroll-contain"
@@ -1591,24 +1667,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-xl shadow-sm">🦘</div>
                 <div>
-                  <div className="font-semibold text-gray-900 text-lg">Muzz</div>
-                  <div className="text-xs text-gray-400 font-medium">Life OS</div>
+                  <div className="font-semibold text-white text-lg">Muzz</div>
+                  <div className="text-xs text-slate-400 font-medium">Life OS</div>
                 </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                <X className="w-5 h-5 text-gray-400" />
+              <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-slate-700/50 rounded-full transition-colors">
+                <X className="w-5 h-5 text-slate-400" />
               </button>
             </div>
             
             {/* Streak Badge */}
             {currentStreak > 0 && (
-              <div className="mx-2 mb-6 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-3 flex items-center gap-3 border border-orange-100">
+              <div className="mx-2 mb-6 bg-gradient-to-r from-orange-500/20 to-amber-500/20 rounded-2xl p-3 flex items-center gap-3 border border-orange-500/30">
                 <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center">
                   <Flame className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-gray-800">{currentStreak} Day Streak</div>
-                  <div className="text-xs text-gray-500">Keep it going!</div>
+                  <div className="text-sm font-semibold text-white">{currentStreak} Day Streak</div>
+                  <div className="text-xs text-slate-400">Keep it going!</div>
                 </div>
               </div>
             )}
@@ -1629,10 +1705,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       isActive 
                         ? 'bg-orange-500 text-white shadow-sm' 
                         : locked 
-                          ? 'text-gray-400 hover:bg-gray-50' 
+                          ? 'text-slate-500 hover:bg-slate-700/50' 
                           : item.id === 'upgrade' 
-                            ? 'text-orange-600 hover:bg-orange-50 border border-orange-200' 
-                            : 'text-gray-600 hover:bg-gray-50'
+                            ? 'text-orange-400 hover:bg-orange-500/20 border border-orange-500/30' 
+                            : 'text-slate-300 hover:bg-slate-700/50'
                     }`}
                   >
                     <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
@@ -1647,7 +1723,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </nav>
             
             {/* Footer */}
-            <div className="pt-4 mt-4 border-t border-gray-100 space-y-1 px-1">
+            <div className="pt-4 mt-4 border-t border-slate-700/50 space-y-1 px-1">
               {/* Backup/Export Section */}
               <div className="mb-3 space-y-2">
                 <button 
@@ -1670,7 +1746,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     URL.revokeObjectURL(url);
                     setSidebarOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-blue-600 transition-all"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-500/20 text-blue-400 transition-all"
                 >
                   <Save className="w-5 h-5" />
                   <span className="font-medium">Export Backup</span>
@@ -1757,7 +1833,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
         </div>
-        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 bg-white/90 backdrop-blur-lg rounded-2xl shadow-sm hover:shadow-md transition-all border border-gray-100"><Menu className="w-5 h-5 text-gray-600" /></button>
+        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-xl transition-all border border-slate-700/50"><Menu className="w-5 h-5 text-white /></button>
       </div>
     );
   };
@@ -1839,7 +1915,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -2053,7 +2129,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-gradient-to-r from-purple-500 to-indigo-600 pt-16 pb-6 px-6">
@@ -2440,7 +2516,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -3330,7 +3406,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -4143,7 +4219,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
     
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         
@@ -5435,7 +5511,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -6121,7 +6197,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -7784,7 +7860,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const totalAssets = filledAssets.reduce((sum, a) => sum + a.value, 0);
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -8602,7 +8678,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-white border-b">
@@ -12350,7 +12426,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // FALLBACK
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-transparent pb-24">
       <Sidebar />
         <SaveIndicator />
       <div className="bg-gradient-to-r from-amber-400 to-orange-500 pt-16 pb-6 px-6">
@@ -12400,7 +12476,11 @@ function AppContent() {
     return <AuthScreen />;
   }
 
-  return <MuzzApp />;
+  return (
+    <StarryBackground>
+      <MuzzApp />
+    </StarryBackground>
+  );
 }
 
 export default function App() {
