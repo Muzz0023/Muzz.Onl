@@ -1213,12 +1213,12 @@ Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedl
         {chatMessages.length === 0 && <div className="text-center py-8"><div className="text-4xl mb-2">🦘</div><div className="text-gray-500 text-sm">G'day! Ask me anything!</div></div>}
         {chatMessages.map((m, i) => (
           <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
-            <div className={m.role === "user" ? "max-w-[80%] px-4 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-br-md" : "max-w-[80%] px-4 py-2 rounded-2xl text-sm bg-white border shadow-sm rounded-bl-md whitespace-pre-wrap"}>{m.text}</div>
+            <div className={m.role === "user" ? "max-w-[80%] px-4 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-br-md" : "max-w-[80%] px-4 py-2 rounded-2xl text-sm bg-slate-700 border border-slate-600 rounded-bl-md whitespace-pre-wrap text-gray-100"}>{m.text}</div>
           </div>
         ))}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-white border shadow-sm px-4 py-3 rounded-2xl rounded-bl-md">
+            <div className="bg-slate-700 border border-slate-600 px-4 py-3 rounded-2xl rounded-bl-md">
               <span className="inline-flex gap-1">
                 <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
                 <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
