@@ -249,7 +249,7 @@ const StarryBackground = ({ children }) => {
         .dark-mode .text-yellow-700, .dark-mode .text-yellow-600, .dark-mode .text-yellow-500 {
           color: #facc15 !important;
         }
-        .dark-mode .text-teal-700, .dark-mode .text-teal-600, .dark-mode .text-teal-500 {
+        .dark-mode .text-teal-800, .dark-mode .text-teal-700, .dark-mode .text-teal-600, .dark-mode .text-teal-500 {
           color: #2dd4bf !important;
         }
         .dark-mode .text-cyan-700, .dark-mode .text-cyan-600, .dark-mode .text-cyan-500 {
@@ -421,7 +421,11 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-yellow-50"], .dark-mode [class*="from-cyan-50"],
         .dark-mode [class*="from-teal-50"],
         .dark-mode [class*="from-gray-100"], .dark-mode [class*="from-slate-100"],
-        .dark-mode [class*="from-amber-100"], .dark-mode [class*="from-orange-100"] {
+        .dark-mode [class*="from-amber-100"], .dark-mode [class*="from-orange-100"],
+        .dark-mode [class*="from-emerald-100"], .dark-mode [class*="from-teal-100"],
+        .dark-mode [class*="from-green-100"], .dark-mode [class*="from-blue-100"],
+        .dark-mode [class*="from-red-100"], .dark-mode [class*="from-purple-100"],
+        .dark-mode [class*="from-pink-100"], .dark-mode [class*="from-yellow-100"] {
           background: rgba(51, 65, 85, 0.6) !important;
         }
 
@@ -446,6 +450,7 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-gray-50"] *,
         .dark-mode [class*="from-green-100"] *,
         .dark-mode [class*="from-emerald-100"] *,
+        .dark-mode [class*="from-teal-100"] *,
         .dark-mode [class*="from-blue-100"] *,
         .dark-mode [class*="from-red-100"] *,
         .dark-mode [class*="from-gray-100"] *,
@@ -485,6 +490,12 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-purple-1"] .text-purple-700 {
           color: #a78bfa !important;
         }
+        .dark-mode [class*="from-emerald-1"] .text-teal-800,
+        .dark-mode [class*="from-emerald-1"] .text-teal-700,
+        .dark-mode [class*="from-teal-1"] .text-teal-800,
+        .dark-mode [class*="from-teal-1"] .text-teal-700 {
+          color: #2dd4bf !important;
+        }
 
         /* --- FOCUS STATES for colored focus backgrounds --- */
         .dark-mode .focus\\:bg-amber-50:focus {
@@ -497,7 +508,7 @@ const StarryBackground = ({ children }) => {
         }
 
         /* --- PRESERVE elements inside vivid gradients --- */
-        /* bg-white boxes inside gradients (like kangaroo avatar, badges) should stay white */
+        /* bg-white boxes inside gradients (like kangaroo avatar, badges, active tabs) should stay white */
         .dark-mode [class*="from-amber-"] .bg-white,
         .dark-mode [class*="from-orange-"] .bg-white,
         .dark-mode [class*="from-blue-"] .bg-white,
@@ -513,6 +524,7 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-lime-"] .bg-white,
         .dark-mode [class*="from-violet-"] .bg-white {
           background-color: white !important;
+          color: #1f2937 !important;
         }
 
         /* Inputs inside vivid gradients should stay transparent/glass, not forced dark */
