@@ -450,6 +450,62 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="ring-pink-"] {
           --tw-ring-color: rgba(236, 72, 153, 0.6) !important;
         }
+
+        /* --- PRESERVE elements inside vivid gradients --- */
+        /* bg-white boxes inside gradients (like kangaroo avatar, badges) should stay white */
+        .dark-mode [class*="from-amber-"] .bg-white,
+        .dark-mode [class*="from-orange-"] .bg-white,
+        .dark-mode [class*="from-blue-"] .bg-white,
+        .dark-mode [class*="from-indigo-"] .bg-white,
+        .dark-mode [class*="from-purple-"] .bg-white,
+        .dark-mode [class*="from-green-"] .bg-white,
+        .dark-mode [class*="from-emerald-"] .bg-white,
+        .dark-mode [class*="from-pink-"] .bg-white,
+        .dark-mode [class*="from-rose-"] .bg-white,
+        .dark-mode [class*="from-red-"] .bg-white,
+        .dark-mode [class*="from-teal-"] .bg-white,
+        .dark-mode [class*="from-cyan-"] .bg-white,
+        .dark-mode [class*="from-lime-"] .bg-white,
+        .dark-mode [class*="from-violet-"] .bg-white {
+          background-color: white !important;
+        }
+
+        /* Inputs inside vivid gradients should stay transparent/glass, not forced dark */
+        .dark-mode [class*="from-blue-5"] input,
+        .dark-mode [class*="from-blue-6"] input,
+        .dark-mode [class*="from-indigo-"] input,
+        .dark-mode [class*="from-purple-5"] input,
+        .dark-mode [class*="from-purple-6"] input,
+        .dark-mode [class*="from-amber-4"] input,
+        .dark-mode [class*="from-amber-5"] input,
+        .dark-mode [class*="from-orange-4"] input,
+        .dark-mode [class*="from-orange-5"] input,
+        .dark-mode [class*="from-green-5"] input,
+        .dark-mode [class*="from-emerald-5"] input,
+        .dark-mode [class*="from-pink-5"] input,
+        .dark-mode [class*="from-rose-5"] input,
+        .dark-mode [class*="from-red-5"] input {
+          background-color: transparent !important;
+          color: white !important;
+          border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        .dark-mode [class*="from-blue-5"] input::placeholder,
+        .dark-mode [class*="from-blue-6"] input::placeholder,
+        .dark-mode [class*="from-indigo-"] input::placeholder,
+        .dark-mode [class*="from-purple-5"] input::placeholder,
+        .dark-mode [class*="from-purple-6"] input::placeholder,
+        .dark-mode [class*="from-amber-4"] input::placeholder,
+        .dark-mode [class*="from-orange-5"] input::placeholder,
+        .dark-mode [class*="from-green-5"] input::placeholder,
+        .dark-mode [class*="from-pink-5"] input::placeholder {
+          color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* bg-white/10, bg-white/20, bg-white/30 inside gradients — preserve glass effect.
+           These use Tailwind's --tw-bg-opacity, so we just ensure they aren't overridden by the .bg-white rule */
+        .dark-mode [class*="from-"][class*="to-"] [class*="bg-white\\/"] {
+          background-color: inherit !important;
+        }
       `}</style>
       {/* Content */}
       <div className="relative z-10 dark-mode">
