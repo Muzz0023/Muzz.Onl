@@ -958,6 +958,8 @@ function MuzzApp() {
   const [showResearchColInput, setShowResearchColInput] = useState(false);
   const [showEconomicsColInput, setShowEconomicsColInput] = useState(false);
   const [showRisksColInput, setShowRisksColInput] = useState(false);
+  const [researchSortBy, setResearchSortBy] = useState('ticker'); // ticker, industry, tollBooth, growth, status
+  const [researchSortDir, setResearchSortDir] = useState('asc'); // asc, desc
   const [billsSubTab, setBillsSubTab] = useState('bills');
   const [calendarBills, setCalendarBills] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -9809,17 +9811,57 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                   <div className="p-6 border-b">
                     <h2 className="text-xl font-semibold">📋 Master Research Summary</h2>
-                    <p className="text-sm text-gray-500">All your research picks at a glance</p>
+                    <p className="text-sm text-gray-500">Click column headers to sort • All your research picks at a glance</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="bg-gray-50 border-b">
-                          <th className="text-left py-3 px-4 font-semibold">Ticker</th>
-                          <th className="text-left py-3 px-4 font-semibold">Industry</th>
-                          <th className="text-center py-3 px-4 font-semibold">Toll Booth?</th>
-                          <th className="text-left py-3 px-4 font-semibold">Growth</th>
-                          <th className="text-left py-3 px-4 font-semibold">Status</th>
+                          <th 
+                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (researchSortBy === 'ticker') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('ticker'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Ticker {researchSortBy === 'ticker' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (researchSortBy === 'industry') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('industry'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Industry {researchSortBy === 'industry' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-center py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (researchSortBy === 'tollBooth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('tollBooth'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Toll Booth? {researchSortBy === 'tollBooth' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (researchSortBy === 'growth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('growth'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Growth {researchSortBy === 'growth' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (researchSortBy === 'status') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('status'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Status {researchSortBy === 'status' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
                           {researchColumns.map(col => (
                             <th key={col.id} className="text-left py-3 px-4 font-semibold">
                               <div className="flex items-center gap-2">
@@ -9836,20 +9878,52 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </tr>
                       </thead>
                       <tbody>
-                        {holdingsResearch.filter(h => h && h.ticker).map((holding, idx) => (
-                          <tr key={idx} className="border-b hover:bg-gray-50">
-                            <td className="py-3 px-4 font-bold">{holding.ticker}</td>
-                            <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
-                            <td className="py-3 px-4 text-center">
-                              {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? '✅' : '❌'}
-                            </td>
-                            <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
-                            <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
-                            {researchColumns.map(col => (
-                              <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
-                            ))}
-                          </tr>
-                        ))}
+                        {(() => {
+                          const growthOrder = { 'High Growth': 4, 'Medium Growth': 3, 'Low Growth': 2, 'Very Low Growth': 1 };
+                          const statusOrder = { 'New': 3, 'Old': 2, 'Reserve': 1 };
+                          
+                          return holdingsResearch
+                            .filter(h => h && h.ticker)
+                            .sort((a, b) => {
+                              let comparison = 0;
+                              switch (researchSortBy) {
+                                case 'ticker':
+                                  comparison = (a.ticker || '').localeCompare(b.ticker || '');
+                                  break;
+                                case 'industry':
+                                  comparison = (a.industry || '').localeCompare(b.industry || '');
+                                  break;
+                                case 'tollBooth':
+                                  const aVal = a.tollBooth?.toLowerCase() === 'yes' ? 1 : 0;
+                                  const bVal = b.tollBooth?.toLowerCase() === 'yes' ? 1 : 0;
+                                  comparison = bVal - aVal;
+                                  break;
+                                case 'growth':
+                                  comparison = (growthOrder[a.growthProspects] || 0) - (growthOrder[b.growthProspects] || 0);
+                                  break;
+                                case 'status':
+                                  comparison = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+                                  break;
+                                default:
+                                  comparison = 0;
+                              }
+                              return researchSortDir === 'asc' ? comparison : -comparison;
+                            })
+                            .map((holding, idx) => (
+                              <tr key={idx} className="border-b hover:bg-gray-50">
+                                <td className="py-3 px-4 font-bold">{holding.ticker}</td>
+                                <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
+                                <td className="py-3 px-4 text-center">
+                                  {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? '✅' : '❌'}
+                                </td>
+                                <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
+                                <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
+                                {researchColumns.map(col => (
+                                  <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
+                                ))}
+                              </tr>
+                            ));
+                        })()}
                       </tbody>
                       <tfoot>
                         <tr className="bg-purple-50 font-bold text-purple-900">
