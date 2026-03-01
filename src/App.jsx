@@ -216,19 +216,19 @@ const StarryBackground = ({ children }) => {
         .dark-mode .text-orange-600, .dark-mode .text-orange-500 {
           color: #fb923c !important;
         }
-        .dark-mode .text-red-700, .dark-mode .text-red-600 {
+        .dark-mode .text-red-800, .dark-mode .text-red-700, .dark-mode .text-red-600 {
           color: #f87171 !important;
         }
         .dark-mode .text-red-500, .dark-mode .text-red-400 {
           color: #f87171 !important;
         }
-        .dark-mode .text-green-700, .dark-mode .text-green-600 {
+        .dark-mode .text-green-800, .dark-mode .text-green-700, .dark-mode .text-green-600 {
           color: #4ade80 !important;
         }
         .dark-mode .text-green-500 {
           color: #4ade80 !important;
         }
-        .dark-mode .text-emerald-700, .dark-mode .text-emerald-600, .dark-mode .text-emerald-500 {
+        .dark-mode .text-emerald-800, .dark-mode .text-emerald-700, .dark-mode .text-emerald-600, .dark-mode .text-emerald-500 {
           color: #34d399 !important;
         }
         .dark-mode .text-blue-700, .dark-mode .text-blue-600, .dark-mode .text-blue-500 {
@@ -261,17 +261,25 @@ const StarryBackground = ({ children }) => {
         .dark-mode .text-violet-700, .dark-mode .text-violet-600, .dark-mode .text-violet-500 {
           color: #a78bfa !important;
         }
-
-        /* --- FONT WEIGHT text color (with !important so it doesn't get overridden) --- */
-        .dark-mode .font-semibold, .dark-mode .font-bold, .dark-mode .font-medium {
-          color: #f3f4f6 !important;
+        .dark-mode .text-sky-700, .dark-mode .text-sky-600, .dark-mode .text-sky-500 {
+          color: #38bdf8 !important;
         }
-        /* But NOT inside gradients or colored backgrounds where text should stay white */
+
+        /* --- FONT WEIGHT text color — only apply when no specific colored text class is present --- */
+        .dark-mode .font-semibold, .dark-mode .font-bold, .dark-mode .font-medium {
+          color: #f3f4f6;
+        }
+        /* Inside gradients, font-weight text should be white */
         .dark-mode [class*="from-"] .font-semibold,
         .dark-mode [class*="from-"] .font-bold,
         .dark-mode [class*="from-"] .font-medium {
           color: white !important;
         }
+        /* 
+         * CRITICAL: When an element has BOTH a font-weight class AND a colored text class,
+         * the colored text class should win. We achieve this by making the colored text
+         * rules use !important while the font-weight rule does NOT use !important.
+         */
 
         /* --- CARD / SURFACE BACKGROUNDS --- */
         .dark-mode .bg-white {
@@ -294,7 +302,7 @@ const StarryBackground = ({ children }) => {
         .dark-mode .bg-green-50, .dark-mode .bg-emerald-50, .dark-mode .bg-lime-50, .dark-mode .bg-teal-50,
         .dark-mode .bg-blue-50, .dark-mode .bg-indigo-50, .dark-mode .bg-cyan-50,
         .dark-mode .bg-purple-50, .dark-mode .bg-violet-50,
-        .dark-mode .bg-pink-50, .dark-mode .bg-fuchsia-50 {
+        .dark-mode .bg-pink-50, .dark-mode .bg-fuchsia-50, .dark-mode .bg-sky-50 {
           background-color: rgba(51, 65, 85, 0.5) !important;
         }
 
@@ -304,7 +312,7 @@ const StarryBackground = ({ children }) => {
         .dark-mode .bg-green-100, .dark-mode .bg-emerald-100, .dark-mode .bg-lime-100, .dark-mode .bg-teal-100,
         .dark-mode .bg-blue-100, .dark-mode .bg-indigo-100, .dark-mode .bg-cyan-100,
         .dark-mode .bg-purple-100, .dark-mode .bg-violet-100,
-        .dark-mode .bg-pink-100, .dark-mode .bg-fuchsia-100 {
+        .dark-mode .bg-pink-100, .dark-mode .bg-fuchsia-100, .dark-mode .bg-sky-100 {
           background-color: rgba(51, 65, 85, 0.6) !important;
         }
 
@@ -417,11 +425,13 @@ const StarryBackground = ({ children }) => {
           background: rgba(51, 65, 85, 0.6) !important;
         }
 
-        /* Ensure ALL text inside vivid gradient containers stays white */
+        /* Ensure text inside VIVID gradient containers (500+ level colors) stays white */
         .dark-mode [class*="from-"][class*="to-"] *:not(input):not(textarea):not(select) {
           color: white !important;
         }
-        /* But for light/pastel gradient headers (50/100-level), text should be light gray */
+
+        /* OVERRIDE: For light/pastel gradient containers (50/100-level), 
+           don't force white — use light gray as default, but allow colored text classes to show */
         .dark-mode [class*="from-green-50"] *,
         .dark-mode [class*="from-amber-50"] *,
         .dark-mode [class*="from-blue-50"] *,
@@ -434,11 +444,46 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-rose-50"] *,
         .dark-mode [class*="from-pink-50"] *,
         .dark-mode [class*="from-gray-50"] *,
+        .dark-mode [class*="from-green-100"] *,
+        .dark-mode [class*="from-emerald-100"] *,
+        .dark-mode [class*="from-blue-100"] *,
+        .dark-mode [class*="from-red-100"] *,
         .dark-mode [class*="from-gray-100"] *,
         .dark-mode [class*="from-slate-100"] *,
         .dark-mode [class*="from-amber-100"] *,
-        .dark-mode [class*="from-orange-100"] * {
+        .dark-mode [class*="from-orange-100"] *,
+        .dark-mode [class*="from-purple-100"] *,
+        .dark-mode [class*="from-pink-100"] *,
+        .dark-mode [class*="from-yellow-100"] * {
           color: #e5e7eb !important;
+        }
+        /* Allow colored text inside pastel gradients to keep their bright colors */
+        .dark-mode [class*="from-green-1"] .text-green-800,
+        .dark-mode [class*="from-green-1"] .text-green-700,
+        .dark-mode [class*="from-green-1"] .text-green-600,
+        .dark-mode [class*="from-emerald-1"] .text-emerald-800,
+        .dark-mode [class*="from-emerald-1"] .text-emerald-700 {
+          color: #4ade80 !important;
+        }
+        .dark-mode [class*="from-red-1"] .text-red-800,
+        .dark-mode [class*="from-red-1"] .text-red-700,
+        .dark-mode [class*="from-red-1"] .text-red-600 {
+          color: #f87171 !important;
+        }
+        .dark-mode [class*="from-amber-1"] .text-amber-800,
+        .dark-mode [class*="from-amber-1"] .text-amber-700,
+        .dark-mode [class*="from-amber-1"] .text-amber-600,
+        .dark-mode [class*="from-orange-1"] .text-orange-800,
+        .dark-mode [class*="from-orange-1"] .text-orange-700 {
+          color: #fbbf24 !important;
+        }
+        .dark-mode [class*="from-blue-1"] .text-blue-800,
+        .dark-mode [class*="from-blue-1"] .text-blue-700 {
+          color: #60a5fa !important;
+        }
+        .dark-mode [class*="from-purple-1"] .text-purple-800,
+        .dark-mode [class*="from-purple-1"] .text-purple-700 {
+          color: #a78bfa !important;
         }
 
         /* --- FOCUS STATES for colored focus backgrounds --- */
