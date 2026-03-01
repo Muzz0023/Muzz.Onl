@@ -9339,150 +9339,153 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </button>
                       </div>
                       
-                      {holding?.ticker && (
-                        <>
-                          {/* Row 2: Toll Booth + Planned Amount */}
-                          <div className="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                              <label className="text-xs text-gray-500 mb-1 block">Toll Booth Economics?</label>
-                              <select
-                                value={holding?.tollBooth || ''}
-                                onChange={(e) => {
-                                  setFutureResearch(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], tollBooth: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                              >
-                                <option value="">Select</option>
-                                <option value="Yes">✅ Yes</option>
-                                <option value="No">❌ No</option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="text-xs text-gray-500 mb-1 block">Planned Investment $</label>
-                              <input
-                                type="text"
-                                value={holding?.plannedAmountStr || ''}
-                                onChange={(e) => {
-                                  const val = e.target.value.replace(/[^0-9.]/g, '');
-                                  setFutureResearch(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
-                                    return updated;
-                                  });
-                                }}
-                                placeholder="$0"
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                              />
-                            </div>
-                          </div>
+                      {/* Row 2: Toll Booth + Planned Amount */}
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Toll Booth Economics?</label>
+                          <select
+                            value={holding?.tollBooth || ''}
+                            onChange={(e) => {
+                              setFutureResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], tollBooth: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          >
+                            <option value="">Select</option>
+                            <option value="Yes">✅ Yes</option>
+                            <option value="No">❌ No</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Planned Investment $</label>
+                          <input
+                            type="text"
+                            value={holding?.plannedAmountStr || ''}
+                            onChange={(e) => {
+                              const val = e.target.value.replace(/[^0-9.]/g, '');
+                              setFutureResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
+                                return updated;
+                              });
+                            }}
+                            placeholder="$0"
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
 
-                          {/* Row 3: Capital Intensity + Growth */}
-                          <div className="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                              <label className="text-xs text-gray-500 mb-1 block">Capital Intensity</label>
-                              <select
-                                value={holding?.capitalIntensity || ''}
-                                onChange={(e) => {
-                                  setFutureResearch(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], capitalIntensity: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                              >
-                                <option value="">Select</option>
-                                <option value="Toll-Like">Toll-Like</option>
-                                <option value="Lean">Lean</option>
-                                <option value="Heavy">Heavy</option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="text-xs text-gray-500 mb-1 block">Growth Prospects</label>
-                              <select
-                                value={holding?.growthProspects || ''}
-                                onChange={(e) => {
-                                  setFutureResearch(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], growthProspects: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                              >
-                                <option value="">Select</option>
-                                <option value="Very Low Growth">Very Low</option>
-                                <option value="Low Growth">Low</option>
-                                <option value="Medium Growth">Medium</option>
-                                <option value="High Growth">High</option>
-                              </select>
-                            </div>
-                          </div>
+                      {/* Row 3: Capital Intensity + Growth */}
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Capital Intensity</label>
+                          <select
+                            value={holding?.capitalIntensity || ''}
+                            onChange={(e) => {
+                              setFutureResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], capitalIntensity: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          >
+                            <option value="">Select</option>
+                            <option value="Toll-Like">Toll-Like</option>
+                            <option value="Lean">Lean</option>
+                            <option value="Heavy">Heavy</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Growth Prospects</label>
+                          <select
+                            value={holding?.growthProspects || ''}
+                            onChange={(e) => {
+                              setFutureResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], growthProspects: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          >
+                            <option value="">Select</option>
+                            <option value="Very Low Growth">Very Low</option>
+                            <option value="Low Growth">Low</option>
+                            <option value="Medium Growth">Medium</option>
+                            <option value="High Growth">High</option>
+                          </select>
+                        </div>
+                      </div>
 
-                          {/* Row 4: Industry + Status */}
-                          <div className="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                              <label className="text-xs text-gray-500 mb-1 block">Industry</label>
-                              <select
-                                value={holding?.industry || ''}
-                                onChange={(e) => {
-                                  setFutureResearch(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], industry: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                              >
-                                {industries.map(ind => (
-                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
-                                ))}
-                              </select>
-                            </div>
-                            <div>
-                              <label className="text-xs text-gray-500 mb-1 block">Status</label>
-                              <select
-                                value={holding?.status || ''}
-                                onChange={(e) => {
-                                  setFutureResearch(prev => {
-                                    const updated = [...prev];
-                                    updated[index] = { ...updated[index], status: e.target.value };
-                                    return updated;
-                                  });
-                                }}
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                              >
-                                <option value="">Select Status</option>
-                                <option value="Researching">Researching</option>
-                                <option value="Ready to Buy">Ready to Buy</option>
-                                <option value="Waiting for Price">Waiting for Price</option>
-                                <option value="Maybe Later">Maybe Later</option>
-                              </select>
-                            </div>
-                          </div>
+                      {/* Row 4: Industry + Status */}
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                          <select
+                            value={holding?.industry || ''}
+                            onChange={(e) => {
+                              setFutureResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], industry: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          >
+                            {industries.map(ind => (
+                              <option key={ind.id} value={ind.id}>{ind.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">Status</label>
+                          <select
+                            value={holding?.status || ''}
+                            onChange={(e) => {
+                              setFutureResearch(prev => {
+                                const updated = [...prev];
+                                if (!updated[index]) updated[index] = {};
+                                updated[index] = { ...updated[index], status: e.target.value };
+                                return updated;
+                              });
+                            }}
+                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          >
+                            <option value="">Select Status</option>
+                            <option value="Researching">Researching</option>
+                            <option value="Ready to Buy">Ready to Buy</option>
+                            <option value="Waiting for Price">Waiting for Price</option>
+                            <option value="Maybe Later">Maybe Later</option>
+                          </select>
+                        </div>
+                      </div>
 
-                          {/* Row 5: Notes */}
-                          <div>
-                            <label className="text-xs text-gray-500 mb-1 block">Research Notes</label>
-                            <textarea
-                              value={holding?.notes || ''}
-                              onChange={(e) => {
-                                setFutureResearch(prev => {
-                                  const updated = [...prev];
-                                  updated[index] = { ...updated[index], notes: e.target.value };
-                                  return updated;
-                                });
-                              }}
-                              placeholder="Your research notes..."
-                              className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 min-h-[80px]"
-                            />
-                          </div>
-                        </>
-                      )}
+                      {/* Row 5: Notes */}
+                      <div>
+                        <label className="text-xs text-gray-500 mb-1 block">Research Notes</label>
+                        <textarea
+                          value={holding?.notes || ''}
+                          onChange={(e) => {
+                            setFutureResearch(prev => {
+                              const updated = [...prev];
+                              if (!updated[index]) updated[index] = {};
+                              updated[index] = { ...updated[index], notes: e.target.value };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Your research notes..."
+                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 min-h-[80px]"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
