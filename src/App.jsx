@@ -9312,7 +9312,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p className="text-sm text-gray-500 mt-1">Research stocks you're considering for your portfolio</p>
                 </div>
                 <div className="p-4 space-y-3">
-                  {[...futureResearch, {}].map((holding, index) => (
+                  {futureResearch.map((holding, index) => (
                     <div key={index} className="border-2 rounded-2xl p-4 bg-white">
                       {/* Row 1: Ticker + Delete */}
                       <div className="flex items-start gap-3 mb-3">
@@ -9323,7 +9323,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           onChange={(e) => {
                             setFutureResearch(prev => {
                               const updated = [...prev];
-                              if (!updated[index]) updated[index] = { ticker: '' };
                               updated[index] = { ...updated[index], ticker: e.target.value };
                               return updated;
                             });
@@ -9487,6 +9486,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="p-4 border-t">
+                  <button
+                    onClick={() => setFutureResearch(prev => [...prev, { ticker: '' }])}
+                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                  >
+                    + Add Research Entry
+                  </button>
                 </div>
               </div>
 
