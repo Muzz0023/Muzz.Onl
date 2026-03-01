@@ -178,26 +178,43 @@ const StarryBackground = ({ children }) => {
         .star-twinkle-slow {
           animation: twinkleSlow ease-in-out infinite;
         }
-        /* Dark mode text colors */
-        .dark-mode .text-gray-900, .dark-mode .text-gray-800, .dark-mode .text-gray-700 {
+        /* Dark mode - ALL text colors */
+        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
+        .dark-mode p, .dark-mode span, .dark-mode label, .dark-mode div {
+          color: inherit;
+        }
+        .dark-mode .text-gray-900, .dark-mode .text-gray-800, .dark-mode .text-gray-700,
+        .dark-mode .text-slate-900, .dark-mode .text-slate-800, .dark-mode .text-slate-700 {
           color: #f3f4f6 !important;
         }
-        .dark-mode .text-gray-600, .dark-mode .text-gray-500 {
+        .dark-mode .text-gray-600, .dark-mode .text-gray-500, .dark-mode .text-gray-400,
+        .dark-mode .text-slate-600, .dark-mode .text-slate-500, .dark-mode .text-slate-400 {
           color: #9ca3af !important;
         }
+        .dark-mode .text-black {
+          color: #ffffff !important;
+        }
+        /* Font semibold/bold headings */
+        .dark-mode .font-semibold, .dark-mode .font-bold, .dark-mode .font-medium {
+          color: #f3f4f6;
+        }
+        /* Card backgrounds */
         .dark-mode .bg-white {
-          background-color: rgba(30, 41, 59, 0.8) !important;
+          background-color: rgba(30, 41, 59, 0.85) !important;
           backdrop-filter: blur(12px);
         }
-        .dark-mode .bg-gray-50 {
+        .dark-mode .bg-gray-50, .dark-mode .bg-slate-50 {
           background-color: transparent !important;
         }
-        .dark-mode .bg-gray-100 {
+        .dark-mode .bg-gray-100, .dark-mode .bg-slate-100 {
           background-color: rgba(51, 65, 85, 0.5) !important;
         }
-        .dark-mode .border, .dark-mode .border-b, .dark-mode .border-t {
+        /* Borders */
+        .dark-mode .border, .dark-mode .border-b, .dark-mode .border-t, .dark-mode .border-l, .dark-mode .border-r,
+        .dark-mode .divide-y > *, .dark-mode .divide-x > * {
           border-color: rgba(71, 85, 105, 0.5) !important;
         }
+        /* Form inputs */
         .dark-mode input, .dark-mode textarea, .dark-mode select {
           background-color: rgba(30, 41, 59, 0.9) !important;
           color: #f3f4f6 !important;
@@ -206,17 +223,39 @@ const StarryBackground = ({ children }) => {
         .dark-mode input::placeholder, .dark-mode textarea::placeholder {
           color: #6b7280 !important;
         }
-        .dark-mode .hover\\:bg-gray-50:hover {
+        /* Hover states */
+        .dark-mode .hover\\:bg-gray-50:hover, .dark-mode .hover\\:bg-slate-50:hover {
           background-color: rgba(51, 65, 85, 0.5) !important;
         }
+        /* Tables */
         .dark-mode table thead tr {
           background-color: rgba(30, 41, 59, 0.9) !important;
         }
         .dark-mode table tbody tr {
           background-color: transparent !important;
         }
-        .dark-mode .shadow-sm, .dark-mode .shadow {
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+        .dark-mode table th, .dark-mode table td {
+          color: #e5e7eb !important;
+        }
+        /* Shadows */
+        .dark-mode .shadow-sm, .dark-mode .shadow, .dark-mode .shadow-md, .dark-mode .shadow-lg {
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+        /* Special overrides for specific colored backgrounds - keep their text */
+        .dark-mode .bg-gradient-to-r, .dark-mode .bg-gradient-to-br, .dark-mode .bg-gradient-to-b {
+          color: white;
+        }
+        /* Purple/indigo footer backgrounds */
+        .dark-mode .bg-purple-50, .dark-mode .bg-indigo-50, .dark-mode .bg-blue-50, .dark-mode .bg-green-50 {
+          background-color: rgba(51, 65, 85, 0.6) !important;
+        }
+        /* Link colors */
+        .dark-mode .text-blue-500, .dark-mode .text-blue-600 {
+          color: #60a5fa !important;
+        }
+        /* Keep gradient text readable */
+        .dark-mode [class*="from-"][class*="to-"] {
+          color: white;
         }
       `}</style>
       {/* Content */}
@@ -864,7 +903,7 @@ Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedl
         </div>
         <button onClick={() => setIsChatOpen(false)} className="text-white/80 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-orange-50 to-white">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent">
         {chatMessages.length === 0 && <div className="text-center py-8"><div className="text-4xl mb-2">🦘</div><div className="text-gray-500 text-sm">G'day! Ask me anything!</div></div>}
         {chatMessages.map((m, i) => (
           <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
@@ -918,7 +957,7 @@ function StatCard({ icon: Icon, label, value, sub, color, onClick }) {
 
 function LockedFeature({ featureName, setActiveView }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-6">
       <div className="text-center max-w-md">
         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <Lock className="w-10 h-10 text-gray-400" />
@@ -5852,7 +5891,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const moodEmojis = { great: '😊', good: '😌', okay: '😐', low: '😔', sad: '😢', angry: '😡' };
     
     return (
-      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white pb-24">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         
@@ -7585,7 +7624,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-24">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
@@ -7657,7 +7696,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // UPGRADE / ELITE STATUS VIEW
   if (activeView === 'upgrade') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white pb-24">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
