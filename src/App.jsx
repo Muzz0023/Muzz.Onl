@@ -964,6 +964,10 @@ function MuzzApp() {
   const [futureSortDir, setFutureSortDir] = useState('asc');
   const [currentSortBy, setCurrentSortBy] = useState('name');
   const [currentSortDir, setCurrentSortDir] = useState('asc');
+  const [billsSortBy, setBillsSortBy] = useState('due');
+  const [billsSortDir, setBillsSortDir] = useState('asc');
+  const [assetsSortBy, setAssetsSortBy] = useState('value');
+  const [assetsSortDir, setAssetsSortDir] = useState('desc');
   const [billsSubTab, setBillsSubTab] = useState('bills');
   const [calendarBills, setCalendarBills] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -6487,11 +6491,35 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b">
-                      <th className="text-left py-3 px-4 font-semibold">Subscription</th>
-                      <th className="text-center py-3 px-3 font-semibold">Due</th>
+                      <th 
+                        className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => {
+                          if (billsSortBy === 'name') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('name'); setBillsSortDir('asc'); }
+                        }}
+                      >
+                        Subscription {billsSortBy === 'name' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        className="text-center py-3 px-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => {
+                          if (billsSortBy === 'due') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('due'); setBillsSortDir('asc'); }
+                        }}
+                      >
+                        Due {billsSortBy === 'due' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
                       <th className="text-right py-3 px-3 font-semibold">Daily</th>
                       <th className="text-right py-3 px-3 font-semibold">Weekly</th>
-                      <th className="text-right py-3 px-3 font-semibold">Monthly</th>
+                      <th 
+                        className="text-right py-3 px-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => {
+                          if (billsSortBy === 'monthly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setBillsSortBy('monthly'); setBillsSortDir('asc'); }
+                        }}
+                      >
+                        Monthly {billsSortBy === 'monthly' && (billsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
                       <th className="text-right py-3 px-3 font-semibold">Quarterly</th>
                       <th className="text-right py-3 px-3 font-semibold">Half-Year</th>
                       <th className="text-right py-3 px-3 font-semibold">Annually</th>
@@ -6499,12 +6527,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </thead>
                   <tbody>
                     {[...filledSubs].sort((a, b) => {
-                      const parseDay = (str) => {
-                        if (!str) return 32;
-                        const num = parseInt(str.replace(/\D/g, ''));
-                        return isNaN(num) ? 32 : num;
-                      };
-                      return parseDay(a.dueDate) - parseDay(b.dueDate);
+                      let comparison = 0;
+                      switch (billsSortBy) {
+                        case 'name':
+                          comparison = (a.name || '').localeCompare(b.name || '');
+                          break;
+                        case 'due':
+                          const parseDay = (str) => {
+                            if (!str) return 32;
+                            const num = parseInt(str.replace(/\D/g, ''));
+                            return isNaN(num) ? 32 : num;
+                          };
+                          comparison = parseDay(a.dueDate) - parseDay(b.dueDate);
+                          break;
+                        case 'monthly':
+                          comparison = (parseFloat(a.monthly) || 0) - (parseFloat(b.monthly) || 0);
+                          break;
+                        default:
+                          comparison = 0;
+                      }
+                      return billsSortDir === 'asc' ? comparison : -comparison;
                     }).map((sub, idx) => (
                       <tr key={idx} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-4 font-medium">
@@ -7921,14 +7963,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
               <div className="p-6 border-b">
                 <h2 className="text-xl font-semibold">Breakdown by Type</h2>
+                <p className="text-sm text-gray-500">Click column headers to sort</p>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b">
-                      <th className="text-left py-3 px-4 font-semibold">Type</th>
-                      <th className="text-right py-3 px-4 font-semibold">Value</th>
-                      <th className="text-right py-3 px-4 font-semibold">% of Total</th>
+                      <th 
+                        className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => {
+                          if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
+                        }}
+                      >
+                        Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => {
+                          if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
+                        }}
+                      >
+                        Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => {
+                          if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
+                        }}
+                      >
+                        % of Total {assetsSortBy === 'percent' && (assetsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -7938,7 +8005,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         total: filledAssets.filter(a => a.category === cat.id).reduce((sum, a) => sum + a.value, 0)
                       }))
                       .filter(cat => cat.total > 0)
-                      .sort((a, b) => a.total - b.total)
+                      .sort((a, b) => {
+                        let comparison = 0;
+                        switch (assetsSortBy) {
+                          case 'type':
+                            comparison = a.name.localeCompare(b.name);
+                            break;
+                          case 'value':
+                          case 'percent':
+                            comparison = a.total - b.total;
+                            break;
+                          default:
+                            comparison = a.total - b.total;
+                        }
+                        return assetsSortDir === 'asc' ? comparison : -comparison;
+                      })
                       .map((cat, idx) => (
                         <tr key={idx} className="border-b hover:bg-gray-50">
                           <td className="py-3 px-4 font-medium">{cat.emoji} {cat.name}</td>
@@ -10797,6 +10878,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       onChange={(e) => {
                         const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
                         setInvestmentNotes(notes.map(n => n.id === note.id ? { ...n, text: e.target.value } : n));
+                        // Adjust height without scrolling
+                        const el = e.target;
+                        const scrollPos = window.scrollY;
+                        el.style.height = 'auto';
+                        el.style.height = Math.max(300, el.scrollHeight) + 'px';
+                        window.scrollTo(0, scrollPos);
                       }}
                       ref={(el) => {
                         // Only run once on mount using a data attribute flag
@@ -10804,14 +10891,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           el.dataset.initialized = 'true';
                           // Delay to avoid scroll jump during render
                           setTimeout(() => {
+                            const scrollPos = window.scrollY;
                             el.style.height = 'auto';
                             el.style.height = Math.max(300, el.scrollHeight) + 'px';
+                            window.scrollTo(0, scrollPos);
                           }, 50);
                         }
-                      }}
-                      onInput={(e) => {
-                        e.target.style.height = 'auto';
-                        e.target.style.height = Math.max(300, e.target.scrollHeight) + 'px';
                       }}
                       placeholder="Write your notes here..."
                       className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
