@@ -178,11 +178,16 @@ const StarryBackground = ({ children }) => {
         .star-twinkle-slow {
           animation: twinkleSlow ease-in-out infinite;
         }
-        /* Dark mode - ALL text colors */
+        /* ==========================================
+           DARK MODE — Comprehensive Theme Override
+           ========================================== */
+
+        /* --- BASE TEXT COLORS --- */
         .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
         .dark-mode p, .dark-mode span, .dark-mode label, .dark-mode div {
           color: inherit;
         }
+        /* Dark gray/slate text → light */
         .dark-mode .text-gray-900, .dark-mode .text-gray-800, .dark-mode .text-gray-700,
         .dark-mode .text-slate-900, .dark-mode .text-slate-800, .dark-mode .text-slate-700 {
           color: #f3f4f6 !important;
@@ -191,30 +196,145 @@ const StarryBackground = ({ children }) => {
         .dark-mode .text-slate-600, .dark-mode .text-slate-500, .dark-mode .text-slate-400 {
           color: #9ca3af !important;
         }
+        .dark-mode .text-gray-300 {
+          color: #d1d5db !important;
+        }
         .dark-mode .text-black {
           color: #ffffff !important;
         }
-        /* Font semibold/bold headings */
-        .dark-mode .font-semibold, .dark-mode .font-bold, .dark-mode .font-medium {
-          color: #f3f4f6;
+
+        /* --- COLORED TEXT — brighten dark-on-light text for dark backgrounds --- */
+        .dark-mode .text-amber-900, .dark-mode .text-amber-800, .dark-mode .text-amber-700 {
+          color: #fbbf24 !important;
         }
-        /* Card backgrounds */
+        .dark-mode .text-amber-600, .dark-mode .text-amber-500 {
+          color: #fbbf24 !important;
+        }
+        .dark-mode .text-orange-900, .dark-mode .text-orange-800, .dark-mode .text-orange-700 {
+          color: #fb923c !important;
+        }
+        .dark-mode .text-orange-600, .dark-mode .text-orange-500 {
+          color: #fb923c !important;
+        }
+        .dark-mode .text-red-700, .dark-mode .text-red-600 {
+          color: #f87171 !important;
+        }
+        .dark-mode .text-red-500, .dark-mode .text-red-400 {
+          color: #f87171 !important;
+        }
+        .dark-mode .text-green-700, .dark-mode .text-green-600 {
+          color: #4ade80 !important;
+        }
+        .dark-mode .text-green-500 {
+          color: #4ade80 !important;
+        }
+        .dark-mode .text-emerald-700, .dark-mode .text-emerald-600, .dark-mode .text-emerald-500 {
+          color: #34d399 !important;
+        }
+        .dark-mode .text-blue-700, .dark-mode .text-blue-600, .dark-mode .text-blue-500 {
+          color: #60a5fa !important;
+        }
+        .dark-mode .text-indigo-700, .dark-mode .text-indigo-600, .dark-mode .text-indigo-500 {
+          color: #818cf8 !important;
+        }
+        .dark-mode .text-purple-700, .dark-mode .text-purple-600, .dark-mode .text-purple-500 {
+          color: #a78bfa !important;
+        }
+        .dark-mode .text-pink-700, .dark-mode .text-pink-600, .dark-mode .text-pink-500 {
+          color: #f472b6 !important;
+        }
+        .dark-mode .text-rose-700, .dark-mode .text-rose-600, .dark-mode .text-rose-500 {
+          color: #fb7185 !important;
+        }
+        .dark-mode .text-yellow-700, .dark-mode .text-yellow-600, .dark-mode .text-yellow-500 {
+          color: #facc15 !important;
+        }
+        .dark-mode .text-teal-700, .dark-mode .text-teal-600, .dark-mode .text-teal-500 {
+          color: #2dd4bf !important;
+        }
+        .dark-mode .text-cyan-700, .dark-mode .text-cyan-600, .dark-mode .text-cyan-500 {
+          color: #22d3ee !important;
+        }
+        .dark-mode .text-lime-700, .dark-mode .text-lime-600, .dark-mode .text-lime-500 {
+          color: #a3e635 !important;
+        }
+        .dark-mode .text-violet-700, .dark-mode .text-violet-600, .dark-mode .text-violet-500 {
+          color: #a78bfa !important;
+        }
+
+        /* --- FONT WEIGHT text color (with !important so it doesn't get overridden) --- */
+        .dark-mode .font-semibold, .dark-mode .font-bold, .dark-mode .font-medium {
+          color: #f3f4f6 !important;
+        }
+        /* But NOT inside gradients or colored backgrounds where text should stay white */
+        .dark-mode [class*="from-"] .font-semibold,
+        .dark-mode [class*="from-"] .font-bold,
+        .dark-mode [class*="from-"] .font-medium {
+          color: white !important;
+        }
+
+        /* --- CARD / SURFACE BACKGROUNDS --- */
         .dark-mode .bg-white {
           background-color: rgba(30, 41, 59, 0.85) !important;
           backdrop-filter: blur(12px);
         }
         .dark-mode .bg-gray-50, .dark-mode .bg-slate-50 {
-          background-color: transparent !important;
+          background-color: rgba(30, 41, 59, 0.4) !important;
         }
         .dark-mode .bg-gray-100, .dark-mode .bg-slate-100 {
           background-color: rgba(51, 65, 85, 0.5) !important;
         }
-        /* Borders */
+        .dark-mode .bg-gray-200 {
+          background-color: rgba(51, 65, 85, 0.7) !important;
+        }
+
+        /* --- ALL COLORED 50-level backgrounds → dark translucent --- */
+        .dark-mode .bg-amber-50, .dark-mode .bg-orange-50, .dark-mode .bg-yellow-50,
+        .dark-mode .bg-red-50, .dark-mode .bg-rose-50,
+        .dark-mode .bg-green-50, .dark-mode .bg-emerald-50, .dark-mode .bg-lime-50, .dark-mode .bg-teal-50,
+        .dark-mode .bg-blue-50, .dark-mode .bg-indigo-50, .dark-mode .bg-cyan-50,
+        .dark-mode .bg-purple-50, .dark-mode .bg-violet-50,
+        .dark-mode .bg-pink-50, .dark-mode .bg-fuchsia-50 {
+          background-color: rgba(51, 65, 85, 0.5) !important;
+        }
+
+        /* --- ALL COLORED 100-level backgrounds → slightly lighter dark --- */
+        .dark-mode .bg-amber-100, .dark-mode .bg-orange-100, .dark-mode .bg-yellow-100,
+        .dark-mode .bg-red-100, .dark-mode .bg-rose-100,
+        .dark-mode .bg-green-100, .dark-mode .bg-emerald-100, .dark-mode .bg-lime-100, .dark-mode .bg-teal-100,
+        .dark-mode .bg-blue-100, .dark-mode .bg-indigo-100, .dark-mode .bg-cyan-100,
+        .dark-mode .bg-purple-100, .dark-mode .bg-violet-100,
+        .dark-mode .bg-pink-100, .dark-mode .bg-fuchsia-100 {
+          background-color: rgba(51, 65, 85, 0.6) !important;
+        }
+
+        /* --- ALL COLORED 200-level backgrounds --- */
+        .dark-mode .bg-amber-200, .dark-mode .bg-orange-200, .dark-mode .bg-yellow-200,
+        .dark-mode .bg-red-200, .dark-mode .bg-rose-200,
+        .dark-mode .bg-green-200, .dark-mode .bg-emerald-200,
+        .dark-mode .bg-blue-200, .dark-mode .bg-indigo-200,
+        .dark-mode .bg-purple-200, .dark-mode .bg-pink-200 {
+          background-color: rgba(51, 65, 85, 0.7) !important;
+        }
+
+        /* --- BORDERS --- */
         .dark-mode .border, .dark-mode .border-b, .dark-mode .border-t, .dark-mode .border-l, .dark-mode .border-r,
         .dark-mode .divide-y > *, .dark-mode .divide-x > * {
           border-color: rgba(71, 85, 105, 0.5) !important;
         }
-        /* Form inputs */
+        /* Colored borders → subtle dark versions */
+        .dark-mode [class*="border-amber-"], .dark-mode [class*="border-orange-"],
+        .dark-mode [class*="border-red-"], .dark-mode [class*="border-rose-"],
+        .dark-mode [class*="border-green-"], .dark-mode [class*="border-emerald-"],
+        .dark-mode [class*="border-blue-"], .dark-mode [class*="border-indigo-"],
+        .dark-mode [class*="border-purple-"], .dark-mode [class*="border-pink-"],
+        .dark-mode [class*="border-yellow-"], .dark-mode [class*="border-teal-"],
+        .dark-mode [class*="border-cyan-"], .dark-mode [class*="border-lime-"],
+        .dark-mode [class*="border-violet-"] {
+          border-color: rgba(71, 85, 105, 0.6) !important;
+        }
+
+        /* --- FORM INPUTS --- */
         .dark-mode input, .dark-mode textarea, .dark-mode select {
           background-color: rgba(30, 41, 59, 0.9) !important;
           color: #f3f4f6 !important;
@@ -223,13 +343,34 @@ const StarryBackground = ({ children }) => {
         .dark-mode input::placeholder, .dark-mode textarea::placeholder {
           color: #6b7280 !important;
         }
-        /* Hover states */
+
+        /* --- HOVER STATES --- */
         .dark-mode .hover\\:bg-gray-50:hover, .dark-mode .hover\\:bg-slate-50:hover {
           background-color: rgba(51, 65, 85, 0.5) !important;
         }
-        /* Tables */
+        .dark-mode .hover\\:bg-red-50:hover, .dark-mode .hover\\:bg-amber-50:hover,
+        .dark-mode .hover\\:bg-orange-50:hover, .dark-mode .hover\\:bg-green-50:hover,
+        .dark-mode .hover\\:bg-pink-50:hover, .dark-mode .hover\\:bg-blue-50:hover {
+          background-color: rgba(51, 65, 85, 0.6) !important;
+        }
+        .dark-mode .hover\\:bg-red-100:hover, .dark-mode .hover\\:bg-amber-100:hover,
+        .dark-mode .hover\\:bg-orange-100:hover, .dark-mode .hover\\:bg-blue-100:hover,
+        .dark-mode .hover\\:bg-green-100:hover, .dark-mode .hover\\:bg-pink-100:hover,
+        .dark-mode .hover\\:bg-rose-100:hover, .dark-mode .hover\\:bg-cyan-100:hover,
+        .dark-mode .hover\\:bg-indigo-100:hover, .dark-mode .hover\\:bg-red-200:hover,
+        .dark-mode .hover\\:bg-blue-200:hover {
+          background-color: rgba(51, 65, 85, 0.7) !important;
+        }
+        .dark-mode .hover\\:brightness-95:hover {
+          filter: brightness(1.1) !important;
+        }
+
+        /* --- TABLES --- */
         .dark-mode table thead tr {
           background-color: rgba(30, 41, 59, 0.9) !important;
+        }
+        .dark-mode table thead tr th {
+          color: #e5e7eb !important;
         }
         .dark-mode table tbody tr {
           background-color: transparent !important;
@@ -237,25 +378,77 @@ const StarryBackground = ({ children }) => {
         .dark-mode table th, .dark-mode table td {
           color: #e5e7eb !important;
         }
-        /* Shadows */
-        .dark-mode .shadow-sm, .dark-mode .shadow, .dark-mode .shadow-md, .dark-mode .shadow-lg {
+        /* Override colored table row backgrounds */
+        .dark-mode table tbody tr.bg-green-50,
+        .dark-mode table tbody tr[class*="bg-green-50"] {
+          background-color: rgba(34, 197, 94, 0.1) !important;
+        }
+
+        /* --- SHADOWS --- */
+        .dark-mode .shadow-sm, .dark-mode .shadow, .dark-mode .shadow-md, .dark-mode .shadow-lg, .dark-mode .shadow-2xl {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
         }
-        /* Special overrides for specific colored backgrounds - keep their text */
-        .dark-mode .bg-gradient-to-r, .dark-mode .bg-gradient-to-br, .dark-mode .bg-gradient-to-b {
-          color: white;
+
+        /* --- GRADIENT BACKGROUNDS — keep text white, preserve gradient colors --- */
+        .dark-mode .bg-gradient-to-r, .dark-mode .bg-gradient-to-br, .dark-mode .bg-gradient-to-b,
+        .dark-mode .bg-gradient-to-l, .dark-mode .bg-gradient-to-t,
+        .dark-mode .bg-gradient-to-tr, .dark-mode .bg-gradient-to-bl {
+          color: white !important;
         }
-        /* Purple/indigo footer backgrounds */
-        .dark-mode .bg-purple-50, .dark-mode .bg-indigo-50, .dark-mode .bg-blue-50, .dark-mode .bg-green-50 {
+
+        /* --- ITALIC text inside dark cards (quotes, notes) --- */
+        .dark-mode .italic {
+          color: #d1d5db !important;
+        }
+
+        /* --- SPECIFIC COMPONENT FIXES --- */
+
+        /* Light pastel gradient backgrounds (50-level from-X-50 to-Y-50) → dark */
+        .dark-mode [class*="from-green-50"], .dark-mode [class*="from-amber-50"],
+        .dark-mode [class*="from-blue-50"], .dark-mode [class*="from-purple-50"],
+        .dark-mode [class*="from-red-50"], .dark-mode [class*="from-orange-50"],
+        .dark-mode [class*="from-indigo-50"], .dark-mode [class*="from-slate-50"],
+        .dark-mode [class*="from-emerald-50"], .dark-mode [class*="from-rose-50"],
+        .dark-mode [class*="from-pink-50"], .dark-mode [class*="from-gray-50"],
+        .dark-mode [class*="from-yellow-50"], .dark-mode [class*="from-cyan-50"],
+        .dark-mode [class*="from-teal-50"],
+        .dark-mode [class*="from-gray-100"], .dark-mode [class*="from-slate-100"],
+        .dark-mode [class*="from-amber-100"], .dark-mode [class*="from-orange-100"] {
+          background: rgba(51, 65, 85, 0.6) !important;
+        }
+
+        /* Ensure ALL text inside vivid gradient containers stays white */
+        .dark-mode [class*="from-"][class*="to-"] *:not(input):not(textarea):not(select) {
+          color: white !important;
+        }
+        /* But for light/pastel gradient headers (50/100-level), text should be light gray */
+        .dark-mode [class*="from-green-50"] *,
+        .dark-mode [class*="from-amber-50"] *,
+        .dark-mode [class*="from-blue-50"] *,
+        .dark-mode [class*="from-purple-50"] *,
+        .dark-mode [class*="from-red-50"] *,
+        .dark-mode [class*="from-orange-50"] *,
+        .dark-mode [class*="from-indigo-50"] *,
+        .dark-mode [class*="from-slate-50"] *,
+        .dark-mode [class*="from-emerald-50"] *,
+        .dark-mode [class*="from-rose-50"] *,
+        .dark-mode [class*="from-pink-50"] *,
+        .dark-mode [class*="from-gray-50"] *,
+        .dark-mode [class*="from-gray-100"] *,
+        .dark-mode [class*="from-slate-100"] *,
+        .dark-mode [class*="from-amber-100"] *,
+        .dark-mode [class*="from-orange-100"] * {
+          color: #e5e7eb !important;
+        }
+
+        /* --- FOCUS STATES for colored focus backgrounds --- */
+        .dark-mode .focus\\:bg-amber-50:focus {
           background-color: rgba(51, 65, 85, 0.6) !important;
         }
-        /* Link colors */
-        .dark-mode .text-blue-500, .dark-mode .text-blue-600 {
-          color: #60a5fa !important;
-        }
-        /* Keep gradient text readable */
-        .dark-mode [class*="from-"][class*="to-"] {
-          color: white;
+
+        /* --- RING COLORS (selection highlights) --- */
+        .dark-mode [class*="ring-pink-"] {
+          --tw-ring-color: rgba(236, 72, 153, 0.6) !important;
         }
       `}</style>
       {/* Content */}
