@@ -960,6 +960,10 @@ function MuzzApp() {
   const [showRisksColInput, setShowRisksColInput] = useState(false);
   const [researchSortBy, setResearchSortBy] = useState('ticker'); // ticker, industry, tollBooth, growth, status
   const [researchSortDir, setResearchSortDir] = useState('asc'); // asc, desc
+  const [futureSortBy, setFutureSortBy] = useState('ticker');
+  const [futureSortDir, setFutureSortDir] = useState('asc');
+  const [currentSortBy, setCurrentSortBy] = useState('name');
+  const [currentSortDir, setCurrentSortDir] = useState('asc');
   const [billsSubTab, setBillsSubTab] = useState('bills');
   const [calendarBills, setCalendarBills] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -9262,19 +9266,69 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b">
                     <h2 className="text-xl font-semibold">Portfolio by Industry</h2>
+                    <p className="text-sm text-gray-500">Click column headers to sort</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="bg-gray-50 border-b">
-                          <th className="text-left py-3 px-4 font-semibold">Industry</th>
-                          <th className="text-center py-3 px-4 font-semibold">Holdings</th>
-                          <th className="text-right py-3 px-4 font-semibold">Value</th>
-                          <th className="text-right py-3 px-4 font-semibold">% of Portfolio</th>
+                          <th 
+                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (currentSortBy === 'industry') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setCurrentSortBy('industry'); setCurrentSortDir('asc'); }
+                            }}
+                          >
+                            Industry {currentSortBy === 'industry' && (currentSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-center py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (currentSortBy === 'holdings') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setCurrentSortBy('holdings'); setCurrentSortDir('asc'); }
+                            }}
+                          >
+                            Holdings {currentSortBy === 'holdings' && (currentSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (currentSortBy === 'value') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setCurrentSortBy('value'); setCurrentSortDir('asc'); }
+                            }}
+                          >
+                            Value {currentSortBy === 'value' && (currentSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            onClick={() => {
+                              if (currentSortBy === 'percent') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setCurrentSortBy('percent'); setCurrentSortDir('asc'); }
+                            }}
+                          >
+                            % of Portfolio {currentSortBy === 'percent' && (currentSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {stocksByIndustry.map(ind => (
+                        {[...stocksByIndustry].sort((a, b) => {
+                          let comparison = 0;
+                          switch (currentSortBy) {
+                            case 'industry':
+                              comparison = a.name.localeCompare(b.name);
+                              break;
+                            case 'holdings':
+                              comparison = a.stocks.length - b.stocks.length;
+                              break;
+                            case 'value':
+                            case 'percent':
+                              comparison = a.total - b.total;
+                              break;
+                            default:
+                              comparison = b.total - a.total; // Default by value desc
+                          }
+                          return currentSortDir === 'asc' ? comparison : -comparison;
+                        }).map(ind => (
                           <tr key={ind.name} className="border-b hover:bg-gray-50">
                             <td className="py-3 px-4 font-medium">{ind.name}</td>
                             <td className="py-3 px-4 text-center text-gray-600">{ind.stocks.length}</td>
@@ -9506,27 +9560,107 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 if (filledFuture.length === 0) return null;
                 
+                const growthOrder = { 'High Growth': 4, 'Medium Growth': 3, 'Low Growth': 2, 'Very Low Growth': 1 };
+                const statusOrder = { 'New': 3, 'Old': 2, 'Reserve': 1 };
+                
+                const sortedFuture = [...filledFuture].sort((a, b) => {
+                  let comparison = 0;
+                  switch (futureSortBy) {
+                    case 'ticker':
+                      comparison = (a.ticker || '').localeCompare(b.ticker || '');
+                      break;
+                    case 'industry':
+                      comparison = (a.industry || '').localeCompare(b.industry || '');
+                      break;
+                    case 'tollBooth':
+                      const aVal = a.tollBooth === 'Yes' ? 1 : 0;
+                      const bVal = b.tollBooth === 'Yes' ? 1 : 0;
+                      comparison = bVal - aVal;
+                      break;
+                    case 'growth':
+                      comparison = (growthOrder[a.growthProspects] || 0) - (growthOrder[b.growthProspects] || 0);
+                      break;
+                    case 'planned':
+                      comparison = (a.plannedAmount || 0) - (b.plannedAmount || 0);
+                      break;
+                    case 'status':
+                      comparison = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+                      break;
+                    default:
+                      comparison = 0;
+                  }
+                  return futureSortDir === 'asc' ? comparison : -comparison;
+                });
+                
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                     <div className="p-6 border-b">
                       <h2 className="text-xl font-semibold">📋 Future Portfolio Summary</h2>
-                      <p className="text-sm text-gray-500">Your planned investments at a glance</p>
+                      <p className="text-sm text-gray-500">Click column headers to sort • Your planned investments at a glance</p>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="bg-gray-50 border-b">
-                            <th className="text-left py-3 px-4 font-semibold">Ticker</th>
-                            <th className="text-left py-3 px-4 font-semibold">Industry</th>
-                            <th className="text-center py-3 px-4 font-semibold">Toll Booth?</th>
-                            <th className="text-left py-3 px-4 font-semibold">Growth</th>
-                            <th className="text-right py-3 px-4 font-semibold">Planned $</th>
+                            <th 
+                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => {
+                                if (futureSortBy === 'ticker') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('ticker'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Ticker {futureSortBy === 'ticker' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => {
+                                if (futureSortBy === 'industry') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('industry'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Industry {futureSortBy === 'industry' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              className="text-center py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => {
+                                if (futureSortBy === 'tollBooth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('tollBooth'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Toll Booth? {futureSortBy === 'tollBooth' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => {
+                                if (futureSortBy === 'growth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('growth'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Growth {futureSortBy === 'growth' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
+                            <th 
+                              className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => {
+                                if (futureSortBy === 'planned') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('planned'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Planned $ {futureSortBy === 'planned' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
                             <th className="text-right py-3 px-4 font-semibold">Weight %</th>
-                            <th className="text-left py-3 px-4 font-semibold">Status</th>
+                            <th 
+                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              onClick={() => {
+                                if (futureSortBy === 'status') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                                else { setFutureSortBy('status'); setFutureSortDir('asc'); }
+                              }}
+                            >
+                              Status {futureSortBy === 'status' && (futureSortDir === 'asc' ? '↑' : '↓')}
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
-                          {filledFuture.map((holding, idx) => {
+                          {sortedFuture.map((holding, idx) => {
                             const weight = totalPlanned > 0 ? ((holding.plannedAmount || 0) / totalPlanned * 100) : 0;
                             return (
                               <tr key={idx} className="border-b hover:bg-gray-50">
