@@ -9461,10 +9461,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
                           >
                             <option value="">Select Status</option>
-                            <option value="Researching">Researching</option>
-                            <option value="Ready to Buy">Ready to Buy</option>
-                            <option value="Waiting for Price">Waiting for Price</option>
-                            <option value="Maybe Later">Maybe Later</option>
+                            <option value="Old">Old</option>
+                            <option value="New">New</option>
+                            <option value="Reserve">Reserve</option>
                           </select>
                         </div>
                       </div>
@@ -9755,6 +9754,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <th className="text-left py-3 px-4 font-semibold">Industry</th>
                           <th className="text-center py-3 px-4 font-semibold">Toll Booth?</th>
                           <th className="text-left py-3 px-4 font-semibold">Growth</th>
+                          <th className="text-left py-3 px-4 font-semibold">Status</th>
                           {researchColumns.map(col => (
                             <th key={col.id} className="text-left py-3 px-4 font-semibold">
                               <div className="flex items-center gap-2">
@@ -9779,6 +9779,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? '✅' : '❌'}
                             </td>
                             <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
+                            <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
                             {researchColumns.map(col => (
                               <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
                             ))}
@@ -9788,7 +9789,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <tfoot>
                         <tr className="bg-purple-50 font-bold text-purple-900">
                           <td className="py-3 px-4">Total</td>
-                          <td className="py-3 px-4" colSpan={3 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
+                          <td className="py-3 px-4" colSpan={4 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
                         </tr>
                       </tfoot>
                     </table>
