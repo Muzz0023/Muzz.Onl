@@ -1846,9 +1846,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         saveStatus === 'saved' ? 'bg-green-50/90 text-green-600 border border-green-100' : 
         'bg-red-50/90 text-red-600 border border-red-100'
       }`}>
-        {saveStatus === 'saving' && <><Loader2 className="w-3 h-3 animate-spin" /> Saving...</>}
-        {saveStatus === 'saved' && <><CheckCircle2 className="w-3 h-3" /> Saved</>}
-        {saveStatus === 'error' && <><X className="w-3 h-3" /> Failed</>}
+        {saveStatus === 'saving' && <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Saving...</span>}
+        {saveStatus === 'saved' && <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Saved</span>}
+        {saveStatus === 'error' && <span className="flex items-center gap-1"><X className="w-3 h-3" /> Failed</span>}
       </div>
     ) : null
   );
