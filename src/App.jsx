@@ -1487,6 +1487,28 @@ function MuzzApp() {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showAddSection, setShowAddSection] = useState(false);
 
+  // ===== NEW FEATURES STATE =====
+  // Habit Tracker
+  const [habits, setHabits] = useState([]);
+  const [habitLog, setHabitLog] = useState({}); // { 'habitId:YYYY-MM-DD': true }
+
+  // Daily Journal
+  const [journalEntries, setJournalEntries] = useState({}); // { 'YYYY-MM-DD': { text, mood, prompt } }
+
+  // Pomodoro Timer (no persist needed - resets each session)
+  const [pomodoroTime, setPomodoroTime] = useState(25 * 60);
+  const [pomodoroRunning, setPomodoroRunning] = useState(false);
+  const [pomodoroMode, setPomodoroMode] = useState('work'); // work | shortBreak | longBreak
+  const [pomodoroSessions, setPomodoroSessions] = useState(0);
+
+  // Debt Payoff Calculator
+  const [debtCalcMethod, setDebtCalcMethod] = useState('snowball'); // snowball | avalanche
+
+  // Compound Interest Calculator
+  const [compoundCalc, setCompoundCalc] = useState({ principal: '', monthlyAdd: '', rate: '7', years: '10' });
+  const [toolsSubTab, setToolsSubTab] = useState('pomodoro');
+  const [journalDate, setJournalDate] = useState(() => new Date().toISOString().split('T')[0]);
+
   // Check Stripe subscription on load
   useEffect(() => {
     if (!userEmail || isVIP) return;
@@ -1700,6 +1722,9 @@ function MuzzApp() {
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.stripeElite) setStripeElite(d.stripeElite);
+          if (d.habits) setHabits(d.habits);
+          if (d.habitLog) setHabitLog(d.habitLog);
+          if (d.journalEntries) setJournalEntries(d.journalEntries);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -1769,7 +1794,10 @@ function MuzzApp() {
           timesheetData,
           customCategories,
           eliteName,
-          stripeElite
+          stripeElite,
+          habits,
+          habitLog,
+          journalEntries
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -1783,7 +1811,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -1792,6 +1820,30 @@ function MuzzApp() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  // Pomodoro timer
+  useEffect(() => {
+    if (!pomodoroRunning) return;
+    const pomodoroModes = { work: 25 * 60, shortBreak: 5 * 60, longBreak: 15 * 60 };
+    const interval = setInterval(() => {
+      setPomodoroTime(prev => {
+        if (prev <= 1) {
+          setPomodoroRunning(false);
+          if (pomodoroMode === 'work') {
+            setPomodoroSessions(s => s + 1);
+            const nextMode = (pomodoroSessions + 1) % 4 === 0 ? 'longBreak' : 'shortBreak';
+            setPomodoroMode(nextMode);
+            return pomodoroModes[nextMode];
+          } else {
+            setPomodoroMode('work');
+            return pomodoroModes.work;
+          }
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [pomodoroRunning, pomodoroMode, pomodoroSessions]);
 
   // Send message to Muzz AI
   const sendMessageToMuzz = async (userMessage) => {
@@ -1941,6 +1993,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // Sidebar navigation items
   const navItems = [
     { id: "home", label: "Dashboard", icon: Home },
+    { id: "habits", label: "Habits", icon: Flame },
+    { id: "journal", label: "Journal", icon: Star },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
@@ -1949,6 +2003,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
+    { id: "tools", label: "Tools", icon: Target },
     ...customCategories.map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: i > 0 })),
     { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
     { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
@@ -6292,6 +6347,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           
           {/* Quick Access */}
           <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+            <button onClick={() => setActiveView('habits')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">🔥</span>
+              <span className="text-xs font-medium text-gray-600">Habits</span>
+            </button>
+            <button onClick={() => setActiveView('journal')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">📓</span>
+              <span className="text-xs font-medium text-gray-600">Journal</span>
+            </button>
             <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
               <span className="text-2xl mb-1">🌙</span>
               <span className="text-xs font-medium text-gray-600">Sleep</span>
@@ -6308,21 +6371,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <span className="text-2xl mb-1">🥗</span>
               <span className="text-xs font-medium text-gray-600">Diet</span>
             </button>
-            <button onClick={() => setActiveView('varied')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">💳</span>
-              <span className="text-xs font-medium text-gray-600">Bills</span>
-            </button>
-            <button onClick={() => setActiveView('assets')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">🏠</span>
-              <span className="text-xs font-medium text-gray-600">Assets</span>
-            </button>
             <button onClick={() => setActiveView('investments')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
               <span className="text-2xl mb-1">📈</span>
               <span className="text-xs font-medium text-gray-600">Invest</span>
             </button>
-            <button onClick={() => setActiveView('tasks')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
-              <span className="text-2xl mb-1">✅</span>
-              <span className="text-xs font-medium text-gray-600">Tasks</span>
+            <button onClick={() => setActiveView('tools')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+              <span className="text-2xl mb-1">🧰</span>
+              <span className="text-xs font-medium text-gray-600">Tools</span>
             </button>
           </div>
           
@@ -12760,6 +12815,464 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
         </div>
+      </div>
+    );
+  }
+
+  // ============================================
+  // HABIT TRACKER VIEW
+  // ============================================
+  if (activeView === 'habits') {
+    const today = new Date().toISOString().split('T')[0];
+    const toggleHabit = (habitId, date) => {
+      const key = `${habitId}:${date}`;
+      setHabitLog(prev => {
+        const updated = { ...prev };
+        if (updated[key]) delete updated[key];
+        else updated[key] = true;
+        return updated;
+      });
+    };
+    const getStreak = (habitId) => {
+      let streak = 0;
+      let d = new Date();
+      while (true) {
+        const dateStr = d.toISOString().split('T')[0];
+        if (habitLog[`${habitId}:${dateStr}`]) { streak++; d.setDate(d.getDate() - 1); }
+        else break;
+      }
+      return streak;
+    };
+    const getLast30Days = () => {
+      const days = [];
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        days.push(d.toISOString().split('T')[0]);
+      }
+      return days;
+    };
+    const last30 = getLast30Days();
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-gradient-to-r from-orange-500 to-rose-600 pt-16 pb-6 px-6">
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <h1 className="text-3xl font-bold text-white">🔥 Habit Tracker</h1>
+            <p className="text-white/70 mt-1">Build streaks. Build discipline.</p>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+          {/* Add Habit */}
+          <button
+            onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '✅', createdAt: today }])}
+            className="w-full py-4 bg-gradient-to-r from-orange-500 to-rose-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+          >
+            + Add New Habit
+          </button>
+
+          {habits.length === 0 && (
+            <div className="bg-white rounded-3xl p-12 shadow-sm border text-center">
+              <div className="text-5xl mb-4">🔥</div>
+              <p className="text-gray-500">No habits yet. Add one above to start building streaks!</p>
+            </div>
+          )}
+
+          {habits.map(habit => {
+            const streak = getStreak(habit.id);
+            const completedToday = !!habitLog[`${habit.id}:${today}`];
+            return (
+              <div key={habit.id} className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                <div className="p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <input
+                      type="text"
+                      value={habit.icon}
+                      onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
+                      className="w-10 h-10 text-center text-xl bg-gray-100 rounded-xl focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      value={habit.name}
+                      onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
+                      placeholder="Habit name..."
+                      className="flex-1 text-lg font-semibold bg-transparent focus:outline-none"
+                    />
+                    <div className="flex items-center gap-2">
+                      <div className="text-center px-3 py-1 bg-orange-100 rounded-xl">
+                        <div className="text-lg font-bold text-orange-600">{streak}</div>
+                        <div className="text-[10px] text-orange-500">streak</div>
+                      </div>
+                      <button
+                        onClick={() => toggleHabit(habit.id, today)}
+                        className={`w-12 h-12 rounded-xl text-2xl transition-all ${completedToday ? 'bg-green-500 text-white scale-110' : 'bg-gray-100 hover:bg-gray-200'}`}
+                      >
+                        {completedToday ? '✓' : '○'}
+                      </button>
+                      <button
+                        onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
+                        className="text-gray-300 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  {/* Heatmap - Last 30 Days */}
+                  <div className="flex gap-1 flex-wrap">
+                    {last30.map(date => {
+                      const done = !!habitLog[`${habit.id}:${date}`];
+                      const isToday = date === today;
+                      return (
+                        <div
+                          key={date}
+                          onClick={() => toggleHabit(habit.id, date)}
+                          title={`${new Date(date).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}${done ? ' ✓' : ''}`}
+                          className={`w-7 h-7 rounded cursor-pointer transition-all ${done ? 'bg-green-500' : 'bg-gray-100 hover:bg-gray-200'} ${isToday ? 'ring-2 ring-orange-400' : ''}`}
+                        />
+                      );
+                    })}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">Last 30 days — click to toggle</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
+      </div>
+    );
+  }
+
+  // ============================================
+  // DAILY JOURNAL VIEW
+  // ============================================
+  if (activeView === 'journal') {
+    const today = new Date().toISOString().split('T')[0];
+    const entry = journalEntries[journalDate] || { text: '', mood: '', gratitude: '' };
+    const prompts = [
+      "What's one thing you're grateful for today?",
+      "What did you accomplish today that you're proud of?",
+      "What's been on your mind lately?",
+      "What's one goal you're working towards right now?",
+      "Describe your perfect day — what would it look like?",
+      "What's something you learned recently?",
+      "What's one small win from today?",
+      "If you could change one thing about today, what would it be?",
+      "What are you looking forward to this week?",
+      "How are you feeling right now, and why?",
+    ];
+    const todayPrompt = prompts[Math.floor(new Date(journalDate).getTime() / 86400000) % prompts.length];
+    const moods = ['😊', '😌', '😐', '😔', '😤', '🤩', '😴', '🥲'];
+    const updateEntry = (field, value) => {
+      setJournalEntries(prev => ({
+        ...prev,
+        [journalDate]: { ...prev[journalDate], [field]: value }
+      }));
+    };
+    const entriesCount = Object.keys(journalEntries).filter(k => journalEntries[k]?.text).length;
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-gradient-to-r from-violet-600 to-purple-700 pt-16 pb-6 px-6">
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <h1 className="text-3xl font-bold text-white">📓 Daily Journal</h1>
+            <p className="text-white/70 mt-1">{entriesCount} {entriesCount === 1 ? 'entry' : 'entries'} written</p>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+          {/* Date Picker */}
+          <div className="flex items-center gap-3">
+            <button onClick={() => { const d = new Date(journalDate); d.setDate(d.getDate() - 1); setJournalDate(d.toISOString().split('T')[0]); }} className="px-3 py-2 bg-white rounded-xl border shadow-sm hover:bg-gray-50">←</button>
+            <input type="date" value={journalDate} onChange={(e) => setJournalDate(e.target.value)} className="flex-1 px-4 py-2 bg-white rounded-xl border shadow-sm text-center font-medium" />
+            <button onClick={() => { const d = new Date(journalDate); d.setDate(d.getDate() + 1); setJournalDate(d.toISOString().split('T')[0]); }} className="px-3 py-2 bg-white rounded-xl border shadow-sm hover:bg-gray-50">→</button>
+          </div>
+
+          {/* Mood */}
+          <div className="bg-white rounded-2xl p-4 border shadow-sm">
+            <h3 className="font-semibold text-gray-700 mb-3">How are you feeling?</h3>
+            <div className="flex gap-2 flex-wrap">
+              {moods.map(m => (
+                <button key={m} onClick={() => updateEntry('mood', m)} className={`text-3xl p-2 rounded-xl transition-all ${entry.mood === m ? 'bg-purple-100 scale-110 ring-2 ring-purple-400' : 'hover:bg-gray-100'}`}>{m}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Daily Prompt */}
+          <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-4 text-white">
+            <p className="text-sm text-purple-200 mb-1">Today's Prompt</p>
+            <p className="font-medium">{todayPrompt}</p>
+          </div>
+
+          {/* Journal Entry */}
+          <div className="bg-white rounded-2xl p-4 border shadow-sm">
+            <h3 className="font-semibold text-gray-700 mb-3">📝 Journal Entry</h3>
+            <textarea
+              value={entry.text || ''}
+              onChange={(e) => updateEntry('text', e.target.value)}
+              onFocus={handleTextareaFocus}
+              placeholder="Write your thoughts..."
+              rows={8}
+              className="w-full p-3 border-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 resize-none transition-colors"
+            />
+          </div>
+
+          {/* Gratitude */}
+          <div className="bg-white rounded-2xl p-4 border shadow-sm">
+            <h3 className="font-semibold text-gray-700 mb-3">🙏 Gratitude</h3>
+            <textarea
+              value={entry.gratitude || ''}
+              onChange={(e) => updateEntry('gratitude', e.target.value)}
+              onFocus={handleTextareaFocus}
+              placeholder="What are you grateful for today?"
+              rows={3}
+              className="w-full p-3 border-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 resize-none transition-colors"
+            />
+          </div>
+        </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
+      </div>
+    );
+  }
+
+  // ============================================
+  // TOOLS VIEW (Pomodoro, Debt Calc, Compound Calc)
+  // ============================================
+  if (activeView === 'tools') {
+
+    // Pomodoro Timer Logic
+    const pomodoroModes = { work: 25 * 60, shortBreak: 5 * 60, longBreak: 15 * 60 };
+    const startPomodoro = () => {
+      if (pomodoroRunning) return;
+      setPomodoroRunning(true);
+    };
+    const pausePomodoro = () => setPomodoroRunning(false);
+    const resetPomodoro = (mode) => {
+      setPomodoroRunning(false);
+      const m = mode || pomodoroMode;
+      setPomodoroMode(m);
+      setPomodoroTime(pomodoroModes[m]);
+    };
+
+    const formatTime = (s) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+
+    // Debt Payoff Calculator
+    const sortedDebts = [...debts].filter(d => d.name && d.balance > 0).sort((a, b) => {
+      if (debtCalcMethod === 'snowball') return (a.balance || 0) - (b.balance || 0);
+      return (b.rate || 0) - (a.rate || 0);
+    });
+    const totalDebt = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.balance) || 0), 0);
+    const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
+
+    // Compound Interest Calc
+    const calcCompound = () => {
+      const p = parseFloat(compoundCalc.principal) || 0;
+      const m = parseFloat(compoundCalc.monthlyAdd) || 0;
+      const r = (parseFloat(compoundCalc.rate) || 0) / 100;
+      const y = parseInt(compoundCalc.years) || 0;
+      const monthly = r / 12;
+      let balance = p;
+      const yearData = [];
+      for (let i = 1; i <= y; i++) {
+        for (let j = 0; j < 12; j++) {
+          balance = balance * (1 + monthly) + m;
+        }
+        yearData.push({ year: i, balance: Math.round(balance) });
+      }
+      const totalContributed = p + (m * 12 * y);
+      const totalInterest = Math.round(balance - totalContributed);
+      return { finalBalance: Math.round(balance), totalContributed: Math.round(totalContributed), totalInterest, yearData };
+    };
+    const compResult = calcCompound();
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-gradient-to-r from-teal-500 to-cyan-600 pt-16 pb-6 px-6">
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <h1 className="text-3xl font-bold text-white">🧰 Tools</h1>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-6">
+          {/* Sub-tabs */}
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+            {[
+              { id: 'pomodoro', label: '🍅 Pomodoro' },
+              { id: 'debtCalc', label: '💳 Debt Payoff' },
+              { id: 'compound', label: '📈 Compound Interest' },
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setToolsSubTab(tab.id)} className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${toolsSubTab === tab.id ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'}`}>{tab.label}</button>
+            ))}
+          </div>
+
+          {/* ===== POMODORO TIMER ===== */}
+          {toolsSubTab === 'pomodoro' && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl shadow-sm border p-8 text-center">
+                <div className="flex justify-center gap-3 mb-8">
+                  {[{ id: 'work', label: 'Focus' }, { id: 'shortBreak', label: 'Short Break' }, { id: 'longBreak', label: 'Long Break' }].map(m => (
+                    <button key={m.id} onClick={() => resetPomodoro(m.id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${pomodoroMode === m.id ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{m.label}</button>
+                  ))}
+                </div>
+                <div className="text-8xl font-bold text-gray-800 mb-8 font-mono">{formatTime(pomodoroTime)}</div>
+                <div className="flex justify-center gap-4">
+                  {!pomodoroRunning ? (
+                    <button onClick={startPomodoro} className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-transform shadow-lg">Start</button>
+                  ) : (
+                    <button onClick={pausePomodoro} className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-transform shadow-lg">Pause</button>
+                  )}
+                  <button onClick={() => resetPomodoro(pomodoroMode)} className="px-8 py-3 bg-gray-200 text-gray-700 rounded-2xl font-bold text-lg hover:bg-gray-300 transition-colors">Reset</button>
+                </div>
+                <div className="mt-8 flex justify-center gap-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className={`w-4 h-4 rounded-full ${i < (pomodoroSessions % 4) ? 'bg-red-500' : 'bg-gray-200'}`} />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500 mt-2">{pomodoroSessions} sessions completed today</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-sm border p-6">
+                <h3 className="font-semibold text-gray-700 mb-2">How the Pomodoro Technique works</h3>
+                <p className="text-sm text-gray-500">Focus for 25 minutes → 5 min break. After 4 sessions, take a 15 min break. This helps you stay sharp and avoid burnout. 🍅</p>
+              </div>
+            </div>
+          )}
+
+          {/* ===== DEBT PAYOFF CALCULATOR ===== */}
+          {toolsSubTab === 'debtCalc' && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">💳 Debt Payoff Calculator</h2>
+                <div className="flex gap-3 mb-6">
+                  <button onClick={() => setDebtCalcMethod('snowball')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'snowball' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}>❄️ Snowball (Smallest First)</button>
+                  <button onClick={() => setDebtCalcMethod('avalanche')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'avalanche' ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-gray-100 text-gray-600'}`}>🏔️ Avalanche (Highest Rate First)</button>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-4 mb-4">
+                  <p className="text-sm text-gray-600">
+                    {debtCalcMethod === 'snowball' 
+                      ? '❄️ Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!'
+                      : '🏔️ Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'
+                    }
+                  </p>
+                </div>
+                {debts.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-400">No debts added yet. Add debts in the Bills section and they'll appear here!</p>
+                    <button onClick={() => setActiveView('varied')} className="mt-4 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl text-sm font-medium">Go to Bills</button>
+                  </div>
+                )}
+                {sortedDebts.length > 0 && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="bg-red-50 rounded-xl p-3 text-center">
+                        <div className="text-2xl font-bold text-red-600">${totalDebt.toLocaleString()}</div>
+                        <div className="text-xs text-red-500">Total Debt</div>
+                      </div>
+                      <div className="bg-blue-50 rounded-xl p-3 text-center">
+                        <div className="text-2xl font-bold text-blue-600">{sortedDebts.length}</div>
+                        <div className="text-xs text-blue-500">Debts</div>
+                      </div>
+                      <div className="bg-green-50 rounded-xl p-3 text-center">
+                        <div className="text-2xl font-bold text-green-600">${totalMinPayments.toLocaleString()}</div>
+                        <div className="text-xs text-green-500">Min Payments/mo</div>
+                      </div>
+                    </div>
+                    <h3 className="font-semibold text-gray-700">Pay-off Order ({debtCalcMethod === 'snowball' ? 'Smallest → Largest' : 'Highest Rate → Lowest'})</h3>
+                    {sortedDebts.map((debt, i) => (
+                      <div key={debt.id || i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">{i + 1}</div>
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-800">{debt.name}</div>
+                          <div className="text-xs text-gray-500">{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-bold text-gray-800">${parseFloat(debt.balance || 0).toLocaleString()}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ===== COMPOUND INTEREST CALCULATOR ===== */}
+          {toolsSubTab === 'compound' && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">📈 Compound Interest Calculator</h2>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 block">Starting Amount ($)</label>
+                    <input type="text" value={compoundCalc.principal} onChange={(e) => setCompoundCalc(prev => ({ ...prev, principal: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="10,000" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-teal-500" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 block">Monthly Contribution ($)</label>
+                    <input type="text" value={compoundCalc.monthlyAdd} onChange={(e) => setCompoundCalc(prev => ({ ...prev, monthlyAdd: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="500" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-teal-500" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 block">Annual Return (%)</label>
+                    <input type="text" value={compoundCalc.rate} onChange={(e) => setCompoundCalc(prev => ({ ...prev, rate: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="7" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-teal-500" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 block">Time Period (years)</label>
+                    <input type="text" value={compoundCalc.years} onChange={(e) => setCompoundCalc(prev => ({ ...prev, years: e.target.value.replace(/[^0-9]/g, '') }))} placeholder="10" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-teal-500" />
+                  </div>
+                </div>
+
+                {/* Results */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-4 text-white text-center">
+                    <div className="text-2xl font-bold">${compResult.finalBalance.toLocaleString()}</div>
+                    <div className="text-xs text-green-100">Final Balance</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-4 text-white text-center">
+                    <div className="text-2xl font-bold">${compResult.totalContributed.toLocaleString()}</div>
+                    <div className="text-xs text-blue-100">You Contributed</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-4 text-white text-center">
+                    <div className="text-2xl font-bold">${compResult.totalInterest.toLocaleString()}</div>
+                    <div className="text-xs text-purple-100">Interest Earned</div>
+                  </div>
+                </div>
+
+                {/* Growth Chart */}
+                {compResult.yearData.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-3">Growth Over Time</h3>
+                    <div className="flex items-end gap-1 h-40 bg-gray-50 rounded-xl p-3">
+                      {compResult.yearData.map((d, i) => {
+                        const maxVal = compResult.yearData[compResult.yearData.length - 1].balance || 1;
+                        const height = (d.balance / maxVal) * 100;
+                        return (
+                          <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group relative">
+                            <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
+                              Year {d.year}: ${d.balance.toLocaleString()}
+                            </div>
+                            <div className="w-full bg-gradient-to-t from-teal-500 to-cyan-400 rounded-t transition-all duration-300" style={{ height: `${Math.max(height, 2)}%` }} />
+                            {(i === 0 || i === compResult.yearData.length - 1 || (i + 1) % 5 === 0) && (
+                              <span className="text-[9px] text-gray-400 mt-1">{d.year}y</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-4 bg-amber-50 rounded-xl p-4 border border-amber-200">
+                  <p className="text-sm text-amber-800 font-medium">🦘 Muzz's Note: This calculator is for education only — not financial advice. Past returns don't guarantee future results. But compound interest is powerful, mate!</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
