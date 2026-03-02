@@ -13259,8 +13259,104 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 // ============================================
 // APP WRAPPER WITH AUTH
 // ============================================
+
+// New Password Form (shown when user clicks reset link from email)
+function NewPasswordForm() {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (newPassword.length < 6) { setError('Password must be at least 6 characters'); return; }
+    if (newPassword !== confirmPassword) { setError('Passwords do not match'); return; }
+    setError('');
+    setLoading(true);
+    try {
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get('access_token');
+      const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ password: newPassword })
+      });
+      if (r.ok) {
+        setSuccess(true);
+        setTimeout(() => {
+          window.location.hash = '';
+          window.location.reload();
+        }, 2000);
+      } else {
+        const data = await r.json();
+        setError(data.error_description || data.msg || 'Failed to update password');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-start justify-center p-4 pt-12 md:pt-4 md:items-center">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-6 md:mb-8">
+          <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-4xl md:text-5xl mx-auto mb-3 md:mb-4">🦘</div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 md:mb-2">Muzz</h1>
+          <p className="text-white/80 text-sm md:text-base">Set your new password</p>
+        </div>
+        <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">New Password 🔐</h2>
+          {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">{error}</div>}
+          {success ? (
+            <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl text-sm text-center">Password updated! Redirecting to login...</div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input type={showPassword ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm new password" className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors" />
+                </div>
+              </div>
+              <button type="submit" disabled={loading} className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50">
+                {loading ? 'Updating...' : 'Set New Password'}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AppContent() {
   const { user, loading } = useAuth();
+
+  // Check if this is a password reset callback
+  const hash = window.location.hash;
+  const isPasswordReset = hash.includes('type=recovery') && hash.includes('access_token=');
+
+  if (isPasswordReset) {
+    return <NewPasswordForm />;
+  }
 
   if (loading) {
     return (
