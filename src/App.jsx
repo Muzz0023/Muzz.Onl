@@ -4,7 +4,7 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 // ============================================
 // REVENUECAT CONFIGURATION
 // ============================================
-const REVENUECAT_API_KEY = 'test_EwvtoVDqbkRhxhStkGWYGQHdeHZ';
+const REVENUECAT_API_KEY = 'appl_QEohIcdAgxVGnNuXLmxwhyLClVD';
 const ELITE_ENTITLEMENT_ID = 'Muzz.onl Pro';
 const MONTHLY_PRODUCT_ID = 'muzz_elite_monthly';
 
@@ -18,15 +18,26 @@ const RevenueCat = {
     if (typeof window === 'undefined' || !window.Capacitor?.isNativePlatform()) return;
     
     try {
-      // Dynamic import that Vite won't analyze
-      const moduleName = '@revenuecat/purchases-capacitor';
-      const module = await import(/* @vite-ignore */ moduleName);
-      this.Purchases = module.Purchases;
+      const rc = await import(/* @vite-ignore */ '@revenuecat/purchases-capacitor');
+      this.Purchases = rc.Purchases;
       await this.Purchases.configure({ apiKey: REVENUECAT_API_KEY });
       this.initialized = true;
       console.log('RevenueCat initialized');
     } catch (err) {
-      console.log('RevenueCat not available:', err);
+      console.log('RevenueCat init error:', err);
+      // Fallback: try Capacitor plugin bridge directly
+      try {
+        if (window.Capacitor?.Plugins?.PurchasesPlugin) {
+          this.Purchases = window.Capacitor.Plugins.PurchasesPlugin;
+        } else {
+          this.Purchases = window.Capacitor.registerPlugin('PurchasesPlugin');
+        }
+        await this.Purchases.configure({ apiKey: REVENUECAT_API_KEY });
+        this.initialized = true;
+        console.log('RevenueCat initialized via plugin bridge');
+      } catch (err2) {
+        console.log('RevenueCat fallback also failed:', err2);
+      }
     }
   },
   
@@ -47,15 +58,22 @@ const RevenueCat = {
       return { success: false };
     }
     try {
-      const { customerInfo } = await this.Purchases.purchaseProduct({ productIdentifier: MONTHLY_PRODUCT_ID });
+      // Get the StoreKit product directly
+      const { products } = await this.Purchases.getProducts({ productIdentifiers: [MONTHLY_PRODUCT_ID] });
+      if (!products || products.length === 0) {
+        alert('Product not found. Please try again later.');
+        return { success: false };
+      }
+      const product = products[0];
+      const { customerInfo } = await this.Purchases.purchaseStoreProduct({ product });
       const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
       return { success: isElite, customerInfo };
     } catch (err) {
-      if (err.code === '1' || err.userCancelled) {
+      if (err.code === '1' || err.userCancelled || err.code === 'PURCHASE_CANCELLED') {
         return { success: false, cancelled: true };
       }
       console.log('Purchase error:', err);
-      alert('Purchase failed. Please try again.');
+      alert('Purchase failed: ' + (err.message || err));
       return { success: false, error: err };
     }
   },
