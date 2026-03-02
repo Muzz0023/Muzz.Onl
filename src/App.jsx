@@ -2602,7 +2602,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              🍅 Pomodoro
+              Pomodoro
             </button>
           </div>
 
