@@ -674,7 +674,7 @@ const supabase = {
     const r = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
       method: 'POST',
       headers: this.headers(false),
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, redirectTo: 'https://muzz.onl' })
     });
     return r.ok;
   },
