@@ -2908,6 +2908,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
         </div>
+      </div>
+    );
+  }
+
   if (activeView === 'diet') {
     const today = new Date().toISOString().split('T')[0];
 
@@ -4598,6 +4602,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
         </div>
+      </div>
+    );
+  }
+
   const customCat = customCategories.find(c => c.id === activeView);
   if (customCat) {
     const catIndex = customCategories.findIndex(c => c.id === activeView);
@@ -8132,6 +8140,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
         </div>
+      </div>
+    );
+  }
+
   if (activeView === 'feedback') {
 
     const handleSendFeedback = () => {
@@ -13082,6 +13094,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
         </div>
+      </div>
+    );
+  }
+
   // ============================================
   if (activeView === 'habits') {
     const today = new Date().toISOString().split('T')[0];
