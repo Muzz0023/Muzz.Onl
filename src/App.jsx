@@ -13120,15 +13120,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       }
       return streak;
     };
-    const getLast30Days = () => {
+    const getLast31Days = () => {
       const days = [];
-      for (let i = 29; i >= 0; i--) {
+      for (let i = 30; i >= 0; i--) {
         const d = new Date(); d.setDate(d.getDate() - i);
         days.push(d.toISOString().split('T')[0]);
       }
       return days;
     };
-    const last30 = getLast30Days();
+    const last31 = getLast31Days();
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
@@ -13196,9 +13196,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </button>
                     </div>
                   </div>
-                  {/* Heatmap - Last 30 Days */}
-                  <div className="flex gap-1 flex-wrap">
-                    {last30.map(date => {
+                  {/* Heatmap - Last 31 Days */}
+                  <div className="grid grid-cols-31 gap-1" style={{ gridTemplateColumns: 'repeat(31, 1fr)' }}>
+                    {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
                       return (
@@ -13206,12 +13206,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
                           title={`${new Date(date).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}${done ? ' ✓' : ''}`}
-                          className={`w-7 h-7 rounded cursor-pointer transition-all ${done ? 'bg-green-500' : 'bg-gray-100 hover:bg-gray-200'} ${isToday ? 'ring-2 ring-orange-400' : ''}`}
+                          className={`aspect-square rounded cursor-pointer transition-all ${done ? 'bg-green-500' : 'bg-gray-100 hover:bg-gray-200'} ${isToday ? 'ring-2 ring-orange-400' : ''}`}
                         />
                       );
                     })}
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">Last 30 days — click to toggle</p>
+                  <p className="text-xs text-gray-400 mt-2">Last 31 days — click to toggle</p>
                 </div>
               </div>
             );
