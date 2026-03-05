@@ -9728,6 +9728,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </button>
                   </div>
                 </div>
+                </div>
                 <div className="p-6">
                   {trackedStocks.length === 0 ? (
                     <div className="text-center py-8 text-gray-400">
