@@ -1526,6 +1526,12 @@ function MuzzApp() {
   const [compoundCalc, setCompoundCalc] = useState({ principal: '', monthlyAdd: '', rate: '7', years: '10' });
   const [journalDate, setJournalDate] = useState(() => new Date().toISOString().split('T')[0]);
 
+  // Travel Countdown
+  const [countdowns, setCountdowns] = useState([]);
+
+  // Bucket List
+  const [bucketList, setBucketList] = useState([]);
+
   // Check Stripe subscription on load
   useEffect(() => {
     if (!userEmail || isVIP) return;
@@ -1742,6 +1748,8 @@ function MuzzApp() {
           if (d.habits) setHabits(d.habits);
           if (d.habitLog) setHabitLog(d.habitLog);
           if (d.journalEntries) setJournalEntries(d.journalEntries);
+          if (d.countdowns) setCountdowns(d.countdowns);
+          if (d.bucketList) setBucketList(d.bucketList);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -1814,7 +1822,9 @@ function MuzzApp() {
           stripeElite,
           habits,
           habitLog,
-          journalEntries
+          journalEntries,
+          countdowns,
+          bucketList
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -1828,7 +1838,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -2011,6 +2021,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const navItems = [
     { id: "home", label: "Dashboard", icon: Home },
     { id: "habits", label: "Habits", icon: Flame },
+    { id: "countdowns", label: "Countdowns", icon: Calendar },
+    { id: "bucketlist", label: "Bucket List", icon: Trophy },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
@@ -3068,128 +3080,163 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Groceries Tab */}
           {dietSubTab === 'groceries' && (
-            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-              <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">🛒 Groceries</h2>
-                <p className="text-sm text-gray-500">Track your groceries and nutrition info</p>
+            <div className="space-y-4">
+              {/* Shopping List Header */}
+              <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                <h2 className="text-2xl font-bold mb-1">🛒 Shopping List</h2>
+                <p className="text-purple-200 text-sm">
+                  {groceries.filter(g => !g.checked).length} items to buy • {groceries.filter(g => g.checked).length} in bag
+                </p>
               </div>
-              <div className="p-4 space-y-3">
-                {groceries.length === 0 ? (
-                  <div className="p-8 text-center text-gray-500">
-                    No grocery items. Add one below!
+
+              {/* Quick Add */}
+              <div className="bg-white rounded-2xl shadow-sm border p-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    id="quickAddGrocery"
+                    placeholder="Add item..."
+                    onFocus={scrollInputIntoView}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        setGroceries(prev => [...prev, { id: Date.now(), item: e.target.value.trim(), quantity: '1', category: 'general', location: '', expiryDate: '', checked: false, serves: '', proteinPerServe: '', carbsPerServe: '', fatPerServe: '', caloriesPerServe: '' }]);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="flex-1 px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-purple-500"
+                  />
+                  <button
+                    onClick={() => {
+                      const input = document.getElementById('quickAddGrocery');
+                      if (input?.value.trim()) {
+                        setGroceries(prev => [...prev, { id: Date.now(), item: input.value.trim(), quantity: '1', category: 'general', location: '', expiryDate: '', checked: false, serves: '', proteinPerServe: '', carbsPerServe: '', fatPerServe: '', caloriesPerServe: '' }]);
+                        input.value = '';
+                      }
+                    }}
+                    className="px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium"
+                  >+</button>
+                </div>
+              </div>
+
+              {/* Need to Buy */}
+              {groceries.filter(g => !g.checked).length > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                  <div className="px-4 py-3 bg-purple-50 border-b">
+                    <h3 className="font-semibold text-purple-700 flex items-center gap-2">🛍️ Need to Buy <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{groceries.filter(g => !g.checked).length}</span></h3>
                   </div>
-                ) : (
-                  groceries.map(item => (
-                    <div key={item.id} className={`border-2 rounded-2xl p-4 ${item.checked ? 'opacity-60 bg-gray-50' : 'bg-white'}`}>
-                      {/* Row 1: Checkbox + Name + Delete */}
-                      <div className="flex items-start gap-3 mb-3">
+                  <div className="divide-y">
+                    {groceries.filter(g => !g.checked).map(item => (
+                      <div key={item.id} className="px-4 py-3 flex items-center gap-3">
                         <button
-                          onClick={() => updateGrocery(item.id, 'checked', !item.checked)}
-                          className={`w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center mt-1 ${
-                            item.checked 
-                              ? 'bg-green-500' 
-                              : 'border-2 border-gray-300 hover:border-green-500'
-                          }`}
-                        >
-                          {item.checked && <span className="text-white text-sm">✓</span>}
-                        </button>
-                        <input
-                          type="text"
-                          value={item.item}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
-                          placeholder="Item name"
-                          className={`flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-green-500 ${item.checked ? 'line-through text-gray-400' : ''}`}
+                          onClick={() => updateGrocery(item.id, 'checked', true)}
+                          className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
                         />
-                        <button
-                          onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))}
-                          className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                        <div className="flex-1 min-w-0">
+                          <input
+                            type="text"
+                            value={item.item}
+                            onFocus={scrollInputIntoView}
+                            onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
+                            placeholder="Item name"
+                            className="w-full text-sm font-medium bg-transparent focus:outline-none"
+                          />
+                          <div className="flex gap-2 mt-1">
+                            <input
+                              type="text"
+                              value={item.quantity || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
+                              placeholder="Qty"
+                              className="w-12 text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 focus:outline-none focus:bg-purple-50"
+                            />
+                            <select
+                              value={item.location || ''}
+                              onChange={(e) => updateGrocery(item.id, 'location', e.target.value)}
+                              className="text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 focus:outline-none"
+                            >
+                              <option value="">Location</option>
+                              <option value="fridge">🧊 Fridge</option>
+                              <option value="freezer">🧊 Freezer</option>
+                              <option value="pantry">📦 Pantry</option>
+                              <option value="bathroom">🛁 Bathroom</option>
+                              <option value="other">📍 Other</option>
+                            </select>
+                            <input
+                              type="date"
+                              value={item.expiryDate || ''}
+                              onChange={(e) => updateGrocery(item.id, 'expiryDate', e.target.value)}
+                              className="text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                      
-                      {/* Row 2: Quantity + Serves */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Quantity</label>
-                          <input
-                            type="text"
-                            value={item.quantity}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
-                            placeholder="0"
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Serves</label>
-                          <input
-                            type="text"
-                            value={item.serves}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateGrocery(item.id, 'serves', e.target.value)}
-                            placeholder="0"
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
-                          />
-                        </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Shopping Bag (checked items) */}
+              {groceries.filter(g => g.checked).length > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                  <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
+                    <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ Shopping Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{groceries.filter(g => g.checked).length}</span></h3>
+                    <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear All</button>
+                  </div>
+                  <div className="divide-y">
+                    {groceries.filter(g => g.checked).map(item => (
+                      <div key={item.id} className="px-4 py-3 flex items-center gap-3 opacity-60">
+                        <button
+                          onClick={() => updateGrocery(item.id, 'checked', false)}
+                          className="w-6 h-6 rounded-lg bg-green-500 flex-shrink-0 flex items-center justify-center"
+                        >
+                          <span className="text-white text-xs">✓</span>
+                        </button>
+                        <span className="flex-1 text-sm line-through text-gray-500">{item.item || 'Unnamed item'}</span>
+                        <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
-                      
-                      {/* Row 3: Nutrition - 4 columns */}
-                      <div className="grid grid-cols-4 gap-2">
-                        <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Protein</label>
-                          <input
-                            type="text"
-                            value={item.proteinPerServe}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateGrocery(item.id, 'proteinPerServe', e.target.value)}
-                            placeholder="0g"
-                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Carbs</label>
-                          <input
-                            type="text"
-                            value={item.carbsPerServe}
-                            onChange={(e) => updateGrocery(item.id, 'carbsPerServe', e.target.value)}
-                            placeholder="0g"
-                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Fat</label>
-                          <input
-                            type="text"
-                            value={item.fatPerServe}
-                            onChange={(e) => updateGrocery(item.id, 'fatPerServe', e.target.value)}
-                            placeholder="0g"
-                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Cals</label>
-                          <input
-                            type="text"
-                            value={item.caloriesPerServe}
-                            onChange={(e) => updateGrocery(item.id, 'caloriesPerServe', e.target.value)}
-                            placeholder="0"
-                            className="w-full px-2 py-2 border-2 rounded-xl text-sm text-center focus:outline-none focus:border-green-500"
-                          />
-                        </div>
-                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {groceries.length === 0 && (
+                <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                  <div className="text-5xl mb-4">🛒</div>
+                  <p className="text-gray-500">Your shopping list is empty. Add items above!</p>
+                </div>
+              )}
+
+              {/* Expiring Soon */}
+              {(() => {
+                const expiring = groceries.filter(g => {
+                  if (!g.expiryDate) return false;
+                  const exp = new Date(g.expiryDate);
+                  const now = new Date();
+                  const diff = (exp - now) / (1000 * 60 * 60 * 24);
+                  return diff >= 0 && diff <= 7;
+                });
+                if (expiring.length === 0) return null;
+                return (
+                  <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                    <div className="px-4 py-3 bg-amber-50 border-b">
+                      <h3 className="font-semibold text-amber-700 flex items-center gap-2">⚠️ Expiring Soon</h3>
                     </div>
-                  ))
-                )}
-              </div>
-              <div className="p-4 border-t">
-                <button
-                  onClick={addGroceryItem}
-                  className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium hover:scale-[1.01] transition-transform"
-                >
-                  + Add Grocery Item
-                </button>
-              </div>
+                    <div className="divide-y">
+                      {expiring.map(item => (
+                        <div key={item.id} className="px-4 py-3 flex items-center justify-between">
+                          <span className="text-sm font-medium">{item.item}</span>
+                          <span className="text-xs text-amber-600">{new Date(item.expiryDate).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -9642,15 +9689,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Live Stock Prices */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold flex items-center gap-2">📊 Live Stock Prices</h2>
-                    <p className="text-sm text-gray-500 mt-1">Track US stocks with real-time prices & profit/loss</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {pricesLastUpdated && (
-                      <span className="text-xs text-gray-400">Updated: {pricesLastUpdated}</span>
-                    )}
+                <div className="p-4 sm:p-6 border-b">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2">📊 Live Stock Prices</h2>
+                      <p className="text-sm text-gray-500 mt-1">Track US stocks with real-time prices & profit/loss</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {pricesLastUpdated && (
+                        <span className="text-xs text-gray-400">Updated: {pricesLastUpdated}</span>
+                      )}
                     <button
                       onClick={async () => {
                         const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
@@ -9707,20 +9755,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const totalPLPct = totalInvested > 0 ? ((totalPL / totalInvested) * 100) : 0;
                         return totalInvested > 0 ? (
                           <div className={`p-4 rounded-2xl border-2 mb-4 ${totalPL >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-                            <div className="grid grid-cols-3 gap-4 text-center">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
                               <div>
                                 <div className="text-[10px] text-gray-500 uppercase font-medium">Total Cost</div>
-                                <div className="text-lg font-bold text-gray-800">${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div className="text-base sm:text-lg font-bold text-gray-800">${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                               </div>
                               <div>
                                 <div className="text-[10px] text-gray-500 uppercase font-medium">Market Value</div>
-                                <div className="text-lg font-bold text-gray-800">${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div className="text-base sm:text-lg font-bold text-gray-800">${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                               </div>
                               <div>
                                 <div className="text-[10px] text-gray-500 uppercase font-medium">Total P/L</div>
-                                <div className={`text-lg font-bold ${totalPL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                <div className={`text-base sm:text-lg font-bold ${totalPL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                   {totalPL >= 0 ? '+' : ''}${totalPL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                  <span className="text-sm ml-1">({totalPL >= 0 ? '+' : ''}{totalPLPct.toFixed(2)}%)</span>
+                                  <span className="text-xs sm:text-sm ml-1">({totalPL >= 0 ? '+' : ''}{totalPLPct.toFixed(2)}%)</span>
                                 </div>
                               </div>
                             </div>
@@ -13071,17 +13119,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <input type="text" value={compoundCalc.years} onChange={(e) => setCompoundCalc(prev => ({ ...prev, years: e.target.value.replace(/[^0-9]/g, '') }))} placeholder="10" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-green-500" />
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                     <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-4 text-white text-center">
-                      <div className="text-2xl font-bold">${compResult.finalBalance.toLocaleString()}</div>
+                      <div className="text-xl sm:text-2xl font-bold">${compResult.finalBalance.toLocaleString()}</div>
                       <div className="text-xs text-green-100">Final Balance</div>
                     </div>
                     <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-4 text-white text-center">
-                      <div className="text-2xl font-bold">${compResult.totalContributed.toLocaleString()}</div>
+                      <div className="text-xl sm:text-2xl font-bold">${compResult.totalContributed.toLocaleString()}</div>
                       <div className="text-xs text-blue-100">You Contributed</div>
                     </div>
                     <div className="bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-4 text-white text-center">
-                      <div className="text-2xl font-bold">${compResult.totalInterest.toLocaleString()}</div>
+                      <div className="text-xl sm:text-2xl font-bold">${compResult.totalInterest.toLocaleString()}</div>
                       <div className="text-xs text-purple-100">Interest Earned</div>
                     </div>
                   </div>
@@ -13215,7 +13263,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
                   {/* Heatmap - Last 31 Days */}
-                  <div className="grid grid-cols-31 gap-1" style={{ gridTemplateColumns: 'repeat(31, 1fr)' }}>
+                  <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(28px, 1fr))' }}>
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
@@ -13224,7 +13272,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
                           title={`${new Date(date).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}${done ? ' ✓' : ''}`}
-                          className={`aspect-square rounded cursor-pointer transition-all ${done ? 'bg-green-500' : 'bg-gray-100 hover:bg-gray-200'} ${isToday ? 'ring-2 ring-orange-400' : ''}`}
+                          className={`aspect-square rounded-lg cursor-pointer transition-all min-h-[28px] ${done ? 'bg-green-500' : 'bg-gray-100 hover:bg-gray-200'} ${isToday ? 'ring-2 ring-orange-400' : ''}`}
                         />
                       );
                     })}
@@ -13234,6 +13282,224 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
           })}
+        </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
+      </div>
+    );
+  }
+
+  // ============================================
+  // COUNTDOWNS VIEW
+  // ============================================
+  if (activeView === 'countdowns') {
+    const today = new Date();
+    const getCountdown = (dateStr) => {
+      const target = new Date(dateStr);
+      const diff = target - today;
+      if (diff <= 0) return { days: 0, hours: 0, mins: 0, passed: true };
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      return { days, hours, mins, passed: false };
+    };
+    const gradients = [
+      'from-blue-500 to-indigo-600', 'from-purple-500 to-pink-600', 'from-orange-500 to-red-600',
+      'from-green-500 to-teal-600', 'from-rose-500 to-pink-600', 'from-cyan-500 to-blue-600',
+      'from-amber-500 to-orange-600', 'from-violet-500 to-purple-600'
+    ];
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 pt-16 pb-6 px-6">
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <h1 className="text-3xl font-bold text-white">⏳ Countdowns</h1>
+            <p className="text-white/70 mt-1">Count down to the things that matter</p>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+          <button
+            onClick={() => setCountdowns(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '✈️', date: '', color: gradients[prev.length % gradients.length] }])}
+            className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+          >
+            + Add Countdown
+          </button>
+
+          {countdowns.length === 0 && (
+            <div className="bg-white rounded-3xl p-12 shadow-sm border text-center">
+              <div className="text-5xl mb-4">⏳</div>
+              <p className="text-gray-500">No countdowns yet. Add a trip, birthday, event — anything!</p>
+            </div>
+          )}
+
+          {countdowns.map(cd => {
+            const countdown = cd.date ? getCountdown(cd.date) : null;
+            return (
+              <div key={cd.id} className={`bg-gradient-to-r ${cd.color || 'from-blue-500 to-indigo-600'} rounded-2xl p-5 text-white shadow-lg`}>
+                <div className="flex items-start gap-3 mb-4">
+                  <input
+                    type="text"
+                    value={cd.emoji}
+                    onChange={(e) => setCountdowns(prev => prev.map(c => c.id === cd.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c))}
+                    className="w-10 h-10 text-center text-xl bg-white/20 rounded-xl focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={cd.name}
+                    onChange={(e) => setCountdowns(prev => prev.map(c => c.id === cd.id ? { ...c, name: e.target.value } : c))}
+                    placeholder="What are you counting down to?"
+                    className="flex-1 text-lg font-bold bg-transparent placeholder-white/50 focus:outline-none"
+                  />
+                  <button onClick={() => setCountdowns(prev => prev.filter(c => c.id !== cd.id))} className="text-white/50 hover:text-white">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                <input
+                  type="date"
+                  value={cd.date}
+                  onChange={(e) => setCountdowns(prev => prev.map(c => c.id === cd.id ? { ...c, date: e.target.value } : c))}
+                  className="w-full px-4 py-2 bg-white/20 rounded-xl text-white focus:outline-none mb-4 text-sm"
+                />
+                {countdown && !countdown.passed && (
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div className="bg-white/20 rounded-xl py-3">
+                      <div className="text-3xl font-bold">{countdown.days}</div>
+                      <div className="text-xs text-white/70">days</div>
+                    </div>
+                    <div className="bg-white/20 rounded-xl py-3">
+                      <div className="text-3xl font-bold">{countdown.hours}</div>
+                      <div className="text-xs text-white/70">hours</div>
+                    </div>
+                    <div className="bg-white/20 rounded-xl py-3">
+                      <div className="text-3xl font-bold">{countdown.mins}</div>
+                      <div className="text-xs text-white/70">minutes</div>
+                    </div>
+                  </div>
+                )}
+                {countdown && countdown.passed && (
+                  <div className="bg-white/20 rounded-xl py-3 text-center">
+                    <div className="text-xl font-bold">🎉 It's here!</div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
+      </div>
+    );
+  }
+
+  // ============================================
+  // BUCKET LIST VIEW
+  // ============================================
+  if (activeView === 'bucketlist') {
+    const completedCount = bucketList.filter(b => b.completed).length;
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-gradient-to-r from-amber-500 to-orange-600 pt-16 pb-6 px-6">
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <h1 className="text-3xl font-bold text-white">🏆 Bucket List</h1>
+            <p className="text-white/70 mt-1">{completedCount}/{bucketList.length} completed</p>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+          <button
+            onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])}
+            className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+          >
+            + Add to Bucket List
+          </button>
+
+          {bucketList.length === 0 && (
+            <div className="bg-white rounded-3xl p-12 shadow-sm border text-center">
+              <div className="text-5xl mb-4">🏆</div>
+              <p className="text-gray-500">Your bucket list is empty. Dream big and add your goals!</p>
+            </div>
+          )}
+
+          {/* Progress */}
+          {bucketList.length > 0 && (
+            <div className="bg-white rounded-2xl p-4 shadow-sm border">
+              <div className="flex justify-between mb-2">
+                <span className="text-sm font-medium text-gray-600">Progress</span>
+                <span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span>
+              </div>
+              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} />
+              </div>
+            </div>
+          )}
+
+          {/* Incomplete */}
+          {bucketList.filter(b => !b.completed).map(item => (
+            <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-start gap-3">
+              <button
+                onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))}
+                className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors"
+              />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <input
+                    type="text"
+                    value={item.emoji}
+                    onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))}
+                    className="w-8 text-center text-lg bg-transparent focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={item.text}
+                    onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))}
+                    placeholder="What do you want to do?"
+                    className="flex-1 font-medium bg-transparent focus:outline-none"
+                  />
+                </div>
+                <select
+                  value={item.category || 'experience'}
+                  onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))}
+                  className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"
+                >
+                  <option value="travel">✈️ Travel</option>
+                  <option value="experience">🎯 Experience</option>
+                  <option value="fitness">💪 Fitness</option>
+                  <option value="career">💼 Career</option>
+                  <option value="financial">💰 Financial</option>
+                  <option value="personal">🌟 Personal</option>
+                  <option value="creative">🎨 Creative</option>
+                </select>
+              </div>
+              <button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+
+          {/* Completed */}
+          {bucketList.filter(b => b.completed).length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>
+              {bucketList.filter(b => b.completed).map(item => (
+                <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-center gap-3 opacity-60 mb-2">
+                  <button
+                    onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))}
+                    className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"
+                  >
+                    <span className="text-white text-sm">✓</span>
+                  </button>
+                  <span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span>
+                  <button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
