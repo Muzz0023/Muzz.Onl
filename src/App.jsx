@@ -1451,6 +1451,8 @@ function MuzzApp() {
   const [birthdays, setBirthdays] = useState([]);
   const [reminders, setReminders] = useState([]);
   const [groceries, setGroceries] = useState([]);
+  const [shoppingLists, setShoppingLists] = useState([{ id: 'default', name: 'Groceries', emoji: '🛒' }]);
+  const [activeShoppingList, setActiveShoppingList] = useState(null);
   const [dailyMeals, setDailyMeals] = useState({});
   const [dailySteps, setDailySteps] = useState({});
   const [workoutPlan, setWorkoutPlan] = useState({
@@ -1735,6 +1737,7 @@ function MuzzApp() {
           if (d.birthdays) setBirthdays(d.birthdays);
           if (d.reminders) setReminders(d.reminders);
           if (d.groceries) setGroceries(d.groceries);
+          if (d.shoppingLists) setShoppingLists(d.shoppingLists);
           if (d.dailyMeals) setDailyMeals(d.dailyMeals);
           if (d.waterIntake) setWaterIntake(d.waterIntake);
           if (d.dailySteps) setDailySteps(d.dailySteps);
@@ -1810,6 +1813,7 @@ function MuzzApp() {
           birthdays,
           reminders,
           groceries,
+          shoppingLists,
           dailyMeals,
           waterIntake,
           dailySteps,
@@ -1838,7 +1842,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -3081,159 +3085,202 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Groceries Tab */}
           {dietSubTab === 'groceries' && (
             <div className="space-y-4">
-              {/* Shopping List Header */}
-              <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
-                <h2 className="text-2xl font-bold mb-1">🛒 Shopping List</h2>
-                <p className="text-purple-200 text-sm">
-                  {groceries.filter(g => !g.checked).length} items to buy • {groceries.filter(g => g.checked).length} in bag
-                </p>
-              </div>
+              {/* Shopping Lists - Overview or Detail */}
+              {!activeShoppingList ? (
+                <>
+                  {/* Header */}
+                  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                    <h2 className="text-2xl font-bold mb-1">🛒 Shopping Lists</h2>
+                    <p className="text-purple-200 text-sm">{shoppingLists.length} {shoppingLists.length === 1 ? 'list' : 'lists'} • {groceries.filter(g => !g.checked).length} items to buy</p>
+                  </div>
 
-              {/* Quick Add */}
-              <div className="bg-white rounded-2xl shadow-sm border p-4">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    id="quickAddGrocery"
-                    placeholder="Add item..."
-                    onFocus={scrollInputIntoView}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.target.value.trim()) {
-                        setGroceries(prev => [...prev, { id: Date.now(), item: e.target.value.trim(), quantity: '1', category: 'general', location: '', expiryDate: '', checked: false, serves: '', proteinPerServe: '', carbsPerServe: '', fatPerServe: '', caloriesPerServe: '' }]);
-                        e.target.value = '';
-                      }
-                    }}
-                    className="flex-1 px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-purple-500"
-                  />
+                  {/* Create New List */}
                   <button
                     onClick={() => {
-                      const input = document.getElementById('quickAddGrocery');
-                      if (input?.value.trim()) {
-                        setGroceries(prev => [...prev, { id: Date.now(), item: input.value.trim(), quantity: '1', category: 'general', location: '', expiryDate: '', checked: false, serves: '', proteinPerServe: '', carbsPerServe: '', fatPerServe: '', caloriesPerServe: '' }]);
-                        input.value = '';
+                      const name = prompt('List name (e.g. Groceries, Kmart, Bunnings)');
+                      if (name?.trim()) {
+                        setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: name.trim(), emoji: '🛍️' }]);
                       }
                     }}
-                    className="px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium"
-                  >+</button>
-                </div>
-              </div>
+                    className="w-full py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+                  >
+                    + Create New List
+                  </button>
 
-              {/* Need to Buy */}
-              {groceries.filter(g => !g.checked).length > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                  <div className="px-4 py-3 bg-purple-50 border-b">
-                    <h3 className="font-semibold text-purple-700 flex items-center gap-2">🛍️ Need to Buy <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{groceries.filter(g => !g.checked).length}</span></h3>
-                  </div>
-                  <div className="divide-y">
-                    {groceries.filter(g => !g.checked).map(item => (
-                      <div key={item.id} className="px-4 py-3 flex items-center gap-3">
-                        <button
-                          onClick={() => updateGrocery(item.id, 'checked', true)}
-                          className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
+                  {/* List Cards */}
+                  {shoppingLists.map(list => {
+                    const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
+                    const toBuy = listItems.filter(g => !g.checked).length;
+                    const inBag = listItems.filter(g => g.checked).length;
+                    return (
+                      <div
+                        key={list.id}
+                        onClick={() => setActiveShoppingList(list.id)}
+                        className="bg-white rounded-2xl shadow-sm border p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+                      >
+                        <input
+                          type="text"
+                          value={list.emoji}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, emoji: e.target.value.slice(0, 2) } : l))}
+                          className="w-12 h-12 text-center text-2xl bg-purple-50 rounded-xl focus:outline-none"
                         />
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1">
                           <input
                             type="text"
-                            value={item.item}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
-                            placeholder="Item name"
-                            className="w-full text-sm font-medium bg-transparent focus:outline-none"
+                            value={list.name}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
+                            className="font-semibold text-gray-800 bg-transparent focus:outline-none w-full"
                           />
-                          <div className="flex gap-2 mt-1">
-                            <input
-                              type="text"
-                              value={item.quantity || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
-                              placeholder="Qty"
-                              className="w-12 text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 focus:outline-none focus:bg-purple-50"
-                            />
-                            <select
-                              value={item.location || ''}
-                              onChange={(e) => updateGrocery(item.id, 'location', e.target.value)}
-                              className="text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 focus:outline-none"
+                          <p className="text-xs text-gray-500">{toBuy} to buy • {inBag} in bag</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {list.id !== 'default' && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm('Delete this list and all its items?')) {
+                                  setShoppingLists(prev => prev.filter(l => l.id !== list.id));
+                                  setGroceries(prev => prev.filter(g => (g.listId || 'default') !== list.id));
+                                }
+                              }}
+                              className="text-gray-300 hover:text-red-500"
                             >
-                              <option value="">Location</option>
-                              <option value="fridge">🧊 Fridge</option>
-                              <option value="freezer">🧊 Freezer</option>
-                              <option value="pantry">📦 Pantry</option>
-                              <option value="bathroom">🛁 Bathroom</option>
-                              <option value="other">📍 Other</option>
-                            </select>
-                            <input
-                              type="date"
-                              value={item.expiryDate || ''}
-                              onChange={(e) => updateGrocery(item.id, 'expiryDate', e.target.value)}
-                              className="text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 focus:outline-none"
-                            />
-                          </div>
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                          <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90" />
                         </div>
-                        <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    );
+                  })}
 
-              {/* Shopping Bag (checked items) */}
-              {groceries.filter(g => g.checked).length > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                  <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
-                    <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ Shopping Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{groceries.filter(g => g.checked).length}</span></h3>
-                    <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear All</button>
-                  </div>
-                  <div className="divide-y">
-                    {groceries.filter(g => g.checked).map(item => (
-                      <div key={item.id} className="px-4 py-3 flex items-center gap-3 opacity-60">
-                        <button
-                          onClick={() => updateGrocery(item.id, 'checked', false)}
-                          className="w-6 h-6 rounded-lg bg-green-500 flex-shrink-0 flex items-center justify-center"
-                        >
-                          <span className="text-white text-xs">✓</span>
-                        </button>
-                        <span className="flex-1 text-sm line-through text-gray-500">{item.item || 'Unnamed item'}</span>
-                        <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  {shoppingLists.length === 0 && (
+                    <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                      <div className="text-5xl mb-4">🛒</div>
+                      <p className="text-gray-500">No shopping lists yet. Create one above!</p>
+                    </div>
+                  )}
+                </>
+              ) : (() => {
+                /* Detail view for a single list */
+                const list = shoppingLists.find(l => l.id === activeShoppingList);
+                if (!list) { setActiveShoppingList(null); return null; }
+                const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
+                const toBuyItems = listItems.filter(g => !g.checked);
+                const bagItems = listItems.filter(g => g.checked);
 
-              {groceries.length === 0 && (
-                <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
-                  <div className="text-5xl mb-4">🛒</div>
-                  <p className="text-gray-500">Your shopping list is empty. Add items above!</p>
-                </div>
-              )}
-
-              {/* Expiring Soon */}
-              {(() => {
-                const expiring = groceries.filter(g => {
-                  if (!g.expiryDate) return false;
-                  const exp = new Date(g.expiryDate);
-                  const now = new Date();
-                  const diff = (exp - now) / (1000 * 60 * 60 * 24);
-                  return diff >= 0 && diff <= 7;
-                });
-                if (expiring.length === 0) return null;
                 return (
-                  <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                    <div className="px-4 py-3 bg-amber-50 border-b">
-                      <h3 className="font-semibold text-amber-700 flex items-center gap-2">⚠️ Expiring Soon</h3>
+                  <div className="space-y-4">
+                    {/* Back + Header */}
+                    <button onClick={() => setActiveShoppingList(null)} className="text-purple-600 font-medium text-sm">← All Lists</button>
+                    <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                      <h2 className="text-2xl font-bold mb-1">{list.emoji} {list.name}</h2>
+                      <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
                     </div>
-                    <div className="divide-y">
-                      {expiring.map(item => (
-                        <div key={item.id} className="px-4 py-3 flex items-center justify-between">
-                          <span className="text-sm font-medium">{item.item}</span>
-                          <span className="text-xs text-amber-600">{new Date(item.expiryDate).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</span>
+
+                    {/* Quick Add */}
+                    <div className="bg-white rounded-2xl shadow-sm border p-4">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          id={`quickAdd-${list.id}`}
+                          placeholder="Add item..."
+                          onFocus={scrollInputIntoView}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && e.target.value.trim()) {
+                              setGroceries(prev => [...prev, { id: Date.now(), item: e.target.value.trim(), quantity: '1', listId: list.id, checked: false }]);
+                              e.target.value = '';
+                            }
+                          }}
+                          className="flex-1 px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-purple-500"
+                        />
+                        <button
+                          onClick={() => {
+                            const input = document.getElementById(`quickAdd-${list.id}`);
+                            if (input?.value.trim()) {
+                              setGroceries(prev => [...prev, { id: Date.now(), item: input.value.trim(), quantity: '1', listId: list.id, checked: false }]);
+                              input.value = '';
+                            }
+                          }}
+                          className="px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium"
+                        >+</button>
+                      </div>
+                    </div>
+
+                    {/* Need to Buy */}
+                    {toBuyItems.length > 0 && (
+                      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                        <div className="px-4 py-3 bg-purple-50 border-b">
+                          <h3 className="font-semibold text-purple-700 flex items-center gap-2">🛍️ Need to Buy <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{toBuyItems.length}</span></h3>
                         </div>
-                      ))}
-                    </div>
+                        <div className="divide-y">
+                          {toBuyItems.map(item => (
+                            <div key={item.id} className="px-4 py-3 flex items-center gap-3">
+                              <button
+                                onClick={() => updateGrocery(item.id, 'checked', true)}
+                                className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <input
+                                  type="text"
+                                  value={item.item}
+                                  onFocus={scrollInputIntoView}
+                                  onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
+                                  placeholder="Item name"
+                                  className="w-full text-sm font-medium bg-transparent focus:outline-none"
+                                />
+                                <input
+                                  type="text"
+                                  value={item.quantity || ''}
+                                  onFocus={scrollInputIntoView}
+                                  onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
+                                  placeholder="Qty"
+                                  className="w-16 text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 mt-1 focus:outline-none focus:bg-purple-50"
+                                />
+                              </div>
+                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Shopping Bag */}
+                    {bagItems.length > 0 && (
+                      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                        <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
+                          <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ In Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{bagItems.length}</span></h3>
+                          <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked || (g.listId || 'default') !== list.id))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear</button>
+                        </div>
+                        <div className="divide-y">
+                          {bagItems.map(item => (
+                            <div key={item.id} className="px-4 py-3 flex items-center gap-3 opacity-60">
+                              <button
+                                onClick={() => updateGrocery(item.id, 'checked', false)}
+                                className="w-6 h-6 rounded-lg bg-green-500 flex-shrink-0 flex items-center justify-center"
+                              >
+                                <span className="text-white text-xs">✓</span>
+                              </button>
+                              <span className="flex-1 text-sm line-through text-gray-500">{item.item || 'Unnamed'}</span>
+                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {listItems.length === 0 && (
+                      <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                        <div className="text-5xl mb-4">{list.emoji}</div>
+                        <p className="text-gray-500">This list is empty. Add items above!</p>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
