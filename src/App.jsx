@@ -3180,45 +3180,88 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
                     </div>
 
-                    {/* Need to Buy */}
-                      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                        <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
-                          <h3 className="font-semibold text-purple-700 flex items-center gap-2">🛍️ Need to Buy {toBuyItems.length > 0 && <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{toBuyItems.length}</span>}</h3>
-                          <button
-                            onClick={() => setGroceries(prev => [...prev, { id: Date.now(), item: '', quantity: '1', listId: list.id, checked: false }])}
-                            className="w-8 h-8 bg-purple-500 text-white rounded-lg flex items-center justify-center text-lg hover:bg-purple-600 transition-colors"
-                          >+</button>
-                        </div>
-                        <div className="divide-y">
-                          {toBuyItems.map(item => (
-                            <div key={item.id} className="px-4 py-3 flex items-center gap-3">
-                              <button
-                                onClick={() => updateGrocery(item.id, 'checked', true)}
-                                className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
-                              />
-                              <input
-                                type="text"
-                                value={item.item}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
-                                placeholder="Item name"
-                                className="flex-1 text-sm font-medium bg-transparent focus:outline-none"
-                              />
-                              <input
-                                type="text"
-                                value={item.quantity || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
-                                placeholder="Qty"
-                                className="w-14 text-sm text-center bg-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:bg-purple-50"
-                              />
-                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
+                    {/* Sub-categories + Add */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => {
+                          const name = prompt('Category name (e.g. Fridge, Freezer, Pantry)');
+                          if (name?.trim()) {
+                            setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: [...(l.subCategories || []), { id: Date.now().toString(), name: name.trim(), emoji: '📦' }] } : l));
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium hover:bg-purple-200 transition-colors"
+                      >+ Add Category</button>
+                      {(list.subCategories || []).map(cat => (
+                        <span key={cat.id} className="px-3 py-1.5 bg-gray-100 rounded-full text-xs font-medium text-gray-600 flex items-center gap-1">
+                          {cat.emoji} {cat.name}
+                          <button onClick={() => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).filter(c => c.id !== cat.id) } : l))} className="text-gray-400 hover:text-red-500 ml-1">×</button>
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Items grouped by sub-category */}
+                    {(() => {
+                      const cats = list.subCategories || [];
+                      const uncategorised = toBuyItems.filter(g => !g.subCategory || !cats.find(c => c.id === g.subCategory));
+                      const allGroups = [
+                        ...cats.map(cat => ({
+                          ...cat,
+                          items: toBuyItems.filter(g => g.subCategory === cat.id)
+                        })),
+                        ...(uncategorised.length > 0 ? [{ id: '_none', name: cats.length > 0 ? 'Uncategorised' : 'Need to Buy', emoji: '🛍️', items: uncategorised }] : [])
+                      ];
+
+                      return allGroups.map(group => (
+                        <div key={group.id} className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                          <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
+                            <h3 className="font-semibold text-purple-700 flex items-center gap-2">
+                              {group.id !== '_none' && (
+                                <input type="text" value={group.emoji} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c) } : l))} className="w-6 text-center bg-transparent focus:outline-none" />
+                              )}
+                              {group.id === '_none' ? group.name : (
+                                <input type="text" value={group.name} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, name: e.target.value } : c) } : l))} className="bg-transparent focus:outline-none font-semibold text-purple-700" />
+                              )}
+                              {group.items.length > 0 && <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{group.items.length}</span>}
+                            </h3>
+                            <button
+                              onClick={() => setGroceries(prev => [...prev, { id: Date.now(), item: '', quantity: '1', listId: list.id, subCategory: group.id === '_none' ? '' : group.id, checked: false }])}
+                              className="w-7 h-7 bg-purple-500 text-white rounded-lg flex items-center justify-center text-sm hover:bg-purple-600 transition-colors"
+                            >+</button>
+                          </div>
+                          {group.items.length > 0 && (
+                            <div className="divide-y">
+                              {group.items.map(item => (
+                                <div key={item.id} className="px-4 py-3 flex items-center gap-3">
+                                  <button
+                                    onClick={() => updateGrocery(item.id, 'checked', true)}
+                                    className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={item.item}
+                                    onFocus={scrollInputIntoView}
+                                    onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
+                                    placeholder="Item name"
+                                    className="flex-1 text-sm font-medium bg-transparent focus:outline-none"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={item.quantity || ''}
+                                    onFocus={scrollInputIntoView}
+                                    onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
+                                    placeholder="Qty"
+                                    className="w-14 text-sm text-center bg-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:bg-purple-50"
+                                  />
+                                  <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          )}
                         </div>
-                      </div>
+                      ));
+                    })()}
 
                     {/* Shopping Bag */}
                     {bagItems.length > 0 && (
