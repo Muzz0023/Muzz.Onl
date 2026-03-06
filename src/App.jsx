@@ -9358,27 +9358,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
 
-                  {/* Vertical line down */}
+                  {/* Children */}
                   {children.length > 0 && (
-                    <>
+                    <div className="flex flex-col items-center">
                       <div className="w-px bg-gray-500" style={{ height: '30px' }} />
-                      <div className="relative" style={{ display: 'inline-flex', justifyContent: 'center', gap: '24px' }}>
-                        {/* Single horizontal line from first child center to last child center */}
-                        {children.length > 1 && (
-                          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', display: 'flex', alignItems: 'center' }}>
-                            <div style={{ width: '50%', flex: `0 0 ${100 / (children.length * 2)}%` }} />
-                            <div style={{ flex: 1, height: '1px', backgroundColor: '#6b7280' }} />
-                            <div style={{ width: '50%', flex: `0 0 ${100 / (children.length * 2)}%` }} />
-                          </div>
-                        )}
+                      <div style={{ display: 'flex', position: 'relative' }}>
+                        {/* Horizontal line spanning from center of first child to center of last child */}
+                        {children.length > 1 && (() => {
+                          const totalChildren = children.length;
+                          return (
+                            <div style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: `calc(50% / ${totalChildren})`,
+                              right: `calc(50% / ${totalChildren})`,
+                              height: '1px',
+                              backgroundColor: '#6b7280'
+                            }} />
+                          );
+                        })()}
                         {children.map(child => (
-                          <div key={child.id} className="flex flex-col items-center">
-                            <div className="w-px bg-gray-500" style={{ height: '30px' }} />
+                          <div key={child.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 12px' }}>
+                            <div style={{ width: '1px', height: '30px', backgroundColor: '#6b7280' }} />
                             {renderTree(child)}
                           </div>
                         ))}
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               );
