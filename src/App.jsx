@@ -9340,12 +9340,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         onClick={() => addChild(node.id)}
                         className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-blue-600"
                       >+</button>
-                      {!isRoot && (
-                        <button
-                          onClick={() => deleteNode(node.id)}
-                          className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-red-600"
-                        >×</button>
-                      )}
+                      <button
+                        onClick={() => deleteNode(node.id)}
+                        className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-red-600"
+                      >×</button>
                     </div>
                   </div>
 
