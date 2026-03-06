@@ -9341,8 +9341,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {/* Action buttons */}
                     {showMapControls && (
                       <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                        <button onClick={() => addSibling(node.id)} className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add sibling left">←</button>
                         <button onClick={() => addChild(node.id)} className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add child">↓</button>
-                        <button onClick={() => addSibling(node.id)} className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add sibling">→</button>
+                        <button onClick={() => addSibling(node.id)} className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add sibling right">→</button>
                         <button onClick={() => deleteNode(node.id)} className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Delete">×</button>
                       </div>
                     )}
