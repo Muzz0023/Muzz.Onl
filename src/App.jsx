@@ -3222,24 +3222,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onClick={() => updateGrocery(item.id, 'checked', true)}
                                 className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
                               />
-                              <div className="flex-1 min-w-0">
-                                <input
-                                  type="text"
-                                  value={item.item}
-                                  onFocus={scrollInputIntoView}
-                                  onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
-                                  placeholder="Item name"
-                                  className="w-full text-sm font-medium bg-transparent focus:outline-none"
-                                />
-                                <input
-                                  type="text"
-                                  value={item.quantity || ''}
-                                  onFocus={scrollInputIntoView}
-                                  onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
-                                  placeholder="Qty"
-                                  className="w-16 text-xs text-gray-500 bg-gray-100 rounded px-1.5 py-0.5 mt-1 focus:outline-none focus:bg-purple-50"
-                                />
-                              </div>
+                              <span className="flex-1 text-sm font-medium">{item.item}</span>
+                              {item.quantity && item.quantity !== '1' && (
+                                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">x{item.quantity}</span>
+                              )}
                               <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
                                 <Trash2 className="w-4 h-4" />
                               </button>
