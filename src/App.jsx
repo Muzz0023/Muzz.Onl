@@ -9360,31 +9360,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                   {/* Children */}
                   {children.length > 0 && (
-                    <div className="flex flex-col items-center">
+                    <>
                       <div className="w-px bg-gray-500" style={{ height: '30px' }} />
-                      <div style={{ display: 'flex', position: 'relative' }}>
-                        {/* Horizontal line spanning from center of first child to center of last child */}
-                        {children.length > 1 && (() => {
-                          const totalChildren = children.length;
-                          return (
-                            <div style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: `calc(50% / ${totalChildren})`,
-                              right: `calc(50% / ${totalChildren})`,
-                              height: '1px',
-                              backgroundColor: '#6b7280'
-                            }} />
-                          );
-                        })()}
+                      {children.length > 1 && (
+                        <div className="relative w-full flex justify-center">
+                          <div className="bg-gray-500" style={{ height: '1px', width: '100%' }} />
+                        </div>
+                      )}
+                      <div className="flex justify-center" style={{ gap: '24px' }}>
                         {children.map(child => (
-                          <div key={child.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 12px' }}>
-                            <div style={{ width: '1px', height: '30px', backgroundColor: '#6b7280' }} />
+                          <div key={child.id} className="flex flex-col items-center">
+                            <div className="w-px bg-gray-500" style={{ height: '30px' }} />
                             {renderTree(child)}
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               );
