@@ -9362,18 +9362,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {children.length > 0 && (
                     <>
                       <div className="w-px bg-gray-500" style={{ height: '30px' }} />
-                      <div className="flex justify-center" style={{ gap: '24px' }}>
-                        {children.map((child, idx) => (
-                          <div key={child.id} className="flex flex-col items-center relative">
-                            {/* Horizontal connector: each child gets a left and/or right half-bar at the top */}
-                            {children.length > 1 && (
-                              <div className="absolute top-0 w-full h-px" style={{ display: 'flex' }}>
-                                {idx > 0 && <div style={{ flex: 1, height: '1px', backgroundColor: '#6b7280' }} />}
-                                {idx === 0 && <div style={{ flex: 1 }} />}
-                                {idx < children.length - 1 && <div style={{ flex: 1, height: '1px', backgroundColor: '#6b7280' }} />}
-                                {idx === children.length - 1 && <div style={{ flex: 1 }} />}
-                              </div>
-                            )}
+                      <div className="relative" style={{ display: 'inline-flex', justifyContent: 'center', gap: '24px' }}>
+                        {/* Single horizontal line from first child center to last child center */}
+                        {children.length > 1 && (
+                          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', display: 'flex', alignItems: 'center' }}>
+                            <div style={{ width: '50%', flex: `0 0 ${100 / (children.length * 2)}%` }} />
+                            <div style={{ flex: 1, height: '1px', backgroundColor: '#6b7280' }} />
+                            <div style={{ width: '50%', flex: `0 0 ${100 / (children.length * 2)}%` }} />
+                          </div>
+                        )}
+                        {children.map(child => (
+                          <div key={child.id} className="flex flex-col items-center">
                             <div className="w-px bg-gray-500" style={{ height: '30px' }} />
                             {renderTree(child)}
                           </div>
