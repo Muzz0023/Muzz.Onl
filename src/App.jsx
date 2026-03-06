@@ -3222,10 +3222,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onClick={() => updateGrocery(item.id, 'checked', true)}
                                 className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
                               />
-                              <span className="flex-1 text-sm font-medium">{item.item || 'Unnamed item'}</span>
-                              {item.quantity && item.quantity !== '1' && (
-                                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">x{item.quantity}</span>
-                              )}
+                              <input
+                                type="text"
+                                value={item.item}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
+                                placeholder="Item name"
+                                className="flex-1 text-sm font-medium bg-transparent focus:outline-none"
+                              />
+                              <input
+                                type="text"
+                                value={item.quantity || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
+                                placeholder="Qty"
+                                className="w-14 text-sm text-center bg-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:bg-purple-50"
+                              />
                               <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
                                 <Trash2 className="w-4 h-4" />
                               </button>
