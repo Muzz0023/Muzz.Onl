@@ -1534,6 +1534,11 @@ function MuzzApp() {
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
 
+  // Asset Map
+  const [assetMapNodes, setAssetMapNodes] = useState([
+    { id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }
+  ]);
+
   // Check Stripe subscription on load
   useEffect(() => {
     if (!userEmail || isVIP) return;
@@ -1753,6 +1758,7 @@ function MuzzApp() {
           if (d.journalEntries) setJournalEntries(d.journalEntries);
           if (d.countdowns) setCountdowns(d.countdowns);
           if (d.bucketList) setBucketList(d.bucketList);
+          if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -1828,7 +1834,8 @@ function MuzzApp() {
           habitLog,
           journalEntries,
           countdowns,
-          bucketList
+          bucketList,
+          assetMapNodes
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -1842,7 +1849,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -8613,6 +8620,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               >
                 Knowledge Guide
               </button>
+              <button
+                onClick={() => setAssetsSubTab('assetMap')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  assetsSubTab === 'assetMap'
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                Asset Map
+              </button>
             </div>
           </div>
         </div>
@@ -9277,12 +9294,123 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             </>
           )}
+
+          {/* Asset Map */}
+          {assetsSubTab === 'assetMap' && (() => {
+            const getChildren = (parentId) => assetMapNodes.filter(n => n.parentId === parentId);
+            const addChild = (parentId) => {
+              setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '📁', parentId }]);
+            };
+            const updateNode = (id, field, value) => {
+              setAssetMapNodes(prev => prev.map(n => n.id === id ? { ...n, [field]: value } : n));
+            };
+            const deleteNode = (id) => {
+              // Delete this node and all descendants
+              const toDelete = new Set();
+              const findDescendants = (nodeId) => {
+                toDelete.add(nodeId);
+                assetMapNodes.filter(n => n.parentId === nodeId).forEach(n => findDescendants(n.id));
+              };
+              findDescendants(id);
+              setAssetMapNodes(prev => prev.filter(n => !toDelete.has(n.id)));
+            };
+
+            const renderNode = (node, depth = 0) => {
+              const children = getChildren(node.id);
+              const isRoot = node.parentId === null;
+              const colors = ['from-blue-500 to-indigo-600', 'from-purple-500 to-violet-600', 'from-teal-500 to-cyan-600', 'from-orange-500 to-amber-600', 'from-rose-500 to-pink-600', 'from-green-500 to-emerald-600'];
+              const colorClass = colors[depth % colors.length];
+
+              return (
+                <div key={node.id} className={`${depth > 0 ? 'ml-4 sm:ml-8' : ''}`}>
+                  {/* Connector line */}
+                  {depth > 0 && (
+                    <div className="flex items-center ml-2 mb-1">
+                      <div className="w-4 h-px bg-gray-400" />
+                      <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                    </div>
+                  )}
+                  {/* Node */}
+                  <div className={`rounded-2xl p-3 mb-2 ${isRoot ? `bg-gradient-to-r ${colorClass} text-white` : 'bg-white border shadow-sm'}`}>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={node.emoji}
+                        onChange={(e) => updateNode(node.id, 'emoji', e.target.value.slice(0, 2))}
+                        className={`w-8 text-center text-lg bg-transparent focus:outline-none ${isRoot ? '' : ''}`}
+                      />
+                      <input
+                        type="text"
+                        value={node.name}
+                        onChange={(e) => updateNode(node.id, 'name', e.target.value)}
+                        placeholder="Name this node..."
+                        className={`flex-1 font-semibold bg-transparent focus:outline-none ${isRoot ? 'text-white placeholder-white/50' : 'text-gray-800 placeholder-gray-400'}`}
+                      />
+                      <button
+                        onClick={() => addChild(node.id)}
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-colors ${isRoot ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-blue-100 hover:bg-blue-200 text-blue-600'}`}
+                        title="Add branch"
+                      >+</button>
+                      {!isRoot && (
+                        <button
+                          onClick={() => deleteNode(node.id)}
+                          className="text-gray-300 hover:text-red-500 transition-colors"
+                          title="Delete branch"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  {/* Children */}
+                  {children.length > 0 && (
+                    <div className="border-l-2 border-gray-300 ml-5">
+                      {children.map(child => renderNode(child, depth + 1))}
+                    </div>
+                  )}
+                </div>
+              );
+            };
+
+            const rootNodes = assetMapNodes.filter(n => n.parentId === null);
+
+            return (
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white">
+                  <h2 className="text-2xl font-bold mb-1">🗺️ Asset Map</h2>
+                  <p className="text-blue-200 text-sm">Map out your assets, investments, and financial structure</p>
+                </div>
+
+                {rootNodes.length === 0 && (
+                  <button
+                    onClick={() => setAssetMapNodes([{ id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }])}
+                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium"
+                  >+ Create Asset Map</button>
+                )}
+
+                <div className="bg-white rounded-2xl shadow-sm border p-4 overflow-x-auto">
+                  {rootNodes.map(root => renderNode(root))}
+                </div>
+
+                <button
+                  onClick={() => setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '🏠', parentId: null }])}
+                  className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                >
+                  + Add Another Root
+                </button>
+
+                <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                  <p className="text-sm text-amber-800">💡 Tap + on any node to add a branch below it. Build out your full financial tree — real estate, investments, super, whatever you want!</p>
+                </div>
+              </div>
+            );
+          })()}
+
         </div>
       </div>
     );
   }
 
-  // INVESTMENTS VIEW
   if (activeView === 'investments') {
     if (!isElite) return <LockedFeature featureName="Investments" setActiveView={setActiveView} />;
     const industries = [
