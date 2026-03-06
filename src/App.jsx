@@ -9333,46 +9333,44 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             const renderTree = (node) => {
               const children = getChildren(node.id);
-              const isRoot = node.parentId === null;
 
               return (
-                <div key={node.id} className="flex flex-col items-center">
+                <div key={node.id} className="flex flex-col items-center" style={{ minWidth: '140px' }}>
                   {/* The node box */}
-                  <div className="relative" style={{ minWidth: '120px', maxWidth: '180px' }}>
-                    <div className="border-2 border-gray-400 rounded-xl px-3 py-2 text-center" style={{ backgroundColor: 'rgba(30,41,59,0.8)' }}>
+                  <div className="relative mb-1">
+                    <div className="border border-gray-500 rounded-lg px-4 py-2.5 text-center whitespace-nowrap" style={{ backgroundColor: 'rgba(30,41,59,0.9)' }}>
                       <input
                         type="text"
                         value={node.name || ''}
                         onChange={(e) => updateNode(node.id, 'name', e.target.value)}
                         placeholder="Name..."
-                        className="bg-transparent text-center font-semibold text-sm focus:outline-none w-full"
-                        style={{ color: '#e2e8f0' }}
+                        className="bg-transparent text-center font-medium text-sm focus:outline-none"
+                        style={{ color: '#e2e8f0', width: `${Math.max((node.name || '').length, 6) * 8 + 20}px`, maxWidth: '250px' }}
                       />
                     </div>
-                    {/* Action buttons */}
                     {showMapControls && (
-                      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-10">
-                        <button onClick={() => addSiblingLeft(node.id)} className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add sibling left">←</button>
-                        <button onClick={() => addChild(node.id)} className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add child">↓</button>
-                        <button onClick={() => addSibling(node.id)} className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add sibling right">→</button>
-                        <button onClick={() => deleteNode(node.id)} className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Delete">×</button>
+                      <div className="flex justify-center gap-0.5 mt-1">
+                        <button onClick={() => addSiblingLeft(node.id)} className="w-4 h-4 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px]">←</button>
+                        <button onClick={() => addChild(node.id)} className="w-4 h-4 bg-blue-600 text-white rounded-full flex items-center justify-center text-[8px]">↓</button>
+                        <button onClick={() => addSibling(node.id)} className="w-4 h-4 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px]">→</button>
+                        <button onClick={() => deleteNode(node.id)} className="w-4 h-4 bg-red-600 text-white rounded-full flex items-center justify-center text-[8px]">×</button>
                       </div>
                     )}
                   </div>
 
-                  {/* Vertical line down to children */}
+                  {/* Vertical line down */}
                   {children.length > 0 && (
                     <>
-                      <div className="w-px h-6 bg-gray-400" />
+                      <div className="w-px bg-gray-500" style={{ height: '30px' }} />
                       {children.length > 1 && (
-                        <div className="relative w-full flex justify-center">
-                          <div className="bg-gray-400" style={{ height: '1px', width: `${Math.max(((children.length - 1) / children.length) * 100, 50)}%` }} />
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                          <div style={{ height: '1px', backgroundColor: '#6b7280', width: `calc(100% - 140px)`, minWidth: '50px' }} />
                         </div>
                       )}
-                      <div className="flex gap-2 justify-center flex-wrap">
+                      <div className="flex justify-center" style={{ gap: '24px' }}>
                         {children.map(child => (
                           <div key={child.id} className="flex flex-col items-center">
-                            <div className="w-px h-6 bg-gray-400" />
+                            <div className="w-px bg-gray-500" style={{ height: '30px' }} />
                             {renderTree(child)}
                           </div>
                         ))}
