@@ -13204,7 +13204,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           const height = (d.balance / maxVal) * 100;
                           return (
                             <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group relative">
-                              <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">Year {d.year}: ${d.balance.toLocaleString()}</div>
+                              <div className="absolute bottom-full mb-1 hidden group-hover:block text-xs px-2 py-1 rounded whitespace-nowrap z-10" style={{ backgroundColor: '#1e293b', color: '#ffffff' }}>Year {d.year}: ${d.balance.toLocaleString()}</div>
                               <div className="w-full bg-gradient-to-t from-green-500 to-emerald-400 rounded-t transition-all duration-300" style={{ height: `${Math.max(height, 2)}%` }} />
                               {(i === 0 || i === compResult.yearData.length - 1 || (i + 1) % 5 === 0) && (<span className="text-[9px] text-gray-400 mt-1">{d.year}y</span>)}
                             </div>
