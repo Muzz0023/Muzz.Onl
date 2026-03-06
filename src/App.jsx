@@ -9362,14 +9362,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {children.length > 0 && (
                     <>
                       <div className="w-px bg-gray-500" style={{ height: '30px' }} />
-                      {children.length > 1 && (
-                        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                          <div style={{ height: '1px', backgroundColor: '#6b7280', width: `calc(100% - 140px)`, minWidth: '50px' }} />
-                        </div>
-                      )}
                       <div className="flex justify-center" style={{ gap: '24px' }}>
-                        {children.map(child => (
-                          <div key={child.id} className="flex flex-col items-center">
+                        {children.map((child, idx) => (
+                          <div key={child.id} className="flex flex-col items-center relative">
+                            {/* Horizontal connector: each child gets a left and/or right half-bar at the top */}
+                            {children.length > 1 && (
+                              <div className="absolute top-0 w-full h-px" style={{ display: 'flex' }}>
+                                {idx > 0 && <div style={{ flex: 1, height: '1px', backgroundColor: '#6b7280' }} />}
+                                {idx === 0 && <div style={{ flex: 1 }} />}
+                                {idx < children.length - 1 && <div style={{ flex: 1, height: '1px', backgroundColor: '#6b7280' }} />}
+                                {idx === children.length - 1 && <div style={{ flex: 1 }} />}
+                              </div>
+                            )}
                             <div className="w-px bg-gray-500" style={{ height: '30px' }} />
                             {renderTree(child)}
                           </div>
