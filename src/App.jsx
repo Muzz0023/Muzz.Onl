@@ -9305,7 +9305,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setAssetMapNodes(prev => prev.map(n => n.id === id ? { ...n, [field]: value } : n));
             };
             const deleteNode = (id) => {
-              // Delete this node and all descendants
               const toDelete = new Set();
               const findDescendants = (nodeId) => {
                 toDelete.add(nodeId);
@@ -9315,58 +9314,62 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setAssetMapNodes(prev => prev.filter(n => !toDelete.has(n.id)));
             };
 
-            const renderNode = (node, depth = 0) => {
+            const renderTree = (node) => {
               const children = getChildren(node.id);
               const isRoot = node.parentId === null;
-              const colors = ['from-blue-500 to-indigo-600', 'from-purple-500 to-violet-600', 'from-teal-500 to-cyan-600', 'from-orange-500 to-amber-600', 'from-rose-500 to-pink-600', 'from-green-500 to-emerald-600'];
-              const colorClass = colors[depth % colors.length];
 
               return (
-                <div key={node.id} className={`${depth > 0 ? 'ml-4 sm:ml-8' : ''}`}>
-                  {/* Connector line */}
-                  {depth > 0 && (
-                    <div className="flex items-center ml-2 mb-1">
-                      <div className="w-4 h-px bg-gray-400" />
-                      <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                <div key={node.id} className="flex flex-col items-center">
+                  {/* The node box */}
+                  <div className="relative group" style={{ minWidth: '120px', maxWidth: '180px' }}>
+                    <div className="border-2 border-gray-400 rounded-xl px-3 py-2 text-center" style={{ backgroundColor: 'rgba(30,41,59,0.8)' }}>
+                      <div className="flex items-center justify-center gap-1">
+                        <input
+                          type="text"
+                          value={node.name || ''}
+                          onChange={(e) => updateNode(node.id, 'name', e.target.value)}
+                          placeholder="Name..."
+                          className="bg-transparent text-center font-semibold text-sm focus:outline-none w-full"
+                          style={{ color: '#e2e8f0' }}
+                        />
+                      </div>
                     </div>
-                  )}
-                  {/* Node */}
-                  <div className={`rounded-2xl p-3 mb-2 ${isRoot ? `bg-gradient-to-r ${colorClass} text-white` : 'bg-white border shadow-sm'}`}>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={node.emoji}
-                        onChange={(e) => updateNode(node.id, 'emoji', e.target.value.slice(0, 2))}
-                        className={`w-8 text-center text-lg bg-transparent focus:outline-none ${isRoot ? '' : ''}`}
-                      />
-                      <input
-                        type="text"
-                        value={node.name}
-                        onChange={(e) => updateNode(node.id, 'name', e.target.value)}
-                        placeholder="Name this node..."
-                        className={`flex-1 font-semibold bg-transparent focus:outline-none ${isRoot ? 'text-white placeholder-white/50' : 'text-gray-800 placeholder-gray-400'}`}
-                      />
+                    {/* Action buttons on hover */}
+                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <button
                         onClick={() => addChild(node.id)}
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-colors ${isRoot ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-blue-100 hover:bg-blue-200 text-blue-600'}`}
-                        title="Add branch"
+                        className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-blue-600"
                       >+</button>
                       {!isRoot && (
                         <button
                           onClick={() => deleteNode(node.id)}
-                          className="text-gray-300 hover:text-red-500 transition-colors"
-                          title="Delete branch"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                          className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-red-600"
+                        >×</button>
                       )}
                     </div>
                   </div>
-                  {/* Children */}
+
+                  {/* Vertical line down to children */}
                   {children.length > 0 && (
-                    <div className="border-l-2 border-gray-300 ml-5">
-                      {children.map(child => renderNode(child, depth + 1))}
-                    </div>
+                    <>
+                      <div className="w-px h-6 bg-gray-400" />
+                      {/* Horizontal bar connecting children */}
+                      {children.length > 1 && (
+                        <div className="relative w-full flex justify-center">
+                          <div className="bg-gray-400" style={{ height: '1px', width: `${Math.max(((children.length - 1) / children.length) * 100, 50)}%` }} />
+                        </div>
+                      )}
+                      {/* Children row */}
+                      <div className="flex gap-2 justify-center flex-wrap">
+                        {children.map(child => (
+                          <div key={child.id} className="flex flex-col items-center">
+                            {/* Vertical line from horizontal bar down to child */}
+                            <div className="w-px h-6 bg-gray-400" />
+                            {renderTree(child)}
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               );
@@ -9388,19 +9391,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   >+ Create Asset Map</button>
                 )}
 
-                <div className="bg-white rounded-2xl shadow-sm border p-4 overflow-x-auto">
-                  {rootNodes.map(root => renderNode(root))}
+                <div className="rounded-2xl shadow-sm border p-6 overflow-x-auto" style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
+                  <div className="flex justify-center min-w-fit">
+                    <div className="flex gap-8">
+                      {rootNodes.map(root => renderTree(root))}
+                    </div>
+                  </div>
                 </div>
 
-                <button
-                  onClick={() => setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '🏠', parentId: null }])}
-                  className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
-                >
-                  + Add Another Root
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '🏠', parentId: null }])}
+                    className="flex-1 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                  >
+                    + Add Root Node
+                  </button>
+                </div>
 
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-                  <p className="text-sm text-amber-800">💡 Tap + on any node to add a branch below it. Build out your full financial tree — real estate, investments, super, whatever you want!</p>
+                  <p className="text-sm text-amber-800">💡 Hover over any node to see the + and × buttons. Add branches to build your financial tree!</p>
                 </div>
               </div>
             );
