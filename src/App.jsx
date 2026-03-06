@@ -1538,6 +1538,7 @@ function MuzzApp() {
   const [assetMapNodes, setAssetMapNodes] = useState([
     { id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }
   ]);
+  const [showMapControls, setShowMapControls] = useState(true);
 
   // Check Stripe subscription on load
   useEffect(() => {
@@ -9301,6 +9302,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const addChild = (parentId) => {
               setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '📁', parentId }]);
             };
+            const addSibling = (nodeId) => {
+              const node = assetMapNodes.find(n => n.id === nodeId);
+              if (!node) return;
+              setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '📁', parentId: node.parentId }]);
+            };
             const updateNode = (id, field, value) => {
               setAssetMapNodes(prev => prev.map(n => n.id === id ? { ...n, [field]: value } : n));
             };
@@ -9321,47 +9327,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               return (
                 <div key={node.id} className="flex flex-col items-center">
                   {/* The node box */}
-                  <div className="relative group" style={{ minWidth: '120px', maxWidth: '180px' }}>
+                  <div className="relative" style={{ minWidth: '120px', maxWidth: '180px' }}>
                     <div className="border-2 border-gray-400 rounded-xl px-3 py-2 text-center" style={{ backgroundColor: 'rgba(30,41,59,0.8)' }}>
-                      <div className="flex items-center justify-center gap-1">
-                        <input
-                          type="text"
-                          value={node.name || ''}
-                          onChange={(e) => updateNode(node.id, 'name', e.target.value)}
-                          placeholder="Name..."
-                          className="bg-transparent text-center font-semibold text-sm focus:outline-none w-full"
-                          style={{ color: '#e2e8f0' }}
-                        />
+                      <input
+                        type="text"
+                        value={node.name || ''}
+                        onChange={(e) => updateNode(node.id, 'name', e.target.value)}
+                        placeholder="Name..."
+                        className="bg-transparent text-center font-semibold text-sm focus:outline-none w-full"
+                        style={{ color: '#e2e8f0' }}
+                      />
+                    </div>
+                    {/* Action buttons */}
+                    {showMapControls && (
+                      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                        <button onClick={() => addChild(node.id)} className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add child">↓</button>
+                        <button onClick={() => addSibling(node.id)} className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Add sibling">→</button>
+                        <button onClick={() => deleteNode(node.id)} className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg" title="Delete">×</button>
                       </div>
-                    </div>
-                    {/* Action buttons always visible */}
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-10">
-                      <button
-                        onClick={() => addChild(node.id)}
-                        className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-blue-600"
-                      >+</button>
-                      <button
-                        onClick={() => deleteNode(node.id)}
-                        className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-red-600"
-                      >×</button>
-                    </div>
+                    )}
                   </div>
 
                   {/* Vertical line down to children */}
                   {children.length > 0 && (
                     <>
                       <div className="w-px h-6 bg-gray-400" />
-                      {/* Horizontal bar connecting children */}
                       {children.length > 1 && (
                         <div className="relative w-full flex justify-center">
                           <div className="bg-gray-400" style={{ height: '1px', width: `${Math.max(((children.length - 1) / children.length) * 100, 50)}%` }} />
                         </div>
                       )}
-                      {/* Children row */}
                       <div className="flex gap-2 justify-center flex-wrap">
                         {children.map(child => (
                           <div key={child.id} className="flex flex-col items-center">
-                            {/* Vertical line from horizontal bar down to child */}
                             <div className="w-px h-6 bg-gray-400" />
                             {renderTree(child)}
                           </div>
@@ -9377,9 +9375,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             return (
               <div className="space-y-4">
-                <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white">
-                  <h2 className="text-2xl font-bold mb-1">🗺️ Asset Map</h2>
-                  <p className="text-blue-200 text-sm">Map out your assets, investments, and financial structure</p>
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-1">🗺️ Asset Map</h2>
+                    <p className="text-blue-200 text-sm">Map out your financial structure</p>
+                  </div>
+                  <button
+                    onClick={() => setShowMapControls(!showMapControls)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${showMapControls ? 'bg-white/20 text-white' : 'bg-white text-blue-600'}`}
+                  >
+                    {showMapControls ? '👁 Hide Controls' : '✏️ Edit'}
+                  </button>
                 </div>
 
                 {rootNodes.length === 0 && (
@@ -9397,18 +9403,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                {showMapControls && (
                   <button
                     onClick={() => setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '🏠', parentId: null }])}
-                    className="flex-1 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
                   >
                     + Add Root Node
                   </button>
-                </div>
-
-                <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-                  <p className="text-sm text-amber-800">💡 Hover over any node to see the + and × buttons. Add branches to build your financial tree!</p>
-                </div>
+                )}
               </div>
             );
           })()}
