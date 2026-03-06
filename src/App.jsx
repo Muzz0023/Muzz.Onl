@@ -3180,40 +3180,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
                     </div>
 
-                    {/* Quick Add */}
-                    <div className="bg-white rounded-2xl shadow-sm border p-4">
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          id={`quickAdd-${list.id}`}
-                          placeholder="Add item..."
-                          onFocus={scrollInputIntoView}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && e.target.value.trim()) {
-                              setGroceries(prev => [...prev, { id: Date.now(), item: e.target.value.trim(), quantity: '1', listId: list.id, checked: false }]);
-                              e.target.value = '';
-                            }
-                          }}
-                          className="flex-1 px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-purple-500"
-                        />
-                        <button
-                          onClick={() => {
-                            const input = document.getElementById(`quickAdd-${list.id}`);
-                            if (input?.value.trim()) {
-                              setGroceries(prev => [...prev, { id: Date.now(), item: input.value.trim(), quantity: '1', listId: list.id, checked: false }]);
-                              input.value = '';
-                            }
-                          }}
-                          className="px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium"
-                        >+</button>
-                      </div>
-                    </div>
-
                     {/* Need to Buy */}
-                    {toBuyItems.length > 0 && (
                       <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                        <div className="px-4 py-3 bg-purple-50 border-b">
-                          <h3 className="font-semibold text-purple-700 flex items-center gap-2">🛍️ Need to Buy <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{toBuyItems.length}</span></h3>
+                        <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
+                          <h3 className="font-semibold text-purple-700 flex items-center gap-2">🛍️ Need to Buy {toBuyItems.length > 0 && <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{toBuyItems.length}</span>}</h3>
+                          <button
+                            onClick={() => setGroceries(prev => [...prev, { id: Date.now(), item: '', quantity: '1', listId: list.id, checked: false }])}
+                            className="w-8 h-8 bg-purple-500 text-white rounded-lg flex items-center justify-center text-lg hover:bg-purple-600 transition-colors"
+                          >+</button>
                         </div>
                         <div className="divide-y">
                           {toBuyItems.map(item => (
@@ -3245,7 +3219,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           ))}
                         </div>
                       </div>
-                    )}
 
                     {/* Shopping Bag */}
                     {bagItems.length > 0 && (
