@@ -3222,7 +3222,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onClick={() => updateGrocery(item.id, 'checked', true)}
                                 className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
                               />
-                              <span className="flex-1 text-sm font-medium">{item.item}</span>
+                              <span className="flex-1 text-sm font-medium">{item.item || 'Unnamed item'}</span>
                               {item.quantity && item.quantity !== '1' && (
                                 <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">x{item.quantity}</span>
                               )}
