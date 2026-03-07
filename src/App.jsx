@@ -1539,6 +1539,10 @@ function MuzzApp() {
     { id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }
   ]);
   const [showMapControls, setShowMapControls] = useState(true);
+  const [mapPins, setMapPins] = useState([]);
+  const worldMapRef = useRef(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [editingPin, setEditingPin] = useState(null);
 
   // Check Stripe subscription on load
   useEffect(() => {
@@ -1760,6 +1764,7 @@ function MuzzApp() {
           if (d.countdowns) setCountdowns(d.countdowns);
           if (d.bucketList) setBucketList(d.bucketList);
           if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
+          if (d.mapPins) setMapPins(d.mapPins);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -1836,7 +1841,8 @@ function MuzzApp() {
           journalEntries,
           countdowns,
           bucketList,
-          assetMapNodes
+          assetMapNodes,
+          mapPins
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -1850,7 +1856,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -8631,6 +8637,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               >
                 Asset Map
               </button>
+              <button
+                onClick={() => setAssetsSubTab('worldMap')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  assetsSubTab === 'worldMap'
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                World Map
+              </button>
             </div>
           </div>
         </div>
@@ -9420,6 +9436,113 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   >
                     + Add Root Node
                   </button>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* World Map */}
+          {assetsSubTab === 'worldMap' && (() => {
+
+            return (
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
+                  <h2 className="text-2xl font-bold mb-1">🌍 World Map</h2>
+                  <p className="text-emerald-200 text-sm">Tap anywhere on the map to drop a pin</p>
+                </div>
+
+                {/* Map Container */}
+                <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
+                  <div
+                    ref={(el) => {
+                      if (!el || el._leaflet_init) return;
+                      el._leaflet_init = true;
+                      
+                      // Load Leaflet CSS
+                      if (!document.getElementById('leaflet-css')) {
+                        const link = document.createElement('link');
+                        link.id = 'leaflet-css';
+                        link.rel = 'stylesheet';
+                        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+                        document.head.appendChild(link);
+                      }
+
+                      const initMap = () => {
+                        if (!window.L) return;
+                        const L = window.L;
+                        const map = L.map(el, { zoomControl: true }).setView([-27.47, 153.02], 4);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                          attribution: '© OpenStreetMap'
+                        }).addTo(map);
+                        
+                        el._leaflet_map = map;
+
+                        // Add existing pins
+                        mapPins.forEach(pin => {
+                          const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+                          marker.bindPopup(`<b>${pin.title || 'Untitled'}</b><br/>${pin.notes || ''}`);
+                        });
+
+                        // Click to add pin
+                        map.on('click', (e) => {
+                          const { lat, lng } = e.latlng;
+                          const title = prompt('Pin name:');
+                          if (title !== null) {
+                            const notes = prompt('Notes (optional):') || '';
+                            const newPin = { id: Date.now().toString(), lat, lng, title: title || 'Untitled', notes, emoji: '📍' };
+                            setMapPins(prev => [...prev, newPin]);
+                            const marker = L.marker([lat, lng]).addTo(map);
+                            marker.bindPopup(`<b>${newPin.title}</b><br/>${newPin.notes}`);
+                          }
+                        });
+                      };
+
+                      if (window.L) {
+                        setTimeout(initMap, 100);
+                      } else {
+                        const script = document.createElement('script');
+                        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+                        script.onload = () => setTimeout(initMap, 100);
+                        document.body.appendChild(script);
+                      }
+                    }}
+                    style={{ height: '500px', width: '100%', borderRadius: '16px' }}
+                  />
+                </div>
+
+                {/* Pins List */}
+                {mapPins.length > 0 && (
+                  <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                    <div className="px-4 py-3 bg-emerald-50 border-b">
+                      <h3 className="font-semibold text-emerald-700">📍 Your Pins ({mapPins.length})</h3>
+                    </div>
+                    <div className="divide-y">
+                      {mapPins.map(pin => (
+                        <div key={pin.id} className="px-4 py-3 flex items-center gap-3">
+                          <span className="text-lg">{pin.emoji || '📍'}</span>
+                          <div className="flex-1">
+                            <div className="font-medium text-sm">{pin.title}</div>
+                            {pin.notes && <div className="text-xs text-gray-500">{pin.notes}</div>}
+                            <div className="text-[10px] text-gray-400">{pin.lat.toFixed(4)}, {pin.lng.toFixed(4)}</div>
+                          </div>
+                          <button
+                            onClick={() => setMapPins(prev => prev.filter(p => p.id !== pin.id))}
+                            className="text-gray-300 hover:text-red-500"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {mapPins.length === 0 && (
+                  <div className="bg-white rounded-2xl p-8 shadow-sm border text-center">
+                    <div className="text-4xl mb-3">🌏</div>
+                    <p className="text-gray-500 text-sm">Tap anywhere on the map to drop your first pin!</p>
+                    <p className="text-gray-400 text-xs mt-1">Mark properties, travel goals, investment locations — anything</p>
+                  </div>
                 )}
               </div>
             );
