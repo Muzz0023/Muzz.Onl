@@ -9447,7 +9447,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const pinColors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 
             const removeMapPin = (pinId) => {
-              // Remove marker from map
               const el = document.getElementById('world-map-container');
               if (el && el._leaflet_map && el._markers) {
                 const markerEntry = el._markers[pinId];
@@ -9462,6 +9461,54 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             const updateMapPin = (pinId, field, value) => {
               setMapPins(prev => prev.map(p => p.id === pinId ? { ...p, [field]: value } : p));
+              
+              const el = document.getElementById('world-map-container');
+              if (!el || !el._leaflet_map || !el._markers || !el._markers[pinId]) return;
+              const L = window.L;
+              const entry = el._markers[pinId];
+              const pin = mapPins.find(p => p.id === pinId);
+              if (!pin) return;
+
+              const updatedPin = { ...pin, [field]: value };
+
+              if (field === 'color') {
+                // Remove old marker, add new one with new colour
+                const latlng = entry.marker.getLatLng();
+                el._leaflet_map.removeLayer(entry.marker);
+                const newMarker = L.marker(latlng, {
+                  icon: L.divIcon({
+                    className: '',
+                    html: `<div style="width:24px;height:24px;background:${value};border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                  })
+                }).addTo(el._leaflet_map);
+                newMarker.bindPopup(`<b>${updatedPin.title || 'Untitled'}</b><br/>${updatedPin.notes || ''}`);
+                entry.marker = newMarker;
+                // Update circle colour too
+                if (entry.circle) {
+                  entry.circle.setStyle({ color: value, fillColor: value });
+                }
+              }
+
+              if (field === 'radius') {
+                const latlng = entry.marker.getLatLng();
+                const radiusKm = parseFloat(value) || 0;
+                // Remove old circle
+                if (entry.circle) {
+                  el._leaflet_map.removeLayer(entry.circle);
+                  entry.circle = null;
+                }
+                // Add new circle if radius > 0
+                if (radiusKm > 0) {
+                  const color = updatedPin.color || '#3B82F6';
+                  entry.circle = L.circle(latlng, { radius: radiusKm * 1000, color: color, fillColor: color, fillOpacity: 0.1, weight: 2 }).addTo(el._leaflet_map);
+                }
+              }
+
+              if (field === 'title' || field === 'notes') {
+                entry.marker.setPopupContent(`<b>${updatedPin.title || 'Untitled'}</b><br/>${updatedPin.notes || ''}`);
+              }
             };
 
             return (
