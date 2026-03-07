@@ -633,6 +633,7 @@ const VIP_EMAILS = [
   'cooperkb05@gmail.com',
   'kirstykb44@gmail.com',
   'tylarjohn@gmail.com',
+  'barbarafremlin370@msn.com',
 ];
 
 // Elite limits
@@ -9443,6 +9444,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* World Map */}
           {assetsSubTab === 'worldMap' && (() => {
+            const pinColors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
+
+            const removeMapPin = (pinId) => {
+              // Remove marker from map
+              const el = document.getElementById('world-map-container');
+              if (el && el._leaflet_map && el._markers) {
+                const markerEntry = el._markers[pinId];
+                if (markerEntry) {
+                  el._leaflet_map.removeLayer(markerEntry.marker);
+                  if (markerEntry.circle) el._leaflet_map.removeLayer(markerEntry.circle);
+                  delete el._markers[pinId];
+                }
+              }
+              setMapPins(prev => prev.filter(p => p.id !== pinId));
+            };
+
+            const updateMapPin = (pinId, field, value) => {
+              setMapPins(prev => prev.map(p => p.id === pinId ? { ...p, [field]: value } : p));
+            };
 
             return (
               <div className="space-y-4">
@@ -9451,14 +9471,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p className="text-emerald-200 text-sm">Tap anywhere on the map to drop a pin</p>
                 </div>
 
-                {/* Map Container */}
                 <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
                   <div
+                    id="world-map-container"
                     ref={(el) => {
                       if (!el || el._leaflet_init) return;
                       el._leaflet_init = true;
+                      el._markers = {};
                       
-                      // Load Leaflet CSS
                       if (!document.getElementById('leaflet-css')) {
                         const link = document.createElement('link');
                         link.id = 'leaflet-css';
@@ -9471,16 +9491,35 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         if (!window.L) return;
                         const L = window.L;
                         const map = L.map(el, { zoomControl: true }).setView([-27.47, 153.02], 4);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                          attribution: '© OpenStreetMap'
+                        
+                        // English-only tiles from CartoDB
+                        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                          attribution: '© OpenStreetMap © CARTO',
+                          subdomains: 'abcd',
+                          maxZoom: 19
                         }).addTo(map);
                         
                         el._leaflet_map = map;
 
+                        const createMarkerIcon = (color) => {
+                          return L.divIcon({
+                            className: '',
+                            html: `<div style="width:24px;height:24px;background:${color};border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                          });
+                        };
+
                         // Add existing pins
                         mapPins.forEach(pin => {
-                          const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+                          const color = pin.color || '#3B82F6';
+                          const marker = L.marker([pin.lat, pin.lng], { icon: createMarkerIcon(color) }).addTo(map);
                           marker.bindPopup(`<b>${pin.title || 'Untitled'}</b><br/>${pin.notes || ''}`);
+                          let circle = null;
+                          if (pin.radius && pin.radius > 0) {
+                            circle = L.circle([pin.lat, pin.lng], { radius: pin.radius * 1000, color: color, fillColor: color, fillOpacity: 0.1, weight: 2 }).addTo(map);
+                          }
+                          el._markers[pin.id] = { marker, circle };
                         });
 
                         // Click to add pin
@@ -9489,10 +9528,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           const title = prompt('Pin name:');
                           if (title !== null) {
                             const notes = prompt('Notes (optional):') || '';
-                            const newPin = { id: Date.now().toString(), lat, lng, title: title || 'Untitled', notes, emoji: '📍' };
+                            const color = '#3B82F6';
+                            const newPin = { id: Date.now().toString(), lat, lng, title: title || 'Untitled', notes, color, radius: 0 };
                             setMapPins(prev => [...prev, newPin]);
-                            const marker = L.marker([lat, lng]).addTo(map);
+                            const marker = L.marker([lat, lng], { icon: createMarkerIcon(color) }).addTo(map);
                             marker.bindPopup(`<b>${newPin.title}</b><br/>${newPin.notes}`);
+                            el._markers[newPin.id] = { marker, circle: null };
                           }
                         });
                       };
@@ -9518,19 +9559,52 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     <div className="divide-y">
                       {mapPins.map(pin => (
-                        <div key={pin.id} className="px-4 py-3 flex items-center gap-3">
-                          <span className="text-lg">{pin.emoji || '📍'}</span>
-                          <div className="flex-1">
-                            <div className="font-medium text-sm">{pin.title}</div>
-                            {pin.notes && <div className="text-xs text-gray-500">{pin.notes}</div>}
-                            <div className="text-[10px] text-gray-400">{pin.lat.toFixed(4)}, {pin.lng.toFixed(4)}</div>
+                        <div key={pin.id} className="px-4 py-3 space-y-2">
+                          <div className="flex items-center gap-3">
+                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: pin.color || '#3B82F6', border: '2px solid white', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', flexShrink: 0 }} />
+                            <div className="flex-1">
+                              <input
+                                type="text"
+                                value={pin.title}
+                                onChange={(e) => updateMapPin(pin.id, 'title', e.target.value)}
+                                className="font-medium text-sm bg-transparent focus:outline-none w-full"
+                              />
+                              <input
+                                type="text"
+                                value={pin.notes || ''}
+                                onChange={(e) => updateMapPin(pin.id, 'notes', e.target.value)}
+                                placeholder="Add notes..."
+                                className="text-xs text-gray-500 bg-transparent focus:outline-none w-full"
+                              />
+                            </div>
+                            <button onClick={() => removeMapPin(pin.id)} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
-                          <button
-                            onClick={() => setMapPins(prev => prev.filter(p => p.id !== pin.id))}
-                            className="text-gray-300 hover:text-red-500"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {/* Colour picker + Radius */}
+                          <div className="flex items-center gap-2 pl-8">
+                            <div className="flex gap-1">
+                              {pinColors.map(c => (
+                                <button
+                                  key={c}
+                                  onClick={() => updateMapPin(pin.id, 'color', c)}
+                                  className="w-5 h-5 rounded-full transition-transform"
+                                  style={{ backgroundColor: c, border: pin.color === c ? '2px solid white' : '2px solid transparent', transform: pin.color === c ? 'scale(1.2)' : 'scale(1)' }}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex items-center gap-1 ml-2">
+                              <span className="text-[10px] text-gray-400">Radius:</span>
+                              <input
+                                type="text"
+                                value={pin.radius || ''}
+                                onChange={(e) => updateMapPin(pin.id, 'radius', parseFloat(e.target.value) || 0)}
+                                placeholder="0"
+                                className="w-12 text-xs text-center bg-gray-100 rounded px-1 py-0.5 focus:outline-none"
+                              />
+                              <span className="text-[10px] text-gray-400">km</span>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
