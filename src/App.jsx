@@ -782,29 +782,16 @@ const supabase = {
   },
 
   async deleteUserData(userId) {
-    // Delete user data
-    await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
-      method: 'DELETE',
-      headers: this.headers(true)
+    // Call server-side API to delete both data and auth account
+    const API = typeof window !== 'undefined' && window.Capacitor?.isNativePlatform() ? 'https://muzz.onl' : '';
+    const r = await fetch(`${API}/api/delete-account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
     });
-    // Delete auth account using user's own token
-    const s = localStorage.getItem('muzz_auth');
-    if (s) {
-      const { accessToken } = JSON.parse(s);
-      if (accessToken) {
-        await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${accessToken}`
-          }
-        });
-      }
-    }
     // Clear all local storage
     localStorage.removeItem('muzz_auth');
-    return true;
+    return r.ok;
   }
 };
 
