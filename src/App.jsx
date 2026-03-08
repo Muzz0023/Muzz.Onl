@@ -779,6 +779,14 @@ const supabase = {
         throw new Error(`Save failed: ${r2.status}`);
       }
     }
+  },
+
+  async deleteUserData(userId) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+      method: 'DELETE',
+      headers: this.headers(true)
+    });
+    return r.ok;
   }
 };
 
@@ -1311,7 +1319,7 @@ function LockedFeature({ featureName, setActiveView }) {
           <Lock className="w-10 h-10 text-gray-400" />
         </div>
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{featureName} is Elite Only</h2>
-        <p className="text-gray-500 mb-6">Upgrade to Elite for $5/month to unlock {featureName} and all premium features.</p>
+        <p className="text-gray-500 mb-6">Upgrade to Elite for $4.99/month to unlock {featureName} and all premium features.</p>
         <button
           onClick={() => setActiveView('upgrade')}
           className="px-6 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl font-bold shadow-lg hover:scale-105 transition-all"
@@ -2295,6 +2303,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-500 transition-all">
                 <LogOut className="w-4 h-4" />
                 <span className="font-medium text-sm">Sign Out</span>
+              </button>
+              <button 
+                onClick={async () => {
+                  if (confirm('Are you sure you want to delete your account? This will permanently delete all your data and cannot be undone.')) {
+                    if (confirm('This is permanent. All your data will be lost forever. Are you absolutely sure?')) {
+                      try {
+                        await supabase.deleteUserData(userId);
+                        signOut();
+                        setSidebarOpen(false);
+                      } catch (err) {
+                        alert('Failed to delete account. Please try again or contact support at Muzz.onl@outlook.com');
+                      }
+                    }
+                  }
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-500/60 transition-all"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span className="font-medium text-sm">Delete Account</span>
               </button>
               <div className="flex items-center justify-center gap-2 text-gray-300 mt-4 pt-4 border-t border-gray-100">
                 <span className="text-xs font-medium">Muzz v3.0</span>
@@ -6559,7 +6586,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" />
                     <defs><linearGradient id="eliteGrad2" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
                   </svg>
-                  <span className="text-white text-sm font-medium">Upgrade to Elite — $5/mo</span>
+                  <span className="text-white text-sm font-medium">Upgrade to Elite — $4.99/mo</span>
                 </div>
                 <span className="text-white/70 text-sm">→</span>
               </div>
@@ -8368,7 +8395,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <h3 className="font-bold text-gray-800 text-lg mb-4">❓ FAQ</h3>
             <div className="space-y-3">
               {[
-                { q: "How do I upgrade to Elite?", a: "Head to the 'Upgrade to Elite' section in the sidebar. It's $5/month and unlocks all features!" },
+                { q: "How do I upgrade to Elite?", a: "Head to the 'Upgrade to Elite' section in the sidebar. It's $4.99/month and unlocks all features!" },
                 { q: "Is my data safe?", a: "Your data is stored securely in the cloud and only you can access it." },
                 { q: "How do I cancel my subscription?", a: "Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period." },
                 { q: "Can I use Muzz on my phone?", a: "Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl." },
@@ -8401,7 +8428,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
             </svg>
             <h1 className="text-4xl font-bold text-white mb-2">{isElite ? 'Elite Member' : 'Upgrade to Elite'}</h1>
-            <p className="text-white/80">{isElite ? "You've got the full Muzz experience, legend." : '$5/month — Unlock everything Muzz has to offer'}</p>
+            <p className="text-white/80">{isElite ? "You've got the full Muzz experience, legend." : '$4.99/month — Unlock everything Muzz has to offer'}</p>
           </div>
         </div>
 
@@ -8450,9 +8477,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 onClick={handleUpgrade}
                 className="px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl text-lg font-bold shadow-lg hover:scale-105 transition-all"
               >
-                {isNative ? 'Become Elite — $4.99/month' : 'Become Elite — $5/month'}
+                {isNative ? 'Become Elite — $4.99/month' : 'Become Elite — $4.99/month'}
               </button>
               <p className="text-xs text-gray-400">Cancel anytime. Your data stays safe.</p>
+              
+              {/* Required subscription info */}
+              <div className="text-xs text-gray-400 space-y-1">
+                <p>Auto-renewable subscription • $4.99 AUD/month</p>
+                <p>Payment will be charged to your Apple ID account at confirmation of purchase. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.</p>
+                <div className="flex justify-center gap-4 mt-2">
+                  <a href="https://muzz.onl/privacy" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Privacy Policy</a>
+                  <a href="https://muzz.onl/terms" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Terms of Use</a>
+                </div>
+              </div>
               
               {/* Restore Purchases - iOS only */}
               {isNative && (
