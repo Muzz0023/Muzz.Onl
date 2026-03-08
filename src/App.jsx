@@ -8492,8 +8492,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <p>Auto-renewable subscription • $4.99 AUD/month</p>
                 <p>Payment will be charged to your Apple ID account at confirmation of purchase. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.</p>
                 <div className="flex justify-center gap-4 mt-2">
-                  <a href="https://muzz.onl/privacy" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Privacy Policy</a>
-                  <a href="https://muzz.onl/terms" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Terms of Use</a>
+                  <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Privacy Policy</a>
+                  <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Terms of Use</a>
                 </div>
               </div>
               
@@ -8553,8 +8553,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Legal Links - always visible */}
           <div className="flex justify-center gap-4 pt-4">
-            <a href="https://muzz.onl/privacy" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Privacy Policy</a>
-            <a href="https://muzz.onl/terms" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Terms of Use</a>
+            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Privacy Policy</a>
+            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Terms of Use</a>
           </div>
         </div>
         <FloatingChat 
