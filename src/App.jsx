@@ -581,6 +581,16 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-"][class*="to-"] [class*="bg-white\\/"] {
           background-color: inherit !important;
         }
+        /* iOS INPUT FIXES - bigger touch targets */
+        input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="password"], textarea, select {
+          font-size: 16px !important; /* Prevents iOS zoom on focus */
+          min-height: 44px;
+        }
+        /* Extra bottom padding for keyboard */
+        .pb-24 { padding-bottom: 8rem !important; }
+        @supports (-webkit-touch-callout: none) {
+          .pb-24 { padding-bottom: 12rem !important; }
+        }
       `}</style>
       {/* Content */}
       <div className="relative z-10 dark-mode">
@@ -594,10 +604,14 @@ const StarryBackground = ({ children }) => {
 // MOBILE KEYBOARD HELPER
 // ============================================
 const scrollInputIntoView = (e) => {
-  // Small delay to let keyboard open first
+  // Longer delay for iOS keyboard to fully open
   setTimeout(() => {
     e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
+  }, 400);
+  // Second scroll to catch late keyboard resize
+  setTimeout(() => {
+    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 800);
 };
 
 // Auto-resize textarea to show full content
@@ -1285,7 +1299,13 @@ function StatCard({ icon: Icon, label, value, sub, color, onClick }) {
 
 function LockedFeature({ featureName, setActiveView }) {
   return (
-    <div className="min-h-screen bg-transparent flex items-center justify-center p-6">
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-6 relative">
+      <button
+        onClick={() => setActiveView('home')}
+        className="absolute top-16 left-6 w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors z-10"
+      >
+        <X className="w-5 h-5 text-gray-600" />
+      </button>
       <div className="text-center max-w-md">
         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <Lock className="w-10 h-10 text-gray-400" />
