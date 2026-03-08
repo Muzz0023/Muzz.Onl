@@ -8544,6 +8544,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <p className="text-amber-600 text-sm mt-1">You're a founder. No subscription needed, ever.</p>
             </div>
           )}
+
+          {/* Legal Links - always visible */}
+          <div className="flex justify-center gap-4 pt-4">
+            <a href="https://muzz.onl/privacy" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Privacy Policy</a>
+            <a href="https://muzz.onl/terms" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Terms of Use</a>
+          </div>
         </div>
         <FloatingChat 
           isChatOpen={isChatOpen}
