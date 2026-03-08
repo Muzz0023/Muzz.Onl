@@ -8406,40 +8406,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
-          {/* Elite Name Setting */}
-          {isElite && (
-            <div className="bg-white rounded-3xl shadow-sm border p-6">
-              <h2 className="text-xl font-semibold mb-3">Your Elite Profile</h2>
-              <div className="flex items-center gap-3">
-                <label className="text-sm text-gray-500">Display Name:</label>
-                <input
-                  type="text"
-                  value={eliteName}
-                  onChange={(e) => setEliteName(e.target.value)}
-                  placeholder="Enter your name..."
-                  className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-orange-500"
-                />
-              </div>
-              <p className="text-xs text-gray-400 mt-2">This is used for personalised greetings on your dashboard</p>
-            </div>
-          )}
-
-          {/* Funny Greetings Toggle */}
-          <div className="bg-white rounded-3xl shadow-sm border p-6">
-            <h2 className="text-xl font-semibold mb-3">Preferences</h2>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-medium text-gray-700">Funny Greetings</div>
-                <div className="text-xs text-gray-400">Show cheeky greetings like "Welcome back daddy 🔥" on your dashboard</div>
-              </div>
-              <button
-                onClick={() => setFunnyGreetings(!funnyGreetings)}
-                className={`relative w-12 h-6 rounded-full transition-colors ${funnyGreetings ? 'bg-orange-500' : 'bg-gray-300'}`}
-              >
-                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${funnyGreetings ? 'translate-x-6' : 'translate-x-0.5'}`} />
-              </button>
-            </div>
-          </div>
 
           {/* Feature Comparison */}
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
