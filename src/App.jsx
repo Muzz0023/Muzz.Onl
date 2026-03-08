@@ -782,11 +782,29 @@ const supabase = {
   },
 
   async deleteUserData(userId) {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+    // Delete user data
+    await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
       method: 'DELETE',
       headers: this.headers(true)
     });
-    return r.ok;
+    // Delete auth account using user's own token
+    const s = localStorage.getItem('muzz_auth');
+    if (s) {
+      const { accessToken } = JSON.parse(s);
+      if (accessToken) {
+        await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+      }
+    }
+    // Clear all local storage
+    localStorage.removeItem('muzz_auth');
+    return true;
   }
 };
 
@@ -2310,6 +2328,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     if (confirm('This is permanent. All your data will be lost forever. Are you absolutely sure?')) {
                       try {
                         await supabase.deleteUserData(userId);
+                        alert('Your account and all data has been permanently deleted.');
                         signOut();
                         setSidebarOpen(false);
                       } catch (err) {
