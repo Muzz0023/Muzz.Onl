@@ -581,6 +581,8 @@ const StarryBackground = ({ children }) => {
         .dark-mode [class*="from-"][class*="to-"] [class*="bg-white\\/"] {
           background-color: inherit !important;
         }
+        /* Hide scrollbar for horizontal scroll tabs */
+        .overflow-x-auto::-webkit-scrollbar { display: none; }
         /* iOS INPUT FIXES - bigger touch targets */
         input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="password"], textarea, select {
           font-size: 16px !important; /* Prevents iOS zoom on focus */
@@ -2665,7 +2667,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setTasksSubTab('daily')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'daily'
                   ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -2675,7 +2677,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setTasksSubTab('weekly')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'weekly'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -2685,7 +2687,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setTasksSubTab('general')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'general'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -2695,7 +2697,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setTasksSubTab('rotation')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'rotation'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -2705,7 +2707,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setTasksSubTab('pomodoro')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'pomodoro'
                   ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -2992,7 +2994,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="bg-white rounded-3xl shadow-sm border p-8 text-center">
                   <div className="flex justify-center gap-3 mb-8">
                     {[{ id: 'work', label: 'Focus' }, { id: 'shortBreak', label: 'Short Break' }, { id: 'longBreak', label: 'Long Break' }].map(m => (
-                      <button key={m.id} onClick={() => resetPom(m.id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${pomodoroMode === m.id ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{m.label}</button>
+                      <button key={m.id} onClick={() => resetPom(m.id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${pomodoroMode === m.id ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{m.label}</button>
                     ))}
                   </div>
                   <div className="text-8xl font-bold text-gray-800 mb-8 font-mono">{formatTime(pomodoroTime)}</div>
@@ -3107,7 +3109,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setDietSubTab('groceries')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'groceries'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -3117,7 +3119,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setDietSubTab('meals')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'meals'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -3127,7 +3129,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setDietSubTab('water')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'water'
                   ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -3137,7 +3139,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setDietSubTab('plans')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'plans'
                   ? 'bg-gradient-to-r from-purple-500 to-violet-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -3147,7 +3149,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setDietSubTab('custom')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'custom'
                   ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -4089,7 +4091,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setGymSubTab('sleep')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'sleep'
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -4099,7 +4101,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setGymSubTab('mental')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'mental'
                   ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -4109,7 +4111,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setGymSubTab('steps')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'steps'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -4119,7 +4121,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setGymSubTab('plan')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'plan'
                   ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -4129,7 +4131,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setGymSubTab('journal')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'journal'
                   ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -4974,7 +4976,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div key={tab.id} className="relative group">
                     <button
                       onClick={() => updateCategory({ activeSubTab: tab.id })}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                         customCat.activeSubTab === tab.id
                           ? 'ring-2 ring-white text-white bg-white/10'
                           : 'bg-white/20 text-white hover:bg-white/30'
@@ -6240,7 +6242,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setWorkSubTab('summary')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 workSubTab === 'summary'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6255,7 +6257,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   setTimesheetData(prev => ({ ...prev, activeJobId: job.id }));
                   setWorkSubTab('timesheet');
                 }}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   workSubTab === 'timesheet' && activeJobId === job.id
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6934,7 +6936,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setBillsSubTab('bills')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'bills'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6944,7 +6946,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setBillsSubTab('calendar')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'calendar'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6954,7 +6956,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setBillsSubTab('goals')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'goals'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6964,7 +6966,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setBillsSubTab('debts')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'debts'
                   ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -6974,7 +6976,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
             <button
               onClick={() => setBillsSubTab('debtCalc')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'debtCalc'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -8696,10 +8698,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
             {/* Sub-tabs */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <button
                 onClick={() => setAssetsSubTab('assets')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'assets'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -8709,7 +8711,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
               <button
                 onClick={() => setAssetsSubTab('goals')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'goals'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -8719,7 +8721,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
               <button
                 onClick={() => setAssetsSubTab('knowledge')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'knowledge'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -8729,7 +8731,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
               <button
                 onClick={() => setAssetsSubTab('assetMap')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'assetMap'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -8739,7 +8741,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
               <button
                 onClick={() => setAssetsSubTab('worldMap')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'worldMap'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
