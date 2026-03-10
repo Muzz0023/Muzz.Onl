@@ -1814,6 +1814,11 @@ function MuzzApp() {
     loadData();
   }, [userId]);
 
+  // Reset dataLoaded when user changes to prevent saving stale data
+  useEffect(() => {
+    setDataLoaded(false);
+  }, [userId]);
+
   // Save data to Supabase when it changes
   useEffect(() => {
     if (!userId || !dataLoaded) return;
