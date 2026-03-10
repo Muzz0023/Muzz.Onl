@@ -1564,6 +1564,7 @@ function MuzzApp() {
 
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
+  const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -2074,7 +2075,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "home", label: "Dashboard", icon: Home },
     { id: "habits", label: "Habits", icon: Flame },
     { id: "countdowns", label: "Countdowns", icon: Calendar },
-    { id: "bucketlist", label: "Bucket List", icon: Trophy },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
@@ -2122,14 +2122,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }, [netWorth, savingsRate, currentStreak, stocks]);
 
   // Lock body scroll when sidebar is open
+  const scrollPosRef = useRef(0);
   useEffect(() => {
     if (sidebarOpen) {
+      scrollPosRef.current = window.scrollY;
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPosRef.current}px`;
+      document.body.style.width = '100%';
     } else {
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPosRef.current);
     }
     return () => {
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
     };
   }, [sidebarOpen]);
 
@@ -13816,9 +13828,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
             <h1 className="text-3xl font-bold text-white">⏳ Countdowns</h1>
             <p className="text-white/70 mt-1">Count down to the things that matter</p>
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => setCountdownsSubTab('countdowns')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${countdownsSubTab === 'countdowns' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'}`}>Countdowns</button>
+              <button onClick={() => setCountdownsSubTab('bucketlist')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${countdownsSubTab === 'bucketlist' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'}`}>Bucket List</button>
+            </div>
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-4" style={{ display: countdownsSubTab === 'countdowns' ? 'block' : 'none' }}>
           <button
             onClick={() => setCountdowns(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '✈️', date: '', color: gradients[prev.length % gradients.length] }])}
             className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
@@ -13886,6 +13902,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })}
         </div>
+
+        {/* Bucket List Sub-tab */}
+        {countdownsSubTab === 'bucketlist' && (() => {
+          const completedCount = bucketList.filter(b => b.completed).length;
+          return (
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
+              {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
+              {bucketList.length > 0 && (<div className="bg-white rounded-2xl p-4 shadow-sm border"><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
+              {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-start gap-3"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
+              {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-center gap-3 opacity-60 mb-2"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
+            </div>
+          );
+        })()}
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
