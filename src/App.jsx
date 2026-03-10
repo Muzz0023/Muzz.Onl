@@ -8601,7 +8601,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="font-semibold text-sm">Charlie Teo Foundation</div>
                   <div className="text-xs text-gray-400">$1 per subscription</div>
                 </div>
-                <a href="https://www.charlietheofoundation.org.au" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
+                <a href="https://charlieteofoundation.org.au" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
               </div>
               <div className="p-5 flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#DBEAFE' }}>🏉</div>
