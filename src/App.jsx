@@ -6614,7 +6614,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-            {isElite && !isVIP && (
+            {isElite && (
               <div className="bg-white/10 backdrop-blur rounded-2xl p-3 mb-4 flex items-center gap-2">
                 <span className="text-lg">💛</span>
                 <span className="text-white/80 text-sm">Your subscription is helping fund research into endometriosis & brain cancer. Thank you.</span>
