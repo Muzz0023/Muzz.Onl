@@ -2130,23 +2130,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const scrollPosRef = useRef(0);
   useEffect(() => {
     if (sidebarOpen) {
-      scrollPosRef.current = window.scrollY;
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollPosRef.current}px`;
-      document.body.style.width = '100%';
     } else {
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, scrollPosRef.current);
     }
     return () => {
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
     };
   }, [sidebarOpen]);
 
@@ -2197,11 +2186,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <button 
                     key={item.id} 
                     onClick={() => { 
+                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
                       setSidebarOpen(false);
-                      setTimeout(() => {
-                        if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
-                        window.scrollTo(0, 0);
-                      }, 50);
+                      scrollPosRef.current = 0;
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                       isActive 
