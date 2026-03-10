@@ -13829,8 +13829,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <h1 className="text-3xl font-bold text-white">⏳ Countdowns</h1>
             <p className="text-white/70 mt-1">Count down to the things that matter</p>
             <div className="flex gap-2 mt-4">
-              <button onClick={() => setCountdownsSubTab('countdowns')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${countdownsSubTab === 'countdowns' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'}`}>Countdowns</button>
-              <button onClick={() => setCountdownsSubTab('bucketlist')} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${countdownsSubTab === 'bucketlist' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'}`}>Bucket List</button>
+              <button onClick={() => setCountdownsSubTab('countdowns')} className="px-4 py-2 rounded-full text-sm font-medium transition-all" style={{ backgroundColor: countdownsSubTab === 'countdowns' ? 'white' : 'rgba(255,255,255,0.2)', color: countdownsSubTab === 'countdowns' ? '#4338ca' : 'white' }}>Countdowns</button>
+              <button onClick={() => setCountdownsSubTab('bucketlist')} className="px-4 py-2 rounded-full text-sm font-medium transition-all" style={{ backgroundColor: countdownsSubTab === 'bucketlist' ? 'white' : 'rgba(255,255,255,0.2)', color: countdownsSubTab === 'bucketlist' ? '#4338ca' : 'white' }}>Bucket List</button>
             </div>
           </div>
         </div>
