@@ -6614,6 +6614,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
+            {isElite && !isVIP && (
+              <div className="bg-white/10 backdrop-blur rounded-2xl p-3 mb-4 flex items-center gap-2">
+                <span className="text-lg">💛</span>
+                <span className="text-white/80 text-sm">Your subscription is helping fund research into endometriosis & brain cancer. Thank you.</span>
+              </div>
+            )}
             <div className="bg-white/20 backdrop-blur rounded-2xl p-4">
               <div className="text-white/80 text-sm">Net Worth</div>
               <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
