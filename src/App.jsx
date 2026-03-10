@@ -6614,12 +6614,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-            {isElite && (
-              <div className="bg-white/10 backdrop-blur rounded-2xl p-3 mb-4 flex items-center gap-2">
-                <span className="text-lg">💛</span>
-                <span className="text-white/80 text-sm">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation 💛</span>
-              </div>
-            )}
             <div className="bg-white/20 backdrop-blur rounded-2xl p-4">
               <div className="text-white/80 text-sm">Net Worth</div>
               <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
@@ -6852,6 +6846,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="text-lg italic mb-2">"{todayQuote.quote}"</div>
             <div className="text-sm text-slate-400">— {todayQuote.author}</div>
           </div>
+
+          {/* Charity Banner */}
+          {isElite && (
+            <div className="bg-white/5 rounded-2xl p-4 flex items-center gap-3 border border-white/10">
+              <span className="text-lg">💛</span>
+              <span className="text-sm text-gray-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation</span>
+            </div>
+          )}
         </div>
         
         {/* Floating Chat */}
