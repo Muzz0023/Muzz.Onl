@@ -9576,7 +9576,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p className="text-emerald-200 text-sm">Tap anywhere on the map to drop a pin</p>
                 </div>
 
-                <div className="rounded-2xl shadow-sm border overflow-hidden" style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
+                <div className="rounded-2xl shadow-sm border overflow-hidden relative" style={{ backgroundColor: 'rgba(15,23,42,0.6)', zIndex: 1 }}>
                   <div
                     id="world-map-container"
                     ref={(el) => {
