@@ -8491,10 +8491,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="text-xs text-gray-400 space-y-1">
                 <p>Auto-renewable subscription • $4.99 AUD/month</p>
                 <p>Payment will be charged to your Apple ID account at confirmation of purchase. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.</p>
-                <div className="flex justify-center gap-4 mt-2">
-                  <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Privacy Policy</a>
-                  <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">Terms of Use</a>
-                </div>
               </div>
               
               {/* Restore Purchases - iOS only */}
@@ -8541,6 +8537,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </button>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* iOS Subscription Management */}
+          {isElite && !isVIP && !subscriptionInfo && isNative && (
+            <div className="bg-white rounded-3xl shadow-sm border p-6 space-y-4">
+              <h2 className="text-xl font-semibold">Subscription</h2>
+              <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
+              <p className="text-xs text-gray-400">To manage or cancel your subscription, go to your iPhone Settings → Apple ID → Subscriptions.</p>
+              <button
+                onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
+                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
+              >
+                Manage Apple Subscription
+              </button>
             </div>
           )}
 
