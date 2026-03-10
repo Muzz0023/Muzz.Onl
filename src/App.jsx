@@ -1635,7 +1635,7 @@ function MuzzApp() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, userEmail }),
           });
-          setIsElite(true);
+          setStripeElite(true);
           alert('Welcome to Elite! 🎉');
           setActiveView('home');
         } else if (result.cancelled) {
@@ -1677,7 +1677,7 @@ function MuzzApp() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId, userEmail }),
         });
-        setIsElite(true);
+        setStripeElite(true);
         alert('Purchases restored! Welcome back Elite! 🎉');
       } else {
         alert('No previous purchases found.');
