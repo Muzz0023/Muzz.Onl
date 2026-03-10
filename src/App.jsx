@@ -2189,7 +2189,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             )}
             
             {/* Navigation */}
-            <nav className="flex-1 space-y-1 px-1">
+            <nav className="flex-1 space-y-0.5 px-1">
               {navItems.map(item => {
                 const locked = item.eliteOnly && !isElite;
                 const isActive = activeView === item.id;
@@ -2197,10 +2197,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <button 
                     key={item.id} 
                     onClick={() => { 
-                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
-                      setSidebarOpen(false); 
+                      setSidebarOpen(false);
+                      setTimeout(() => {
+                        if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
+                        window.scrollTo(0, 0);
+                      }, 50);
                     }}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                       isActive 
                         ? 'bg-orange-500 text-white shadow-sm' 
                         : locked 
