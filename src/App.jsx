@@ -8579,6 +8579,44 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
+          {/* Giving Back */}
+          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+            <div className="p-6 text-center border-b" style={{ background: 'linear-gradient(135deg, #fdf2f8, #fef3c7)' }}>
+              <div className="text-3xl mb-2">💛</div>
+              <h2 className="text-xl font-bold text-gray-800">Giving Back</h2>
+              <p className="text-sm text-gray-500 mt-1">$3 from every Elite subscription goes directly to charity</p>
+            </div>
+            <div className="divide-y">
+              <div className="p-5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#FEF3C7' }}>🎗️</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm">Endometriosis Australia</div>
+                  <div className="text-xs text-gray-400">$1 per subscription</div>
+                </div>
+                <a href="https://www.endometriosisaustralia.org" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
+              </div>
+              <div className="p-5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#EDE9FE' }}>🧠</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm">Charlie Teo Foundation</div>
+                  <div className="text-xs text-gray-400">$1 per subscription</div>
+                </div>
+                <a href="https://www.charlietheofoundation.org.au" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
+              </div>
+              <div className="p-5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#DBEAFE' }}>🏉</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm">Mark Hughes Foundation</div>
+                  <div className="text-xs text-gray-400">$1 per subscription</div>
+                </div>
+                <a href="https://www.markhughesfoundation.com.au" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
+              </div>
+            </div>
+            <div className="p-4 text-center" style={{ backgroundColor: 'rgba(249,115,22,0.05)' }}>
+              <p className="text-xs text-gray-400">Every Elite member helps fund research into endometriosis and brain cancer. Thank you.</p>
+            </div>
+          </div>
+
           {/* Legal Links - always visible */}
           <div className="flex justify-center gap-4 pt-4">
             <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Privacy Policy</a>
