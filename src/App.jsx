@@ -138,7 +138,6 @@ const StarryBackground = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative" style={{ backgroundColor: '#030712' }}>
-      {/* Cover iOS safe area insets so they match the dark background */}
       <div className="fixed top-0 left-0 right-0 z-[999]" style={{ height: 'env(safe-area-inset-top)', backgroundColor: '#030712' }} />
       <div className="fixed bottom-0 left-0 right-0 z-[999]" style={{ height: 'env(safe-area-inset-bottom)', backgroundColor: '#030712' }} />
       {/* Stars layer */}
@@ -1571,7 +1570,6 @@ function MuzzApp() {
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
-  // Timetable state - must be at top level (React hooks rules)
   const [timetableBlocks, setTimetableBlocks] = useState([]);
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' });
@@ -13813,16 +13811,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       className="flex-1 text-lg font-semibold bg-transparent focus:outline-none"
                     />
                     <div className="flex items-center gap-2">
-                      <div className="text-center px-3 py-1 bg-orange-100 rounded-xl">
-                        <div className="text-lg font-bold text-orange-600">{streak}</div>
-                        <div className="text-[10px] text-orange-500">streak</div>
-                      </div>
-                      <button
-                        onClick={() => toggleHabit(habit.id, today)}
-                        className={`w-12 h-12 rounded-xl text-2xl transition-all ${completedToday ? 'bg-green-500 text-white scale-110' : 'bg-gray-100 hover:bg-gray-200'}`}
-                      >
-                        {completedToday ? '✓' : '○'}
-                      </button>
                       <button
                         onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
                         className="p-1.5 bg-red-100 hover:bg-red-500 text-red-400 hover:text-white rounded-lg transition-all"
@@ -13862,15 +13850,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ============================================
   if (activeView === 'timetable') {
     const TT_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const TT_HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 7am–10pm
+    const TT_HOURS = Array.from({ length: 16 }, (_, i) => i + 7);
+    // Use hex colours directly so they always work regardless of Tailwind purging
     const TT_COLORS = [
-      { bg: 'bg-blue-500', light: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
-      { bg: 'bg-purple-500', light: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200' },
-      { bg: 'bg-orange-500', light: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
-      { bg: 'bg-green-500', light: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
-      { bg: 'bg-rose-500', light: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-200' },
-      { bg: 'bg-teal-500', light: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-200' },
-      { bg: 'bg-amber-500', light: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200' },
+      { hex: '#3b82f6', light: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe', name: 'Blue' },
+      { hex: '#8b5cf6', light: '#f5f3ff', text: '#6d28d9', border: '#ddd6fe', name: 'Purple' },
+      { hex: '#f97316', light: '#fff7ed', text: '#c2410c', border: '#fed7aa', name: 'Orange' },
+      { hex: '#22c55e', light: '#f0fdf4', text: '#15803d', border: '#bbf7d0', name: 'Green' },
+      { hex: '#ef4444', light: '#fef2f2', text: '#b91c1c', border: '#fecaca', name: 'Red' },
+      { hex: '#14b8a6', light: '#f0fdfa', text: '#0f766e', border: '#99f6e4', name: 'Teal' },
+      { hex: '#f59e0b', light: '#fffbeb', text: '#b45309', border: '#fde68a', name: 'Amber' },
     ];
     const TT_TYPES = [
       { id: 'uni', label: '🎓 Uni / Class' },
@@ -13881,8 +13870,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { id: 'other', label: '📌 Other' },
     ];
     const todayDayIdx = (new Date().getDay() + 6) % 7;
-
-    const fmtHour = (h) => h > 12 ? `${h-12}pm` : h === 12 ? '12pm' : `${h}am`;
+    const fmtHour = (h) => h > 12 ? `${h - 12}pm` : h === 12 ? '12pm' : `${h}am`;
 
     const saveTtBlock = () => {
       if (!ttNewBlock.title.trim()) return;
@@ -13895,24 +13883,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' });
       setTtTab('week');
     };
-
-    const startTtEdit = (block) => {
-      setTtNewBlock({ ...block });
-      setTtEditingId(block.id);
-      setTtTab('add');
-    };
-
-    const deleteTtBlock = (id) => {
-      setTimetableBlocks(prev => prev.filter(b => b.id !== id));
-      setTtEditingId(null);
-      setTtTab('week');
-    };
+    const startTtEdit = (block) => { setTtNewBlock({ ...block }); setTtEditingId(block.id); setTtTab('add'); };
+    const deleteTtBlock = (id) => { setTimetableBlocks(prev => prev.filter(b => b.id !== id)); setTtEditingId(null); setTtTab('week'); };
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-r from-violet-600 to-indigo-700 pt-16 pb-6 px-6">
+        <div style={{ background: 'linear-gradient(to right, #7c3aed, #4338ca)' }} className="pt-16 pb-6 px-6">
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
             <h1 className="text-3xl font-bold text-white">📅 Timetable</h1>
@@ -13924,55 +13902,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Tabs */}
           <div className="flex gap-2 mb-4">
             {[{ id: 'week', label: '📋 Week View' }, { id: 'add', label: ttEditingId ? '✏️ Edit Block' : '➕ Add Block' }].map(t => (
-              <button key={t.id} onClick={() => {
-                setTtTab(t.id);
-                if (t.id !== 'add') { setTtEditingId(null); setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' }); }
-              }}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab === t.id ? 'bg-violet-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
+              <button key={t.id} onClick={() => { setTtTab(t.id); if (t.id !== 'add') { setTtEditingId(null); setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' }); } }}
+                style={ttTab === t.id ? { background: '#7c3aed', color: 'white' } : {}}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab !== t.id ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : ''}`}>
                 {t.label}
               </button>
             ))}
           </div>
 
-          {/* WEEK VIEW */}
           {ttTab === 'week' && (
             <div>
               {timetableBlocks.length === 0 ? (
                 <div className="bg-slate-800/60 rounded-3xl p-12 text-center border border-slate-700/50">
                   <div className="text-5xl mb-4">📅</div>
                   <p className="text-gray-400 mb-4">No classes or shifts yet.</p>
-                  <button onClick={() => setTtTab('add')} className="px-6 py-2 bg-violet-600 text-white rounded-xl text-sm font-medium">Add your first block</button>
+                  <button onClick={() => setTtTab('add')} style={{ background: '#7c3aed' }} className="px-6 py-2 text-white rounded-xl text-sm font-medium">Add your first block</button>
                 </div>
               ) : (
                 <>
-                  {/* Scrollable week grid */}
                   <div className="overflow-x-auto -mx-4 px-4 mb-6">
-                    <div className="min-w-[580px]">
-                      {/* Day headers */}
+                    <div style={{ minWidth: '560px' }}>
                       <div className="grid mb-1" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px' }}>
                         <div />
                         {TT_DAYS.map((d, i) => (
-                          <div key={d} className={`text-center text-xs font-bold py-1.5 rounded-lg ${i === todayDayIdx ? 'bg-violet-600 text-white' : 'text-slate-400'}`}>{d}</div>
+                          <div key={d} className="text-center text-xs font-bold py-1.5 rounded-lg"
+                            style={i === todayDayIdx ? { background: '#7c3aed', color: 'white' } : { color: '#94a3b8' }}>{d}</div>
                         ))}
                       </div>
-                      {/* Hour rows */}
                       {TT_HOURS.map(hour => (
                         <div key={hour} className="grid" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px', minHeight: '36px', marginBottom: '2px' }}>
-                          <div className="text-right text-[10px] text-slate-500 pr-1 pt-0.5">{fmtHour(hour)}</div>
+                          <div className="text-right text-slate-500 pr-1 pt-0.5" style={{ fontSize: '10px' }}>{fmtHour(hour)}</div>
                           {TT_DAYS.map(day => {
                             const startsHere = timetableBlocks.filter(b => b.day === day && b.startHour === hour);
                             return (
                               <div key={day} className="relative" style={{ minHeight: '36px' }}>
-                                <div className="absolute inset-0 border-t border-slate-700/20" />
+                                <div className="absolute inset-0" style={{ borderTop: '1px solid rgba(148,163,184,0.15)' }} />
                                 {startsHere.map(block => {
                                   const col = TT_COLORS[block.color % TT_COLORS.length];
-                                  const spanHeight = (block.endHour - block.startHour) * 38;
                                   return (
                                     <div key={block.id} onClick={() => startTtEdit(block)}
-                                      className={`absolute inset-x-0 top-0 ${col.light} ${col.text} border ${col.border} rounded-md px-1 py-0.5 cursor-pointer hover:opacity-80 overflow-hidden z-10`}
-                                      style={{ height: `${spanHeight}px` }}>
-                                      <p className="text-[9px] font-bold leading-tight truncate">{block.title}</p>
-                                      {block.location && <p className="text-[8px] opacity-60 truncate">{block.location}</p>}
+                                      className="absolute inset-x-0 top-0 rounded-md px-1 py-0.5 cursor-pointer overflow-hidden z-10 hover:opacity-80"
+                                      style={{ height: `${(block.endHour - block.startHour) * 38}px`, background: col.light, color: col.text, border: `1px solid ${col.border}` }}>
+                                      <p className="font-bold leading-tight truncate" style={{ fontSize: '9px' }}>{block.title}</p>
+                                      {block.location && <p className="opacity-60 truncate" style={{ fontSize: '8px' }}>{block.location}</p>}
                                     </div>
                                   );
                                 })}
@@ -13984,7 +13956,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
 
-                  {/* Block list by day */}
                   <div className="space-y-3">
                     <h3 className="text-sm font-semibold text-slate-400">All Blocks</h3>
                     {TT_DAYS.map(day => {
@@ -13995,17 +13966,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
                           {dayBlocks.map(block => {
                             const col = TT_COLORS[block.color % TT_COLORS.length];
-                            const typeLabel = TT_TYPES.find(t => t.id === block.type)?.label || block.type;
                             return (
-                              <div key={block.id} className={`flex items-center gap-3 ${col.light} border ${col.border} rounded-xl p-3 mb-1.5`}>
-                                <div className={`w-1.5 h-10 ${col.bg} rounded-full flex-shrink-0`} />
+                              <div key={block.id} className="flex items-center gap-3 rounded-xl p-3 mb-1.5"
+                                style={{ background: col.light, border: `1px solid ${col.border}` }}>
+                                <div className="w-1.5 h-10 rounded-full flex-shrink-0" style={{ background: col.hex }} />
                                 <div className="flex-1 min-w-0">
-                                  <p className={`font-semibold text-sm ${col.text} truncate`}>{block.title}</p>
-                                  <p className="text-xs text-gray-500">{typeLabel} · {fmtHour(block.startHour)}–{fmtHour(block.endHour)}{block.location ? ` · ${block.location}` : ''}</p>
+                                  <p className="font-semibold text-sm truncate" style={{ color: col.text }}>
+                                    {block.title}
+                                  </p>
+                                  <p className="text-xs text-gray-500">
+                                    {TT_TYPES.find(t => t.id === block.type)?.label} · {fmtHour(block.startHour)}–{fmtHour(block.endHour)}{block.location ? ` · ${block.location}` : ''}
+                                  </p>
                                 </div>
                                 <div className="flex gap-1.5">
-                                  <button onClick={() => startTtEdit(block)} className="p-1.5 bg-white/70 rounded-lg text-gray-500 hover:text-violet-600 transition-colors text-sm">✏️</button>
-                                  <button onClick={() => deleteTtBlock(block.id)} className="p-1.5 bg-white/70 rounded-lg text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                                  <button onClick={() => startTtEdit(block)} className="p-1.5 rounded-lg text-gray-500 hover:text-violet-600 transition-colors text-sm" style={{ background: 'rgba(255,255,255,0.7)' }}>✏️</button>
+                                  <button onClick={() => deleteTtBlock(block.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 transition-colors" style={{ background: 'rgba(255,255,255,0.7)' }}><Trash2 className="w-3.5 h-3.5" /></button>
                                 </div>
                               </div>
                             );
@@ -14019,7 +13994,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          {/* ADD / EDIT FORM */}
           {ttTab === 'add' && (
             <div className="bg-slate-800/60 rounded-3xl p-5 border border-slate-700/50 space-y-4">
               <h2 className="text-white font-bold text-lg">{ttEditingId ? 'Edit Block' : 'Add New Block'}</h2>
@@ -14028,21 +14002,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <label className="text-xs text-slate-400 font-medium block mb-1">Title *</label>
                 <input value={ttNewBlock.title} onChange={e => setTtNewBlock(p => ({ ...p, title: e.target.value }))}
                   placeholder="e.g. ECON101, Morning Shift..."
-                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
+                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none text-sm"
+                  style={{ outlineColor: '#7c3aed' }} />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">Type</label>
                   <select value={ttNewBlock.type} onChange={e => setTtNewBlock(p => ({ ...p, type: e.target.value }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
                     {TT_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">Day</label>
                   <select value={ttNewBlock.day} onChange={e => setTtNewBlock(p => ({ ...p, day: e.target.value }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
                     {TT_DAYS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
@@ -14052,14 +14027,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">Start</label>
                   <select value={ttNewBlock.startHour} onChange={e => setTtNewBlock(p => ({ ...p, startHour: parseInt(e.target.value), endHour: Math.max(parseInt(e.target.value) + 1, p.endHour) }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
                     {TT_HOURS.map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">End</label>
                   <select value={ttNewBlock.endHour} onChange={e => setTtNewBlock(p => ({ ...p, endHour: parseInt(e.target.value) }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
                     {TT_HOURS.filter(h => h > ttNewBlock.startHour).map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
                   </select>
                 </div>
@@ -14069,27 +14044,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <label className="text-xs text-slate-400 font-medium block mb-1">Location (optional)</label>
                 <input value={ttNewBlock.location} onChange={e => setTtNewBlock(p => ({ ...p, location: e.target.value }))}
                   placeholder="e.g. Building A, Room 201"
-                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
+                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none text-sm" />
               </div>
 
               <div>
                 <label className="text-xs text-slate-400 font-medium block mb-2">Colour</label>
-                <div className="flex gap-2">
-                  {TT_COLORS.map((c, i) => (
-                    <button key={i} onClick={() => setTtNewBlock(p => ({ ...p, color: i }))}
-                      className={`w-7 h-7 rounded-full ${c.bg} transition-transform ${ttNewBlock.color === i ? 'scale-125 ring-2 ring-white' : 'opacity-50 hover:opacity-80'}`} />
+                <div className="flex gap-3">
+                  {TT_COLORS.map((col, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setTtNewBlock(p => ({ ...p, color: i }))}
+                      title={col.name}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: col.hex,
+                        border: ttNewBlock.color === i ? '3px solid white' : '3px solid transparent',
+                        boxShadow: ttNewBlock.color === i ? `0 0 0 2px ${col.hex}` : 'none',
+                        transform: ttNewBlock.color === i ? 'scale(1.2)' : 'scale(1)',
+                        transition: 'all 0.15s ease',
+                        cursor: 'pointer',
+                      }}
+                    />
                   ))}
                 </div>
               </div>
 
               <div className="flex gap-2 pt-1">
                 <button onClick={saveTtBlock}
-                  className="flex-1 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all text-sm">
+                  className="flex-1 py-3 text-white rounded-xl font-semibold text-sm transition-all hover:opacity-90"
+                  style={{ background: 'linear-gradient(to right, #7c3aed, #4338ca)' }}>
                   {ttEditingId ? '✓ Save Changes' : '+ Add Block'}
                 </button>
                 {ttEditingId && (
                   <button onClick={() => deleteTtBlock(ttEditingId)}
-                    className="px-4 py-3 bg-red-500/20 text-red-400 rounded-xl font-medium hover:bg-red-500/30 transition-all text-sm">
+                    className="px-4 py-3 text-red-400 rounded-xl font-medium text-sm transition-all hover:opacity-90"
+                    style={{ background: 'rgba(239,68,68,0.15)' }}>
                     🗑️ Delete
                   </button>
                 )}
