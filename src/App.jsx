@@ -138,9 +138,9 @@ const StarryBackground = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative" style={{ backgroundColor: '#030712' }}>
-      {/* Safe area fills - covers iOS status bar and home indicator */}
-      <div className="fixed top-0 left-0 right-0 z-0" style={{ height: 'env(safe-area-inset-top)', backgroundColor: '#030712' }} />
-      <div className="fixed bottom-0 left-0 right-0 z-0" style={{ height: 'env(safe-area-inset-bottom)', backgroundColor: '#030712' }} />
+      {/* Cover iOS safe area insets so they match the dark background */}
+      <div className="fixed top-0 left-0 right-0 z-[999]" style={{ height: 'env(safe-area-inset-top)', backgroundColor: '#030712' }} />
+      <div className="fixed bottom-0 left-0 right-0 z-[999]" style={{ height: 'env(safe-area-inset-bottom)', backgroundColor: '#030712' }} />
       {/* Stars layer */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {/* Small stars */}
@@ -1571,7 +1571,11 @@ function MuzzApp() {
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
+  // Timetable state - must be at top level (React hooks rules)
   const [timetableBlocks, setTimetableBlocks] = useState([]);
+  const [ttTab, setTtTab] = useState('week');
+  const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' });
+  const [ttEditingId, setTtEditingId] = useState(null);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -2088,8 +2092,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const navItems = [
     { id: "home", label: "Dashboard", icon: Home },
     { id: "habits", label: "Habits", icon: Flame },
-    { id: "countdowns", label: "Countdowns", icon: Calendar },
     { id: "timetable", label: "Timetable", icon: Calendar },
+    { id: "countdowns", label: "Countdowns", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
@@ -13857,55 +13861,52 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // TIMETABLE VIEW
   // ============================================
   if (activeView === 'timetable') {
-    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 7am - 10pm
-    const BLOCK_COLORS = [
-      { bg: 'bg-blue-500', light: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-300' },
-      { bg: 'bg-purple-500', light: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-300' },
-      { bg: 'bg-orange-500', light: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300' },
-      { bg: 'bg-green-500', light: 'bg-green-100', text: 'text-green-700', border: 'border-green-300' },
-      { bg: 'bg-rose-500', light: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-300' },
-      { bg: 'bg-teal-500', light: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-300' },
-      { bg: 'bg-amber-500', light: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300' },
+    const TT_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const TT_HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 7am–10pm
+    const TT_COLORS = [
+      { bg: 'bg-blue-500', light: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
+      { bg: 'bg-purple-500', light: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200' },
+      { bg: 'bg-orange-500', light: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
+      { bg: 'bg-green-500', light: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
+      { bg: 'bg-rose-500', light: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-200' },
+      { bg: 'bg-teal-500', light: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-200' },
+      { bg: 'bg-amber-500', light: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200' },
     ];
-
-    const todayIdx = (new Date().getDay() + 6) % 7; // 0=Mon
-    const [ttBlocks, setTtBlocks] = [timetableBlocks, setTimetableBlocks];
-    const [ttTab, setTtTab] = useState('week'); // 'week' | 'add'
-    const [newBlock, setNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' });
-    const [editingBlock, setEditingBlock] = useState(null);
-
-    const typeOptions = [
+    const TT_TYPES = [
       { id: 'uni', label: '🎓 Uni / Class' },
       { id: 'work', label: '💼 Work / Shift' },
       { id: 'gym', label: '🏋️ Gym' },
-      { id: 'personal', label: '⭐ Personal' },
       { id: 'study', label: '📚 Study' },
+      { id: 'personal', label: '⭐ Personal' },
       { id: 'other', label: '📌 Other' },
     ];
+    const todayDayIdx = (new Date().getDay() + 6) % 7;
 
-    const getBlocksForDayHour = (day, hour) =>
-      ttBlocks.filter(b => b.day === day && b.startHour <= hour && b.endHour > hour);
+    const fmtHour = (h) => h > 12 ? `${h-12}pm` : h === 12 ? '12pm' : `${h}am`;
 
-    const saveBlock = () => {
-      if (!newBlock.title.trim()) return;
-      if (editingBlock) {
-        setTtBlocks(prev => prev.map(b => b.id === editingBlock ? { ...newBlock, id: editingBlock } : b));
-        setEditingBlock(null);
+    const saveTtBlock = () => {
+      if (!ttNewBlock.title.trim()) return;
+      if (ttEditingId) {
+        setTimetableBlocks(prev => prev.map(b => b.id === ttEditingId ? { ...ttNewBlock, id: ttEditingId } : b));
+        setTtEditingId(null);
       } else {
-        setTtBlocks(prev => [...prev, { ...newBlock, id: Date.now().toString() }]);
+        setTimetableBlocks(prev => [...prev, { ...ttNewBlock, id: Date.now().toString() }]);
       }
-      setNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' });
+      setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' });
       setTtTab('week');
     };
 
-    const startEdit = (block) => {
-      setNewBlock({ ...block });
-      setEditingBlock(block.id);
+    const startTtEdit = (block) => {
+      setTtNewBlock({ ...block });
+      setTtEditingId(block.id);
       setTtTab('add');
     };
 
-    const deleteBlock = (id) => setTtBlocks(prev => prev.filter(b => b.id !== id));
+    const deleteTtBlock = (id) => {
+      setTimetableBlocks(prev => prev.filter(b => b.id !== id));
+      setTtEditingId(null);
+      setTtTab('week');
+    };
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
@@ -13919,174 +13920,176 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        {/* Tabs */}
         <div className="max-w-4xl mx-auto px-4 pt-4">
+          {/* Tabs */}
           <div className="flex gap-2 mb-4">
-            {[{id:'week',label:'📋 Week View'},{id:'add',label: editingBlock ? '✏️ Edit Block' : '➕ Add Block'}].map(t => (
-              <button key={t.id} onClick={() => { setTtTab(t.id); if (t.id !== 'add') { setEditingBlock(null); setNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' }); }}}
+            {[{ id: 'week', label: '📋 Week View' }, { id: 'add', label: ttEditingId ? '✏️ Edit Block' : '➕ Add Block' }].map(t => (
+              <button key={t.id} onClick={() => {
+                setTtTab(t.id);
+                if (t.id !== 'add') { setTtEditingId(null); setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' }); }
+              }}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab === t.id ? 'bg-violet-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
                 {t.label}
               </button>
             ))}
           </div>
 
+          {/* WEEK VIEW */}
           {ttTab === 'week' && (
             <div>
-              {ttBlocks.length === 0 && (
+              {timetableBlocks.length === 0 ? (
                 <div className="bg-slate-800/60 rounded-3xl p-12 text-center border border-slate-700/50">
                   <div className="text-5xl mb-4">📅</div>
-                  <p className="text-gray-400">No classes or shifts yet.</p>
-                  <button onClick={() => setTtTab('add')} className="mt-4 px-6 py-2 bg-violet-600 text-white rounded-xl text-sm font-medium">Add your first block</button>
+                  <p className="text-gray-400 mb-4">No classes or shifts yet.</p>
+                  <button onClick={() => setTtTab('add')} className="px-6 py-2 bg-violet-600 text-white rounded-xl text-sm font-medium">Add your first block</button>
                 </div>
-              )}
-
-              {/* Week grid - scrollable horizontally */}
-              {ttBlocks.length > 0 && (
-                <div className="overflow-x-auto -mx-4 px-4">
-                  <div className="min-w-[600px]">
-                    {/* Day headers */}
-                    <div className="grid gap-1 mb-1" style={{ gridTemplateColumns: '48px repeat(7, 1fr)' }}>
-                      <div />
-                      {DAYS.map((d, i) => (
-                        <div key={d} className={`text-center text-xs font-semibold py-1.5 rounded-lg ${i === todayIdx ? 'bg-violet-600 text-white' : 'text-slate-400'}`}>{d}</div>
+              ) : (
+                <>
+                  {/* Scrollable week grid */}
+                  <div className="overflow-x-auto -mx-4 px-4 mb-6">
+                    <div className="min-w-[580px]">
+                      {/* Day headers */}
+                      <div className="grid mb-1" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px' }}>
+                        <div />
+                        {TT_DAYS.map((d, i) => (
+                          <div key={d} className={`text-center text-xs font-bold py-1.5 rounded-lg ${i === todayDayIdx ? 'bg-violet-600 text-white' : 'text-slate-400'}`}>{d}</div>
+                        ))}
+                      </div>
+                      {/* Hour rows */}
+                      {TT_HOURS.map(hour => (
+                        <div key={hour} className="grid" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px', minHeight: '36px', marginBottom: '2px' }}>
+                          <div className="text-right text-[10px] text-slate-500 pr-1 pt-0.5">{fmtHour(hour)}</div>
+                          {TT_DAYS.map(day => {
+                            const startsHere = timetableBlocks.filter(b => b.day === day && b.startHour === hour);
+                            return (
+                              <div key={day} className="relative" style={{ minHeight: '36px' }}>
+                                <div className="absolute inset-0 border-t border-slate-700/20" />
+                                {startsHere.map(block => {
+                                  const col = TT_COLORS[block.color % TT_COLORS.length];
+                                  const spanHeight = (block.endHour - block.startHour) * 38;
+                                  return (
+                                    <div key={block.id} onClick={() => startTtEdit(block)}
+                                      className={`absolute inset-x-0 top-0 ${col.light} ${col.text} border ${col.border} rounded-md px-1 py-0.5 cursor-pointer hover:opacity-80 overflow-hidden z-10`}
+                                      style={{ height: `${spanHeight}px` }}>
+                                      <p className="text-[9px] font-bold leading-tight truncate">{block.title}</p>
+                                      {block.location && <p className="text-[8px] opacity-60 truncate">{block.location}</p>}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })}
+                        </div>
                       ))}
                     </div>
-                    {/* Hour rows */}
-                    {HOURS.map(hour => (
-                      <div key={hour} className="grid gap-1 mb-0.5" style={{ gridTemplateColumns: '48px repeat(7, 1fr)' }}>
-                        <div className="text-right text-[10px] text-slate-500 pr-2 pt-1">{hour > 12 ? `${hour-12}pm` : hour === 12 ? '12pm' : `${hour}am`}</div>
-                        {DAYS.map(day => {
-                          const blocks = getBlocksForDayHour(day, hour);
-                          const isStart = ttBlocks.filter(b => b.day === day && b.startHour === hour);
-                          return (
-                            <div key={day} className="min-h-[36px] relative">
-                              {isStart.map(block => {
-                                const col = BLOCK_COLORS[block.color % BLOCK_COLORS.length];
-                                const height = (block.endHour - block.startHour) * 36 + (block.endHour - block.startHour - 1) * 2;
-                                return (
-                                  <div key={block.id} onClick={() => startEdit(block)}
-                                    className={`absolute inset-x-0 top-0 ${col.light} ${col.text} ${col.border} border rounded-lg px-1 py-0.5 cursor-pointer hover:opacity-80 overflow-hidden z-10`}
-                                    style={{ height: `${height}px` }}>
-                                    <p className="text-[10px] font-bold leading-tight truncate">{block.title}</p>
-                                    {block.location && <p className="text-[9px] opacity-70 truncate">{block.location}</p>}
-                                  </div>
-                                );
-                              })}
-                              {blocks.length === 0 && isStart.length === 0 && (
-                                <div className="h-full border-t border-slate-700/30" />
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
                   </div>
-                </div>
-              )}
 
-              {/* Block list */}
-              {ttBlocks.length > 0 && (
-                <div className="mt-6 space-y-2">
-                  <h3 className="text-sm font-semibold text-slate-400 mb-2">All Blocks</h3>
-                  {DAYS.map(day => {
-                    const dayBlocks = ttBlocks.filter(b => b.day === day).sort((a,b) => a.startHour - b.startHour);
-                    if (!dayBlocks.length) return null;
-                    return (
-                      <div key={day}>
-                        <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
-                        {dayBlocks.map(block => {
-                          const col = BLOCK_COLORS[block.color % BLOCK_COLORS.length];
-                          const typeLabel = typeOptions.find(t => t.id === block.type)?.label || block.type;
-                          return (
-                            <div key={block.id} className={`flex items-center gap-3 ${col.light} ${col.border} border rounded-xl p-3 mb-1`}>
-                              <div className={`w-1.5 h-10 ${col.bg} rounded-full flex-shrink-0`} />
-                              <div className="flex-1 min-w-0">
-                                <p className={`font-semibold text-sm ${col.text} truncate`}>{block.title}</p>
-                                <p className="text-xs text-gray-500">{typeLabel} · {block.startHour > 12 ? `${block.startHour-12}pm` : `${block.startHour}am`} – {block.endHour > 12 ? `${block.endHour-12}pm` : `${block.endHour}am`}{block.location ? ` · ${block.location}` : ''}</p>
+                  {/* Block list by day */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold text-slate-400">All Blocks</h3>
+                    {TT_DAYS.map(day => {
+                      const dayBlocks = timetableBlocks.filter(b => b.day === day).sort((a, b) => a.startHour - b.startHour);
+                      if (!dayBlocks.length) return null;
+                      return (
+                        <div key={day}>
+                          <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
+                          {dayBlocks.map(block => {
+                            const col = TT_COLORS[block.color % TT_COLORS.length];
+                            const typeLabel = TT_TYPES.find(t => t.id === block.type)?.label || block.type;
+                            return (
+                              <div key={block.id} className={`flex items-center gap-3 ${col.light} border ${col.border} rounded-xl p-3 mb-1.5`}>
+                                <div className={`w-1.5 h-10 ${col.bg} rounded-full flex-shrink-0`} />
+                                <div className="flex-1 min-w-0">
+                                  <p className={`font-semibold text-sm ${col.text} truncate`}>{block.title}</p>
+                                  <p className="text-xs text-gray-500">{typeLabel} · {fmtHour(block.startHour)}–{fmtHour(block.endHour)}{block.location ? ` · ${block.location}` : ''}</p>
+                                </div>
+                                <div className="flex gap-1.5">
+                                  <button onClick={() => startTtEdit(block)} className="p-1.5 bg-white/70 rounded-lg text-gray-500 hover:text-violet-600 transition-colors text-sm">✏️</button>
+                                  <button onClick={() => deleteTtBlock(block.id)} className="p-1.5 bg-white/70 rounded-lg text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                                </div>
                               </div>
-                              <div className="flex gap-1">
-                                <button onClick={() => startEdit(block)} className="p-1.5 bg-white/60 rounded-lg text-gray-500 hover:text-violet-600 transition-colors"><span className="text-sm">✏️</span></button>
-                                <button onClick={() => deleteBlock(block.id)} className="p-1.5 bg-white/60 rounded-lg text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
-                </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </div>
           )}
 
+          {/* ADD / EDIT FORM */}
           {ttTab === 'add' && (
             <div className="bg-slate-800/60 rounded-3xl p-5 border border-slate-700/50 space-y-4">
-              <h2 className="text-white font-bold text-lg">{editingBlock ? 'Edit Block' : 'Add New Block'}</h2>
+              <h2 className="text-white font-bold text-lg">{ttEditingId ? 'Edit Block' : 'Add New Block'}</h2>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Title *</label>
-                <input value={newBlock.title} onChange={e => setNewBlock(p => ({...p, title: e.target.value}))}
-                  placeholder="e.g. ECON101, Morning Shift..." className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
+                <label className="text-xs text-slate-400 font-medium block mb-1">Title *</label>
+                <input value={ttNewBlock.title} onChange={e => setTtNewBlock(p => ({ ...p, title: e.target.value }))}
+                  placeholder="e.g. ECON101, Morning Shift..."
+                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Type</label>
-                  <select value={newBlock.type} onChange={e => setNewBlock(p => ({...p, type: e.target.value}))}
-                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
-                    {typeOptions.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                  <label className="text-xs text-slate-400 font-medium block mb-1">Type</label>
+                  <select value={ttNewBlock.type} onChange={e => setTtNewBlock(p => ({ ...p, type: e.target.value }))}
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {TT_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Day</label>
-                  <select value={newBlock.day} onChange={e => setNewBlock(p => ({...p, day: e.target.value}))}
-                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
-                    {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
+                  <label className="text-xs text-slate-400 font-medium block mb-1">Day</label>
+                  <select value={ttNewBlock.day} onChange={e => setTtNewBlock(p => ({ ...p, day: e.target.value }))}
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {TT_DAYS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">Start Time</label>
-                  <select value={newBlock.startHour} onChange={e => setNewBlock(p => ({...p, startHour: parseInt(e.target.value), endHour: Math.max(parseInt(e.target.value)+1, p.endHour)}))}
-                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
-                    {HOURS.map(h => <option key={h} value={h}>{h > 12 ? `${h-12}:00 pm` : h === 12 ? '12:00 pm' : `${h}:00 am`}</option>)}
+                  <label className="text-xs text-slate-400 font-medium block mb-1">Start</label>
+                  <select value={ttNewBlock.startHour} onChange={e => setTtNewBlock(p => ({ ...p, startHour: parseInt(e.target.value), endHour: Math.max(parseInt(e.target.value) + 1, p.endHour) }))}
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {TT_HOURS.map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 font-medium">End Time</label>
-                  <select value={newBlock.endHour} onChange={e => setNewBlock(p => ({...p, endHour: parseInt(e.target.value)}))}
-                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
-                    {HOURS.filter(h => h > newBlock.startHour).map(h => <option key={h} value={h}>{h > 12 ? `${h-12}:00 pm` : h === 12 ? '12:00 pm' : `${h}:00 am`}</option>)}
+                  <label className="text-xs text-slate-400 font-medium block mb-1">End</label>
+                  <select value={ttNewBlock.endHour} onChange={e => setTtNewBlock(p => ({ ...p, endHour: parseInt(e.target.value) }))}
+                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {TT_HOURS.filter(h => h > ttNewBlock.startHour).map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Location (optional)</label>
-                <input value={newBlock.location} onChange={e => setNewBlock(p => ({...p, location: e.target.value}))}
-                  placeholder="e.g. Building A, Room 201..." className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
+                <label className="text-xs text-slate-400 font-medium block mb-1">Location (optional)</label>
+                <input value={ttNewBlock.location} onChange={e => setTtNewBlock(p => ({ ...p, location: e.target.value }))}
+                  placeholder="e.g. Building A, Room 201"
+                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium">Colour</label>
-                <div className="flex gap-2 mt-1">
-                  {BLOCK_COLORS.map((c, i) => (
-                    <button key={i} onClick={() => setNewBlock(p => ({...p, color: i}))}
-                      className={`w-7 h-7 rounded-full ${c.bg} transition-transform ${newBlock.color === i ? 'scale-125 ring-2 ring-white' : 'opacity-60'}`} />
+                <label className="text-xs text-slate-400 font-medium block mb-2">Colour</label>
+                <div className="flex gap-2">
+                  {TT_COLORS.map((c, i) => (
+                    <button key={i} onClick={() => setTtNewBlock(p => ({ ...p, color: i }))}
+                      className={`w-7 h-7 rounded-full ${c.bg} transition-transform ${ttNewBlock.color === i ? 'scale-125 ring-2 ring-white' : 'opacity-50 hover:opacity-80'}`} />
                   ))}
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2">
-                <button onClick={saveBlock}
-                  className="flex-1 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
-                  {editingBlock ? '✓ Save Changes' : '+ Add Block'}
+              <div className="flex gap-2 pt-1">
+                <button onClick={saveTtBlock}
+                  className="flex-1 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all text-sm">
+                  {ttEditingId ? '✓ Save Changes' : '+ Add Block'}
                 </button>
-                {editingBlock && (
-                  <button onClick={() => { deleteBlock(editingBlock); setEditingBlock(null); setTtTab('week'); setNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' }); }}
-                    className="px-4 py-3 bg-red-500/20 text-red-400 rounded-xl font-medium hover:bg-red-500/30 transition-all">
+                {ttEditingId && (
+                  <button onClick={() => deleteTtBlock(ttEditingId)}
+                    className="px-4 py-3 bg-red-500/20 text-red-400 rounded-xl font-medium hover:bg-red-500/30 transition-all text-sm">
                     🗑️ Delete
                   </button>
                 )}
