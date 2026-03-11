@@ -1572,7 +1572,7 @@ function MuzzApp() {
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
   const [timetableBlocks, setTimetableBlocks] = useState([]);
   const [ttTab, setTtTab] = useState('week');
-  const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' });
+  const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
 
   // Bucket List
@@ -13851,16 +13851,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'timetable') {
     const TT_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const TT_HOURS = Array.from({ length: 16 }, (_, i) => i + 7);
-    // Use hex colours directly so they always work regardless of Tailwind purging
-    const TT_COLORS = [
-      { hex: '#3b82f6', light: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe', name: 'Blue' },
-      { hex: '#8b5cf6', light: '#f5f3ff', text: '#6d28d9', border: '#ddd6fe', name: 'Purple' },
-      { hex: '#f97316', light: '#fff7ed', text: '#c2410c', border: '#fed7aa', name: 'Orange' },
-      { hex: '#22c55e', light: '#f0fdf4', text: '#15803d', border: '#bbf7d0', name: 'Green' },
-      { hex: '#ef4444', light: '#fef2f2', text: '#b91c1c', border: '#fecaca', name: 'Red' },
-      { hex: '#14b8a6', light: '#f0fdfa', text: '#0f766e', border: '#99f6e4', name: 'Teal' },
-      { hex: '#f59e0b', light: '#fffbeb', text: '#b45309', border: '#fde68a', name: 'Amber' },
-    ];
     const TT_TYPES = [
       { id: 'uni', label: '🎓 Uni / Class' },
       { id: 'work', label: '💼 Work / Shift' },
@@ -13872,6 +13862,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const todayDayIdx = (new Date().getDay() + 6) % 7;
     const fmtHour = (h) => h > 12 ? `${h - 12}pm` : h === 12 ? '12pm' : `${h}am`;
 
+    // Hex to rgba for light backgrounds
+    const hexToLight = (hex) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r},${g},${b},0.12)`;
+    };
+
     const saveTtBlock = () => {
       if (!ttNewBlock.title.trim()) return;
       if (ttEditingId) {
@@ -13880,7 +13878,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       } else {
         setTimetableBlocks(prev => [...prev, { ...ttNewBlock, id: Date.now().toString() }]);
       }
-      setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' });
+      setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
       setTtTab('week');
     };
     const startTtEdit = (block) => { setTtNewBlock({ ...block }); setTtEditingId(block.id); setTtTab('add'); };
@@ -13890,134 +13888,124 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div style={{ background: 'linear-gradient(to right, #7c3aed, #4338ca)' }} className="pt-16 pb-6 px-6">
+        <div style={{ background: 'linear-gradient(135deg, #7c3aed, #4338ca)' }} className="pt-16 pb-6 px-6">
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white">← Back</button>
             <h1 className="text-3xl font-bold text-white">📅 Timetable</h1>
             <p className="text-white/70 mt-1">Track your uni & work schedule</p>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 pt-4">
-          {/* Tabs */}
           <div className="flex gap-2 mb-4">
-            {[{ id: 'week', label: '📋 Week View' }, { id: 'add', label: ttEditingId ? '✏️ Edit Block' : '➕ Add Block' }].map(t => (
-              <button key={t.id} onClick={() => { setTtTab(t.id); if (t.id !== 'add') { setTtEditingId(null); setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '' }); } }}
-                style={ttTab === t.id ? { background: '#7c3aed', color: 'white' } : {}}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab !== t.id ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : ''}`}>
+            {[{ id: 'week', label: '📋 Week View' }, { id: 'add', label: ttEditingId ? '✏️ Edit' : '➕ Add Block' }].map(t => (
+              <button key={t.id}
+                onClick={() => { setTtTab(t.id); if (t.id !== 'add') { setTtEditingId(null); setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' }); } }}
+                style={ttTab === t.id ? { background: '#7c3aed', color: 'white' } : { background: 'rgba(30,41,59,0.8)', color: '#94a3b8' }}
+                className="px-4 py-2 rounded-xl text-sm font-medium transition-all">
                 {t.label}
               </button>
             ))}
           </div>
 
           {ttTab === 'week' && (
-            <div>
-              {timetableBlocks.length === 0 ? (
-                <div className="bg-slate-800/60 rounded-3xl p-12 text-center border border-slate-700/50">
-                  <div className="text-5xl mb-4">📅</div>
-                  <p className="text-gray-400 mb-4">No classes or shifts yet.</p>
-                  <button onClick={() => setTtTab('add')} style={{ background: '#7c3aed' }} className="px-6 py-2 text-white rounded-xl text-sm font-medium">Add your first block</button>
-                </div>
-              ) : (
-                <>
-                  <div className="overflow-x-auto -mx-4 px-4 mb-6">
-                    <div style={{ minWidth: '560px' }}>
-                      <div className="grid mb-1" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px' }}>
-                        <div />
-                        {TT_DAYS.map((d, i) => (
-                          <div key={d} className="text-center text-xs font-bold py-1.5 rounded-lg"
-                            style={i === todayDayIdx ? { background: '#7c3aed', color: 'white' } : { color: '#94a3b8' }}>{d}</div>
-                        ))}
-                      </div>
-                      {TT_HOURS.map(hour => (
-                        <div key={hour} className="grid" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px', minHeight: '36px', marginBottom: '2px' }}>
-                          <div className="text-right text-slate-500 pr-1 pt-0.5" style={{ fontSize: '10px' }}>{fmtHour(hour)}</div>
-                          {TT_DAYS.map(day => {
-                            const startsHere = timetableBlocks.filter(b => b.day === day && b.startHour === hour);
-                            return (
-                              <div key={day} className="relative" style={{ minHeight: '36px' }}>
-                                <div className="absolute inset-0" style={{ borderTop: '1px solid rgba(148,163,184,0.15)' }} />
-                                {startsHere.map(block => {
-                                  const col = TT_COLORS[block.color % TT_COLORS.length];
-                                  return (
-                                    <div key={block.id} onClick={() => startTtEdit(block)}
-                                      className="absolute inset-x-0 top-0 rounded-md px-1 py-0.5 cursor-pointer overflow-hidden z-10 hover:opacity-80"
-                                      style={{ height: `${(block.endHour - block.startHour) * 38}px`, background: col.light, color: col.text, border: `1px solid ${col.border}` }}>
-                                      <p className="font-bold leading-tight truncate" style={{ fontSize: '9px' }}>{block.title}</p>
-                                      {block.location && <p className="opacity-60 truncate" style={{ fontSize: '8px' }}>{block.location}</p>}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            );
-                          })}
-                        </div>
+            timetableBlocks.length === 0 ? (
+              <div className="rounded-3xl p-12 text-center border border-slate-700/50" style={{ background: 'rgba(30,41,59,0.6)' }}>
+                <div className="text-5xl mb-4">📅</div>
+                <p className="text-gray-400 mb-4">No classes or shifts yet.</p>
+                <button onClick={() => setTtTab('add')} style={{ background: '#7c3aed' }} className="px-6 py-2 text-white rounded-xl text-sm font-medium">Add your first block</button>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto -mx-4 px-4 mb-6">
+                  <div style={{ minWidth: '560px' }}>
+                    <div className="grid mb-1" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px' }}>
+                      <div />
+                      {TT_DAYS.map((d, i) => (
+                        <div key={d} className="text-center text-xs font-bold py-1.5 rounded-lg"
+                          style={i === todayDayIdx ? { background: '#7c3aed', color: 'white' } : { color: '#64748b' }}>{d}</div>
                       ))}
                     </div>
+                    {TT_HOURS.map(hour => (
+                      <div key={hour} className="grid" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px', minHeight: '36px', marginBottom: '2px' }}>
+                        <div style={{ fontSize: 10, color: '#475569', textAlign: 'right', paddingRight: 4, paddingTop: 2 }}>{fmtHour(hour)}</div>
+                        {TT_DAYS.map(day => {
+                          const startsHere = timetableBlocks.filter(b => b.day === day && b.startHour === hour);
+                          return (
+                            <div key={day} className="relative" style={{ minHeight: 36 }}>
+                              <div style={{ position: 'absolute', inset: 0, borderTop: '1px solid rgba(148,163,184,0.12)' }} />
+                              {startsHere.map(block => (
+                                <div key={block.id} onClick={() => startTtEdit(block)}
+                                  className="absolute inset-x-0 top-0 rounded-md px-1 py-0.5 cursor-pointer overflow-hidden z-10"
+                                  style={{ height: (block.endHour - block.startHour) * 38, background: hexToLight(block.color), borderLeft: `3px solid ${block.color}`, color: block.color }}>
+                                  <p style={{ fontSize: 9, fontWeight: 700, lineHeight: 1.2 }} className="truncate">{block.title}</p>
+                                  {block.location && <p style={{ fontSize: 8, opacity: 0.7 }} className="truncate">{block.location}</p>}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
                   </div>
+                </div>
 
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-semibold text-slate-400">All Blocks</h3>
-                    {TT_DAYS.map(day => {
-                      const dayBlocks = timetableBlocks.filter(b => b.day === day).sort((a, b) => a.startHour - b.startHour);
-                      if (!dayBlocks.length) return null;
-                      return (
-                        <div key={day}>
-                          <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
-                          {dayBlocks.map(block => {
-                            const col = TT_COLORS[block.color % TT_COLORS.length];
-                            return (
-                              <div key={block.id} className="flex items-center gap-3 rounded-xl p-3 mb-1.5"
-                                style={{ background: col.light, border: `1px solid ${col.border}` }}>
-                                <div className="w-1.5 h-10 rounded-full flex-shrink-0" style={{ background: col.hex }} />
-                                <div className="flex-1 min-w-0">
-                                  <p className="font-semibold text-sm truncate" style={{ color: col.text }}>
-                                    {block.title}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    {TT_TYPES.find(t => t.id === block.type)?.label} · {fmtHour(block.startHour)}–{fmtHour(block.endHour)}{block.location ? ` · ${block.location}` : ''}
-                                  </p>
-                                </div>
-                                <div className="flex gap-1.5">
-                                  <button onClick={() => startTtEdit(block)} className="p-1.5 rounded-lg text-gray-500 hover:text-violet-600 transition-colors text-sm" style={{ background: 'rgba(255,255,255,0.7)' }}>✏️</button>
-                                  <button onClick={() => deleteTtBlock(block.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 transition-colors" style={{ background: 'rgba(255,255,255,0.7)' }}><Trash2 className="w-3.5 h-3.5" /></button>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-            </div>
+                <div className="space-y-2">
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">All Blocks</h3>
+                  {TT_DAYS.map(day => {
+                    const dayBlocks = timetableBlocks.filter(b => b.day === day).sort((a, b) => a.startHour - b.startHour);
+                    if (!dayBlocks.length) return null;
+                    return (
+                      <div key={day}>
+                        <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
+                        {dayBlocks.map(block => (
+                          <div key={block.id} className="flex items-center gap-3 rounded-xl p-3 mb-1.5"
+                            style={{ background: hexToLight(block.color), border: `1px solid ${block.color}33` }}>
+                            <div className="w-1 h-10 rounded-full flex-shrink-0" style={{ background: block.color }} />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-sm truncate" style={{ color: block.color }}>{block.title}</p>
+                              <p className="text-xs text-slate-500">{TT_TYPES.find(t => t.id === block.type)?.label} · {fmtHour(block.startHour)}–{fmtHour(block.endHour)}{block.location ? ` · ${block.location}` : ''}</p>
+                            </div>
+                            <div className="flex gap-1.5">
+                              <button onClick={() => startTtEdit(block)} className="p-1.5 rounded-lg text-slate-500 hover:text-violet-500 text-sm" style={{ background: 'rgba(255,255,255,0.15)' }}>✏️</button>
+                              <button onClick={() => deleteTtBlock(block.id)} className="p-1.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.15)' }}><Trash2 className="w-3.5 h-3.5 text-slate-400 hover:text-red-500" /></button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )
           )}
 
           {ttTab === 'add' && (
-            <div className="bg-slate-800/60 rounded-3xl p-5 border border-slate-700/50 space-y-4">
+            <div className="rounded-3xl p-5 border border-slate-700/50 space-y-4" style={{ background: 'rgba(15,23,42,0.7)' }}>
               <h2 className="text-white font-bold text-lg">{ttEditingId ? 'Edit Block' : 'Add New Block'}</h2>
 
               <div>
                 <label className="text-xs text-slate-400 font-medium block mb-1">Title *</label>
                 <input value={ttNewBlock.title} onChange={e => setTtNewBlock(p => ({ ...p, title: e.target.value }))}
                   placeholder="e.g. ECON101, Morning Shift..."
-                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none text-sm"
-                  style={{ outlineColor: '#7c3aed' }} />
+                  className="w-full px-3 py-2.5 rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm"
+                  style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }} />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">Type</label>
                   <select value={ttNewBlock.type} onChange={e => setTtNewBlock(p => ({ ...p, type: e.target.value }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
+                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
+                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
                     {TT_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">Day</label>
                   <select value={ttNewBlock.day} onChange={e => setTtNewBlock(p => ({ ...p, day: e.target.value }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
+                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
+                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
                     {TT_DAYS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
@@ -14027,14 +14015,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">Start</label>
                   <select value={ttNewBlock.startHour} onChange={e => setTtNewBlock(p => ({ ...p, startHour: parseInt(e.target.value), endHour: Math.max(parseInt(e.target.value) + 1, p.endHour) }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
+                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
+                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
                     {TT_HOURS.map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-xs text-slate-400 font-medium block mb-1">End</label>
                   <select value={ttNewBlock.endHour} onChange={e => setTtNewBlock(p => ({ ...p, endHour: parseInt(e.target.value) }))}
-                    className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none text-sm">
+                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
+                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
                     {TT_HOURS.filter(h => h > ttNewBlock.startHour).map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
                   </select>
                 </div>
@@ -14044,42 +14034,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <label className="text-xs text-slate-400 font-medium block mb-1">Location (optional)</label>
                 <input value={ttNewBlock.location} onChange={e => setTtNewBlock(p => ({ ...p, location: e.target.value }))}
                   placeholder="e.g. Building A, Room 201"
-                  className="w-full px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none text-sm" />
+                  className="w-full px-3 py-2.5 rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm"
+                  style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }} />
               </div>
 
+              {/* Native colour picker - guaranteed to work on all platforms */}
               <div>
                 <label className="text-xs text-slate-400 font-medium block mb-2">Colour</label>
-                <div className="flex gap-3">
-                  {TT_COLORS.map((col, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setTtNewBlock(p => ({ ...p, color: i }))}
-                      title={col.name}
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        background: col.hex,
-                        border: ttNewBlock.color === i ? '3px solid white' : '3px solid transparent',
-                        boxShadow: ttNewBlock.color === i ? `0 0 0 2px ${col.hex}` : 'none',
-                        transform: ttNewBlock.color === i ? 'scale(1.2)' : 'scale(1)',
-                        transition: 'all 0.15s ease',
-                        cursor: 'pointer',
-                      }}
-                    />
-                  ))}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={ttNewBlock.color}
+                    onChange={e => setTtNewBlock(p => ({ ...p, color: e.target.value }))}
+                    style={{ width: 48, height: 48, borderRadius: 12, border: 'none', padding: 2, background: 'transparent', cursor: 'pointer' }}
+                  />
+                  <div className="flex gap-2">
+                    {['#8b5cf6','#3b82f6','#22c55e','#ef4444','#f97316','#f59e0b','#14b8a6','#ec4899'].map(hex => (
+                      <button key={hex} onClick={() => setTtNewBlock(p => ({ ...p, color: hex }))}
+                        style={{ width: 28, height: 28, borderRadius: '50%', background: hex, border: ttNewBlock.color === hex ? '3px solid white' : '2px solid transparent', boxShadow: ttNewBlock.color === hex ? `0 0 0 2px ${hex}` : 'none', cursor: 'pointer', transition: 'all 0.15s' }} />
+                    ))}
+                  </div>
                 </div>
+                <p className="text-xs text-slate-500 mt-1">Tap a preset or use the picker for any colour</p>
               </div>
 
               <div className="flex gap-2 pt-1">
                 <button onClick={saveTtBlock}
-                  className="flex-1 py-3 text-white rounded-xl font-semibold text-sm transition-all hover:opacity-90"
+                  className="flex-1 py-3 text-white rounded-xl font-semibold text-sm"
                   style={{ background: 'linear-gradient(to right, #7c3aed, #4338ca)' }}>
                   {ttEditingId ? '✓ Save Changes' : '+ Add Block'}
                 </button>
                 {ttEditingId && (
                   <button onClick={() => deleteTtBlock(ttEditingId)}
-                    className="px-4 py-3 text-red-400 rounded-xl font-medium text-sm transition-all hover:opacity-90"
+                    className="px-4 py-3 text-red-400 rounded-xl font-medium text-sm"
                     style={{ background: 'rgba(239,68,68,0.15)' }}>
                     🗑️ Delete
                   </button>
