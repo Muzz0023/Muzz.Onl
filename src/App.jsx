@@ -137,7 +137,10 @@ const StarryBackground = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative" style={{ backgroundColor: '#030712' }}>
+      {/* Safe area fills - covers iOS status bar and home indicator */}
+      <div className="fixed top-0 left-0 right-0 z-0" style={{ height: 'env(safe-area-inset-top)', backgroundColor: '#030712' }} />
+      <div className="fixed bottom-0 left-0 right-0 z-0" style={{ height: 'env(safe-area-inset-bottom)', backgroundColor: '#030712' }} />
       {/* Stars layer */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {/* Small stars */}
@@ -1341,6 +1344,7 @@ function LockedFeature({ featureName, setActiveView }) {
 function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
+  const [pendingView, setPendingView] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
@@ -1567,6 +1571,7 @@ function MuzzApp() {
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
+  const [timetableBlocks, setTimetableBlocks] = useState([]);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -1802,6 +1807,7 @@ function MuzzApp() {
           if (d.bucketList) setBucketList(d.bucketList);
           if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
           if (d.mapPins) setMapPins(d.mapPins);
+          if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -1884,7 +1890,8 @@ function MuzzApp() {
           countdowns,
           bucketList,
           assetMapNodes,
-          mapPins
+          mapPins,
+          timetableBlocks
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -1898,7 +1905,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, timetableBlocks, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -2082,6 +2089,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "home", label: "Dashboard", icon: Home },
     { id: "habits", label: "Habits", icon: Flame },
     { id: "countdowns", label: "Countdowns", icon: Calendar },
+    { id: "timetable", label: "Timetable", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "diet", label: "Diet", icon: ShoppingCart },
@@ -2183,14 +2191,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <nav className="flex-1 space-y-0.5 px-1">
               {navItems.map(item => {
                 const locked = item.eliteOnly && !isElite;
-                const isActive = activeView === item.id;
+                const isActive = (pendingView ?? activeView) === item.id;
                 return (
                   <button 
                     key={item.id} 
                     onClick={() => { 
-                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
+                      const target = locked ? 'upgrade' : item.id;
+                      setPendingView(target);
+                      setActiveView(target);
                       setSidebarOpen(false);
                       scrollPosRef.current = 0;
+                      setTimeout(() => setPendingView(null), 400);
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                       isActive 
@@ -13810,7 +13821,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </button>
                       <button
                         onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
-                        className="text-gray-300 hover:text-red-500 transition-colors"
+                        className="p-1.5 bg-red-100 hover:bg-red-500 text-red-400 hover:text-white rounded-lg transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -13836,6 +13847,252 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
           })}
+        </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
+      </div>
+    );
+  }
+
+  // ============================================
+  // TIMETABLE VIEW
+  // ============================================
+  if (activeView === 'timetable') {
+    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 7am - 10pm
+    const BLOCK_COLORS = [
+      { bg: 'bg-blue-500', light: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-300' },
+      { bg: 'bg-purple-500', light: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-300' },
+      { bg: 'bg-orange-500', light: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300' },
+      { bg: 'bg-green-500', light: 'bg-green-100', text: 'text-green-700', border: 'border-green-300' },
+      { bg: 'bg-rose-500', light: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-300' },
+      { bg: 'bg-teal-500', light: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-300' },
+      { bg: 'bg-amber-500', light: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300' },
+    ];
+
+    const todayIdx = (new Date().getDay() + 6) % 7; // 0=Mon
+    const [ttBlocks, setTtBlocks] = [timetableBlocks, setTimetableBlocks];
+    const [ttTab, setTtTab] = useState('week'); // 'week' | 'add'
+    const [newBlock, setNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' });
+    const [editingBlock, setEditingBlock] = useState(null);
+
+    const typeOptions = [
+      { id: 'uni', label: '🎓 Uni / Class' },
+      { id: 'work', label: '💼 Work / Shift' },
+      { id: 'gym', label: '🏋️ Gym' },
+      { id: 'personal', label: '⭐ Personal' },
+      { id: 'study', label: '📚 Study' },
+      { id: 'other', label: '📌 Other' },
+    ];
+
+    const getBlocksForDayHour = (day, hour) =>
+      ttBlocks.filter(b => b.day === day && b.startHour <= hour && b.endHour > hour);
+
+    const saveBlock = () => {
+      if (!newBlock.title.trim()) return;
+      if (editingBlock) {
+        setTtBlocks(prev => prev.map(b => b.id === editingBlock ? { ...newBlock, id: editingBlock } : b));
+        setEditingBlock(null);
+      } else {
+        setTtBlocks(prev => [...prev, { ...newBlock, id: Date.now().toString() }]);
+      }
+      setNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' });
+      setTtTab('week');
+    };
+
+    const startEdit = (block) => {
+      setNewBlock({ ...block });
+      setEditingBlock(block.id);
+      setTtTab('add');
+    };
+
+    const deleteBlock = (id) => setTtBlocks(prev => prev.filter(b => b.id !== id));
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        <div className="bg-gradient-to-r from-violet-600 to-indigo-700 pt-16 pb-6 px-6">
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+            <h1 className="text-3xl font-bold text-white">📅 Timetable</h1>
+            <p className="text-white/70 mt-1">Track your uni & work schedule</p>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="max-w-4xl mx-auto px-4 pt-4">
+          <div className="flex gap-2 mb-4">
+            {[{id:'week',label:'📋 Week View'},{id:'add',label: editingBlock ? '✏️ Edit Block' : '➕ Add Block'}].map(t => (
+              <button key={t.id} onClick={() => { setTtTab(t.id); if (t.id !== 'add') { setEditingBlock(null); setNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' }); }}}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab === t.id ? 'bg-violet-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {ttTab === 'week' && (
+            <div>
+              {ttBlocks.length === 0 && (
+                <div className="bg-slate-800/60 rounded-3xl p-12 text-center border border-slate-700/50">
+                  <div className="text-5xl mb-4">📅</div>
+                  <p className="text-gray-400">No classes or shifts yet.</p>
+                  <button onClick={() => setTtTab('add')} className="mt-4 px-6 py-2 bg-violet-600 text-white rounded-xl text-sm font-medium">Add your first block</button>
+                </div>
+              )}
+
+              {/* Week grid - scrollable horizontally */}
+              {ttBlocks.length > 0 && (
+                <div className="overflow-x-auto -mx-4 px-4">
+                  <div className="min-w-[600px]">
+                    {/* Day headers */}
+                    <div className="grid gap-1 mb-1" style={{ gridTemplateColumns: '48px repeat(7, 1fr)' }}>
+                      <div />
+                      {DAYS.map((d, i) => (
+                        <div key={d} className={`text-center text-xs font-semibold py-1.5 rounded-lg ${i === todayIdx ? 'bg-violet-600 text-white' : 'text-slate-400'}`}>{d}</div>
+                      ))}
+                    </div>
+                    {/* Hour rows */}
+                    {HOURS.map(hour => (
+                      <div key={hour} className="grid gap-1 mb-0.5" style={{ gridTemplateColumns: '48px repeat(7, 1fr)' }}>
+                        <div className="text-right text-[10px] text-slate-500 pr-2 pt-1">{hour > 12 ? `${hour-12}pm` : hour === 12 ? '12pm' : `${hour}am`}</div>
+                        {DAYS.map(day => {
+                          const blocks = getBlocksForDayHour(day, hour);
+                          const isStart = ttBlocks.filter(b => b.day === day && b.startHour === hour);
+                          return (
+                            <div key={day} className="min-h-[36px] relative">
+                              {isStart.map(block => {
+                                const col = BLOCK_COLORS[block.color % BLOCK_COLORS.length];
+                                const height = (block.endHour - block.startHour) * 36 + (block.endHour - block.startHour - 1) * 2;
+                                return (
+                                  <div key={block.id} onClick={() => startEdit(block)}
+                                    className={`absolute inset-x-0 top-0 ${col.light} ${col.text} ${col.border} border rounded-lg px-1 py-0.5 cursor-pointer hover:opacity-80 overflow-hidden z-10`}
+                                    style={{ height: `${height}px` }}>
+                                    <p className="text-[10px] font-bold leading-tight truncate">{block.title}</p>
+                                    {block.location && <p className="text-[9px] opacity-70 truncate">{block.location}</p>}
+                                  </div>
+                                );
+                              })}
+                              {blocks.length === 0 && isStart.length === 0 && (
+                                <div className="h-full border-t border-slate-700/30" />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Block list */}
+              {ttBlocks.length > 0 && (
+                <div className="mt-6 space-y-2">
+                  <h3 className="text-sm font-semibold text-slate-400 mb-2">All Blocks</h3>
+                  {DAYS.map(day => {
+                    const dayBlocks = ttBlocks.filter(b => b.day === day).sort((a,b) => a.startHour - b.startHour);
+                    if (!dayBlocks.length) return null;
+                    return (
+                      <div key={day}>
+                        <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
+                        {dayBlocks.map(block => {
+                          const col = BLOCK_COLORS[block.color % BLOCK_COLORS.length];
+                          const typeLabel = typeOptions.find(t => t.id === block.type)?.label || block.type;
+                          return (
+                            <div key={block.id} className={`flex items-center gap-3 ${col.light} ${col.border} border rounded-xl p-3 mb-1`}>
+                              <div className={`w-1.5 h-10 ${col.bg} rounded-full flex-shrink-0`} />
+                              <div className="flex-1 min-w-0">
+                                <p className={`font-semibold text-sm ${col.text} truncate`}>{block.title}</p>
+                                <p className="text-xs text-gray-500">{typeLabel} · {block.startHour > 12 ? `${block.startHour-12}pm` : `${block.startHour}am`} – {block.endHour > 12 ? `${block.endHour-12}pm` : `${block.endHour}am`}{block.location ? ` · ${block.location}` : ''}</p>
+                              </div>
+                              <div className="flex gap-1">
+                                <button onClick={() => startEdit(block)} className="p-1.5 bg-white/60 rounded-lg text-gray-500 hover:text-violet-600 transition-colors"><span className="text-sm">✏️</span></button>
+                                <button onClick={() => deleteBlock(block.id)} className="p-1.5 bg-white/60 rounded-lg text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {ttTab === 'add' && (
+            <div className="bg-slate-800/60 rounded-3xl p-5 border border-slate-700/50 space-y-4">
+              <h2 className="text-white font-bold text-lg">{editingBlock ? 'Edit Block' : 'Add New Block'}</h2>
+
+              <div>
+                <label className="text-xs text-slate-400 font-medium">Title *</label>
+                <input value={newBlock.title} onChange={e => setNewBlock(p => ({...p, title: e.target.value}))}
+                  placeholder="e.g. ECON101, Morning Shift..." className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-400 font-medium">Type</label>
+                  <select value={newBlock.type} onChange={e => setNewBlock(p => ({...p, type: e.target.value}))}
+                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {typeOptions.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-slate-400 font-medium">Day</label>
+                  <select value={newBlock.day} onChange={e => setNewBlock(p => ({...p, day: e.target.value}))}
+                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-slate-400 font-medium">Start Time</label>
+                  <select value={newBlock.startHour} onChange={e => setNewBlock(p => ({...p, startHour: parseInt(e.target.value), endHour: Math.max(parseInt(e.target.value)+1, p.endHour)}))}
+                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {HOURS.map(h => <option key={h} value={h}>{h > 12 ? `${h-12}:00 pm` : h === 12 ? '12:00 pm' : `${h}:00 am`}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-slate-400 font-medium">End Time</label>
+                  <select value={newBlock.endHour} onChange={e => setNewBlock(p => ({...p, endHour: parseInt(e.target.value)}))}
+                    className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-violet-500 text-sm">
+                    {HOURS.filter(h => h > newBlock.startHour).map(h => <option key={h} value={h}>{h > 12 ? `${h-12}:00 pm` : h === 12 ? '12:00 pm' : `${h}:00 am`}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-400 font-medium">Location (optional)</label>
+                <input value={newBlock.location} onChange={e => setNewBlock(p => ({...p, location: e.target.value}))}
+                  placeholder="e.g. Building A, Room 201..." className="w-full mt-1 px-3 py-2.5 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 text-sm" />
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-400 font-medium">Colour</label>
+                <div className="flex gap-2 mt-1">
+                  {BLOCK_COLORS.map((c, i) => (
+                    <button key={i} onClick={() => setNewBlock(p => ({...p, color: i}))}
+                      className={`w-7 h-7 rounded-full ${c.bg} transition-transform ${newBlock.color === i ? 'scale-125 ring-2 ring-white' : 'opacity-60'}`} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button onClick={saveBlock}
+                  className="flex-1 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                  {editingBlock ? '✓ Save Changes' : '+ Add Block'}
+                </button>
+                {editingBlock && (
+                  <button onClick={() => { deleteBlock(editingBlock); setEditingBlock(null); setTtTab('week'); setNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: 0, location: '', notes: '' }); }}
+                    className="px-4 py-3 bg-red-500/20 text-red-400 rounded-xl font-medium hover:bg-red-500/30 transition-all">
+                    🗑️ Delete
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
