@@ -1631,15 +1631,16 @@ function MuzzApp() {
       try {
         const result = await RevenueCat.purchaseElite();
         if (result.success) {
-          // Update Supabase to mark user as Elite
-          await fetch(api('/api/sync-apple-purchase'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, userEmail }),
-          });
+          // Unlock Elite immediately — don't wait for API
           setStripeElite(true);
           alert('Welcome to Elite! 🎉');
           setActiveView('home');
+          // Sync to Supabase in background (non-blocking)
+          fetch(api('/api/sync-apple-purchase'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, userEmail }),
+          }).catch(err => console.log('Sync error (non-critical):', err));
         } else if (result.cancelled) {
           // User cancelled - do nothing
         }
@@ -8524,8 +8525,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          {/* Subscription Management for paying Elite members */}
-          {isElite && !isVIP && subscriptionInfo && (
+          {/* iOS Subscription Management - Apple handles billing */}
+          {isElite && !isVIP && isNative && (
+            <div className="bg-white rounded-3xl shadow-sm border p-6 space-y-4">
+              <h2 className="text-xl font-semibold">Subscription</h2>
+              <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active</span></p>
+              <p className="text-xs text-gray-400">Renews monthly via Apple. To cancel, go to iPhone Settings → Apple ID → Subscriptions → Muzz.</p>
+              <button
+                onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
+                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
+              >
+                Manage Subscription
+              </button>
+            </div>
+          )}
+
+          {/* Web/Stripe Subscription Management */}
+          {isElite && !isVIP && !isNative && subscriptionInfo && (
             <div className="bg-white rounded-3xl shadow-sm border p-6 space-y-4">
               <h2 className="text-xl font-semibold">Subscription</h2>
               <div className="flex items-center justify-between">
@@ -8556,21 +8572,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </button>
                 )}
               </div>
-            </div>
-          )}
-
-          {/* iOS Subscription Management */}
-          {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div className="bg-white rounded-3xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-xl font-semibold">Subscription</h2>
-              <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
-              <p className="text-xs text-gray-400">To manage or cancel your subscription, go to your iPhone Settings → Apple ID → Subscriptions.</p>
-              <button
-                onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
-                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
-              >
-                Manage Apple Subscription
-              </button>
             </div>
           )}
 
