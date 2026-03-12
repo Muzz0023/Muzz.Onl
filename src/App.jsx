@@ -138,12 +138,6 @@ const StarryBackground = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative">
-      {/* Force safe area bars to match app background on iOS */}
-      <style>{`
-        html, body { background-color: #030712 !important; margin: 0; padding: 0; }
-      `}</style>
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 'env(safe-area-inset-top)', backgroundColor: '#030712', zIndex: 9999 }} />
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 'env(safe-area-inset-bottom)', backgroundColor: '#030712', zIndex: 9999 }} />
       {/* Stars layer */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {/* Small stars */}
@@ -2152,11 +2146,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div>
         <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/50 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
-        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 translate-x-0 transition-transform duration-300 border-r border-slate-700/50" : "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 -translate-x-full transition-transform duration-300 border-r border-slate-700/50"}>
+        <div 
+          style={{ backgroundColor: '#0f172a' }}
+          className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 shadow-2xl z-50 translate-x-0 transition-transform duration-300 border-r border-slate-700/50" : "fixed top-0 left-0 h-full w-72 shadow-2xl z-50 -translate-x-full transition-transform duration-300 border-r border-slate-700/50"}>
           <div 
             ref={sidebarScrollRef} 
-            className="px-4 py-6 h-full flex flex-col overflow-y-auto overscroll-contain"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            className="px-4 h-full flex flex-col overflow-y-auto overscroll-contain"
+            style={{ WebkitOverflowScrolling: 'touch', paddingTop: 'calc(env(safe-area-inset-top) + 24px)', paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-8 px-2">
@@ -14240,23 +14236,15 @@ function AppContent() {
 }
 
 export default function App() {
-  // Force body/html background dark so iOS safe area bars (top + bottom) match the app
   React.useEffect(() => {
-    document.documentElement.style.backgroundColor = '#030712';
-    document.body.style.backgroundColor = '#030712';
+    document.documentElement.style.backgroundColor = '#0f172a';
+    document.body.style.backgroundColor = '#0f172a';
     document.body.style.margin = '0';
-    // Force status bar area colour on iOS
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) {
-      meta.setAttribute('content', '#030712');
-    } else {
-      const m = document.createElement('meta');
-      m.name = 'theme-color';
-      m.content = '#030712';
-      document.head.appendChild(m);
-    }
+    document.body.style.padding = '0';
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
+    meta.content = '#0f172a';
   }, []);
-
   return (
     <AuthProvider>
       <AppContent />
