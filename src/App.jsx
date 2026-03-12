@@ -137,9 +137,7 @@ const StarryBackground = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative" style={{ backgroundColor: '#030712' }}>
-      <div className="fixed top-0 left-0 right-0 z-[999]" style={{ height: 'env(safe-area-inset-top)', backgroundColor: '#030712' }} />
-      <div className="fixed bottom-0 left-0 right-0 z-[999]" style={{ height: 'env(safe-area-inset-bottom)', backgroundColor: '#030712' }} />
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative">
       {/* Stars layer */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {/* Small stars */}
@@ -1343,7 +1341,6 @@ function LockedFeature({ featureName, setActiveView }) {
 function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
-  const [pendingView, setPendingView] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
@@ -1570,10 +1567,6 @@ function MuzzApp() {
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
-  const [timetableBlocks, setTimetableBlocks] = useState([]);
-  const [ttTab, setTtTab] = useState('week');
-  const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
-  const [ttEditingId, setTtEditingId] = useState(null);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -1809,7 +1802,6 @@ function MuzzApp() {
           if (d.bucketList) setBucketList(d.bucketList);
           if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
           if (d.mapPins) setMapPins(d.mapPins);
-          if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -1892,8 +1884,7 @@ function MuzzApp() {
           countdowns,
           bucketList,
           assetMapNodes,
-          mapPins,
-          timetableBlocks
+          mapPins
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -1907,7 +1898,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, timetableBlocks, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -2090,7 +2081,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const navItems = [
     { id: "home", label: "Dashboard", icon: Home },
     { id: "habits", label: "Habits", icon: Flame },
-    { id: "timetable", label: "Timetable", icon: Calendar },
     { id: "countdowns", label: "Countdowns", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
@@ -2156,11 +2146,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div>
         <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/50 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
-        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 translate-x-0 transition-transform duration-300 border-r border-slate-700/50" : "fixed top-0 left-0 h-full w-72 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 -translate-x-full transition-transform duration-300 border-r border-slate-700/50"}>
+        <div className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 bg-slate-900 shadow-2xl z-50 translate-x-0 transition-transform duration-300 border-r border-slate-700/50" : "fixed top-0 left-0 h-full w-72 bg-slate-900 shadow-2xl z-50 -translate-x-full transition-transform duration-300 border-r border-slate-700/50"}>
           <div 
             ref={sidebarScrollRef} 
-            className="px-4 py-6 h-full flex flex-col overflow-y-auto overscroll-contain"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            className="px-4 h-full flex flex-col overflow-y-auto overscroll-contain"
+            style={{ WebkitOverflowScrolling: 'touch', paddingTop: 'calc(env(safe-area-inset-top) + 24px)', paddingBottom: '24px' }}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-8 px-2">
@@ -2193,17 +2183,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <nav className="flex-1 space-y-0.5 px-1">
               {navItems.map(item => {
                 const locked = item.eliteOnly && !isElite;
-                const isActive = (pendingView ?? activeView) === item.id;
+                const isActive = activeView === item.id;
                 return (
                   <button 
                     key={item.id} 
                     onClick={() => { 
-                      const target = locked ? 'upgrade' : item.id;
-                      setPendingView(target);
-                      setActiveView(target);
+                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
                       setSidebarOpen(false);
                       scrollPosRef.current = 0;
-                      setTimeout(() => setPendingView(null), 400);
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
                       isActive 
@@ -13811,9 +13798,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       className="flex-1 text-lg font-semibold bg-transparent focus:outline-none"
                     />
                     <div className="flex items-center gap-2">
+                      <div className="text-center px-3 py-1 bg-orange-100 rounded-xl">
+                        <div className="text-lg font-bold text-orange-600">{streak}</div>
+                        <div className="text-[10px] text-orange-500">streak</div>
+                      </div>
+                      <button
+                        onClick={() => toggleHabit(habit.id, today)}
+                        className={`w-12 h-12 rounded-xl text-2xl transition-all ${completedToday ? 'bg-green-500 text-white scale-110' : 'bg-gray-100 hover:bg-gray-200'}`}
+                      >
+                        {completedToday ? '✓' : '○'}
+                      </button>
                       <button
                         onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
-                        className="p-1.5 bg-red-100 hover:bg-red-500 text-red-400 hover:text-white rounded-lg transition-all"
+                        className="text-gray-300 hover:text-red-500 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -13839,241 +13836,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
           })}
-        </div>
-        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
-      </div>
-    );
-  }
-
-  // ============================================
-  // TIMETABLE VIEW
-  // ============================================
-  if (activeView === 'timetable') {
-    const TT_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const TT_HOURS = Array.from({ length: 16 }, (_, i) => i + 7);
-    const TT_TYPES = [
-      { id: 'uni', label: '🎓 Uni / Class' },
-      { id: 'work', label: '💼 Work / Shift' },
-      { id: 'gym', label: '🏋️ Gym' },
-      { id: 'study', label: '📚 Study' },
-      { id: 'personal', label: '⭐ Personal' },
-      { id: 'other', label: '📌 Other' },
-    ];
-    const todayDayIdx = (new Date().getDay() + 6) % 7;
-    const fmtHour = (h) => h > 12 ? `${h - 12}pm` : h === 12 ? '12pm' : `${h}am`;
-
-    // Hex to rgba for light backgrounds
-    const hexToLight = (hex) => {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      return `rgba(${r},${g},${b},0.12)`;
-    };
-
-    const saveTtBlock = () => {
-      if (!ttNewBlock.title.trim()) return;
-      if (ttEditingId) {
-        setTimetableBlocks(prev => prev.map(b => b.id === ttEditingId ? { ...ttNewBlock, id: ttEditingId } : b));
-        setTtEditingId(null);
-      } else {
-        setTimetableBlocks(prev => [...prev, { ...ttNewBlock, id: Date.now().toString() }]);
-      }
-      setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
-      setTtTab('week');
-    };
-    const startTtEdit = (block) => { setTtNewBlock({ ...block }); setTtEditingId(block.id); setTtTab('add'); };
-    const deleteTtBlock = (id) => { setTimetableBlocks(prev => prev.filter(b => b.id !== id)); setTtEditingId(null); setTtTab('week'); };
-
-    return (
-      <div className="min-h-screen bg-transparent pb-24">
-        <Sidebar />
-        <SaveIndicator />
-        <div style={{ background: 'linear-gradient(135deg, #7c3aed, #4338ca)' }} className="pt-16 pb-6 px-6">
-          <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white">← Back</button>
-            <h1 className="text-3xl font-bold text-white">📅 Timetable</h1>
-            <p className="text-white/70 mt-1">Track your uni & work schedule</p>
-          </div>
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 pt-4">
-          <div className="flex gap-2 mb-4">
-            {[{ id: 'week', label: '📋 Week View' }, { id: 'add', label: ttEditingId ? '✏️ Edit' : '➕ Add Block' }].map(t => (
-              <button key={t.id}
-                onClick={() => { setTtTab(t.id); if (t.id !== 'add') { setTtEditingId(null); setTtNewBlock({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' }); } }}
-                style={ttTab === t.id ? { background: '#7c3aed', color: 'white' } : { background: 'rgba(30,41,59,0.8)', color: '#94a3b8' }}
-                className="px-4 py-2 rounded-xl text-sm font-medium transition-all">
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {ttTab === 'week' && (
-            timetableBlocks.length === 0 ? (
-              <div className="rounded-3xl p-12 text-center border border-slate-700/50" style={{ background: 'rgba(30,41,59,0.6)' }}>
-                <div className="text-5xl mb-4">📅</div>
-                <p className="text-gray-400 mb-4">No classes or shifts yet.</p>
-                <button onClick={() => setTtTab('add')} style={{ background: '#7c3aed' }} className="px-6 py-2 text-white rounded-xl text-sm font-medium">Add your first block</button>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto -mx-4 px-4 mb-6">
-                  <div style={{ minWidth: '560px' }}>
-                    <div className="grid mb-1" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px' }}>
-                      <div />
-                      {TT_DAYS.map((d, i) => (
-                        <div key={d} className="text-center text-xs font-bold py-1.5 rounded-lg"
-                          style={i === todayDayIdx ? { background: '#7c3aed', color: 'white' } : { color: '#64748b' }}>{d}</div>
-                      ))}
-                    </div>
-                    {TT_HOURS.map(hour => (
-                      <div key={hour} className="grid" style={{ gridTemplateColumns: '44px repeat(7, 1fr)', gap: '2px', minHeight: '36px', marginBottom: '2px' }}>
-                        <div style={{ fontSize: 10, color: '#475569', textAlign: 'right', paddingRight: 4, paddingTop: 2 }}>{fmtHour(hour)}</div>
-                        {TT_DAYS.map(day => {
-                          const startsHere = timetableBlocks.filter(b => b.day === day && b.startHour === hour);
-                          return (
-                            <div key={day} className="relative" style={{ minHeight: 36 }}>
-                              <div style={{ position: 'absolute', inset: 0, borderTop: '1px solid rgba(148,163,184,0.12)' }} />
-                              {startsHere.map(block => (
-                                <div key={block.id} onClick={() => startTtEdit(block)}
-                                  className="absolute inset-x-0 top-0 rounded-md px-1 py-0.5 cursor-pointer overflow-hidden z-10"
-                                  style={{ height: (block.endHour - block.startHour) * 38, background: hexToLight(block.color), borderLeft: `3px solid ${block.color}`, color: block.color }}>
-                                  <p style={{ fontSize: 9, fontWeight: 700, lineHeight: 1.2 }} className="truncate">{block.title}</p>
-                                  {block.location && <p style={{ fontSize: 8, opacity: 0.7 }} className="truncate">{block.location}</p>}
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">All Blocks</h3>
-                  {TT_DAYS.map(day => {
-                    const dayBlocks = timetableBlocks.filter(b => b.day === day).sort((a, b) => a.startHour - b.startHour);
-                    if (!dayBlocks.length) return null;
-                    return (
-                      <div key={day}>
-                        <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
-                        {dayBlocks.map(block => (
-                          <div key={block.id} className="flex items-center gap-3 rounded-xl p-3 mb-1.5"
-                            style={{ background: hexToLight(block.color), border: `1px solid ${block.color}33` }}>
-                            <div className="w-1 h-10 rounded-full flex-shrink-0" style={{ background: block.color }} />
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-sm truncate" style={{ color: block.color }}>{block.title}</p>
-                              <p className="text-xs text-slate-500">{TT_TYPES.find(t => t.id === block.type)?.label} · {fmtHour(block.startHour)}–{fmtHour(block.endHour)}{block.location ? ` · ${block.location}` : ''}</p>
-                            </div>
-                            <div className="flex gap-1.5">
-                              <button onClick={() => startTtEdit(block)} className="p-1.5 rounded-lg text-slate-500 hover:text-violet-500 text-sm" style={{ background: 'rgba(255,255,255,0.15)' }}>✏️</button>
-                              <button onClick={() => deleteTtBlock(block.id)} className="p-1.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.15)' }}><Trash2 className="w-3.5 h-3.5 text-slate-400 hover:text-red-500" /></button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )
-          )}
-
-          {ttTab === 'add' && (
-            <div className="rounded-3xl p-5 border border-slate-700/50 space-y-4" style={{ background: 'rgba(15,23,42,0.7)' }}>
-              <h2 className="text-white font-bold text-lg">{ttEditingId ? 'Edit Block' : 'Add New Block'}</h2>
-
-              <div>
-                <label className="text-xs text-slate-400 font-medium block mb-1">Title *</label>
-                <input value={ttNewBlock.title} onChange={e => setTtNewBlock(p => ({ ...p, title: e.target.value }))}
-                  placeholder="e.g. ECON101, Morning Shift..."
-                  className="w-full px-3 py-2.5 rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm"
-                  style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs text-slate-400 font-medium block mb-1">Type</label>
-                  <select value={ttNewBlock.type} onChange={e => setTtNewBlock(p => ({ ...p, type: e.target.value }))}
-                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
-                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
-                    {TT_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-slate-400 font-medium block mb-1">Day</label>
-                  <select value={ttNewBlock.day} onChange={e => setTtNewBlock(p => ({ ...p, day: e.target.value }))}
-                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
-                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
-                    {TT_DAYS.map(d => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs text-slate-400 font-medium block mb-1">Start</label>
-                  <select value={ttNewBlock.startHour} onChange={e => setTtNewBlock(p => ({ ...p, startHour: parseInt(e.target.value), endHour: Math.max(parseInt(e.target.value) + 1, p.endHour) }))}
-                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
-                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
-                    {TT_HOURS.map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-slate-400 font-medium block mb-1">End</label>
-                  <select value={ttNewBlock.endHour} onChange={e => setTtNewBlock(p => ({ ...p, endHour: parseInt(e.target.value) }))}
-                    className="w-full px-3 py-2.5 rounded-xl text-white focus:outline-none text-sm"
-                    style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }}>
-                    {TT_HOURS.filter(h => h > ttNewBlock.startHour).map(h => <option key={h} value={h}>{fmtHour(h)}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs text-slate-400 font-medium block mb-1">Location (optional)</label>
-                <input value={ttNewBlock.location} onChange={e => setTtNewBlock(p => ({ ...p, location: e.target.value }))}
-                  placeholder="e.g. Building A, Room 201"
-                  className="w-full px-3 py-2.5 rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm"
-                  style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(100,116,139,0.4)' }} />
-              </div>
-
-              {/* Native colour picker - guaranteed to work on all platforms */}
-              <div>
-                <label className="text-xs text-slate-400 font-medium block mb-2">Colour</label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    value={ttNewBlock.color}
-                    onChange={e => setTtNewBlock(p => ({ ...p, color: e.target.value }))}
-                    style={{ width: 48, height: 48, borderRadius: 12, border: 'none', padding: 2, background: 'transparent', cursor: 'pointer' }}
-                  />
-                  <div className="flex gap-2">
-                    {['#8b5cf6','#3b82f6','#22c55e','#ef4444','#f97316','#f59e0b','#14b8a6','#ec4899'].map(hex => (
-                      <button key={hex} onClick={() => setTtNewBlock(p => ({ ...p, color: hex }))}
-                        style={{ width: 28, height: 28, borderRadius: '50%', background: hex, border: ttNewBlock.color === hex ? '3px solid white' : '2px solid transparent', boxShadow: ttNewBlock.color === hex ? `0 0 0 2px ${hex}` : 'none', cursor: 'pointer', transition: 'all 0.15s' }} />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-xs text-slate-500 mt-1">Tap a preset or use the picker for any colour</p>
-              </div>
-
-              <div className="flex gap-2 pt-1">
-                <button onClick={saveTtBlock}
-                  className="flex-1 py-3 text-white rounded-xl font-semibold text-sm"
-                  style={{ background: 'linear-gradient(to right, #7c3aed, #4338ca)' }}>
-                  {ttEditingId ? '✓ Save Changes' : '+ Add Block'}
-                </button>
-                {ttEditingId && (
-                  <button onClick={() => deleteTtBlock(ttEditingId)}
-                    className="px-4 py-3 text-red-400 rounded-xl font-medium text-sm"
-                    style={{ background: 'rgba(239,68,68,0.15)' }}>
-                    🗑️ Delete
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
         </div>
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
