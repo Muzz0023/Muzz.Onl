@@ -224,6 +224,11 @@ const StarryBackground = ({ children }) => {
         .dark-mode .text-gray-300 {
           color: #d1d5db !important;
         }
+        /* Protect white text from being overridden */
+        .dark-mode .text-white,
+        .dark-mode [class*="text-white"] {
+          color: white !important;
+        }
         .dark-mode .text-black {
           color: #ffffff !important;
         }
@@ -6562,9 +6567,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-3xl">🦘</div>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
               <div className="flex-1">
-                <div className="text-white/80 text-sm">{greeting}, {isElite && eliteName ? eliteName : 'mate'}!</div>
+                <div className="text-sm" style={{color:"rgba(255,255,255,0.75)"}}>{greeting}, {isElite && eliteName ? eliteName : 'mate'}!</div>
                 <div className="flex items-center gap-2">
                   <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : 'Welcome back legend!'}</div>
                   {isElite && (
@@ -6581,7 +6586,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
             {isElite && !eliteName && (
-              <div className="bg-white/20 backdrop-blur rounded-2xl p-3 mb-4 flex items-center gap-3">
+              <div className="rounded-2xl p-3 mb-4 flex items-center gap-3" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.15)"}}>
                 <span className="text-white text-sm">Set your name for personalised greetings:</span>
                 <input
                   type="text"
@@ -6596,7 +6601,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             )}
             {!isElite && (
-              <div onClick={() => setActiveView('upgrade')} className="bg-white/20 backdrop-blur rounded-2xl p-3 mb-4 flex items-center justify-between cursor-pointer hover:bg-white/30 transition-colors">
+              <div onClick={() => setActiveView('upgrade')} className="rounded-2xl p-3 mb-4 flex items-center justify-between cursor-pointer transition-colors" style={{background:"rgba(255,165,0,0.1)",border:"1px solid rgba(255,165,0,0.25)"}}>
                 <div className="flex items-center gap-2">
                   <svg width="20" height="20" viewBox="0 0 24 32" fill="none">
                     <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGrad2)" />
@@ -6608,8 +6613,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-            <div className="bg-white/20 backdrop-blur rounded-2xl p-4">
-              <div className="text-white/80 text-sm">Net Worth</div>
+            <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
               <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
             </div>
           </div>
@@ -6638,65 +6643,65 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <span className="text-lg">📊</span> Today's Summary
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <button onClick={() => setActiveView('gym')} className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-indigo-100">
+              <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 text-left transition-all" style={{background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.2)"}}>
                 <div className="text-2xl mb-1">🌙</div>
-                <div className="text-xs text-indigo-600 font-medium">Last Night</div>
-                <div className="text-xl font-bold text-indigo-700">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
+                <div className="text-xs font-medium" style={{color:"rgba(129,140,248,0.9)"}}>Last Night</div>
+                <div className="text-xl font-bold" style={{color:"#a5b4fc"}}>{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
               </button>
               
-              <button onClick={() => setActiveView('gym')} className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-pink-100">
+              <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 text-left transition-all" style={{background:"rgba(236,72,153,0.1)",border:"1px solid rgba(236,72,153,0.2)"}}>
                 <div className="text-2xl mb-1">🧠</div>
-                <div className="text-xs text-pink-600 font-medium">Mood</div>
-                <div className="text-xl font-bold text-pink-700">{todayMood.mood ? moodEmojis[todayMood.mood] : '—'}</div>
+                <div className="text-xs font-medium" style={{color:"rgba(244,114,182,0.9)"}}>Mood</div>
+                <div className="text-xl font-bold" style={{color:"#f9a8d4"}}>{todayMood.mood ? moodEmojis[todayMood.mood] : '—'}</div>
               </button>
               
-              <button onClick={() => setActiveView('work')} className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-blue-100">
+              <button onClick={() => setActiveView('work')} className="rounded-xl p-3 text-left transition-all" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
                 <div className="text-2xl mb-1">💼</div>
-                <div className="text-xs text-blue-600 font-medium">This Week</div>
-                <div className="text-xl font-bold text-blue-700">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : '—'}</div>
+                <div className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>This Week</div>
+                <div className="text-xl font-bold" style={{color:"#93c5fd"}}>{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : '—'}</div>
               </button>
               
-              <button onClick={() => setActiveView('tasks')} className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-3 text-left hover:shadow-md transition-all border border-purple-100">
+              <button onClick={() => setActiveView('tasks')} className="rounded-xl p-3 text-left transition-all" style={{background:"rgba(139,92,246,0.1)",border:"1px solid rgba(139,92,246,0.2)"}}>
                 <div className="text-2xl mb-1">✅</div>
-                <div className="text-xs text-purple-600 font-medium">Tasks</div>
-                <div className="text-xl font-bold text-purple-700">{dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}</div>
+                <div className="text-xs font-medium" style={{color:"rgba(192,132,252,0.9)"}}>Tasks</div>
+                <div className="text-xl font-bold" style={{color:"#d8b4fe"}}>{dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}</div>
               </button>
             </div>
           </div>
           
           {/* Quick Access */}
           <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
-            <button onClick={() => setActiveView('habits')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('habits')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">🔥</span>
-              <span className="text-xs font-medium text-gray-600">Habits</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Habits</span>
             </button>
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">🌙</span>
-              <span className="text-xs font-medium text-gray-600">Sleep</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Sleep</span>
             </button>
-            <button onClick={() => setActiveView('gym')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">🧠</span>
-              <span className="text-xs font-medium text-gray-600">Mood</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Mood</span>
             </button>
-            <button onClick={() => setActiveView('work')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('work')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">💼</span>
-              <span className="text-xs font-medium text-gray-600">Work</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Work</span>
             </button>
-            <button onClick={() => setActiveView('diet')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('diet')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">🥗</span>
-              <span className="text-xs font-medium text-gray-600">Diet</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Diet</span>
             </button>
-            <button onClick={() => setActiveView('varied')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('varied')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">💳</span>
-              <span className="text-xs font-medium text-gray-600">Bills</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Bills</span>
             </button>
-            <button onClick={() => setActiveView('investments')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('investments')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">📈</span>
-              <span className="text-xs font-medium text-gray-600">Invest</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Invest</span>
             </button>
-            <button onClick={() => setActiveView('tasks')} className="bg-white rounded-xl p-3 border shadow-sm hover:shadow-md transition-all flex flex-col items-center">
+            <button onClick={() => setActiveView('tasks')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">✅</span>
-              <span className="text-xs font-medium text-gray-600">Tasks</span>
+              <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Tasks</span>
             </button>
           </div>
           
@@ -12721,14 +12726,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-3xl mb-2">🎁</div>
                       <h3 className="text-md font-bold text-blue-800 mb-2">1. Unique Products</h3>
                       <p className="text-sm text-gray-600 mb-2">Embedded into consumer habits through consistency, marketing, and experience.</p>
-                      <p className="text-xs text-blue-600 font-medium">Examples: Coca-Cola, Hershey, Wrigley, P&G</p>
+                      <p className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>Examples: Coca-Cola, Hershey, Wrigley, P&G</p>
                     </div>
 
                     <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
                       <div className="text-3xl mb-2">🛎️</div>
                       <h3 className="text-md font-bold text-purple-800 mb-2">2. Unique Services</h3>
                       <p className="text-sm text-gray-600 mb-2">Trusted, recurring services tied to the brand—not individuals.</p>
-                      <p className="text-xs text-purple-600 font-medium">Examples: Moody's, H&R Block, AmEx</p>
+                      <p className="text-xs font-medium" style={{color:"rgba(192,132,252,0.9)"}}>Examples: Moody's, H&R Block, AmEx</p>
                     </div>
 
                     <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
