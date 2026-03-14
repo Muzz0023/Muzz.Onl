@@ -6720,14 +6720,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* Header with Net Worth */}
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-end justify-between mb-1">
-              <div></div>
-              <button onClick={() => setShowDashCustomise(true)}
-                className="text-xs font-mono px-3 py-1.5 rounded-xl transition-all"
-                style={{color:"rgba(0,200,255,0.6)",border:"1px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.05)"}}>
-                ⚙ customise
-              </button>
-            </div>
+
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
               <div className="flex-1">
@@ -6775,16 +6768,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-            {widgets.networth && <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+            <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
               <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
               <div className="text-4xl font-bold text-white hud-number" style={{textShadow:"0 0 20px rgba(0,200,255,0.4)"}}>${netWorth.toLocaleString()}</div>
-            </div>}
+            </div>
           </div>
         </div>
         
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
           {/* Stats Row */}
-          {widgets.stats && <div className="grid grid-cols-3 gap-3 mt-4">
+          <div className="grid grid-cols-3 gap-3 mt-4">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
               <div className="text-xl font-bold text-white hud-number">${totalMonthly.toFixed(0)}</div>
@@ -6797,10 +6790,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Portfolio</div>
               <div className="text-xl font-bold text-white hud-number">${totalStocks.toLocaleString()}</div>
             </div>
-          </div>}
+          </div>
           
           {/* Today's Summary */}
-          {widgets.summary && <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
             <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
               <span className="text-lg">📊</span> Today's Summary
             </h3>
@@ -6829,9 +6822,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-xl font-bold" style={{color:"#d8b4fe"}}>{dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}</div>
               </button>
             </div>
-          </div>}
+          </div>
           {/* Quick Access */}
-          {widgets.quickaccess && <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
             <button onClick={() => setActiveView('habits')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">🔥</span>
               <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Habits</span>
@@ -6864,10 +6857,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <span className="text-2xl mb-1">✅</span>
               <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Tasks</span>
             </button>
-          </div>}
+          </div>
           
           {/* Achievements & Coming Up */}
-          {widgets.achievements && <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
@@ -7001,16 +6994,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 })()}
               </div>
             </div>
-          </div>}
+          </div>
 
           {/* Daily Quote */}
-          {widgets.quote && <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-5 text-white">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-5 text-white">
             <div className="text-lg italic mb-2">"{todayQuote.quote}"</div>
             <div className="text-sm text-slate-400">— {todayQuote.author}</div>
-          </div>}
+          </div>
 
           {/* Charity Banner */}
-          {widgets.charity && isElite && (
+          {isElite && (
             <div className="bg-white/5 rounded-2xl p-4 flex items-center gap-3 border border-white/10">
               <span className="text-lg">💛</span>
               <span className="text-sm text-gray-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation</span>
@@ -7018,55 +7011,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
         </div>
         
-        {/* Dashboard Customise Modal */}
-        {showDashCustomise && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center" style={{background:"rgba(0,0,0,0.7)",backdropFilter:"blur(10px)"}}
-            onClick={() => setShowDashCustomise(false)}>
-            <div className="w-full max-w-lg rounded-t-3xl p-6 pb-10" style={{background:"#020c1b",border:"1px solid rgba(0,200,255,0.2)"}}
-              onClick={e => e.stopPropagation()}>
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// DASHBOARD</div>
-                  <h2 className="text-xl font-bold text-white">Customise Widgets</h2>
-                </div>
-                <button onClick={() => setShowDashCustomise(false)} style={{color:"rgba(0,200,255,0.5)"}}>
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {[
-                  {key:'networth', label:'Net Worth', desc:'Your total assets value'},
-                  {key:'stats', label:'Stats Row', desc:'Bills, savings rate & portfolio'},
-                  {key:'summary', label:"Today's Summary", desc:'Sleep, mood, work & tasks'},
-                  {key:'quickaccess', label:'Quick Access', desc:'Shortcuts to all sections'},
-                  {key:'achievements', label:'Achievements & Coming Up', desc:'Goals & upcoming events'},
-                  {key:'quote', label:'Daily Quote', desc:'Motivational quote of the day'},
-                  {key:'charity', label:'Charity Banner', desc:'Elite giving back section'},
-                ].map(w => (
-                  <div key={w.key} className="flex items-center justify-between p-3 rounded-xl"
-                    style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.08)"}}>
-                    <div>
-                      <div className="text-sm font-medium text-white">{w.label}</div>
-                      <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>{w.desc}</div>
-                    </div>
-                    <button onClick={() => toggleWidget(w.key)}
-                      className="w-12 h-6 rounded-full transition-all relative"
-                      style={{background: widgets[w.key] ? 'rgba(0,200,255,0.8)' : 'rgba(255,255,255,0.1)'}}>
-                      <div className="w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all"
-                        style={{left: widgets[w.key] ? '26px' : '2px'}} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <button onClick={() => { setDashWidgets(defaultWidgets); try { localStorage.removeItem('muzz_dash_widgets'); } catch {} }}
-                className="w-full mt-4 py-3 rounded-xl text-sm font-mono transition-all"
-                style={{color:"rgba(0,200,255,0.4)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                reset to default
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Floating Chat */}
         <FloatingChat 
           isChatOpen={isChatOpen}
