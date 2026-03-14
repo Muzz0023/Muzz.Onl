@@ -2813,112 +2813,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'commandboard') {
     const tiles = boardTiles || defaultTiles;
     const today = new Date().toISOString().split('T')[0];
-    const completedHabits = habits.filter(h => habitLog[`${h.id}:${today}`]).length;
-    const todayTasks = dailyTasks.filter(t => !t.completed).length;
-    const nextCountdown = countdowns.filter(c => c.date >= today).sort((a,b) => a.date > b.date ? 1 : -1)[0];
+    const completedHabits = habits.filter(h => habitLog && habitLog[`${h.id}:${today}`]).length;
+    const todayTasksDone = Array.isArray(dailyTasks) ? dailyTasks.filter(t => t.completed).length : 0;
+    const todayTasksTotal = Array.isArray(dailyTasks) ? dailyTasks.length : 0;
+    const nextCountdown = Array.isArray(countdowns) ? countdowns.filter(c => c.date >= today).sort((a,b) => a.date > b.date ? 1 : -1)[0] : null;
     const daysUntil = nextCountdown ? Math.ceil((new Date(nextCountdown.date) - new Date()) / 86400000) : null;
-    const todayMoodEntry = mentalHealthData?.find?.(m => m.date === today);
+    const moodToday = mentalHealthData && typeof mentalHealthData === 'object' && !Array.isArray(mentalHealthData) 
+      ? (mentalHealthData[today]?.mood || null)
+      : null;
     const moodEmojisMap = { 1:'😔', 2:'😕', 3:'😐', 4:'🙂', 5:'😄' };
 
-    const tileData = {
-      networth: {
-        title: 'NET WORTH', icon: '💰', color: 'rgba(0,200,255,0.15)', border: 'rgba(0,200,255,0.3)',
-        content: () => (
-          <div>
-            <div className="text-3xl font-bold text-white hud-number" style={{textShadow:'0 0 20px rgba(0,200,255,0.4)'}}>${netWorth.toLocaleString()}</div>
-            <div className="text-xs mt-1" style={{color:'rgba(0,200,255,0.5)'}}>↑ total assets</div>
-          </div>
-        ),
-        onClick: () => setActiveView('assets'),
-        span: true
-      },
-      tasks: {
-        title: 'TASKS TODAY', icon: '✅', color: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.3)',
-        content: () => (
-          <div>
-            <div className="text-3xl font-bold text-white hud-number">{dailyTasks.filter(t=>t.completed).length}<span className="text-lg text-slate-400">/{dailyTasks.length}</span></div>
-            <div className="text-xs mt-1" style={{color:'rgba(99,102,241,0.6)'}}>{todayTasks > 0 ? `${todayTasks} remaining` : '✓ all done!'}</div>
-          </div>
-        ),
-        onClick: () => setActiveView('tasks')
-      },
-      habits: {
-        title: 'HABITS', icon: '🔥', color: 'rgba(251,146,60,0.1)', border: 'rgba(251,146,60,0.3)',
-        content: () => (
-          <div>
-            <div className="text-3xl font-bold text-white hud-number">{completedHabits}<span className="text-lg text-slate-400">/{habits.length}</span></div>
-            <div className="text-xs mt-1" style={{color:'rgba(251,146,60,0.6)'}}>completed today</div>
-          </div>
-        ),
-        onClick: () => setActiveView('habits')
-      },
-      countdown: {
-        title: 'NEXT EVENT', icon: '⏳', color: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.3)',
-        content: () => (
-          <div>
-            {nextCountdown ? (
-              <>
-                <div className="text-3xl font-bold text-white hud-number">{daysUntil}d</div>
-                <div className="text-xs mt-1 truncate" style={{color:'rgba(168,85,247,0.7)'}}>{nextCountdown.title}</div>
-              </>
-            ) : (
-              <div className="text-sm" style={{color:'rgba(168,85,247,0.4)'}}>no events</div>
-            )}
-          </div>
-        ),
-        onClick: () => setActiveView('countdowns')
-      },
-      bills: {
-        title: 'MONTHLY BILLS', icon: '💸', color: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.25)',
-        content: () => (
-          <div>
-            <div className="text-3xl font-bold text-white hud-number">${totalMonthly.toFixed(0)}</div>
-            <div className="text-xs mt-1" style={{color:'rgba(239,68,68,0.5)'}}>per month</div>
-          </div>
-        ),
-        onClick: () => setActiveView('varied')
-      },
-      portfolio: {
-        title: 'PORTFOLIO', icon: '📈', color: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.25)',
-        content: () => (
-          <div>
-            <div className="text-3xl font-bold text-white hud-number">${totalStocks.toLocaleString()}</div>
-            <div className="text-xs mt-1" style={{color:'rgba(34,197,94,0.5)'}}>{stocks.length} holdings</div>
-          </div>
-        ),
-        onClick: () => setActiveView('investments')
-      },
-      mood: {
-        title: 'MOOD', icon: '🧠', color: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.25)',
-        content: () => (
-          <div>
-            <div className="text-4xl">{todayMoodEntry?.mood ? moodEmojisMap[todayMoodEntry.mood] : '—'}</div>
-            <div className="text-xs mt-1" style={{color:'rgba(236,72,153,0.5)'}}>today</div>
-          </div>
-        ),
-        onClick: () => setActiveView('gym')
-      },
-      ai: {
-        title: 'MUZZ AI', icon: '🦘', color: 'rgba(251,146,60,0.1)', border: 'rgba(251,146,60,0.3)',
-        content: () => (
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="text-3xl mb-1">🦘</div>
-            <div className="text-xs text-center" style={{color:'rgba(251,146,60,0.6)'}}>tap to chat</div>
-          </div>
-        ),
-        onClick: () => setIsChatOpen(true)
-      },
-    };
-
-    const handleDragStart = (e, id) => {
-      boardDragRef.current = id;
-      setBoardDragging(id);
-      e.dataTransfer.effectAllowed = 'move';
-    };
-    const handleDragOver = (e, id) => {
-      e.preventDefault();
-      setBoardDragOver(id);
-    };
+    const handleDragStart = (e, id) => { boardDragRef.current = id; setBoardDragging(id); e.dataTransfer.effectAllowed = 'move'; };
+    const handleDragOver = (e, id) => { e.preventDefault(); setBoardDragOver(id); };
     const handleDrop = (e, targetId) => {
       e.preventDefault();
       if (!boardDragRef.current || boardDragRef.current === targetId) { setBoardDragging(null); setBoardDragOver(null); return; }
@@ -2931,12 +2837,63 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       setBoardDragging(null); setBoardDragOver(null);
     };
 
+    const renderTile = (tile) => {
+      const isActive = boardDragging === tile.id;
+      const isOver = boardDragOver === tile.id && boardDragging !== tile.id;
+      const isSpan = tile.id === 'networth';
+
+      const configs = {
+        networth: { title:'NET WORTH', color:'rgba(0,200,255,0.12)', border:'rgba(0,200,255,0.3)', onClick:()=>setActiveView('assets'),
+          body: <div><div className="text-3xl font-bold text-white hud-number" style={{textShadow:'0 0 20px rgba(0,200,255,0.4)'}}>${netWorth.toLocaleString()}</div><div className="text-xs mt-1" style={{color:'rgba(0,200,255,0.5)'}}>total assets</div></div> },
+        tasks: { title:'TASKS TODAY', color:'rgba(99,102,241,0.1)', border:'rgba(99,102,241,0.3)', onClick:()=>setActiveView('tasks'),
+          body: <div><div className="text-3xl font-bold text-white hud-number">{todayTasksDone}<span className="text-lg text-slate-400">/{todayTasksTotal}</span></div><div className="text-xs mt-1" style={{color:'rgba(99,102,241,0.6)'}}>{todayTasksTotal - todayTasksDone > 0 ? `${todayTasksTotal - todayTasksDone} left` : '✓ done!'}</div></div> },
+        habits: { title:'HABITS', color:'rgba(251,146,60,0.1)', border:'rgba(251,146,60,0.3)', onClick:()=>setActiveView('habits'),
+          body: <div><div className="text-3xl font-bold text-white hud-number">{completedHabits}<span className="text-lg text-slate-400">/{habits.length}</span></div><div className="text-xs mt-1" style={{color:'rgba(251,146,60,0.6)'}}>today</div></div> },
+        countdown: { title:'NEXT EVENT', color:'rgba(168,85,247,0.1)', border:'rgba(168,85,247,0.3)', onClick:()=>setActiveView('countdowns'),
+          body: nextCountdown ? <div><div className="text-3xl font-bold text-white hud-number">{daysUntil}d</div><div className="text-xs mt-1 truncate" style={{color:'rgba(168,85,247,0.7)'}}>{nextCountdown.title}</div></div> : <div className="text-sm" style={{color:'rgba(168,85,247,0.4)'}}>no events</div> },
+        bills: { title:'MONTHLY BILLS', color:'rgba(239,68,68,0.1)', border:'rgba(239,68,68,0.25)', onClick:()=>setActiveView('varied'),
+          body: <div><div className="text-3xl font-bold text-white hud-number">${totalMonthly.toFixed(0)}</div><div className="text-xs mt-1" style={{color:'rgba(239,68,68,0.5)'}}>per month</div></div> },
+        portfolio: { title:'PORTFOLIO', color:'rgba(34,197,94,0.1)', border:'rgba(34,197,94,0.25)', onClick:()=>setActiveView('investments'),
+          body: <div><div className="text-3xl font-bold text-white hud-number">${totalStocks.toLocaleString()}</div><div className="text-xs mt-1" style={{color:'rgba(34,197,94,0.5)'}}>{stocks.length} holdings</div></div> },
+        mood: { title:'MOOD', color:'rgba(236,72,153,0.1)', border:'rgba(236,72,153,0.25)', onClick:()=>setActiveView('gym'),
+          body: <div><div className="text-4xl">{moodToday ? moodEmojisMap[moodToday] : '—'}</div><div className="text-xs mt-1" style={{color:'rgba(236,72,153,0.5)'}}>today</div></div> },
+        ai: { title:'MUZZ AI', color:'rgba(251,146,60,0.1)', border:'rgba(251,146,60,0.3)', onClick:()=>setIsChatOpen(true),
+          body: <div className="flex flex-col items-center justify-center py-1"><div className="text-3xl mb-1">🦘</div><div className="text-xs" style={{color:'rgba(251,146,60,0.6)'}}>tap to chat</div></div> },
+      };
+
+      const c = configs[tile.id];
+      if (!c) return null;
+
+      return (
+        <div key={tile.id}
+          draggable
+          onDragStart={e => handleDragStart(e, tile.id)}
+          onDragOver={e => handleDragOver(e, tile.id)}
+          onDrop={e => handleDrop(e, tile.id)}
+          onDragEnd={() => { setBoardDragging(null); setBoardDragOver(null); }}
+          onClick={c.onClick}
+          className={`rounded-2xl p-4 cursor-pointer transition-all select-none ${isSpan ? 'col-span-2' : ''}`}
+          style={{
+            background: c.color,
+            border: `1px solid ${isActive ? 'rgba(0,200,255,0.8)' : isOver ? 'rgba(0,200,255,0.6)' : c.border}`,
+            boxShadow: isActive ? '0 0 30px rgba(0,200,255,0.3)' : isOver ? '0 0 20px rgba(0,200,255,0.15)' : 'none',
+            opacity: isActive ? 0.7 : 1,
+            transform: isOver ? 'scale(1.02)' : 'scale(1)',
+            minHeight: '110px',
+          }}>
+          <div className="flex items-start justify-between mb-3">
+            <span className="text-xs font-mono" style={{color:'rgba(255,255,255,0.4)',letterSpacing:'1px'}}>{c.title}</span>
+            <span className="text-slate-600 text-xs cursor-grab">⠿</span>
+          </div>
+          {c.body}
+        </div>
+      );
+    };
+
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-
-        {/* Header */}
         <div className="pt-16 pb-4 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div>
@@ -2946,44 +2903,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="text-xs font-mono" style={{color:"rgba(0,200,255,0.3)"}}>drag to rearrange</div>
           </div>
         </div>
-
-        {/* Tile Grid */}
-        <div className="max-w-4xl mx-auto px-4 py-6" style={{paddingBottom:"calc(env(safe-area-inset-bottom) + 100px)"}}>
+        <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="grid grid-cols-3 gap-3">
-            {tiles.map(tile => {
-              const t = tileData[tile.id];
-              if (!t) return null;
-              const isSpan = tile.id === 'networth';
-              return (
-                <div
-                  key={tile.id}
-                  draggable
-                  onDragStart={e => handleDragStart(e, tile.id)}
-                  onDragOver={e => handleDragOver(e, tile.id)}
-                  onDrop={e => handleDrop(e, tile.id)}
-                  onDragEnd={() => { setBoardDragging(null); setBoardDragOver(null); }}
-                  onClick={t.onClick}
-                  className={`rounded-2xl p-4 cursor-pointer transition-all select-none ${isSpan ? 'col-span-2' : ''}`}
-                  style={{
-                    background: t.color,
-                    border: `1px solid ${boardDragging === tile.id ? 'rgba(0,200,255,0.8)' : boardDragOver === tile.id ? 'rgba(0,200,255,0.6)' : t.border}`,
-                    boxShadow: boardDragging === tile.id ? '0 0 30px rgba(0,200,255,0.3)' : boardDragOver === tile.id ? '0 0 20px rgba(0,200,255,0.15)' : 'none',
-                    opacity: boardDragging === tile.id ? 0.7 : 1,
-                    transform: boardDragOver === tile.id && boardDragging !== tile.id ? 'scale(1.02)' : 'scale(1)',
-                    minHeight: '110px',
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="text-xs font-mono" style={{color:`${t.border}`,letterSpacing:"1px",opacity:0.8}}>{t.title}</span>
-                    <span className="text-sm opacity-60 cursor-grab">⠿</span>
-                  </div>
-                  <div>{t.content()}</div>
-                </div>
-              );
-            })}
+            {tiles.map(tile => renderTile(tile))}
           </div>
-
-          {/* Reset layout button */}
           <div className="text-center mt-6">
             <button onClick={() => { setBoardTiles(defaultTiles); try { localStorage.removeItem('muzz_board_tiles'); } catch {} }}
               className="text-xs font-mono px-4 py-2 rounded-xl transition-all"
@@ -2997,6 +2920,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   // TASKS VIEW
+  if (activeView === 'tasks') {  // TASKS VIEW
   if (activeView === 'tasks') {
     const addDailyTask = () => {
       setDailyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, dateAdded: new Date().toISOString() }]);
