@@ -2215,7 +2215,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="mb-4 px-2 py-2 rounded-xl" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>{new Date().toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</span>
-                <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.5)"}}>{currentStreak > 0 ? `🔥 ${currentStreak}d streak` : 'No streak'}</span>
               </div>
               <div className="text-xs font-mono mt-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"0.5px"}}>SYS: ONLINE ●</div>
             </div>
@@ -2233,18 +2232,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
             </div>
             
-            {/* Streak Badge */}
-            {currentStreak > 0 && (
-              <div className="mx-2 mb-6 rounded-2xl p-3 flex items-center gap-3" style={{background:"rgba(0,200,255,0.07)",border:"1px solid rgba(0,200,255,0.2)"}}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:"rgba(0,200,255,0.15)",border:"1px solid rgba(0,200,255,0.3)"}}>
-                  <Flame className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-white">{currentStreak} Day Streak</div>
-                  <div className="text-xs text-slate-400">Keep it going!</div>
-                </div>
-              </div>
-            )}
+
             
             {/* Navigation */}
             <nav className="flex-1 space-y-0.5 px-1">
@@ -13848,10 +13836,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       className="flex-1 text-lg font-semibold bg-transparent focus:outline-none"
                     />
                     <div className="flex items-center gap-2">
-                      <div className="text-center px-3 py-1 bg-orange-100 rounded-xl">
-                        <div className="text-lg font-bold text-orange-600">{streak}</div>
-                        <div className="text-[10px] text-orange-500">streak</div>
-                      </div>
                       <button
                         onClick={() => toggleHabit(habit.id, today)}
                         className={`w-12 h-12 rounded-xl text-2xl transition-all ${completedToday ? 'bg-green-500 text-white scale-110' : 'bg-gray-100 hover:bg-gray-200'}`}
