@@ -2187,11 +2187,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // Lock body scroll when sidebar is open
   const scrollPosRef = useRef(0);
+  const viewScrollRef = useRef({});
   useEffect(() => {
+    const viewEl = document.getElementById('muzz-view-scroll');
     if (sidebarOpen) {
-      // Reset menu scroll to top
+      // Save current view scroll position
+      if (viewEl) viewScrollRef.current[activeView] = viewEl.scrollTop;
+      // Reset menu to top
       const menuContent = document.getElementById('muzz-menu-scroll');
       if (menuContent) menuContent.scrollTop = 0;
+    } else {
+      // Restore view scroll position after menu closes
+      if (viewEl) {
+        const saved = viewScrollRef.current[activeView] || 0;
+        setTimeout(() => { viewEl.scrollTop = saved; }, 0);
+      }
     }
   }, [sidebarOpen]);
 
@@ -2228,8 +2238,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div>
         {/* Full screen overlay */}
         <div
-          className={sidebarOpen ? "fixed inset-0 z-50 transition-all duration-300" : "fixed inset-0 z-50 pointer-events-none opacity-0 transition-all duration-300"}
-          style={{background:"rgba(2,8,20,0.97)",backdropFilter:"blur(20px)"}}
+          className="fixed inset-0 z-50 transition-all duration-300"
+          style={{
+            background:"rgba(2,8,20,0.97)",
+            backdropFilter:"blur(20px)",
+            opacity: sidebarOpen ? 1 : 0,
+            pointerEvents: sidebarOpen ? 'all' : 'none',
+            visibility: sidebarOpen ? 'visible' : 'hidden'
+          }}
         >
           {/* Grid background */}
           <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
@@ -2464,7 +2480,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -2678,7 +2694,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -3116,7 +3132,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -4098,7 +4114,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -4977,7 +4993,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
     
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         
@@ -6247,7 +6263,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -6576,7 +6592,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const moodEmojis = { great: '😊', good: '😌', okay: '😐', low: '😔', sad: '😢', angry: '😡' };
     
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         
@@ -6943,7 +6959,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -8394,7 +8410,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -8466,7 +8482,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // UPGRADE / ELITE STATUS VIEW
   if (activeView === 'upgrade') {
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -8702,7 +8718,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const totalAssets = filledAssets.reduce((sum, a) => sum + a.value, 0);
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -9896,7 +9912,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     return (
-      <div className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -13767,7 +13783,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const last31 = getLast31Days();
 
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -13876,7 +13892,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     ];
 
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -13984,7 +14000,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const completedCount = bucketList.filter(b => b.completed).length;
 
     return (
-      <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -14093,7 +14109,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // FALLBACK
   return (
-    <div className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+    <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
       <Sidebar />
         <SaveIndicator />
       <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
