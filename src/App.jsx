@@ -4922,8 +4922,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   value={customCat.name}
                   onChange={(e) => updateCategory({ name: e.target.value })}
                   placeholder="Name this category..."
-                  className="text-4xl font-bold focus:outline-none flex-1 text-white"
-                  style={{background:"transparent",border:"none",color:"white",outline:"none"}}
+                  className="text-4xl font-bold focus:outline-none flex-1 text-white w-full px-4 py-2 rounded-xl"
+                  style={{background:"transparent",border:"1px solid rgba(0,200,255,0.3)",color:"white",outline:"none"}}
                 />
               </div>
               
