@@ -3195,7 +3195,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div
                         key={list.id}
                         onClick={() => setActiveShoppingList(list.id)}
-                        className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+                        className="rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}
                       >
                         <input
                           type="text"
@@ -6618,15 +6618,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
           {/* Stats Row */}
           <div className="grid grid-cols-3 gap-3 -mt-8">
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} text-center">
+            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs text-gray-500">Monthly Bills</div>
               <div className="text-xl font-bold text-gray-800">${totalMonthly.toFixed(0)}</div>
             </div>
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} text-center">
+            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs text-gray-500">Savings Rate</div>
               <div className="text-xl font-bold text-gray-800">{savingsRate.toFixed(0)}%</div>
             </div>
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} text-center">
+            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs text-gray-500">Portfolio</div>
               <div className="text-xl font-bold text-gray-800">${totalStocks.toLocaleString()}</div>
             </div>
@@ -8526,7 +8526,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
-            <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}} space-y-4">
+            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
               <h2 className="text-xl font-semibold">Subscription</h2>
               <div className="flex items-center justify-between">
                 <div>
@@ -8561,7 +8561,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}} space-y-4">
+            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
               <h2 className="text-xl font-semibold">Subscription</h2>
               <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
               <p className="text-xs text-gray-400">To manage or cancel your subscription, go to your iPhone Settings → Apple ID → Subscriptions.</p>
@@ -13956,8 +13956,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
               {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
               {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
-              {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-start gap-3"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
-              {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-3 opacity-60 mb-2"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
+              {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-start gap-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
+              {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-center gap-3 opacity-60 mb-2" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
             </div>
           );
         })()}
@@ -14013,7 +14013,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Incomplete */}
           {bucketList.filter(b => !b.completed).map(item => (
-            <div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-start gap-3">
+            <div key={item.id} className="rounded-2xl p-4 flex items-start gap-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <button
                 onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))}
                 className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors"
@@ -14059,7 +14059,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div>
               <h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>
               {bucketList.filter(b => b.completed).map(item => (
-                <div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-3 opacity-60 mb-2">
+                <div key={item.id} className="rounded-2xl p-4 flex items-center gap-3 opacity-60 mb-2" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
                   <button
                     onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))}
                     className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"
