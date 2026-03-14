@@ -3013,7 +3013,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <p className="text-sm text-gray-500 mt-2">{pomodoroSessions} sessions completed today</p>
                 </div>
-                <div className="rounded-2xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
+                <div className="rounded-2xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
                   <h3 className="font-semibold text-gray-700 mb-2">How the Pomodoro Technique works</h3>
                   <p className="text-sm text-gray-500">Focus for 25 minutes → 5 min break. After 4 sessions, take a 15 min break. This helps you stay sharp and avoid burnout. 🍅</p>
                 </div>
@@ -4596,7 +4596,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Weekly Steps Tab */}
           {gymSubTab === 'steps' && (
             <div className="space-y-4">
-              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
                 <h2 className="text-lg font-semibold text-gray-700">👟 Weekly Steps & Workouts</h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-sm text-gray-500">Goal:</span>
@@ -5008,7 +5008,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
           {/* Tab Name Editor & Toolbar */}
-          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
             <div className="flex flex-wrap gap-3 items-center justify-between">
               <div className="flex flex-wrap gap-2 items-center">
                 {/* Current Tab Name */}
@@ -6633,7 +6633,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
           
           {/* Today's Summary */}
-          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
             <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
               <span className="text-lg">📊</span> Today's Summary
             </h3>
@@ -8299,7 +8299,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
             return (
               <div className="space-y-6">
-                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}">
+                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">💳 Debt Payoff Calculator</h2>
                   <div className="flex gap-3 mb-6">
                     <button onClick={() => setDebtCalcMethod('snowball')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'snowball' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}>❄️ Snowball (Smallest First)</button>
@@ -13655,7 +13655,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const compResult = calcCompound();
             return (
               <div className="space-y-6">
-                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}">
+                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">📈 Compound Interest Calculator</h2>
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
@@ -13955,7 +13955,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
               <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
               {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
-              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}"><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
+              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
               {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-start gap-3"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
               {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-3 opacity-60 mb-2"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
             </div>
@@ -14000,7 +14000,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Progress */}
           {bucketList.length > 0 && (
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">Progress</span>
                 <span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span>
