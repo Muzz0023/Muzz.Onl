@@ -137,7 +137,7 @@ const StarryBackground = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen relative" style={{background: "linear-gradient(180deg, #020817 0%, #050d1a 40%, #030a14 100%)"}}>
+    <div className="min-h-screen relative scanline noise-overlay" style={{background: "linear-gradient(180deg, #020817 0%, #050d1a 40%, #030a14 100%)"}}>
       {/* Futuristic grid overlay */}
       <div className="fixed inset-0 pointer-events-none z-0" style={{backgroundImage: 'linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
       {/* Ambient glow orbs */}
@@ -188,6 +188,118 @@ const StarryBackground = ({ children }) => {
       {/* CSS for twinkle animation */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+        /* ── FUTURISTIC ANIMATIONS ── */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+
+        /* Scanline overlay */
+        @keyframes scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
+        }
+        .scanline::after {
+          content: '';
+          position: fixed;
+          top: 0; left: 0; right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(0,200,255,0.15), transparent);
+          animation: scanline 8s linear infinite;
+          pointer-events: none;
+          z-index: 9999;
+        }
+
+        /* Noise texture */
+        .noise-overlay::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+          pointer-events: none;
+          z-index: 1;
+          opacity: 0.4;
+        }
+
+        /* HUD number font */
+        .hud-number {
+          font-family: 'Share Tech Mono', monospace !important;
+          letter-spacing: 1px;
+        }
+
+        /* Cyan glow pulse on active nav */
+        @keyframes navPulse {
+          0%, 100% { box-shadow: 0 0 8px rgba(0,200,255,0.3); }
+          50% { box-shadow: 0 0 16px rgba(0,200,255,0.7), 0 0 30px rgba(0,200,255,0.3); }
+        }
+        .nav-active-glow {
+          animation: navPulse 2s ease-in-out infinite;
+        }
+
+        /* Header scan line animation */
+        @keyframes headerScan {
+          0% { transform: translateX(-100%); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateX(100%); opacity: 0; }
+        }
+        .header-scan::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, #00c8ff, transparent);
+          animation: headerScan 4s ease-in-out infinite;
+        }
+
+        /* Progress bar glow */
+        .progress-glow {
+          box-shadow: 0 0 8px rgba(0,200,255,0.6), 0 0 16px rgba(0,200,255,0.3);
+        }
+
+        /* Stat card count-up glow */
+        @keyframes statAppear {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .stat-appear {
+          animation: statAppear 0.5s ease-out forwards;
+        }
+
+        /* Kangaroo button pulse */
+        @keyframes kangPulse {
+          0%, 100% { box-shadow: 0 4px 24px rgba(251,146,60,0.4); }
+          50% { box-shadow: 0 4px 32px rgba(251,146,60,0.7), 0 0 40px rgba(251,146,60,0.3); }
+        }
+        .kang-pulse {
+          animation: kangPulse 3s ease-in-out infinite;
+        }
+
+        /* Button press glow */
+        .btn-cyber:active {
+          box-shadow: 0 0 20px rgba(0,200,255,0.5) !important;
+          transform: scale(0.97);
+        }
+
+        /* Sidebar glow edge */
+        @keyframes sidebarGlow {
+          0%, 100% { box-shadow: 4px 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,200,255,0.05); }
+          50% { box-shadow: 4px 0 40px rgba(0,0,0,0.8), 0 0 50px rgba(0,200,255,0.12); }
+        }
+        .sidebar-glow {
+          animation: sidebarGlow 4s ease-in-out infinite;
+        }
+
+        /* Cyber loading spinner */
+        @keyframes cyberSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .cyber-spinner {
+          width: 40px; height: 40px;
+          border: 2px solid rgba(0,200,255,0.1);
+          border-top: 2px solid #00c8ff;
+          border-radius: 50%;
+          animation: cyberSpin 0.8s linear infinite;
+          box-shadow: 0 0 12px rgba(0,200,255,0.3);
+        }
 
         @keyframes twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.8); }
@@ -1196,7 +1308,7 @@ Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedl
 
   if (!isChatOpen) {
     return (
-      <button onClick={() => setIsChatOpen(true)} className="fixed w-14 h-14 rounded-full hover:scale-110 transition-all flex items-center justify-center text-2xl z-50" style={{bottom:"calc(env(safe-area-inset-bottom) + 72px)",right:"16px",background:"linear-gradient(135deg,#fb923c,#f97316)",boxShadow:"0 4px 24px rgba(251,146,60,0.4)"}}>
+      <button onClick={() => setIsChatOpen(true)} className="fixed w-14 h-14 rounded-full hover:scale-110 transition-all flex items-center justify-center text-2xl z-50 kang-pulse" style={{bottom:"calc(env(safe-area-inset-bottom) + 72px)",right:"16px",background:"linear-gradient(135deg,#fb923c,#f97316)",boxShadow:"0 4px 24px rgba(251,146,60,0.4)"}}>
         🦘
       </button>
     );
@@ -2108,7 +2220,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div>
         <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/50 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
         <div 
-          style={{ background: "linear-gradient(180deg, #020c1b 0%, #030f20 100%)", borderRight: "1px solid rgba(0,200,255,0.15)", boxShadow: "4px 0 40px rgba(0,0,0,0.8), inset -1px 0 0 rgba(0,200,255,0.05)" }}
+          style={{ background: "linear-gradient(180deg, #020c1b 0%, #030f20 100%)", borderRight: "1px solid rgba(0,200,255,0.2)", boxShadow: "4px 0 40px rgba(0,0,0,0.8), 0 0 40px rgba(0,200,255,0.08), inset -1px 0 0 rgba(0,200,255,0.05)" }}
           className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 z-50 -translate-x-full transition-transform duration-300"}>
           <div 
             ref={sidebarScrollRef} 
@@ -2397,7 +2509,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -2611,7 +2723,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Task Management</h1>
@@ -3049,7 +3161,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -4031,7 +4143,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -4912,7 +5024,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         
         {/* Header */}
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-6xl mx-auto">
             <div>
               <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
@@ -6180,7 +6292,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -6511,7 +6623,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         
         {/* Header with Net Worth */}
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
@@ -6562,7 +6674,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             )}
             <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
               <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
-              <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
+              <div className="text-4xl font-bold text-white hud-number" style={{textShadow:"0 0 20px rgba(0,200,255,0.4)"}}>${netWorth.toLocaleString()}</div>
             </div>
           </div>
         </div>
@@ -6572,15 +6684,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="grid grid-cols-3 gap-3 mt-4">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
-              <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
+              <div className="text-xl font-bold text-white hud-number">${totalMonthly.toFixed(0)}</div>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Savings Rate</div>
-              <div className="text-xl font-bold text-white">{savingsRate.toFixed(0)}%</div>
+              <div className="text-xl font-bold text-white hud-number">{savingsRate.toFixed(0)}%</div>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Portfolio</div>
-              <div className="text-xl font-bold text-white">${totalStocks.toLocaleString()}</div>
+              <div className="text-xl font-bold text-white hud-number">${totalStocks.toLocaleString()}</div>
             </div>
           </div>
           
@@ -6874,7 +6986,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -8325,7 +8437,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
             <p className="text-white/80">We'd love to hear from you, legend.</p>
@@ -8397,7 +8509,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-3xl mx-auto text-center">
             <svg width="64" height="80" viewBox="0 0 24 32" fill="none" className="mx-auto mb-4">
               <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
@@ -8537,7 +8649,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className="p-6 text-center border-b" style={{ background: 'linear-gradient(135deg, #fdf2f8, #fef3c7)' }}>
               <div className="text-3xl mb-2">💛</div>
-              <h2 className="text-xl font-bold text-white">Giving Back</h2>
+              <h2 className="text-xl font-bold text-white hud-number">Giving Back</h2>
               <p className="text-sm text-gray-500 mt-1">$3 from every Elite subscription goes directly to charity</p>
             </div>
             <div className="divide-y">
@@ -8643,7 +8755,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -9837,7 +9949,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -13708,7 +13820,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🔥 Habit Tracker</h1>
@@ -13820,7 +13932,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>⏳ Countdowns</h1>
@@ -13907,7 +14019,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
               <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
               {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
-              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium" style={{color:"rgba(148,163,184,0.9)"}}>Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
+              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium" style={{color:"rgba(148,163,184,0.9)"}}>Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500 progress-glow" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
               {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-start gap-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
               {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-center gap-3 opacity-60 mb-2" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
             </div>
@@ -13928,7 +14040,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🏆 Bucket List</h1>
@@ -13958,7 +14070,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span>
               </div>
               <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} />
+                <div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500 progress-glow" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} />
               </div>
             </div>
           )}
@@ -14037,7 +14149,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     <div className="min-h-screen bg-transparent pb-24">
       <Sidebar />
         <SaveIndicator />
-      <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+      <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
         <div className="max-w-4xl mx-auto">
           <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
           <h1 className="text-3xl font-bold text-white capitalize">{activeView}</h1>
@@ -14082,7 +14194,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 style={{minWidth:'56px'}}>
                 <div className="relative flex items-center justify-center" style={{width:'28px',height:'28px',borderRadius:'8px',background: active ? 'rgba(0,200,255,0.12)' : 'transparent',transition:'all 0.2s'}}>
                   <Icon style={{width:'16px',height:'16px',color: active ? '#00c8ff' : locked ? 'rgba(100,116,139,0.35)' : 'rgba(148,163,184,0.6)',transition:'color 0.2s'}} />
-                  {active && <div style={{position:'absolute',bottom:'-6px',left:'50%',transform:'translateX(-50%)',width:'3px',height:'3px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 6px #00c8ff'}} />}
+                  {active && <div style={{position:'absolute',bottom:'-6px',left:'50%',transform:'translateX(-50%)',width:'4px',height:'4px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 10px #00c8ff, 0 0 20px rgba(0,200,255,0.5)'}} className='nav-active-glow' />}
                 </div>
                 <span style={{fontSize:'9px',fontWeight:500,color: active ? '#00c8ff' : locked ? 'rgba(100,116,139,0.3)' : 'rgba(148,163,184,0.55)',letterSpacing:'0.3px',marginTop:'4px'}}>{label}</span>
               </button>
