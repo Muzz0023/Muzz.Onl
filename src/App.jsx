@@ -4922,7 +4922,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   value={customCat.name}
                   onChange={(e) => updateCategory({ name: e.target.value })}
                   placeholder="Name this category..."
-                  className="text-4xl font-bold bg-transparent focus:outline-none placeholder-white/50 flex-1"
+                  className="text-4xl font-bold focus:outline-none flex-1 text-white"
+                  style={{background:"transparent",border:"none",color:"white",outline:"none"}}
                 />
               </div>
               
@@ -4932,11 +4933,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div key={tab.id} className="relative group">
                     <button
                       onClick={() => updateCategory({ activeSubTab: tab.id })}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                        customCat.activeSubTab === tab.id
-                          ? 'ring-2 ring-white text-white bg-white/10'
-                          : 'bg-white/20 text-white hover:bg-white/30'
-                      }`}
+                      className="px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0"
+                      style={customCat.activeSubTab === tab.id ? {background:'rgba(0,200,255,0.15)',border:'1px solid rgba(0,200,255,0.4)',color:'#00c8ff'} : {background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.8)'}}
                     >
                       {tab.name}
                     </button>
@@ -4951,7 +4949,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 ))}
                 <button
                   onClick={addSubTab}
-                  className="px-3 py-2 rounded-full text-sm font-medium bg-white/20 text-white hover:bg-white/30 transition-all"
+                  className="px-3 py-2 rounded-full text-sm font-medium transition-all" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)",color:"rgba(0,200,255,0.8)"}}
                 >
                   + Add Tab
                 </button>
@@ -4983,7 +4981,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     + Add Section
                   </button>
                   {showAddSection && (
-                    <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-xl p-2 flex flex-wrap gap-1 z-10 w-max max-w-xl">
+                    <div className="absolute top-full left-0 mt-2 rounded-xl p-2 flex flex-wrap gap-1 z-10 w-max max-w-xl" style={{background:"rgba(5,15,30,0.95)",border:"1px solid rgba(0,200,255,0.2)",backdropFilter:"blur(20px)"}}>
                       {sectionTypes.map(st => (
                         <button
                           key={st.type}
