@@ -958,63 +958,37 @@ function AuthScreen() {
   // Reset Password Screen
   if (showResetPassword) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-start justify-center p-4 pt-12 md:pt-4 md:items-center">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-6 md:mb-8">
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-4xl md:text-5xl mx-auto mb-3 md:mb-4">🦘</div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 md:mb-2">Muzz</h1>
-            <p className="text-white/80 text-sm md:text-base">Reset your password</p>
+      <div className="min-h-screen flex items-center justify-center p-4" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 100%)"}}>
+        <div style={{position:'fixed',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px)',backgroundSize:'60px 60px',pointerEvents:'none'}} />
+        <div style={{position:'fixed',width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px',pointerEvents:'none'}} />
+        <div className="w-full max-w-md relative z-10">
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>🦘</div>
+            <div className="text-4xl font-bold text-white mb-1" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px'}}>MUZZ</div>
+            <div className="text-sm" style={{color:'#00c8ff',letterSpacing:'2px'}}>Reset your password</div>
           </div>
-
-          <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
-              Forgot password? 🔐
-            </h2>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">
-                {error}
-              </div>
-            )}
-
-            {successMessage && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-4 text-sm">
-                {successMessage}
-              </div>
-            )}
-
+          <div className="rounded-3xl p-8" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)',backdropFilter:'blur(20px)'}}>
+            <h2 className="text-xl font-bold text-white mb-6 text-center">Forgot password? 🔐</h2>
+            {error && <div className="px-4 py-3 rounded-xl mb-4 text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'#fca5a5'}}>{error}</div>}
+            {successMessage && <div className="px-4 py-3 rounded-xl mb-4 text-sm" style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.3)',color:'#86efac'}}>{successMessage}</div>}
             <form onSubmit={handleResetPassword} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium mb-2" style={{color:'rgba(0,200,255,0.8)'}}>Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    required
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors"
-                  />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{color:'rgba(0,200,255,0.5)'}} />
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required
+                    className="w-full pl-10 pr-4 py-3 rounded-xl transition-colors text-white placeholder-slate-500 focus:outline-none"
+                    style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}} />
                 </div>
               </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
-              >
+              <button type="submit" disabled={loading} className="w-full py-3 font-semibold rounded-xl transition-all disabled:opacity-50"
+                style={{background:'linear-gradient(135deg,#00a8d4,#0070a0)',color:'white',border:'1px solid rgba(0,200,255,0.3)'}}>
                 {loading ? 'Sending...' : 'Send Reset Link'}
               </button>
             </form>
-
-            <div className="mt-4 md:mt-6 text-center">
-              <button
-                onClick={() => { setShowResetPassword(false); setError(''); setSuccessMessage(''); }}
-                className="text-orange-600 hover:text-orange-700 font-medium text-sm md:text-base"
-              >
-                ← Back to Sign In
-              </button>
+            <div className="mt-6 text-center">
+              <button onClick={() => { setShowResetPassword(false); setError(''); setSuccessMessage(''); }}
+                className="text-sm font-medium" style={{color:'rgba(0,200,255,0.7)'}}>← Back to Sign In</button>
             </div>
           </div>
         </div>
@@ -1023,92 +997,67 @@ function AuthScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 flex items-start justify-center p-4 pt-12 md:pt-4 md:items-center">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-6 md:mb-8">
-          <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-4xl md:text-5xl mx-auto mb-3 md:mb-4">🦘</div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 md:mb-2">Muzz</h1>
-          <p className="text-white/80 text-sm md:text-base">Your Aussie money mate</p>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 100%)"}}>
+      <div style={{position:'fixed',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px)',backgroundSize:'60px 60px',pointerEvents:'none'}} />
+      <div style={{position:'fixed',width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px',pointerEvents:'none'}} />
+      <div style={{position:'fixed',width:'300px',height:'300px',borderRadius:'50%',background:'rgba(255,120,0,0.04)',filter:'blur(80px)',bottom:'100px',left:'-60px',pointerEvents:'none'}} />
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>🦘</div>
+          <div className="text-4xl font-bold text-white mb-1" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px'}}>MUZZ</div>
+          <div className="text-sm" style={{color:'#00c8ff',letterSpacing:'2px'}}>Your Life OS</div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
-            {isLogin ? 'Welcome back legend 🦘' : 'Create account'}
+        <div className="rounded-3xl p-8" style={{background:'rgba(5,15,30,0.85)',border:'1px solid rgba(0,200,255,0.15)',backdropFilter:'blur(20px)'}}>
+          <h2 className="text-xl font-bold text-white mb-6 text-center">
+            {isLogin ? 'Welcome Legend 🦘' : 'Create account'}
           </h2>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">
-              {error}
-            </div>
-          )}
+          {error && <div className="px-4 py-3 rounded-xl mb-4 text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'#fca5a5'}}>{error}</div>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium mb-2" style={{color:'rgba(0,200,255,0.8)'}}>Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors"
-                />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{color:'rgba(0,200,255,0.5)'}} />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required
+                  className="w-full pl-10 pr-4 py-3 rounded-xl transition-colors text-white placeholder-slate-500 focus:outline-none"
+                  style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}} />
               </div>
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium mb-2" style={{color:'rgba(0,200,255,0.8)'}}>Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                  className="w-full pl-10 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{color:'rgba(0,200,255,0.5)'}} />
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••" required minLength={6}
+                  className="w-full pl-10 pr-12 py-3 rounded-xl transition-colors text-white placeholder-slate-500 focus:outline-none"
+                  style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}} />
+                <button type="button" onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2" style={{color:'rgba(0,200,255,0.5)'}}>
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
-            >
+            <button type="submit" disabled={loading} className="w-full py-3 font-semibold rounded-xl transition-all disabled:opacity-50 mt-2"
+              style={{background:'linear-gradient(135deg,#00a8d4,#0070a0)',color:'white',border:'1px solid rgba(0,200,255,0.3)',boxShadow:'0 0 20px rgba(0,200,255,0.15)'}}>
               {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
-          <div className="mt-4 md:mt-6 text-center space-y-2">
+          <div className="mt-6 text-center space-y-3">
             {isLogin && (
-              <button
-                onClick={() => { setShowResetPassword(true); setError(''); }}
-                className="text-gray-500 hover:text-gray-700 text-sm"
-              >
-                Forgot password?
-              </button>
+              <button onClick={() => { setShowResetPassword(true); setError(''); }}
+                className="text-sm" style={{color:'rgba(148,163,184,0.7)'}}>Forgot password?</button>
             )}
-            <button
-              onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="block w-full text-orange-600 hover:text-orange-700 font-medium text-sm md:text-base"
-            >
+            <button onClick={() => { setIsLogin(!isLogin); setError(''); }}
+              className="block w-full font-medium text-sm" style={{color:'#00c8ff'}}>
               {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
             </button>
           </div>
         </div>
 
-        <p className="text-center text-white/60 text-xs md:text-sm mt-4 md:mt-6">
+        <p className="text-center text-xs mt-6" style={{color:'rgba(148,163,184,0.4)'}}>
           Your data is securely stored in the cloud ☁️
         </p>
       </div>
