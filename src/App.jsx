@@ -137,7 +137,7 @@ const StarryBackground = ({ children }) => {
   }, []);
 
   return (
-    <div className="relative noise-overlay" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 40%,#030a14 100%)",height:"100dvh",overflow:"hidden",position:"fixed",inset:0}}>
+    <div className="relative noise-overlay" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 40%,#030a14 100%)"}}>
       {/* Futuristic grid overlay */}
       <div className="fixed inset-0 pointer-events-none z-0" style={{backgroundImage: 'linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
       {/* Ambient glow orbs */}
@@ -2613,7 +2613,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -2931,7 +2931,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
 
@@ -3014,7 +3014,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -3452,7 +3452,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -4434,7 +4434,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -5313,7 +5313,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
     
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         
@@ -6583,7 +6583,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -6912,7 +6912,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const moodEmojis = { great: '😊', good: '😌', okay: '😐', low: '😔', sad: '😢', angry: '😡' };
     
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         
@@ -7279,7 +7279,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -8730,7 +8730,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -8802,7 +8802,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // UPGRADE / ELITE STATUS VIEW
   if (activeView === 'upgrade') {
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -9038,7 +9038,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const totalAssets = filledAssets.reduce((sum, a) => sum + a.value, 0);
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -10232,7 +10232,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -14103,7 +14103,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const last31 = getLast31Days();
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -14212,7 +14212,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     ];
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -14320,7 +14320,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const completedCount = bucketList.filter(b => b.completed).length;
 
     return (
-      <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -14429,7 +14429,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // FALLBACK
   return (
-    <div id="muzz-view-scroll" className="bg-transparent pb-24" style={{height:"100dvh",overflowY:"auto",overscrollBehavior:"contain"}}>
+    <div className="min-h-screen bg-transparent pb-24">
       <Sidebar />
         <SaveIndicator />
       <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
