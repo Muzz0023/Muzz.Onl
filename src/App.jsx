@@ -13886,6 +13886,202 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
+  // TIMETABLE VIEW
+  if (activeView === 'timetable') {
+    if (!isElite) return <LockedFeature featureName="Timetable" setActiveView={setActiveView} />;
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const hours = Array.from({length:16},(_,i)=>i+7);
+    const today = new Date().toLocaleDateString('en-AU',{weekday:'short'}).slice(0,3);
+    const hexToRgba = (hex, a) => {
+      try { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
+      catch { return `rgba(139,92,246,${a})`; }
+    };
+    const types = ['uni','work','gym','study','personal','other'];
+    const editing = ttEditingId ? timetableBlocks.find(b=>b.id===ttEditingId) : null;
+    const formBlock = editing || ttNewBlock;
+    const setForm = (u) => {
+      if (ttEditingId) { setTimetableBlocks(prev=>prev.map(b=>b.id===ttEditingId?{...b,...u}:b)); }
+      else { setTtNewBlock(prev=>({...prev,...u})); }
+    };
+    const saveBlock = () => {
+      if (!formBlock.title.trim()) return;
+      if (ttEditingId) { setTtEditingId(null); setTtTab('list'); }
+      else { setTimetableBlocks(prev=>[...prev,{...ttNewBlock,id:Date.now()}]); setTtNewBlock({title:'',type:'uni',day:'Mon',startHour:9,endHour:10,color:'#8b5cf6',location:''}); }
+    };
+    const presets = ['#8b5cf6','#3b82f6','#22c55e','#ef4444','#f97316','#f59e0b','#14b8a6','#ec4899'];
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+          <div className="max-w-5xl mx-auto">
+            <button onClick={()=>setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Timetable</h1>
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
+          {/* Tabs */}
+          <div className="flex gap-2 flex-wrap">
+            {[{id:'week',label:'Week View'},{id:'list',label:'List'},{id:'add',label:'+ Add Block'}].map(t=>(
+              <button key={t.id} onClick={()=>{setTtTab(t.id);if(t.id!=='add')setTtEditingId(null);}}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab===t.id?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* WEEK GRID */}
+          {ttTab==='week' && (
+            <div className="rounded-2xl overflow-x-auto" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div style={{minWidth:'600px'}}>
+                <div className="grid" style={{gridTemplateColumns:'52px repeat(7,1fr)'}}>
+                  <div />
+                  {days.map(d=>(
+                    <div key={d} className="p-2 text-center text-xs font-mono font-bold"
+                      style={{color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',borderBottom:'1px solid rgba(0,200,255,0.1)',background:d===today?'rgba(0,200,255,0.05)':'transparent'}}>
+                      {d}
+                    </div>
+                  ))}
+                  {hours.map(h=>(
+                    <React.Fragment key={h}>
+                      <div className="text-right pr-2 border-t flex items-center justify-end" style={{borderColor:'rgba(0,200,255,0.06)',minHeight:'40px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:"'Share Tech Mono',monospace"}}>
+                        {h}:00
+                      </div>
+                      {days.map(d=>{
+                        const block = timetableBlocks.find(b=>b.day===d&&b.startHour<=h&&b.endHour>h);
+                        const isStart = block && block.startHour===h;
+                        const span = block ? (block.endHour - block.startHour) : 1;
+                        return (
+                          <div key={d} className="border-t relative" style={{borderColor:'rgba(0,200,255,0.06)',minHeight:'40px',background:d===today?'rgba(0,200,255,0.015)':'transparent'}}>
+                            {isStart && (
+                              <div onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
+                                className="absolute inset-x-0.5 rounded-lg p-1 cursor-pointer overflow-hidden"
+                                style={{background:hexToRgba(block.color,0.2),border:`1px solid ${hexToRgba(block.color,0.6)}`,top:'2px',height:`${span*40-4}px`,zIndex:1}}>
+                                <div className="text-xs font-medium truncate text-white">{block.title}</div>
+                                {block.location && <div className="text-xs truncate" style={{color:'rgba(255,255,255,0.5)'}}>{block.location}</div>}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* LIST VIEW */}
+          {ttTab==='list' && (
+            <div className="space-y-4">
+              {timetableBlocks.length===0 && (
+                <div className="rounded-2xl p-8 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+                  <div className="text-3xl mb-2">📅</div>
+                  <div style={{color:"rgba(148,163,184,0.5)"}}>No blocks yet. Tap + Add Block to get started.</div>
+                </div>
+              )}
+              {days.map(d=>{
+                const dayBlocks = timetableBlocks.filter(b=>b.day===d).sort((a,b)=>a.startHour-b.startHour);
+                if(!dayBlocks.length) return null;
+                return (
+                  <div key={d}>
+                    <div className="text-xs font-mono mb-2 px-1" style={{color:'rgba(0,200,255,0.5)',letterSpacing:'2px'}}>{d.toUpperCase()}{d===today?' — TODAY':''}</div>
+                    {dayBlocks.map(b=>(
+                      <div key={b.id} className="flex items-center gap-3 p-3 rounded-xl mb-2" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${hexToRgba(b.color,0.3)}`}}>
+                        <div className="w-3 h-3 rounded-full flex-shrink-0" style={{background:b.color,boxShadow:`0 0 8px ${b.color}`}} />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-white truncate">{b.title}</div>
+                          <div className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{b.startHour}:00 – {b.endHour}:00{b.location?` · ${b.location}`:''}</div>
+                        </div>
+                        <span className="text-xs px-2 py-0.5 rounded-full capitalize" style={{background:hexToRgba(b.color,0.15),color:b.color}}>{b.type}</span>
+                        <button onClick={()=>{setTtEditingId(b.id);setTtTab('add');}} className="text-xs px-2 py-1 rounded-lg transition-all" style={{color:'rgba(0,200,255,0.6)',border:'1px solid rgba(0,200,255,0.2)'}}>edit</button>
+                        <button onClick={()=>setTimetableBlocks(prev=>prev.filter(x=>x.id!==b.id))} className="text-xs px-2 py-1 rounded-lg" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* ADD / EDIT FORM */}
+          {ttTab==='add' && (
+            <div className="rounded-2xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+              <h3 className="text-white font-semibold text-lg">{ttEditingId?'Edit Block':'New Block'}</h3>
+              <input value={formBlock.title} onChange={e=>setForm({title:e.target.value})} placeholder="Block title e.g. COMP1234..."
+                className="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 focus:outline-none"
+                style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}} />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)"}}>DAY</div>
+                  <select value={formBlock.day} onChange={e=>setForm({day:e.target.value})}
+                    className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
+                    {days.map(d=><option key={d} value={d} style={{background:'#020c1b'}}>{d}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)"}}>TYPE</div>
+                  <select value={formBlock.type} onChange={e=>setForm({type:e.target.value})}
+                    className="w-full px-4 py-3 rounded-xl text-white focus:outline-none capitalize"
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
+                    {types.map(t=><option key={t} value={t} style={{background:'#020c1b'}} className="capitalize">{t}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)"}}>START</div>
+                  <select value={formBlock.startHour} onChange={e=>setForm({startHour:parseInt(e.target.value)})}
+                    className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
+                    {hours.map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{h}:00</option>)}
+                  </select>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)"}}>END</div>
+                  <select value={formBlock.endHour} onChange={e=>setForm({endHour:parseInt(e.target.value)})}
+                    className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
+                    {hours.filter(h=>h>formBlock.startHour).map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{h}:00</option>)}
+                  </select>
+                </div>
+              </div>
+              <input value={formBlock.location} onChange={e=>setForm({location:e.target.value})} placeholder="Location (optional)"
+                className="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 focus:outline-none"
+                style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}} />
+              <div>
+                <div className="text-xs font-mono mb-2" style={{color:"rgba(0,200,255,0.4)"}}>COLOUR</div>
+                <div className="flex gap-2 flex-wrap items-center">
+                  {presets.map(c=>(
+                    <button key={c} onClick={()=>setForm({color:c})}
+                      className="w-8 h-8 rounded-lg transition-all"
+                      style={{background:c,border:formBlock.color===c?'2px solid white':'2px solid transparent',boxShadow:formBlock.color===c?`0 0 10px ${c}`:'none'}} />
+                  ))}
+                  <input type="color" value={formBlock.color} onChange={e=>setForm({color:e.target.value})}
+                    className="w-8 h-8 rounded-lg cursor-pointer border-0" />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button onClick={saveBlock}
+                  className="flex-1 py-3 rounded-xl font-semibold text-white transition-all"
+                  style={{background:'linear-gradient(135deg,#00a8d4,#0070a0)',border:'1px solid rgba(0,200,255,0.3)',boxShadow:'0 0 16px rgba(0,200,255,0.15)'}}>
+                  {ttEditingId?'Save Changes':'Add Block'}
+                </button>
+                {ttEditingId && (
+                  <button onClick={()=>{setTimetableBlocks(prev=>prev.filter(b=>b.id!==ttEditingId));setTtEditingId(null);setTtTab('list');}}
+                    className="px-4 py-3 rounded-xl font-medium transition-all"
+                    style={{color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.2)'}}>Delete</button>
+                )}
+                <button onClick={()=>{setTtEditingId(null);setTtTab('week');}}
+                  className="px-4 py-3 rounded-xl font-medium transition-all"
+                  style={{color:'rgba(148,163,184,0.5)',border:'1px solid rgba(148,163,184,0.1)'}}>Cancel</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // TIMETABLE VIEW
   // STATS & INSIGHTS VIEW
   if (activeView === 'statsinsights') {
     const today = new Date().toISOString().split('T')[0];
