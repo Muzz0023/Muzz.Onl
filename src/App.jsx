@@ -137,7 +137,7 @@ const StarryBackground = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen relative scanline noise-overlay" style={{background: "linear-gradient(180deg, #020817 0%, #050d1a 40%, #030a14 100%)"}}>
+    <div className="min-h-screen relative noise-overlay" style={{background: "linear-gradient(180deg, #020817 0%, #050d1a 40%, #030a14 100%)"}}>
       {/* Futuristic grid overlay */}
       <div className="fixed inset-0 pointer-events-none z-0" style={{backgroundImage: 'linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
       {/* Ambient glow orbs */}
@@ -191,22 +191,6 @@ const StarryBackground = ({ children }) => {
 
         /* ── FUTURISTIC ANIMATIONS ── */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
-
-        /* Scanline overlay */
-        @keyframes scanline {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100vh); }
-        }
-        .scanline::after {
-          content: '';
-          position: fixed;
-          top: 0; left: 0; right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, rgba(0,200,255,0.15), transparent);
-          animation: scanline 8s linear infinite;
-          pointer-events: none;
-          z-index: 9999;
-        }
 
         /* Noise texture */
         .noise-overlay::before {
