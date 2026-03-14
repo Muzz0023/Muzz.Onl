@@ -1217,6 +1217,7 @@ function FloatingChat({
   muzzPersonality
 }) {
   const [input, setInput] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const endRef = useRef(null);
   
   useEffect(() => { 
@@ -1225,8 +1226,6 @@ function FloatingChat({
 
   const sendMessage = async (msg) => {
     if (!msg.trim() || isTyping) return;
-
-    // Check AI daily limit
     if (isAiLimitReached()) {
       setChatMessages(prev => [...prev, 
         { role: "user", text: msg },
@@ -1234,15 +1233,11 @@ function FloatingChat({
       ]);
       return;
     }
-
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setIsTyping(true);
-    
     const brainRotMode = muzzPersonality;
-    
     const systemPrompt = brainRotMode 
     ? `You are Muzz 🦘, a friendly Australian kangaroo financial advisor.
-
 Your personality:
 - Use Aussie slang occasionally (mate, legend, no worries, reckon)
 - You can use ONE gen-z term per response MAX from: W, L, no cap, fr, bussin, lowkey, based, bet, aura, slay
@@ -1251,12 +1246,9 @@ Your personality:
 - NEVER say "g'day mate" more than once in a conversation
 - NEVER repeat the same slang twice in a row
 - Vary your greetings and phrases
-
 ${financialContext}
-
 IMPORTANT: Be natural and varied. Don't spam the same phrases. Keep it short and punchy! 🦘`
     : `You are Muzz 🦘, a friendly Australian kangaroo who's a financial advisor and life coach! 
-
 Your personality:
 - Friendly, encouraging, and supportive
 - Use Aussie slang sparingly and naturally (mate, legend, no worries, reckon)
@@ -1266,11 +1258,8 @@ Your personality:
 - NEVER say "g'day mate" more than once in a conversation
 - NEVER repeat the same phrases over and over
 - Vary your language and greetings
-
 ${financialContext}
-
 Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedly. Keep it short, helpful, and real! 🦘`;
-    
     try {
       const response = await fetch(api('/api/chat'), {
         method: 'POST',
@@ -1299,51 +1288,180 @@ Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedl
   }
 
   const handleSend = () => {
-    if (input.trim()) {
-      sendMessage(input);
-      setInput("");
-    }
+    if (input.trim()) { sendMessage(input); setInput(""); }
   };
 
+  // ── FULLSCREEN TERMINAL MODE ──
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col" style={{background:"#020a14",fontFamily:"'Share Tech Mono',monospace"}}>
+        {/* Terminal grid bg */}
+        <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px)',backgroundSize:'30px 30px',pointerEvents:'none'}} />
+        
+        {/* Terminal header */}
+        <div className="relative z-10 flex items-center justify-between px-6 py-4" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.04)"}}>
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full" style={{background:"#ff5f57"}}></div>
+              <div className="w-3 h-3 rounded-full" style={{background:"#febc2e"}}></div>
+              <div className="w-3 h-3 rounded-full" style={{background:"#28c840"}}></div>
+            </div>
+            <span className="text-xs" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"2px"}}>MUZZ TERMINAL — AI ADVISOR v3.0</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={() => setIsFullscreen(false)} className="text-xs px-3 py-1 rounded transition-all" style={{color:"rgba(0,200,255,0.6)",border:"1px solid rgba(0,200,255,0.2)"}}>
+              ⊡ minimise
+            </button>
+            <button onClick={() => { setIsFullscreen(false); setIsChatOpen(false); }} style={{color:"rgba(0,200,255,0.5)"}}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Terminal messages */}
+        <div className="relative z-10 flex-1 overflow-y-auto px-6 py-4 space-y-3">
+          {/* Boot message */}
+          <div style={{color:"rgba(0,200,255,0.4)",fontSize:"12px",letterSpacing:"1px",marginBottom:"16px"}}>
+            <div>MUZZ AI TERMINAL v3.0</div>
+            <div>INITIALISING... ████████████ 100%</div>
+            <div style={{color:"rgba(0,200,255,0.3)"}}>Type your question below. 🦘</div>
+            <div style={{color:"rgba(0,200,255,0.15)",marginTop:"8px"}}>{'─'.repeat(40)}</div>
+          </div>
+
+          {chatMessages.length === 0 && (
+            <div style={{color:"rgba(0,200,255,0.35)",fontSize:"13px"}}>
+              <span style={{color:"rgba(0,200,255,0.5)"}}>muzz@life-os:~$</span> awaiting input...
+            </div>
+          )}
+
+          {chatMessages.map((m, i) => (
+            <div key={i} className="space-y-1">
+              {m.role === "user" ? (
+                <div style={{fontSize:"13px"}}>
+                  <span style={{color:"rgba(0,200,255,0.7)"}}>you@muzz:~$</span>{' '}
+                  <span style={{color:"#e2e8f0"}}>{m.text}</span>
+                </div>
+              ) : (
+                <div style={{fontSize:"13px",paddingLeft:"8px",borderLeft:"2px solid rgba(0,200,255,0.3)"}}>
+                  <div style={{color:"rgba(0,200,255,0.5)",fontSize:"11px",marginBottom:"2px",letterSpacing:"1px"}}>MUZZ 🦘</div>
+                  <span style={{color:"#94a3b8",lineHeight:"1.7",whiteSpace:"pre-wrap"}}>{m.text}</span>
+                </div>
+              )}
+            </div>
+          ))}
+
+          {isTyping && (
+            <div style={{fontSize:"13px",paddingLeft:"8px",borderLeft:"2px solid rgba(0,200,255,0.3)"}}>
+              <div style={{color:"rgba(0,200,255,0.5)",fontSize:"11px",marginBottom:"2px",letterSpacing:"1px"}}>MUZZ 🦘</div>
+              <span style={{color:"rgba(0,200,255,0.6)"}}>processing<span className="animate-pulse">...</span></span>
+            </div>
+          )}
+          <div ref={endRef} />
+        </div>
+
+        {/* Terminal input */}
+        <div className="relative z-10 px-6 py-4" style={{borderTop:"1px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.03)"}}>
+          <div className="flex items-center gap-3">
+            <span style={{color:"rgba(0,200,255,0.6)",fontSize:"13px",whiteSpace:"nowrap"}}>you@muzz:~$</span>
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
+              placeholder="ask muzz anything..."
+              disabled={isTyping || isAiLimitReached()}
+              autoFocus
+              className="flex-1 focus:outline-none bg-transparent"
+              style={{color:"#e2e8f0",fontSize:"13px",fontFamily:"'Share Tech Mono',monospace",caretColor:"#00c8ff"}}
+            />
+            <button onClick={handleSend} disabled={isTyping || !input.trim() || isAiLimitReached()}
+              className="transition-all disabled:opacity-30"
+              style={{color:"#00c8ff",fontSize:"13px"}}>
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="mt-2 flex items-center justify-between">
+            <span style={{color:"rgba(0,200,255,0.25)",fontSize:"11px",letterSpacing:"1px"}}>
+              {getAiRemaining()} / {AI_DAILY_LIMIT} queries remaining
+            </span>
+            <span style={{color:"rgba(0,200,255,0.2)",fontSize:"11px"}}>ESC to minimise</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── COMPACT BUBBLE MODE ──
   return (
     <div className="fixed w-96 h-[500px] rounded-3xl shadow-2xl flex flex-col z-50 overflow-hidden" style={{bottom:"calc(env(safe-area-inset-bottom) + 72px)",right:"16px",background:"#070f1e",border:"1px solid rgba(0,200,255,0.2)",boxShadow:"0 0 40px rgba(0,0,0,0.8),0 0 20px rgba(0,150,255,0.1)"}}>
-      <div className="bg-gradient-to-r from-amber-400 to-orange-500 p-4 flex items-center justify-between">
+      {/* Header */}
+      <div className="p-4 flex items-center justify-between" style={{background:"rgba(0,200,255,0.07)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow">🦘</div>
-          <div><div className="text-white font-bold">Muzz</div><div className="text-white/70 text-xs">{isTyping ? "Typing..." : "Online"}</div></div>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center text-lg" style={{background:"linear-gradient(135deg,#fb923c,#f97316)"}}>🦘</div>
+          <div>
+            <div className="text-white font-semibold text-sm" style={{fontFamily:"'Orbitron',monospace",letterSpacing:"1px"}}>MUZZ AI</div>
+            <div className="text-xs" style={{color: isTyping ? "#00c8ff" : "rgba(0,200,255,0.5)"}}>{isTyping ? "● thinking..." : "● online"}</div>
+          </div>
         </div>
-        <button onClick={() => setIsChatOpen(false)} className="text-white/80 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setIsFullscreen(true)} className="p-1.5 rounded-lg transition-all" style={{color:"rgba(0,200,255,0.6)",border:"1px solid rgba(0,200,255,0.2)"}} title="Full screen terminal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+          <button onClick={() => setIsChatOpen(false)} style={{color:"rgba(0,200,255,0.5)"}}><X className="w-4 h-4" /></button>
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent">
-        {chatMessages.length === 0 && <div className="text-center py-8"><div className="text-4xl mb-2">🦘</div><div className="text-gray-500 text-sm">G'day! Ask me anything!</div></div>}
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {chatMessages.length === 0 && (
+          <div className="text-center py-8">
+            <div className="text-4xl mb-2">🦘</div>
+            <div className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>G'day! Ask me anything.</div>
+            <button onClick={() => setIsFullscreen(true)} className="mt-3 text-xs px-3 py-1.5 rounded-lg" style={{color:"rgba(0,200,255,0.7)",border:"1px solid rgba(0,200,255,0.2)",background:"rgba(0,200,255,0.05)"}}>
+              ⌨ Open terminal mode
+            </button>
+          </div>
+        )}
         {chatMessages.map((m, i) => (
           <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
-            <div 
-              className={m.role === "user" ? "max-w-[80%] px-4 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-br-md" : "max-w-[80%] px-4 py-2 rounded-2xl text-sm rounded-bl-md whitespace-pre-wrap"}
-              style={m.role !== "user" ? { backgroundColor: '#334155', color: '#f3f4f6', border: '1px solid #475569' } : undefined}
-            >{m.text}</div>
+            <div className="max-w-[80%] px-3 py-2 rounded-2xl text-sm whitespace-pre-wrap"
+              style={m.role === "user"
+                ? {background:"linear-gradient(135deg,#fb923c,#f97316)",color:"white"}
+                : {background:"rgba(0,200,255,0.08)",color:"#cbd5e1",border:"1px solid rgba(0,200,255,0.15)"}
+              }>{m.text}</div>
           </div>
         ))}
         {isTyping && (
           <div className="flex justify-start">
-            <div style={{ backgroundColor: '#334155', border: '1px solid #475569' }} className="px-4 py-3 rounded-2xl rounded-bl-md">
+            <div className="px-4 py-3 rounded-2xl" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.15)"}}>
               <span className="inline-flex gap-1">
-                <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                <span className="w-2 h-2 rounded-full animate-bounce" style={{background:"#00c8ff",animationDelay:"0ms"}}></span>
+                <span className="w-2 h-2 rounded-full animate-bounce" style={{background:"#00c8ff",animationDelay:"150ms"}}></span>
+                <span className="w-2 h-2 rounded-full animate-bounce" style={{background:"#00c8ff",animationDelay:"300ms"}}></span>
               </span>
             </div>
           </div>
         )}
         <div ref={endRef} />
       </div>
-      <div className="p-3 border-t bg-white">
+
+      {/* Input */}
+      <div className="p-3" style={{borderTop:"1px solid rgba(0,200,255,0.1)",background:"rgba(0,200,255,0.03)"}}>
         <div className="flex gap-2">
-          <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter") handleSend(); }} placeholder="Ask Muzz..." disabled={isTyping || isAiLimitReached()} className="flex-1 px-4 py-2 border-2 rounded-full text-sm focus:outline-none focus:border-orange-400 transition-colors" />
-          <button onClick={handleSend} disabled={isTyping || !input.trim() || isAiLimitReached()} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-full disabled:opacity-50 transition-all hover:shadow-lg"><Send className="w-4 h-4" /></button>
+          <input type="text" value={input} onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
+            placeholder="Ask Muzz..." disabled={isTyping || isAiLimitReached()}
+            className="flex-1 px-4 py-2 rounded-full text-sm focus:outline-none text-white placeholder-slate-500"
+            style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.2)"}} />
+          <button onClick={handleSend} disabled={isTyping || !input.trim() || isAiLimitReached()}
+            className="px-4 py-2 rounded-full disabled:opacity-40 transition-all"
+            style={{background:"linear-gradient(135deg,#fb923c,#f97316)",color:"white"}}>
+            <Send className="w-4 h-4" />
+          </button>
         </div>
-        <p className={`text-xs text-center mt-1 ${getAiRemaining() <= 5 ? 'text-red-400' : 'text-gray-400'}`}>
-          {getAiRemaining()} / {AI_DAILY_LIMIT} messages remaining today
+        <p className={`text-xs text-center mt-1.5 ${getAiRemaining() <= 5 ? 'text-red-400' : ''}`}
+          style={getAiRemaining() > 5 ? {color:"rgba(0,200,255,0.3)"} : {}}>
+          {getAiRemaining()} / {AI_DAILY_LIMIT} messages remaining
         </p>
       </div>
     </div>
