@@ -2920,7 +2920,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   // TASKS VIEW
-  if (activeView === 'tasks') {  // TASKS VIEW
   if (activeView === 'tasks') {
     const addDailyTask = () => {
       setDailyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, dateAdded: new Date().toISOString() }]);
