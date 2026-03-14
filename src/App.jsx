@@ -2364,6 +2364,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       ]},
       { title: 'ACCOUNT', items: [
         { id: 'upgrade', label: isElite ? 'Elite Status' : 'Upgrade to Elite', icon: Award },
+        { id: 'statsinsights', label: 'Stats & Insights', icon: TrendingUp },
         { id: 'feedback', label: 'Feedback & Support', icon: MessageCircle },
       ]},
     ];
