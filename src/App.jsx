@@ -2447,7 +2447,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Reminders</h1>
               </div>
             </div>
@@ -2657,10 +2657,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 pt-16 pb-6 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
-            <h1 className="text-3xl font-bold text-white">Task Management</h1>
+            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Task Management</h1>
           </div>
         </div>
 
@@ -3099,7 +3099,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Diet Management</h1>
               </div>
             </div>
@@ -4081,7 +4081,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Health Management</h1>
               </div>
             </div>
@@ -6232,7 +6232,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Work & Timesheet</h1>
               </div>
             </div>
@@ -6559,7 +6559,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         
         {/* Header with Net Worth */}
-        <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-8 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-3xl">🦘</div>
@@ -6926,7 +6926,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Bills Management</h1>
               </div>
             </div>
@@ -8373,7 +8373,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
             <p className="text-white/80">We'd love to hear from you, legend.</p>
@@ -8445,7 +8445,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-orange-600 pt-16 pb-12 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-3xl mx-auto text-center">
             <svg width="64" height="80" viewBox="0 0 24 32" fill="none" className="mx-auto mb-4">
               <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
@@ -8695,7 +8695,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Assets Management</h1>
               </div>
             </div>
@@ -9889,7 +9889,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="pl-12">
-                <button onClick={() => setActiveView('home')} className="text-blue-500 mb-4 font-medium">← Back</button>
+                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
                 <h1 className="text-4xl font-semibold">Investments Management</h1>
               </div>
             </div>
@@ -13756,10 +13756,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-r from-orange-500 to-rose-600 pt-16 pb-6 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
-            <h1 className="text-3xl font-bold text-white">🔥 Habit Tracker</h1>
+            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🔥 Habit Tracker</h1>
             <p className="text-white/70 mt-1">Build streaks. Build discipline.</p>
           </div>
         </div>
@@ -13868,10 +13868,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 pt-16 pb-6 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
-            <h1 className="text-3xl font-bold text-white">⏳ Countdowns</h1>
+            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>⏳ Countdowns</h1>
             <p className="text-white/70 mt-1">Count down to the things that matter</p>
             <div className="flex gap-2 mt-4">
               <button onClick={() => setCountdownsSubTab('countdowns')} className="px-4 py-2 rounded-full text-sm font-medium transition-all text-white" style={{ border: countdownsSubTab === 'countdowns' ? '2px solid white' : '2px solid transparent' }}>Countdowns</button>
@@ -13976,10 +13976,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-gradient-to-r from-amber-500 to-orange-600 pt-16 pb-6 px-6">
+        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
-            <h1 className="text-3xl font-bold text-white">🏆 Bucket List</h1>
+            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🏆 Bucket List</h1>
             <p className="text-white/70 mt-1">{completedCount}/{bucketList.length} completed</p>
           </div>
         </div>
@@ -14085,9 +14085,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     <div className="min-h-screen bg-transparent pb-24">
       <Sidebar />
         <SaveIndicator />
-      <div className="bg-gradient-to-r from-amber-400 to-orange-500 pt-16 pb-6 px-6">
+      <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
         <div className="max-w-4xl mx-auto">
-          <button onClick={() => setActiveView('home')} className="text-white/80 mb-4 text-sm hover:text-white transition-colors">← Back</button>
+          <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
           <h1 className="text-3xl font-bold text-white capitalize">{activeView}</h1>
         </div>
       </div>
