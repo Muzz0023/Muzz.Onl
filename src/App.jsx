@@ -6664,14 +6664,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-            <div className="rounded-2xl p-4 relative overflow-hidden" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
-              <svg className="absolute right-0 bottom-0 opacity-20" width="120" height="50" viewBox="0 0 120 50">
-                <polyline points="0,45 20,38 40,35 60,25 80,20 100,12 120,5" fill="none" stroke="#00c8ff" strokeWidth="1.5"/>
-                <polygon points="0,45 20,38 40,35 60,25 80,20 100,12 120,5 120,50 0,50" fill="rgba(0,200,255,0.1)"/>
-              </svg>
-              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)",letterSpacing:"1px",fontFamily:"'Share Tech Mono',monospace"}}>NET WORTH</div>
+            <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
               <div className="text-4xl font-bold text-white hud-number" style={{textShadow:"0 0 20px rgba(0,200,255,0.4)"}}>${netWorth.toLocaleString()}</div>
-              <div className="text-xs mt-1" style={{color:"rgba(0,200,255,0.5)",fontFamily:"'Share Tech Mono',monospace"}}>↑ TRACKING</div>
             </div>
           </div>
         </div>
