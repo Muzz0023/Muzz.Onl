@@ -2244,7 +2244,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             backdropFilter:"blur(20px)",
             opacity: sidebarOpen ? 1 : 0,
             pointerEvents: sidebarOpen ? 'all' : 'none',
-            visibility: sidebarOpen ? 'visible' : 'hidden'
+            visibility: sidebarOpen ? 'visible' : 'hidden',
+            transform: 'translateZ(0)'
           }}
         >
           {/* Grid background */}
@@ -2262,7 +2263,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* Scrollable content */}
-          <div id="muzz-menu-scroll" className="relative z-10 overflow-y-auto px-6 py-6" style={{height:"calc(100vh - 120px)"}}>
+          <div id="muzz-menu-scroll" className="relative z-10 px-6 py-6" style={{overflowY:"auto",height:"calc(100dvh - 120px)",scrollBehavior:"auto"}}>
             {menuSections.filter(s => s.items.length > 0).map(section => (
               <div key={section.title} className="mb-8">
                 <div className="text-xs font-mono mb-3" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// {section.title}</div>
