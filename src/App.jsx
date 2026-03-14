@@ -2662,7 +2662,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Task Management</h1>
@@ -6564,7 +6564,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         
         {/* Header with Net Worth */}
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
@@ -6622,7 +6622,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
           {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-3 -mt-8">
+          <div className="grid grid-cols-3 gap-3 mt-4">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
               <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
@@ -8378,7 +8378,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
             <p className="text-white/80">We'd love to hear from you, legend.</p>
@@ -8450,7 +8450,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-3xl mx-auto text-center">
             <svg width="64" height="80" viewBox="0 0 24 32" fill="none" className="mx-auto mb-4">
               <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
@@ -13761,7 +13761,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🔥 Habit Tracker</h1>
@@ -13873,7 +13873,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>⏳ Countdowns</h1>
@@ -13981,7 +13981,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🏆 Bucket List</h1>
@@ -14090,7 +14090,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     <div className="min-h-screen bg-transparent pb-24">
       <Sidebar />
         <SaveIndicator />
-      <div className="pt-16 pb-6 px-6" style={{background:"linear-gradient(135deg, #020c1b 0%, #041424 60%, #020c1b 100%)",borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+      <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
         <div className="max-w-4xl mx-auto">
           <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
           <h1 className="text-3xl font-bold text-white capitalize">{activeView}</h1>
