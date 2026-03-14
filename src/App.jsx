@@ -2439,7 +2439,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r));
                           }}
                           placeholder="Reminder title"
-                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none"
+                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
                           rows={Math.max(2, Math.ceil((reminder.title?.length || 0) / 35))}
                           style={{ minHeight: '60px' }}
                         />
@@ -2450,7 +2450,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               value={reminder.date || ''}
                               onFocus={scrollInputIntoView}
                               onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
-                              className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                              className="px-3 py-2 rounded-xl text-sm focus:outline-none text-white" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
                             />
                             {reminder.date && (
                               <button
@@ -2519,7 +2519,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Name"
-                          className="w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none"
+                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
                           style={{ minHeight: '48px', overflow: 'hidden' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
@@ -2529,7 +2529,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               value={bday.date}
                               onFocus={scrollInputIntoView}
                               onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: e.target.value } : b))}
-                              className="px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                              className="px-3 py-2 rounded-xl text-sm focus:outline-none text-white" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
                             />
                             {bday.date && (
                               <button
@@ -2626,7 +2626,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'daily'
                   ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Daily Tasks
@@ -2636,7 +2636,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'weekly'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Weekly Tasks
@@ -2646,7 +2646,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'general'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               General Tasks
@@ -2656,7 +2656,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'rotation'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Daily Rotation
@@ -2666,7 +2666,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 tasksSubTab === 'pomodoro'
                   ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Pomodoro
@@ -2715,7 +2715,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                               }}
                               placeholder="What needs to be done today?"
-                              className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
                               rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
                               style={{ minHeight: '70px' }}
                             />
@@ -2777,7 +2777,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                               }}
                               placeholder="What needs to be done this week?"
-                              className={`w-full px-4 py-3 border-2 rounded-xl text-base focus:outline-none focus:border-blue-500 resize-none ${task.completed ? 'line-through text-gray-400' : ''}`}
+                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
                               rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
                               style={{ minHeight: '70px' }}
                             />
@@ -2905,7 +2905,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { time: '11pm', activity: '-' },
                   { time: '12am', activity: '-' },
                 ])}
-                className="w-full py-3 bg-gray-100 text-gray-600 rounded-2xl font-medium hover:bg-gray-200 transition-colors"
+                className="w-full py-3 rounded-2xl font-medium transition-colors text-slate-300" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}
               >
                 Reset to Default
               </button>
@@ -2950,7 +2950,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="bg-white rounded-3xl shadow-sm border p-8 text-center">
                   <div className="flex justify-center gap-3 mb-8">
                     {[{ id: 'work', label: 'Focus' }, { id: 'shortBreak', label: 'Short Break' }, { id: 'longBreak', label: 'Long Break' }].map(m => (
-                      <button key={m.id} onClick={() => resetPom(m.id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${pomodoroMode === m.id ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{m.label}</button>
+                      <button key={m.id} onClick={() => resetPom(m.id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${pomodoroMode === m.id ? 'text-white' : 'text-slate-500'}`}>{m.label}</button>
                     ))}
                   </div>
                   <div className="text-8xl font-bold text-gray-800 mb-8 font-mono">{formatTime(pomodoroTime)}</div>
@@ -3068,7 +3068,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'groceries'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Groceries
@@ -3078,7 +3078,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'meals'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Weekly Meals
@@ -3088,7 +3088,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'water'
                   ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Water
@@ -3098,7 +3098,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'plans'
                   ? 'bg-gradient-to-r from-purple-500 to-violet-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Diet Plans
@@ -3108,7 +3108,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 dietSubTab === 'custom'
                   ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               My Diets
@@ -4050,7 +4050,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'sleep'
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               🌙 Sleep
@@ -4060,7 +4060,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'mental'
                   ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               🧠 Mental Health
@@ -4070,7 +4070,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'steps'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               👟 Weekly Steps
@@ -4080,7 +4080,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'plan'
                   ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               💪 Workout Plan
@@ -4090,7 +4090,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 gymSubTab === 'journal'
                   ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               📓 Journal
@@ -4971,7 +4971,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   value={currentSubTab?.name || ''}
                   onChange={(e) => renameSubTab(customCat.activeSubTab, e.target.value)}
                   placeholder="Tab name..."
-                  className="px-3 py-2 border-2 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500"
+                  className="px-3 py-2 rounded-xl text-sm font-medium focus:outline-none text-white" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}
                 />
                 
                 {/* Add Section Dropdown */}
@@ -6201,7 +6201,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 workSubTab === 'summary'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               📊 Total Summary
@@ -6216,7 +6216,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   workSubTab === 'timesheet' && activeJobId === job.id
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 💼 {job.name}
@@ -6895,7 +6895,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'bills'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Bills
@@ -6905,7 +6905,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'calendar'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Calendar
@@ -6915,7 +6915,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'goals'
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Goals
@@ -6925,7 +6925,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'debts'
                   ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Debts
@@ -6935,7 +6935,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                 billsSubTab === 'debtCalc'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               Debt Payoff Calc
@@ -6951,7 +6951,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 billsType === 'personal'
                   ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               🍺 Personal
@@ -6961,7 +6961,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 billsType === 'business'
                   ? 'bg-purple-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'text-slate-400 hover:text-white transition-colors'
               }`}
             >
               💼 Business
@@ -8337,7 +8337,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
             <div className="flex gap-2 mb-6">
               {[{ id: 'feedback', label: '💡 Feedback', desc: 'Ideas & suggestions' }, { id: 'bug', label: '🐛 Bug Report', desc: 'Something broken?' }, { id: 'support', label: '🆘 Support', desc: 'Need help?' }].map(t => (
-                <button key={t.id} onClick={() => setFeedbackType(t.id)} className={`flex-1 p-3 rounded-2xl text-center transition-all ${feedbackType === t.id ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                <button key={t.id} onClick={() => setFeedbackType(t.id)} className={`flex-1 p-3 rounded-2xl text-center transition-all ${feedbackType === t.id ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg' : 'text-slate-400 hover:text-white transition-colors'}`}>
                   <div className="text-lg font-bold">{t.label}</div>
                   <div className={`text-xs mt-1 ${feedbackType === t.id ? 'text-white/80' : 'text-gray-400'}`}>{t.desc}</div>
                 </button>
@@ -8660,7 +8660,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'assets'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Assets
@@ -8670,7 +8670,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'goals'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Goals
@@ -8680,7 +8680,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'knowledge'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Knowledge Guide
@@ -8690,7 +8690,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'assetMap'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Asset Map
@@ -8700,7 +8700,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   assetsSubTab === 'worldMap'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 World Map
@@ -9854,7 +9854,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'portfolio'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Current Portfolio
@@ -9864,7 +9864,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'futurePortfolio'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Future Portfolio
@@ -9874,7 +9874,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   (investmentsSubTab === 'research' || investmentsSubTab === 'declined' || investmentsSubTab === 'economics' || investmentsSubTab === 'risks')
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Research
@@ -9884,7 +9884,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'goals'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Goals
@@ -9894,7 +9894,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'notes'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Notes
@@ -9904,7 +9904,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   (investmentsSubTab === 'knowledge' || investmentsSubTab === 'books')
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Knowledge Guide
@@ -9914,7 +9914,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'accounting'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Accounting
@@ -9924,7 +9924,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'sp500'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 S&P 500
@@ -9934,7 +9934,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'compound'
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'text-slate-400 hover:text-white transition-colors'
                 }`}
               >
                 Compound Calc
@@ -11156,7 +11156,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     investmentsSubTab === 'research'
                       ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'text-slate-400 hover:text-white transition-colors'
                   }`}
                 >
                   Research
@@ -11166,7 +11166,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     investmentsSubTab === 'economics'
                       ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'text-slate-400 hover:text-white transition-colors'
                   }`}
                 >
                   Company Economics
@@ -11176,7 +11176,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     investmentsSubTab === 'risks'
                       ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'text-slate-400 hover:text-white transition-colors'
                   }`}
                 >
                   Biggest Risks
@@ -11186,7 +11186,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     investmentsSubTab === 'declined'
                       ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'text-slate-400 hover:text-white transition-colors'
                   }`}
                 >
                   Declined Companies
@@ -12395,7 +12395,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     investmentsSubTab === 'knowledge'
                       ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'text-slate-400 hover:text-white transition-colors'
                   }`}
                 >
                   Knowledge
@@ -12405,7 +12405,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     investmentsSubTab === 'books'
                       ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'text-slate-400 hover:text-white transition-colors'
                   }`}
                 >
                   Book Recommendations
