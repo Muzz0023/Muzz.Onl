@@ -2211,6 +2211,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             className="px-4 h-full flex flex-col overflow-y-auto overscroll-contain"
             style={{ WebkitOverflowScrolling: 'touch', paddingTop: 'calc(env(safe-area-inset-top) + 24px)', paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}
           >
+            {/* Mission Control Status Strip */}
+            <div className="mb-4 px-2 py-2 rounded-xl" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>{new Date().toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</span>
+                <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.5)"}}>{currentStreak > 0 ? `🔥 ${currentStreak}d streak` : 'No streak'}</span>
+              </div>
+              <div className="text-xs font-mono mt-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"0.5px"}}>SYS: ONLINE ●</div>
+            </div>
             {/* Header */}
             <div className="flex items-center justify-between mb-8 px-2">
               <div className="flex items-center gap-3">
@@ -6656,9 +6664,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-            <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
-              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
+            <div className="rounded-2xl p-4 relative overflow-hidden" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+              <svg className="absolute right-0 bottom-0 opacity-20" width="120" height="50" viewBox="0 0 120 50">
+                <polyline points="0,45 20,38 40,35 60,25 80,20 100,12 120,5" fill="none" stroke="#00c8ff" strokeWidth="1.5"/>
+                <polygon points="0,45 20,38 40,35 60,25 80,20 100,12 120,5 120,50 0,50" fill="rgba(0,200,255,0.1)"/>
+              </svg>
+              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)",letterSpacing:"1px",fontFamily:"'Share Tech Mono',monospace"}}>NET WORTH</div>
               <div className="text-4xl font-bold text-white hud-number" style={{textShadow:"0 0 20px rgba(0,200,255,0.4)"}}>${netWorth.toLocaleString()}</div>
+              <div className="text-xs mt-1" style={{color:"rgba(0,200,255,0.5)",fontFamily:"'Share Tech Mono',monospace"}}>↑ TRACKING</div>
             </div>
           </div>
         </div>
@@ -6750,8 +6763,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           
           {/* Achievements & Coming Up */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl p-4 border shadow-sm">
-              <div className="font-semibold text-gray-800 mb-3 flex items-center gap-2"><Award className="w-4 h-4 text-amber-500" />Achievements</div>
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                 {(() => {
                   const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
@@ -6813,7 +6826,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const progress = Math.min((a.current / a.target) * 100, 100);
                     const isComplete = progress >= 100;
                     return (
-                      <div key={a.id} className={`p-3 rounded-xl border ${isComplete ? 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200' : 'bg-gray-50 border-gray-200'}`}>
+                      <div key={a.id} className="p-3 rounded-xl transition-all"
+                      style={isComplete ? {background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.4)',boxShadow:'0 0 16px rgba(245,158,11,0.15)'} : {background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.07)'}}>
                         <div className="flex items-center gap-3 mb-2">
                           <div className={`text-2xl ${isComplete ? '' : 'grayscale opacity-60'}`}>{a.icon}</div>
                           <div className="flex-1">
@@ -6826,7 +6840,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div 
-                            className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-gradient-to-r from-amber-400 to-orange-500' : 'bg-gradient-to-r from-gray-300 to-gray-400'}`}
+                            className="h-full rounded-full transition-all duration-500"
+                            style={isComplete ? {background:'linear-gradient(90deg,#f59e0b,#f97316)',boxShadow:'0 0 8px rgba(245,158,11,0.6)'} : {background:'linear-gradient(90deg,rgba(0,200,255,0.6),rgba(0,150,255,0.4))'}}
                             style={{ width: `${progress}%` }}
                           />
                         </div>
@@ -8508,11 +8523,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
 
           {/* Feature Comparison */}
-          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-            <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-white">What you get</h2>
+          <div className="rounded-3xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+            <div className="p-6" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
+              <h2 className="text-xl font-semibold text-white" style={{fontFamily:"'Share Tech Mono',monospace",letterSpacing:"2px"}}>// WHAT YOU GET</h2>
             </div>
-            <div className="divide-y">
+            <div>
+              <div className="flex items-center px-6 py-2 sticky top-0" style={{background:"rgba(0,200,255,0.08)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+                <span className="flex-1 text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>FEATURE</span>
+                <span className="w-16 text-center text-xs font-mono" style={{color:"rgba(148,163,184,0.6)",letterSpacing:"1px"}}>FREE</span>
+                <span className="w-16 text-center text-xs font-mono" style={{color:"#f59e0b",letterSpacing:"1px"}}>ELITE</span>
+              </div>
               {[
                 { feature: 'Tasks & Daily Planner', free: true, elite: true },
                 { feature: 'Reminders & Birthdays', free: true, elite: true },
@@ -8529,17 +8549,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Elite Badge & Name', free: false, elite: true },
                 { feature: 'Ad Free', free: false, elite: true },
               ].map((row, i) => (
-                <div key={i} className="flex items-center px-6 py-3">
-                  <span className="flex-1 text-sm text-gray-700">{row.feature}</span>
-                  <span className="w-16 text-center">{row.free ? '✅' : '❌'}</span>
-                  <span className="w-16 text-center">{row.elite ? '✅' : '—'}</span>
+                <div key={i} className="flex items-center px-6 py-3 transition-all" style={{borderBottom:"1px solid rgba(0,200,255,0.06)",background: row.elite && !row.free ? "rgba(0,200,255,0.03)" : "transparent"}}>
+                  <span className="flex-1 text-sm text-white">{row.feature}</span>
+                  <span className="w-16 text-center text-base">{row.free ? '✅' : <span style={{color:"rgba(239,68,68,0.7)",fontSize:"18px"}}>✕</span>}</span>
+                  <span className="w-16 text-center text-base">{row.elite ? '✅' : '—'}</span>
                 </div>
               ))}
-              <div className="flex items-center px-6 py-2 bg-gray-50 font-semibold text-sm">
-                <span className="flex-1"></span>
-                <span className="w-16 text-center text-gray-500">Free</span>
-                <span className="w-16 text-center text-amber-600">Elite</span>
-              </div>
             </div>
           </div>
 
@@ -8548,7 +8563,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="text-center space-y-4">
               <button
                 onClick={handleUpgrade}
-                className="px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl text-lg font-bold shadow-lg hover:scale-105 transition-all"
+                className="px-8 py-4 text-white rounded-2xl text-lg font-bold transition-all hover:scale-105" style={{background:"linear-gradient(135deg,#f59e0b,#f97316)",boxShadow:"0 0 30px rgba(245,158,11,0.4), 0 4px 20px rgba(249,115,22,0.3)",border:"1px solid rgba(255,200,0,0.3)",letterSpacing:"1px",animation:"kangPulse 3s ease-in-out infinite"}}
               >
                 {isNative ? 'Become Elite — $4.99/month' : 'Become Elite — $4.99/month'}
               </button>
@@ -8630,40 +8645,30 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {/* Giving Back */}
-          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-            <div className="p-6 text-center border-b" style={{ background: 'linear-gradient(135deg, #fdf2f8, #fef3c7)' }}>
+          <div className="rounded-3xl overflow-hidden" style={{border:"1px solid rgba(255,200,0,0.2)",background:"rgba(5,15,30,0.8)"}}>
+            <div className="p-6 text-center" style={{background:"linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,120,0,0.05))",borderBottom:"1px solid rgba(255,200,0,0.15)"}}>
               <div className="text-3xl mb-2">💛</div>
-              <h2 className="text-xl font-bold text-white hud-number">Giving Back</h2>
-              <p className="text-sm text-gray-500 mt-1">$3 from every Elite subscription goes directly to charity</p>
+              <h2 className="text-xl font-bold text-white mb-1" style={{letterSpacing:"1px"}}>Giving Back</h2>
+              <p className="text-sm" style={{color:"rgba(255,200,100,0.7)"}}>$3 from every Elite subscription goes directly to charity</p>
             </div>
-            <div className="divide-y">
-              <div className="p-5 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#FEF3C7' }}>🎗️</div>
-                <div className="flex-1">
-                  <div className="font-semibold text-sm">Endometriosis Australia</div>
-                  <div className="text-xs text-gray-400">$1 per subscription</div>
+            <div style={{borderTop:"1px solid rgba(255,200,0,0.08)"}}>
+              {[
+                {emoji:"🎗️",name:"Endometriosis Australia",url:"https://www.endometriosisaustralia.org",color:"rgba(255,180,0,0.1)"},
+                {emoji:"🧠",name:"Charlie Teo Foundation",url:"https://charlieteofoundation.org.au",color:"rgba(180,100,255,0.1)"},
+                {emoji:"🏉",name:"Mark Hughes Foundation",url:"https://www.markhughesfoundation.com.au",color:"rgba(0,150,255,0.1)"},
+              ].map((c,i) => (
+                <div key={i} className="p-5 flex items-center gap-4" style={{borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{background:c.color,border:"1px solid rgba(255,255,255,0.1)"}}>{c.emoji}</div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-sm text-white">{c.name}</div>
+                    <div className="text-xs" style={{color:"rgba(148,163,184,0.7)"}}>$1 per subscription</div>
+                  </div>
+                  <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium" style={{color:"rgba(255,180,0,0.8)"}}>Visit</a>
                 </div>
-                <a href="https://www.endometriosisaustralia.org" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
-              </div>
-              <div className="p-5 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#EDE9FE' }}>🧠</div>
-                <div className="flex-1">
-                  <div className="font-semibold text-sm">Charlie Teo Foundation</div>
-                  <div className="text-xs text-gray-400">$1 per subscription</div>
-                </div>
-                <a href="https://charlieteofoundation.org.au" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
-              </div>
-              <div className="p-5 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: '#DBEAFE' }}>🏉</div>
-                <div className="flex-1">
-                  <div className="font-semibold text-sm">Mark Hughes Foundation</div>
-                  <div className="text-xs text-gray-400">$1 per subscription</div>
-                </div>
-                <a href="https://www.markhughesfoundation.com.au" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">Visit</a>
-              </div>
+              ))}
             </div>
-            <div className="p-4 text-center" style={{ backgroundColor: 'rgba(249,115,22,0.05)' }}>
-              <p className="text-xs text-gray-400">Every Elite member helps fund research into endometriosis and brain cancer. Thank you.</p>
+            <div className="p-4 text-center" style={{borderTop:"1px solid rgba(255,200,0,0.08)"}}>
+              <p className="text-xs" style={{color:"rgba(148,163,184,0.5)"}}>Every Elite member helps fund research into endometriosis and brain cancer. Thank you.</p>
             </div>
           </div>
 
@@ -13876,7 +13881,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
                           title={`${new Date(date).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}${done ? ' ✓' : ''}`}
-                          className={`aspect-square rounded-lg cursor-pointer transition-all min-h-[28px] ${done ? 'bg-green-500' : 'bg-gray-100 hover:bg-gray-200'} ${isToday ? 'ring-2 ring-orange-400' : ''}`}
+                          className="aspect-square rounded-lg cursor-pointer transition-all min-h-[28px]"
+                          style={done ? {background:'rgba(0,200,255,0.8)',boxShadow:'0 0 8px rgba(0,200,255,0.6), 0 0 16px rgba(0,200,255,0.3)'} : isToday ? {background:'rgba(0,200,255,0.15)',border:'1px solid rgba(0,200,255,0.4)'} : {background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)'}}
                         />
                       );
                     })}
