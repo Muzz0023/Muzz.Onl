@@ -1756,22 +1756,6 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const [showDashCustomise, setShowDashCustomise] = useState(false);
-  const [dashWidgets, setDashWidgets] = useState(() => {
-    try {
-      const s = localStorage.getItem('muzz_dash_widgets');
-      return s ? JSON.parse(s) : { networth:true, stats:true, summary:true, quickaccess:true, achievements:true, quote:true, charity:true };
-    } catch {
-      return { networth:true, stats:true, summary:true, quickaccess:true, achievements:true, quote:true, charity:true };
-    }
-  });
-  const toggleDashWidget = (key) => {
-    setDashWidgets(prev => {
-      const updated = { ...prev, [key]: !prev[key] };
-      try { localStorage.setItem('muzz_dash_widgets', JSON.stringify(updated)); } catch {}
-      return updated;
-    });
-  };
 
   // Check Stripe subscription on load
   useEffect(() => {
@@ -6784,7 +6768,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span className="text-white/70 text-sm">→</span>
               </div>
             )}
-{dashWidgets.networth && <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+<div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
               <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
               <div className="text-4xl font-bold text-white hud-number" style={{textShadow:"0 0 20px rgba(0,200,255,0.4)"}}>${netWorth.toLocaleString()}</div>
             </div>}
@@ -6792,7 +6776,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
         
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-          {dashWidgets.stats && <div className="grid grid-cols-3 gap-3 mt-4">
+          <div className="grid grid-cols-3 gap-3 mt-4">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
               <div className="text-xl font-bold text-white hud-number">${totalMonthly.toFixed(0)}</div>
@@ -6805,10 +6789,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Portfolio</div>
               <div className="text-xl font-bold text-white hud-number">${totalStocks.toLocaleString()}</div>
             </div>
-          </div>}
+          </div>
           
           {/* Today's Summary */}
-          {dashWidgets.summary && <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
             <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
               <span className="text-lg">📊</span> Today's Summary
             </h3>
@@ -6838,9 +6822,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
             </div>
           </div>
-          }
           {/* Quick Access */}
-          {dashWidgets.quickaccess && <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
             <button onClick={() => setActiveView('habits')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <span className="text-2xl mb-1">🔥</span>
               <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Habits</span>
@@ -6875,9 +6858,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
           </div>
           
-          }
           {/* Achievements & Coming Up */}
-          {dashWidgets.achievements && <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
@@ -7013,15 +6995,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          }
           {/* Daily Quote */}
-          {dashWidgets.quote && <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-5 text-white">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-5 text-white">
             <div className="text-lg italic mb-2">"{todayQuote.quote}"</div>
             <div className="text-sm text-slate-400">— {todayQuote.author}</div>
-          </div>}
+          </div>
 
           {/* Charity Banner */}
-          {dashWidgets.charity && isElite && (
+          {isElite && (
             <div className="bg-white/5 rounded-2xl p-4 flex items-center gap-3 border border-white/10">
               <span className="text-lg">💛</span>
               <span className="text-sm text-gray-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation</span>
@@ -7029,52 +7010,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
         </div>
         
-        {/* Dashboard Customise Modal */}
-        {showDashCustomise && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setShowDashCustomise(false)}
-            style={{background:"rgba(0,0,0,0.7)",backdropFilter:"blur(10px)"}}>
-            <div className="w-full max-w-lg rounded-t-3xl p-6 pb-10" onClick={e => e.stopPropagation()}
-              style={{background:"#020c1b",border:"1px solid rgba(0,200,255,0.2)"}}>
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// DASHBOARD</div>
-                  <h2 className="text-xl font-bold text-white">Customise Widgets</h2>
-                </div>
-                <button onClick={() => setShowDashCustomise(false)} style={{color:"rgba(0,200,255,0.5)"}}><X className="w-5 h-5" /></button>
-              </div>
-              <div className="space-y-3">
-                {[
-                  {key:'networth', label:'Net Worth', desc:'Total assets value'},
-                  {key:'stats', label:'Stats Row', desc:'Bills, savings rate & portfolio'},
-                  {key:'summary', label:"Today's Summary", desc:'Sleep, mood, work & tasks'},
-                  {key:'quickaccess', label:'Quick Access', desc:'Shortcuts to all sections'},
-                  {key:'achievements', label:'Achievements', desc:'Goals & upcoming events'},
-                  {key:'quote', label:'Daily Quote', desc:'Motivational quote of the day'},
-                  {key:'charity', label:'Charity Banner', desc:'Elite giving back section'},
-                ].map(w => (
-                  <div key={w.key} className="flex items-center justify-between p-3 rounded-xl"
-                    style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.08)"}}>
-                    <div>
-                      <div className="text-sm font-medium text-white">{w.label}</div>
-                      <div className="text-xs" style={{color:"rgba(148,163,184,0.5)"}}>{w.desc}</div>
-                    </div>
-                    <button onClick={() => toggleDashWidget(w.key)}
-                      className="w-12 h-6 rounded-full transition-all relative flex-shrink-0"
-                      style={{background: dashWidgets[w.key] ? '#00c8ff' : 'rgba(255,255,255,0.1)'}}>
-                      <div className="w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all"
-                        style={{left: dashWidgets[w.key] ? '26px' : '2px'}} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <button onClick={() => { const d = {networth:true,stats:true,summary:true,quickaccess:true,achievements:true,quote:true,charity:true}; setDashWidgets(d); try{localStorage.setItem('muzz_dash_widgets',JSON.stringify(d));}catch{} }}
-                className="w-full mt-4 py-3 rounded-xl text-sm font-mono"
-                style={{color:"rgba(0,200,255,0.4)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                reset to default
-              </button>
-            </div>
-          </div>
-        )}
         {/* Floating Chat */}
         <FloatingChat 
           isChatOpen={isChatOpen}
