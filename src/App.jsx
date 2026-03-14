@@ -2190,6 +2190,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   useEffect(() => {
     if (sidebarOpen) {
       document.body.style.overflow = 'hidden';
+      // Reset scroll position of the menu content
+      const menuContent = document.getElementById('muzz-menu-scroll');
+      if (menuContent) menuContent.scrollTop = 0;
     } else {
       document.body.style.overflow = '';
     }
@@ -2249,7 +2252,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* Scrollable content */}
-          <div className="relative z-10 overflow-y-auto px-6 py-6" style={{height:"calc(100vh - 120px)"}}>
+          <div id="muzz-menu-scroll" className="relative z-10 overflow-y-auto px-6 py-6" style={{height:"calc(100vh - 120px)"}}>
             {menuSections.filter(s => s.items.length > 0).map(section => (
               <div key={section.title} className="mb-8">
                 <div className="text-xs font-mono mb-3" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// {section.title}</div>
@@ -2288,22 +2291,63 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             {/* Footer actions */}
             <div style={{borderTop:"1px solid rgba(0,200,255,0.1)",paddingTop:"20px",marginTop:"8px"}} className="space-y-2">
-              <button
-                onClick={() => {
-                  const allData = { subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName };
-                  const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url; a.download = `muzz-backup-${new Date().toISOString().split('T')[0]}.json`; a.click();
-                  URL.revokeObjectURL(url);
-                  setSidebarOpen(false);
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
-                style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.7)"}}
-              >
-                <Save className="w-4 h-4" />
-                <span className="text-sm font-medium">Export Backup</span>
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    const allData = { subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName };
+                    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = `muzz-backup-${new Date().toISOString().split('T')[0]}.json`; a.click();
+                    URL.revokeObjectURL(url);
+                    setSidebarOpen(false);
+                  }}
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all"
+                  style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.7)"}}
+                >
+                  <Save className="w-4 h-4" />
+                  <span className="text-sm font-medium">Export</span>
+                </button>
+                <label className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all cursor-pointer"
+                  style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.7)"}}>
+                  <input type="file" accept=".json" className="hidden" onChange={(e) => {
+                    const file = e.target.files?.[0]; if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      try {
+                        const data = JSON.parse(event.target.result);
+                        if (confirm('This will replace all your current data. Are you sure?')) {
+                          if (data.subscriptions) setSubscriptions(data.subscriptions);
+                          if (data.businessSubscriptions) setBusinessSubscriptions(data.businessSubscriptions);
+                          if (data.assets) setAssets(data.assets);
+                          if (data.stocks) setStocks(data.stocks);
+                          if (data.tasks) setTasks(data.tasks);
+                          if (data.dailyTasks) setDailyTasks(data.dailyTasks);
+                          if (data.weeklyTasks) setWeeklyTasks(data.weeklyTasks);
+                          if (data.generalTasks) setGeneralTasks(data.generalTasks);
+                          if (data.habits) setHabits(data.habits);
+                          if (data.habitLog) setHabitLog(data.habitLog);
+                          if (data.reminders) setReminders(data.reminders);
+                          if (data.birthdays) setBirthdays(data.birthdays);
+                          if (data.groceries) setGroceries(data.groceries);
+                          if (data.dailyMeals) setDailyMeals(data.dailyMeals);
+                          if (data.customCategories) setCustomCategories(data.customCategories);
+                          if (data.debts) setDebts(data.debts);
+                          if (data.calendarBills) setCalendarBills(data.calendarBills);
+                          if (data.monthlySalary) setMonthlySalary(data.monthlySalary);
+                          if (data.eliteName) setEliteName(data.eliteName);
+                          alert('Backup restored!');
+                          setSidebarOpen(false);
+                        }
+                      } catch { alert('Invalid backup file.'); }
+                    };
+                    reader.readAsText(file);
+                    e.target.value = '';
+                  }} />
+                  <Plus className="w-4 h-4" />
+                  <span className="text-sm font-medium">Import</span>
+                </label>
+              </div>
               <button onClick={() => { signOut(); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
                 style={{background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.1)",color:"rgba(239,68,68,0.7)"}}>
