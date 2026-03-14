@@ -137,7 +137,12 @@ const StarryBackground = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 relative">
+    <div className="min-h-screen relative" style={{background: "linear-gradient(180deg, #020817 0%, #050d1a 40%, #030a14 100%)"}}>
+      {/* Futuristic grid overlay */}
+      <div className="fixed inset-0 pointer-events-none z-0" style={{backgroundImage: 'linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
+      {/* Ambient glow orbs */}
+      <div className="fixed pointer-events-none z-0" style={{width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px'}} />
+      <div className="fixed pointer-events-none z-0" style={{width:'300px',height:'300px',borderRadius:'50%',background:'rgba(255,120,0,0.04)',filter:'blur(80px)',bottom:'200px',left:'-60px'}} />
       {/* Stars layer */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {/* Small stars */}
@@ -182,6 +187,8 @@ const StarryBackground = ({ children }) => {
       </div>
       {/* CSS for twinkle animation */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
         @keyframes twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.8); }
           50% { opacity: 1; transform: scale(1.2); }
@@ -1235,7 +1242,7 @@ Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedl
 
   if (!isChatOpen) {
     return (
-      <button onClick={() => setIsChatOpen(true)} className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full shadow-lg hover:scale-110 transition-all flex items-center justify-center text-3xl z-50">
+      <button onClick={() => setIsChatOpen(true)} className="fixed w-14 h-14 rounded-full hover:scale-110 transition-all flex items-center justify-center text-2xl z-50" style={{bottom:"calc(env(safe-area-inset-bottom) + 72px)",right:"16px",background:"linear-gradient(135deg,#fb923c,#f97316)",boxShadow:"0 4px 24px rgba(251,146,60,0.4)"}}>
         🦘
       </button>
     );
@@ -1249,7 +1256,7 @@ Remember: Be natural and varied. Don't spam "g'day mate" or any phrase repeatedl
   };
 
   return (
-    <div className="fixed bottom-6 right-6 w-96 h-[500px] bg-white rounded-3xl shadow-2xl border-2 border-orange-200 flex flex-col z-50 overflow-hidden">
+    <div className="fixed w-96 h-[500px] rounded-3xl shadow-2xl flex flex-col z-50 overflow-hidden" style={{bottom:"calc(env(safe-area-inset-bottom) + 72px)",right:"16px",background:"#070f1e",border:"1px solid rgba(0,200,255,0.2)",boxShadow:"0 0 40px rgba(0,0,0,0.8),0 0 20px rgba(0,150,255,0.1)"}}>
       <div className="bg-gradient-to-r from-amber-400 to-orange-500 p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow">🦘</div>
@@ -1631,16 +1638,15 @@ function MuzzApp() {
       try {
         const result = await RevenueCat.purchaseElite();
         if (result.success) {
-          // Unlock Elite immediately — don't wait for API
-          setStripeElite(true);
-          alert('Welcome to Elite! 🎉');
-          setActiveView('home');
-          // Sync to Supabase in background (non-blocking)
-          fetch(api('/api/sync-apple-purchase'), {
+          // Update Supabase to mark user as Elite
+          await fetch(api('/api/sync-apple-purchase'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, userEmail }),
-          }).catch(err => console.log('Sync error (non-critical):', err));
+          });
+          setStripeElite(true);
+          alert('Welcome to Elite! 🎉');
+          setActiveView('home');
         } else if (result.cancelled) {
           // User cancelled - do nothing
         }
@@ -2148,8 +2154,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div>
         <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/50 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
         <div 
-          style={{ backgroundColor: '#0f172a' }}
-          className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 shadow-2xl z-50 translate-x-0 transition-transform duration-300 border-r border-slate-700/50" : "fixed top-0 left-0 h-full w-72 shadow-2xl z-50 -translate-x-full transition-transform duration-300 border-r border-slate-700/50"}>
+          style={{ background: "linear-gradient(180deg, #020c1b 0%, #030f20 100%)", borderRight: "1px solid rgba(0,200,255,0.15)", boxShadow: "4px 0 40px rgba(0,0,0,0.8), inset -1px 0 0 rgba(0,200,255,0.05)" }}
+          className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 z-50 -translate-x-full transition-transform duration-300"}>
           <div 
             ref={sidebarScrollRef} 
             className="px-4 h-full flex flex-col overflow-y-auto overscroll-contain"
@@ -2158,21 +2164,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {/* Header */}
             <div className="flex items-center justify-between mb-8 px-2">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-xl shadow-sm">🦘</div>
+                <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shadow-sm" style={{background:'linear-gradient(135deg,rgba(0,200,255,0.2),rgba(0,200,255,0.05))',border:'1px solid rgba(0,200,255,0.3)'}}>🦘</div>
                 <div>
-                  <div className="font-semibold text-white text-lg">Muzz</div>
-                  <div className="text-xs text-slate-400 font-medium">Life OS</div>
+                  <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'18px',letterSpacing:'3px'}}>MUZZ</div>
+                  <div style={{fontSize:'9px',color:'#00c8ff',letterSpacing:'2px',textTransform:'uppercase',marginTop:'1px'}}>Life OS</div>
                 </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-slate-700/50 rounded-full transition-colors">
-                <X className="w-5 h-5 text-slate-400" />
+              <button onClick={() => setSidebarOpen(false)} className="p-2 rounded-full transition-colors" style={{color:'rgba(0,200,255,0.6)'}}>
+                <X className="w-5 h-5" />
               </button>
             </div>
             
             {/* Streak Badge */}
             {currentStreak > 0 && (
-              <div className="mx-2 mb-6 bg-gradient-to-r from-orange-500/20 to-amber-500/20 rounded-2xl p-3 flex items-center gap-3 border border-orange-500/30">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center">
+              <div className="mx-2 mb-6 rounded-2xl p-3 flex items-center gap-3" style={{background:"rgba(0,200,255,0.07)",border:"1px solid rgba(0,200,255,0.2)"}}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:"rgba(0,200,255,0.15)",border:"1px solid rgba(0,200,255,0.3)"}}>
                   <Flame className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -2195,15 +2201,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       setSidebarOpen(false);
                       scrollPosRef.current = 0;
                     }}
-                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
-                      isActive 
-                        ? 'bg-orange-500 text-white shadow-sm' 
-                        : locked 
-                          ? 'text-slate-500 hover:bg-slate-700/50' 
-                          : item.id === 'upgrade' 
-                            ? 'text-orange-400 hover:bg-orange-500/20 border border-orange-500/30' 
-                            : 'text-slate-300 hover:bg-slate-700/50'
-                    }`}
+                    className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all"
+                    style={isActive ? {background:'rgba(0,200,255,0.12)',borderLeft:'2px solid #00c8ff',color:'#00c8ff',paddingLeft:'10px'} : item.id==='upgrade' && !isElite ? {color:'#fb923c',border:'1px solid rgba(251,146,60,0.3)',borderRadius:'12px'} : locked ? {color:'rgba(100,116,139,0.5)'} : {color:'rgba(203,213,225,0.8)'}}
                   >
                     <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
                     <span className="font-medium flex-1 text-left text-sm">{item.label}</span>
@@ -2245,7 +2244,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <Save className="w-5 h-5" />
                   <span className="font-medium">Export Backup</span>
                 </button>
-                <label className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-green-600 transition-all cursor-pointer">
+                <label className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-green-400 transition-all cursor-pointer">
                   <input
                     type="file"
                     accept=".json"
@@ -2341,13 +2340,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <Trash2 className="w-4 h-4" />
                 <span className="font-medium text-sm">Delete Account</span>
               </button>
-              <div className="flex items-center justify-center gap-2 text-gray-300 mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-center gap-2 text-gray-300 mt-4 pt-4 border-t border-slate-800">
                 <span className="text-xs font-medium">Muzz v3.0</span>
               </div>
             </div>
           </div>
         </div>
-        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-xl transition-all border border-slate-700/50"><Menu className="w-5 h-5 text-white" /></button>
+        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 rounded-2xl transition-all" style={{background:"rgba(2,12,27,0.9)",backdropFilter:"blur(20px)",border:"1px solid rgba(0,200,255,0.2)",boxShadow:"0 0 20px rgba(0,200,255,0.1)"}}><Menu className="w-5 h-5" style={{color:"#00c8ff"}} /></button>
       </div>
     );
   };
@@ -3014,7 +3013,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <p className="text-sm text-gray-500 mt-2">{pomodoroSessions} sessions completed today</p>
                 </div>
-                <div className="bg-white rounded-2xl shadow-sm border p-6">
+                <div className="rounded-2xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
                   <h3 className="font-semibold text-gray-700 mb-2">How the Pomodoro Technique works</h3>
                   <p className="text-sm text-gray-500">Focus for 25 minutes → 5 min break. After 4 sessions, take a 15 min break. This helps you stay sharp and avoid burnout. 🍅</p>
                 </div>
@@ -3196,7 +3195,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div
                         key={list.id}
                         onClick={() => setActiveShoppingList(list.id)}
-                        className="bg-white rounded-2xl shadow-sm border p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+                        className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
                       >
                         <input
                           type="text"
@@ -4597,7 +4596,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Weekly Steps Tab */}
           {gymSubTab === 'steps' && (
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl shadow-sm border p-4">
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
                 <h2 className="text-lg font-semibold text-gray-700">👟 Weekly Steps & Workouts</h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-sm text-gray-500">Goal:</span>
@@ -5009,7 +5008,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
           {/* Tab Name Editor & Toolbar */}
-          <div className="bg-white rounded-2xl shadow-sm border p-4">
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
             <div className="flex flex-wrap gap-3 items-center justify-between">
               <div className="flex flex-wrap gap-2 items-center">
                 {/* Current Tab Name */}
@@ -5757,7 +5756,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                       
                       {/* Insert Toggle - Retractable */}
-                      <div className="pt-2 border-t border-gray-100">
+                      <div className="pt-2 border-t border-slate-800">
                         <button
                           onClick={() => updateSection(section.id, { showInsertBar: !section.showInsertBar })}
                           className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"
@@ -6619,22 +6618,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
           {/* Stats Row */}
           <div className="grid grid-cols-3 gap-3 -mt-8">
-            <div className="bg-white rounded-2xl p-4 shadow-sm border text-center">
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} text-center">
               <div className="text-xs text-gray-500">Monthly Bills</div>
               <div className="text-xl font-bold text-gray-800">${totalMonthly.toFixed(0)}</div>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border text-center">
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} text-center">
               <div className="text-xs text-gray-500">Savings Rate</div>
               <div className="text-xl font-bold text-gray-800">{savingsRate.toFixed(0)}%</div>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border text-center">
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} text-center">
               <div className="text-xs text-gray-500">Portfolio</div>
               <div className="text-xl font-bold text-gray-800">${totalStocks.toLocaleString()}</div>
             </div>
           </div>
           
           {/* Today's Summary */}
-          <div className="bg-white rounded-2xl shadow-sm border p-4">
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
             <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
               <span className="text-lg">📊</span> Today's Summary
             </h3>
@@ -8300,7 +8299,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
             return (
               <div className="space-y-6">
-                <div className="bg-white rounded-3xl shadow-sm border p-6">
+                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">💳 Debt Payoff Calculator</h2>
                   <div className="flex gap-3 mb-6">
                     <button onClick={() => setDebtCalcMethod('snowball')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'snowball' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}>❄️ Snowball (Smallest First)</button>
@@ -8525,24 +8524,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          {/* iOS Subscription Management - Apple handles billing */}
-          {isElite && !isVIP && isNative && (
-            <div className="bg-white rounded-3xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-xl font-semibold">Subscription</h2>
-              <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active</span></p>
-              <p className="text-xs text-gray-400">Renews monthly via Apple. To cancel, go to iPhone Settings → Apple ID → Subscriptions → Muzz.</p>
-              <button
-                onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
-                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
-              >
-                Manage Subscription
-              </button>
-            </div>
-          )}
-
-          {/* Web/Stripe Subscription Management */}
-          {isElite && !isVIP && !isNative && subscriptionInfo && (
-            <div className="bg-white rounded-3xl shadow-sm border p-6 space-y-4">
+          {/* Subscription Management for paying Elite members */}
+          {isElite && !isVIP && subscriptionInfo && (
+            <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}} space-y-4">
               <h2 className="text-xl font-semibold">Subscription</h2>
               <div className="flex items-center justify-between">
                 <div>
@@ -8572,6 +8556,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </button>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* iOS Subscription Management */}
+          {isElite && !isVIP && !subscriptionInfo && isNative && (
+            <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}} space-y-4">
+              <h2 className="text-xl font-semibold">Subscription</h2>
+              <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
+              <p className="text-xs text-gray-400">To manage or cancel your subscription, go to your iPhone Settings → Apple ID → Subscriptions.</p>
+              <button
+                onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
+                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
+              >
+                Manage Apple Subscription
+              </button>
             </div>
           )}
 
@@ -13656,7 +13655,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const compResult = calcCompound();
             return (
               <div className="space-y-6">
-                <div className="bg-white rounded-3xl shadow-sm border p-6">
+                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">📈 Compound Interest Calculator</h2>
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
@@ -13956,9 +13955,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
               <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
               {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
-              {bucketList.length > 0 && (<div className="bg-white rounded-2xl p-4 shadow-sm border"><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
-              {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-start gap-3"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
-              {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-center gap-3 opacity-60 mb-2"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
+              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}"><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
+              {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-start gap-3"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
+              {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-3 opacity-60 mb-2"><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
             </div>
           );
         })()}
@@ -14001,7 +14000,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Progress */}
           {bucketList.length > 0 && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border">
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}">
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">Progress</span>
                 <span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span>
@@ -14014,7 +14013,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Incomplete */}
           {bucketList.filter(b => !b.completed).map(item => (
-            <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-start gap-3">
+            <div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-start gap-3">
               <button
                 onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))}
                 className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors"
@@ -14060,7 +14059,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div>
               <h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>
               {bucketList.filter(b => b.completed).map(item => (
-                <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border flex items-center gap-3 opacity-60 mb-2">
+                <div key={item.id} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}} flex items-center gap-3 opacity-60 mb-2">
                   <button
                     onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))}
                     className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"
@@ -14111,6 +14110,34 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         AI_DAILY_LIMIT={AI_DAILY_LIMIT}
         muzzPersonality={muzzPersonality}
       />
+
+      {/* ── BOTTOM NAVIGATION BAR ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40" style={{background:"rgba(2,8,20,0.96)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.12)",paddingBottom:"env(safe-area-inset-bottom)"}}>
+        <div className="flex justify-around items-center px-1 py-2">
+          {[
+            {id:'home', label:'Home', Icon:Home},
+            {id:'tasks', label:'Tasks', Icon:CheckCircle2},
+            {id:'varied', label:'Finance', Icon:DollarSign, eliteOnly:true},
+            {id:'gym', label:'Health', Icon:Dumbbell, eliteOnly:true},
+            {id:'upgrade', label:'Elite', Icon:Award},
+          ].map(({id, label, Icon, eliteOnly}) => {
+            const active = activeView === id || (id==='varied' && ['varied','assets','investments','work','bills'].includes(activeView));
+            const locked = eliteOnly && !isElite;
+            return (
+              <button key={id}
+                onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(id);} }}
+                className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all"
+                style={{minWidth:'56px'}}>
+                <div className="relative flex items-center justify-center" style={{width:'28px',height:'28px',borderRadius:'8px',background: active ? 'rgba(0,200,255,0.12)' : 'transparent',transition:'all 0.2s'}}>
+                  <Icon style={{width:'16px',height:'16px',color: active ? '#00c8ff' : locked ? 'rgba(100,116,139,0.35)' : 'rgba(148,163,184,0.6)',transition:'color 0.2s'}} />
+                  {active && <div style={{position:'absolute',bottom:'-6px',left:'50%',transform:'translateX(-50%)',width:'3px',height:'3px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 6px #00c8ff'}} />}
+                </div>
+                <span style={{fontSize:'9px',fontWeight:500,color: active ? '#00c8ff' : locked ? 'rgba(100,116,139,0.3)' : 'rgba(148,163,184,0.55)',letterSpacing:'0.3px',marginTop:'4px'}}>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
