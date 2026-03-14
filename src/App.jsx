@@ -6829,9 +6829,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-xl font-bold" style={{color:"#d8b4fe"}}>{dailyTasks.filter(t => t.completed).length}/{dailyTasks.length}</div>
               </button>
             </div>
-          </div>
-          
-          }
+          </div>}
           {/* Quick Access */}
           {widgets.quickaccess && <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
             <button onClick={() => setActiveView('habits')} className="rounded-xl p-3 transition-all flex flex-col items-center" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.12)"}}>
@@ -6866,9 +6864,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <span className="text-2xl mb-1">✅</span>
               <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.8)"}}>Tasks</span>
             </button>
-          </div>
+          </div>}
           
-          }
           {/* Achievements & Coming Up */}
           {widgets.achievements && <div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
