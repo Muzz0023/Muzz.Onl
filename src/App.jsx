@@ -2465,8 +2465,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold">Reminders</h2>
-              <p className="text-sm text-gray-500">General reminders and notes</p>
+              <h2 className="text-xl font-semibold text-white">Reminders</h2>
+              <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>General reminders and notes</p>
             </div>
             <div className="divide-y">
               {sortedReminders.length === 0 ? (
@@ -2542,8 +2542,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold">🎂 Birthdays</h2>
-              <p className="text-sm text-gray-500">Friends & Family birthdays</p>
+              <h2 className="text-xl font-semibold text-white">🎂 Birthdays</h2>
+              <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Friends & Family birthdays</p>
             </div>
             <div className="divide-y">
               {sortedBirthdays.length === 0 ? (
@@ -2731,8 +2731,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Daily Tasks</h2>
-                  <p className="text-sm text-gray-500">Tasks to complete today</p>
+                  <h2 className="text-xl font-semibold text-white">Daily Tasks</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Tasks to complete today</p>
                 </div>
                 <div className="divide-y">
                   {dailyTasks.length === 0 ? (
@@ -2793,8 +2793,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Weekly Tasks</h2>
-                  <p className="text-sm text-gray-500">Tasks to complete this week</p>
+                  <h2 className="text-xl font-semibold text-white">Weekly Tasks</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Tasks to complete this week</p>
                 </div>
                 <div className="divide-y">
                   {weeklyTasks.length === 0 ? (
@@ -2829,7 +2829,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                             <div className="flex flex-wrap gap-2 items-center">
                               <div className="flex items-center gap-1">
-                                <span className="text-xs text-gray-500">Start:</span>
+                                <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Start:</span>
                                 <input
                                   type="date"
                                   value={task.startDate || ''}
@@ -2839,7 +2839,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 />
                               </div>
                               <div className="flex items-center gap-1">
-                                <span className="text-xs text-gray-500">Due:</span>
+                                <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Due:</span>
                                 <input
                                   type="date"
                                   value={task.dueDate || ''}
@@ -2877,8 +2877,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">General Tasks</h2>
-                  <p className="text-sm text-gray-500">Ongoing tasks with no time limit</p>
+                  <h2 className="text-xl font-semibold text-white">General Tasks</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Ongoing tasks with no time limit</p>
                 </div>
                 <div className="divide-y">
                   {generalTasks.length === 0 ? (
@@ -2957,8 +2957,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Daily Rotation</h2>
-                  <p className="text-sm text-gray-500">Your daily schedule - click to edit activities</p>
+                  <h2 className="text-xl font-semibold text-white">Daily Rotation</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Your daily schedule - click to edit activities</p>
                 </div>
                 <div className="divide-y">
                   {dailyRotation.map((slot, index) => (
@@ -3014,8 +3014,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p className="text-sm text-gray-500 mt-2">{pomodoroSessions} sessions completed today</p>
                 </div>
                 <div className="rounded-2xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                  <h3 className="font-semibold text-gray-700 mb-2">How the Pomodoro Technique works</h3>
-                  <p className="text-sm text-gray-500">Focus for 25 minutes → 5 min break. After 4 sessions, take a 15 min break. This helps you stay sharp and avoid burnout. 🍅</p>
+                  <h3 className="font-semibold text-white mb-2">How the Pomodoro Technique works</h3>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Focus for 25 minutes → 5 min break. After 4 sessions, take a 15 min break. This helps you stay sharp and avoid burnout. 🍅</p>
                 </div>
               </div>
             );
@@ -3212,7 +3212,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
                             className="font-semibold text-gray-800 bg-transparent focus:outline-none w-full"
                           />
-                          <p className="text-xs text-gray-500">{toBuy} to buy • {inBag} in bag</p>
+                          <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{toBuy} to buy • {inBag} in bag</p>
                         </div>
                         <div className="flex items-center gap-2">
                           {list.id !== 'default' && (
@@ -3485,11 +3485,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-semibold">Water Intake</h2>
-                      <p className="text-sm text-gray-500">Stay hydrated, legend</p>
+                      <h2 className="text-xl font-semibold text-white">Water Intake</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Stay hydrated, legend</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">Daily Goal:</span>
+                      <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Daily Goal:</span>
                       <input
                         type="text"
                         inputMode="decimal"
@@ -3501,7 +3501,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         }}
                         className="w-16 px-2 py-1 border-2 rounded-lg text-sm text-center focus:outline-none focus:border-blue-500"
                       />
-                      <span className="text-sm text-gray-500">L</span>
+                      <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>L</span>
                     </div>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -3545,7 +3545,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     {/* Today's Input */}
                     <div className="flex flex-col items-center gap-4">
-                      <h3 className="text-lg font-semibold text-gray-700">Today</h3>
+                      <h3 className="text-lg font-semibold text-white">Today</h3>
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => {
@@ -3589,8 +3589,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-semibold">This Week</h2>
-                      <p className="text-sm text-gray-500">
+                      <h2 className="text-xl font-semibold text-white">This Week</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
                         Weekly avg: {weekAvg.toFixed(1)}L / day • Total: {weekTotal.toFixed(1)}L
                       </p>
                     </div>
@@ -3648,7 +3648,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="space-y-4">
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Prebuilt Diet Plans</h2>
+                  <h2 className="text-xl font-semibold text-white">Prebuilt Diet Plans</h2>
                   <p className="text-sm text-gray-500 mt-1">Tap a plan to see the full daily meal breakdown</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -3733,7 +3733,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       >
                         <div className="text-left">
                           <div className="font-semibold text-gray-800 text-lg">{plan.name}</div>
-                          <div className="text-sm text-gray-500">{plan.goal} — {plan.calories}</div>
+                          <div className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{plan.goal} — {plan.calories}</div>
                         </div>
                         <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedDietPlan === plan.id ? 'rotate-180' : ''}`}>
                           ▼
@@ -3748,7 +3748,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <span className="text-xs font-semibold text-gray-500 uppercase">{meal.time}</span>
                                   <span className="text-xs font-medium text-orange-500">{meal.cal}</span>
                                 </div>
-                                <p className="text-sm text-gray-700">{meal.meal}</p>
+                                <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>{meal.meal}</p>
                               </div>
                             </div>
                           ))}
@@ -3770,7 +3770,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-semibold">My Custom Diets</h2>
+                    <h2 className="text-xl font-semibold text-white">My Custom Diets</h2>
                     <p className="text-sm text-gray-500 mt-1">Build your own meal plans</p>
                   </div>
                   <button
@@ -3805,7 +3805,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       >
                         <div className="text-left">
                           <div className="font-semibold text-gray-800 text-lg">{diet.name || 'Untitled Diet'}</div>
-                          <div className="text-sm text-gray-500">{diet.goal || 'No goal set'} — {diet.meals.length} meal{diet.meals.length !== 1 ? 's' : ''}</div>
+                          <div className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{diet.goal || 'No goal set'} — {diet.meals.length} meal{diet.meals.length !== 1 ? 's' : ''}</div>
                         </div>
                         <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedCustomDiet === diet.id ? 'rotate-180' : ''}`}>
                           ▼
@@ -4597,9 +4597,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {gymSubTab === 'steps' && (
             <div className="space-y-4">
               <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                <h2 className="text-lg font-semibold text-gray-700">👟 Weekly Steps & Workouts</h2>
+                <h2 className="text-lg font-semibold text-white">👟 Weekly Steps & Workouts</h2>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-sm text-gray-500">Goal:</span>
+                  <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Goal:</span>
                   <input
                     type="text"
                     value={workoutPlan.stepsGoal || ''}
@@ -4609,7 +4609,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     }}
                     className="w-24 px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 text-center"
                   />
-                  <span className="text-sm text-gray-500">steps per day</span>
+                  <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>steps per day</span>
                 </div>
               </div>
 
@@ -4631,7 +4631,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-gray-800">{day.dayName} {day.isToday && <span className="text-blue-500 text-sm">• Today</span>}</span>
+                            <span className="font-medium text-white">{day.dayName} {day.isToday && <span className="text-blue-500 text-sm">• Today</span>}</span>
                             <div className="flex items-center gap-2">
                               <input
                                 type="text"
@@ -4643,7 +4643,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 placeholder="0"
                                 className="w-24 px-3 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 text-right"
                               />
-                              <span className="text-sm text-gray-500">/ {goalDisplay}</span>
+                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>/ {goalDisplay}</span>
                             </div>
                           </div>
                           
@@ -4784,7 +4784,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <button onClick={() => { const d = new Date(journalDate); d.setDate(d.getDate() + 1); setJournalDate(d.toISOString().split('T')[0]); }} className="px-3 py-2 bg-white rounded-xl border shadow-sm hover:bg-gray-50">→</button>
                 </div>
                 <div className="bg-white rounded-2xl p-4 border shadow-sm">
-                  <h3 className="font-semibold text-gray-700 mb-3">How are you feeling?</h3>
+                  <h3 className="font-semibold text-white mb-3">How are you feeling?</h3>
                   <div className="flex gap-2 flex-wrap">
                     {moods.map(m => (
                       <button key={m} onClick={() => updateEntry('mood', m)} className={`text-3xl p-2 rounded-xl transition-all ${entry.mood === m ? 'bg-purple-100 scale-110 ring-2 ring-purple-400' : 'hover:bg-gray-100'}`}>{m}</button>
@@ -4796,11 +4796,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p className="font-medium">{todayPrompt}</p>
                 </div>
                 <div className="bg-white rounded-2xl p-4 border shadow-sm">
-                  <h3 className="font-semibold text-gray-700 mb-3">📝 Journal Entry</h3>
+                  <h3 className="font-semibold text-white mb-3">📝 Journal Entry</h3>
                   <textarea value={entry.text || ''} onChange={(e) => updateEntry('text', e.target.value)} onFocus={handleTextareaFocus} placeholder="Write your thoughts..." rows={8} className="w-full p-3 border-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 resize-none transition-colors" />
                 </div>
                 <div className="bg-white rounded-2xl p-4 border shadow-sm">
-                  <h3 className="font-semibold text-gray-700 mb-3">🙏 Gratitude</h3>
+                  <h3 className="font-semibold text-white mb-3">🙏 Gratitude</h3>
                   <textarea value={entry.gratitude || ''} onChange={(e) => updateEntry('gratitude', e.target.value)} onFocus={handleTextareaFocus} placeholder="What are you grateful for today?" rows={3} className="w-full p-3 border-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 resize-none transition-colors" />
                 </div>
               </div>
@@ -6078,7 +6078,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <button onClick={() => updateSection(section.id, { studyMode: !section.studyMode })} className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${section.studyMode ? 'bg-purple-500 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>
                           {section.studyMode ? '✏️ Edit Mode' : '📖 Study Mode'}
                         </button>
-                        {section.studyMode && <span className="text-sm text-gray-500">Click cards to flip!</span>}
+                        {section.studyMode && <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click cards to flip!</span>}
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {(section.content || []).map(card => (
@@ -6311,18 +6311,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <span className="text-lg">💼</span>
                           </div>
                           <div>
-                            <div className="font-medium text-gray-800">{job.name}</div>
-                            <div className="text-xs text-gray-500">${job.hourlyRate || 0}/hr</div>
+                            <div className="font-medium text-white">{job.name}</div>
+                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>${job.hourlyRate || 0}/hr</div>
                           </div>
                         </div>
                         <div className="flex items-center gap-4 text-right">
                           <div>
                             <div className="font-bold text-gray-800">{hours.toFixed(1)}h</div>
-                            <div className="text-xs text-gray-500">Hours</div>
+                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Hours</div>
                           </div>
                           <div>
                             <div className="font-bold text-green-600">${pay.toFixed(2)}</div>
-                            <div className="text-xs text-gray-500">Pay</div>
+                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Pay</div>
                           </div>
                         </div>
                       </div>
@@ -6619,22 +6619,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Stats Row */}
           <div className="grid grid-cols-3 gap-3 -mt-8">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="text-xs text-gray-500">Monthly Bills</div>
-              <div className="text-xl font-bold text-gray-800">${totalMonthly.toFixed(0)}</div>
+              <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
+              <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="text-xs text-gray-500">Savings Rate</div>
-              <div className="text-xl font-bold text-gray-800">{savingsRate.toFixed(0)}%</div>
+              <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Savings Rate</div>
+              <div className="text-xl font-bold text-white">{savingsRate.toFixed(0)}%</div>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="text-xs text-gray-500">Portfolio</div>
-              <div className="text-xl font-bold text-gray-800">${totalStocks.toLocaleString()}</div>
+              <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Portfolio</div>
+              <div className="text-xl font-bold text-white">${totalStocks.toLocaleString()}</div>
             </div>
           </div>
           
           {/* Today's Summary */}
           <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-            <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
               <span className="text-lg">📊</span> Today's Summary
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -6769,8 +6769,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="flex items-center gap-3 mb-2">
                           <div className={`text-2xl ${isComplete ? '' : 'grayscale opacity-60'}`}>{a.icon}</div>
                           <div className="flex-1">
-                            <div className="font-medium text-gray-800">{a.title}</div>
-                            <div className="text-xs text-gray-500">
+                            <div className="font-medium text-white">{a.title}</div>
+                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>
                               {isComplete ? '🎉 Complete!' : `${a.unit === "$" ? "$" : ""}${a.current.toLocaleString(undefined, {maximumFractionDigits: 0})}${a.unit !== "$" ? a.unit : ""} / ${a.unit === "$" ? "$" : ""}${a.target.toLocaleString()}${a.unit !== "$" ? a.unit : ""}`}
                             </div>
                           </div>
@@ -7017,7 +7017,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Salary Input */}
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold">{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
+              <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
             </div>
             <div className="p-4">
               <div className="flex items-center gap-2">
@@ -7039,7 +7039,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {salaryNum > 0 && (
             <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
+                <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -7073,7 +7073,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Bills List - Personal or Business */}
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className={`p-6 border-b ${billsType === 'business' ? 'bg-purple-50' : ''}`}>
-              <h2 className="text-xl font-semibold">{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
+              <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
             </div>
             <div className="p-4">
               <div className="space-y-2">
@@ -7168,7 +7168,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledSubs.length > 0 && (
             <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">Cost Breakdown</h2>
+                <h2 className="text-xl font-semibold text-white">Cost Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
@@ -7289,8 +7289,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     />
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-xs text-gray-500">$0</span>
-                    <span className="text-xs text-gray-500">${salaryNum.toLocaleString()}</span>
+                    <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>$0</span>
+                    <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>${salaryNum.toLocaleString()}</span>
                   </div>
                 </div>
               )}
@@ -7495,7 +7495,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div className="text-4xl">🦘</div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-xl font-semibold">Muzz's Money Tips</h2>
+                        <h2 className="text-xl font-semibold text-white">Muzz's Money Tips</h2>
                         {tips.length > 1 && (
                           <span className="text-xs text-blue-200">{tipIndex + 1} / {tips.length}</span>
                         )}
@@ -7528,7 +7528,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledSubs.length > 0 && salaryNum > 0 && (
             <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">Bills vs Income</h2>
+                <h2 className="text-xl font-semibold text-white">Bills vs Income</h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -7582,11 +7582,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="flex gap-8">
                     <div className="text-center">
                       <p className="text-3xl font-bold text-red-600">{calcPercentage(totalMonthly, salaryNum)}%</p>
-                      <p className="text-sm text-gray-500">Bills</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Bills</p>
                     </div>
                     <div className="text-center">
                       <p className="text-3xl font-bold text-green-600">{(100 - parseFloat(calcPercentage(totalMonthly, salaryNum))).toFixed(1)}%</p>
-                      <p className="text-sm text-gray-500">Savings</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Savings</p>
                     </div>
                   </div>
                   <div className="flex-1 w-full md:w-auto">
@@ -7616,8 +7616,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="p-4 border-b">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h2 className="text-xl font-semibold">Bills Calendar</h2>
-                      <p className="text-sm text-gray-500">Track when bills are due</p>
+                      <h2 className="text-xl font-semibold text-white">Bills Calendar</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track when bills are due</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -7696,7 +7696,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <h2 className="text-lg font-semibold">
                         {new Date(selectedCalendarDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
                       </h2>
-                      <p className="text-sm text-gray-500">Add or manage bills</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Add or manage bills</p>
                     </div>
                     <button onClick={() => setSelectedCalendarDate(null)} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
                   </div>
@@ -7776,7 +7776,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-4 border-b">
                   <h2 className="text-lg font-semibold">Bills This Month</h2>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
                     Total: ${Object.entries(calendarBills)
                       .filter(([date]) => {
                         const d = new Date(date);
@@ -7838,8 +7838,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Small Goals */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Small Goals</h2>
-                  <p className="text-sm text-gray-500">Short-term savings targets</p>
+                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {billSmallGoals.map((goal, index) => {
@@ -7871,7 +7871,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Target:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -7889,7 +7889,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Saved:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -7937,8 +7937,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Big Goals */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Big Goals</h2>
-                  <p className="text-sm text-gray-500">Long-term financial targets</p>
+                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {billBigGoals.map((goal, index) => {
@@ -7970,7 +7970,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Target:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -7988,7 +7988,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Saved:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -8124,7 +8124,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {/* Row 3: Progress Bar */}
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-gray-500">{Math.round(pct)}% paid off</span>
+                      <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{Math.round(pct)}% paid off</span>
                       <span className="text-xs font-semibold text-red-500">${remaining.toLocaleString()} remaining</span>
                     </div>
                     <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
@@ -8213,22 +8213,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
                       <div className="text-center p-3 bg-red-50 rounded-xl">
-                        <p className="text-xs text-gray-500">Total Debt</p>
+                        <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Total Debt</p>
                         <p className="text-lg font-bold text-red-600">${totalDebt.toLocaleString()}</p>
                       </div>
                       <div className="text-center p-3 bg-green-50 rounded-xl">
-                        <p className="text-xs text-gray-500">Total Paid</p>
+                        <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Total Paid</p>
                         <p className="text-lg font-bold text-green-600">${totalPaid.toLocaleString()}</p>
                       </div>
                       <div className="text-center p-3 bg-orange-50 rounded-xl">
-                        <p className="text-xs text-gray-500">Remaining</p>
+                        <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Remaining</p>
                         <p className="text-lg font-bold text-orange-600">${totalOwed.toLocaleString()}</p>
                       </div>
                     </div>
                     {totalDebt > 0 && (
                       <div>
                         <div className="flex justify-between mb-1">
-                          <span className="text-xs text-gray-500">Overall Progress</span>
+                          <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Overall Progress</span>
                           <span className="text-xs font-semibold">{Math.round(overallPct)}%</span>
                         </div>
                         <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
@@ -8247,8 +8247,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="p-6 border-b bg-green-50">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-xl font-semibold">Personal Debts</h2>
-                        <p className="text-sm text-gray-500">{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
+                        <h2 className="text-xl font-semibold text-white">Personal Debts</h2>
+                        <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
                   </div>
@@ -8268,8 +8268,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="p-6 border-b bg-purple-50">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-xl font-semibold">Business Debts</h2>
-                        <p className="text-sm text-gray-500">{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
+                        <h2 className="text-xl font-semibold text-white">Business Debts</h2>
+                        <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
                   </div>
@@ -8306,7 +8306,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <button onClick={() => setDebtCalcMethod('avalanche')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'avalanche' ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'bg-gray-100 text-gray-600'}`}>🏔️ Avalanche (Highest Rate First)</button>
                   </div>
                   <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                    <p className="text-sm text-gray-600">{debtCalcMethod === 'snowball' ? '❄️ Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : '🏔️ Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
+                    <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{debtCalcMethod === 'snowball' ? '❄️ Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : '🏔️ Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
                   </div>
                   {sortedDebts.length === 0 && (
                     <div className="text-center py-8">
@@ -8330,15 +8330,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="text-xs text-green-500">Min Payments/mo</div>
                         </div>
                       </div>
-                      <h3 className="font-semibold text-gray-700">Pay-off Order ({debtCalcMethod === 'snowball' ? 'Smallest → Largest' : 'Highest Rate → Lowest'})</h3>
+                      <h3 className="font-semibold text-white">Pay-off Order ({debtCalcMethod === 'snowball' ? 'Smallest → Largest' : 'Highest Rate → Lowest'})</h3>
                       {sortedDebts.map((debt, i) => {
                         const remaining = Math.max((parseFloat(debt.total) || 0) - (parseFloat(debt.paid) || 0), 0);
                         return (
                           <div key={debt.id || i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">{i + 1}</div>
                             <div className="flex-1">
-                              <div className="font-medium text-gray-800">{debt.name}</div>
-                              <div className="text-xs text-gray-500">{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
+                              <div className="font-medium text-white">{debt.name}</div>
+                              <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
                             </div>
                             <div className="text-right">
                               <div className="font-bold text-gray-800">${remaining.toLocaleString()}</div>
@@ -8410,8 +8410,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <a href="mailto:Muzz.onl@outlook.com" className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
               <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center"><Mail className="w-5 h-5 text-white" /></div>
               <div>
-                <div className="font-medium text-gray-800">Email Support</div>
-                <div className="text-sm text-gray-500">Muzz.onl@outlook.com</div>
+                <div className="font-medium text-white">Email Support</div>
+                <div className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Muzz.onl@outlook.com</div>
               </div>
             </a>
           </div>
@@ -8462,7 +8462,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Feature Comparison */}
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold">What you get</h2>
+              <h2 className="text-xl font-semibold text-white">What you get</h2>
             </div>
             <div className="divide-y">
               {[
@@ -8527,10 +8527,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
             <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
-              <h2 className="text-xl font-semibold">Subscription</h2>
+              <h2 className="text-xl font-semibold text-white">Subscription</h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active</span></p>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active</span></p>
                   {subscriptionInfo.currentPeriodEnd && (
                     <p className="text-xs text-gray-400">
                       {subscriptionInfo.cancelAtPeriodEnd 
@@ -8562,8 +8562,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
             <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
-              <h2 className="text-xl font-semibold">Subscription</h2>
-              <p className="text-sm text-gray-600">Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
+              <h2 className="text-xl font-semibold text-white">Subscription</h2>
+              <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
               <p className="text-xs text-gray-400">To manage or cancel your subscription, go to your iPhone Settings → Apple ID → Subscriptions.</p>
               <button
                 onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
@@ -8585,7 +8585,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className="p-6 text-center border-b" style={{ background: 'linear-gradient(135deg, #fdf2f8, #fef3c7)' }}>
               <div className="text-3xl mb-2">💛</div>
-              <h2 className="text-xl font-bold text-gray-800">Giving Back</h2>
+              <h2 className="text-xl font-bold text-white">Giving Back</h2>
               <p className="text-sm text-gray-500 mt-1">$3 from every Elite subscription goes directly to charity</p>
             </div>
             <div className="divide-y">
@@ -8799,8 +8799,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Assets Input */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Assets</h2>
-                  <p className="text-sm text-gray-500">Property, super, cash, vehicles, etc.</p>
+                  <h2 className="text-xl font-semibold text-white">Assets</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Property, super, cash, vehicles, etc.</p>
                 </div>
 
             {/* Assets Cards */}
@@ -8886,8 +8886,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledAssets.length > 0 && (
             <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">Breakdown by Type</h2>
-                <p className="text-sm text-gray-500">Click column headers to sort</p>
+                <h2 className="text-xl font-semibold text-white">Breakdown by Type</h2>
+                <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -8968,7 +8968,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledAssets.length > 0 && (
             <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
               <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">Assets Breakdown</h2>
+                <h2 className="text-xl font-semibold text-white">Assets Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
@@ -9076,8 +9076,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Small Goals */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Small Goals</h2>
-                  <p className="text-sm text-gray-500">Short-term savings targets</p>
+                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {smallGoals.map((goal, index) => {
@@ -9109,7 +9109,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Target:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -9127,7 +9127,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Saved:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -9175,8 +9175,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Big Goals */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Big Goals</h2>
-                  <p className="text-sm text-gray-500">Long-term wealth targets</p>
+                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term wealth targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {bigGoals.map((goal, index) => {
@@ -9208,7 +9208,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Target:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -9226,7 +9226,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Saved:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -9289,7 +9289,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* The 3 Asset Categories */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📚 The 3 Asset Categories (Buffett's Framework)</h2>
+                  <h2 className="text-xl font-semibold text-white">📚 The 3 Asset Categories (Buffett's Framework)</h2>
                   <p className="text-sm text-gray-500 mt-1">Warren Buffett explains that all investments fall into one of three buckets</p>
                 </div>
                 <div className="p-6 space-y-6">
@@ -10131,8 +10131,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Stocks Input */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Stocks & ETFs</h2>
-                  <p className="text-sm text-gray-500">Individual stocks, ETFs, index funds</p>
+                  <h2 className="text-xl font-semibold text-white">Stocks & ETFs</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Individual stocks, ETFs, index funds</p>
                 </div>
 
                 {/* Stocks Cards */}
@@ -10478,7 +10478,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {filledStocks.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b">
-                    <h2 className="text-xl font-semibold">Portfolio by Name</h2>
+                    <h2 className="text-xl font-semibold text-white">Portfolio by Name</h2>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
@@ -10545,7 +10545,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               className="w-3 h-3 rounded-full flex-shrink-0" 
                               style={{ backgroundColor: colors[i % colors.length] }}
                             />
-                            <span className="text-sm text-gray-600">{stock.name}</span>
+                            <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{stock.name}</span>
                             <span className="text-sm font-medium">{((stock.currentValue / totalStocksValue) * 100).toFixed(1)}%</span>
                           </div>
                         ));
@@ -10559,7 +10559,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {stocksByIndustry.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b">
-                    <h2 className="text-xl font-semibold">Portfolio by Industry</h2>
+                    <h2 className="text-xl font-semibold text-white">Portfolio by Industry</h2>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
@@ -10624,7 +10624,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               className="w-3 h-3 rounded-full flex-shrink-0" 
                               style={{ backgroundColor: colors[i % colors.length] }}
                             />
-                            <span className="text-sm text-gray-600">{ind.name}</span>
+                            <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{ind.name}</span>
                             <span className="text-sm font-medium">{((ind.total / totalStocksValue) * 100).toFixed(1)}%</span>
                           </div>
                         ));
@@ -10638,8 +10638,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {stocksByIndustry.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b">
-                    <h2 className="text-xl font-semibold">Portfolio by Industry</h2>
-                    <p className="text-sm text-gray-500">Click column headers to sort</p>
+                    <h2 className="text-xl font-semibold text-white">Portfolio by Industry</h2>
+                    <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -10737,7 +10737,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Future Holdings Research - Same format as Current */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Future Holdings Research</h2>
+                  <h2 className="text-xl font-semibold text-white">Future Holdings Research</h2>
                   <p className="text-sm text-gray-500 mt-1">Research stocks you're considering for your portfolio</p>
                 </div>
                 <div className="p-4 space-y-3">
@@ -10968,8 +10968,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                     <div className="p-6 border-b">
-                      <h2 className="text-xl font-semibold">📋 Future Portfolio Summary</h2>
-                      <p className="text-sm text-gray-500">Click column headers to sort • Your planned investments at a glance</p>
+                      <h2 className="text-xl font-semibold text-white">📋 Future Portfolio Summary</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort • Your planned investments at a glance</p>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
@@ -11078,8 +11078,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                     <div className="p-6 border-b">
-                      <h2 className="text-xl font-semibold">⚖️ Portfolio Company Weighting</h2>
-                      <p className="text-sm text-gray-500">Weight of each company in your future portfolio</p>
+                      <h2 className="text-xl font-semibold text-white">⚖️ Portfolio Company Weighting</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Weight of each company in your future portfolio</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       <svg width="200" height="200" viewBox="0 0 200 200">
@@ -11111,7 +11111,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1 font-medium">{stock.ticker}</span>
-                              <span className="text-sm text-gray-500">${stock.plannedAmount.toLocaleString()}</span>
+                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>${stock.plannedAmount.toLocaleString()}</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
@@ -11147,8 +11147,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                     <div className="p-6 border-b">
-                      <h2 className="text-xl font-semibold">📊 Industry Allocation</h2>
-                      <p className="text-sm text-gray-500">Breakdown of your future portfolio by industry</p>
+                      <h2 className="text-xl font-semibold text-white">📊 Industry Allocation</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Breakdown of your future portfolio by industry</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       <svg width="200" height="200" viewBox="0 0 200 200">
@@ -11180,7 +11180,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span className="text-sm text-gray-500">{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
+                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
@@ -11267,8 +11267,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                     <div className="p-6 border-b">
-                      <h2 className="text-xl font-semibold">📊 Research by Industry</h2>
-                      <p className="text-sm text-gray-500">Your research picks broken down by sector</p>
+                      <h2 className="text-xl font-semibold text-white">📊 Research by Industry</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Your research picks broken down by sector</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       {/* Pie Chart */}
@@ -11302,7 +11302,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span className="text-sm text-gray-500">{ind.count} picks</span>
+                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{ind.count} picks</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
@@ -11317,8 +11317,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
                   <div className="p-6 border-b">
-                    <h2 className="text-xl font-semibold">📋 Master Research Summary</h2>
-                    <p className="text-sm text-gray-500">Click column headers to sort • All your research picks at a glance</p>
+                    <h2 className="text-xl font-semibold text-white">📋 Master Research Summary</h2>
+                    <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort • All your research picks at a glance</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -11447,7 +11447,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold">Holdings Research</h2>
+                    <h2 className="text-xl font-semibold text-white">Holdings Research</h2>
                   </div>
                   <div className="flex items-center gap-2">
                     {showResearchColInput ? (
@@ -11671,7 +11671,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold">Company Economics</h2>
+                    <h2 className="text-xl font-semibold text-white">Company Economics</h2>
                   </div>
                   <div className="flex items-center gap-2">
                     {showEconomicsColInput ? (
@@ -11804,7 +11804,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold">Biggest Risks</h2>
+                    <h2 className="text-xl font-semibold text-white">Biggest Risks</h2>
                   </div>
                   <div className="flex items-center gap-2">
                     {showRisksColInput ? (
@@ -11936,8 +11936,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Small Goals */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Small Goals</h2>
-                  <p className="text-sm text-gray-500">Short-term investment targets</p>
+                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term investment targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {investmentSmallGoals.map((goal, index) => {
@@ -11969,7 +11969,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Target:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -11987,7 +11987,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Saved:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -12035,8 +12035,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Big Goals */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Big Goals</h2>
-                  <p className="text-sm text-gray-500">Long-term investment targets</p>
+                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term investment targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {investmentBigGoals.map((goal, index) => {
@@ -12068,7 +12068,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div className="flex items-center gap-4 pl-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Target:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -12086,7 +12086,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Saved:</span>
+                            <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span className="text-gray-400">$</span>
                             <input
                               type="text"
@@ -12215,8 +12215,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">Declined Companies</h2>
-                  <p className="text-sm text-gray-500">Track companies you've passed on and why</p>
+                  <h2 className="text-xl font-semibold text-white">Declined Companies</h2>
+                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track companies you've passed on and why</p>
                 </div>
 
                 <div className="p-4 space-y-3">
@@ -12319,7 +12319,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <>
                     <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                       <div className="p-6 border-b">
-                        <h2 className="text-xl font-semibold">Declined by Industry</h2>
+                        <h2 className="text-xl font-semibold text-white">Declined by Industry</h2>
                       </div>
                       <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                         {/* Pie Chart */}
@@ -12384,7 +12384,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   className="w-3 h-3 rounded-full flex-shrink-0" 
                                   style={{ backgroundColor: colors[i % colors.length] }}
                                 />
-                                <span className="text-sm text-gray-600">{ind.name}</span>
+                                <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{ind.name}</span>
                                 <span className="text-sm font-medium">{((ind.count / totalDeclined) * 100).toFixed(1)}%</span>
                               </div>
                             ));
@@ -12396,7 +12396,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {/* Breakdown Table */}
                     <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                       <div className="p-6 border-b">
-                        <h2 className="text-xl font-semibold">Declined Companies Breakdown</h2>
+                        <h2 className="text-xl font-semibold text-white">Declined Companies Breakdown</h2>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
@@ -12476,7 +12476,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Equity Investment Breakdown Guide */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📈 Equity Investment Breakdown Guide</h2>
+                  <h2 className="text-xl font-semibold text-white">📈 Equity Investment Breakdown Guide</h2>
                   <p className="text-sm text-gray-500 mt-1">Key questions to ask when analyzing a stock</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -12624,7 +12624,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Yourself vs Consensus & Yourself */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">🧠 Self-Assessment Questions</h2>
+                  <h2 className="text-xl font-semibold text-white">🧠 Self-Assessment Questions</h2>
                   <p className="text-sm text-gray-500 mt-1">Check yourself before you wreck yourself</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -12659,7 +12659,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* 10 Don'ts & 15 Do's */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📖 Philip Fisher's Rules</h2>
+                  <h2 className="text-xl font-semibold text-white">📖 Philip Fisher's Rules</h2>
                   <p className="text-sm text-gray-500 mt-1">From "Common Stocks and Uncommon Profits"</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -12711,7 +12711,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Durable Competitive Advantages */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">🏰 Types of Durable Competitive Advantages</h2>
+                  <h2 className="text-xl font-semibold text-white">🏰 Types of Durable Competitive Advantages</h2>
                   <p className="text-sm text-gray-500 mt-1">Buffett classifies great businesses into three categories</p>
                 </div>
                 <div className="p-6">
@@ -12748,7 +12748,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Beer & Foam Analogy */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">🍺 The Beer & Foam Analogy</h2>
+                  <h2 className="text-xl font-semibold text-white">🍺 The Beer & Foam Analogy</h2>
                   <p className="text-sm text-gray-500 mt-1">Understanding hype vs real value in markets</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -12790,7 +12790,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                   <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
                     <h4 className="font-bold text-orange-800 mb-2">⚠️ The Problem</h4>
-                    <p className="text-sm text-gray-700">When you pour a beer, sometimes you get mostly foam. Markets work the same way — during bull runs and hype cycles, prices can be 90% foam and 10% beer. When the foam settles (and it always does), you're left holding a glass that's mostly empty.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>When you pour a beer, sometimes you get mostly foam. Markets work the same way — during bull runs and hype cycles, prices can be 90% foam and 10% beer. When the foam settles (and it always does), you're left holding a glass that's mostly empty.</p>
                   </div>
 
                   <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
@@ -12829,7 +12829,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Book Recommendations */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📚 Recommended Reading List</h2>
+                  <h2 className="text-xl font-semibold text-white">📚 Recommended Reading List</h2>
                   <p className="text-sm text-gray-500 mt-1">Books to level up your investing game</p>
                 </div>
                 <div className="p-6 space-y-6">
@@ -12906,7 +12906,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Core Ratios */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📊 Core Ratios & Metrics</h2>
+                  <h2 className="text-xl font-semibold text-white">📊 Core Ratios & Metrics</h2>
                   <p className="text-sm text-gray-500 mt-1">The fundamental numbers you need to track</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -12967,7 +12967,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Trend Checks */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📉 Breakdown Metrics – Trend Checks</h2>
+                  <h2 className="text-xl font-semibold text-white">📉 Breakdown Metrics – Trend Checks</h2>
                   <p className="text-sm text-gray-500 mt-1">Track these over 10-15 years to spot red flags or strengths</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -13039,7 +13039,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Income Statement Deep Dive */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📄 What to Look for in the Income Statement</h2>
+                  <h2 className="text-xl font-semibold text-white">📄 What to Look for in the Income Statement</h2>
                 </div>
                 <div className="p-6 space-y-4">
 
@@ -13103,7 +13103,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* EPS Deep Dive */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📈 EPS (Earnings Per Share) Analysis</h2>
+                  <h2 className="text-xl font-semibold text-white">📈 EPS (Earnings Per Share) Analysis</h2>
                   <p className="text-sm text-gray-500 mt-1">EPS = Net Income / Shares Outstanding</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -13144,7 +13144,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Balance Sheet Deep Dive */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">📋 What to Look for in the Balance Sheet</h2>
+                  <h2 className="text-xl font-semibold text-white">📋 What to Look for in the Balance Sheet</h2>
                 </div>
                 <div className="p-6 space-y-4">
 
@@ -13218,7 +13218,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Cash Flow Deep Dive */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">💸 Cash Flow Statement Insights</h2>
+                  <h2 className="text-xl font-semibold text-white">💸 Cash Flow Statement Insights</h2>
                 </div>
                 <div className="p-6 space-y-4">
 
@@ -13231,8 +13231,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ul>
                     <div className="mt-3 p-3 bg-white rounded-lg">
                       <p className="text-sm font-semibold text-indigo-800 mb-2">Buffett's Insight:</p>
-                      <p className="text-sm text-gray-700">Great businesses: Coca-Cola uses 19% of earnings on CapEx, Moody's only 5%</p>
-                      <p className="text-sm text-gray-700">Weak businesses: GM or Goodyear often use &gt;100% of earnings for CapEx (funded by debt)</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Great businesses: Coca-Cola uses 19% of earnings on CapEx, Moody's only 5%</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Weak businesses: GM or Goodyear often use &gt;100% of earnings for CapEx (funded by debt)</p>
                     </div>
                     <div className="mt-3 p-2 bg-green-100 rounded-lg">
                       <p className="text-sm text-green-800"><span className="font-semibold">Rule of Thumb:</span> &lt;50% of earnings on CapEx = worth considering. &lt;25% = likely has strong competitive advantage.</p>
@@ -13254,7 +13254,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* When to Sell */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold">🚪 When You May Consider Selling</h2>
+                  <h2 className="text-xl font-semibold text-white">🚪 When You May Consider Selling</h2>
                 </div>
                 <div className="p-6">
                   <div className="grid md:grid-cols-3 gap-4">
@@ -13262,19 +13262,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
                       <div className="text-2xl mb-2">🎯</div>
                       <h3 className="text-md font-bold text-blue-800 mb-2">1. Better Opportunity</h3>
-                      <p className="text-sm text-gray-600">Sell only if you find a better company at a better price.</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Sell only if you find a better company at a better price.</p>
                     </div>
 
                     <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
                       <div className="text-2xl mb-2">📉</div>
                       <h3 className="text-md font-bold text-orange-800 mb-2">2. Competitive Advantage Fades</h3>
-                      <p className="text-sm text-gray-600">Sell if the company is losing its edge (e.g., newspapers vs internet).</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Sell if the company is losing its edge (e.g., newspapers vs internet).</p>
                     </div>
 
                     <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
                       <div className="text-2xl mb-2">🎈</div>
                       <h3 className="text-md font-bold text-red-800 mb-2">3. Market Euphoria</h3>
-                      <p className="text-sm text-gray-600">If price goes way above intrinsic value (e.g., P/E &gt; 40), consider selling.</p>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>If price goes way above intrinsic value (e.g., P/E &gt; 40), consider selling.</p>
                     </div>
 
                   </div>
@@ -13304,7 +13304,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Buffett's Definition of Investing */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <h2 className="text-xl font-semibold">🧠 Buffett's Definition of Investing (2011)</h2>
+                  <h2 className="text-xl font-semibold text-white">🧠 Buffett's Definition of Investing (2011)</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
@@ -13312,7 +13312,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
                     <h3 className="text-md font-bold text-red-800 mb-2">Buffett's REAL Definition of Risk</h3>
-                    <p className="text-sm text-gray-700">Not volatility. Not beta.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Not volatility. Not beta.</p>
                     <p className="text-sm text-gray-700 font-semibold mt-1">Risk = The chance your investment won't protect (or grow) your purchasing power over time.</p>
                   </div>
                 </div>
@@ -13321,7 +13321,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Buffett's Will Instructions */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                  <h2 className="text-xl font-semibold">📜 Buffett's Personal Will Instructions (2013)</h2>
+                  <h2 className="text-xl font-semibold text-white">📜 Buffett's Personal Will Instructions (2013)</h2>
                 </div>
                 <div className="p-6">
                   <p className="text-sm text-gray-600 mb-4">For his wife's trust, Buffett instructed:</p>
@@ -13342,20 +13342,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* S&P 500 Performance 1964-2014 */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
-                  <h2 className="text-xl font-semibold">📊 The Tailwind: S&P 500 vs the Dollar (1964–2014)</h2>
+                  <h2 className="text-xl font-semibold text-white">📊 The Tailwind: S&P 500 vs the Dollar (1964–2014)</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
                       <h3 className="text-md font-bold text-green-800 mb-2">S&P 500 Performance</h3>
-                      <p className="text-sm text-gray-700">Rose from <strong>84 → 2,059</strong></p>
-                      <p className="text-sm text-gray-700">Including reinvested dividends:</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Rose from <strong>84 → 2,059</strong></p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Including reinvested dividends:</p>
                       <p className="text-2xl font-bold text-green-600 mt-1">11,196% total return</p>
                     </div>
                     <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
                       <h3 className="text-md font-bold text-red-800 mb-2">Dollar Purchasing Power</h3>
-                      <p className="text-sm text-gray-700">Fell <strong>87%</strong> over same period</p>
-                      <p className="text-sm text-gray-700">What cost $0.13 in 1965 costs $1.00 in 2014</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Fell <strong>87%</strong> over same period</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>What cost $0.13 in 1965 costs $1.00 in 2014</p>
                     </div>
                   </div>
                   <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
@@ -13367,17 +13367,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Voting Machine vs Weighing Machine */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-purple-50 to-violet-50">
-                  <h2 className="text-xl font-semibold">⚖️ Voting Machine vs Weighing Machine (2017)</h2>
+                  <h2 className="text-xl font-semibold text-white">⚖️ Voting Machine vs Weighing Machine (2017)</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
                       <h3 className="text-md font-bold text-red-800 mb-2">Short Term</h3>
-                      <p className="text-sm text-gray-700">Market is a <strong>voting machine</strong> (popularity contest). Stock prices surge and swoon seemingly unconnected to underlying value.</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Market is a <strong>voting machine</strong> (popularity contest). Stock prices surge and swoon seemingly unconnected to underlying value.</p>
                     </div>
                     <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
                       <h3 className="text-md font-bold text-green-800 mb-2">Long Term</h3>
-                      <p className="text-sm text-gray-700">Market is a <strong>weighing machine</strong> (business reality). Retained earnings + ROE + moat + management shows up in price.</p>
+                      <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Market is a <strong>weighing machine</strong> (business reality). Retained earnings + ROE + moat + management shows up in price.</p>
                     </div>
                   </div>
                 </div>
@@ -13386,7 +13386,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Berkshire Drawdowns */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
-                  <h2 className="text-xl font-semibold">📉 Berkshire's Major Drawdowns — Price Crashes Are Normal</h2>
+                  <h2 className="text-xl font-semibold text-white">📉 Berkshire's Major Drawdowns — Price Crashes Are Normal</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="overflow-x-auto">
@@ -13423,16 +13423,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Never Use Debt */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-red-50 to-pink-50">
-                  <h2 className="text-xl font-semibold">🚫 The Strongest Argument Against Using Debt in Stocks</h2>
+                  <h2 className="text-xl font-semibold text-white">🚫 The Strongest Argument Against Using Debt in Stocks</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
                     <p className="text-sm text-gray-700 italic font-medium">"This table offers the strongest argument I can muster against ever using borrowed money to own stocks."</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-700">• You can't predict how far or how fast stocks can fall short-term</p>
-                    <p className="text-sm text-gray-700">• Even small borrowings can wreck your decision-making — headlines + crashing values = fear = panic selling</p>
-                    <p className="text-sm text-gray-700">• An unsettled mind makes bad decisions at the worst possible time</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• You can't predict how far or how fast stocks can fall short-term</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Even small borrowings can wreck your decision-making — headlines + crashing values = fear = panic selling</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• An unsettled mind makes bad decisions at the worst possible time</p>
                   </div>
                   <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
                     <p className="text-sm text-gray-700 italic">"The light can at any time go from green to red without pausing at yellow."</p>
@@ -13444,16 +13444,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Crashes as Opportunities */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                  <h2 className="text-xl font-semibold">💎 Crashes as Opportunities (If You're Not in Debt)</h2>
+                  <h2 className="text-xl font-semibold text-white">💎 Crashes as Opportunities (If You're Not in Debt)</h2>
                 </div>
                 <div className="p-6 space-y-4">
-                  <p className="text-sm text-gray-700">For the unleveraged investor, big drops are "extraordinary opportunities" — a chance to buy great businesses at bargain prices.</p>
+                  <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>For the unleveraged investor, big drops are "extraordinary opportunities" — a chance to buy great businesses at bargain prices.</p>
                   <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
                     <p className="text-sm text-gray-700 font-medium mb-2">The mindset you need (from Kipling's "If"):</p>
-                    <p className="text-sm text-gray-700">• Keep your head while others lose theirs</p>
-                    <p className="text-sm text-gray-700">• Be patient and not worn out by waiting</p>
-                    <p className="text-sm text-gray-700">• Think clearly but don't over-obsess</p>
-                    <p className="text-sm text-gray-700">• Trust yourself when others doubt you</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Keep your head while others lose theirs</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Be patient and not worn out by waiting</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Think clearly but don't over-obsess</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Trust yourself when others doubt you</p>
                   </div>
                 </div>
               </div>
@@ -13461,10 +13461,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* The Bet */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
-                  <h2 className="text-xl font-semibold">🏆 The Bet: S&P 500 vs Hedge Funds (2007–2017)</h2>
+                  <h2 className="text-xl font-semibold text-white">🏆 The Bet: S&P 500 vs Hedge Funds (2007–2017)</h2>
                 </div>
                 <div className="p-6 space-y-4">
-                  <p className="text-sm text-gray-700">Buffett bet that a zero-fee S&P 500 index fund would beat five fund-of-funds (each holding 200+ hedge funds) over 10 years.</p>
+                  <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Buffett bet that a zero-fee S&P 500 index fund would beat five fund-of-funds (each holding 200+ hedge funds) over 10 years.</p>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead><tr className="border-b-2 bg-gray-50">
@@ -13500,23 +13500,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Why Hedge Funds Fail */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
-                  <h2 className="text-xl font-semibold">❌ Why Almost All Hedge Funds Fail Long-Term</h2>
+                  <h2 className="text-xl font-semibold text-white">❌ Why Almost All Hedge Funds Fail Long-Term</h2>
                 </div>
                 <div className="p-6 space-y-3">
                   <div className="bg-red-50 rounded-xl p-3 border border-red-200">
-                    <p className="text-sm text-gray-700"><strong>1. Size:</strong> Good performance attracts money, size explodes — big money is harder to compound.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>1. Size:</strong> Good performance attracts money, size explodes — big money is harder to compound.</p>
                   </div>
                   <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
-                    <p className="text-sm text-gray-700"><strong>2. Luck mistaken for skill:</strong> A manager could be lucky for 3, 5, even 10 years.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>2. Luck mistaken for skill:</strong> A manager could be lucky for 3, 5, even 10 years.</p>
                   </div>
                   <div className="bg-orange-50 rounded-xl p-3 border border-orange-200">
-                    <p className="text-sm text-gray-700"><strong>3. Fee incentive:</strong> More AUM = more fees, so managers keep growing, lowering future returns.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>3. Fee incentive:</strong> More AUM = more fees, so managers keep growing, lowering future returns.</p>
                   </div>
                   <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200 mt-2">
                     <p className="text-sm text-gray-700 italic font-medium">"What is easy with millions becomes impossible with billions."</p>
                   </div>
                   <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
-                    <p className="text-sm text-gray-700"><strong>Why active investors lose:</strong> Active investors, in aggregate, ARE the market. Passive investors match the market. Active investors have far higher costs. Therefore passive investors MUST win. It's simple arithmetic, not theory.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>Why active investors lose:</strong> Active investors, in aggregate, ARE the market. Passive investors match the market. Active investors have far higher costs. Therefore passive investors MUST win. It's simple arithmetic, not theory.</p>
                   </div>
                 </div>
               </div>
@@ -13524,10 +13524,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* The American Tailwind */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <h2 className="text-xl font-semibold">🇺🇸 The American Tailwind (2018)</h2>
+                  <h2 className="text-xl font-semibold text-white">🇺🇸 The American Tailwind (2018)</h2>
                 </div>
                 <div className="p-6 space-y-4">
-                  <p className="text-sm text-gray-700">Buffett made his first investment on March 11, 1942 at age 11 — $114.75 for 3 shares of Cities Service. He traces what happened across 77 years.</p>
+                  <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Buffett made his first investment on March 11, 1942 at age 11 — $114.75 for 3 shares of Cities Service. He traces what happened across 77 years.</p>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead><tr className="border-b-2 bg-gray-50">
@@ -13554,7 +13554,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <p className="text-sm text-gray-700 mt-2">Gold gained less than 1% of what American business produced over the same period.</p>
                   </div>
                   <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                    <p className="text-sm text-gray-700">America prospered under 7 Republican and 7 Democratic presidents from 1942–2019. Despite high inflation, 21% prime rates, wars, housing collapse, financial panic, and presidential resignation — U.S. household wealth reached $108 trillion.</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>America prospered under 7 Republican and 7 Democratic presidents from 1942–2019. Despite high inflation, 21% prime rates, wars, housing collapse, financial panic, and presidential resignation — U.S. household wealth reached $108 trillion.</p>
                   </div>
                 </div>
               </div>
@@ -13562,16 +13562,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Buffett's Recommendation */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                  <h2 className="text-xl font-semibold">✅ Buffett's Recommendation (60 Years Straight)</h2>
+                  <h2 className="text-xl font-semibold text-white">✅ Buffett's Recommendation (60 Years Straight)</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="bg-green-50 rounded-2xl p-5 border-2 border-green-300 text-center">
                     <p className="text-lg font-bold text-green-700">"Buy a low-cost S&P 500 index fund."</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-700">• Middle-class people follow the advice</p>
-                    <p className="text-sm text-gray-700">• Rich people almost NEVER follow it</p>
-                    <p className="text-sm text-gray-700">• Institutions never follow it</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Middle-class people follow the advice</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Rich people almost NEVER follow it</p>
+                    <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Institutions never follow it</p>
                     <p className="text-sm text-gray-500 mt-2">Because they want special treatment, complex solutions, fancy "styles," and Wall Street relationships — even though an index fund is almost always the best answer.</p>
                   </div>
                   <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
@@ -13584,7 +13584,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Ultimate Lessons */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-orange-50">
-                  <h2 className="text-xl font-semibold">⭐ Ultimate Lessons</h2>
+                  <h2 className="text-xl font-semibold text-white">⭐ Ultimate Lessons</h2>
                 </div>
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -13610,7 +13610,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Classic Quotes */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b bg-gradient-to-r from-slate-50 to-gray-100">
-                  <h2 className="text-xl font-semibold">💬 Classic Buffett Lines</h2>
+                  <h2 className="text-xl font-semibold text-white">💬 Classic Buffett Lines</h2>
                 </div>
                 <div className="p-6 space-y-3">
                   {[
@@ -13691,7 +13691,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   {compResult.yearData.length > 0 && (
                     <div>
-                      <h3 className="font-semibold text-gray-700 mb-3">Growth Over Time</h3>
+                      <h3 className="font-semibold text-white mb-3">Growth Over Time</h3>
                       <div className="flex items-end gap-1 h-40 bg-gray-50 rounded-xl p-3">
                         {compResult.yearData.map((d, i) => {
                           const maxVal = compResult.yearData[compResult.yearData.length - 1].balance || 1;
@@ -13955,7 +13955,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
               <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
               {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
-              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium text-gray-600">Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
+              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium" style={{color:"rgba(148,163,184,0.9)"}}>Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
               {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-start gap-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
               {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-center gap-3 opacity-60 mb-2" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
             </div>
@@ -14002,7 +14002,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {bucketList.length > 0 && (
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">Progress</span>
+                <span className="text-sm font-medium" style={{color:"rgba(148,163,184,0.9)"}}>Progress</span>
                 <span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span>
               </div>
               <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
