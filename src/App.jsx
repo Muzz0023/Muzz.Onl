@@ -2342,6 +2342,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const menuSections = [
       { title: 'LIFE', items: [
         { id: 'home', label: 'Dashboard', icon: Home },
+        { id: 'commandboard', label: 'Command Board', icon: Star },
         { id: 'habits', label: 'Habits', icon: Flame },
         { id: 'tasks', label: 'Tasks', icon: CheckCircle2 },
         { id: 'countdowns', label: 'Countdowns', icon: Calendar },
@@ -14461,49 +14462,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       {/* ── BOTTOM NAVIGATION BAR ── */}
       <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:9990,background:"rgba(2,8,20,0.98)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.2)"}}>
         <div className="flex justify-around items-center px-1 py-2">
-          {/* Left tabs */}
           {[
             {id:'home', label:'Home', Icon:Home},
             {id:'tasks', label:'Tasks', Icon:CheckCircle2},
-          ].map(({id, label, Icon}) => {
-            const active = activeView === id;
-            return (
-              <button key={id} onClick={() => setActiveView(id)}
-                className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all"
-                style={{minWidth:'56px'}}>
-                <div className="relative flex items-center justify-center" style={{width:'28px',height:'28px',borderRadius:'8px',background: active ? 'rgba(0,200,255,0.12)' : 'transparent',transition:'all 0.2s'}}>
-                  <Icon style={{width:'16px',height:'16px',color: active ? '#00c8ff' : 'rgba(148,163,184,0.6)',transition:'color 0.2s'}} />
-                  {active && <div style={{position:'absolute',bottom:'-6px',left:'50%',transform:'translateX(-50%)',width:'4px',height:'4px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 10px #00c8ff, 0 0 20px rgba(0,200,255,0.5)'}} className='nav-active-glow' />}
-                </div>
-                <span style={{fontSize:'9px',fontWeight:500,color: active ? '#00c8ff' : 'rgba(148,163,184,0.55)',letterSpacing:'0.3px',marginTop:'4px'}}>{label}</span>
-              </button>
-            );
-          })}
-
-          {/* Centre Board button - prominent */}
-          <button onClick={() => setActiveView('commandboard')}
-            className="flex flex-col items-center gap-0.5 transition-all hover:scale-110"
-            style={{marginTop:'-16px'}}>
-            <div className="flex items-center justify-center rounded-2xl" style={{
-              width:'52px', height:'52px',
-              background: activeView === 'commandboard' ? 'linear-gradient(135deg,#00c8ff,#0070a0)' : 'linear-gradient(135deg,rgba(0,200,255,0.3),rgba(0,100,160,0.3))',
-              border: '2px solid rgba(0,200,255,0.5)',
-              boxShadow: activeView === 'commandboard' ? '0 0 20px rgba(0,200,255,0.6), 0 0 40px rgba(0,200,255,0.3)' : '0 0 12px rgba(0,200,255,0.2)',
-            }}>
-              <Star style={{width:'22px',height:'22px',color:'white'}} />
-            </div>
-            <span style={{fontSize:'9px',fontWeight:600,color: activeView === 'commandboard' ? '#00c8ff' : 'rgba(0,200,255,0.6)',letterSpacing:'0.5px',marginTop:'2px'}}>BOARD</span>
-          </button>
-
-          {/* Right tabs */}
-          {[
             {id:'varied', label:'Finance', Icon:DollarSign, eliteOnly:true},
+            {id:'gym', label:'Health', Icon:Dumbbell, eliteOnly:true},
             {id:'upgrade', label:'Elite', Icon:Award},
           ].map(({id, label, Icon, eliteOnly}) => {
             const active = activeView === id || (id==='varied' && ['varied','assets','investments','work','bills'].includes(activeView));
             const locked = eliteOnly && !isElite;
             return (
-              <button key={id} onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(id);} }}
+              <button key={id}
+                onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(id);} }}
                 className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all"
                 style={{minWidth:'56px'}}>
                 <div className="relative flex items-center justify-center" style={{width:'28px',height:'28px',borderRadius:'8px',background: active ? 'rgba(0,200,255,0.12)' : 'transparent',transition:'all 0.2s'}}>
