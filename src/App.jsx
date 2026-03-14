@@ -14459,7 +14459,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       />
 
       {/* ── BOTTOM NAVIGATION BAR ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40" style={{background:"rgba(2,8,20,0.96)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.12)",paddingBottom:"env(safe-area-inset-bottom)"}}>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:9990,background:"rgba(2,8,20,0.98)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.2)"}}>
         <div className="flex justify-around items-center px-1 py-2">
           {/* Left tabs */}
           {[
