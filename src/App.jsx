@@ -2189,14 +2189,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   const scrollPosRef = useRef(0);
   useEffect(() => {
     if (sidebarOpen) {
+      // Save current scroll position
+      scrollPosRef.current = window.scrollY;
+      // Lock body in place at current position
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPosRef.current}px`;
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-      // Reset scroll position of the menu content
+      // Reset menu scroll to top
       const menuContent = document.getElementById('muzz-menu-scroll');
       if (menuContent) menuContent.scrollTop = 0;
     } else {
+      // Restore scroll position
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, scrollPosRef.current);
     }
     return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
     };
   }, [sidebarOpen]);
