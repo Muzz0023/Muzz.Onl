@@ -2397,12 +2397,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Reminders</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Reminders</h1>
               </div>
             </div>
           </div>
@@ -3049,12 +3049,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Diet Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Diet Management</h1>
               </div>
             </div>
           </div>
@@ -4031,12 +4031,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Health Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Health Management</h1>
               </div>
             </div>
           </div>
@@ -4912,10 +4912,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
         
         {/* Header */}
-        <div className={`bg-gradient-to-r ${getGradient()} text-white`}>
-          <div className="max-w-6xl mx-auto px-6 py-6">
-            <div className="pl-12">
-              <button onClick={() => setActiveView('home')} className="text-white/80 hover:text-white mb-4 font-medium">← Back</button>
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-6xl mx-auto">
+            <div>
+              <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
               <div className="flex items-center gap-4">
                 <input
                   type="text"
@@ -6182,12 +6182,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Work & Timesheet</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Work & Timesheet</h1>
               </div>
             </div>
           </div>
@@ -6876,12 +6876,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Bills Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Bills Management</h1>
               </div>
             </div>
           </div>
@@ -8645,12 +8645,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Assets Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Assets Management</h1>
               </div>
             </div>
             {/* Sub-tabs */}
@@ -9839,12 +9839,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        <div className="bg-white border-b">
-          <div className="max-w-5xl mx-auto px-6 py-6">
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
-              <div className="pl-12">
+              <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold">Investments Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Investments Management</h1>
               </div>
             </div>
             {/* Sub-tabs - scrollable on mobile */}
