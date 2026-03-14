@@ -13886,6 +13886,63 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
+  // STATS & INSIGHTS VIEW
+  if (activeView === 'statsinsights') {
+    const today = new Date().toISOString().split('T')[0];
+    const thisMonth = today.slice(0, 7);
+    const totalHabitDays = Object.keys(habitLog || {}).length;
+    const thisMonthHabits = Object.keys(habitLog || {}).filter(k => k.includes(thisMonth)).length;
+    const completedTasks = Array.isArray(dailyTasks) ? dailyTasks.filter(t => t.completed).length : 0;
+    const totalTasks = Array.isArray(dailyTasks) ? dailyTasks.length : 0;
+    const sleepEntries = Object.values(sleepData || {}).filter(s => s.hoursSlept);
+    const avgSleep = sleepEntries.length > 0 ? (sleepEntries.reduce((s,e) => s + parseFloat(e.hoursSlept||0), 0) / sleepEntries.length).toFixed(1) : '—';
+    const moodEntries = Object.values(mentalHealthData || {}).filter(m => m.mood);
+    const avgMood = moodEntries.length > 0 ? (moodEntries.reduce((s,e) => s + (e.mood||0), 0) / moodEntries.length).toFixed(1) : '—';
+    const moodEmojis = { 1:'😔', 2:'😕', 3:'😐', 4:'🙂', 5:'😄' };
+    const savingsRateNum = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100).toFixed(0) : 0;
+    const statCards = [
+      { label:'NET WORTH', value:`$${netWorth.toLocaleString()}`, sub:'total assets', color:'#00c8ff', icon:'💰' },
+      { label:'SAVINGS RATE', value:`${savingsRateNum}%`, sub:'of monthly income', color:'#22c55e', icon:'📈' },
+      { label:'PORTFOLIO', value:`$${totalStocks.toLocaleString()}`, sub:`${stocks.length} holdings`, color:'#8b5cf6', icon:'💹' },
+      { label:'MONTHLY BILLS', value:`$${totalMonthly.toFixed(0)}`, sub:'per month', color:'#ef4444', icon:'💸' },
+      { label:'HABIT CHECK-INS', value:totalHabitDays, sub:'all time', color:'#f97316', icon:'🔥' },
+      { label:'THIS MONTH', value:thisMonthHabits, sub:'habit completions', color:'#f59e0b', icon:'📅' },
+      { label:'TASKS TODAY', value:`${completedTasks}/${totalTasks}`, sub:'completed', color:'#3b82f6', icon:'✅' },
+      { label:'AVG SLEEP', value:`${avgSleep}h`, sub:`${sleepEntries.length} nights tracked`, color:'#6366f1', icon:'🌙' },
+      { label:'AVG MOOD', value:avgMood !== '—' ? `${avgMood} ${moodEmojis[Math.round(parseFloat(avgMood))]||''}` : '—', sub:`${moodEntries.length} days tracked`, color:'#ec4899', icon:'🧠' },
+      { label:'ASSETS', value:assets.length, sub:'tracked assets', color:'#14b8a6', icon:'🏠' },
+      { label:'HABITS', value:habits.length, sub:'active habits', color:'#a855f7', icon:'⚡' },
+      { label:'COUNTDOWNS', value:countdowns.length, sub:'upcoming events', color:'#f43f5e', icon:'⏳' },
+    ];
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
+            <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// YOUR LIFE DATA</div>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Stats & Insights</h1>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {statCards.map((s, i) => (
+              <div key={i} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${s.color}30`,boxShadow:`inset 0 0 20px ${s.color}08`}}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-mono" style={{color:`${s.color}90`,letterSpacing:"1px"}}>{s.label}</span>
+                  <span className="text-base">{s.icon}</span>
+                </div>
+                <div className="text-2xl font-bold text-white hud-number" style={{textShadow:`0 0 12px ${s.color}66`}}>{s.value}</div>
+                <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{s.sub}</div>
+                <div className="mt-3 h-0.5 rounded-full" style={{background:`linear-gradient(90deg,${s.color}50,transparent)`}} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ============================================
   if (activeView === 'habits') {
     const today = new Date().toISOString().split('T')[0];
