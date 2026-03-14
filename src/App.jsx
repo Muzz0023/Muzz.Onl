@@ -2200,198 +2200,138 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
+    const menuSections = [
+      { title: 'LIFE', items: [
+        { id: 'home', label: 'Dashboard', icon: Home },
+        { id: 'habits', label: 'Habits', icon: Flame },
+        { id: 'tasks', label: 'Tasks', icon: CheckCircle2 },
+        { id: 'countdowns', label: 'Countdowns', icon: Calendar },
+        { id: 'reminders', label: 'Reminders', icon: Bell },
+        { id: 'diet', label: 'Diet', icon: ShoppingCart },
+      ]},
+      { title: 'FINANCE', items: [
+        { id: 'varied', label: 'Bills', icon: Wallet, eliteOnly: true },
+        { id: 'assets', label: 'Assets', icon: DollarSign, eliteOnly: true },
+        { id: 'investments', label: 'Investments', icon: TrendingUp, eliteOnly: true },
+      ]},
+      { title: 'HEALTH & WORK', items: [
+        { id: 'gym', label: 'Health', icon: Dumbbell, eliteOnly: true },
+        { id: 'work', label: 'Work', icon: Briefcase, eliteOnly: true },
+      ]},
+      { title: 'CUSTOM', items: [
+        ...customCategories.map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: i > 0 })),
+      ]},
+      { title: 'ACCOUNT', items: [
+        { id: 'upgrade', label: isElite ? 'Elite Status' : 'Upgrade to Elite', icon: Award },
+        { id: 'feedback', label: 'Feedback & Support', icon: MessageCircle },
+      ]},
+    ];
+
     return (
       <div>
-        <div className={sidebarOpen ? "fixed inset-0 z-40 bg-black/50 backdrop-blur-md transition-all duration-300" : "fixed inset-0 z-40 pointer-events-none opacity-0 transition-all duration-300"} onClick={() => setSidebarOpen(false)} />
-        <div 
-          style={{ background: "linear-gradient(180deg, #020c1b 0%, #030f20 100%)", borderRight: "1px solid rgba(0,200,255,0.2)", boxShadow: "4px 0 40px rgba(0,0,0,0.8), 0 0 40px rgba(0,200,255,0.08), inset -1px 0 0 rgba(0,200,255,0.05)" }}
-          className={sidebarOpen ? "fixed top-0 left-0 h-full w-72 z-50 translate-x-0 transition-transform duration-300" : "fixed top-0 left-0 h-full w-72 z-50 -translate-x-full transition-transform duration-300"}>
-          <div 
-            ref={sidebarScrollRef} 
-            className="px-4 h-full flex flex-col overflow-y-auto overscroll-contain"
-            style={{ WebkitOverflowScrolling: 'touch', paddingTop: 'calc(env(safe-area-inset-top) + 24px)', paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}
-          >
-            {/* Mission Control Status Strip */}
-            <div className="mb-4 px-2 py-2 rounded-xl" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>{new Date().toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</span>
-              </div>
-              <div className="text-xs font-mono mt-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"0.5px"}}>SYS: ONLINE ●</div>
+        {/* Full screen overlay */}
+        <div
+          className={sidebarOpen ? "fixed inset-0 z-50 transition-all duration-300" : "fixed inset-0 z-50 pointer-events-none opacity-0 transition-all duration-300"}
+          style={{background:"rgba(2,8,20,0.97)",backdropFilter:"blur(20px)"}}
+        >
+          {/* Grid background */}
+          <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
+
+          {/* Header */}
+          <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-6" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
+            <div>
+              <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'22px',letterSpacing:'4px'}}>MUZZ</div>
+              <div className="text-xs mt-0.5" style={{color:"#00c8ff",letterSpacing:"2px"}}>NAVIGATION SYSTEM</div>
             </div>
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8 px-2">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shadow-sm" style={{background:'linear-gradient(135deg,rgba(0,200,255,0.2),rgba(0,200,255,0.05))',border:'1px solid rgba(0,200,255,0.3)'}}>🦘</div>
-                <div>
-                  <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'18px',letterSpacing:'3px'}}>MUZZ</div>
-                  <div style={{fontSize:'9px',color:'#00c8ff',letterSpacing:'2px',textTransform:'uppercase',marginTop:'1px'}}>Life OS</div>
+            <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center transition-all" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
+              <X className="w-5 h-5" style={{color:"#00c8ff"}} />
+            </button>
+          </div>
+
+          {/* Scrollable content */}
+          <div className="relative z-10 overflow-y-auto px-6 py-6" style={{height:"calc(100vh - 120px)"}}>
+            {menuSections.filter(s => s.items.length > 0).map(section => (
+              <div key={section.title} className="mb-8">
+                <div className="text-xs font-mono mb-3" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// {section.title}</div>
+                <div className="grid grid-cols-3 gap-3">
+                  {section.items.map(item => {
+                    const locked = item.eliteOnly && !isElite;
+                    const active = activeView === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
+                          setSidebarOpen(false);
+                        }}
+                        className="flex flex-col items-center gap-2 p-4 rounded-2xl transition-all"
+                        style={active
+                          ? {background:"rgba(0,200,255,0.15)",border:"1px solid rgba(0,200,255,0.5)",boxShadow:"0 0 20px rgba(0,200,255,0.2)"}
+                          : locked
+                            ? {background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",opacity:0.5}
+                            : item.id === 'upgrade' && !isElite
+                              ? {background:"rgba(245,158,11,0.1)",border:"1px solid rgba(245,158,11,0.3)"}
+                              : {background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)"}
+                        }
+                      >
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={active ? {background:"rgba(0,200,255,0.2)"} : {background:"rgba(255,255,255,0.05)"}}>
+                          <item.icon className="w-5 h-5" style={{color: active ? "#00c8ff" : locked ? "rgba(100,116,139,0.5)" : item.id==='upgrade' && !isElite ? "#f59e0b" : "rgba(148,163,184,0.8)"}} />
+                        </div>
+                        <span className="text-xs font-medium text-center leading-tight" style={{color: active ? "#00c8ff" : locked ? "rgba(100,116,139,0.5)" : "rgba(203,213,225,0.8)"}}>{item.label}</span>
+                        {locked && <span style={{fontSize:"8px",color:"rgba(100,116,139,0.5)"}}>ELITE</span>}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} className="p-2 rounded-full transition-colors" style={{color:'rgba(0,200,255,0.6)'}}>
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
+            ))}
 
-            
-            {/* Navigation */}
-            <nav className="flex-1 space-y-0.5 px-1">
-              {navItems.map(item => {
-                const locked = item.eliteOnly && !isElite;
-                const isActive = activeView === item.id;
-                return (
-                  <button 
-                    key={item.id} 
-                    onClick={() => { 
-                      if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
-                      setSidebarOpen(false);
-                      scrollPosRef.current = 0;
-                    }}
-                    className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all"
-                    style={isActive ? {background:'rgba(0,200,255,0.12)',borderLeft:'2px solid #00c8ff',color:'#00c8ff',paddingLeft:'10px'} : item.id==='upgrade' && !isElite ? {color:'#fb923c',border:'1px solid rgba(251,146,60,0.3)',borderRadius:'12px'} : locked ? {color:'rgba(100,116,139,0.5)'} : {color:'rgba(203,213,225,0.8)'}}
-                  >
-                    <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
-                    <span className="font-medium flex-1 text-left text-sm">{item.label}</span>
-                    {locked && <Lock className="w-4 h-4" />}
-                    {item.id === 'upgrade' && !isElite && (
-                      <svg width="12" height="12" viewBox="0 0 24 32" fill="none"><path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="#F59E0B" /><path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" /></svg>
-                    )}
-                  </button>
-                );
-              })}
-            </nav>
-            
-            {/* Footer */}
-            <div className="pt-4 mt-4 border-t border-slate-700/50 space-y-1 px-1">
-              {/* Backup/Export Section */}
-              <div className="mb-3 space-y-2">
-                <button 
-                  onClick={() => {
-                    const allData = {
-                      subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets,
-                      trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings,
-                      smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals,
-                      investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns,
-                      biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks,
-                      dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals,
-                      waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName
-                    };
-                    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `muzz-backup-${new Date().toISOString().split('T')[0]}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    setSidebarOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-500/20 text-blue-400 transition-all"
-                >
-                  <Save className="w-5 h-5" />
-                  <span className="font-medium">Export Backup</span>
-                </button>
-                <label className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-green-400 transition-all cursor-pointer">
-                  <input
-                    type="file"
-                    accept=".json"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        try {
-                          const data = JSON.parse(event.target.result);
-                          if (confirm('This will replace all your current data with the backup. Are you sure?')) {
-                            if (data.subscriptions) setSubscriptions(data.subscriptions);
-                            if (data.businessSubscriptions) setBusinessSubscriptions(data.businessSubscriptions);
-                            if (data.muzzPersonality !== undefined) setMuzzPersonality(data.muzzPersonality);
-                            if (data.funnyGreetings !== undefined) setFunnyGreetings(data.funnyGreetings);
-                            if (data.customDiets) setCustomDiets(data.customDiets);
-                            if (data.trackedStocks) setTrackedStocks(data.trackedStocks);
-                            if (data.monthlySalary) setMonthlySalary(data.monthlySalary);
-                            if (data.monthlySalaryStr) setMonthlySalaryStr(data.monthlySalaryStr);
-                            if (data.assets) setAssets(data.assets);
-                            if (data.stocks) setStocks(data.stocks);
-                            if (data.investmentSettings) setInvestmentSettings(data.investmentSettings);
-                            if (data.smallGoals) setSmallGoals(data.smallGoals);
-                            if (data.bigGoals) setBigGoals(data.bigGoals);
-                            if (data.holdingsResearch) setHoldingsResearch(data.holdingsResearch);
-                            if (data.investmentSmallGoals) setInvestmentSmallGoals(data.investmentSmallGoals);
-                            if (data.investmentBigGoals) setInvestmentBigGoals(data.investmentBigGoals);
-                            if (data.investmentNotes) setInvestmentNotes(data.investmentNotes);
-                            if (data.declinedCompanies) setDeclinedCompanies(data.declinedCompanies);
-                            if (data.companyEconomics) setCompanyEconomics(data.companyEconomics);
-                            if (data.economicsColumns) setEconomicsColumns(data.economicsColumns);
-                            if (data.researchColumns) setResearchColumns(data.researchColumns);
-                            if (data.biggestRisks) setBiggestRisks(data.biggestRisks);
-                            if (data.risksColumns) setRisksColumns(data.risksColumns);
-                            if (data.billSmallGoals) setBillSmallGoals(data.billSmallGoals);
-                            if (data.billBigGoals) setBillBigGoals(data.billBigGoals);
-                            if (data.debts) setDebts(data.debts);
-                            if (data.calendarBills) setCalendarBills(data.calendarBills);
-                            if (data.tasks) setTasks(data.tasks);
-                            if (data.dailyTasks) setDailyTasks(data.dailyTasks);
-                            if (data.weeklyTasks) setWeeklyTasks(data.weeklyTasks);
-                            if (data.generalTasks) setGeneralTasks(data.generalTasks);
-                            if (data.dailyRotation) setDailyRotation(data.dailyRotation);
-                            if (data.birthdays) setBirthdays(data.birthdays);
-                            if (data.reminders) setReminders(data.reminders);
-                            if (data.groceries) setGroceries(data.groceries);
-                            if (data.dailyMeals) setDailyMeals(data.dailyMeals);
-                            if (data.waterIntake) setWaterIntake(data.waterIntake);
-                            if (data.dailySteps) setDailySteps(data.dailySteps);
-                            if (data.workoutPlan) setWorkoutPlan(data.workoutPlan);
-                            if (data.sleepData) setSleepData(data.sleepData);
-                            if (data.mentalHealthData) setMentalHealthData(data.mentalHealthData);
-                            if (data.timesheetData) setTimesheetData(data.timesheetData);
-                            if (data.customCategories) setCustomCategories(data.customCategories);
-                            if (data.eliteName) setEliteName(data.eliteName);
-                            alert('Backup restored successfully!');
-                            setSidebarOpen(false);
-                          }
-                        } catch (err) {
-                          alert('Invalid backup file. Please select a valid Muzz backup JSON file.');
-                        }
-                      };
-                      reader.readAsText(file);
-                      e.target.value = '';
-                    }}
-                  />
-                  <Plus className="w-4 h-4" />
-                  <span className="font-medium text-sm">Import</span>
-                </label>
-              </div>
-              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-500 transition-all">
-                <LogOut className="w-4 h-4" />
-                <span className="font-medium text-sm">Sign Out</span>
+            {/* Footer actions */}
+            <div style={{borderTop:"1px solid rgba(0,200,255,0.1)",paddingTop:"20px",marginTop:"8px"}} className="space-y-2">
+              <button
+                onClick={() => {
+                  const allData = { subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName };
+                  const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = `muzz-backup-${new Date().toISOString().split('T')[0]}.json`; a.click();
+                  URL.revokeObjectURL(url);
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+                style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.7)"}}
+              >
+                <Save className="w-4 h-4" />
+                <span className="text-sm font-medium">Export Backup</span>
               </button>
-              <button 
+              <button onClick={() => { signOut(); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+                style={{background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.1)",color:"rgba(239,68,68,0.7)"}}>
+                <LogOut className="w-4 h-4" />
+                <span className="text-sm font-medium">Sign Out</span>
+              </button>
+              <button
                 onClick={async () => {
                   if (confirm('Are you sure you want to delete your account? This will permanently delete all your data and cannot be undone.')) {
                     if (confirm('This is permanent. All your data will be lost forever. Are you absolutely sure?')) {
-                      try {
-                        await supabase.deleteUserData(userId);
-                        alert('Your account and all data has been permanently deleted.');
-                        signOut();
-                        setSidebarOpen(false);
-                      } catch (err) {
-                        alert('Failed to delete account. Please try again or contact support at Muzz.onl@outlook.com');
-                      }
+                      try { await supabase.deleteUserData(userId); alert('Your account and all data has been permanently deleted.'); signOut(); setSidebarOpen(false); }
+                      catch (err) { alert('Failed to delete account. Please try again or contact support at Muzz.onl@outlook.com'); }
                     }
                   }
                 }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-500/60 transition-all"
-              >
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+                style={{color:"rgba(239,68,68,0.4)"}}>
                 <Trash2 className="w-4 h-4" />
-                <span className="font-medium text-sm">Delete Account</span>
+                <span className="text-sm font-medium">Delete Account</span>
               </button>
-              <div className="flex items-center justify-center gap-2 text-gray-300 mt-4 pt-4 border-t border-slate-800">
-                <span className="text-xs font-medium">Muzz v3.0</span>
+              <div className="text-center pt-2">
+                <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.2)"}}>MUZZ v3.0 // LIFE OS</span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Hamburger button */}
         <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 rounded-2xl transition-all" style={{background:"rgba(2,12,27,0.9)",backdropFilter:"blur(20px)",border:"1px solid rgba(0,200,255,0.2)",boxShadow:"0 0 20px rgba(0,200,255,0.1)"}}><Menu className="w-5 h-5" style={{color:"#00c8ff"}} /></button>
       </div>
     );
