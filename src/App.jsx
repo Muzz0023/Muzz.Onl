@@ -13891,6 +13891,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (!isElite) return <LockedFeature featureName="Timetable" setActiveView={setActiveView} />;
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const hours = Array.from({length:16},(_,i)=>i+7);
+    const fmt12 = (h) => h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
     const today = new Date().toLocaleDateString('en-AU',{weekday:'short'}).slice(0,3);
     const hexToRgba = (hex, a) => {
       try { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
@@ -13905,8 +13906,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
     const saveBlock = () => {
       if (!formBlock.title.trim()) return;
-      if (ttEditingId) { setTtEditingId(null); setTtTab('list'); }
-      else { setTimetableBlocks(prev=>[...prev,{...ttNewBlock,id:Date.now()}]); setTtNewBlock({title:'',type:'uni',day:'Mon',startHour:9,endHour:10,color:'#8b5cf6',location:''}); }
+      if (ttEditingId) { setTtEditingId(null); setTtTab('week'); }
+      else { setTimetableBlocks(prev=>[...prev,{...ttNewBlock,id:Date.now()}]); setTtNewBlock({title:'',type:'uni',day:'Mon',startHour:9,endHour:10,color:'#8b5cf6',location:''}); setTtTab('week'); }
     };
     const presets = ['#8b5cf6','#3b82f6','#22c55e','#ef4444','#f97316','#f59e0b','#14b8a6','#ec4899'];
     return (
@@ -13990,7 +13991,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="w-3 h-3 rounded-full flex-shrink-0" style={{background:b.color,boxShadow:`0 0 8px ${b.color}`}} />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-white truncate">{b.title}</div>
-                          <div className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{b.startHour}:00 – {b.endHour}:00{b.location?` · ${b.location}`:''}</div>
+                          <div className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{fmt12(b.startHour)} – {fmt12(b.endHour)}{b.location?` · ${b.location}`:''}</div>
                         </div>
                         <span className="text-xs px-2 py-0.5 rounded-full capitalize" style={{background:hexToRgba(b.color,0.15),color:b.color}}>{b.type}</span>
                         <button onClick={()=>{setTtEditingId(b.id);setTtTab('add');}} className="text-xs px-2 py-1 rounded-lg transition-all" style={{color:'rgba(0,200,255,0.6)',border:'1px solid rgba(0,200,255,0.2)'}}>edit</button>
@@ -14032,7 +14033,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <select value={formBlock.startHour} onChange={e=>setForm({startHour:parseInt(e.target.value)})}
                     className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
                     style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
-                    {hours.map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{h}:00</option>)}
+                    {hours.map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{fmt12(h)}</option>)}
                   </select>
                 </div>
                 <div>
