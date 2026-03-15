@@ -13945,7 +13945,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {hours.map(h=>(
                     <React.Fragment key={h}>
                       <div className="text-right pr-2 border-t flex items-center justify-end" style={{borderColor:'rgba(0,200,255,0.06)',minHeight:'40px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:"'Share Tech Mono',monospace"}}>
-                        {h}:00
+                        {fmt12(h)}
                       </div>
                       {days.map(d=>{
                         const block = timetableBlocks.find(b=>b.day===d&&b.startHour<=h&&b.endHour>h);
@@ -14041,7 +14041,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <select value={formBlock.endHour} onChange={e=>setForm({endHour:parseInt(e.target.value)})}
                     className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
                     style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
-                    {hours.filter(h=>h>formBlock.startHour).map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{h}:00</option>)}
+                    {hours.filter(h=>h>formBlock.startHour).map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{fmt12(h)}</option>)}
                   </select>
                 </div>
               </div>
