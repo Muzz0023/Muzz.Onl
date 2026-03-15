@@ -13938,13 +13938,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div />
                   {days.map(d=>(
                     <div key={d} className="p-2 text-center text-xs font-mono font-bold"
-                      style={{color:d===todayShort?'#00c8ff':'rgba(148,163,184,0.6)',borderBottom:'1px solid rgba(0,200,255,0.1)',background:d===todayShort?'rgba(0,200,255,0.05)':'transparent'}}>
+                      style={{color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',borderBottom:'1px solid rgba(0,200,255,0.1)',background:d===today?'rgba(0,200,255,0.05)':'transparent'}}>
                       {d}
                     </div>
                   ))}
                   {hours.map(h=>(
                     <React.Fragment key={h}>
-                      <div className="text-right pr-2 border-t flex items-center justify-end" style={{borderColor:'rgba(0,200,255,0.06)',height:'40px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:"monospace"}}>
+                      <div className="text-right pr-2 border-t flex items-center justify-end" style={{borderColor:'rgba(0,200,255,0.06)',height:'40px',minHeight:'40px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:"monospace",display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px'}}>
                         {fmt12(h)}
                       </div>
                       {days.map(d=>{
@@ -13952,7 +13952,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const isStart = block && block.startHour===h;
                         const span = block ? (block.endHour - block.startHour) : 1;
                         return (
-                          <div key={d} className="border-t relative" style={{borderColor:'rgba(0,200,255,0.06)',height:'40px',background:d===todayShort?'rgba(0,200,255,0.015)':'transparent'}}>
+                          <div key={d} className="border-t relative" style={{borderColor:'rgba(0,200,255,0.06)',height:'40px',background:d===today?'rgba(0,200,255,0.015)':'transparent'}}>
                             {isStart && (
                               <div onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
                                 className="absolute inset-x-0.5 rounded-lg p-1 cursor-pointer overflow-hidden"
