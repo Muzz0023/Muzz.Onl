@@ -2644,7 +2644,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Name"
-                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"48px",overflow:"hidden"}
+                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"48px",overflow:"hidden"}}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <div className="flex items-center gap-2">
