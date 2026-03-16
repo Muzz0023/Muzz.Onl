@@ -13629,31 +13629,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {ttTab==='week' && (
             <div className="rounded-2xl overflow-x-auto" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div style={{minWidth:'600px'}}>
-                <div className="grid" style={{gridTemplateColumns:'52px repeat(7,1fr)'}}>
-                  <div />
+                <div className="grid" style={{gridTemplateColumns:'52px repeat(7,1fr)',borderBottom:'1px solid rgba(0,200,255,0.1)'}}>
+                  <div/>
                   {days.map(d=>(
                     <div key={d} className="p-2 text-center text-xs font-mono font-bold"
-                      style={{color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',borderBottom:'1px solid rgba(0,200,255,0.1)',background:d===today?'rgba(0,200,255,0.05)':'transparent'}}>
+                      style={{color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',background:d===today?'rgba(0,200,255,0.05)':'transparent'}}>
                       {d}
                     </div>
                   ))}
-                  {hours.map(h=>(
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',gridAutoRows:'40px'}}>
+                  {hours.map((h,hi)=>(
                     <React.Fragment key={h}>
-                      <div className="text-right pr-2 border-t flex items-center justify-end" style={{borderColor:'rgba(0,200,255,0.06)',height:'40px',minHeight:'40px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:"monospace",display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px'}}>
+                      <div style={{borderTop:'1px solid rgba(0,200,255,0.06)',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
                         {fmt12(h)}
                       </div>
-                      {days.map(d=>{
-                        const block = timetableBlocks.find(b=>b.day===d&&b.startHour<=h&&b.endHour>h);
-                        const isStart = block && block.startHour===h;
-                        const span = block ? (block.endHour - block.startHour) : 1;
+                      {days.map((d,di)=>{
+                        const block = timetableBlocks.find(b=>b.day===d&&b.startHour===h);
+                        const span = block ? (block.endHour-block.startHour) : 0;
                         return (
-                          <div key={d} className="border-t relative" style={{borderColor:'rgba(0,200,255,0.06)',height:'40px',background:d===today?'rgba(0,200,255,0.015)':'transparent'}}>
-                            {isStart && (
+                          <div key={d} style={{borderTop:'1px solid rgba(0,200,255,0.06)',background:d===today?'rgba(0,200,255,0.015)':'transparent',position:'relative'}}>
+                            {block && (
                               <div onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
-                                className="absolute inset-x-0.5 rounded-lg p-1 cursor-pointer overflow-hidden"
-                                style={{background:hexToRgba(block.color,0.2),border:`1px solid ${hexToRgba(block.color,0.6)}`,top:'2px',height:`${span*41-4}px`,zIndex:1}}>
-                                <div className="text-xs font-medium truncate text-white">{block.title}</div>
-                                {block.location && <div className="text-xs truncate" style={{color:'rgba(255,255,255,0.5)'}}>{block.location}</div>}
+                                style={{position:'absolute',left:'2px',right:'2px',top:'2px',height:`calc(${span}*40px - 4px)`,background:hexToRgba(block.color,0.25),border:`1px solid ${hexToRgba(block.color,0.7)}`,borderRadius:'6px',padding:'4px',cursor:'pointer',zIndex:2,overflow:'hidden'}}>
+                                <div style={{fontSize:'11px',fontWeight:500,color:'white',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{block.title}</div>
+                                {block.location && <div style={{fontSize:'10px',color:'rgba(255,255,255,0.5)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{block.location}</div>}
                               </div>
                             )}
                           </div>
@@ -13666,8 +13666,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          {/* LIST VIEW */}
-          {ttTab==='list' && (
+                    {ttTab==='list' && (
             <div className="space-y-4">
               {timetableBlocks.length===0 && (
                 <div className="rounded-2xl p-8 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
