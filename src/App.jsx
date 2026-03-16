@@ -1763,6 +1763,8 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
+  const [openSections, setOpenSections] = useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
+  const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
   const [dashTab, setDashTab] = useState('overview');
   const [timetableBlocks, setTimetableBlocks] = useState([]);
   const [ttTab, setTtTab] = useState('week');
@@ -2338,8 +2340,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
-    const [openSections, setOpenSections] = React.useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
-    const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
     const menuSections = [
       { title: 'LIFE', items: [
         { id: 'home', label: 'Dashboard', icon: Home },
