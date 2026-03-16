@@ -2398,7 +2398,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else{ else{setActiveView(item.id);} } setSidebarOpen(false); }}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(item.id);} setSidebarOpen(false); }}
                           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
