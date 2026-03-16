@@ -13651,7 +13651,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             {isStart && (
                               <div onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
                                 className="absolute inset-x-0.5 rounded-lg p-1 cursor-pointer overflow-hidden"
-                                style={{background:hexToRgba(block.color,0.2),border:`1px solid ${hexToRgba(block.color,0.6)}`,top:'2px',height:`${span*40-4}px`,zIndex:1}}>
+                                style={{background:hexToRgba(block.color,0.2),border:`1px solid ${hexToRgba(block.color,0.6)}`,top:'2px',height:`${span*41-4}px`,zIndex:1}}>
                                 <div className="text-xs font-medium truncate text-white">{block.title}</div>
                                 {block.location && <div className="text-xs truncate" style={{color:'rgba(255,255,255,0.5)'}}>{block.location}</div>}
                               </div>
