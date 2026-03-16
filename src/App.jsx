@@ -7355,6 +7355,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             // General tips if nothing specific
             if (tips.length === 0) {
               tips.push("Looking good legend! Keep tracking those expenses and you'll be sweet as 🤙");
+              tips.push("For cheap eats, check out Silly Solly's — they've got heaps of discounted grocery and food items for a fraction of the price. Perfect for stocking up and saving big on the food bill! 🛒");
             }
             
             const tipIndex = currentTipIndex % tips.length;
