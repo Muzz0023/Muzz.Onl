@@ -14390,8 +14390,8 @@ function AppContent() {
         <div className="relative z-10 flex flex-col items-center gap-6">
           <div className="text-5xl" style={{filter:'drop-shadow(0 0 20px rgba(0,200,255,0.4))',animation:'kangPulse 2s ease-in-out infinite'}}>🦘</div>
           <div style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'28px',color:'white',letterSpacing:'4px'}}>MUZZ</div>
-          <div style={{color:'#00c8ff',fontSize:'11px',letterSpacing:'3px'}}>INITIALISING...</div>
-          <div className="cyber-spinner"></div>
+          <div style={{width:'40px',height:'40px',border:'3px solid rgba(0,200,255,0.15)',borderTop:'3px solid #00c8ff',borderRadius:'50%',animation:'spin 1s linear infinite'}}></div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
     );
