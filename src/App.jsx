@@ -2742,7 +2742,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Task Management</h1>
+            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Tasks</h1>
           </div>
         </div>
 
@@ -3180,7 +3180,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex items-center justify-between">
               <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Diet Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Diet</h1>
               </div>
             </div>
           </div>
@@ -4267,7 +4267,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex items-center justify-between">
               <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Health Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Health</h1>
               </div>
             </div>
           </div>
@@ -6538,7 +6538,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="flex-1">
                 <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : "mate"}!</div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : "Welcome back legend!"}</div>
+                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
                   {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:"rgba(255,215,0,0.15)",border:"1px solid rgba(255,215,0,0.3)"}}><span className="text-xs font-bold" style={{color:"#FFD700"}}>⚡ ELITE</span></div>}
                 </div>
               </div>
@@ -6798,7 +6798,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex items-center justify-between">
               <div>
                 <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Bills Management</h1>
+                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Bills</h1>
               </div>
             </div>
           </div>
@@ -13971,7 +13971,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     })}
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">Last 31 days — click to toggle</p>
+                  <p className="text-xs mt-2" style={{color:"rgba(0,200,255,0.3)"}}>Last 31 days — tap any day to toggle</p>
                 </div>
               </div>
             );
@@ -14250,7 +14250,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       />
 
       {/* ── BOTTOM NAVIGATION BAR ── */}
-      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:9990,background:"rgba(2,8,20,0.98)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.2)"}}>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:9999,background:"rgba(2,8,20,0.98)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.2)",paddingBottom:"env(safe-area-inset-bottom)"}}>
         <div className="flex justify-around items-center px-1 py-2">
           {[
             {id:'home', label:'Home', Icon:Home},
