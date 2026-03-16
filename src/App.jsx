@@ -2327,9 +2327,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (sidebarOpen) {
       // Save current view scroll position
       if (viewEl) viewScrollRef.current[activeView] = viewEl.scrollTop;
-      // Reset menu to top
-      const menuContent = document.getElementById('muzz-menu-scroll');
-      if (menuContent) menuContent.scrollTop = 0;
     } else {
       // Restore view scroll position after menu closes
       if (viewEl) {
