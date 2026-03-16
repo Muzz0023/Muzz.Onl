@@ -2360,7 +2360,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
-      { section: 'ACCOUNT', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
+
     ];
     const sections = ['LIFE','HEALTH','FINANCE','ACCOUNT'];
     const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', ACCOUNT:'#8b5cf6' };
@@ -2373,7 +2373,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
         </button>
 
-        <div className="fixed inset-0 z-50 transition-all duration-300" style={{background:"rgba(2,8,20,0.98)",backdropFilter:"blur(20px)",opacity:sidebarOpen?1:0,pointerEvents:sidebarOpen?'all':'none',visibility:sidebarOpen?'visible':'hidden'}}>
+        {sidebarOpen && <div className="fixed inset-0 z-50" style={{background:"rgba(2,8,20,0.98)",backdropFilter:"blur(20px)"}}>
           <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
 
           <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
@@ -2427,9 +2427,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.6)'}}>
                 Sign Out
               </button>
+              <button onClick={() => { if(window.confirm('Are you sure? This permanently deletes your account and all data.')){supabase.deleteUserData(userId).then(()=>signOut());}}} className="w-full py-2 rounded-xl text-sm mt-1" style={{background:'rgba(239,68,68,0.03)',border:'1px solid rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.4)'}}>
+                🗑️ Delete Account
+              </button>
             </div>
           </div>
-        </div>
+        </div>}
       </>
     );
   };
