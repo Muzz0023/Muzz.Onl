@@ -2349,7 +2349,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'LIFE', id:'countdowns', label:'Countdowns', icon:'⏳' },
       { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
       { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
-      { section: 'HEALTH', id:'gym_steps', label:'Gym', icon:'🏋️', elite:true },
+      { section: 'HEALTH', id:'gymworkout', label:'Gym', icon:'🏋️', elite:true },
       { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
       { section: 'HEALTH', id:'diet', label:'Diet', icon:'🥗', elite:true },
       { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
@@ -2397,7 +2397,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else{ if(item.id==='gym_steps'){setActiveView('gym');setGymSubTab('steps');}else{setActiveView(item.id);} } setSidebarOpen(false); }}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else{ else{setActiveView(item.id);} } setSidebarOpen(false); }}
                           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
@@ -4058,6 +4058,112 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
   // GYM MANAGEMENT VIEW
+  if (activeView === 'gymworkout') {
+    if (!isElite) return <LockedFeature featureName="Gym" setActiveView={setActiveView} />;
+    const [gymTab, setGymTab] = React.useState('steps');
+    const today = new Date().toISOString().split('T')[0];
+    const getWeekDays = () => { const now=new Date(),dow=now.getDay(),mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); const days=[]; for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);days.push({date:d.toISOString().split('T')[0],dayName:d.toLocaleDateString('en-AU',{weekday:'long'}),dayShort:d.toLocaleDateString('en-AU',{weekday:'short'}),dateNum:d.getDate(),isToday:d.toISOString().split('T')[0]===today});} return days; };
+    const weekDays = getWeekDays();
+    const updateGymData = (date, field, value) => { setSleepData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}})); };
+    const stepsGoal = sleepData?.stepsGoal || 10000;
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+          <div className="max-w-5xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px"}}>← Back</button>
+            <h1 className="text-4xl font-semibold text-white" style={{textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Gym</h1>
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto px-6 py-6 space-y-6">
+          <div className="flex gap-2">
+            <button onClick={() => setGymTab('steps')} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${gymTab==='steps'?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>👟 Weekly Steps</button>
+            <button onClick={() => setGymTab('plan')} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${gymTab==='plan'?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>💪 Workout Plan</button>
+          </div>
+
+          {gymTab === 'steps' && (
+            <div className="space-y-4">
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+                <h2 className="text-lg font-semibold text-white mb-2">👟 Weekly Steps & Workouts</h2>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-slate-400">Goal:</span>
+                  <input type="number" defaultValue={stepsGoal}
+                    onChange={(e) => setSleepData(prev => ({...prev, stepsGoal: parseInt(e.target.value)||10000}))}
+                    className="w-28 px-3 py-2 rounded-xl text-white focus:outline-none text-sm"
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}} />
+                  <span className="text-sm text-slate-400">steps per day</span>
+                </div>
+              </div>
+              {weekDays.map(day => {
+                const data = sleepData?.[day.date] || {};
+                const steps = data.steps || 0;
+                const pct = Math.min((steps / stepsGoal) * 100, 100);
+                return (
+                  <div key={day.date} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${day.isToday?'rgba(0,200,255,0.3)':'rgba(0,200,255,0.1)'}`}}>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white text-sm" style={{background:day.isToday?'rgba(0,200,255,0.2)':'rgba(255,255,255,0.05)'}}>{day.dayShort}</div>
+                      <div className="flex-1">
+                        <div className="font-medium text-white">{day.dayName} {day.isToday && <span className="text-xs ml-1" style={{color:'#00c8ff'}}>• Today</span>}</div>
+                        <div className="h-2 rounded-full mt-1" style={{background:'rgba(255,255,255,0.05)'}}>
+                          <div className="h-full rounded-full transition-all" style={{width:`${pct}%`,background:'linear-gradient(90deg,#00c8ff,#0070a0)'}} />
+                        </div>
+                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{pct.toFixed(0)}%</div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <input type="number" value={steps||''} placeholder="0"
+                          onChange={(e) => updateGymData(day.date, 'steps', parseInt(e.target.value)||0)}
+                          className="w-20 px-2 py-2 rounded-xl text-white text-sm text-right focus:outline-none"
+                          style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}} />
+                        <span className="text-xs text-slate-500">/ {(stepsGoal/1000).toFixed(0)}K</span>
+                      </div>
+                    </div>
+                    <input type="text" value={data.workoutNotes||''} placeholder="Workout notes (e.g., Chest & Triceps, 30 min cardio...)"
+                      onChange={(e) => updateGymData(day.date, 'workoutNotes', e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"
+                      style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.1)"}} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {gymTab === 'plan' && (
+            <div className="space-y-6">
+              {[1,2,3,4].map(week => (
+                <div key={week} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+                  <div className="p-4" style={{background:"linear-gradient(135deg,rgba(139,92,246,0.3),rgba(236,72,153,0.2)",borderBottom:"1px solid rgba(139,92,246,0.3)"}}>
+                    <input type="text" value={workoutPlan.weeks?.[week]?.name||''} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...(prev.weeks||{}), [week]:{...(prev.weeks?.[week]||{}), name:e.target.value}}}))}
+                      placeholder={`Week ${week} — Training Focus`}
+                      className="w-full bg-transparent text-white text-lg font-semibold placeholder-white/50 focus:outline-none" />
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {(workoutPlan.weeks?.[week]?.exercises||[]).map(ex => (
+                      <div key={ex.id} className="flex items-center gap-2">
+                        <input type="text" value={ex.amount} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week], exercises:prev.weeks[week].exercises.map(e2 => e2.id===ex.id?{...e2,amount:e.target.value}:e2)}}}))}
+                          placeholder="x3" className="w-14 px-2 py-2 rounded-xl text-sm text-white text-center focus:outline-none"
+                          style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.15)"}} />
+                        <input type="text" value={ex.name} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week], exercises:prev.weeks[week].exercises.map(e2 => e2.id===ex.id?{...e2,name:e.target.value}:e2)}}}))}
+                          placeholder="Exercise" className="flex-1 px-3 py-2 rounded-xl text-sm text-white focus:outline-none"
+                          style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.15)"}} />
+                        <button onClick={() => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week], exercises:prev.weeks[week].exercises.filter(e2 => e2.id!==ex.id)}}}))}
+                          className="text-slate-500 hover:text-red-400"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    ))}
+                    <button onClick={() => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week]||{}, exercises:[...(prev.weeks?.[week]?.exercises||[]), {id:Date.now(),amount:'',name:'',details:''}]}}}))}
+                      className="w-full py-2 rounded-xl text-sm transition-all" style={{border:"1px dashed rgba(0,200,255,0.2)",color:"rgba(0,200,255,0.5)"}}>
+                      + Add Exercise
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (activeView === 'gym') {
     if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
     const today = new Date().toISOString().split('T')[0];
