@@ -13662,9 +13662,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         if(startIdx === -1) return null;
                         const actualEnd = endIdx === -1 ? hours.length : endIdx;
                         const ROW_H = 41;
-                        const top = startIdx * ROW_H;
-                        const height = (actualEnd - startIdx) * ROW_H - 2;
-                        console.log(`Block ${block.title}: start=${block.startHour}(idx=${startIdx}) end=${block.endHour}(idx=${endIdx}) top=${top} height=${height}`);
+                        const top = startIdx * ROW_H + 1;
+                        const height = (actualEnd - startIdx) * ROW_H - 1;
                         return (
                           <div key={block.id}
                             onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
