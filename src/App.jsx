@@ -2357,13 +2357,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'FINANCE', id:'varied', label:'Bills', icon:'💸', elite:true },
       { section: 'FINANCE', id:'assets', label:'Assets', icon:'🏠', elite:true },
       { section: 'FINANCE', id:'investments', label:'Investments', icon:'📈', elite:true },
+      { section: 'CUSTOM', id:'custom1', label: customCategories?.[0]?.name || 'Custom 1', icon: customCategories?.[0]?.icon || '📁' },
+      { section: 'CUSTOM', id:'custom2', label: customCategories?.[1]?.name || 'Custom 2', icon: customCategories?.[1]?.icon || '📁', elite:true },
+      { section: 'CUSTOM', id:'custom3', label: customCategories?.[2]?.name || 'Custom 3', icon: customCategories?.[2]?.icon || '📁', elite:true },
       { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
 
     ];
-    const sections = ['LIFE','HEALTH','FINANCE','ACCOUNT'];
-    const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', ACCOUNT:'#8b5cf6' };
+    const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT'];
+    const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', CUSTOM:'#a855f7', ACCOUNT:'#8b5cf6' };
 
     return (
       <>
