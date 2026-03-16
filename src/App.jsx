@@ -1763,6 +1763,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
+  const [dashTab, setDashTab] = useState('overview');
   const [timetableBlocks, setTimetableBlocks] = useState([]);
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
@@ -6791,8 +6792,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
         
-        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-          <div className="grid grid-cols-3 gap-3 mt-4">
+        {/* Tab Bar */}
+        <div className="max-w-4xl mx-auto px-6 pt-4 pb-2">
+          <div className="flex gap-2">
+            {dashTabs.map(t => (
+              <button key={t.id} onClick={() => setDashTab(t.id)}
+                className={`px-5 py-2 rounded-xl text-sm font-medium transition-all ${dashTab===t.id?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-6 py-4 space-y-4">
+
+          {/* ── OVERVIEW TAB ── */}
+          {dashTab === 'overview' && (<div className="space-y-4">
+            {/* Net Worth */}
+            <div className="rounded-2xl p-5" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+              <div className="text-sm mb-1" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
+              <div className="text-5xl font-bold text-white">${netWorth.toLocaleString()}</div>
+            </div>
+            {/* Stats Row */}
+            <div className="grid grid-cols-3 gap-3">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
               <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
@@ -6874,8 +6896,159 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
           </div>
           
-          {/* Achievements & Coming Up */}
-          <div className="grid md:grid-cols-2 gap-6">
+          {/* Achievements preview */}
+          <div className="grid grid-cols-2 gap-3">
+            <button onClick={() => setDashTab('life')} className="rounded-2xl p-4 text-left" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+              <div className="text-xs font-mono mb-2" style={{color:"rgba(0,200,255,0.4)"}}>ACHIEVEMENTS</div>
+              <div className="text-2xl font-bold text-white">{achievements.length}</div>
+              <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>unlocked →</div>
+            </button>
+            <button onClick={() => setDashTab('life')} className="rounded-2xl p-4 text-left" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+              <div className="text-xs font-mono mb-2" style={{color:"rgba(0,200,255,0.4)"}}>COMING UP</div>
+              <div className="text-lg font-bold text-white truncate">{countdowns.filter(c=>c.date>=new Date().toISOString().split('T')[0]).sort((a,b)=>a.date>b.date?1:-1)[0]?.title || '—'}</div>
+              <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>next event →</div>
+            </button>
+          </div>
+          </div>)}
+
+          {/* ── FINANCE TAB ── */}
+          {dashTab === 'finance' && (<div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Monthly Bills</div>
+                <div className="text-3xl font-bold text-white mt-1">${totalMonthly.toFixed(0)}</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Savings Rate</div>
+                <div className="text-3xl font-bold text-white mt-1">{savingsRate.toFixed(0)}%</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Portfolio</div>
+                <div className="text-3xl font-bold text-white mt-1">${totalStocks.toLocaleString()}</div>
+                <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.4)"}}>{stocks.length} holdings</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Assets</div>
+                <div className="text-3xl font-bold text-white mt-1">${totalAssets.toLocaleString()}</div>
+                <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.4)"}}>{assets.length} assets</div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <button onClick={()=>setActiveView('varied')} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}>
+                <div className="text-2xl mb-1">💸</div><div className="text-xs text-white">Bills</div>
+              </button>
+              <button onClick={()=>setActiveView('assets')} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}>
+                <div className="text-2xl mb-1">🏠</div><div className="text-xs text-white">Assets</div>
+              </button>
+              <button onClick={()=>setActiveView('investments')} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}>
+                <div className="text-2xl mb-1">📈</div><div className="text-xs text-white">Invest</div>
+              </button>
+            </div>
+            {/* Daily Quote */}
+            <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+              <div className="text-base italic text-white mb-2">"{todayQuote.quote}"</div>
+              <div className="text-xs" style={{color:"rgba(148,163,184,0.5)"}}>— {todayQuote.author}</div>
+            </div>
+          </div>)}
+
+          {/* ── HEALTH TAB ── */}
+          {dashTab === 'health' && (<div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(99,102,241,0.2)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Last Night Sleep</div>
+                <div className="text-3xl font-bold text-white mt-1">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
+                <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.4)"}}>hours slept</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(236,72,153,0.2)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Today's Mood</div>
+                <div className="text-4xl mt-1">{todayMood.mood ? {great:'😊',good:'😌',okay:'😐',low:'😔',sad:'😢',angry:'😡'}[todayMood.mood] || '—' : '—'}</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(251,146,60,0.2)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>This Week Work</div>
+                <div className="text-3xl font-bold text-white mt-1">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : '—'}</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(34,197,94,0.2)"}}>
+                <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>Tasks Today</div>
+                <div className="text-3xl font-bold text-white mt-1">{dailyTasks.filter(t=>t.completed).length}/{dailyTasks.length}</div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <button onClick={()=>setActiveView('gym')} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}>
+                <div className="text-2xl mb-1">🌙</div><div className="text-xs text-white">Sleep</div>
+              </button>
+              <button onClick={()=>setActiveView('gym')} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}>
+                <div className="text-2xl mb-1">🧠</div><div className="text-xs text-white">Mood</div>
+              </button>
+              <button onClick={()=>setActiveView('work')} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}>
+                <div className="text-2xl mb-1">💼</div><div className="text-xs text-white">Work</div>
+              </button>
+            </div>
+          </div>)}
+
+          {/* ── LIFE TAB ── */}
+          {dashTab === 'life' && (<div className="space-y-4">
+            {/* Achievements */}
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                {(() => {
+                  const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
+                  const totalDailyTasks = dailyTasks.length;
+                  const achievementData = [
+                    { id:"first_1k", icon:"💰", title:"First $1K", current:netWorth, target:1000, unit:"$" },
+                    { id:"10k_club", icon:"🏆", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
+                    { id:"50k_club", icon:"👑", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
+                    { id:"100k_club", icon:"🚀", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
+                    { id:"saver_20", icon:"🌿", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
+                    { id:"super_saver", icon:"💪", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
+                    { id:"diversified", icon:"🎯", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
+                  ];
+                  const sorted = [...achievementData].sort((a,b) => {
+                    const ap = Math.min((a.current/a.target)*100,100);
+                    const bp = Math.min((b.current/b.target)*100,100);
+                    if(ap>=100&&bp<100) return 1;
+                    if(ap<100&&bp>=100) return -1;
+                    return bp-ap;
+                  });
+                  return sorted.map(a => {
+                    const progress = Math.min((a.current/a.target)*100,100);
+                    const isComplete = progress >= 100;
+                    return (
+                      <div key={a.id} className="p-3 rounded-xl" style={isComplete?{background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.3)'}:{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.07)'}}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={isComplete?'':'grayscale opacity-60'}>{a.icon}</span>
+                          <span className="text-sm font-medium text-white">{a.title}</span>
+                          {isComplete && <Trophy className="w-4 h-4 ml-auto" style={{color:"#f59e0b"}} />}
+                        </div>
+                        <div className="h-1.5 rounded-full overflow-hidden" style={{background:'rgba(255,255,255,0.05)'}}>
+                          <div className="h-full rounded-full" style={{width:`${progress}%`,background:isComplete?'linear-gradient(90deg,#f59e0b,#f97316)':'linear-gradient(90deg,rgba(0,200,255,0.6),rgba(0,150,255,0.4))'}} />
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+            {/* Coming Up */}
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="font-semibold text-white mb-3">📅 Coming Up</div>
+              {countdowns.filter(c=>c.date>=new Date().toISOString().split('T')[0]).sort((a,b)=>a.date>b.date?1:-1).slice(0,4).map(c => {
+                const days = Math.ceil((new Date(c.date)-new Date())/86400000);
+                return (
+                  <div key={c.id} className="flex items-center justify-between py-2" style={{borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
+                    <span className="text-sm text-white">{c.emoji} {c.title}</span>
+                    <span className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>{days}d</span>
+                  </div>
+                );
+              })}
+              {countdowns.filter(c=>c.date>=new Date().toISOString().split('T')[0]).length === 0 && (
+                <div className="text-sm text-center py-4" style={{color:'rgba(148,163,184,0.4)'}}>No upcoming events</div>
+              )}
+            </div>
+          </div>)}
+
+          {/* ── ACHIEVEMENTS from old code hidden ── */}
+          {false && (<div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
@@ -7009,21 +7182,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 })()}
               </div>
             </div>
-          </div>
+          </div>)}
 
-          {/* Daily Quote */}
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-5 text-white">
-            <div className="text-lg italic mb-2">"{todayQuote.quote}"</div>
-            <div className="text-sm text-slate-400">— {todayQuote.author}</div>
-          </div>
-
-          {/* Charity Banner */}
-          {isElite && (
-            <div className="bg-white/5 rounded-2xl p-4 flex items-center gap-3 border border-white/10">
-              <span className="text-lg">💛</span>
-              <span className="text-sm text-gray-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation</span>
-            </div>
-          )}
         </div>
         
         {/* Floating Chat */}
