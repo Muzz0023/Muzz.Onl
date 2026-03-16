@@ -4823,7 +4823,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         className="w-full text-sm text-gray-500 italic bg-transparent focus:outline-none"
                       />
                     </div>
-                  </div>}
+                  </div>
                 </div>
               ))}
             </div>
@@ -8774,7 +8774,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
                       />
                     </div>
-                  </div>}
+                  </div>
                 </div>
               ))}
             </div>
@@ -12100,7 +12100,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
                       style={{ minHeight: '300px' }}
                     />
-                  </div>}
+                  </div>
                 </div>
               ))}
 
