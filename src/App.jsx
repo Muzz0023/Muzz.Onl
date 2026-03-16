@@ -6685,27 +6685,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const todayMood = mentalHealthData[today] || {};
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
     const lastNightSleep = sleepData[yesterday.toISOString().split('T')[0]] || {};
-    const getWeekDays = () => { const now=new Date(),dow=now.getDay(),mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().split('T')[0];}); };
+    const getWeekDays = () => { const now=new Date(),dow=now.getDay(),mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().split("T")[0];}); };
     const weekDays = getWeekDays();
-    const jobs = timesheetData.jobs || [{ id:1, name:'Job 1', hourlyRate:timesheetData.hourlyRate||0, shifts:timesheetData.shifts||{} }];
+    const jobs = timesheetData.jobs || [{ id:1, name:"Job 1", hourlyRate:timesheetData.hourlyRate||0, shifts:timesheetData.shifts||{} }];
     const weeklyWorkHours = jobs.reduce((total,job)=>total+weekDays.reduce((sum,date)=>{const s=job.shifts?.[date]||{};return sum+(parseFloat(s.normalHours)||0)+(parseFloat(s.timeHalfHours)||0)+(parseFloat(s.doubleHours)||0)+(parseFloat(s.doubleHalfHours)||0);},0),0);
     const dayOfYear = Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
-    const moodEmojis = { great:'\u{1F60A}', good:'\u{1F60C}', okay:'\u{1F610}', low:'\u{1F614}', sad:'\u{1F622}', angry:'\u{1F621}' };
+    const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
+
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>&#x1F998;</div>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
               <div className="flex-1">
-                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : 'mate'}!</div>
+                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : "mate"}!</div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : 'Welcome back legend!'}</div>
-                  {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:'rgba(255,215,0,0.15)',border:'1px solid rgba(255,215,0,0.3)'}}><span className="text-xs font-bold" style={{color:'#FFD700'}}>&#x26A1; ELITE</span></div>}
+                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : "Welcome back legend!"}</div>
+                  {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:"rgba(255,215,0,0.15)",border:"1px solid rgba(255,215,0,0.3)"}}><span className="text-xs font-bold" style={{color:"#FFD700"}}>⚡ ELITE</span></div>}
                 </div>
               </div>
             </div>
@@ -6715,7 +6716,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
         </div>
+
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs text-slate-400">Monthly Bills</div>
@@ -6730,124 +6733,151 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="text-xl font-bold text-white">${totalStocks.toLocaleString()}</div>
             </div>
           </div>
+
           <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-            <h3 className="font-semibold text-white mb-3">&#x1F4CA; Today's Summary</h3>
+            <h3 className="font-semibold text-white mb-3 flex items-center gap-2"><span>📊</span> Today's Summary</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 text-left" style={{background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.2)"}}>
-                <div className="text-2xl mb-1">&#x1F319;</div>
-                <div className="text-xs" style={{color:"rgba(129,140,248,0.9)"}}>Last Night</div>
-                <div className="text-xl font-bold text-white">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
+              <button onClick={() => setActiveView("gym")} className="rounded-xl p-3 text-left" style={{background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.2)"}}>
+                <div className="text-2xl mb-1">🌙</div>
+                <div className="text-xs font-medium" style={{color:"rgba(129,140,248,0.9)"}}>Last Night</div>
+                <div className="text-xl font-bold text-white">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : "—"}</div>
               </button>
-              <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 text-left" style={{background:"rgba(236,72,153,0.1)",border:"1px solid rgba(236,72,153,0.2)"}}>
-                <div className="text-2xl mb-1">&#x1F9E0;</div>
-                <div className="text-xs" style={{color:"rgba(244,114,182,0.9)"}}>Mood</div>
-                <div className="text-xl font-bold text-white">{todayMood.mood ? ({great:'\u{1F60A}',good:'\u{1F60C}',okay:'\u{1F610}',low:'\u{1F614}',sad:'\u{1F622}',angry:'\u{1F621}'}[todayMood.mood] || '—') : '—'}</div>
+              <button onClick={() => setActiveView("gym")} className="rounded-xl p-3 text-left" style={{background:"rgba(236,72,153,0.1)",border:"1px solid rgba(236,72,153,0.2)"}}>
+                <div className="text-2xl mb-1">🧠</div>
+                <div className="text-xs font-medium" style={{color:"rgba(244,114,182,0.9)"}}>Mood</div>
+                <div className="text-xl font-bold text-white">{todayMood.mood ? ({great:"😊",good:"😌",okay:"😐",low:"😔",sad:"😢",angry:"😡"}[todayMood.mood]||"—") : "—"}</div>
               </button>
-              <button onClick={() => setActiveView('work')} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
-                <div className="text-2xl mb-1">&#x1F4BC;</div>
-                <div className="text-xs" style={{color:"rgba(96,165,250,0.9)"}}>This Week</div>
-                <div className="text-xl font-bold text-white">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : '—'}</div>
+              <button onClick={() => setActiveView("work")} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
+                <div className="text-2xl mb-1">💼</div>
+                <div className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>This Week</div>
+                <div className="text-xl font-bold text-white">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : "—"}</div>
               </button>
-              <button onClick={() => setActiveView('tasks')} className="rounded-xl p-3 text-left" style={{background:"rgba(139,92,246,0.1)",border:"1px solid rgba(139,92,246,0.2)"}}>
-                <div className="text-2xl mb-1">&#x2705;</div>
-                <div className="text-xs" style={{color:"rgba(192,132,252,0.9)"}}>Tasks</div>
-                <div className="text-xl font-bold text-white">{dailyTasks.filter(t=>t.completed).length}/{dailyTasks.length}</div>
+              <button onClick={() => setActiveView("tasks")} className="rounded-xl p-3 text-left" style={{background:"rgba(139,92,246,0.1)",border:"1px solid rgba(139,92,246,0.2)"}}>
+                <div className="text-2xl mb-1">✅</div>
+                <div className="text-xs font-medium" style={{color:"rgba(192,132,252,0.9)"}}>Tasks</div>
+                <div className="text-xl font-bold text-white">{completedDailyTasks}/{dailyTasks.length}</div>
               </button>
             </div>
           </div>
+
           <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
             {[
-              {label:'Habits',emoji:'&#x1F525;',view:'habits'},
-              {label:'Sleep',emoji:'&#x1F319;',view:'gym'},
-              {label:'Mood',emoji:'&#x1F9E0;',view:'gym'},
-              {label:'Work',emoji:'&#x1F4BC;',view:'work'},
-              {label:'Diet',emoji:'&#x1F957;',view:'diet'},
-              {label:'Bills',emoji:'&#x1F4B8;',view:'varied'},
-              {label:'Invest',emoji:'&#x1F4C8;',view:'investments'},
-              {label:'Tasks',emoji:'&#x2705;',view:'tasks'},
+              {label:"Habits",emoji:"🔥",view:"habits"},
+              {label:"Sleep",emoji:"🌙",view:"gym"},
+              {label:"Mood",emoji:"🧠",view:"gym"},
+              {label:"Work",emoji:"💼",view:"work"},
+              {label:"Diet",emoji:"🥗",view:"diet"},
+              {label:"Bills",emoji:"💸",view:"varied"},
+              {label:"Invest",emoji:"📈",view:"investments"},
+              {label:"Tasks",emoji:"✅",view:"tasks"},
             ].map(s => (
               <button key={s.view} onClick={() => setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                <span className="text-2xl mb-1" dangerouslySetInnerHTML={{__html:s.emoji}} />
+                <span className="text-2xl mb-1">{s.emoji}</span>
                 <span className="text-xs text-slate-400">{s.label}</span>
               </button>
             ))}
           </div>
+
           <div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="font-semibold text-white mb-3">&#x1F3C6; Achievements</div>
-              <div className="space-y-2">
-                {[
-                  {icon:"💰",title:"First $1K",current:netWorth,target:1000},
-                  {icon:"🏆",title:"$10K Club",current:netWorth,target:10000},
-                  {icon:"👑",title:"$50K Club",current:netWorth,target:50000},
-                  {icon:"🚀",title:"$100K Club",current:netWorth,target:100000},
-                  {icon:"💎",title:"$250K Club",current:netWorth,target:250000},
-                  {icon:"🌟",title:"$500K Club",current:netWorth,target:500000},
-                  {icon:"🌿",title:"20% Saver",current:savingsRate,target:20},
-                  {icon:"💪",title:"Super Saver 50%",current:savingsRate,target:50},
-                  {icon:"🎯",title:"5 Investments",current:stocks.length,target:5},
-                  {icon:"📊",title:"10 Investments",current:stocks.length,target:10},
-                  {icon:"🏠",title:"First Asset",current:assets.length,target:1},
-                  {icon:"🔥",title:"5 Habits",current:habits.length,target:5},
-                  {icon:"⚡",title:"10 Habits",current:habits.length,target:10},
-                  {icon:"📅",title:"First Countdown",current:countdowns.length,target:1},
-                ].sort((a,b)=>{const ap=Math.min((a.current/a.target)*100,100),bp=Math.min((b.current/b.target)*100,100);if(ap>=100&&bp<100)return 1;if(ap<100&&bp>=100)return -1;return bp-ap;})
-                .map((a,i)=>{
-                  const p=Math.min((a.current/a.target)*100,100); const done=p>=100;
-                  return (
-                    <div key={i} className="p-2 rounded-xl" style={done?{background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)'}:{background:'rgba(255,255,255,0.02)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span dangerouslySetInnerHTML={{__html:a.icon}} className={done?'':'grayscale opacity-50'} />
-                        <span className="text-xs text-white">{a.title}</span>
-                        {done && <span className="ml-auto text-xs" style={{color:'#f59e0b'}}>&#x2713;</span>}
+              <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                {(() => {
+                  const achievementData = [
+                    { id:"first_1k", icon:"💰", title:"First $1K", current:netWorth, target:1000, unit:"$" },
+                    { id:"5k_club", icon:"💵", title:"$5K Club", current:netWorth, target:5000, unit:"$" },
+                    { id:"10k_club", icon:"🏆", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
+                    { id:"25k_club", icon:"💎", title:"$25K Club", current:netWorth, target:25000, unit:"$" },
+                    { id:"50k_club", icon:"👑", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
+                    { id:"100k_club", icon:"🚀", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
+                    { id:"250k_club", icon:"⭐", title:"$250K Club", current:netWorth, target:250000, unit:"$" },
+                    { id:"500k_club", icon:"🌟", title:"$500K Club", current:netWorth, target:500000, unit:"$" },
+                    { id:"1m_club", icon:"🎯", title:"Millionaire", current:netWorth, target:1000000, unit:"$" },
+                    { id:"saver_10", icon:"🌱", title:"Baby Saver", current:savingsRate, target:10, unit:"%" },
+                    { id:"saver_20", icon:"🌿", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
+                    { id:"super_saver", icon:"💪", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
+                    { id:"mega_saver", icon:"🦸", title:"Mega Saver", current:savingsRate, target:70, unit:"%" },
+                    { id:"first_stock", icon:"📈", title:"First Investment", current:stocks.length, target:1, unit:" stocks" },
+                    { id:"diversified", icon:"🎯", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
+                    { id:"portfolio_pro", icon:"📊", title:"Portfolio Pro", current:stocks.length, target:10, unit:" stocks" },
+                    { id:"task_starter", icon:"✅", title:"Task Starter", current:completedDailyTasks, target:1, unit:" tasks" },
+                    { id:"task_master", icon:"🏅", title:"Task Master", current:completedDailyTasks, target:5, unit:" tasks" },
+                    { id:"asset_owner", icon:"🏠", title:"Asset Owner", current:assets.length, target:1, unit:" assets" },
+                    { id:"asset_collector", icon:"🏰", title:"Asset Collector", current:assets.length, target:5, unit:" assets" },
+                  ];
+                  const sorted = [...achievementData].sort((a,b) => {
+                    const ap = Math.min((a.current/a.target)*100,100);
+                    const bp = Math.min((b.current/b.target)*100,100);
+                    if(ap>=100&&bp<100) return 1;
+                    if(ap<100&&bp>=100) return -1;
+                    return bp-ap;
+                  });
+                  return sorted.map(a => {
+                    const progress = Math.min((a.current/a.target)*100,100);
+                    const isComplete = progress >= 100;
+                    return (
+                      <div key={a.id} className="p-3 rounded-xl" style={isComplete?{background:"rgba(245,158,11,0.1)",border:"1px solid rgba(245,158,11,0.3)"}:{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className={`text-2xl ${isComplete?"":"grayscale opacity-60"}`}>{a.icon}</div>
+                          <div className="flex-1">
+                            <div className="font-medium text-white">{a.title}</div>
+                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>
+                              {isComplete ? "🎉 Complete!" : `${a.unit==="$"?"$":""}${a.current.toLocaleString(undefined,{maximumFractionDigits:0})}${a.unit!=="$"?a.unit:""} / ${a.unit==="$"?"$":""}${a.target.toLocaleString()}${a.unit!=="$"?a.unit:""}`}
+                            </div>
+                          </div>
+                          {isComplete && <Trophy className="w-5 h-5" style={{color:"#f59e0b"}} />}
+                        </div>
+                        <div className="h-2 rounded-full overflow-hidden" style={{background:"rgba(255,255,255,0.06)"}}>
+                          <div className="h-full rounded-full transition-all duration-500" style={{width:`${progress}%`,background:isComplete?"linear-gradient(90deg,#f59e0b,#f97316)":"rgba(0,200,255,0.5)"}} />
+                        </div>
+                        {!isComplete && <div className="text-xs text-right mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{progress.toFixed(0)}%</div>}
                       </div>
-                      <div className="h-1 rounded-full" style={{background:'rgba(255,255,255,0.05)'}}>
-                        <div className="h-full rounded-full" style={{width:`${p}%`,background:done?'#f59e0b':'rgba(0,200,255,0.5)'}} />
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
               </div>
             </div>
+
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="font-semibold text-white mb-3">&#x1F4C5; Coming Up</div>
+              <div className="font-semibold text-white mb-3">📅 Coming Up</div>
               {(() => {
-                const now = today;
                 const thisYear = new Date().getFullYear();
                 const bdayEvents = (birthdays||[]).map(b => {
                   if (!b.date) return null;
-                  const parts = b.date.split('-');
+                  const parts = b.date.split("-");
                   let next = `${thisYear}-${parts[1]}-${parts[2]}`;
-                  if (next < now) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
-                  const days = Math.ceil((new Date(next)-new Date())/86400000);
-                  return { id:'b'+b.id, title:`${b.name}'s Birthday`, emoji:'🎂', date:next, days };
+                  if (next < today) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
+                  return { id:"b"+b.id, title:`${b.name}'s Birthday`, emoji:"🎂", days:Math.ceil((new Date(next)-new Date())/86400000) };
                 }).filter(Boolean);
-                const cdEvents = countdowns.filter(c=>c.date>=now).map(c => ({
-                  id:c.id, title:c.title, emoji:c.emoji||'⏳', date:c.date,
-                  days:Math.ceil((new Date(c.date)-new Date())/86400000)
+                const cdEvents = (countdowns||[]).filter(c=>c.date>=today).map(c=>({
+                  id:c.id, title:c.title, emoji:c.emoji||"⏳", days:Math.ceil((new Date(c.date)-new Date())/86400000)
                 }));
-                const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,6);
-                if (all.length===0) return <div className="text-sm text-center py-4" style={{color:'rgba(148,163,184,0.4)'}}>No upcoming events</div>;
+                const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
+                if (all.length===0) return <div className="text-sm text-center py-4" style={{color:"rgba(148,163,184,0.4)"}}>No upcoming events</div>;
                 return all.map(ev => (
-                  <div key={ev.id} className="flex items-center justify-between py-2" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div key={ev.id} className="flex items-center justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
                     <span className="text-sm text-white">{ev.emoji} {ev.title}</span>
-                    <span className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>{ev.days}d</span>
+                    <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.6)"}}>{ev.days}d</span>
                   </div>
                 ));
               })()}
             </div>
           </div>
+
           <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.08)"}}>
             <div className="text-base italic text-white mb-2">"{todayQuote.quote}"</div>
-            <div className="text-xs text-slate-400">&#x2014; {todayQuote.author}</div>
+            <div className="text-xs text-slate-400">— {todayQuote.author}</div>
           </div>
+
           {isElite && (
             <div className="rounded-2xl p-4 flex items-center gap-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)"}}>
-              <span className="text-lg">&#x1F49B;</span>
-              <span className="text-sm text-slate-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation &amp; Mark Hughes Foundation</span>
+              <span className="text-lg">💛</span>
+              <span className="text-sm text-slate-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation</span>
             </div>
           )}
+
         </div>
+
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
