@@ -2831,7 +2831,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="bg-transparent pb-24" style={{minHeight:"100vh",overflowY:"auto"}}>
         <Sidebar />
         <SaveIndicator />
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
@@ -6777,11 +6777,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="font-semibold text-white mb-3">&#x1F3C6; Achievements</div>
               <div className="space-y-2">
                 {[
-                  {icon:"&#x1F4B0;",title:"First $1K",current:netWorth,target:1000},
-                  {icon:"&#x1F3C6;",title:"$10K Club",current:netWorth,target:10000},
-                  {icon:"&#x1F451;",title:"$50K Club",current:netWorth,target:50000},
-                  {icon:"&#x1F33F;",title:"20% Saver",current:savingsRate,target:20},
-                  {icon:"&#x1F4AA;",title:"50% Saver",current:savingsRate,target:50},
+                  {icon:"💰",title:"First $1K",current:netWorth,target:1000},
+                  {icon:"🏆",title:"$10K Club",current:netWorth,target:10000},
+                  {icon:"👑",title:"$50K Club",current:netWorth,target:50000},
+                  {icon:"🚀",title:"$100K Club",current:netWorth,target:100000},
+                  {icon:"💎",title:"$250K Club",current:netWorth,target:250000},
+                  {icon:"🌟",title:"$500K Club",current:netWorth,target:500000},
+                  {icon:"🌿",title:"20% Saver",current:savingsRate,target:20},
+                  {icon:"💪",title:"Super Saver 50%",current:savingsRate,target:50},
+                  {icon:"🎯",title:"5 Investments",current:stocks.length,target:5},
+                  {icon:"📊",title:"10 Investments",current:stocks.length,target:10},
+                  {icon:"🏠",title:"First Asset",current:assets.length,target:1},
+                  {icon:"🔥",title:"5 Habits",current:habits.length,target:5},
+                  {icon:"⚡",title:"10 Habits",current:habits.length,target:10},
+                  {icon:"📅",title:"First Countdown",current:countdowns.length,target:1},
                 ].sort((a,b)=>{const ap=Math.min((a.current/a.target)*100,100),bp=Math.min((b.current/b.target)*100,100);if(ap>=100&&bp<100)return 1;if(ap<100&&bp>=100)return -1;return bp-ap;})
                 .map((a,i)=>{
                   const p=Math.min((a.current/a.target)*100,100); const done=p>=100;
@@ -6802,16 +6811,30 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
             <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="font-semibold text-white mb-3">&#x1F4C5; Coming Up</div>
-              {countdowns.filter(c=>c.date>=today).sort((a,b)=>a.date>b.date?1:-1).slice(0,5).map(c => {
-                const days = Math.ceil((new Date(c.date)-new Date())/86400000);
-                return (
-                  <div key={c.id} className="flex items-center justify-between py-2" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <span className="text-sm text-white">{c.emoji} {c.title}</span>
-                    <span className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>{days}d</span>
+              {(() => {
+                const now = today;
+                const thisYear = new Date().getFullYear();
+                const bdayEvents = (birthdays||[]).map(b => {
+                  if (!b.date) return null;
+                  const parts = b.date.split('-');
+                  let next = `${thisYear}-${parts[1]}-${parts[2]}`;
+                  if (next < now) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
+                  const days = Math.ceil((new Date(next)-new Date())/86400000);
+                  return { id:'b'+b.id, title:`${b.name}'s Birthday`, emoji:'🎂', date:next, days };
+                }).filter(Boolean);
+                const cdEvents = countdowns.filter(c=>c.date>=now).map(c => ({
+                  id:c.id, title:c.title, emoji:c.emoji||'⏳', date:c.date,
+                  days:Math.ceil((new Date(c.date)-new Date())/86400000)
+                }));
+                const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,6);
+                if (all.length===0) return <div className="text-sm text-center py-4" style={{color:'rgba(148,163,184,0.4)'}}>No upcoming events</div>;
+                return all.map(ev => (
+                  <div key={ev.id} className="flex items-center justify-between py-2" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <span className="text-sm text-white">{ev.emoji} {ev.title}</span>
+                    <span className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>{ev.days}d</span>
                   </div>
-                );
-              })}
-              {countdowns.filter(c=>c.date>=today).length===0 && <div className="text-sm text-center py-4" style={{color:'rgba(148,163,184,0.4)'}}>No upcoming events</div>}
+                ));
+              })()}
             </div>
           </div>
           <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.08)"}}>
