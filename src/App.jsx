@@ -2348,19 +2348,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'LIFE', id:'tasks', label:'Tasks', icon:'✅' },
       { section: 'LIFE', id:'countdowns', label:'Countdowns', icon:'⏳' },
       { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
-      { section: 'LIFE', id:'diet', label:'Diet', icon:'🥗' },
+      { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
+      { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
+      { section: 'HEALTH', id:'diet', label:'Diet', icon:'🥗', elite:true },
+      { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
       { section: 'FINANCE', id:'varied', label:'Bills', icon:'💸', elite:true },
       { section: 'FINANCE', id:'assets', label:'Assets', icon:'🏠', elite:true },
       { section: 'FINANCE', id:'investments', label:'Investments', icon:'📈', elite:true },
-      { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
-      { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
-      { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
       { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
     ];
-    const sections = ['LIFE','FINANCE','HEALTH','ACCOUNT'];
-    const sectionColors = { LIFE:'#00c8ff', FINANCE:'#22c55e', HEALTH:'#f97316', ACCOUNT:'#8b5cf6' };
+    const sections = ['LIFE','HEALTH','FINANCE','ACCOUNT'];
+    const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', ACCOUNT:'#8b5cf6' };
 
     return (
       <>
