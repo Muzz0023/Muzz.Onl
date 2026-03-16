@@ -13660,10 +13660,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const startIdx = hours.indexOf(block.startHour);
                         const endIdx = hours.indexOf(block.endHour);
                         if(startIdx === -1) return null;
-                        const actualEnd = endIdx === -1 ? hours.length : endIdx;
+                        const actualEnd = endIdx === -1 ? hours.length : endIdx + 1;
                         const ROW_H = 41;
                         const top = startIdx * ROW_H + 1;
-                        const height = (actualEnd - startIdx) * ROW_H - 1;
+                        const height = (actualEnd - startIdx) * ROW_H - 4;
                         return (
                           <div key={block.id}
                             onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
