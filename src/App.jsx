@@ -6700,6 +6700,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
+          {reminders && reminders.length > 0 && (
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="font-semibold text-white flex items-center gap-2">📌 Reminders</div>
+                <button onClick={() => setActiveView('reminders')} className="text-xs" style={{color:"rgba(0,200,255,0.5)"}}>view all →</button>
+              </div>
+              <div className="space-y-2">
+                {reminders.filter(r => r.title).slice(0,4).map(r => (
+                  <div key={r.id} className="flex items-center justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                    <span className="text-sm text-white">{r.title}</span>
+                    {r.permanent ? (
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.6)"}}>📌 always</span>
+                    ) : r.date ? (
+                      <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.5)"}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.08)"}}>
             <div className="text-base italic text-white mb-2">"{todayQuote.quote}"</div>
             <div className="text-xs text-slate-400">— {todayQuote.author}</div>
