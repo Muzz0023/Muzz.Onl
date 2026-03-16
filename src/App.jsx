@@ -2357,37 +2357,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
     ];
-
     const sections = ['LIFE','FINANCE','HEALTH','ACCOUNT'];
     const sectionColors = { LIFE:'#00c8ff', FINANCE:'#22c55e', HEALTH:'#f97316', ACCOUNT:'#8b5cf6' };
 
     return (
       <>
-        {/* Hamburger */}
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="fixed top-4 left-4 z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl"
-          style={{background:"rgba(5,15,30,0.9)",border:"1px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
+        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{background:"rgba(5,15,30,0.9)",border:"1px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
         </button>
 
-        {/* Overlay */}
-        <div
-          className="fixed inset-0 z-50 transition-all duration-300"
-          style={{
-            background:"rgba(2,8,20,0.97)",
-            backdropFilter:"blur(20px)",
-            opacity: sidebarOpen ? 1 : 0,
-            pointerEvents: sidebarOpen ? 'all' : 'none',
-            visibility: sidebarOpen ? 'visible' : 'hidden',
-          }}>
-
-          {/* Grid bg */}
+        <div className="fixed inset-0 z-50 transition-all duration-300" style={{background:"rgba(2,8,20,0.98)",backdropFilter:"blur(20px)",opacity:sidebarOpen?1:0,pointerEvents:sidebarOpen?'all':'none',visibility:sidebarOpen?'visible':'hidden'}}>
           <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
 
-          {/* Header */}
           <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
             <div>
               <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'20px',letterSpacing:'4px'}}>MUZZ</div>
@@ -2398,31 +2381,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </button>
           </div>
 
-          {/* Compact grid — 2 columns, all sections visible */}
           <div className="relative z-10 px-4 py-4">
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+            <div className="grid grid-cols-2 gap-x-3">
               {sections.map(sec => {
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
-                  <div key={sec} className="mb-3">
-                    <div className="text-xs font-mono mb-2 px-1" style={{color:`${color}60`,letterSpacing:'2px'}}>// {sec}</div>
+                  <div key={sec} className="mb-4">
+                    <div className="text-xs font-mono mb-2 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
                       const locked = item.elite && !isElite;
                       return (
-                        <button
-                          key={item.id}
+                        <button key={item.id}
                           onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(item.id);} setSidebarOpen(false); }}
-                          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl mb-1 transition-all text-left"
-                          style={{
-                            background: active ? `${color}15` : 'rgba(255,255,255,0.02)',
-                            border: `1px solid ${active ? `${color}50` : 'rgba(255,255,255,0.05)'}`,
-                          }}>
-                          <span className="text-base">{item.icon}</span>
-                          <span className="text-sm font-medium" style={{color: active ? color : locked ? 'rgba(148,163,184,0.35)' : 'rgba(255,255,255,0.8)'}}>{item.label}</span>
+                          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
+                          style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
+                          <span className="text-base leading-none">{item.icon}</span>
+                          <span className="text-sm font-medium" style={{color:active?color:locked?'rgba(148,163,184,0.3)':'rgba(255,255,255,0.8)'}}>{item.label}</span>
                           {locked && <span className="ml-auto text-xs" style={{color:'rgba(0,200,255,0.3)'}}>⚡</span>}
-                          {active && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{background:color,boxShadow:`0 0 6px ${color}`}}></span>}
+                          {active && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}></span>}
                         </button>
                       );
                     })}
@@ -2431,15 +2409,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               })}
             </div>
 
-            {/* Bottom actions */}
-            <div className="mt-2 pt-3" style={{borderTop:'1px solid rgba(0,200,255,0.08)'}}>
+            <div className="mt-1 pt-3" style={{borderTop:'1px solid rgba(0,200,255,0.08)'}}>
               <div className="grid grid-cols-2 gap-2 mb-2">
                 <button onClick={() => { exportData(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                   <Download className="w-4 h-4" /> Export
                 </button>
-                <button onClick={() => { document.getElementById('import-file')?.click(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
+                <label className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm cursor-pointer" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                   <Upload className="w-4 h-4" /> Import
-                </button>
+                  <input type="file" id="import-file" accept=".json" className="hidden" onChange={(e) => { importData(e); setSidebarOpen(false); }} />
+                </label>
               </div>
               <button onClick={() => { handleSignOut(); setSidebarOpen(false); }} className="w-full py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.6)'}}>
                 Sign Out
@@ -2448,45 +2426,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
       </>
-    );
-  };
-                    reader.readAsText(file);
-                    e.target.value = '';
-                  }} />
-                  <Plus className="w-4 h-4" />
-                  <span className="text-sm font-medium">Import</span>
-                </label>
-              </div>
-              <button onClick={() => { signOut(); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
-                style={{background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.1)",color:"rgba(239,68,68,0.7)"}}>
-                <LogOut className="w-4 h-4" />
-                <span className="text-sm font-medium">Sign Out</span>
-              </button>
-              <button
-                onClick={async () => {
-                  if (confirm('Are you sure you want to delete your account? This will permanently delete all your data and cannot be undone.')) {
-                    if (confirm('This is permanent. All your data will be lost forever. Are you absolutely sure?')) {
-                      try { await supabase.deleteUserData(userId); alert('Your account and all data has been permanently deleted.'); signOut(); setSidebarOpen(false); }
-                      catch (err) { alert('Failed to delete account. Please try again or contact support at Muzz.onl@outlook.com'); }
-                    }
-                  }
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
-                style={{color:"rgba(239,68,68,0.4)"}}>
-                <Trash2 className="w-4 h-4" />
-                <span className="text-sm font-medium">Delete Account</span>
-              </button>
-              <div className="text-center pt-2">
-                <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.2)"}}>MUZZ v3.0 // LIFE OS</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Hamburger button */}
-        <button onClick={() => setSidebarOpen(true)} className="fixed top-4 left-4 z-30 p-2.5 rounded-2xl transition-all" style={{background:"rgba(2,12,27,0.9)",backdropFilter:"blur(20px)",border:"1px solid rgba(0,200,255,0.2)",boxShadow:"0 0 20px rgba(0,200,255,0.1)"}}><Menu className="w-5 h-5" style={{color:"#00c8ff"}} /></button>
-      </div>
     );
   };
 
