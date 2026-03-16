@@ -2338,6 +2338,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
+    const [openSections, setOpenSections] = React.useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
+    const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
     const menuSections = [
       { title: 'LIFE', items: [
         { id: 'home', label: 'Dashboard', icon: Home },
@@ -2396,7 +2398,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* Scrollable content */}
-          <div id="muzz-menu-scroll" className="relative z-10 px-6 py-6" style={{overflowY:"auto",height:"calc(100dvh - 120px)",scrollBehavior:"auto"}}>
+          <div id="muzz-menu-scroll" className="relative z-10 px-6 py-6">
             {menuSections.filter(s => s.items.length > 0).map(section => (
               <div key={section.title} className="mb-8">
                 <div className="text-xs font-mono mb-3" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// {section.title}</div>
@@ -4919,7 +4921,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         className="w-full text-sm text-gray-500 italic bg-transparent focus:outline-none"
                       />
                     </div>
-                  </div>
+                  </div>}
                 </div>
               ))}
             </div>
@@ -6689,239 +6691,141 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const weeklyWorkHours = jobs.reduce((total,job)=>total+weekDays.reduce((sum,date)=>{const s=job.shifts?.[date]||{};return sum+(parseFloat(s.normalHours)||0)+(parseFloat(s.timeHalfHours)||0)+(parseFloat(s.doubleHours)||0)+(parseFloat(s.doubleHalfHours)||0);},0),0);
     const dayOfYear = Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
-
-
-    const dashTabs = [
-      { id:'overview', label:'Overview' },
-      { id:'finance', label:'Finance' },
-      { id:'health', label:'Health' },
-      { id:'life', label:'Life' },
-    ];
+    const moodEmojis = { great:'\u{1F60A}', good:'\u{1F60C}', okay:'\u{1F610}', low:'\u{1F614}', sad:'\u{1F622}', angry:'\u{1F621}' };
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-
-        {/* Header */}
-        <div className="pt-16 pb-4 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>🦘</div>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>&#x1F998;</div>
               <div className="flex-1">
                 <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : 'mate'}!</div>
-                <div className="flex items-center gap-2">
-                  <div className="text-xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : 'Welcome back legend!'}</div>
-                  {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:'rgba(255,215,0,0.15)',border:'1px solid rgba(255,215,0,0.3)'}}><span className="text-xs font-bold" style={{color:'#FFD700'}}>⚡ ELITE</span></div>}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : 'Welcome back legend!'}</div>
+                  {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:'rgba(255,215,0,0.15)',border:'1px solid rgba(255,215,0,0.3)'}}><span className="text-xs font-bold" style={{color:'#FFD700'}}>&#x26A1; ELITE</span></div>}
                 </div>
               </div>
             </div>
+            <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
+              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
+              <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
+            </div>
           </div>
         </div>
-
-        {/* Tab Bar */}
-        <div className="max-w-4xl mx-auto px-6 pt-4 pb-2">
-          <div className="flex gap-2">
-            {dashTabs.map(t => (
-              <button key={t.id} onClick={() => setDashTab(t.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${dashTab===t.id?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>
-                {t.label}
+        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="text-xs text-slate-400">Monthly Bills</div>
+              <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
+            </div>
+            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="text-xs text-slate-400">Savings Rate</div>
+              <div className="text-xl font-bold text-white">{savingsRate.toFixed(0)}%</div>
+            </div>
+            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="text-xs text-slate-400">Portfolio</div>
+              <div className="text-xl font-bold text-white">${totalStocks.toLocaleString()}</div>
+            </div>
+          </div>
+          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+            <h3 className="font-semibold text-white mb-3">&#x1F4CA; Today's Summary</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 text-left" style={{background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.2)"}}>
+                <div className="text-2xl mb-1">&#x1F319;</div>
+                <div className="text-xs" style={{color:"rgba(129,140,248,0.9)"}}>Last Night</div>
+                <div className="text-xl font-bold text-white">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
+              </button>
+              <button onClick={() => setActiveView('gym')} className="rounded-xl p-3 text-left" style={{background:"rgba(236,72,153,0.1)",border:"1px solid rgba(236,72,153,0.2)"}}>
+                <div className="text-2xl mb-1">&#x1F9E0;</div>
+                <div className="text-xs" style={{color:"rgba(244,114,182,0.9)"}}>Mood</div>
+                <div className="text-xl font-bold text-white">{todayMood.mood ? ({great:'\u{1F60A}',good:'\u{1F60C}',okay:'\u{1F610}',low:'\u{1F614}',sad:'\u{1F622}',angry:'\u{1F621}'}[todayMood.mood] || '—') : '—'}</div>
+              </button>
+              <button onClick={() => setActiveView('work')} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
+                <div className="text-2xl mb-1">&#x1F4BC;</div>
+                <div className="text-xs" style={{color:"rgba(96,165,250,0.9)"}}>This Week</div>
+                <div className="text-xl font-bold text-white">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : '—'}</div>
+              </button>
+              <button onClick={() => setActiveView('tasks')} className="rounded-xl p-3 text-left" style={{background:"rgba(139,92,246,0.1)",border:"1px solid rgba(139,92,246,0.2)"}}>
+                <div className="text-2xl mb-1">&#x2705;</div>
+                <div className="text-xs" style={{color:"rgba(192,132,252,0.9)"}}>Tasks</div>
+                <div className="text-xl font-bold text-white">{dailyTasks.filter(t=>t.completed).length}/{dailyTasks.length}</div>
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+            {[
+              {label:'Habits',emoji:'&#x1F525;',view:'habits'},
+              {label:'Sleep',emoji:'&#x1F319;',view:'gym'},
+              {label:'Mood',emoji:'&#x1F9E0;',view:'gym'},
+              {label:'Work',emoji:'&#x1F4BC;',view:'work'},
+              {label:'Diet',emoji:'&#x1F957;',view:'diet'},
+              {label:'Bills',emoji:'&#x1F4B8;',view:'varied'},
+              {label:'Invest',emoji:'&#x1F4C8;',view:'investments'},
+              {label:'Tasks',emoji:'&#x2705;',view:'tasks'},
+            ].map(s => (
+              <button key={s.view} onClick={() => setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
+                <span className="text-2xl mb-1" dangerouslySetInnerHTML={{__html:s.emoji}} />
+                <span className="text-xs text-slate-400">{s.label}</span>
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Tab Content */}
-        <div className="max-w-4xl mx-auto px-6 py-4 space-y-4">
-
-          {/* OVERVIEW */}
-          {dashTab === 'overview' && (
-            <div className="space-y-4">
-              <div className="rounded-2xl p-5" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
-                <div className="text-sm mb-1" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
-                <div className="text-5xl font-bold text-white">${netWorth.toLocaleString()}</div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                  <div className="text-xs text-slate-400">Bills</div>
-                  <div className="text-xl font-bold text-white mt-1">${totalMonthly.toFixed(0)}</div>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                  <div className="text-xs text-slate-400">Savings</div>
-                  <div className="text-xl font-bold text-white mt-1">{savingsRate.toFixed(0)}%</div>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                  <div className="text-xs text-slate-400">Portfolio</div>
-                  <div className="text-xl font-bold text-white mt-1">${totalStocks.toLocaleString()}</div>
-                </div>
-              </div>
-              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                <div className="font-semibold text-white mb-3">📊 Today</div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-xl p-3" style={{background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.2)"}}>
-                    <div className="text-2xl mb-1">🌙</div>
-                    <div className="text-xs" style={{color:"rgba(129,140,248,0.8)"}}>Last Night</div>
-                    <div className="text-lg font-bold text-white">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : '—'}</div>
-                  </div>
-                  <div className="rounded-xl p-3" style={{background:"rgba(236,72,153,0.1)",border:"1px solid rgba(236,72,153,0.2)"}}>
-                    <div className="text-2xl mb-1">🧠</div>
-                    <div className="text-xs" style={{color:"rgba(244,114,182,0.8)"}}>Mood</div>
-                    <div className="text-lg font-bold text-white">{todayMood.mood ? {great:'😊',good:'😌',okay:'😐',low:'😔',sad:'😢',angry:'😡'}[todayMood.mood]||'—' : '—'}</div>
-                  </div>
-                  <div className="rounded-xl p-3" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
-                    <div className="text-2xl mb-1">💼</div>
-                    <div className="text-xs" style={{color:"rgba(96,165,250,0.8)"}}>This Week</div>
-                    <div className="text-lg font-bold text-white">{weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:'—'}</div>
-                  </div>
-                  <div className="rounded-xl p-3" style={{background:"rgba(139,92,246,0.1)",border:"1px solid rgba(139,92,246,0.2)"}}>
-                    <div className="text-2xl mb-1">✅</div>
-                    <div className="text-xs" style={{color:"rgba(167,139,250,0.8)"}}>Tasks</div>
-                    <div className="text-lg font-bold text-white">{dailyTasks.filter(t=>t.completed).length}/{dailyTasks.length}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="font-semibold text-white mb-3">&#x1F3C6; Achievements</div>
+              <div className="space-y-2">
                 {[
-                  {label:'Habits',emoji:'🔥',view:'habits'},
-                  {label:'Diet',emoji:'🥗',view:'diet'},
-                  {label:'Bills',emoji:'💸',view:'varied'},
-                  {label:'Invest',emoji:'📈',view:'investments'},
-                ].map(s=>(
-                  <button key={s.view} onClick={()=>setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center transition-all" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                    <span className="text-2xl mb-1">{s.emoji}</span>
-                    <span className="text-xs text-slate-400">{s.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* FINANCE */}
-          {dashTab === 'finance' && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  {label:'Net Worth',value:`$${netWorth.toLocaleString()}`,color:'#00c8ff'},
-                  {label:'Monthly Bills',value:`$${totalMonthly.toFixed(0)}`,color:'#ef4444'},
-                  {label:'Savings Rate',value:`${savingsRate.toFixed(0)}%`,color:'#22c55e'},
-                  {label:'Portfolio',value:`$${totalStocks.toLocaleString()}`,color:'#8b5cf6'},
-                ].map(s=>(
-                  <div key={s.label} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${s.color}25`}}>
-                    <div className="text-xs mb-1" style={{color:`${s.color}90`}}>{s.label}</div>
-                    <div className="text-3xl font-bold text-white">{s.value}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                {[{l:'Bills',e:'💸',v:'varied'},{l:'Assets',e:'🏠',v:'assets'},{l:'Invest',e:'📈',v:'investments'}].map(s=>(
-                  <button key={s.v} onClick={()=>setActiveView(s.v)} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                    <div className="text-2xl mb-1">{s.e}</div><div className="text-xs text-white">{s.l}</div>
-                  </button>
-                ))}
-              </div>
-              <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.08)"}}>
-                <div className="text-base italic text-white mb-2">"{todayQuote.quote}"</div>
-                <div className="text-xs text-slate-400">— {todayQuote.author}</div>
-              </div>
-            </div>
-          )}
-
-          {/* HEALTH */}
-          {dashTab === 'health' && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  {label:'Last Night Sleep',value:lastNightSleep.hoursSlept?`${lastNightSleep.hoursSlept}h`:'—',color:'#6366f1'},
-                  {label:'Today Mood',value:todayMood.mood?{great:'😊',good:'😌',okay:'😐',low:'😔',sad:'😢',angry:'😡'}[todayMood.mood]||'—':'—',color:'#ec4899'},
-                  {label:'Week Work',value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:'—',color:'#f97316'},
-                  {label:'Tasks Done',value:`${dailyTasks.filter(t=>t.completed).length}/${dailyTasks.length}`,color:'#22c55e'},
-                ].map(s=>(
-                  <div key={s.label} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${s.color}25`}}>
-                    <div className="text-xs mb-1" style={{color:`${s.color}90`}}>{s.label}</div>
-                    <div className="text-3xl font-bold text-white">{s.value}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                {[{l:'Sleep',e:'🌙',v:'gym'},{l:'Mood',e:'🧠',v:'gym'},{l:'Work',e:'💼',v:'work'}].map(s=>(
-                  <button key={s.l} onClick={()=>setActiveView(s.v)} className="rounded-2xl p-4 text-center transition-all hover:scale-105" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                    <div className="text-2xl mb-1">{s.e}</div><div className="text-xs text-white">{s.l}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* LIFE */}
-          {dashTab === 'life' && (
-            <div className="space-y-4">
-              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
-                <div className="space-y-2 max-h-56 overflow-y-auto">
-                  {[
-                    {icon:"💰",title:"First $1K",current:netWorth,target:1000},
-                    {icon:"🏆",title:"$10K Club",current:netWorth,target:10000},
-                    {icon:"👑",title:"$50K Club",current:netWorth,target:50000},
-                    {icon:"🚀",title:"$100K Club",current:netWorth,target:100000},
-                    {icon:"🌿",title:"20% Saver",current:savingsRate,target:20},
-                    {icon:"💪",title:"50% Saver",current:savingsRate,target:50},
-                    {icon:"🎯",title:"5 Stocks",current:stocks.length,target:5},
-                  ].sort((a,b)=>{
-                    const ap=Math.min((a.current/a.target)*100,100);
-                    const bp=Math.min((b.current/b.target)*100,100);
-                    if(ap>=100&&bp<100)return 1;
-                    if(ap<100&&bp>=100)return -1;
-                    return bp-ap;
-                  }).map((a,i)=>{
-                    const p=Math.min((a.current/a.target)*100,100);
-                    const done=p>=100;
-                    return (
-                      <div key={i} className="p-2 rounded-xl flex items-center gap-3" style={done?{background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)'}:{background:'rgba(255,255,255,0.02)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                        <span className={done?'':'grayscale opacity-50'}>{a.icon}</span>
-                        <div className="flex-1">
-                          <div className="text-xs text-white">{a.title}</div>
-                          <div className="h-1 rounded-full mt-1" style={{background:'rgba(255,255,255,0.05)'}}>
-                            <div className="h-full rounded-full" style={{width:`${p}%`,background:done?'#f59e0b':'rgba(0,200,255,0.5)'}} />
-                          </div>
-                        </div>
-                        {done && <span style={{color:'#f59e0b',fontSize:'12px'}}>✓</span>}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                <div className="font-semibold text-white mb-3">📅 Coming Up</div>
-                {countdowns.filter(c=>c.date>=today).sort((a,b)=>a.date>b.date?1:-1).slice(0,5).map(c=>{
-                  const days=Math.ceil((new Date(c.date)-new Date())/86400000);
+                  {icon:"&#x1F4B0;",title:"First $1K",current:netWorth,target:1000},
+                  {icon:"&#x1F3C6;",title:"$10K Club",current:netWorth,target:10000},
+                  {icon:"&#x1F451;",title:"$50K Club",current:netWorth,target:50000},
+                  {icon:"&#x1F33F;",title:"20% Saver",current:savingsRate,target:20},
+                  {icon:"&#x1F4AA;",title:"50% Saver",current:savingsRate,target:50},
+                ].sort((a,b)=>{const ap=Math.min((a.current/a.target)*100,100),bp=Math.min((b.current/b.target)*100,100);if(ap>=100&&bp<100)return 1;if(ap<100&&bp>=100)return -1;return bp-ap;})
+                .map((a,i)=>{
+                  const p=Math.min((a.current/a.target)*100,100); const done=p>=100;
                   return (
-                    <div key={c.id} className="flex items-center justify-between py-2" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                      <span className="text-sm text-white">{c.emoji} {c.title}</span>
-                      <span className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>{days}d</span>
+                    <div key={i} className="p-2 rounded-xl" style={done?{background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)'}:{background:'rgba(255,255,255,0.02)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span dangerouslySetInnerHTML={{__html:a.icon}} className={done?'':'grayscale opacity-50'} />
+                        <span className="text-xs text-white">{a.title}</span>
+                        {done && <span className="ml-auto text-xs" style={{color:'#f59e0b'}}>&#x2713;</span>}
+                      </div>
+                      <div className="h-1 rounded-full" style={{background:'rgba(255,255,255,0.05)'}}>
+                        <div className="h-full rounded-full" style={{width:`${p}%`,background:done?'#f59e0b':'rgba(0,200,255,0.5)'}} />
+                      </div>
                     </div>
                   );
                 })}
-                {countdowns.filter(c=>c.date>=today).length===0 && <div className="text-sm text-center py-3" style={{color:'rgba(148,163,184,0.4)'}}>No upcoming events</div>}
               </div>
             </div>
+            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
+              <div className="font-semibold text-white mb-3">&#x1F4C5; Coming Up</div>
+              {countdowns.filter(c=>c.date>=today).sort((a,b)=>a.date>b.date?1:-1).slice(0,5).map(c => {
+                const days = Math.ceil((new Date(c.date)-new Date())/86400000);
+                return (
+                  <div key={c.id} className="flex items-center justify-between py-2" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <span className="text-sm text-white">{c.emoji} {c.title}</span>
+                    <span className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>{days}d</span>
+                  </div>
+                );
+              })}
+              {countdowns.filter(c=>c.date>=today).length===0 && <div className="text-sm text-center py-4" style={{color:'rgba(148,163,184,0.4)'}}>No upcoming events</div>}
+            </div>
+          </div>
+          <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.08)"}}>
+            <div className="text-base italic text-white mb-2">"{todayQuote.quote}"</div>
+            <div className="text-xs text-slate-400">&#x2014; {todayQuote.author}</div>
+          </div>
+          {isElite && (
+            <div className="rounded-2xl p-4 flex items-center gap-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)"}}>
+              <span className="text-lg">&#x1F49B;</span>
+              <span className="text-sm text-slate-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation &amp; Mark Hughes Foundation</span>
+            </div>
           )}
-
         </div>
-
-        <FloatingChat
-          isChatOpen={isChatOpen}
-          setIsChatOpen={setIsChatOpen}
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-          isTyping={isTyping}
-          setIsTyping={setIsTyping}
-          financialContext={financialContext}
-          isAiLimitReached={isAiLimitReached}
-          incrementAiUsage={incrementAiUsage}
-          getAiRemaining={getAiRemaining}
-          AI_DAILY_LIMIT={AI_DAILY_LIMIT}
-          muzzPersonality={muzzPersonality}
-        />
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
@@ -8915,7 +8819,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
                       />
                     </div>
-                  </div>
+                  </div>}
                 </div>
               ))}
             </div>
@@ -12241,7 +12145,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 resize-none overflow-hidden"
                       style={{ minHeight: '300px' }}
                     />
-                  </div>
+                  </div>}
                 </div>
               ))}
 
