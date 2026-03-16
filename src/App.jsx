@@ -2571,32 +2571,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           rows={Math.max(2, Math.ceil((reminder.title?.length || 0) / 35))}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="date"
-                              value={reminder.date || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
-                              className="px-3 py-2 rounded-xl text-sm focus:outline-none text-white" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
-                            />
-                            {reminder.date && (
-                              <button
-                                onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: '' } : r))}
-                                className="text-gray-400 hover:text-red-500 transition-colors"
-                                title="Clear date"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            )}
-                          </div>
-                          {getReminderUpcoming(reminder.date) && (
-                            <span className={`text-sm font-medium ${
-                              getReminderUpcoming(reminder.date) === 'Overdue' ? 'text-red-600' :
-                              getReminderUpcoming(reminder.date) === 'Today' || getReminderUpcoming(reminder.date) === 'Tomorrow' ? 'text-green-600' : 
-                              'text-orange-500'
-                            }`}>
-                              {getReminderUpcoming(reminder.date)}
-                            </span>
+                          {/* Permanent toggle */}
+                          <button onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, permanent: !r.permanent, date: r.permanent ? r.date : '' } : r))}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+                            style={{background: reminder.permanent ? 'rgba(0,200,255,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${reminder.permanent ? 'rgba(0,200,255,0.4)' : 'rgba(255,255,255,0.1)'}`, color: reminder.permanent ? '#00c8ff' : 'rgba(148,163,184,0.6)'}}>
+                            📌 {reminder.permanent ? 'Permanent' : 'Permanent?'}
+                          </button>
+                          {/* Date (only show if not permanent) */}
+                          {!reminder.permanent && (
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="date"
+                                value={reminder.date || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
+                                className="px-3 py-2 rounded-xl text-sm focus:outline-none text-white" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
+                              />
+                              {reminder.date && (
+                                <button onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: '' } : r))} className="text-gray-400 hover:text-red-500 transition-colors">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              )}
+                              {getReminderUpcoming(reminder.date) && (
+                                <span className={`text-sm font-medium ${getReminderUpcoming(reminder.date) === 'Overdue' ? 'text-red-600' : getReminderUpcoming(reminder.date) === 'Today' || getReminderUpcoming(reminder.date) === 'Tomorrow' ? 'text-green-600' : 'text-orange-500'}`}>
+                                  {getReminderUpcoming(reminder.date)}
+                                </span>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -6674,6 +6675,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="font-semibold text-white mb-3">📅 Coming Up</div>
               {(() => {
                 const thisYear = new Date().getFullYear();
+                const permanentReminders = (reminders||[]).filter(r => r.permanent && r.title).map(r => ({
+                  id:'r'+r.id, title:r.title, emoji:'📌', days:-1, permanent:true
+                }));
                 const bdayEvents = (birthdays||[]).map(b => {
                   if (!b.date) return null;
                   const parts = b.date.split("-");
