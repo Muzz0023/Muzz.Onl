@@ -2565,9 +2565,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r));
                           }}
                           placeholder="Reminder title"
-                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
+                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"60px"}}
                           rows={Math.max(2, Math.ceil((reminder.title?.length || 0) / 35))}
-                          style={{ minHeight: '60px' }}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <div className="flex items-center gap-2">
@@ -2645,8 +2644,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             e.target.style.height = e.target.scrollHeight + 'px';
                           }}
                           placeholder="Name"
-                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
-                          style={{ minHeight: '48px', overflow: 'hidden' }}
+                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"48px",overflow:"hidden"}
                         />
                         <div className="flex flex-wrap gap-3 items-center">
                           <div className="flex items-center gap-2">
@@ -2842,9 +2840,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                               }}
                               placeholder="What needs to be done today?"
-                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
+                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"70px"}}
                               rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
-                              style={{ minHeight: '70px' }}
                             />
                           </div>
                           <button
@@ -2904,9 +2901,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
                               }}
                               placeholder="What needs to be done this week?"
-                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
+                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"70px"}}
                               rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
-                              style={{ minHeight: '70px' }}
                             />
                             <div className="flex flex-wrap gap-2 items-center">
                               <div className="flex items-center gap-1">
