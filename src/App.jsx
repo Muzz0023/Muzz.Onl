@@ -4132,7 +4132,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="space-y-6">
               {[1,2,3,4].map(week => (
                 <div key={week} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                  <div className="p-4" style={{background:"linear-gradient(135deg,rgba(139,92,246,0.3),rgba(236,72,153,0.2)",borderBottom:"1px solid rgba(139,92,246,0.3)"}}>
+                  <div className="p-4" style={{background:"rgba(139,92,246,0.12)",borderBottom:"1px solid rgba(139,92,246,0.25)"}}>
                     <input type="text" value={workoutPlan.weeks?.[week]?.name||''} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...(prev.weeks||{}), [week]:{...(prev.weeks?.[week]||{}), name:e.target.value}}}))}
                       placeholder={`Week ${week} — Training Focus`}
                       className="w-full bg-transparent text-white text-lg font-semibold placeholder-white/50 focus:outline-none" />
