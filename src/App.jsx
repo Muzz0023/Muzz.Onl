@@ -6786,7 +6786,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             )}
 <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
               <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
-              <div className="text-4xl font-bold text-white hud-number" style={{textShadow:"0 0 20px rgba(0,200,255,0.4)"}}>${netWorth.toLocaleString()}</div>
+              <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
             </div>}
           </div>
         </div>
@@ -6795,15 +6795,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="grid grid-cols-3 gap-3 mt-4">
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Monthly Bills</div>
-              <div className="text-xl font-bold text-white hud-number">${totalMonthly.toFixed(0)}</div>
+              <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Savings Rate</div>
-              <div className="text-xl font-bold text-white hud-number">{savingsRate.toFixed(0)}%</div>
+              <div className="text-xl font-bold text-white">{savingsRate.toFixed(0)}%</div>
             </div>
             <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Portfolio</div>
-              <div className="text-xl font-bold text-white hud-number">${totalStocks.toLocaleString()}</div>
+              <div className="text-xl font-bold text-white">${totalStocks.toLocaleString()}</div>
             </div>
           </div>
           
@@ -14129,7 +14129,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <span className="text-xs font-mono" style={{color:`${s.color}90`,letterSpacing:"1px"}}>{s.label}</span>
                   <span className="text-base">{s.icon}</span>
                 </div>
-                <div className="text-2xl font-bold text-white hud-number" style={{textShadow:`0 0 12px ${s.color}66`}}>{s.value}</div>
+                <div className="text-2xl font-bold text-white" style={{textShadow:`0 0 12px ${s.color}66`}}>{s.value}</div>
                 <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{s.sub}</div>
                 <div className="mt-3 h-0.5 rounded-full" style={{background:`linear-gradient(90deg,${s.color}50,transparent)`}} />
               </div>
