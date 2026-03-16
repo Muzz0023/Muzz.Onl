@@ -2360,6 +2360,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
+      { section: 'ACCOUNT', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
     ];
     const sections = ['LIFE','HEALTH','FINANCE','ACCOUNT'];
     const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', ACCOUNT:'#8b5cf6' };
@@ -2398,11 +2399,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(item.id);} setSidebarOpen(false); }}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
                           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
-                          <span className="text-sm font-medium" style={{color:active?color:locked?'rgba(148,163,184,0.3)':'rgba(255,255,255,0.8)'}}>{item.label}</span>
+                          <span className="text-sm font-medium" style={{color:active?color:locked?'rgba(148,163,184,0.3)':item.danger?'rgba(239,68,68,0.7)':'rgba(255,255,255,0.8)'}}>{item.label}</span>
                           {locked && <span className="ml-auto text-xs" style={{color:'rgba(0,200,255,0.3)'}}>⚡</span>}
                           {active && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}></span>}
                         </button>
@@ -8336,7 +8337,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <h2 className="text-xl font-semibold text-white" style={{fontFamily:"'Share Tech Mono',monospace",letterSpacing:"2px"}}>// WHAT YOU GET</h2>
             </div>
             <div>
-              <div className="flex items-center px-6 py-2 sticky top-0" style={{background:"rgba(0,200,255,0.08)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
+              <div className="flex items-center px-6 py-2" style={{background:"rgba(0,200,255,0.08)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
                 <span className="flex-1 text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>FEATURE</span>
                 <span className="w-16 text-center text-xs font-mono" style={{color:"rgba(148,163,184,0.6)",letterSpacing:"1px"}}>FREE</span>
                 <span className="w-16 text-center text-xs font-mono" style={{color:"#f59e0b",letterSpacing:"1px"}}>ELITE</span>
@@ -14249,33 +14250,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         muzzPersonality={muzzPersonality}
       />
 
-      {/* ── BOTTOM NAVIGATION BAR ── */}
-      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:9999,background:"rgba(2,8,20,0.98)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"1px solid rgba(0,200,255,0.2)",paddingBottom:"env(safe-area-inset-bottom)"}}>
-        <div className="flex justify-around items-center px-1 py-2">
-          {[
-            {id:'home', label:'Home', Icon:Home},
-            {id:'tasks', label:'Tasks', Icon:CheckCircle2},
-            {id:'varied', label:'Finance', Icon:DollarSign, eliteOnly:true},
-            {id:'gym', label:'Health', Icon:Dumbbell, eliteOnly:true},
-            {id:'upgrade', label:'Elite', Icon:Award},
-          ].map(({id, label, Icon, eliteOnly}) => {
-            const active = activeView === id || (id==='varied' && ['varied','assets','investments','work','bills'].includes(activeView));
-            const locked = eliteOnly && !isElite;
-            return (
-              <button key={id}
-                onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(id);} }}
-                className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all"
-                style={{minWidth:'56px'}}>
-                <div className="relative flex items-center justify-center" style={{width:'28px',height:'28px',borderRadius:'8px',background: active ? 'rgba(0,200,255,0.12)' : 'transparent',transition:'all 0.2s'}}>
-                  <Icon style={{width:'16px',height:'16px',color: active ? '#00c8ff' : locked ? 'rgba(100,116,139,0.35)' : 'rgba(148,163,184,0.6)',transition:'color 0.2s'}} />
-                  {active && <div style={{position:'absolute',bottom:'-6px',left:'50%',transform:'translateX(-50%)',width:'4px',height:'4px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 10px #00c8ff, 0 0 20px rgba(0,200,255,0.5)'}} className='nav-active-glow' />}
-                </div>
-                <span style={{fontSize:'9px',fontWeight:500,color: active ? '#00c8ff' : locked ? 'rgba(100,116,139,0.3)' : 'rgba(148,163,184,0.55)',letterSpacing:'0.3px',marginTop:'4px'}}>{label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+
     </div>
   );
 }
