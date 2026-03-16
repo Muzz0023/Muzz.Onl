@@ -2411,15 +2411,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             <div className="mt-1 pt-3" style={{borderTop:'1px solid rgba(0,200,255,0.08)'}}>
               <div className="grid grid-cols-2 gap-2 mb-2">
-                <button onClick={() => { exportData(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
+                <button onClick={() => { const d=JSON.stringify({subscriptions,stocks,assets,habits,habitLog,dailyTasks,countdowns,birthdays,sleepData,mentalHealthData,timesheetData},null,2); const b=new Blob([d],{type:"application/json"}); const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download="muzz-backup.json"; a.click(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                   <Download className="w-4 h-4" /> Export
                 </button>
                 <label className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm cursor-pointer" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                   <Upload className="w-4 h-4" /> Import
-                  <input type="file" id="import-file" accept=".json" className="hidden" onChange={(e) => { importData(e); setSidebarOpen(false); }} />
+                  <input type="file" id="import-file" accept=".json" className="hidden" onChange={(e) => { const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=(ev)=>{ try{ const d=JSON.parse(ev.target.result); if(d.subscriptions) setSubscriptions(d.subscriptions); if(d.stocks) setStocks(d.stocks); if(d.assets) setAssets(d.assets); if(d.habits) setHabits(d.habits); if(d.habitLog) setHabitLog(d.habitLog); if(d.dailyTasks) setDailyTasks(d.dailyTasks); if(d.countdowns) setCountdowns(d.countdowns); if(d.birthdays) setBirthdays(d.birthdays); if(d.sleepData) setSleepData(d.sleepData); if(d.mentalHealthData) setMentalHealthData(d.mentalHealthData); if(d.timesheetData) setTimesheetData(d.timesheetData); }catch(err){alert("Invalid file");} }; r.readAsText(file); setSidebarOpen(false); }} />
                 </label>
               </div>
-              <button onClick={() => { handleSignOut(); setSidebarOpen(false); }} className="w-full py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.6)'}}>
+              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.6)'}}>
                 Sign Out
               </button>
             </div>
