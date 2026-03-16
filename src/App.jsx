@@ -13638,7 +13638,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',gridAutoRows:'40px'}}>
+                <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',gridAutoRows:'41px'}}>
                   {hours.map((h,hi)=>(
                     <React.Fragment key={h}>
                       <div style={{borderTop:'1px solid rgba(0,200,255,0.06)',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
@@ -13651,7 +13651,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div key={d} style={{borderTop:'1px solid rgba(0,200,255,0.06)',background:d===today?'rgba(0,200,255,0.015)':'transparent',position:'relative'}}>
                             {block && (
                               <div onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
-                                style={{position:'absolute',left:'2px',right:'2px',top:'2px',height:`calc(${span}*40px - 4px)`,background:hexToRgba(block.color,0.25),border:`1px solid ${hexToRgba(block.color,0.7)}`,borderRadius:'6px',padding:'4px',cursor:'pointer',zIndex:2,overflow:'hidden'}}>
+                                style={{position:'absolute',left:'2px',right:'2px',top:'2px',height:`${span*41-5}px`,background:hexToRgba(block.color,0.25),border:`1px solid ${hexToRgba(block.color,0.7)}`,borderRadius:'6px',padding:'4px',cursor:'pointer',zIndex:2,overflow:'hidden'}}>
                                 <div style={{fontSize:'11px',fontWeight:500,color:'white',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{block.title}</div>
                                 {block.location && <div style={{fontSize:'10px',color:'rgba(255,255,255,0.5)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{block.location}</div>}
                               </div>
