@@ -2340,38 +2340,40 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
-    const menuSections = [
-      { title: 'LIFE', items: [
-        { id: 'home', label: 'Dashboard', icon: Home },
-        { id: 'habits', label: 'Habits', icon: Flame },
-        { id: 'tasks', label: 'Tasks', icon: CheckCircle2 },
-        { id: 'countdowns', label: 'Countdowns', icon: Calendar },
-        { id: 'reminders', label: 'Reminders', icon: Bell },
-        { id: 'diet', label: 'Diet', icon: ShoppingCart },
-      ]},
-      { title: 'FINANCE', items: [
-        { id: 'varied', label: 'Bills', icon: Wallet, eliteOnly: true },
-        { id: 'assets', label: 'Assets', icon: DollarSign, eliteOnly: true },
-        { id: 'investments', label: 'Investments', icon: TrendingUp, eliteOnly: true },
-      ]},
-      { title: 'HEALTH & WORK', items: [
-        { id: 'gym', label: 'Health', icon: Dumbbell, eliteOnly: true },
-        { id: 'work', label: 'Work', icon: Briefcase, eliteOnly: true },
-        { id: 'timetable', label: 'Timetable', icon: Calendar, eliteOnly: true },
-      ]},
-      { title: 'CUSTOM', items: [
-        ...customCategories.map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: i > 0 })),
-      ]},
-      { title: 'ACCOUNT', items: [
-        { id: 'upgrade', label: isElite ? 'Elite Status' : 'Upgrade to Elite', icon: Award },
-        { id: 'statsinsights', label: 'Stats & Insights', icon: TrendingUp },
-        { id: 'feedback', label: 'Feedback & Support', icon: MessageCircle },
-      ]},
+    const menuItems = [
+      { section: 'LIFE', id:'home', label:'Dashboard', icon:'🏠' },
+      { section: 'LIFE', id:'habits', label:'Habits', icon:'🔥' },
+      { section: 'LIFE', id:'tasks', label:'Tasks', icon:'✅' },
+      { section: 'LIFE', id:'countdowns', label:'Countdowns', icon:'⏳' },
+      { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
+      { section: 'LIFE', id:'diet', label:'Diet', icon:'🥗' },
+      { section: 'FINANCE', id:'varied', label:'Bills', icon:'💸', elite:true },
+      { section: 'FINANCE', id:'assets', label:'Assets', icon:'🏠', elite:true },
+      { section: 'FINANCE', id:'investments', label:'Investments', icon:'📈', elite:true },
+      { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
+      { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
+      { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
+      { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
+      { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
+      { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
     ];
 
+    const sections = ['LIFE','FINANCE','HEALTH','ACCOUNT'];
+    const sectionColors = { LIFE:'#00c8ff', FINANCE:'#22c55e', HEALTH:'#f97316', ACCOUNT:'#8b5cf6' };
+
     return (
-      <div>
-        {/* Full screen overlay */}
+      <>
+        {/* Hamburger */}
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="fixed top-4 left-4 z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl"
+          style={{background:"rgba(5,15,30,0.9)",border:"1px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
+          <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
+          <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
+          <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
+        </button>
+
+        {/* Overlay */}
         <div
           className="fixed inset-0 z-50 transition-all duration-300"
           style={{
@@ -2380,113 +2382,74 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             opacity: sidebarOpen ? 1 : 0,
             pointerEvents: sidebarOpen ? 'all' : 'none',
             visibility: sidebarOpen ? 'visible' : 'hidden',
-            transform: 'translateZ(0)'
-          }}
-        >
-          {/* Grid background */}
-          <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
+          }}>
+
+          {/* Grid bg */}
+          <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
 
           {/* Header */}
-          <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-6" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
+          <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
             <div>
-              <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'22px',letterSpacing:'4px'}}>MUZZ</div>
+              <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'20px',letterSpacing:'4px'}}>MUZZ</div>
               <div className="text-xs mt-0.5" style={{color:"#00c8ff",letterSpacing:"2px"}}>NAVIGATION SYSTEM</div>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center transition-all" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
+            <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
               <X className="w-5 h-5" style={{color:"#00c8ff"}} />
             </button>
           </div>
 
-          {/* Scrollable content */}
-          <div id="muzz-menu-scroll" className="relative z-10 px-6 py-6">
-            {menuSections.filter(s => s.items.length > 0).map(section => (
-              <div key={section.title} className="mb-8">
-                <div className="text-xs font-mono mb-3" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// {section.title}</div>
-                <div className="grid grid-cols-3 gap-3">
-                  {section.items.map(item => {
-                    const locked = item.eliteOnly && !isElite;
-                    const active = activeView === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          if (locked) { setActiveView('upgrade'); } else { setActiveView(item.id); }
-                          setSidebarOpen(false);
-                        }}
-                        className="flex flex-col items-center gap-2 p-4 rounded-2xl transition-all"
-                        style={active
-                          ? {background:"rgba(0,200,255,0.15)",border:"1px solid rgba(0,200,255,0.5)",boxShadow:"0 0 20px rgba(0,200,255,0.2)"}
-                          : locked
-                            ? {background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",opacity:0.5}
-                            : item.id === 'upgrade' && !isElite
-                              ? {background:"rgba(245,158,11,0.1)",border:"1px solid rgba(245,158,11,0.3)"}
-                              : {background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)"}
-                        }
-                      >
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={active ? {background:"rgba(0,200,255,0.2)"} : {background:"rgba(255,255,255,0.05)"}}>
-                          <item.icon className="w-5 h-5" style={{color: active ? "#00c8ff" : locked ? "rgba(100,116,139,0.5)" : item.id==='upgrade' && !isElite ? "#f59e0b" : "rgba(148,163,184,0.8)"}} />
-                        </div>
-                        <span className="text-xs font-medium text-center leading-tight" style={{color: active ? "#00c8ff" : locked ? "rgba(100,116,139,0.5)" : "rgba(203,213,225,0.8)"}}>{item.label}</span>
-                        {locked && <span style={{fontSize:"8px",color:"rgba(100,116,139,0.5)"}}>ELITE</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+          {/* Compact grid — 2 columns, all sections visible */}
+          <div className="relative z-10 px-4 py-4">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+              {sections.map(sec => {
+                const items = menuItems.filter(i => i.section === sec);
+                const color = sectionColors[sec];
+                return (
+                  <div key={sec} className="mb-3">
+                    <div className="text-xs font-mono mb-2 px-1" style={{color:`${color}60`,letterSpacing:'2px'}}>// {sec}</div>
+                    {items.map(item => {
+                      const active = activeView === item.id;
+                      const locked = item.elite && !isElite;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(item.id);} setSidebarOpen(false); }}
+                          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl mb-1 transition-all text-left"
+                          style={{
+                            background: active ? `${color}15` : 'rgba(255,255,255,0.02)',
+                            border: `1px solid ${active ? `${color}50` : 'rgba(255,255,255,0.05)'}`,
+                          }}>
+                          <span className="text-base">{item.icon}</span>
+                          <span className="text-sm font-medium" style={{color: active ? color : locked ? 'rgba(148,163,184,0.35)' : 'rgba(255,255,255,0.8)'}}>{item.label}</span>
+                          {locked && <span className="ml-auto text-xs" style={{color:'rgba(0,200,255,0.3)'}}>⚡</span>}
+                          {active && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{background:color,boxShadow:`0 0 6px ${color}`}}></span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
 
-            {/* Footer actions */}
-            <div style={{borderTop:"1px solid rgba(0,200,255,0.1)",paddingTop:"20px",marginTop:"8px"}} className="space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => {
-                    const allData = { subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName };
-                    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url; a.download = `muzz-backup-${new Date().toISOString().split('T')[0]}.json`; a.click();
-                    URL.revokeObjectURL(url);
-                    setSidebarOpen(false);
-                  }}
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all"
-                  style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.7)"}}
-                >
-                  <Save className="w-4 h-4" />
-                  <span className="text-sm font-medium">Export</span>
+            {/* Bottom actions */}
+            <div className="mt-2 pt-3" style={{borderTop:'1px solid rgba(0,200,255,0.08)'}}>
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <button onClick={() => { exportData(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
+                  <Download className="w-4 h-4" /> Export
                 </button>
-                <label className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all cursor-pointer"
-                  style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.7)"}}>
-                  <input type="file" accept=".json" className="hidden" onChange={(e) => {
-                    const file = e.target.files?.[0]; if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                      try {
-                        const data = JSON.parse(event.target.result);
-                        if (confirm('This will replace all your current data. Are you sure?')) {
-                          if (data.subscriptions) setSubscriptions(data.subscriptions);
-                          if (data.businessSubscriptions) setBusinessSubscriptions(data.businessSubscriptions);
-                          if (data.assets) setAssets(data.assets);
-                          if (data.stocks) setStocks(data.stocks);
-                          if (data.tasks) setTasks(data.tasks);
-                          if (data.dailyTasks) setDailyTasks(data.dailyTasks);
-                          if (data.weeklyTasks) setWeeklyTasks(data.weeklyTasks);
-                          if (data.generalTasks) setGeneralTasks(data.generalTasks);
-                          if (data.habits) setHabits(data.habits);
-                          if (data.habitLog) setHabitLog(data.habitLog);
-                          if (data.reminders) setReminders(data.reminders);
-                          if (data.birthdays) setBirthdays(data.birthdays);
-                          if (data.groceries) setGroceries(data.groceries);
-                          if (data.dailyMeals) setDailyMeals(data.dailyMeals);
-                          if (data.customCategories) setCustomCategories(data.customCategories);
-                          if (data.debts) setDebts(data.debts);
-                          if (data.calendarBills) setCalendarBills(data.calendarBills);
-                          if (data.monthlySalary) setMonthlySalary(data.monthlySalary);
-                          if (data.eliteName) setEliteName(data.eliteName);
-                          alert('Backup restored!');
-                          setSidebarOpen(false);
-                        }
-                      } catch { alert('Invalid backup file.'); }
-                    };
+                <button onClick={() => { document.getElementById('import-file')?.click(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
+                  <Upload className="w-4 h-4" /> Import
+                </button>
+              </div>
+              <button onClick={() => { handleSignOut(); setSidebarOpen(false); }} className="w-full py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.6)'}}>
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
                     reader.readAsText(file);
                     e.target.value = '';
                   }} />
