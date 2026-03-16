@@ -13629,37 +13629,63 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {ttTab==='week' && (
             <div className="rounded-2xl overflow-x-auto" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <div style={{minWidth:'600px'}}>
-                <div className="grid" style={{gridTemplateColumns:'52px repeat(7,1fr)',borderBottom:'1px solid rgba(0,200,255,0.1)'}}>
+                {/* Header */}
+                <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',borderBottom:'1px solid rgba(0,200,255,0.1)'}}>
                   <div/>
                   {days.map(d=>(
-                    <div key={d} className="p-2 text-center text-xs font-mono font-bold"
-                      style={{color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',background:d===today?'rgba(0,200,255,0.05)':'transparent'}}>
+                    <div key={d} style={{padding:'8px',textAlign:'center',fontSize:'11px',fontFamily:'monospace',fontWeight:'bold',color:d===today?'#00c8ff':'rgba(148,163,184,0.6)',background:d===today?'rgba(0,200,255,0.05)':'transparent'}}>
                       {d}
                     </div>
                   ))}
                 </div>
-                <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',gridAutoRows:'41px'}}>
-                  {hours.map((h,hi)=>(
-                    <React.Fragment key={h}>
-                      <div style={{borderTop:'1px solid rgba(0,200,255,0.06)',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
+                {/* Grid body - each column is independent so blocks can span rows */}
+                <div style={{display:'flex'}}>
+                  {/* Time labels column */}
+                  <div style={{width:'52px',flexShrink:0}}>
+                    {hours.map(h=>(
+                      <div key={h} style={{height:'40px',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',borderTop:'1px solid rgba(0,200,255,0.06)',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
                         {fmt12(h)}
                       </div>
-                      {days.map((d,di)=>{
-                        const block = timetableBlocks.find(b=>b.day===d&&b.startHour===h);
-                        const span = block ? (block.endHour-block.startHour) : 0;
+                    ))}
+                  </div>
+                  {/* Day columns */}
+                  {days.map(d=>(
+                    <div key={d} style={{flex:1,position:'relative',background:d===today?'rgba(0,200,255,0.01)':'transparent'}}>
+                      {/* Hour cells for borders */}
+                      {hours.map(h=>(
+                        <div key={h} style={{height:'40px',borderTop:'1px solid rgba(0,200,255,0.06)',borderLeft:'1px solid rgba(0,200,255,0.04)'}}/>
+                      ))}
+                      {/* Blocks positioned absolutely */}
+                      {timetableBlocks.filter(b=>b.day===d).map(block=>{
+                        const startIdx = hours.indexOf(block.startHour);
+                        const endIdx = hours.indexOf(block.endHour);
+                        if(startIdx === -1) return null;
+                        const actualEnd = endIdx === -1 ? hours.length : endIdx;
+                        const top = startIdx * 41 + 1;
+                        const height = (actualEnd - startIdx) * 41 - 3;
                         return (
-                          <div key={d} style={{borderTop:'1px solid rgba(0,200,255,0.06)',background:d===today?'rgba(0,200,255,0.015)':'transparent',position:'relative'}}>
-                            {block && (
-                              <div onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
-                                style={{position:'absolute',left:'2px',right:'2px',top:'2px',height:`${span*41-5}px`,background:hexToRgba(block.color,0.25),border:`1px solid ${hexToRgba(block.color,0.7)}`,borderRadius:'6px',padding:'4px',cursor:'pointer',zIndex:2,overflow:'hidden'}}>
-                                <div style={{fontSize:'11px',fontWeight:500,color:'white',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{block.title}</div>
-                                {block.location && <div style={{fontSize:'10px',color:'rgba(255,255,255,0.5)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{block.location}</div>}
-                              </div>
-                            )}
+                          <div key={block.id}
+                            onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
+                            style={{
+                              position:'absolute',
+                              top:`${top}px`,
+                              left:'2px',
+                              right:'2px',
+                              height:`${height}px`,
+                              background:hexToRgba(block.color,0.25),
+                              border:`1px solid ${hexToRgba(block.color,0.7)}`,
+                              borderRadius:'6px',
+                              padding:'4px',
+                              cursor:'pointer',
+                              zIndex:2,
+                              overflow:'hidden'
+                            }}>
+                            <div style={{fontSize:'11px',fontWeight:500,color:'white',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{block.title}</div>
+                            {block.location && <div style={{fontSize:'10px',color:'rgba(255,255,255,0.5)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{block.location}</div>}
                           </div>
                         );
                       })}
-                    </React.Fragment>
+                    </div>
                   ))}
                 </div>
               </div>
