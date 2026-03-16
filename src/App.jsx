@@ -2349,6 +2349,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'LIFE', id:'countdowns', label:'Countdowns', icon:'⏳' },
       { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
       { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
+      { section: 'HEALTH', id:'gym_steps', label:'Weekly Steps', icon:'👟', elite:true },
+      { section: 'HEALTH', id:'gym_plan', label:'Workout Plan', icon:'🏋️', elite:true },
       { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
       { section: 'HEALTH', id:'diet', label:'Diet', icon:'🥗', elite:true },
       { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
@@ -2396,7 +2398,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else{setActiveView(item.id);} setSidebarOpen(false); }}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else{ if(item.id==='gym_steps'){setActiveView('gym');setGymSubTab('steps');}else if(item.id==='gym_plan'){setActiveView('gym');setGymSubTab('plan');}else{setActiveView(item.id);} } setSidebarOpen(false); }}
                           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
