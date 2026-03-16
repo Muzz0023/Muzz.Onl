@@ -2379,7 +2379,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
             <div>
               <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'20px',letterSpacing:'4px'}}>MUZZ</div>
-              <div className="text-xs mt-0.5" style={{color:"#00c8ff",letterSpacing:"2px"}}>NAVIGATION SYSTEM</div>
+              <div className="text-xs mt-0.5" style={{color:"#00c8ff",letterSpacing:"2px"}}>OPERATING SYSTEM</div>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
               <X className="w-5 h-5" style={{color:"#00c8ff"}} />
