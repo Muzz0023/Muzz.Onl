@@ -1769,6 +1769,7 @@ function MuzzApp() {
   const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
   const [dashTab, setDashTab] = useState('overview');
   const [timetableBlocks, setTimetableBlocks] = useState([]);
+  const [gymTab, setGymTab] = useState('steps');
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
@@ -4060,7 +4061,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // GYM MANAGEMENT VIEW
   if (activeView === 'gymworkout') {
     if (!isElite) return <LockedFeature featureName="Gym" setActiveView={setActiveView} />;
-    const [gymTab, setGymTab] = React.useState('steps');
     const today = new Date().toISOString().split('T')[0];
     const getWeekDays = () => { const now=new Date(),dow=now.getDay(),mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); const days=[]; for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);days.push({date:d.toISOString().split('T')[0],dayName:d.toLocaleDateString('en-AU',{weekday:'long'}),dayShort:d.toLocaleDateString('en-AU',{weekday:'short'}),dateNum:d.getDate(),isToday:d.toISOString().split('T')[0]===today});} return days; };
     const weekDays = getWeekDays();
