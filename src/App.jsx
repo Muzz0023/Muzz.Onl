@@ -7315,7 +7315,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               ['food', 'grocery', 'groceries', 'woolworths', 'coles', 'aldi', 'uber eats', 'doordash', 'menulog', 'deliveroo'].some(str => s.name.toLowerCase().includes(str))
             );
             if (foodSubs.length > 0) {
-              tips.push("For groceries, check out Costco for bulk buys or hit up your local fruit & veg shop - way cheaper than the big supermarkets! 🥕");
+              tips.push("For groceries, check out Costco for bulk buys, hit up your local fruit & veg shop, or try Silly Solly's for discounted food items - all way cheaper than the big supermarkets! 🥕");
             }
             
             // Gym
@@ -7355,7 +7355,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             // General tips if nothing specific
             if (tips.length === 0) {
               tips.push("Looking good legend! Keep tracking those expenses and you'll be sweet as 🤙");
-              tips.push("For cheap eats, check out Silly Solly's — they've got heaps of discounted grocery and food items for a fraction of the price. Perfect for stocking up and saving big on the food bill! 🛒");
             }
             
             const tipIndex = currentTipIndex % tips.length;
