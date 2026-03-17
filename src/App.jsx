@@ -1770,6 +1770,7 @@ function MuzzApp() {
   const [dashTab, setDashTab] = useState('overview');
   const [timetableBlocks, setTimetableBlocks] = useState([]);
   const [gymTab, setGymTab] = useState('steps');
+  const [appMode, setAppMode] = useState('muzz');
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
@@ -2351,7 +2352,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
       { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
       { section: 'HEALTH', id:'gymworkout', label:'Gym', icon:'🏋️', elite:true },
-      { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
+      { section: 'HEALTH', id:'work', label:'Work', icon:'🐨', elite:true },
       { section: 'HEALTH', id:'diet', label:'Diet', icon:'🥗', elite:true },
       { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
       { section: 'FINANCE', id:'varied', label:'Bills', icon:'💸', elite:true },
@@ -2383,14 +2384,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {sidebarOpen && <div className="fixed inset-0 z-50" style={{background:"rgba(2,8,20,0.98)",backdropFilter:"blur(20px)"}}>
           <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
 
-          <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
-            <div>
-              <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'20px',letterSpacing:'4px'}}>MUZZ</div>
-              <div className="text-xs mt-0.5" style={{color:"#00c8ff",letterSpacing:"2px"}}>OPERATING SYSTEM</div>
+          <div className="relative z-10 px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'20px',letterSpacing:'4px'}}>{appMode === 'muzz' ? 'MUZZ' : 'DONNY'}</div>
+                <div className="text-xs mt-0.5" style={{color: appMode === 'muzz' ? '#00c8ff' : '#f97316',letterSpacing:"2px"}}>{appMode === 'muzz' ? 'OPERATING SYSTEM' : 'BUSINESS SYSTEM'}</div>
+              </div>
+              <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
+                <X className="w-5 h-5" style={{color:"#00c8ff"}} />
+              </button>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
-              <X className="w-5 h-5" style={{color:"#00c8ff"}} />
-            </button>
+            <div className="flex gap-2">
+              <button onClick={() => setAppMode('muzz')} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='muzz'?'rgba(0,200,255,0.15)':'rgba(255,255,255,0.03)',border:appMode==='muzz'?'1px solid rgba(0,200,255,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
+                🦘 MUZZ
+              </button>
+              <button onClick={() => setAppMode('donny')} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='donny'?'rgba(249,115,22,0.15)':'rgba(255,255,255,0.03)',border:appMode==='donny'?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
+                🐨 DONNY
+              </button>
+            </div>
           </div>
 
           <div className="relative z-10 px-4 py-4">
@@ -2419,6 +2430,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 );
               })}
+              )}
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
@@ -8513,7 +8525,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { id: 'rental', name: 'Rental Properties', emoji: '🏘️' },
       { id: 'vacation', name: 'Vacation Homes', emoji: '🏖️' },
       { id: 'land', name: 'Land', emoji: '🌳' },
-      { id: 'business', name: 'Business Interest', emoji: '💼' },
+      { id: 'business', name: 'Business Interest', emoji: '🐨' },
       { id: 'super', name: 'Superannuation', emoji: '🏦' },
       { id: 'cash', name: 'Cash/Savings', emoji: '💵' },
       { id: 'stocks', name: 'Stocks', emoji: '📈' },
@@ -13804,6 +13816,149 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   // TIMETABLE VIEW
+  // DONNY VIEW
+  if (activeView === 'donny') {
+    if (!isElite) return <LockedFeature featureName="Donny Business System" setActiveView={setActiveView} />;
+
+    const [donnyTab, setDonnyTab] = React.useState('jobs');
+    const [jobs, setJobs] = React.useState(() => {
+      try { const s = localStorage.getItem('muzz_donny_jobs'); return s ? JSON.parse(s) : []; } catch { return []; }
+    });
+    const [selectedJob, setSelectedJob] = React.useState(null);
+    const [showNewJob, setShowNewJob] = React.useState(false);
+    const [newJob, setNewJob] = React.useState({ title:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
+
+    const saveJobs = (updated) => {
+      setJobs(updated);
+      try { localStorage.setItem('muzz_donny_jobs', JSON.stringify(updated)); } catch {}
+    };
+
+    const addJob = () => {
+      if (!newJob.title.trim()) return;
+      const updated = [...jobs, { ...newJob, id: Date.now(), createdAt: new Date().toISOString() }];
+      saveJobs(updated);
+      setNewJob({ title:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
+      setShowNewJob(false);
+    };
+
+    const updateJob = (id, field, value) => {
+      const updated = jobs.map(j => j.id === id ? { ...j, [field]: value } : j);
+      saveJobs(updated);
+      if (selectedJob?.id === id) setSelectedJob(prev => ({ ...prev, [field]: value }));
+    };
+
+    const fields = [
+      { key:'employees', label:'👷 Employees', placeholder:'James, Peter, Sam' },
+      { key:'risk', label:'⚠️ Biggest Risk', placeholder:'Falling off ladder' },
+      { key:'riskAvoid', label:'🛡️ How to Avoid', placeholder:'Keep 3 points of contact' },
+      { key:'materials', label:'🔧 Materials', placeholder:'Ladders, Cables, etc.' },
+      { key:'costs', label:'💰 Costs', placeholder:'$800 Labour, $1000 TPS Cable' },
+      { key:'avgTime', label:'⏱️ Avg Time', placeholder:'2 working days' },
+      { key:'mistakes', label:'❌ Mistakes', placeholder:'James cut cable too short' },
+      { key:'problems', label:'🚨 Problems', placeholder:'Need more 2C+E Orange' },
+      { key:'notes', label:'📝 Notes', placeholder:'Any additional notes...' },
+    ];
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar />
+        <SaveIndicator />
+        {/* Header */}
+        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)"}}>
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(249,115,22,0.8)",fontSize:"13px"}}>← Back</button>
+            <div className="flex items-center gap-3">
+              <div className="text-4xl">🐨</div>
+              <div>
+                <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"3px"}}>// BUSINESS SYSTEM</div>
+                <h1 className="text-3xl font-bold text-white" style={{fontFamily:"'Orbitron',monospace",letterSpacing:"3px"}}>DONNY</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          {/* If viewing a specific job */}
+          {selectedJob ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <button onClick={() => setSelectedJob(null)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← All Jobs</button>
+              </div>
+              <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
+                <input value={selectedJob.title} onChange={e => updateJob(selectedJob.id,'title',e.target.value)}
+                  className="w-full bg-transparent text-white text-xl font-bold focus:outline-none"
+                  style={{fontFamily:"'Orbitron',monospace"}} placeholder="Job Title" />
+                <div className="text-xs mt-1" style={{color:"rgba(249,115,22,0.4)"}}>Created {new Date(selectedJob.createdAt).toLocaleDateString('en-AU')}</div>
+              </div>
+              {fields.map(f => (
+                <div key={f.key} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
+                  <div className="text-xs font-mono mb-2" style={{color:"rgba(249,115,22,0.6)",letterSpacing:"1px"}}>{f.label}</div>
+                  <textarea value={selectedJob[f.key]||''} onChange={e => updateJob(selectedJob.id,f.key,e.target.value)}
+                    placeholder={f.placeholder}
+                    className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none resize-none text-sm"
+                    rows={2} style={{lineHeight:"1.6"}} />
+                </div>
+              ))}
+              <button onClick={() => { const updated = jobs.filter(j => j.id !== selectedJob.id); saveJobs(updated); setSelectedJob(null); }}
+                className="w-full py-3 rounded-xl text-sm" style={{color:"rgba(239,68,68,0.6)",border:"1px solid rgba(239,68,68,0.15)"}}>
+                Delete Job
+              </button>
+            </div>
+          ) : showNewJob ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <button onClick={() => setShowNewJob(false)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← Cancel</button>
+              </div>
+              <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
+                <input value={newJob.title} onChange={e => setNewJob(p=>({...p,title:e.target.value}))}
+                  className="w-full bg-transparent text-white text-xl font-bold focus:outline-none placeholder-orange-900"
+                  placeholder="Job Title e.g. Install Cable For Switchroom" />
+              </div>
+              {fields.map(f => (
+                <div key={f.key} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
+                  <div className="text-xs font-mono mb-2" style={{color:"rgba(249,115,22,0.6)",letterSpacing:"1px"}}>{f.label}</div>
+                  <textarea value={newJob[f.key]||''} onChange={e => setNewJob(p=>({...p,[f.key]:e.target.value}))}
+                    placeholder={f.placeholder}
+                    className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none resize-none text-sm"
+                    rows={2} />
+                </div>
+              ))}
+              <button onClick={addJob} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
+                + Add Job
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <button onClick={() => setShowNewJob(true)} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
+                + New Job
+              </button>
+              {jobs.length === 0 && (
+                <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
+                  <div className="text-4xl mb-3">💼</div>
+                  <div className="text-white font-semibold mb-1">No jobs yet</div>
+                  <div className="text-sm" style={{color:"rgba(148,163,184,0.5)"}}>Add your first job to get started</div>
+                </div>
+              )}
+              {jobs.map(job => (
+                <button key={job.id} onClick={() => setSelectedJob(job)} className="w-full rounded-2xl p-4 text-left transition-all" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-white">{job.title}</div>
+                      <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>
+                        {job.employees ? `👷 ${job.employees.split(',').length} workers` : 'No workers assigned'} · {new Date(job.createdAt).toLocaleDateString('en-AU')}
+                      </div>
+                    </div>
+                    <span style={{color:"rgba(249,115,22,0.5)"}}>›</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // STATS & INSIGHTS VIEW
   if (activeView === 'statsinsights') {
     const today = new Date().toISOString().split('T')[0];
