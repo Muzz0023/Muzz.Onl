@@ -2359,7 +2359,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
       { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
       { section: 'HEALTH', id:'gymworkout', label:'Gym', icon:'🏋️', elite:true },
-      { section: 'HEALTH', id:'work', label:'Work', icon:'🐨', elite:true },
+      { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
       { section: 'HEALTH', id:'diet', label:'Diet', icon:'🥗', elite:true },
       { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
       { section: 'FINANCE', id:'varied', label:'Bills', icon:'💸', elite:true },
@@ -6252,13 +6252,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     
     // Delete job
     const deleteJob = (jobId) => {
-      if (donnyJobs.length <= 1) return alert('Must have at least one job');
+      if (jobs.length <= 1) return alert('Must have at least one job');
       if (!confirm('Delete this job and all its timesheet data?')) return;
-      const newDonnyJobs = donnyJobs.filter(j => j.id !== jobId);
+      const newJobs = jobs.filter(j => j.id !== jobId);
       setTimesheetData(prev => ({
         ...prev,
-        jobs: newDonnyJobs,
-        activeJobId: newDonnyJobs[0].id
+        jobs: newJobs,
+        activeJobId: newJobs[0].id
       }));
     };
 
@@ -6290,7 +6290,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             >
               📊 Total Summary
             </button>
-            {donnyJobs.map(job => (
+            {jobs.map(job => (
               <button
                 key={job.id}
                 onClick={() => {
@@ -6306,7 +6306,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 💼 {job.name}
               </button>
             ))}
-            {donnyJobs.length < 5 && (
+            {jobs.length < 5 && (
               <button
                 onClick={addJob}
                 className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
@@ -6340,7 +6340,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <h3 className="font-semibold text-gray-800">Breakdown by Job</h3>
                 </div>
                 <div className="divide-y">
-                  {donnyJobs.map(job => {
+                  {jobs.map(job => {
                     const { hours, pay } = calcJobTotals(job);
                     return (
                       <div key={job.id} className="p-4 flex items-center justify-between">
@@ -8543,7 +8543,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { id: 'rental', name: 'Rental Properties', emoji: '🏘️' },
       { id: 'vacation', name: 'Vacation Homes', emoji: '🏖️' },
       { id: 'land', name: 'Land', emoji: '🌳' },
-      { id: 'business', name: 'Business Interest', emoji: '🐨' },
+      { id: 'business', name: 'Business Interest', emoji: '💼' },
       { id: 'super', name: 'Superannuation', emoji: '🏦' },
       { id: 'cash', name: 'Cash/Savings', emoji: '💵' },
       { id: 'stocks', name: 'Stocks', emoji: '📈' },
