@@ -14050,9 +14050,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   ))}
                 </div>
                 <div className="mt-6 flex justify-center">
-                  <button onClick={() => setActiveView('donny-newjob')} className="px-8 py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
-                    + New Job
-                  </button>
+                  <button onClick={() => setActiveView('donny-newjob')} className="px-8 py-2.5 rounded-xl font-bold text-sm" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
                 </div>
               </>
             )}
@@ -14130,37 +14128,67 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="NEW JOB" icon="➕" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
-              <input value={newDonnyJob.title} onChange={e => setNewDonnyJob(p=>({...p,title:e.target.value}))}
-                className="w-full bg-transparent text-white text-xl font-bold focus:outline-none"
-                placeholder="Job Title" />
+          {/* Custom header with glow */}
+          <div className="pt-16 pb-8 px-6 relative overflow-hidden" style={{borderBottom:'1px solid rgba(249,115,22,0.2)',background:'rgba(249,115,22,0.03)'}}>
+            <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(249,115,22,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.03) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}}/>
+            <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'300px',height:'150px',background:'radial-gradient(ellipse,rgba(249,115,22,0.15) 0%,transparent 70%)',pointerEvents:'none'}}/>
+            <div className="max-w-2xl mx-auto relative">
+              <button onClick={() => setActiveView('donny')} className="mb-4 font-medium flex items-center gap-1 text-xs" style={{color:'rgba(249,115,22,0.7)',letterSpacing:'1px'}}>← DASHBOARD</button>
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',boxShadow:'0 0 20px rgba(249,115,22,0.15)'}}>➕</div>
+                <div>
+                  <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'3px'}}>// DONNY BUSINESS SYSTEM</div>
+                  <h1 className="text-3xl font-black text-white" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px'}}>NEW JOB</h1>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div className="max-w-2xl mx-auto px-6 py-8 space-y-4">
+            {/* Job Title */}
+            <div className="relative rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.3)',boxShadow:'0 0 30px rgba(249,115,22,0.05)'}}>
+              <div className="absolute top-0 left-0 right-0 h-px" style={{background:'linear-gradient(90deg,transparent,rgba(249,115,22,0.5),transparent)'}}/>
+              <div className="p-5">
+                <div className="text-xs font-mono mb-3 tracking-widest" style={{color:'rgba(249,115,22,0.5)'}}>// JOB TITLE</div>
+                <input value={newDonnyJob.title} onChange={e => setNewDonnyJob(p=>({...p,title:e.target.value}))}
+                  className="w-full bg-transparent text-white text-2xl font-black focus:outline-none"
+                  style={{fontFamily:"'Orbitron',monospace",letterSpacing:'1px'}}
+                  placeholder="Job name..." />
+              </div>
+            </div>
+
+            {/* Job Number + Dates */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.1)'}}>
-                <div className="text-xs font-mono mb-2" style={{color:'rgba(249,115,22,0.6)',letterSpacing:'1px'}}>🔢 JOB NUMBER</div>
-                <input value={newDonnyJob.jobNumber||''} onChange={e => setNewDonnyJob(p=>({...p,jobNumber:e.target.value}))}
-                  placeholder="e.g. 042" className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none text-sm" />
-              </div>
-              <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.1)'}}>
-                <div className="text-xs font-mono mb-2" style={{color:'rgba(249,115,22,0.6)',letterSpacing:'1px'}}>🟢 START DATE</div>
-                <input type="date" value={newDonnyJob.startDate||''} onChange={e => setNewDonnyJob(p=>({...p,startDate:e.target.value}))}
-                  className="w-full bg-transparent text-white focus:outline-none text-sm" style={{colorScheme:'dark'}} />
-              </div>
-              <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.1)'}}>
-                <div className="text-xs font-mono mb-2" style={{color:'rgba(249,115,22,0.6)',letterSpacing:'1px'}}>🔴 DUE DATE</div>
-                <input type="date" value={newDonnyJob.dueDate||''} onChange={e => setNewDonnyJob(p=>({...p,dueDate:e.target.value}))}
-                  className="w-full bg-transparent text-white focus:outline-none text-sm" style={{colorScheme:'dark'}} />
-              </div>
+              {[
+                { label:'JOB NUMBER', key:'jobNumber', type:'text', placeholder:'e.g. 042', icon:'#' },
+                { label:'START DATE', key:'startDate', type:'date', icon:'▶' },
+                { label:'DUE DATE', key:'dueDate', type:'date', icon:'⏹' },
+              ].map(f => (
+                <div key={f.key} className="relative rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)',boxShadow:'0 0 20px rgba(249,115,22,0.03)'}}>
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{background:'linear-gradient(90deg,transparent,rgba(249,115,22,0.3),transparent)'}}/>
+                  <div className="p-4">
+                    <div className="text-xs font-mono mb-3 tracking-widest flex items-center gap-1.5" style={{color:'rgba(249,115,22,0.5)'}}>
+                      <span style={{color:'#f97316'}}>{f.icon}</span> {f.label}
+                    </div>
+                    <input type={f.type} value={newDonnyJob[f.key]||''} onChange={e => setNewDonnyJob(p=>({...p,[f.key]:e.target.value}))}
+                      placeholder={f.placeholder||''}
+                      className="w-full bg-transparent text-white font-bold focus:outline-none text-sm"
+                      style={{colorScheme:'dark'}} />
+                  </div>
+                </div>
+              ))}
             </div>
+
+            {/* Add button */}
             <button onClick={() => {
               if (!newDonnyJob.title.trim()) return;
               saveDonnyJobs([...donnyJobs, {...newDonnyJob, id:Date.now(), createdAt:new Date().toISOString(), completed:false}]);
               setNewDonnyJob({title:'',jobNumber:'',startDate:'',dueDate:'',employees:'',risk:'',riskAvoid:'',materials:'',costs:'',avgTime:'',mistakes:'',problems:'',notes:''});
               setActiveView('donny-masterview');
-            }} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
-              + Add Job
+            }} className="w-full py-5 rounded-2xl font-black text-white text-lg relative overflow-hidden"
+              style={{background:'linear-gradient(135deg,#f97316,#ea580c)',boxShadow:'0 0 40px rgba(249,115,22,0.4)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px'}}>
+              <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px)',backgroundSize:'20px 20px'}}/>
+              <span className="relative">+ ADD JOB</span>
             </button>
           </div>
         </div>
