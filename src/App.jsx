@@ -13979,11 +13979,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // JOBS MASTERVIEW
     if (activeView === 'donny-masterview') {
       const columns = [
-        { id: 'todo', label: 'TO DO', color: '#94a3b8', jobs: donnyJobs.filter(j => !j.started && !j.completed) },
-        { id: 'inprogress', label: 'IN PROGRESS', color: '#f97316', jobs: donnyJobs.filter(j => j.started && !j.completed) },
-        { id: 'done', label: 'DONE', color: '#22c55e', jobs: donnyJobs.filter(j => j.completed) },
+        { id:'todo', label:'TO DO', color:'#94a3b8', jobs: donnyJobs.filter(j => !j.started && !j.completed) },
+        { id:'inprogress', label:'IN PROGRESS', color:'#f97316', jobs: donnyJobs.filter(j => j.started && !j.completed) },
+        { id:'done', label:'DONE', color:'#22c55e', jobs: donnyJobs.filter(j => j.completed) },
       ];
-      const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short'}) : '—';
+      const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'2-digit'}) : '—';
+      const isOverdue = (d) => d && new Date(d) < new Date();
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
@@ -14000,73 +14001,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="grid grid-cols-3 gap-4">
                 {columns.map(col => (
                   <div key={col.id}>
-                    {/* Column header */}
                     <div className="flex items-center gap-2 mb-3 px-1">
                       <div className="w-2 h-2 rounded-full" style={{background:col.color}}/>
                       <span className="text-xs font-mono font-bold tracking-widest" style={{color:col.color}}>{col.label}</span>
                       <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{background:`${col.color}20`,color:col.color}}>{col.jobs.length}</span>
                     </div>
-                    {/* Cards */}
                     <div className="space-y-3">
                       {col.jobs.length === 0 && (
                         <div className="rounded-xl p-4 text-center text-xs" style={{background:'rgba(255,255,255,0.02)',border:`1px dashed ${col.color}30`,color:'rgba(148,163,184,0.3)'}}>No jobs</div>
                       )}
                       {col.jobs.map(job => (
                         <div key={job.id} className="rounded-2xl p-4 cursor-pointer transition-all hover:scale-[1.02]"
-                          style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${col.color}30`,boxShadow:`0 0 20px ${col.color}08`}}
+                          style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${col.color}30`}}
                           onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobs'); }}>
-                          {/* Job number badge */}
                           {job.jobNumber && (
-                            <div className="text-xs font-mono mb-2 px-2 py-0.5 rounded-md inline-block" style={{background:`${col.color}15`,color:col.color,border:`1px solid ${col.color}30`}}>
-                              #{job.jobNumber}
-                            </div>
+                            <div className="text-xs font-mono mb-2 px-2 py-0.5 rounded-md inline-block" style={{background:`${col.color}15`,color:col.color,border:`1px solid ${col.color}30`}}>#{job.jobNumber}</div>
                           )}
-                          {/* Title */}
-                          <div className="text-white font-bold text-sm mb-3 leading-snug">{job.title}</div>
-                          {/* Dates */}
-                          <div className="space-y-1.5 mb-3">
-                            {job.startDate && (
-                              <div className="flex items-center gap-2 text-xs" style={{color:'rgba(148,163,184,0.6)'}}>
-                                <span>🟢</span><span>Start: <span className="text-white">{formatDate(job.startDate)}</span></span>
-                              </div>
-                            )}
-                            {job.dueDate && (
-                              <div className="flex items-center gap-2 text-xs" style={{color: new Date(job.dueDate) < new Date() && !job.completed ? 'rgba(239,68,68,0.8)' : 'rgba(148,163,184,0.6)'}}>
-                                <span>🔴</span><span>Due: <span className="font-semibold">{formatDate(job.dueDate)}</span></span>
-                              </div>
-                            )}
+                          <div className="text-white font-bold text-sm mb-3">{job.title}</div>
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between text-xs">
+                              <span style={{color:'rgba(148,163,184,0.5)'}}>Start</span>
+                              <span className="text-white">{formatDate(job.startDate)}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs">
+                              <span style={{color:'rgba(148,163,184,0.5)'}}>Due</span>
+                              <span style={{color: isOverdue(job.dueDate) && !job.completed ? '#ef4444' : 'white'}}>{formatDate(job.dueDate)}</span>
+                            </div>
                           </div>
-                          {/* Employees */}
-                          {job.employees && (
-                            <div className="flex flex-wrap gap-1 mb-3">
-                              {job.employees.split(',').map(e => e.trim()).filter(Boolean).map((emp,i) => (
-                                <span key={i} className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>{emp}</span>
-                              ))}
-                            </div>
-                          )}
-                          {/* Cost */}
-                          {job.costs && (
-                            <div className="text-xs" style={{color:'rgba(34,197,94,0.7)'}}>💰 {job.costs}</div>
-                          )}
-                          {/* Status toggle */}
                           <div className="flex gap-2 mt-3 pt-3" style={{borderTop:`1px solid ${col.color}15`}}>
                             {!job.started && !job.completed && (
                               <button onClick={e => { e.stopPropagation(); saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,started:true}:j)); }}
-                                className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>
-                                Start →
-                              </button>
+                                className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>Start →</button>
                             )}
                             {job.started && !job.completed && (
                               <button onClick={e => { e.stopPropagation(); saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:true}:j)); }}
-                                className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(34,197,94,0.15)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.3)'}}>
-                                Complete ✓
-                              </button>
+                                className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(34,197,94,0.15)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.3)'}}>Complete ✓</button>
                             )}
                             {job.completed && (
                               <button onClick={e => { e.stopPropagation(); saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j)); }}
-                                className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>
-                                Reopen
-                              </button>
+                                className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>Reopen</button>
                             )}
                           </div>
                         </div>
