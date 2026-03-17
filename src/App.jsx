@@ -2419,23 +2419,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             <div className="mt-1 pt-3" style={{borderTop:'1px solid rgba(0,200,255,0.08)'}}>
               <div className="grid grid-cols-2 gap-3">
-                {/* Left: Export + Import */}
-                <div className="space-y-2">
+                {/* Left: Export only */}
+                <div>
                   <button onClick={() => { doExport(); setSidebarOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                     <Download className="w-4 h-4" /> Export
                   </button>
+                </div>
+                {/* Right: Import, Delete Account, Sign Out */}
+                <div className="space-y-2">
                   <label className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm cursor-pointer" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                     <Upload className="w-4 h-4" /> Import
                     <input type="file" id="import-file" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
                   </label>
-                </div>
-                {/* Right: Sign Out + Delete Account */}
-                <div className="space-y-2">
+                  <button onClick={() => { if(window.confirm('Are you sure? This permanently deletes your account and all data.')){supabase.deleteUserData(userId).then(()=>signOut());}}} className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.03)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.5)'}}>
+                    🗑️ Delete Account
+                  </button>
                   <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.2)',color:'rgba(239,68,68,0.7)'}}>
                     🚪 Sign Out
-                  </button>
-                  <button onClick={() => { if(window.confirm('Are you sure? This permanently deletes your account and all data.')){supabase.deleteUserData(userId).then(()=>signOut());}}} className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.03)',border:'1px solid rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.4)'}}>
-                    🗑️ Delete Account
                   </button>
                 </div>
               </div>
