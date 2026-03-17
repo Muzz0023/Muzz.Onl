@@ -2411,7 +2411,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          <div className="relative z-10 px-4 py-4">
+          <div className="relative z-10 px-4 py-4 flex flex-col" style={{height:'calc(100vh - 140px)',overflow:'hidden'}}>
+            <div className="flex-1 overflow-y-auto pb-4" style={{scrollbarWidth:'none'}}>
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
@@ -2475,8 +2476,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
             </div>
 
+            </div>
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
-            <div className="mt-3 px-0">
+            <div className="pt-3 flex-shrink-0">
               <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-3 rounded-xl text-sm font-semibold" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)'}}>
                 🚪 Sign Out
               </button>
