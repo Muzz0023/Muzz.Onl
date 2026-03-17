@@ -2363,14 +2363,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
-      { section: 'ACCOUNT', id:'export', label:'Export Data', icon:'📤' },
-      { section: 'ACCOUNT', id:'import', label:'Import Data', icon:'📥' },
-      { section: 'ACCOUNT', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
-      { section: 'ACCOUNT', id:'signout', label:'Sign Out', icon:'🚪', danger:true },
+      { section: 'SETTINGS', id:'export', label:'Export Data', icon:'📤' },
+      { section: 'SETTINGS', id:'import', label:'Import Data', icon:'📥' },
+      { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
+      { section: 'SETTINGS', id:'signout', label:'Sign Out', icon:'🚪', danger:true },
 
     ];
-    const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT'];
-    const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', CUSTOM:'#a855f7', ACCOUNT:'#8b5cf6' };
+    const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT','SETTINGS'];
+    const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', CUSTOM:'#a855f7', ACCOUNT:'#8b5cf6', SETTINGS:'#64748b' };
 
     return (
       <>
