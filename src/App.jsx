@@ -2411,7 +2411,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          <div className="relative z-10 px-4 py-4 overflow-y-auto" style={{height:'calc(100vh - 140px)'}}>
+          <div className="relative z-10 px-4 py-2">
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
@@ -2452,15 +2452,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
-                  <div key={sec} className="mb-4">
-                    <div className="text-xs font-mono mb-2 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
+                  <div key={sec} className="mb-2">
+                    <div className="text-xs font-mono mb-1 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
                           onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
-                          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
+                          className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
                           <span className="text-sm font-medium" style={{color:active?color:locked?'rgba(148,163,184,0.3)':item.danger?'rgba(239,68,68,0.7)':'rgba(255,255,255,0.8)'}}>{item.label}</span>
@@ -2476,7 +2476,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
-            <div className="mt-4 mb-2">
+            <div className="mt-3 mb-2">
               <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2" style={{background:'rgba(239,68,68,0.12)',border:'1px solid rgba(239,68,68,0.35)',color:'rgba(239,68,68,0.9)'}}>
                 🚪 Sign Out
               </button>
