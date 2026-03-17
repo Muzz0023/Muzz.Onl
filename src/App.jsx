@@ -1691,7 +1691,7 @@ function MuzzApp() {
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
-  const [gymSubTab, setGymSubTab] = useState('sleep');
+  const [gymSubTab, setGymSubTab] = useState('mental');
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
   const [timesheetData, setTimesheetData] = useState({
