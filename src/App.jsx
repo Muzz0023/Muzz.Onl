@@ -2395,10 +2395,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setAppMode('muzz')} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='muzz'?'rgba(0,200,255,0.15)':'rgba(255,255,255,0.03)',border:appMode==='muzz'?'1px solid rgba(0,200,255,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
+              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); }} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='muzz'?'rgba(0,200,255,0.15)':'rgba(255,255,255,0.03)',border:appMode==='muzz'?'1px solid rgba(0,200,255,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
                 🦘 MUZZ
               </button>
-              <button onClick={() => setAppMode('donny')} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='donny'?'rgba(249,115,22,0.15)':'rgba(255,255,255,0.03)',border:appMode==='donny'?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
+              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='donny'?'rgba(249,115,22,0.15)':'rgba(255,255,255,0.03)',border:appMode==='donny'?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
                 🐨 DONNY
               </button>
             </div>
