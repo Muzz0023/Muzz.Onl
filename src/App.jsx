@@ -2413,18 +2413,42 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="relative z-10 px-4 py-4">
             <div className="grid grid-cols-2 gap-x-3">
-              {appMode === 'donny' ? (
-                <div className="col-span-2 flex flex-col items-center justify-center py-16 space-y-4">
-                  <div className="text-6xl">🐨</div>
-                  <div className="text-white font-bold" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px',fontSize:'18px'}}>DONNY</div>
-                  <div className="text-xs" style={{color:"rgba(249,115,22,0.6)",letterSpacing:'2px'}}>BUSINESS SYSTEM</div>
-                  <button onClick={() => { setActiveView('donny'); setSidebarOpen(false); }}
-                    className="mt-4 px-8 py-3 rounded-xl font-bold text-white"
-                    style={{background:'linear-gradient(135deg,#f97316,#ea580c)',boxShadow:'0 0 20px rgba(249,115,22,0.4)',fontFamily:"'Orbitron',monospace",letterSpacing:'1px',fontSize:'12px'}}>
-                    ENTER →
-                  </button>
-                </div>
-              ) : sections.map(sec => {
+              {appMode === 'donny' ? (() => {
+                const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
+                const donnyItems = [
+                  { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
+                  { section:'JOBS', id:'donny-jobs', label:'All Jobs', icon:'🔨' },
+                  { section:'JOBS', id:'donny-newjob', label:'New Job', icon:'➕' },
+                  { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
+                  { section:'SAFETY', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
+                  { section:'COSTS', id:'donny-costs', label:'Materials', icon:'🔧' },
+                  { section:'COSTS', id:'donny-budget', label:'Budget', icon:'💰' },
+                  { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
+                ];
+                const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', SAFETY:'#ef4444', COSTS:'#22c55e', REPORTS:'#f97316' };
+                return donnySections.map(sec => {
+                  const items = donnyItems.filter(i => i.section === sec);
+                  const color = donnyColors[sec];
+                  return (
+                    <div key={sec} className="mb-4">
+                      <div className="text-xs font-mono mb-2 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
+                      {items.map(item => {
+                        const active = activeView === item.id;
+                        return (
+                          <button key={item.id}
+                            onClick={() => { setActiveView(item.id); setSidebarOpen(false); }}
+                            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
+                            style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
+                            <span className="text-base leading-none">{item.icon}</span>
+                            <span className="text-sm font-medium" style={{color:active?color:'rgba(255,255,255,0.8)'}}>{item.label}</span>
+                            {active && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{background:color}}/>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                });
+              })() : sections.map(sec => {
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
@@ -13834,43 +13858,345 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   // TIMETABLE VIEW
-  // DONNY VIEW
-  if (activeView === 'donny') {
+  // DONNY VIEWS
+  if (activeView && activeView.startsWith('donny')) {
     if (!isElite) return <LockedFeature featureName="Donny Business System" setActiveView={setActiveView} />;
-    return (
-      <div className="min-h-screen bg-transparent pb-24">
-        <Sidebar />
-        <SaveIndicator />
-        <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(249,115,22,0.2)"}}>
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-3">
-              <div className="text-4xl">🐨</div>
-              <div>
-                <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"3px"}}>// BUSINESS SYSTEM</div>
-                <h1 className="text-3xl font-bold text-white" style={{fontFamily:"'Orbitron',monospace",letterSpacing:"3px"}}>DONNY</h1>
-              </div>
+
+    const saveDonnyJobs = (updated) => {
+      setDonnyJobs(updated);
+      try { localStorage.setItem('muzz_donny_jobs', JSON.stringify(updated)); } catch {}
+    };
+
+    const fields = [
+      { key:'employees', label:'👷 Employees', placeholder:'James, Peter, Sam' },
+      { key:'risk', label:'⚠️ Biggest Risk', placeholder:'Falling off ladder' },
+      { key:'riskAvoid', label:'🛡️ How to Avoid', placeholder:'Keep 3 points of contact' },
+      { key:'materials', label:'🔧 Materials Used', placeholder:'Ladders, Cables, etc.' },
+      { key:'costs', label:'💰 Costs', placeholder:'$800 Labour, $1000 TPS Cable' },
+      { key:'avgTime', label:'⏱️ Avg Time', placeholder:'2 working days' },
+      { key:'mistakes', label:'❌ Mistakes', placeholder:'James cut cable too short' },
+      { key:'problems', label:'🚨 Problems', placeholder:'Need more 2C+E Orange' },
+      { key:'notes', label:'📝 Notes', placeholder:'Any additional notes...' },
+    ];
+
+    const DonnyHeader = ({ title, icon }) => (
+      <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)"}}>
+        <div className="max-w-4xl mx-auto">
+          <button onClick={() => setActiveView('donny')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(249,115,22,0.8)",fontSize:"13px"}}>← Dashboard</button>
+          <div className="flex items-center gap-3">
+            <div className="text-3xl">{icon}</div>
+            <div>
+              <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"3px"}}>// DONNY</div>
+              <h1 className="text-3xl font-bold text-white" style={{fontFamily:"'Orbitron',monospace",letterSpacing:"2px"}}>{title}</h1>
             </div>
-          </div>
-        </div>
-        <div className="max-w-4xl mx-auto px-6 py-12 flex flex-col items-center justify-center text-center space-y-6">
-          <div className="text-8xl">🐨</div>
-          <div>
-            <div className="text-2xl font-bold text-white mb-2" style={{fontFamily:"'Orbitron',monospace",letterSpacing:"2px"}}>COMING SOON</div>
-            <div className="text-sm" style={{color:"rgba(249,115,22,0.6)"}}>Donny Business System is under construction</div>
-          </div>
-          <div className="rounded-2xl p-6 w-full max-w-md" style={{background:"rgba(249,115,22,0.06)",border:"1px solid rgba(249,115,22,0.15)"}}>
-            <div className="text-xs font-mono mb-4" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// WHAT'S COMING</div>
-            {['Job tracking & management','Employee assignment','Risk & safety register','Materials & cost tracking','Avg time per job','Mistakes & problems log'].map((f,i) => (
-              <div key={i} className="flex items-center gap-3 py-2" style={{borderBottom:"1px solid rgba(249,115,22,0.08)"}}>
-                <span style={{color:"rgba(249,115,22,0.4)"}}>◦</span>
-                <span className="text-sm" style={{color:"rgba(148,163,184,0.7)"}}>{f}</span>
-              </div>
-            ))}
           </div>
         </div>
       </div>
     );
+
+    // DASHBOARD
+    if (activeView === 'donny') {
+      const activeJobs = donnyJobs.filter(j => !j.completed);
+      const completedJobs = donnyJobs.filter(j => j.completed);
+      const allEmployees = [...new Set(donnyJobs.flatMap(j => (j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
+      const totalCosts = donnyJobs.reduce((sum,j) => {
+        const nums = (j.costs||'').match(/\$[\d,]+/g)||[];
+        return sum + nums.reduce((s,n) => s + parseFloat(n.replace(/[$,]/g,''))||0, 0);
+      }, 0);
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar />
+          <SaveIndicator />
+          <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)"}}>
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">🐨</div>
+                <div>
+                  <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"3px"}}>// BUSINESS SYSTEM</div>
+                  <h1 className="text-3xl font-bold text-white" style={{fontFamily:"'Orbitron',monospace",letterSpacing:"3px"}}>DONNY</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+            {/* Stats row */}
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label:'Active Jobs', value: activeJobs.length, icon:'🔨' },
+                { label:'Team Members', value: allEmployees.length, icon:'👷' },
+                { label:'Est. Costs', value: totalCosts > 0 ? `$${totalCosts.toLocaleString()}` : '$0', icon:'💰' },
+              ].map((s,i) => (
+                <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)"}}>
+                  <div className="text-2xl mb-1">{s.icon}</div>
+                  <div className="text-xl font-bold text-white">{s.value}</div>
+                  <div className="text-xs" style={{color:"rgba(249,115,22,0.6)"}}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            {/* Active Jobs */}
+            <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
+              <div className="flex items-center justify-between p-4" style={{borderBottom:"1px solid rgba(249,115,22,0.1)"}}>
+                <div className="font-semibold text-white">🔨 Active Jobs</div>
+                <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg" style={{background:"rgba(249,115,22,0.15)",color:"#f97316",border:"1px solid rgba(249,115,22,0.3)"}}>+ New Job</button>
+              </div>
+              {activeJobs.length === 0 ? (
+                <div className="p-8 text-center" style={{color:"rgba(148,163,184,0.4)"}}>No active jobs — add one!</div>
+              ) : activeJobs.map(job => (
+                <button key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobs'); }}
+                  className="w-full flex items-center justify-between p-4 text-left transition-all hover:bg-orange-900/10"
+                  style={{borderBottom:"1px solid rgba(249,115,22,0.06)"}}>
+                  <div>
+                    <div className="font-medium text-white">{job.title}</div>
+                    <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>
+                      {job.employees ? `👷 ${job.employees}` : 'No workers'} {job.avgTime ? `· ⏱️ ${job.avgTime}` : ''}
+                    </div>
+                  </div>
+                  <span style={{color:"rgba(249,115,22,0.5)"}}>›</span>
+                </button>
+              ))}
+            </div>
+            {/* Problems/Alerts */}
+            {donnyJobs.filter(j => j.problems && !j.completed).length > 0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.2)"}}>
+                <div className="p-4" style={{borderBottom:"1px solid rgba(239,68,68,0.1)"}}>
+                  <div className="font-semibold text-white">🚨 Active Problems</div>
+                </div>
+                {donnyJobs.filter(j => j.problems && !j.completed).map(job => (
+                  <div key={job.id} className="p-4" style={{borderBottom:"1px solid rgba(239,68,68,0.08)"}}>
+                    <div className="text-sm font-medium text-white mb-1">{job.title}</div>
+                    <div className="text-sm" style={{color:"rgba(239,68,68,0.7)"}}>{job.problems}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ALL JOBS
+    if (activeView === 'donny-jobs') {
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="ALL JOBS" icon="🔨" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={() => setActiveView('donny-newjob')} className="w-full py-4 rounded-xl font-bold text-white" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>+ New Job</button>
+            {selectedDonnyJob ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <button onClick={() => setSelectedDonnyJob(null)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← All Jobs</button>
+                  <button onClick={() => { const u = donnyJobs.map(j => j.id===selectedDonnyJob.id?{...j,completed:!j.completed}:j); saveDonnyJobs(u); setSelectedDonnyJob(prev=>({...prev,completed:!prev.completed})); }}
+                    className="text-xs px-3 py-1.5 rounded-lg" style={{background:selectedDonnyJob.completed?"rgba(34,197,94,0.15)":"rgba(249,115,22,0.15)",color:selectedDonnyJob.completed?"#22c55e":"#f97316",border:`1px solid ${selectedDonnyJob.completed?"rgba(34,197,94,0.3)":"rgba(249,115,22,0.3)"}`}}>
+                    {selectedDonnyJob.completed ? '✓ Completed' : 'Mark Complete'}
+                  </button>
+                </div>
+                <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
+                  <input value={selectedDonnyJob.title} onChange={e => { const u=donnyJobs.map(j=>j.id===selectedDonnyJob.id?{...j,title:e.target.value}:j); saveDonnyJobs(u); setSelectedDonnyJob(p=>({...p,title:e.target.value})); }}
+                    className="w-full bg-transparent text-white text-xl font-bold focus:outline-none" placeholder="Job Title" />
+                  <div className="text-xs mt-1" style={{color:"rgba(249,115,22,0.4)"}}>Created {new Date(selectedDonnyJob.createdAt).toLocaleDateString('en-AU')}</div>
+                </div>
+                {fields.map(f => (
+                  <div key={f.key} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
+                    <div className="text-xs font-mono mb-2" style={{color:"rgba(249,115,22,0.6)",letterSpacing:"1px"}}>{f.label}</div>
+                    <textarea value={selectedDonnyJob[f.key]||''} onChange={e => { const u=donnyJobs.map(j=>j.id===selectedDonnyJob.id?{...j,[f.key]:e.target.value}:j); saveDonnyJobs(u); setSelectedDonnyJob(p=>({...p,[f.key]:e.target.value})); }}
+                      placeholder={f.placeholder} rows={2}
+                      className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none resize-none text-sm" />
+                  </div>
+                ))}
+                <button onClick={() => { saveDonnyJobs(donnyJobs.filter(j=>j.id!==selectedDonnyJob.id)); setSelectedDonnyJob(null); }}
+                  className="w-full py-3 rounded-xl text-sm" style={{color:"rgba(239,68,68,0.6)",border:"1px solid rgba(239,68,68,0.15)"}}>Delete Job</button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {donnyJobs.length === 0 && <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}><div className="text-4xl mb-3">🐨</div><div className="text-white">No jobs yet</div></div>}
+                {donnyJobs.filter(j=>!j.completed).map(job => (
+                  <button key={job.id} onClick={() => setSelectedDonnyJob(job)} className="w-full rounded-2xl p-4 text-left" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
+                    <div className="flex items-center justify-between">
+                      <div><div className="font-semibold text-white">{job.title}</div><div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{job.employees||'No workers'} · {new Date(job.createdAt).toLocaleDateString('en-AU')}</div></div>
+                      <span style={{color:"rgba(249,115,22,0.5)"}}>›</span>
+                    </div>
+                  </button>
+                ))}
+                {donnyJobs.filter(j=>j.completed).length > 0 && (
+                  <div>
+                    <div className="text-xs font-mono my-3" style={{color:"rgba(34,197,94,0.5)",letterSpacing:"2px"}}>// COMPLETED</div>
+                    {donnyJobs.filter(j=>j.completed).map(job => (
+                      <button key={job.id} onClick={() => setSelectedDonnyJob(job)} className="w-full rounded-2xl p-4 text-left mb-2 opacity-60" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(34,197,94,0.15)"}}>
+                        <div className="flex items-center justify-between">
+                          <div><div className="font-semibold text-white line-through">{job.title}</div><div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{job.employees||'No workers'}</div></div>
+                          <span className="text-green-500">✓</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // NEW JOB
+    if (activeView === 'donny-newjob') {
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="NEW JOB" icon="➕" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
+              <input value={newDonnyJob.title} onChange={e => setNewDonnyJob(p=>({...p,title:e.target.value}))}
+                className="w-full bg-transparent text-white text-xl font-bold focus:outline-none placeholder-orange-900"
+                placeholder="Job Title e.g. Install Cable For Switchroom" />
+            </div>
+            {fields.map(f => (
+              <div key={f.key} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
+                <div className="text-xs font-mono mb-2" style={{color:"rgba(249,115,22,0.6)",letterSpacing:"1px"}}>{f.label}</div>
+                <textarea value={newDonnyJob[f.key]||''} onChange={e => setNewDonnyJob(p=>({...p,[f.key]:e.target.value}))}
+                  placeholder={f.placeholder} rows={2}
+                  className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none resize-none text-sm" />
+              </div>
+            ))}
+            <button onClick={() => {
+              if (!newDonnyJob.title.trim()) return;
+              saveDonnyJobs([...donnyJobs, {...newDonnyJob, id:Date.now(), createdAt:new Date().toISOString(), completed:false}]);
+              setNewDonnyJob({title:'',employees:'',risk:'',riskAvoid:'',materials:'',costs:'',avgTime:'',mistakes:'',problems:'',notes:''});
+              setActiveView('donny-jobs');
+            }} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
+              + Add Job
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // TEAM
+    if (activeView === 'donny-team') {
+      const allEmployees = [...new Set(donnyJobs.flatMap(j => (j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="TEAM" icon="👷" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            {allEmployees.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}><div className="text-4xl mb-3">👷</div><div className="text-white">No team members yet</div><div className="text-sm mt-1" style={{color:"rgba(148,163,184,0.5)"}}>Add employees when creating jobs</div></div>
+            ) : allEmployees.map(emp => {
+              const empJobs = donnyJobs.filter(j => (j.employees||'').includes(emp));
+              const mistakes = donnyJobs.filter(j => (j.mistakes||'').toLowerCase().includes(emp.toLowerCase()));
+              return (
+                <div key={emp} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold" style={{background:"rgba(249,115,22,0.15)",color:"#f97316"}}>{emp[0]}</div>
+                    <div><div className="font-semibold text-white">{emp}</div><div className="text-xs" style={{color:"rgba(249,115,22,0.5)"}}>{empJobs.length} job{empJobs.length!==1?'s':''}</div></div>
+                  </div>
+                  <div className="text-xs" style={{color:"rgba(148,163,184,0.5)"}}>{empJobs.map(j=>j.title).join(', ')}</div>
+                  {mistakes.length > 0 && <div className="mt-2 text-xs" style={{color:"rgba(239,68,68,0.6)"}}>⚠️ Noted in mistakes log</div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // SAFETY
+    if (activeView === 'donny-safety') {
+      const jobsWithRisks = donnyJobs.filter(j => j.risk);
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="RISK REGISTER" icon="⚠️" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            {jobsWithRisks.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.1)"}}><div className="text-4xl mb-3">✅</div><div className="text-white">No risks logged yet</div></div>
+            ) : jobsWithRisks.map(job => (
+              <div key={job.id} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.2)"}}>
+                <div className="p-3 text-sm font-semibold text-white" style={{background:"rgba(239,68,68,0.08)",borderBottom:"1px solid rgba(239,68,68,0.15)"}}>{job.title}</div>
+                <div className="p-4 space-y-3">
+                  <div><div className="text-xs font-mono mb-1" style={{color:"rgba(239,68,68,0.6)"}}>⚠️ RISK</div><div className="text-sm text-white">{job.risk}</div></div>
+                  {job.riskAvoid && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(34,197,94,0.6)"}}>🛡️ HOW TO AVOID</div><div className="text-sm text-white">{job.riskAvoid}</div></div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // COSTS / MATERIALS
+    if (activeView === 'donny-costs' || activeView === 'donny-budget') {
+      const jobsWithCosts = donnyJobs.filter(j => j.materials || j.costs);
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title={activeView==='donny-budget'?'BUDGET':'MATERIALS'} icon={activeView==='donny-budget'?'💰':'🔧'} />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            {jobsWithCosts.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(34,197,94,0.1)"}}><div className="text-4xl mb-3">🔧</div><div className="text-white">No materials or costs logged yet</div></div>
+            ) : jobsWithCosts.map(job => (
+              <div key={job.id} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(34,197,94,0.15)"}}>
+                <div className="p-3 text-sm font-semibold text-white" style={{background:"rgba(34,197,94,0.05)",borderBottom:"1px solid rgba(34,197,94,0.1)"}}>{job.title}</div>
+                <div className="p-4 space-y-3">
+                  {job.materials && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(34,197,94,0.6)"}}>🔧 MATERIALS</div><div className="text-sm text-white">{job.materials}</div></div>}
+                  {job.costs && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(249,115,22,0.6)"}}>💰 COSTS</div><div className="text-sm text-white">{job.costs}</div></div>}
+                  {job.avgTime && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(148,163,184,0.5)"}}>⏱️ AVG TIME</div><div className="text-sm text-white">{job.avgTime}</div></div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // REPORTS
+    if (activeView === 'donny-reports') {
+      const activeJobs = donnyJobs.filter(j=>!j.completed);
+      const completedJobs = donnyJobs.filter(j=>j.completed);
+      const allEmployees = [...new Set(donnyJobs.flatMap(j=>(j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
+      const jobsWithProblems = donnyJobs.filter(j=>j.problems);
+      const jobsWithMistakes = donnyJobs.filter(j=>j.mistakes);
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="REPORTS" icon="📊" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                {label:'Total Jobs',value:donnyJobs.length,color:'#f97316'},
+                {label:'Active',value:activeJobs.length,color:'#f97316'},
+                {label:'Completed',value:completedJobs.length,color:'#22c55e'},
+                {label:'Team Size',value:allEmployees.length,color:'#f97316'},
+                {label:'Open Problems',value:jobsWithProblems.filter(j=>!j.completed).length,color:'#ef4444'},
+                {label:'Mistakes Logged',value:jobsWithMistakes.length,color:'#f59e0b'},
+              ].map((s,i) => (
+                <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${s.color}25`}}>
+                  <div className="text-2xl font-bold mb-1" style={{color:s.color}}>{s.value}</div>
+                  <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            {jobsWithProblems.length > 0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.2)"}}>
+                <div className="p-4 font-semibold text-white" style={{borderBottom:"1px solid rgba(239,68,68,0.1)"}}>🚨 Problems Log</div>
+                {jobsWithProblems.map(j => <div key={j.id} className="p-4" style={{borderBottom:"1px solid rgba(239,68,68,0.06)"}}><div className="text-sm font-medium text-white">{j.title}</div><div className="text-sm mt-1" style={{color:"rgba(239,68,68,0.7)"}}>{j.problems}</div></div>)}
+              </div>
+            )}
+            {jobsWithMistakes.length > 0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(245,158,11,0.2)"}}>
+                <div className="p-4 font-semibold text-white" style={{borderBottom:"1px solid rgba(245,158,11,0.1)"}}>❌ Mistakes Log</div>
+                {jobsWithMistakes.map(j => <div key={j.id} className="p-4" style={{borderBottom:"1px solid rgba(245,158,11,0.06)"}}><div className="text-sm font-medium text-white">{j.title}</div><div className="text-sm mt-1" style={{color:"rgba(245,158,11,0.7)"}}>{j.mistakes}</div></div>)}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   }
+
 
   // STATS & INSIGHTS VIEW
   if (activeView === 'statsinsights') {
