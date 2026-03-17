@@ -2411,7 +2411,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          <div className="relative z-10 px-4 py-4">
+          <div className="relative z-10 px-4 py-4 overflow-y-auto" style={{maxHeight:'calc(100vh - 140px)',paddingBottom:'24px'}}>
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
@@ -2476,7 +2476,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
-            <div className="mt-4 mb-6 px-0">
+            <div className="mt-4 mb-2">
               <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2" style={{background:'rgba(239,68,68,0.12)',border:'1px solid rgba(239,68,68,0.35)',color:'rgba(239,68,68,0.9)'}}>
                 🚪 Sign Out
               </button>
