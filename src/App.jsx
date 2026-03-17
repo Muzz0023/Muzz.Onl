@@ -2363,6 +2363,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
       { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
       { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
+      { section: 'ACCOUNT', id:'signout', label:'Sign Out', icon:'🚪', danger:true },
+      { section: 'ACCOUNT', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
 
     ];
     const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT'];
@@ -2418,7 +2420,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             <div className="mt-1 pt-3" style={{borderTop:'1px solid rgba(0,200,255,0.08)'}}>
-              <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="grid grid-cols-2 gap-2">
                 <button onClick={() => { doExport(); setSidebarOpen(false); }} className="flex items-center justify-center gap-2 py-2 rounded-xl text-sm" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.15)',color:'rgba(0,200,255,0.7)'}}>
                   <Download className="w-4 h-4" /> Export
                 </button>
@@ -2427,12 +2429,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <input type="file" id="import-file" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
                 </label>
               </div>
-              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-2 rounded-xl text-sm" style={{background:'rgba(239,68,68,0.05)',border:'1px solid rgba(239,68,68,0.15)',color:'rgba(239,68,68,0.6)'}}>
-                Sign Out
-              </button>
-              <button onClick={() => { if(window.confirm('Are you sure? This permanently deletes your account and all data.')){supabase.deleteUserData(userId).then(()=>signOut());}}} className="w-full py-2 rounded-xl text-sm mt-1" style={{background:'rgba(239,68,68,0.03)',border:'1px solid rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.4)'}}>
-                🗑️ Delete Account
-              </button>
             </div>
           </div>
         </div>}
