@@ -2411,7 +2411,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          <div className="relative z-10 px-4 py-4 overflow-y-auto" style={{maxHeight:'calc(100vh - 140px)',paddingBottom:'24px'}}>
+          <div className="relative z-10 px-4 py-4 overflow-y-auto" style={{height:'calc(100vh - 140px)'}}>
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
