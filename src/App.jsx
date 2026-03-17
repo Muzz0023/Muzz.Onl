@@ -2406,7 +2406,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="relative z-10 px-4 py-4">
             <div className="grid grid-cols-2 gap-x-3">
-              {sections.map(sec => {
+              {appMode === 'donny' ? (
+                <div className="col-span-2 flex flex-col items-center justify-center py-16 space-y-4">
+                  <div className="text-6xl">🐨</div>
+                  <div className="text-white font-bold" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px',fontSize:'18px'}}>DONNY</div>
+                  <div className="text-xs" style={{color:"rgba(249,115,22,0.6)",letterSpacing:'2px'}}>BUSINESS SYSTEM</div>
+                  <button onClick={() => { setActiveView('donny'); setSidebarOpen(false); }}
+                    className="mt-4 px-8 py-3 rounded-xl font-bold text-white"
+                    style={{background:'linear-gradient(135deg,#f97316,#ea580c)',boxShadow:'0 0 20px rgba(249,115,22,0.4)',fontFamily:"'Orbitron',monospace",letterSpacing:'1px',fontSize:'12px'}}>
+                    ENTER →
+                  </button>
+                </div>
+              ) : sections.map(sec => {
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
