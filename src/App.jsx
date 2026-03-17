@@ -1771,6 +1771,13 @@ function MuzzApp() {
   const [timetableBlocks, setTimetableBlocks] = useState([]);
   const [gymTab, setGymTab] = useState('steps');
   const [appMode, setAppMode] = useState('muzz');
+  const [donnyTab, setDonnyTab] = useState('jobs');
+  const [donnyJobs, setDonnyJobs] = useState(() => {
+    try { const s = localStorage.getItem('muzz_donny_jobs'); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
+  const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
+  const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
+  const [newDonnyJob, setNewDonnyJob] = useState({ title:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
@@ -6234,8 +6241,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     
     // Add new job
     const addJob = () => {
-      if (jobs.length >= 5) return alert('Maximum 5 jobs allowed');
-      const newId = Math.max(...jobs.map(j => j.id)) + 1;
+      if (donnyJobs.length >= 5) return alert('Maximum 5 jobs allowed');
+      const newId = Math.max(...donnyJobs.map(j => j.id)) + 1;
       setTimesheetData(prev => ({
         ...prev,
         jobs: [...(prev.jobs || jobs), { id: newId, name: `Job ${newId}`, hourlyRate: 0, hourlyRateStr: '', shifts: {} }],
@@ -6245,13 +6252,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     
     // Delete job
     const deleteJob = (jobId) => {
-      if (jobs.length <= 1) return alert('Must have at least one job');
+      if (donnyJobs.length <= 1) return alert('Must have at least one job');
       if (!confirm('Delete this job and all its timesheet data?')) return;
-      const newJobs = jobs.filter(j => j.id !== jobId);
+      const newDonnyJobs = donnyJobs.filter(j => j.id !== jobId);
       setTimesheetData(prev => ({
         ...prev,
-        jobs: newJobs,
-        activeJobId: newJobs[0].id
+        jobs: newDonnyJobs,
+        activeJobId: newDonnyJobs[0].id
       }));
     };
 
@@ -6283,7 +6290,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             >
               📊 Total Summary
             </button>
-            {jobs.map(job => (
+            {donnyJobs.map(job => (
               <button
                 key={job.id}
                 onClick={() => {
@@ -6299,7 +6306,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 💼 {job.name}
               </button>
             ))}
-            {jobs.length < 5 && (
+            {donnyJobs.length < 5 && (
               <button
                 onClick={addJob}
                 className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
@@ -6333,7 +6340,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <h3 className="font-semibold text-gray-800">Breakdown by Job</h3>
                 </div>
                 <div className="divide-y">
-                  {jobs.map(job => {
+                  {donnyJobs.map(job => {
                     const { hours, pay } = calcJobTotals(job);
                     return (
                       <div key={job.id} className="p-4 flex items-center justify-between">
@@ -6385,7 +6392,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
                       className="text-2xl font-bold bg-transparent border-b border-white/30 focus:outline-none focus:border-white"
                     />
-                    {jobs.length > 1 && (
+                    {donnyJobs.length > 1 && (
                       <button
                         onClick={() => deleteJob(activeJobId)}
                         className="p-1 text-white/60 hover:text-red-300 transition-colors"
@@ -13831,31 +13838,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'donny') {
     if (!isElite) return <LockedFeature featureName="Donny Business System" setActiveView={setActiveView} />;
 
-    const [donnyTab, setDonnyTab] = React.useState('jobs');
-    const [jobs, setJobs] = React.useState(() => {
-      try { const s = localStorage.getItem('muzz_donny_jobs'); return s ? JSON.parse(s) : []; } catch { return []; }
-    });
-    const [selectedJob, setSelectedJob] = React.useState(null);
-    const [showNewJob, setShowNewJob] = React.useState(false);
-    const [newJob, setNewJob] = React.useState({ title:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
-
     const saveJobs = (updated) => {
-      setJobs(updated);
+      setDonnyJobs(updated);
       try { localStorage.setItem('muzz_donny_jobs', JSON.stringify(updated)); } catch {}
     };
 
     const addJob = () => {
-      if (!newJob.title.trim()) return;
-      const updated = [...jobs, { ...newJob, id: Date.now(), createdAt: new Date().toISOString() }];
+      if (!newDonnyJob.title.trim()) return;
+      const updated = [...donnyJobs, { ...newDonnyJob, id: Date.now(), createdAt: new Date().toISOString() }];
       saveJobs(updated);
-      setNewJob({ title:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
-      setShowNewJob(false);
+      setNewDonnyJob({ title:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
+      setShowNewDonnyJob(false);
     };
 
     const updateJob = (id, field, value) => {
-      const updated = jobs.map(j => j.id === id ? { ...j, [field]: value } : j);
+      const updated = donnyJobs.map(j => j.id === id ? { ...j, [field]: value } : j);
       saveJobs(updated);
-      if (selectedJob?.id === id) setSelectedJob(prev => ({ ...prev, [field]: value }));
+      if (selectedDonnyJob?.id === id) setSelectedDonnyJob(prev => ({ ...prev, [field]: value }));
     };
 
     const fields = [
@@ -13890,45 +13889,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-4xl mx-auto px-4 py-6">
           {/* If viewing a specific job */}
-          {selectedJob ? (
+          {selectedDonnyJob ? (
             <div className="space-y-4">
               <div className="flex items-center gap-3 mb-2">
-                <button onClick={() => setSelectedJob(null)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← All Jobs</button>
+                <button onClick={() => setSelectedDonnyJob(null)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← All Jobs</button>
               </div>
               <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
-                <input value={selectedJob.title} onChange={e => updateJob(selectedJob.id,'title',e.target.value)}
+                <input value={selectedDonnyJob.title} onChange={e => updateJob(selectedDonnyJob.id,'title',e.target.value)}
                   className="w-full bg-transparent text-white text-xl font-bold focus:outline-none"
                   style={{fontFamily:"'Orbitron',monospace"}} placeholder="Job Title" />
-                <div className="text-xs mt-1" style={{color:"rgba(249,115,22,0.4)"}}>Created {new Date(selectedJob.createdAt).toLocaleDateString('en-AU')}</div>
+                <div className="text-xs mt-1" style={{color:"rgba(249,115,22,0.4)"}}>Created {new Date(selectedDonnyJob.createdAt).toLocaleDateString('en-AU')}</div>
               </div>
               {fields.map(f => (
                 <div key={f.key} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
                   <div className="text-xs font-mono mb-2" style={{color:"rgba(249,115,22,0.6)",letterSpacing:"1px"}}>{f.label}</div>
-                  <textarea value={selectedJob[f.key]||''} onChange={e => updateJob(selectedJob.id,f.key,e.target.value)}
+                  <textarea value={selectedDonnyJob[f.key]||''} onChange={e => updateJob(selectedDonnyJob.id,f.key,e.target.value)}
                     placeholder={f.placeholder}
                     className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none resize-none text-sm"
                     rows={2} style={{lineHeight:"1.6"}} />
                 </div>
               ))}
-              <button onClick={() => { const updated = jobs.filter(j => j.id !== selectedJob.id); saveJobs(updated); setSelectedJob(null); }}
+              <button onClick={() => { const updated = donnyJobs.filter(j => j.id !== selectedDonnyJob.id); saveJobs(updated); setSelectedDonnyJob(null); }}
                 className="w-full py-3 rounded-xl text-sm" style={{color:"rgba(239,68,68,0.6)",border:"1px solid rgba(239,68,68,0.15)"}}>
                 Delete Job
               </button>
             </div>
-          ) : showNewJob ? (
+          ) : showNewDonnyJob ? (
             <div className="space-y-4">
               <div className="flex items-center gap-3 mb-2">
-                <button onClick={() => setShowNewJob(false)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← Cancel</button>
+                <button onClick={() => setShowNewDonnyJob(false)} className="text-sm" style={{color:"rgba(249,115,22,0.7)"}}>← Cancel</button>
               </div>
               <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
-                <input value={newJob.title} onChange={e => setNewJob(p=>({...p,title:e.target.value}))}
+                <input value={newDonnyJob.title} onChange={e => setNewDonnyJob(p=>({...p,title:e.target.value}))}
                   className="w-full bg-transparent text-white text-xl font-bold focus:outline-none placeholder-orange-900"
                   placeholder="Job Title e.g. Install Cable For Switchroom" />
               </div>
               {fields.map(f => (
                 <div key={f.key} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
                   <div className="text-xs font-mono mb-2" style={{color:"rgba(249,115,22,0.6)",letterSpacing:"1px"}}>{f.label}</div>
-                  <textarea value={newJob[f.key]||''} onChange={e => setNewJob(p=>({...p,[f.key]:e.target.value}))}
+                  <textarea value={newDonnyJob[f.key]||''} onChange={e => setNewDonnyJob(p=>({...p,[f.key]:e.target.value}))}
                     placeholder={f.placeholder}
                     className="w-full bg-transparent text-white placeholder-slate-600 focus:outline-none resize-none text-sm"
                     rows={2} />
@@ -13940,18 +13939,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           ) : (
             <div className="space-y-4">
-              <button onClick={() => setShowNewJob(true)} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
+              <button onClick={() => setShowNewDonnyJob(true)} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
                 + New Job
               </button>
-              {jobs.length === 0 && (
+              {donnyJobs.length === 0 && (
                 <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}>
                   <div className="text-4xl mb-3">💼</div>
                   <div className="text-white font-semibold mb-1">No jobs yet</div>
                   <div className="text-sm" style={{color:"rgba(148,163,184,0.5)"}}>Add your first job to get started</div>
                 </div>
               )}
-              {jobs.map(job => (
-                <button key={job.id} onClick={() => setSelectedJob(job)} className="w-full rounded-2xl p-4 text-left transition-all" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
+              {donnyJobs.map(job => (
+                <button key={job.id} onClick={() => setSelectedDonnyJob(job)} className="w-full rounded-2xl p-4 text-left transition-all" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-semibold text-white">{job.title}</div>
