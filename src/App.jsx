@@ -2374,6 +2374,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'SETTINGS', id:'export', label:'Export Data', icon:'📤' },
       { section: 'SETTINGS', id:'import', label:'Import Data', icon:'📥' },
       { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
+      { section: 'SETTINGS', id:'signout', label:'Sign Out', icon:'🚪', danger:true },
 
 
     ];
@@ -2411,8 +2412,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          <div className="relative z-10 px-4 py-4 flex flex-col" style={{height:'calc(100vh - 140px)',overflow:'hidden'}}>
-            <div className="flex-1 overflow-y-auto pb-4" style={{scrollbarWidth:'none'}}>
+          <div className="relative z-10 px-4 py-4">
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
@@ -2460,7 +2460,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='signout'){signOut(); setSidebarOpen(false);}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
                           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
@@ -2476,13 +2476,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
             </div>
 
-            </div>
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
-            <div className="pt-3 flex-shrink-0">
-              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-3 rounded-xl text-sm font-semibold" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)'}}>
-                🚪 Sign Out
-              </button>
-            </div>
           </div>
         </div>}
       </>
