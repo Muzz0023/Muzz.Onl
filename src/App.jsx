@@ -2366,7 +2366,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'SETTINGS', id:'export', label:'Export Data', icon:'📤' },
       { section: 'SETTINGS', id:'import', label:'Import Data', icon:'📥' },
       { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
-      { section: 'SETTINGS', id:'signout', label:'Sign Out', icon:'🚪', danger:true },
+
 
     ];
     const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT','SETTINGS'];
@@ -2422,6 +2422,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
+            <div className="mt-3 px-0">
+              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-3 rounded-xl text-sm font-semibold" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)'}}>
+                🚪 Sign Out
+              </button>
+            </div>
           </div>
         </div>}
       </>
