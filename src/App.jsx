@@ -2374,7 +2374,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'SETTINGS', id:'export', label:'Export Data', icon:'📤' },
       { section: 'SETTINGS', id:'import', label:'Import Data', icon:'📥' },
       { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
-      { section: 'SETTINGS', id:'signout', label:'Sign Out', icon:'🚪', danger:true },
 
 
     ];
@@ -2460,7 +2459,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='signout'){signOut(); setSidebarOpen(false);}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
+                          onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
                           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
                           style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
                           <span className="text-base leading-none">{item.icon}</span>
@@ -2477,6 +2476,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
+            <div className="mt-4 mb-6 px-0">
+              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2" style={{background:'rgba(239,68,68,0.12)',border:'1px solid rgba(239,68,68,0.35)',color:'rgba(239,68,68,0.9)'}}>
+                🚪 Sign Out
+              </button>
+            </div>
           </div>
         </div>}
       </>
