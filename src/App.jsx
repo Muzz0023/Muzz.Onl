@@ -14128,7 +14128,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          {/* Custom header with glow */}
           <div className="pt-16 pb-8 px-6 relative overflow-hidden" style={{borderBottom:'1px solid rgba(249,115,22,0.2)',background:'rgba(249,115,22,0.03)'}}>
             <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(249,115,22,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.03) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}}/>
             <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'300px',height:'150px',background:'radial-gradient(ellipse,rgba(249,115,22,0.15) 0%,transparent 70%)',pointerEvents:'none'}}/>
@@ -14143,28 +14142,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
           </div>
-
           <div className="max-w-2xl mx-auto px-6 py-8 space-y-4">
-            {/* Job Title */}
             <div className="relative rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.3)',boxShadow:'0 0 30px rgba(249,115,22,0.05)'}}>
               <div className="absolute top-0 left-0 right-0 h-px" style={{background:'linear-gradient(90deg,transparent,rgba(249,115,22,0.5),transparent)'}}/>
               <div className="p-5">
                 <div className="text-xs font-mono mb-3 tracking-widest" style={{color:'rgba(249,115,22,0.5)'}}>// JOB TITLE</div>
                 <input value={newDonnyJob.title} onChange={e => setNewDonnyJob(p=>({...p,title:e.target.value}))}
-                  className="w-full bg-transparent text-white text-2xl font-black focus:outline-none"
-                  style={{fontFamily:"'Orbitron',monospace",letterSpacing:'1px'}}
+                  className="w-full bg-transparent text-white text-2xl font-bold focus:outline-none"
                   placeholder="Job name..." />
               </div>
             </div>
-
-            {/* Job Number + Dates */}
             <div className="grid grid-cols-3 gap-3">
               {[
                 { label:'JOB NUMBER', key:'jobNumber', type:'text', placeholder:'e.g. 042', icon:'#' },
                 { label:'START DATE', key:'startDate', type:'date', icon:'▶' },
                 { label:'DUE DATE', key:'dueDate', type:'date', icon:'⏹' },
               ].map(f => (
-                <div key={f.key} className="relative rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)',boxShadow:'0 0 20px rgba(249,115,22,0.03)'}}>
+                <div key={f.key} className="relative rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
                   <div className="absolute top-0 left-0 right-0 h-px" style={{background:'linear-gradient(90deg,transparent,rgba(249,115,22,0.3),transparent)'}}/>
                   <div className="p-4">
                     <div className="text-xs font-mono mb-3 tracking-widest flex items-center gap-1.5" style={{color:'rgba(249,115,22,0.5)'}}>
@@ -14178,8 +14172,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               ))}
             </div>
-
-            {/* Add button */}
             <button onClick={() => {
               if (!newDonnyJob.title.trim()) return;
               saveDonnyJobs([...donnyJobs, {...newDonnyJob, id:Date.now(), createdAt:new Date().toISOString(), completed:false}]);
