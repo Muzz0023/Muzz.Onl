@@ -1785,7 +1785,7 @@ function MuzzApp() {
   const [editingJobId, setEditingJobId] = useState(null);
   const [showAddMember, setShowAddMember] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
-  const [newMember, setNewMember] = useState({ name:'', role:'', position:'', hourlyRate:'', jobAccess:[] });
+  const [newMember, setNewMember] = useState({ name:'', roles:[], position:'', hourlyRate:'', jobAccess:[] });
   const [showNewMistake, setShowNewMistake] = useState(false);
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
@@ -14305,7 +14305,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const ROLES = [
         { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
         { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
-        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson'] },
+        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson','Licenced Electrician'] },
         { group:'ENTRY', options:['Apprentice','Intern','Labourer','Trainee'] },
       ];
       const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
@@ -14334,9 +14334,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-xs mb-1.5" style={{color:'rgba(249,115,22,0.4)',letterSpacing:'2px'}}>{group.group}</div>
                       <div className="flex flex-wrap gap-1.5">
                         {group.options.map(opt => (
-                          <button key={opt} onClick={() => setNewMember(p=>({...p,role:opt}))}
+                          <button key={opt} onClick={() => setNewMember(p=>({...p,roles:(p.roles||[]).includes(opt)?(p.roles||[]).filter(r=>r!==opt):[...(p.roles||[]),opt]}))}
                             className="text-xs px-3 py-1 rounded-lg font-medium"
-                            style={{background:newMember.role===opt?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:newMember.role===opt?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:newMember.role===opt?'#f97316':'rgba(148,163,184,0.6)'}}>
+                            style={{background:(newMember.roles||[]).includes(opt)?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:(newMember.roles||[]).includes(opt)?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:(newMember.roles||[]).includes(opt)?'#f97316':'rgba(148,163,184,0.6)'}}>
                             {opt}
                           </button>
                         ))}
@@ -14356,7 +14356,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 HOURLY RATE (AUD)</div>
                     <input value={newMember.hourlyRate} onChange={e => setNewMember(p=>({...p,hourlyRate:e.target.value}))}
-                      placeholder="e.g. 45.00" type="number"
+                      placeholder="e.g. 45.00" type="text" inputMode="decimal"
                       className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                   </div>
                 </div>
@@ -14408,7 +14408,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {member.position && <span className="text-xs px-2 py-0.5 rounded-full font-mono" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.8)',border:'1px solid rgba(249,115,22,0.2)'}}>{member.position}</span>}
                             </div>
                             <div className="flex items-center gap-3 mt-0.5">
-                              {member.role && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{member.role}</span>}
+                              {(member.roles||[member.role]).filter(Boolean).length > 0 && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')}</span>}
                               {member.hourlyRate && <span className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>💰 ${member.hourlyRate}/hr</span>}
                             </div>
                           </div>
@@ -14444,9 +14444,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>ROLE</div>
                               <div className="flex flex-wrap gap-1.5">
                                 {allRoleOptions.map(opt => (
-                                  <button key={opt} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,role:opt}:m))}
+                                  <button key={opt} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,roles:(m.roles||[]).includes(opt)?(m.roles||[]).filter(r=>r!==opt):[...(m.roles||[]),opt]}:m))}
                                     className="text-xs px-2.5 py-1 rounded-lg"
-                                    style={{background:member.role===opt?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:member.role===opt?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:member.role===opt?'#f97316':'rgba(148,163,184,0.5)'}}>
+                                    style={{background:(member.roles||[]).includes(opt)?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:(member.roles||[]).includes(opt)?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:(member.roles||[]).includes(opt)?'#f97316':'rgba(148,163,184,0.5)'}}>
                                     {opt}
                                   </button>
                                 ))}
@@ -14484,6 +14484,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   );
                 })}
+              </div>
+            )}
+
+            {/* MASTER TABLE */}
+            {donnyTeam.length > 0 && (
+              <div className="mt-4 rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// TEAM TABLE</div>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyTeam.length} members</span>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 140px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>NAME</div><div>ROLE</div><div>POSITION</div><div>RATE</div>
+                </div>
+                {[...donnyTeam].sort((a,b)=>{const POSITIONS=['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];const pi=POSITIONS.indexOf(a.position);const pj=POSITIONS.indexOf(b.position);return(pi===-1?99:pi)-(pj===-1?99:pj);}).map((member,i)=>(
+                  <div key={member.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
+                    style={{gridTemplateColumns:'1fr 1fr 140px 80px',borderBottom:i<donnyTeam.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{member.name.charAt(0).toUpperCase()}</div>
+                      <span className="text-white font-medium text-sm truncate">{member.name}</span>
+                    </div>
+                    <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')||'—'}</div>
+                    <div className="text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{member.position||'—'}</div>
+                    <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{member.hourlyRate?`$${member.hourlyRate}/hr`:'—'}</div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
