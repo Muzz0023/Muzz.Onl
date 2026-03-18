@@ -13936,7 +13936,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="grid grid-cols-3 gap-4">
               {[
                 { label:'Active Jobs', value: activeJobs.length, icon:'🔨' },
-                { label:'Team Members', value: donnyTeam.length, icon:'👷' },
+                { label:'Team Members', value: allEmployees.length, icon:'👷' },
                 { label:'Est. Costs', value: totalCosts > 0 ? `$${totalCosts.toLocaleString()}` : '$0', icon:'💰' },
               ].map((s,i) => (
                 <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)"}}>
@@ -13955,8 +13955,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {activeJobs.length === 0 ? (
                 <div className="p-8 text-center" style={{color:"rgba(148,163,184,0.4)"}}>No active jobs — add one!</div>
               ) : activeJobs.map(job => (
-                <button key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobs'); }}
-                  className="w-full flex items-center justify-between p-4 text-left transition-all hover:bg-orange-900/10"
+                <div key={job.id}
+                  className="w-full flex items-center justify-between p-4 text-left"
                   style={{borderBottom:"1px solid rgba(249,115,22,0.06)"}}>
                   <div>
                     <div className="font-medium text-white">{job.title}</div>
@@ -13964,8 +13964,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {job.employees ? `👷 ${job.employees}` : 'No workers'} {job.avgTime ? `· ⏱️ ${job.avgTime}` : ''}
                     </div>
                   </div>
-                  <span style={{color:"rgba(249,115,22,0.5)"}}>›</span>
-                </button>
+                </div>
               ))}
             </div>
             {/* Problems/Alerts */}
@@ -14634,7 +14633,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:'Total Jobs',value:donnyJobs.length,color:'#f97316'},
                 {label:'Active',value:activeJobs.length,color:'#f97316'},
                 {label:'Completed',value:completedJobs.length,color:'#22c55e'},
-                {label:'Team Size',value:donnyTeam.length,color:'#f97316'},
+                {label:'Team Size',value:allEmployees.length,color:'#f97316'},
                 {label:'Open Problems',value:jobsWithProblems.filter(j=>!j.completed).length,color:'#ef4444'},
                 {label:'Mistakes Logged',value:jobsWithMistakes.length,color:'#f59e0b'},
               ].map((s,i) => (
