@@ -14414,7 +14414,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const ROLES = [
         { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
         { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
-        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson','Licenced Electrician'] },
+        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson'] },
         { group:'ENTRY', options:['Apprentice','Intern','Labourer','Trainee'] },
       ];
       const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
@@ -14546,20 +14546,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div>
                                 <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>HOURLY RATE</div>
                                 <input value={member.hourlyRate} onChange={e => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,hourlyRate:e.target.value}:m))}
-                                  type="number" className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                                  type="text" inputMode="decimal" className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>ROLE</div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {allRoleOptions.map(opt => (
-                                  <button key={opt} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,role:opt}:m))}
-                                    className="text-xs px-2.5 py-1 rounded-lg"
-                                    style={{background:member.role===opt?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:member.role===opt?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:member.role===opt?'#f97316':'rgba(148,163,184,0.5)'}}>
-                                    {opt}
-                                  </button>
-                                ))}
-                              </div>
+                              <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.4)'}}>ROLE</div>
+                              {ROLES.map(group => (
+                                <div key={group.group} className="mb-2">
+                                  <div className="text-xs mb-1.5" style={{color:'rgba(249,115,22,0.4)',letterSpacing:'2px'}}>{group.group}</div>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {group.options.map(opt => {
+                                      const active = (member.roles||[]).includes(opt);
+                                      return (
+                                        <button key={opt} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,roles:active?(m.roles||[]).filter(r=>r!==opt):[...(m.roles||[]),opt]}:m))}
+                                          className="text-xs px-2.5 py-1 rounded-lg"
+                                          style={{background:active?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:active?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:active?'#f97316':'rgba(148,163,184,0.5)'}}>
+                                          {opt}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                             <div>
                               <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>POSITION</div>
