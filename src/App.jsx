@@ -2528,29 +2528,50 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
                 ];
                 const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', CLIENTS:'#3b82f6', SITE:'#ef4444', COSTS:'#22c55e', FINANCE:'#a855f7', REPORTS:'#f97316' };
-                return donnySections.map(sec => {
-                  const items = donnyItems.filter(i => i.section === sec);
-                  const color = donnyColors[sec];
-                  return (
-                    <div key={sec} className="mb-4">
-                      <div className="text-xs font-mono mb-2 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
-                      {items.map(item => {
-                        const active = activeView === item.id;
+                const donnyIcons = { JOBS:'🔨', TEAM:'👷', CLIENTS:'🤝', SITE:'🦺', COSTS:'💰', FINANCE:'📄', REPORTS:'📊' };
+
+                // Work out which section is active based on current view
+                const activeSection = donnyItems.find(i => i.id === activeView)?.section || 'JOBS';
+                const [donnyNavSection, setDonnyNavSection] = React.useState(activeSection);
+                const currentColor = donnyColors[donnyNavSection] || '#f97316';
+                const visibleItems = donnyItems.filter(i => i.section === donnyNavSection);
+
+                return (
+                  <div className="col-span-2">
+                    {/* Section tab pills — horizontal, no scroll */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {donnySections.map(sec => {
+                        const c = donnyColors[sec];
+                        const isActive = donnyNavSection === sec;
                         return (
-                          <button key={item.id}
-                            onClick={() => { setActiveView(item.id); setSidebarOpen(false); }}
-                            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl mb-1 text-left transition-all"
-                            style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
-                            <span className="text-base leading-none">{item.icon}</span>
-                            <span className="text-sm font-medium" style={{color:active?color:'rgba(255,255,255,0.8)'}}>{item.label}</span>
-                            {active && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{background:color}}/>}
+                          <button key={sec} onClick={() => setDonnyNavSection(sec)}
+                            className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
+                            style={{background: isActive ? `${c}20` : 'rgba(255,255,255,0.04)', border: isActive ? `1px solid ${c}60` : '1px solid rgba(255,255,255,0.08)', color: isActive ? c : 'rgba(148,163,184,0.5)'}}>
+                            {donnyIcons[sec]} {sec}
                           </button>
                         );
                       })}
                     </div>
-                  );
-                });
-              })() : sections.map(sec => {
+                    {/* Items for selected section — always fits on screen */}
+                    <div className="space-y-1">
+                      {visibleItems.map(item => {
+                        const active = activeView === item.id;
+                        return (
+                          <button key={item.id}
+                            onClick={() => { setActiveView(item.id); setSidebarOpen(false); }}
+                            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all"
+                            style={{background: active ? `${currentColor}15` : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? `${currentColor}50` : 'rgba(255,255,255,0.05)'}`}}>
+                            <span className="text-lg leading-none">{item.icon}</span>
+                            <span className="text-sm font-medium flex-1" style={{color: active ? currentColor : 'rgba(255,255,255,0.8)'}}>{item.label}</span>
+                            {active && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background: currentColor}}/>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()
+              : sections.map(sec => {
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
@@ -2574,7 +2595,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 );
               })}
-              )}
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
