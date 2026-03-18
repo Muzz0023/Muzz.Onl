@@ -13977,6 +13977,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (activeView === 'donny') {
       const hour = new Date().getHours();
       const greeting = hour < 12 ? "G'morning" : hour < 17 ? "G'day" : "G'evening";
+      const today = new Date().toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long'});
       const activeJobs = donnyJobs.filter(j => !j.completed);
       const overdueJobs = activeJobs.filter(j => j.dueDate && new Date(j.dueDate) < new Date());
       const totalLabourCost = donnyTimesheets.reduce((sum, e) => {
@@ -13984,145 +13985,122 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         return sum + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const totalMaterialCost = donnyCosts.reduce((sum, c) => sum + (parseFloat(c.amount)||0), 0);
+      const totalCosts = totalLabourCost + totalMaterialCost;
 
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar />
           <SaveIndicator />
 
-          {/* Header — same structure as Muzz home */}
-          <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",position:"relative",overflow:"hidden"}}>
+          <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(249,115,22,0.15)",position:"relative",overflow:"hidden"}}>
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.25)"}}>🐨</div>
-                <div className="flex-1">
-                  <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, boss!</div>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.25)"}}>🐨</div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm mb-0.5" style={{color:"rgba(255,255,255,0.5)"}}>{greeting}, boss · {today}</div>
                   <div className="text-2xl font-bold text-white">
-                    {activeJobs.length === 0 ? "No active jobs 🤙" : overdueJobs.length > 0 ? `${overdueJobs.length} job${overdueJobs.length>1?'s':''} overdue ⚠️` : `${activeJobs.length} job${activeJobs.length>1?'s':''} running 🔨`}
+                    {overdueJobs.length > 0
+                      ? `${overdueJobs.length} job${overdueJobs.length>1?'s':''} overdue ⚠️`
+                      : activeJobs.length === 0
+                      ? "No active jobs 🤙"
+                      : `${activeJobs.length} job${activeJobs.length>1?'s':''} on the go 🔨`}
                   </div>
                 </div>
               </div>
-              {/* Hero stat — total costs tracked */}
               <div className="rounded-2xl p-4" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)"}}>
-                <div className="text-sm" style={{color:"rgba(249,115,22,0.8)"}}>Total costs tracked</div>
-                <div className="text-4xl font-bold text-white">${(totalLabourCost + totalMaterialCost).toLocaleString('en-AU', {minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+                <div className="text-sm mb-1" style={{color:"rgba(249,115,22,0.7)"}}>Total costs tracked</div>
+                <div className="text-4xl font-bold text-white">${totalCosts.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+                <div className="flex gap-4 mt-2">
+                  <span className="text-xs" style={{color:"rgba(255,255,255,0.4)"}}>Labour <span className="text-white font-semibold">${totalLabourCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</span></span>
+                  <span className="text-xs" style={{color:"rgba(255,255,255,0.4)"}}>Materials <span className="text-white font-semibold">${totalMaterialCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</span></span>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-
-            {/* 3-col stat row — same as Muzz */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.12)"}}>
-                <div className="text-xs text-slate-400">Active Jobs</div>
-                <div className="text-xl font-bold text-white">{activeJobs.length}</div>
-              </div>
-              <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.12)"}}>
-                <div className="text-xs text-slate-400">Team</div>
-                <div className="text-xl font-bold text-white">{donnyTeam.length}</div>
-              </div>
-              <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.12)"}}>
-                <div className="text-xs text-slate-400">Clients</div>
-                <div className="text-xl font-bold text-white">{donnyClients.length}</div>
-              </div>
+              {[
+                {label:'Active Jobs', value: activeJobs.length, color:'#f97316'},
+                {label:'Team', value: donnyTeam.length, color:'#f97316'},
+                {label:'Clients', value: donnyClients.length, color:'#3b82f6'},
+              ].map((s,i) => (
+                <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
+                  <div className="text-xs text-slate-400 mb-1">{s.label}</div>
+                  <div className="text-2xl font-bold" style={{color:s.color}}>{s.value}</div>
+                </div>
+              ))}
             </div>
 
-            {/* Today's snapshot — same as Muzz "Today's Summary" */}
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.12)"}}>
-              <h3 className="font-semibold text-white mb-3">📊 Business Snapshot</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <button onClick={() => setActiveView('donny-timesheets')} className="rounded-xl p-3 text-left" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.2)"}}>
-                  <div className="text-2xl mb-1">⏱️</div>
-                  <div className="text-xs font-medium" style={{color:"rgba(251,146,60,0.9)"}}>Labour Cost</div>
-                  <div className="text-xl font-bold text-white">${totalLabourCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-                </button>
-                <button onClick={() => setActiveView('donny-dailycosts')} className="rounded-xl p-3 text-left" style={{background:"rgba(34,197,94,0.1)",border:"1px solid rgba(34,197,94,0.2)"}}>
-                  <div className="text-2xl mb-1">🔧</div>
-                  <div className="text-xs font-medium" style={{color:"rgba(74,222,128,0.9)"}}>Materials</div>
-                  <div className="text-xl font-bold text-white">${totalMaterialCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-                </button>
-                <button onClick={() => setActiveView('donny-suppliers')} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
-                  <div className="text-2xl mb-1">🏭</div>
-                  <div className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>Price Book</div>
-                  <div className="text-xl font-bold text-white">{donnySuppliers.length}</div>
-                </button>
-                <button onClick={() => setActiveView('donny-subs')} className="rounded-xl p-3 text-left" style={{background:"rgba(168,85,247,0.1)",border:"1px solid rgba(168,85,247,0.2)"}}>
-                  <div className="text-2xl mb-1">🔩</div>
-                  <div className="text-xs font-medium" style={{color:"rgba(192,132,252,0.9)"}}>Subcontractors</div>
-                  <div className="text-xl font-bold text-white">{donnySubs.length}</div>
-                </button>
-              </div>
-            </div>
-
-            {/* Quick nav tiles — same as Muzz shortcut grid */}
             <div className="grid grid-cols-4 gap-2">
               {[
-                {label:"Jobs",emoji:"🔨",view:"donny-masterview"},
-                {label:"Scheduler",emoji:"🗓️",view:"donny-scheduler"},
-                {label:"Team",emoji:"👷",view:"donny-team"},
-                {label:"Clients",emoji:"🤝",view:"donny-clients"},
-                {label:"Timesheets",emoji:"⏱️",view:"donny-timesheets"},
-                {label:"Daily Costs",emoji:"📅",view:"donny-dailycosts"},
-                {label:"Photos",emoji:"📸",view:"donny-photos"},
-                {label:"SWMS",emoji:"✅",view:"donny-checklists"},
-                {label:"Price Book",emoji:"🏭",view:"donny-suppliers"},
-                {label:"Job Log",emoji:"📝",view:"donny-joblog"},
-                {label:"Subs",emoji:"🔩",view:"donny-subs"},
-                {label:"Reports",emoji:"📊",view:"donny-reports"},
+                {label:"Jobs",       emoji:"🔨", view:"donny-masterview"},
+                {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler"},
+                {label:"Job Log",    emoji:"📝", view:"donny-joblog"},
+                {label:"Costing",    emoji:"📊", view:"donny-costing"},
+                {label:"Team",       emoji:"👷", view:"donny-team"},
+                {label:"Timesheets", emoji:"⏱️", view:"donny-timesheets"},
+                {label:"Subs",       emoji:"🔩", view:"donny-subs"},
+                {label:"Clients",    emoji:"🤝", view:"donny-clients"},
+                {label:"Photos",     emoji:"📸", view:"donny-photos"},
+                {label:"SWMS",       emoji:"✅", view:"donny-checklists"},
+                {label:"Incidents",  emoji:"🚨", view:"donny-incidents"},
+                {label:"Reports",    emoji:"📊", view:"donny-reports"},
               ].map(s => (
-                <button key={s.view} onClick={() => setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center" style={{background:"rgba(249,115,22,0.05)",border:"1px solid rgba(249,115,22,0.1)"}}>
-                  <span className="text-2xl mb-1">{s.emoji}</span>
-                  <span className="text-xs text-slate-400">{s.label}</span>
+                <button key={s.view} onClick={() => setActiveView(s.view)}
+                  className="rounded-xl p-3 flex flex-col items-center gap-1"
+                  style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
+                  <span className="text-2xl">{s.emoji}</span>
+                  <span className="text-xs text-slate-400 leading-tight text-center">{s.label}</span>
                 </button>
               ))}
             </div>
 
-            {/* Active jobs list */}
-            <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.12)"}}>
-              <div className="flex items-center justify-between p-4" style={{borderBottom:"1px solid rgba(249,115,22,0.08)"}}>
-                <div className="font-semibold text-white">🔨 Active Jobs</div>
-                <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg" style={{background:"rgba(249,115,22,0.15)",color:"#f97316",border:"1px solid rgba(249,115,22,0.3)"}}>+ New Job</button>
+            <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
+              <div className="flex items-center justify-between px-4 py-3" style={{borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+                <div className="font-semibold text-white text-sm">Active Jobs</div>
+                <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{background:"rgba(249,115,22,0.15)",color:"#f97316",border:"1px solid rgba(249,115,22,0.3)"}}>+ New Job</button>
               </div>
               {activeJobs.length === 0 ? (
-                <div className="p-8 text-center" style={{color:"rgba(148,163,184,0.4)"}}>No active jobs — add one above!</div>
-              ) : activeJobs.map(job => {
+                <div className="p-8 text-center text-sm" style={{color:"rgba(148,163,184,0.4)"}}>No active jobs — add one!</div>
+              ) : activeJobs.map((job, i) => {
                 const isOverdue = job.dueDate && new Date(job.dueDate) < new Date();
                 return (
                   <button key={job.id} onClick={() => setActiveView('donny-masterview')}
-                    className="w-full flex items-center justify-between p-4 text-left hover:bg-white/[0.02]"
-                    style={{borderBottom:"1px solid rgba(249,115,22,0.05)"}}>
+                    className="w-full flex items-center justify-between px-4 py-3 text-left"
+                    style={{borderBottom: i < activeJobs.length-1 ? "1px solid rgba(255,255,255,0.04)" : "none"}}>
                     <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{background: isOverdue ? '#ef4444' : job.started ? '#f97316' : '#94a3b8'}} />
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{background: isOverdue ? '#ef4444' : job.started ? '#f97316' : '#475569'}} />
                       <div>
-                        <div className="font-medium text-white">{job.title}</div>
+                        <div className="text-sm font-medium text-white">{job.title}</div>
                         <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>
                           {job.jobNumber ? `#${job.jobNumber} · ` : ''}{job.dueDate ? `Due ${new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : 'No due date'}
                         </div>
                       </div>
                     </div>
-                    {isOverdue && <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(239,68,68,0.1)",color:"#f87171",border:"1px solid rgba(239,68,68,0.2)"}}>Overdue</span>}
-                    {!isOverdue && job.started && <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(249,115,22,0.1)",color:"#f97316",border:"1px solid rgba(249,115,22,0.2)"}}>In progress</span>}
+                    {isOverdue
+                      ? <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(239,68,68,0.1)",color:"#f87171",border:"1px solid rgba(239,68,68,0.2)"}}>Overdue</span>
+                      : job.started
+                      ? <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(249,115,22,0.1)",color:"#f97316",border:"1px solid rgba(249,115,22,0.2)"}}>In progress</span>
+                      : <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(148,163,184,0.08)",color:"rgba(148,163,184,0.5)",border:"1px solid rgba(148,163,184,0.1)"}}>To do</span>
+                    }
                   </button>
                 );
               })}
             </div>
 
-            {/* Problems alert — same pattern as Muzz reminders */}
             {donnyJobs.filter(j => j.problems && !j.completed).length > 0 && (
               <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.2)"}}>
                 <div className="flex items-center justify-between mb-3">
-                  <div className="font-semibold text-white">🚨 Active Problems</div>
+                  <div className="font-semibold text-white text-sm">🚨 Active Problems</div>
                   <button onClick={() => setActiveView('donny-joblog')} className="text-xs" style={{color:"rgba(249,115,22,0.5)"}}>log it →</button>
                 </div>
-                <div className="space-y-2">
-                  {donnyJobs.filter(j => j.problems && !j.completed).map(job => (
-                    <div key={job.id} className="flex items-start justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-                      <span className="text-sm text-white">{job.title}</span>
-                      <span className="text-xs ml-4 flex-shrink-0" style={{color:"rgba(239,68,68,0.7)"}}>{job.problems.slice(0,40)}{job.problems.length>40?'…':''}</span>
-                    </div>
-                  ))}
-                </div>
+                {donnyJobs.filter(j => j.problems && !j.completed).map(job => (
+                  <div key={job.id} className="flex items-start justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                    <span className="text-sm text-white">{job.title}</span>
+                    <span className="text-xs ml-4 flex-shrink-0" style={{color:"rgba(239,68,68,0.7)"}}>{job.problems.slice(0,40)}{job.problems.length>40?'…':''}</span>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -14130,6 +14108,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
       );
     }
+
 
     // JOBS MASTERVIEW
     if (activeView === 'donny-masterview') {
