@@ -1825,6 +1825,10 @@ function MuzzApp() {
   const [donnyPhotos, setDonnyPhotos] = useState(() => { try { const s=localStorage.getItem('muzz_donny_photos'); return s?JSON.parse(s):{}; } catch { return {}; } });
   const [photoJobId, setPhotoJobId] = useState(null);
   const [photoFilter, setPhotoFilter] = useState('all');
+  // Donny Materials Log
+  const [donnyMaterialsLog, setDonnyMaterialsLog] = useState(() => { try { const s=localStorage.getItem('muzz_donny_materials_log'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [matLogJobId, setMatLogJobId] = useState(null);
+  const [newMatEntry, setNewMatEntry] = useState({ item:'', qty:'', unit:'', note:'' });
   // Donny Checklists / SWMS
   const [donnyChecklists, setDonnyChecklists] = useState(() => { try { const s=localStorage.getItem('muzz_donny_checklists'); return s?JSON.parse(s):[]; } catch { return []; } });
   const [checklistJobId, setChecklistJobId] = useState(null);
@@ -2494,6 +2498,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝' },
                   { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸' },
                   { section:'SITE', id:'donny-checklists', label:'SWMS', icon:'✅' },
+                  { section:'SITE', id:'donny-materialslog', label:'Extra Materials', icon:'📦' },
                   { section:'SITE', id:'donny-incidents', label:'Incidents', icon:'🚨' },
                   { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
@@ -14751,6 +14756,118 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               );
             })()}
+          </div>
+        </div>
+      );
+    }
+
+    // ── EXTRA MATERIALS LOG ─────────────────────────────────────────────────
+    if (activeView === 'donny-materialslog') {
+      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); try { localStorage.setItem('muzz_donny_materials_log', JSON.stringify(updated)); } catch {} };
+      const jobEntries = matLogJobId ? donnyMaterialsLog.filter(e => e.jobId === matLogJobId) : [];
+      const today = new Date().toISOString().split('T')[0];
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="EXTRA MATERIALS" icon="📦" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+
+            {/* Job selector */}
+            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(249,115,22,0.6)',borderBottom:'1px solid rgba(249,115,22,0.1)'}}>// SELECT JOB</div>
+              <div className="p-3 flex flex-wrap gap-2">
+                {donnyJobs.filter(j => !j.completed).map(job => (
+                  <button key={job.id} onClick={() => setMatLogJobId(job.id)}
+                    className="px-3 py-2 rounded-xl text-sm font-medium"
+                    style={{background:matLogJobId===job.id?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:matLogJobId===job.id?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:matLogJobId===job.id?'#f97316':'rgba(148,163,184,0.7)'}}>
+                    {job.jobNumber?`#${job.jobNumber} · `:''}  {job.title}
+                    {donnyMaterialsLog.filter(e=>e.jobId===job.id).length > 0 && (
+                      <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.2)',color:'#f97316'}}>{donnyMaterialsLog.filter(e=>e.jobId===job.id).length}</span>
+                    )}
+                  </button>
+                ))}
+                {donnyJobs.filter(j=>!j.completed).length===0 && <div className="text-sm p-2" style={{color:'rgba(148,163,184,0.4)'}}>No active jobs</div>}
+              </div>
+            </div>
+
+            {matLogJobId && (
+              <>
+                {/* Log entry form */}
+                <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="col-span-2">
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
+                      <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))}
+                        placeholder="e.g. 2C+E 2.5mm TPS Cable"
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
+                      <div className="flex gap-1">
+                        <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))}
+                          placeholder="10" type="number"
+                          className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                        <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))}
+                          placeholder="m" 
+                          className="w-12 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTE FOR BOSS (OPTIONAL)</div>
+                    <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))}
+                      placeholder="e.g. Ran short on site, need more by Thursday"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <button onClick={() => {
+                    if (!newMatEntry.item.trim()) return;
+                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, loggedBy:'', date:today, createdAt:new Date().toISOString() };
+                    saveMatLog([entry, ...donnyMaterialsLog]);
+                    setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                    + Log Material
+                  </button>
+                </div>
+
+                {/* Entries */}
+                {jobEntries.length === 0 ? (
+                  <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+                    <div className="text-3xl mb-2">📦</div>
+                    <div className="text-white font-bold">No materials logged yet</div>
+                    <div className="text-sm mt-1" style={{color:'rgba(148,163,184,0.4)'}}>Log extra materials used or needed on this job</div>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
+                    <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(249,115,22,0.08)'}}>
+                      <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// {jobEntries.length} ITEM{jobEntries.length!==1?'S':''} LOGGED</div>
+                    </div>
+                    {jobEntries.map((entry, i) => (
+                      <div key={entry.id} className="px-5 py-4" style={{borderBottom: i < jobEntries.length-1 ? '1px solid rgba(255,255,255,0.04)' : 'none'}}>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-white font-medium text-sm">{entry.item}</span>
+                              {(entry.qty || entry.unit) && (
+                                <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>
+                                  {entry.qty}{entry.unit ? ` ${entry.unit}` : ''}
+                                </span>
+                              )}
+                            </div>
+                            {entry.note && <div className="text-xs mt-1.5" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
+                            <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>
+                              {new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
+                            </div>
+                          </div>
+                          <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e => e.id !== entry.id))}
+                            className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       );
