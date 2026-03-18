@@ -2503,21 +2503,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const donnySections = ['JOBS','TEAM','CLIENTS','SITE','COSTS','FINANCE','REPORTS'];
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
-                  { section:'JOBS', id:'donny-masterview', label:'Jobs Masterview', icon:'📋' },
+                  { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️' },
                   { section:'JOBS', id:'donny-joblog', label:'Job Log', icon:'📝' },
                   { section:'JOBS', id:'donny-costing', label:'Job Costing', icon:'📊' },
-                  { section:'JOBS', id:'donny-recurring', label:'Recurring Jobs', icon:'🔁' },
+                  { section:'JOBS', id:'donny-recurring', label:'Recurring', icon:'🔁' },
                   { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
                   { section:'TEAM', id:'donny-timesheets', label:'Timesheets', icon:'⏱️' },
                   { section:'TEAM', id:'donny-subs', label:'Subcontractors', icon:'🔩' },
                   { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝' },
-                  { section:'SITE', id:'donny-photos', label:'Photo Log', icon:'📸' },
-                  { section:'SITE', id:'donny-checklists', label:'Checklists / SWMS', icon:'✅' },
-                  { section:'SITE', id:'donny-incidents', label:'Incident Register', icon:'🚨' },
+                  { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸' },
+                  { section:'SITE', id:'donny-checklists', label:'SWMS', icon:'✅' },
+                  { section:'SITE', id:'donny-incidents', label:'Incidents', icon:'🚨' },
                   { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
-                  { section:'COSTS', id:'donny-dailycosts', label:'Daily Cost Tracker', icon:'📅' },
+                  { section:'COSTS', id:'donny-dailycosts', label:'Daily Costs', icon:'📅' },
                   { section:'COSTS', id:'donny-costs', label:'Materials', icon:'🔧' },
                   { section:'COSTS', id:'donny-budget', label:'Budget', icon:'💰' },
                   { section:'COSTS', id:'donny-pos', label:'Purchase Orders', icon:'📦' },
@@ -2528,48 +2528,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
                 ];
                 const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', CLIENTS:'#3b82f6', SITE:'#ef4444', COSTS:'#22c55e', FINANCE:'#a855f7', REPORTS:'#f97316' };
-                const donnyIcons = { JOBS:'🔨', TEAM:'👷', CLIENTS:'🤝', SITE:'🦺', COSTS:'💰', FINANCE:'📄', REPORTS:'📊' };
-
-                // Work out which section is active based on current view
-                const activeSection = donnyItems.find(i => i.id === activeView)?.section || 'JOBS';
-                const [donnyNavSection, setDonnyNavSection] = React.useState(activeSection);
-                const currentColor = donnyColors[donnyNavSection] || '#f97316';
-                const visibleItems = donnyItems.filter(i => i.section === donnyNavSection);
-
-                return (
-                  <div className="col-span-2">
-                    {/* Section tab pills — horizontal, no scroll */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {donnySections.map(sec => {
-                        const c = donnyColors[sec];
-                        const isActive = donnyNavSection === sec;
-                        return (
-                          <button key={sec} onClick={() => setDonnyNavSection(sec)}
-                            className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
-                            style={{background: isActive ? `${c}20` : 'rgba(255,255,255,0.04)', border: isActive ? `1px solid ${c}60` : '1px solid rgba(255,255,255,0.08)', color: isActive ? c : 'rgba(148,163,184,0.5)'}}>
-                            {donnyIcons[sec]} {sec}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {/* Items for selected section — always fits on screen */}
-                    <div className="space-y-1">
-                      {visibleItems.map(item => {
+                return donnySections.map(sec => {
+                  const items = donnyItems.filter(i => i.section === sec);
+                  const color = donnyColors[sec];
+                  return (
+                    <div key={sec} className="mb-2">
+                      <div className="text-xs font-mono mb-1 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
+                      {items.map(item => {
                         const active = activeView === item.id;
                         return (
                           <button key={item.id}
                             onClick={() => { setActiveView(item.id); setSidebarOpen(false); }}
-                            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all"
-                            style={{background: active ? `${currentColor}15` : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? `${currentColor}50` : 'rgba(255,255,255,0.05)'}`}}>
-                            <span className="text-lg leading-none">{item.icon}</span>
-                            <span className="text-sm font-medium flex-1" style={{color: active ? currentColor : 'rgba(255,255,255,0.8)'}}>{item.label}</span>
-                            {active && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background: currentColor}}/>}
+                            className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-left transition-all"
+                            style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
+                            <span className="text-base leading-none">{item.icon}</span>
+                            <span className="text-sm font-medium" style={{color:active?color:'rgba(255,255,255,0.8)'}}>{item.label}</span>
+                            {active && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}/>}
                           </button>
                         );
                       })}
                     </div>
-                  </div>
-                );
+                  );
+                })
               })()
               : sections.map(sec => {
                 const items = menuItems.filter(i => i.section === sec);
