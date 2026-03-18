@@ -1782,14 +1782,14 @@ function MuzzApp() {
     try { const s = localStorage.getItem('muzz_donny_mistakes'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
-  const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
-  const [newDonnyJob, setNewDonnyJob] = useState({ title:'', jobNumber:'', startDate:'', dueDate:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
   const [editingJobId, setEditingJobId] = useState(null);
   const [showAddMember, setShowAddMember] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [newMember, setNewMember] = useState({ name:'', role:'', position:'', hourlyRate:'', jobAccess:[] });
   const [showNewMistake, setShowNewMistake] = useState(false);
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
+  const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
+  const [newDonnyJob, setNewDonnyJob] = useState({ title:'', jobNumber:'', startDate:'', dueDate:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
@@ -14305,7 +14305,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const ROLES = [
         { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
         { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
-        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson','Licenced Electrician'] },
+        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson'] },
         { group:'ENTRY', options:['Apprentice','Intern','Labourer','Trainee'] },
       ];
       const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
