@@ -13942,7 +13942,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="grid grid-cols-3 gap-4">
               {[
                 { label:'Active Jobs', value: activeJobs.length, icon:'🔨' },
-                { label:'Team Members', value: allEmployees.length, icon:'👷' },
+                { label:'Team Members', value: donnyTeam.length, icon:'👷' },
                 { label:'Est. Costs', value: totalCosts > 0 ? `$${totalCosts.toLocaleString()}` : '$0', icon:'💰' },
               ].map((s,i) => (
                 <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)"}}>
@@ -14595,6 +14595,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 })}
               </div>
             )}
+
+            {donnyTeam.length > 0 && (() => {
+              const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
+              const sorted = [...donnyTeam].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); });
+              const totalRate = donnyTeam.reduce((sum,m) => sum+(parseFloat(m.hourlyRate)||0), 0);
+              return (
+                <div className="mt-4 rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                  <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                    <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// TEAM TABLE</div>
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyTeam.length} members</span>
+                  </div>
+                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 140px 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>NAME</div><div>ROLE</div><div>POSITION</div><div>RATE</div>
+                  </div>
+                  {sorted.map((member,i) => (
+                    <div key={member.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
+                      style={{gridTemplateColumns:'1fr 1fr 140px 90px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{member.name.charAt(0).toUpperCase()}</div>
+                        <span className="text-white font-medium text-sm truncate">{member.name}</span>
+                      </div>
+                      <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')||'—'}</div>
+                      <div className="text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{member.position||'—'}</div>
+                      <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{member.hourlyRate?`$${member.hourlyRate}/hr`:'—'}</div>
+                    </div>
+                  ))}
+                  <div className="flex items-center justify-between px-5 py-3" style={{borderTop:'1px solid rgba(249,115,22,0.15)',background:'rgba(249,115,22,0.05)'}}>
+                    <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL HOURLY COST</div>
+                    <div className="text-base font-black" style={{color:'#22c55e'}}>${totalRate.toFixed(2)}<span className="text-xs font-normal ml-1" style={{color:'rgba(34,197,94,0.6)'}}>/ hr</span></div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       );
