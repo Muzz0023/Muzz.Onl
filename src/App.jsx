@@ -1837,9 +1837,6 @@ function MuzzApp() {
   const [donnyIncidents, setDonnyIncidents] = useState(() => { try { const s=localStorage.getItem('muzz_donny_incidents'); return s?JSON.parse(s):[]; } catch { return []; } });
   const [showNewIncident, setShowNewIncident] = useState(false);
   const [newIncident, setNewIncident] = useState({ date:new Date().toISOString().split('T')[0], time:'', jobId:'', who:'', type:'near_miss', description:'', injury:'', action:'', reported:false });
-  // Donny Purchase Orders
-  const [donnyPOs, setDonnyPOs] = useState(() => { try { const s=localStorage.getItem('muzz_donny_pos'); return s?JSON.parse(s):[]; } catch { return []; } });
-  const [selectedPOId, setSelectedPOId] = useState(null);
   // Donny Supplier Price Book
   const [donnySuppliers, setDonnySuppliers] = useState(() => { try { const s=localStorage.getItem('muzz_donny_suppliers'); return s?JSON.parse(s):[]; } catch { return []; } });
   const [showAddSupplier, setShowAddSupplier] = useState(false);
@@ -2504,9 +2501,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
                   { section:'COSTS', id:'donny-dailycosts', label:'Daily Costs', icon:'📅' },
-                  { section:'COSTS', id:'donny-costs', label:'Materials', icon:'🔧' },
-                  { section:'COSTS', id:'donny-budget', label:'Budget', icon:'💰' },
-                  { section:'COSTS', id:'donny-pos', label:'Purchase Orders', icon:'📦' },
                   { section:'COSTS', id:'donny-suppliers', label:'Price Book', icon:'🏭' },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
                 ];
@@ -14048,10 +14042,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="text-xs font-medium" style={{color:"rgba(74,222,128,0.9)"}}>Materials</div>
                   <div className="text-xl font-bold text-white">${totalMaterialCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
                 </button>
-                <button onClick={() => setActiveView('donny-pos')} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
-                  <div className="text-2xl mb-1">📦</div>
-                  <div className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>Purchase Orders</div>
-                  <div className="text-xl font-bold text-white">{donnyPOs.length}</div>
+                <button onClick={() => setActiveView('donny-suppliers')} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
+                  <div className="text-2xl mb-1">🏭</div>
+                  <div className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>Price Book</div>
+                  <div className="text-xl font-bold text-white">{donnySuppliers.length}</div>
                 </button>
                 <button onClick={() => setActiveView('donny-subs')} className="rounded-xl p-3 text-left" style={{background:"rgba(168,85,247,0.1)",border:"1px solid rgba(168,85,247,0.2)"}}>
                   <div className="text-2xl mb-1">🔩</div>
@@ -14069,7 +14063,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:"Team",emoji:"👷",view:"donny-team"},
                 {label:"Clients",emoji:"🤝",view:"donny-clients"},
                 {label:"Timesheets",emoji:"⏱️",view:"donny-timesheets"},
-                {label:"Costs",emoji:"💰",view:"donny-dailycosts"},
+                {label:"Daily Costs",emoji:"📅",view:"donny-dailycosts"},
                 {label:"Photos",emoji:"📸",view:"donny-photos"},
                 {label:"SWMS",emoji:"✅",view:"donny-checklists"},
                 {label:"Price Book",emoji:"🏭",view:"donny-suppliers"},
@@ -14887,32 +14881,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       );
     }
 
-    // COSTS / MATERIALS
-    if (activeView === 'donny-costs' || activeView === 'donny-budget') {
-      const jobsWithCosts = donnyJobs.filter(j => j.materials || j.costs);
-      return (
-        <div className="min-h-screen bg-transparent pb-24">
-          <Sidebar /><SaveIndicator />
-          <DonnyHeader title={activeView==='donny-budget'?'BUDGET':'MATERIALS'} icon={activeView==='donny-budget'?'💰':'🔧'} />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            {jobsWithCosts.length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(34,197,94,0.1)"}}><div className="text-4xl mb-3">🔧</div><div className="text-white">No materials or costs logged yet</div></div>
-            ) : jobsWithCosts.map(job => (
-              <div key={job.id} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(34,197,94,0.15)"}}>
-                <div className="p-3 text-sm font-semibold text-white" style={{background:"rgba(34,197,94,0.05)",borderBottom:"1px solid rgba(34,197,94,0.1)"}}>{job.title}</div>
-                <div className="p-4 space-y-3">
-                  {job.materials && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(34,197,94,0.6)"}}>🔧 MATERIALS</div><div className="text-sm text-white">{job.materials}</div></div>}
-                  {job.costs && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(249,115,22,0.6)"}}>💰 COSTS</div><div className="text-sm text-white">{job.costs}</div></div>}
-                  {job.avgTime && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(148,163,184,0.5)"}}>⏱️ AVG TIME</div><div className="text-sm text-white">{job.avgTime}</div></div>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    // REPORTS
     if (activeView === 'donny-reports') {
       const activeJobs = donnyJobs.filter(j=>!j.completed);
       const completedJobs = donnyJobs.filter(j=>j.completed);
