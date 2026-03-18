@@ -2483,7 +2483,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="relative z-10 px-4 py-2">
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
-                const donnySections = ['JOBS','CLIENTS','COSTS','SITE','TEAM','REPORTS'];
+                const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
