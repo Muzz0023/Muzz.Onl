@@ -1784,6 +1784,12 @@ function MuzzApp() {
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
   const [newDonnyJob, setNewDonnyJob] = useState({ title:'', jobNumber:'', startDate:'', dueDate:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
+  const [editingJobId, setEditingJobId] = useState(null);
+  const [showAddMember, setShowAddMember] = useState(false);
+  const [editingMemberId, setEditingMemberId] = useState(null);
+  const [newMember, setNewMember] = useState({ name:'', role:'', position:'', hourlyRate:'', jobAccess:[] });
+  const [showNewMistake, setShowNewMistake] = useState(false);
+  const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
@@ -13990,7 +13996,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       ];
       const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'2-digit'}) : '—';
       const isOverdue = (d) => d && new Date(d) < new Date();
-      const [editingJobId, setEditingJobId] = React.useState(null);
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
@@ -14297,9 +14302,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // TEAM
     if (activeView === 'donny-team') {
       const saveTeam = (updated) => { setDonnyTeam(updated); try { localStorage.setItem('muzz_donny_team', JSON.stringify(updated)); } catch {} };
-      const [showAddMember, setShowAddMember] = React.useState(false);
-      const [editingMemberId, setEditingMemberId] = React.useState(null);
-      const [newMember, setNewMember] = React.useState({ name:'', role:'', position:'', hourlyRate:'', jobAccess:[] });
       const ROLES = [
         { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
         { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
@@ -14492,8 +14494,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // MISTAKES
     if (activeView === 'donny-mistakes') {
       const saveMistakes = (updated) => { setDonnyMistakes(updated); try { localStorage.setItem('muzz_donny_mistakes', JSON.stringify(updated)); } catch {} };
-      const [showNewMistake, setShowNewMistake] = React.useState(false);
-      const [newMistake, setNewMistake] = React.useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
       const teamNames = donnyTeam.map(m => m.name);
       return (
         <div className="min-h-screen bg-transparent pb-24">
