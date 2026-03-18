@@ -1783,6 +1783,10 @@ function MuzzApp() {
   });
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [editingJobId, setEditingJobId] = useState(null);
+  const [donnyNotes, setDonnyNotes] = useState(() => {
+    try { const s = localStorage.getItem('muzz_donny_notes'); return s ? JSON.parse(s) : {}; } catch { return {}; }
+  });
+  const [newNoteText, setNewNoteText] = useState('');
   const [showAddMember, setShowAddMember] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [newMember, setNewMember] = useState({ name:'', roles:[], position:'', hourlyRate:'', jobAccess:[] });
@@ -13936,7 +13940,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="grid grid-cols-3 gap-4">
               {[
                 { label:'Active Jobs', value: activeJobs.length, icon:'🔨' },
-                { label:'Team Members', value: donnyTeam.length, icon:'👷' },
+                { label:'Team Members', value: allEmployees.length, icon:'👷' },
                 { label:'Est. Costs', value: totalCosts > 0 ? `$${totalCosts.toLocaleString()}` : '$0', icon:'💰' },
               ].map((s,i) => (
                 <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)"}}>
@@ -14094,6 +14098,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j))}
                                       className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>Reopen</button>
                                   )}
+                                  <button onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-notes'); }}
+                                    className="px-3 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(139,92,246,0.15)',color:'#a78bfa',border:'1px solid rgba(139,92,246,0.3)'}}>
+                                    📝 {(donnyNotes[job.id]||[]).length > 0 ? (donnyNotes[job.id]||[]).length : ''}
+                                  </button>
                                 </div>
                               </>
                             )}
@@ -14132,6 +14140,61 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               </>
             )}
+          </div>
+        </div>
+      );
+    }
+
+    // JOB NOTES
+    if (activeView === 'donny-notes' && selectedDonnyJob) {
+      const saveNotes = (updated) => {
+        setDonnyNotes(updated);
+        try { localStorage.setItem('muzz_donny_notes', JSON.stringify(updated)); } catch {}
+      };
+      const jobNotes = donnyNotes[selectedDonnyJob.id] || [];
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="JOB LOG" icon="📝" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <div className="rounded-2xl px-5 py-4" style={{background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>// JOB</div>
+              <div className="text-white font-bold">{selectedDonnyJob.jobNumber ? `#${selectedDonnyJob.jobNumber} · ` : ''}{selectedDonnyJob.title}</div>
+            </div>
+            <div className="rounded-2xl p-4 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.2)'}}>
+              <div className="text-xs font-mono" style={{color:'rgba(139,92,246,0.6)'}}>// NEW ENTRY</div>
+              <textarea value={newNoteText} onChange={e => setNewNoteText(e.target.value)}
+                placeholder="What happened on site today..." rows={3}
+                className="w-full bg-transparent text-white focus:outline-none text-sm resize-none"
+                style={{borderBottom:'1px solid rgba(139,92,246,0.2)',paddingBottom:'8px'}}/>
+              <button onClick={() => {
+                if (!newNoteText.trim()) return;
+                const updated = {...donnyNotes, [selectedDonnyJob.id]: [{id:Date.now(),text:newNoteText.trim(),createdAt:new Date().toISOString()}, ...jobNotes]};
+                saveNotes(updated);
+                setNewNoteText('');
+              }} className="w-full py-2.5 rounded-xl text-sm font-bold text-white"
+                style={{background:'linear-gradient(135deg,rgba(139,92,246,0.8),rgba(109,40,217,0.8))'}}>
+                + Add Entry
+              </button>
+            </div>
+            {jobNotes.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(139,92,246,0.08)'}}>
+                <div className="text-4xl mb-3">📝</div>
+                <div className="text-white font-bold mb-1">No entries yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Log what happens on site each day</div>
+              </div>
+            ) : jobNotes.map(note => (
+              <div key={note.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.15)'}}>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="text-xs font-mono" style={{color:'rgba(139,92,246,0.6)'}}>
+                    {new Date(note.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})} · {new Date(note.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
+                  </div>
+                  <button onClick={() => saveNotes({...donnyNotes,[selectedDonnyJob.id]:jobNotes.filter(n=>n.id!==note.id)})}
+                    className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                </div>
+                <div className="text-white text-sm leading-relaxed">{note.text}</div>
+              </div>
+            ))}
           </div>
         </div>
       );
@@ -14485,40 +14548,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 })}
               </div>
             )}
-
-            {/* TEAM TABLE */}
-            {donnyTeam.length > 0 && (() => {
-              const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
-              const sorted = [...donnyTeam].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); });
-              const totalRate = donnyTeam.reduce((sum,m) => sum+(parseFloat(m.hourlyRate)||0), 0);
-              return (
-                <div className="mt-4 rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                  <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
-                    <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// TEAM TABLE</div>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyTeam.length} members</span>
-                  </div>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 140px 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>NAME</div><div>ROLE</div><div>POSITION</div><div>RATE</div>
-                  </div>
-                  {sorted.map((member,i) => (
-                    <div key={member.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
-                      style={{gridTemplateColumns:'1fr 1fr 140px 90px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{member.name.charAt(0).toUpperCase()}</div>
-                        <span className="text-white font-medium text-sm truncate">{member.name}</span>
-                      </div>
-                      <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')||'—'}</div>
-                      <div className="text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{member.position||'—'}</div>
-                      <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{member.hourlyRate?`$${member.hourlyRate}/hr`:'—'}</div>
-                    </div>
-                  ))}
-                  <div className="flex items-center justify-between px-5 py-3" style={{borderTop:'1px solid rgba(249,115,22,0.15)',background:'rgba(249,115,22,0.05)'}}>
-                    <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL HOURLY COST</div>
-                    <div className="text-base font-black" style={{color:'#22c55e'}}>${totalRate.toFixed(2)}<span className="text-xs font-normal ml-1" style={{color:'rgba(34,197,94,0.6)'}}>/ hr</span></div>
-                  </div>
-                </div>
-              );
-            })()}
           </div>
         </div>
       );
