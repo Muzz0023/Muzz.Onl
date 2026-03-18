@@ -1775,6 +1775,9 @@ function MuzzApp() {
   const [donnyJobs, setDonnyJobs] = useState(() => {
     try { const s = localStorage.getItem('muzz_donny_jobs'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
+  const [donnyMistakes, setDonnyMistakes] = useState(() => {
+    try { const s = localStorage.getItem('muzz_donny_mistakes'); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
   const [newDonnyJob, setNewDonnyJob] = useState({ title:'', jobNumber:'', startDate:'', dueDate:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
@@ -2418,8 +2421,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
                   { section:'JOBS', id:'donny-masterview', label:'Jobs Masterview', icon:'📋' },
-                  { section:'JOBS', id:'donny-jobs', label:'All Jobs', icon:'🔨' },
-                  { section:'JOBS', id:'donny-newjob', label:'New Job', icon:'➕' },
+                  { section:'JOBS', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
                   { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
                   { section:'SAFETY', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
                   { section:'COSTS', id:'donny-costs', label:'Materials', icon:'🔧' },
@@ -13985,6 +13987,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       ];
       const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'2-digit'}) : '—';
       const isOverdue = (d) => d && new Date(d) < new Date();
+      const getStatus = (job) => job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
+      const getStatusColor = (job) => job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
@@ -13994,12 +13998,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="rounded-2xl p-12 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.1)'}}>
                 <div className="text-5xl mb-3">📋</div>
                 <div className="text-white font-bold mb-1">No jobs yet</div>
-                <div className="text-sm mb-4" style={{color:'rgba(148,163,184,0.5)'}}>Add a job to see it on the whiteboard</div>
+                <div className="text-sm mb-4" style={{color:'rgba(148,163,184,0.5)'}}>Add a job to get started</div>
                 <button onClick={() => setActiveView('donny-newjob')} className="px-6 py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ New Job</button>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-3 gap-4">
+                {/* KANBAN */}
+                <div className="grid grid-cols-3 gap-4 mb-8">
                   {columns.map(col => (
                     <div key={col.id}>
                       <div className="flex items-center gap-2 mb-3 px-1">
@@ -14020,7 +14025,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <button onClick={() => { if(window.confirm('Delete this job?')) saveDonnyJobs(donnyJobs.filter(j => j.id !== job.id)); }}
                                 className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                             </div>
-                            <div className="text-white font-bold text-sm mb-3 cursor-pointer" onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobs'); }}>{job.title}</div>
+                            <div className="text-white font-bold text-sm mb-3">{job.title}</div>
                             <div className="space-y-1.5 mb-3">
                               <div className="flex items-center justify-between text-xs">
                                 <span style={{color:'rgba(148,163,184,0.5)'}}>Start</span>
@@ -14051,11 +14056,42 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 flex justify-center">
-                  <button onClick={() => setActiveView('donny-newjob')} className="px-8 py-2.5 rounded-xl font-bold text-sm" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
+
+                {/* MASTER TABLE */}
+                <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                  <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                    <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// MASTER TABLE</div>
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyJobs.length} jobs</span>
+                  </div>
+                  {/* Table header */}
+                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'80px 1fr 110px 110px 120px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>JOB #</div>
+                    <div>NAME</div>
+                    <div>START</div>
+                    <div>DUE</div>
+                    <div>STATUS</div>
+                  </div>
+                  {/* Table rows */}
+                  {donnyJobs.map((job, i) => (
+                    <div key={job.id} className="grid px-5 py-3 text-sm items-center transition-all hover:bg-white/[0.02]"
+                      style={{gridTemplateColumns:'80px 1fr 110px 110px 120px',borderBottom: i < donnyJobs.length-1 ? '1px solid rgba(255,255,255,0.03)' : 'none'}}>
+                      <div className="font-mono text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{job.jobNumber ? `#${job.jobNumber}` : '—'}</div>
+                      <div className="text-white font-medium truncate pr-4">{job.title}</div>
+                      <div className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{formatDate(job.startDate)}</div>
+                      <div className="text-xs" style={{color: isOverdue(job.dueDate) && !job.completed ? '#ef4444' : 'rgba(148,163,184,0.6)'}}>{formatDate(job.dueDate)}</div>
+                      <div>
+                        <span className="text-xs font-bold px-2 py-1 rounded-lg" style={{background:`${getStatusColor(job)}15`,color:getStatusColor(job),border:`1px solid ${getStatusColor(job)}30`}}>
+                          {getStatus(job)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </>
             )}
+            <div className="mt-6 flex justify-center">
+              <button onClick={() => setActiveView('donny-newjob')} className="px-8 py-2.5 rounded-xl font-bold text-sm" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
+            </div>
           </div>
         </div>
       );
@@ -14217,6 +14253,103 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             }} className="w-full py-4 rounded-xl font-bold text-white text-base" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
               + Add Job
             </button>
+          </div>
+        </div>
+      );
+    }
+
+    // MISTAKES
+    if (activeView === 'donny-mistakes') {
+      const saveMistakes = (updated) => {
+        setDonnyMistakes(updated);
+        try { localStorage.setItem('muzz_donny_mistakes', JSON.stringify(updated)); } catch {}
+      };
+      const [showNewMistake, setShowNewMistake] = React.useState(false);
+      const [newMistake, setNewMistake] = React.useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
+      const allEmployees = [...new Set(donnyJobs.flatMap(j => (j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="MISTAKES" icon="❌" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            {/* Add mistake button */}
+            <button onClick={() => setShowNewMistake(s => !s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
+              {showNewMistake ? '✕ Cancel' : '+ Log a Mistake'}
+            </button>
+
+            {/* New mistake form */}
+            {showNewMistake && (
+              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.2)'}}>
+                <div className="text-xs font-mono tracking-widest mb-1" style={{color:'rgba(239,68,68,0.5)'}}>// NEW MISTAKE</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👤 WHO MADE IT</div>
+                    <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))}
+                      placeholder="Name..." list="mistake-employees"
+                      className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    <datalist id="mistake-employees">{allEmployees.map(e => <option key={e} value={e}/>)}</datalist>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
+                    <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
+                      className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>❌ WHAT HAPPENED</div>
+                  <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))}
+                    placeholder="Describe the mistake..." rows={2}
+                    className="w-full bg-transparent text-white font-medium focus:outline-none text-sm resize-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔧 WHAT WAS AFFECTED</div>
+                  <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))}
+                    placeholder="Gear, materials, people affected..." rows={2}
+                    className="w-full bg-transparent text-white font-medium focus:outline-none text-sm resize-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 RELATED JOB (OPTIONAL)</div>
+                  <input value={newMistake.jobRef} onChange={e => setNewMistake(p=>({...p,jobRef:e.target.value}))}
+                    placeholder="Job name or number..." list="mistake-jobs"
+                    className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  <datalist id="mistake-jobs">{donnyJobs.map(j => <option key={j.id} value={j.jobNumber ? `#${j.jobNumber} ${j.title}` : j.title}/>)}</datalist>
+                </div>
+                <button onClick={() => {
+                  if (!newMistake.what.trim()) return;
+                  saveMistakes([{...newMistake, id:Date.now()}, ...donnyMistakes]);
+                  setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
+                  setShowNewMistake(false);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>
+                  Log Mistake
+                </button>
+              </div>
+            )}
+
+            {/* Mistakes list */}
+            {donnyMistakes.length === 0 && !showNewMistake ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.08)'}}>
+                <div className="text-4xl mb-3">✅</div>
+                <div className="text-white font-bold mb-1">No mistakes logged</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Keep it that way!</div>
+              </div>
+            ) : donnyMistakes.map(m => (
+              <div key={m.id} className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <div className="font-bold text-white">{m.who || 'Unknown'}</div>
+                    <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.date ? new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}) : ''}{m.jobRef ? ` · ${m.jobRef}` : ''}</div>
+                  </div>
+                  <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x => x.id !== m.id)); }}
+                    className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                </div>
+                <div className="text-sm text-white mb-2">{m.what}</div>
+                {m.affected && (
+                  <div className="text-xs px-3 py-1.5 rounded-lg inline-block" style={{background:'rgba(239,68,68,0.08)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.15)'}}>
+                    🔧 {m.affected}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       );
