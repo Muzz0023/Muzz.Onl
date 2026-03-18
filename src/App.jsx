@@ -1787,6 +1787,7 @@ function MuzzApp() {
     try { const s = localStorage.getItem('muzz_donny_notes'); return s ? JSON.parse(s) : {}; } catch { return {}; }
   });
   const [newNoteText, setNewNoteText] = useState('');
+  const [noteJobId, setNoteJobId] = useState(null);
   const [showAddMember, setShowAddMember] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [newMember, setNewMember] = useState({ name:'', roles:[], position:'', hourlyRate:'', jobAccess:[] });
@@ -2434,6 +2435,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
                   { section:'JOBS', id:'donny-masterview', label:'Jobs Masterview', icon:'📋' },
+                  { section:'JOBS', id:'donny-joblog', label:'Job Log', icon:'📝' },
                   { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
                   { section:'SAFETY', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
                   { section:'SAFETY', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
@@ -14098,10 +14100,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j))}
                                       className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>Reopen</button>
                                   )}
-                                  <button onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-notes'); }}
-                                    className="px-3 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(139,92,246,0.15)',color:'#a78bfa',border:'1px solid rgba(139,92,246,0.3)'}}>
-                                    📝 {(donnyNotes[job.id]||[]).length > 0 ? (donnyNotes[job.id]||[]).length : ''}
-                                  </button>
                                 </div>
                               </>
                             )}
@@ -14145,56 +14143,105 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       );
     }
 
-    // JOB NOTES
-    if (activeView === 'donny-notes' && selectedDonnyJob) {
+    // JOB LOG
+    if (activeView === 'donny-joblog') {
       const saveNotes = (updated) => {
         setDonnyNotes(updated);
         try { localStorage.setItem('muzz_donny_notes', JSON.stringify(updated)); } catch {}
       };
-      const jobNotes = donnyNotes[selectedDonnyJob.id] || [];
+      const activeJob = noteJobId ? donnyJobs.find(j => j.id === noteJobId) : null;
+      const jobNotes = activeJob ? (donnyNotes[activeJob.id] || []) : [];
+      const today = new Date().toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="JOB LOG" icon="📝" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            <div className="rounded-2xl px-5 py-4" style={{background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.2)'}}>
-              <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>// JOB</div>
-              <div className="text-white font-bold">{selectedDonnyJob.jobNumber ? `#${selectedDonnyJob.jobNumber} · ` : ''}{selectedDonnyJob.title}</div>
-            </div>
-            <div className="rounded-2xl p-4 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.2)'}}>
-              <div className="text-xs font-mono" style={{color:'rgba(139,92,246,0.6)'}}>// NEW ENTRY</div>
-              <textarea value={newNoteText} onChange={e => setNewNoteText(e.target.value)}
-                placeholder="What happened on site today..." rows={3}
-                className="w-full bg-transparent text-white focus:outline-none text-sm resize-none"
-                style={{borderBottom:'1px solid rgba(139,92,246,0.2)',paddingBottom:'8px'}}/>
-              <button onClick={() => {
-                if (!newNoteText.trim()) return;
-                const updated = {...donnyNotes, [selectedDonnyJob.id]: [{id:Date.now(),text:newNoteText.trim(),createdAt:new Date().toISOString()}, ...jobNotes]};
-                saveNotes(updated);
-                setNewNoteText('');
-              }} className="w-full py-2.5 rounded-xl text-sm font-bold text-white"
-                style={{background:'linear-gradient(135deg,rgba(139,92,246,0.8),rgba(109,40,217,0.8))'}}>
-                + Add Entry
-              </button>
-            </div>
-            {jobNotes.length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(139,92,246,0.08)'}}>
+
+            {/* Today's date */}
+            <div className="text-xs font-mono text-center py-2" style={{color:'rgba(139,92,246,0.5)',letterSpacing:'2px'}}>{today.toUpperCase()}</div>
+
+            {donnyJobs.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(139,92,246,0.1)'}}>
                 <div className="text-4xl mb-3">📝</div>
-                <div className="text-white font-bold mb-1">No entries yet</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Log what happens on site each day</div>
+                <div className="text-white font-bold mb-1">No jobs yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start logging</div>
               </div>
-            ) : jobNotes.map(note => (
-              <div key={note.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.15)'}}>
-                <div className="flex items-start justify-between mb-2">
-                  <div className="text-xs font-mono" style={{color:'rgba(139,92,246,0.6)'}}>
-                    {new Date(note.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})} · {new Date(note.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
+            ) : (
+              <>
+                {/* Job selector */}
+                <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.2)'}}>
+                  <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(139,92,246,0.6)',borderBottom:'1px solid rgba(139,92,246,0.1)'}}>// SELECT JOB</div>
+                  <div className="p-3 flex flex-wrap gap-2">
+                    {donnyJobs.filter(j => !j.completed).map(job => (
+                      <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); }}
+                        className="px-3 py-2 rounded-xl text-sm font-medium transition-all"
+                        style={{background: noteJobId===job.id ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.04)',
+                          border: noteJobId===job.id ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.08)',
+                          color: noteJobId===job.id ? '#a78bfa' : 'rgba(148,163,184,0.7)'}}>
+                        {job.jobNumber ? `#${job.jobNumber} · ` : ''}{job.title}
+                        {(donnyNotes[job.id]||[]).length > 0 && (
+                          <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full" style={{background:'rgba(139,92,246,0.2)',color:'#a78bfa'}}>{(donnyNotes[job.id]||[]).length}</span>
+                        )}
+                      </button>
+                    ))}
                   </div>
-                  <button onClick={() => saveNotes({...donnyNotes,[selectedDonnyJob.id]:jobNotes.filter(n=>n.id!==note.id)})}
-                    className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                 </div>
-                <div className="text-white text-sm leading-relaxed">{note.text}</div>
-              </div>
-            ))}
+
+                {/* Log entry form — only shows when a job is selected */}
+                {activeJob && (
+                  <>
+                    <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.25)'}}>
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs font-mono" style={{color:'rgba(139,92,246,0.6)'}}>// LOG ENTRY — {activeJob.jobNumber ? `#${activeJob.jobNumber} ` : ''}{activeJob.title.toUpperCase()}</div>
+                      </div>
+                      <textarea
+                        value={newNoteText}
+                        onChange={e => setNewNoteText(e.target.value)}
+                        placeholder="What happened today? What needs to be done tomorrow?"
+                        rows={4}
+                        className="w-full bg-transparent text-white focus:outline-none text-sm resize-none leading-relaxed"
+                        style={{borderBottom:'1px solid rgba(139,92,246,0.15)',paddingBottom:'12px'}}
+                      />
+                      <button onClick={() => {
+                        if (!newNoteText.trim()) return;
+                        const updated = {
+                          ...donnyNotes,
+                          [activeJob.id]: [
+                            { id: Date.now(), text: newNoteText.trim(), createdAt: new Date().toISOString() },
+                            ...(donnyNotes[activeJob.id] || [])
+                          ]
+                        };
+                        saveNotes(updated);
+                        setNewNoteText('');
+                      }} className="w-full py-3 rounded-xl text-sm font-bold text-white"
+                        style={{background:'linear-gradient(135deg,rgba(139,92,246,0.9),rgba(109,40,217,0.9))'}}>
+                        + Post Update
+                      </button>
+                    </div>
+
+                    {/* Log feed for selected job */}
+                    {jobNotes.length > 0 && (
+                      <div className="space-y-3">
+                        <div className="text-xs font-mono px-1" style={{color:'rgba(139,92,246,0.5)',letterSpacing:'2px'}}>// PREVIOUS ENTRIES</div>
+                        {jobNotes.map(note => (
+                          <div key={note.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(139,92,246,0.12)'}}>
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="text-xs font-mono" style={{color:'rgba(139,92,246,0.5)'}}>
+                                {new Date(note.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(note.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
+                              </div>
+                              <button onClick={() => saveNotes({...donnyNotes,[activeJob.id]:jobNotes.filter(n=>n.id!==note.id)})}
+                                className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                            </div>
+                            <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">{note.text}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
       );
