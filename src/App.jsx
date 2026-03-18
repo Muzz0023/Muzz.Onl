@@ -1795,6 +1795,32 @@ function MuzzApp() {
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
   const [newDonnyJob, setNewDonnyJob] = useState({ title:'', jobNumber:'', startDate:'', dueDate:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
+  // Donny Timesheets
+  const [donnyTimesheets, setDonnyTimesheets] = useState(() => { try { const s=localStorage.getItem('muzz_donny_timesheets'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [tsSelectedJob, setTsSelectedJob] = useState(null);
+  const [tsSelectedMember, setTsSelectedMember] = useState(null);
+  const [tsHours, setTsHours] = useState('');
+  const [tsDate, setTsDate] = useState(new Date().toISOString().split('T')[0]);
+  const [tsDesc, setTsDesc] = useState('');
+  // Donny Daily Cost Tracker
+  const [donnyCosts, setDonnyCosts] = useState(() => { try { const s=localStorage.getItem('muzz_donny_daily_costs'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [dcSelectedJob, setDcSelectedJob] = useState(null);
+  const [dcNewItem, setDcNewItem] = useState({ desc:'', type:'material', amount:'', date: new Date().toISOString().split('T')[0] });
+  // Donny Clients
+  const [donnyClients, setDonnyClients] = useState(() => { try { const s=localStorage.getItem('muzz_donny_clients'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [showAddClient, setShowAddClient] = useState(false);
+  const [newClient, setNewClient] = useState({ name:'', company:'', phone:'', email:'', address:'', jobIds:[] });
+  const [editingClientId, setEditingClientId] = useState(null);
+  // Donny Quotes
+  const [donnyQuotes, setDonnyQuotes] = useState(() => { try { const s=localStorage.getItem('muzz_donny_quotes'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [showNewQuote, setShowNewQuote] = useState(false);
+  const [newQuote, setNewQuote] = useState({ jobId:'', clientId:'', lineItems:[], notes:'', taxRate:'10', validDays:'30' });
+  const [selectedQuoteId, setSelectedQuoteId] = useState(null);
+  // Donny Invoices
+  const [donnyInvoices, setDonnyInvoices] = useState(() => { try { const s=localStorage.getItem('muzz_donny_invoices'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
+  const [showNewInvoice, setShowNewInvoice] = useState(false);
+  const [newInvoice, setNewInvoice] = useState({ jobId:'', clientId:'', lineItems:[], notes:'', taxRate:'10', dueDate:'' });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
@@ -2431,19 +2457,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="relative z-10 px-4 py-2">
             <div className="grid grid-cols-2 gap-x-3">
               {appMode === 'donny' ? (() => {
-                const donnySections = ['JOBS','TEAM','SAFETY','COSTS','REPORTS'];
+                const donnySections = ['JOBS','TEAM','CLIENTS','COSTS','FINANCE','SAFETY','REPORTS'];
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
                   { section:'JOBS', id:'donny-masterview', label:'Jobs Masterview', icon:'📋' },
                   { section:'JOBS', id:'donny-joblog', label:'Job Log', icon:'📝' },
                   { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
-                  { section:'SAFETY', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
-                  { section:'SAFETY', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
+                  { section:'TEAM', id:'donny-timesheets', label:'Timesheets', icon:'⏱️' },
+                  { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝' },
+                  { section:'COSTS', id:'donny-dailycosts', label:'Daily Cost Tracker', icon:'📅' },
                   { section:'COSTS', id:'donny-costs', label:'Materials', icon:'🔧' },
                   { section:'COSTS', id:'donny-budget', label:'Budget', icon:'💰' },
+                  { section:'FINANCE', id:'donny-quotes', label:'Quotes', icon:'📄' },
+                  { section:'FINANCE', id:'donny-invoices', label:'Invoices', icon:'🧾' },
+                  { section:'SAFETY', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
+                  { section:'SAFETY', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
                 ];
-                const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', SAFETY:'#ef4444', COSTS:'#22c55e', REPORTS:'#f97316' };
+                const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', CLIENTS:'#3b82f6', COSTS:'#22c55e', FINANCE:'#a855f7', SAFETY:'#ef4444', REPORTS:'#f97316' };
                 return donnySections.map(sec => {
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
@@ -14806,6 +14837,742 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {jobsWithMistakes.map(j => <div key={j.id} className="p-4" style={{borderBottom:"1px solid rgba(245,158,11,0.06)"}}><div className="text-sm font-medium text-white">{j.title}</div><div className="text-sm mt-1" style={{color:"rgba(245,158,11,0.7)"}}>{j.mistakes}</div></div>)}
               </div>
             )}
+          </div>
+        </div>
+      );
+    }
+
+    // ── TIMESHEETS ──────────────────────────────────────────────────────────
+    if (activeView === 'donny-timesheets') {
+      const saveTS = (updated) => { setDonnyTimesheets(updated); try { localStorage.setItem('muzz_donny_timesheets', JSON.stringify(updated)); } catch {} };
+      const jobEntries = tsSelectedJob ? donnyTimesheets.filter(e => e.jobId === tsSelectedJob) : [];
+      const memberEntries = tsSelectedMember ? jobEntries.filter(e => e.memberId === tsSelectedMember) : jobEntries;
+      const member = donnyTeam.find(m => m.id === tsSelectedMember);
+      const jobTotals = donnyTeam.map(m => {
+        const entries = donnyTimesheets.filter(e => e.jobId === tsSelectedJob && e.memberId === m.id);
+        const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+        const pay = hrs * (parseFloat(m.hourlyRate)||0);
+        return { member: m, hrs, pay, entries };
+      }).filter(x => x.hrs > 0);
+      const totalHrs = jobTotals.reduce((s,x) => s + x.hrs, 0);
+      const totalPay = jobTotals.reduce((s,x) => s + x.pay, 0);
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="TIMESHEETS" icon="⏱️" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            {/* Job selector */}
+            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(249,115,22,0.6)',borderBottom:'1px solid rgba(249,115,22,0.1)'}}>// SELECT JOB</div>
+              <div className="p-3 flex flex-wrap gap-2">
+                {donnyJobs.filter(j=>!j.completed).map(job => (
+                  <button key={job.id} onClick={() => { setTsSelectedJob(job.id); setTsSelectedMember(null); }}
+                    className="px-3 py-2 rounded-xl text-sm font-medium"
+                    style={{background:tsSelectedJob===job.id?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:tsSelectedJob===job.id?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:tsSelectedJob===job.id?'#f97316':'rgba(148,163,184,0.7)'}}>
+                    {job.jobNumber?`#${job.jobNumber} · `:''}  {job.title}
+                  </button>
+                ))}
+                {donnyJobs.filter(j=>!j.completed).length===0 && <div className="text-sm p-2" style={{color:'rgba(148,163,184,0.4)'}}>No active jobs</div>}
+              </div>
+            </div>
+
+            {tsSelectedJob && (
+              <>
+                {/* Log entry form */}
+                <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.25)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG HOURS</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
+                      <select value={tsSelectedMember||''} onChange={e=>setTsSelectedMember(e.target.value||null)}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                        <option value="">Select member...</option>
+                        {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}{m.hourlyRate?` ($${m.hourlyRate}/hr)`:''}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
+                      <input type="date" value={tsDate} onChange={e=>setTsDate(e.target.value)}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>⏱️ HOURS WORKED</div>
+                      <input type="number" value={tsHours} onChange={e=>setTsHours(e.target.value)} placeholder="e.g. 8" min="0" step="0.5"
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION (OPTIONAL)</div>
+                      <input value={tsDesc} onChange={e=>setTsDesc(e.target.value)} placeholder="e.g. Cable install, Level 2"
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  </div>
+                  {tsSelectedMember && tsHours && (
+                    <div className="rounded-xl p-3 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                      <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>Calculated pay: </span>
+                      <span className="text-lg font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>m.id===tsSelectedMember)?.hourlyRate)||0)).toFixed(2)}</span>
+                    </div>
+                  )}
+                  <button onClick={() => {
+                    if (!tsSelectedMember||!tsHours) return;
+                    const entry = { id:Date.now(), jobId:tsSelectedJob, memberId:tsSelectedMember, date:tsDate, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString() };
+                    saveTS([entry,...donnyTimesheets]);
+                    setTsHours(''); setTsDesc('');
+                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                    + Log Hours
+                  </button>
+                </div>
+
+                {/* Summary table */}
+                {jobTotals.length > 0 && (
+                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                      <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// JOB SUMMARY</div>
+                      <span className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>{donnyJobs.find(j=>j.id===tsSelectedJob)?.title}</span>
+                    </div>
+                    <div className="grid text-xs font-mono px-5 py-2" style={{gridTemplateColumns:'1fr 80px 80px 100px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div>MEMBER</div><div>RATE</div><div>HOURS</div><div>PAY</div>
+                    </div>
+                    {jobTotals.map(x => (
+                      <div key={x.member.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02]" style={{gridTemplateColumns:'1fr 80px 80px 100px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                        <div className="text-white font-medium">{x.member.name}</div>
+                        <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>${x.member.hourlyRate||0}/hr</div>
+                        <div className="font-bold" style={{color:'#f97316'}}>{x.hrs.toFixed(1)}h</div>
+                        <div className="font-black" style={{color:'#22c55e'}}>${x.pay.toFixed(2)}</div>
+                      </div>
+                    ))}
+                    <div className="grid px-5 py-3" style={{gridTemplateColumns:'1fr 80px 80px 100px',background:'rgba(249,115,22,0.05)',borderTop:'1px solid rgba(249,115,22,0.15)'}}>
+                      <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL</div>
+                      <div/>
+                      <div className="text-sm font-black" style={{color:'#f97316'}}>{totalHrs.toFixed(1)}h</div>
+                      <div className="text-sm font-black" style={{color:'#22c55e'}}>${totalPay.toFixed(2)}</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Individual entries */}
+                {donnyTimesheets.filter(e=>e.jobId===tsSelectedJob).length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// ALL ENTRIES</div>
+                    {donnyTimesheets.filter(e=>e.jobId===tsSelectedJob).map(entry => {
+                      const m = donnyTeam.find(x=>x.id===entry.memberId);
+                      const pay = (entry.hours||0)*(parseFloat(m?.hourlyRate)||0);
+                      return (
+                        <div key={entry.id} className="rounded-xl px-4 py-3 flex items-center justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                          <div>
+                            <div className="text-sm text-white font-medium">{m?.name||'Unknown'} <span className="text-xs ml-2" style={{color:'rgba(249,115,22,0.6)'}}>{entry.hours}h</span></div>
+                            <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{entry.date}{entry.desc?` · ${entry.desc}`:''}</div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-bold" style={{color:'#22c55e'}}>${pay.toFixed(2)}</span>
+                            <button onClick={() => saveTS(donnyTimesheets.filter(e2=>e2.id!==entry.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+            {!tsSelectedJob && donnyJobs.filter(j=>!j.completed).length > 0 && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+                <div className="text-4xl mb-3">⏱️</div>
+                <div className="text-white font-bold mb-1">Select a job above</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Pick a job to view and log timesheets</div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ── DAILY COST TRACKER ──────────────────────────────────────────────────
+    if (activeView === 'donny-dailycosts') {
+      const saveDC = (updated) => { setDonnyCosts(updated); try { localStorage.setItem('muzz_donny_daily_costs', JSON.stringify(updated)); } catch {} };
+      const jobCosts = dcSelectedJob ? donnyCosts.filter(c=>c.jobId===dcSelectedJob) : [];
+      const totalMat = jobCosts.filter(c=>c.type==='material').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+      const totalLab = jobCosts.filter(c=>c.type==='labour').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+      const totalOther = jobCosts.filter(c=>c.type==='other').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+      const grandTotal = totalMat+totalLab+totalOther;
+      const byDate = jobCosts.reduce((acc,c) => { if(!acc[c.date]) acc[c.date]=[]; acc[c.date].push(c); return acc; }, {});
+      const typeColors = { material:'#22c55e', labour:'#f97316', other:'#a78bfa' };
+      const typeLabels = { material:'🔧 Material', labour:'👷 Labour', other:'📦 Other' };
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="DAILY COSTS" icon="📅" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            {/* Job selector */}
+            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+              <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(34,197,94,0.6)',borderBottom:'1px solid rgba(34,197,94,0.1)'}}>// SELECT JOB</div>
+              <div className="p-3 flex flex-wrap gap-2">
+                {donnyJobs.map(job => (
+                  <button key={job.id} onClick={() => setDcSelectedJob(job.id)}
+                    className="px-3 py-2 rounded-xl text-sm font-medium"
+                    style={{background:dcSelectedJob===job.id?'rgba(34,197,94,0.2)':'rgba(255,255,255,0.04)',border:dcSelectedJob===job.id?'1px solid rgba(34,197,94,0.5)':'1px solid rgba(255,255,255,0.08)',color:dcSelectedJob===job.id?'#22c55e':'rgba(148,163,184,0.7)'}}>
+                    {job.jobNumber?`#${job.jobNumber} · `:''}  {job.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {dcSelectedJob && (
+              <>
+                {/* Running total */}
+                <div className="grid grid-cols-4 gap-3">
+                  {[{label:'Materials',val:totalMat,c:'#22c55e'},{label:'Labour',val:totalLab,c:'#f97316'},{label:'Other',val:totalOther,c:'#a78bfa'},{label:'TOTAL',val:grandTotal,c:'#00c8ff'}].map((s,i)=>(
+                    <div key={i} className="rounded-2xl p-3 text-center" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${s.c}25`}}>
+                      <div className="text-xs font-mono mb-1" style={{color:`${s.c}80`}}>{s.label}</div>
+                      <div className="text-lg font-black" style={{color:s.c}}>${s.val.toFixed(0)}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add cost entry */}
+                <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.25)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.6)'}}>// ADD COST</div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
+                      <input type="date" value={dcNewItem.date} onChange={e=>setDcNewItem(p=>({...p,date:e.target.value}))}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TYPE</div>
+                      <div className="flex gap-1.5">
+                        {['material','labour','other'].map(t=>(
+                          <button key={t} onClick={()=>setDcNewItem(p=>({...p,type:t}))}
+                            className="flex-1 text-xs py-1.5 rounded-lg font-medium"
+                            style={{background:dcNewItem.type===t?`${typeColors[t]}20`:'rgba(255,255,255,0.04)',border:dcNewItem.type===t?`1px solid ${typeColors[t]}60`:'1px solid rgba(255,255,255,0.08)',color:dcNewItem.type===t?typeColors[t]:'rgba(148,163,184,0.5)'}}>
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 AMOUNT ($)</div>
+                      <input type="number" value={dcNewItem.amount} onChange={e=>setDcNewItem(p=>({...p,amount:e.target.value}))} placeholder="0.00"
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION</div>
+                    <input value={dcNewItem.desc} onChange={e=>setDcNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. 100m TPS Cable, Conduit, etc."
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <button onClick={() => {
+                    if (!dcNewItem.desc.trim()||!dcNewItem.amount) return;
+                    saveDC([{...dcNewItem,id:Date.now(),jobId:dcSelectedJob},...donnyCosts]);
+                    setDcNewItem(p=>({...p,desc:'',amount:''}));
+                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>
+                    + Add Cost
+                  </button>
+                </div>
+
+                {/* Entries by date */}
+                {Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date => {
+                  const dayTotal = byDate[date].reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+                  return (
+                    <div key={date} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.12)'}}>
+                      <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(34,197,94,0.08)',background:'rgba(34,197,94,0.04)'}}>
+                        <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.7)'}}>{new Date(date+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</div>
+                        <div className="text-sm font-black" style={{color:'#22c55e'}}>${dayTotal.toFixed(2)}</div>
+                      </div>
+                      {byDate[date].map(c=>(
+                        <div key={c.id} className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs px-2 py-0.5 rounded-lg font-mono" style={{background:`${typeColors[c.type]}15`,color:typeColors[c.type],border:`1px solid ${typeColors[c.type]}30`}}>{c.type}</span>
+                            <span className="text-sm text-white">{c.desc}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-bold" style={{color:typeColors[c.type]}}>${parseFloat(c.amount).toFixed(2)}</span>
+                            <button onClick={()=>saveDC(donnyCosts.filter(x=>x.id!==c.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+                {jobCosts.length===0 && <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.08)'}}><div className="text-3xl mb-2">💰</div><div className="text-white font-bold">No costs logged yet</div></div>}
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ── CLIENTS ─────────────────────────────────────────────────────────────
+    if (activeView === 'donny-clients') {
+      const saveClients = (updated) => { setDonnyClients(updated); try { localStorage.setItem('muzz_donny_clients', JSON.stringify(updated)); } catch {} };
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="CLIENTS" icon="🤝" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={()=>{ setShowAddClient(s=>!s); setEditingClientId(null); }}
+              className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>
+              {showAddClient ? '✕ Cancel' : '+ Add Client'}
+            </button>
+
+            {showAddClient && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(59,130,246,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(59,130,246,0.6)'}}>// NEW CLIENT</div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[{key:'name',label:'👤 FULL NAME',placeholder:'John Smith'},{key:'company',label:'🏢 COMPANY',placeholder:'Smith Electrical'},{key:'phone',label:'📞 PHONE',placeholder:'04XX XXX XXX'},{key:'email',label:'📧 EMAIL',placeholder:'john@example.com'}].map(f=>(
+                    <div key={f.key}>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>{f.label}</div>
+                      <input value={newClient[f.key]} onChange={e=>setNewClient(p=>({...p,[f.key]:e.target.value}))} placeholder={f.placeholder}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📍 ADDRESS</div>
+                  <input value={newClient.address} onChange={e=>setNewClient(p=>({...p,address:e.target.value}))} placeholder="123 Main St, Brisbane QLD 4000"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                {donnyJobs.length > 0 && (
+                  <div>
+                    <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>🔨 LINKED JOBS</div>
+                    <div className="flex flex-wrap gap-2">
+                      {donnyJobs.map(job=>(
+                        <button key={job.id} onClick={()=>setNewClient(p=>({...p,jobIds:p.jobIds.includes(job.id)?p.jobIds.filter(id=>id!==job.id):[...p.jobIds,job.id]}))}
+                          className="text-xs px-3 py-1 rounded-lg font-medium"
+                          style={{background:newClient.jobIds.includes(job.id)?'rgba(59,130,246,0.2)':'rgba(255,255,255,0.04)',border:newClient.jobIds.includes(job.id)?'1px solid rgba(59,130,246,0.5)':'1px solid rgba(255,255,255,0.08)',color:newClient.jobIds.includes(job.id)?'#3b82f6':'rgba(148,163,184,0.6)'}}>
+                          {job.jobNumber?`#${job.jobNumber} `:''}  {job.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <button onClick={()=>{
+                  if(!newClient.name.trim()) return;
+                  saveClients([...donnyClients,{...newClient,id:Date.now(),createdAt:new Date().toISOString()}]);
+                  setNewClient({name:'',company:'',phone:'',email:'',address:'',jobIds:[]});
+                  setShowAddClient(false);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(59,130,246,0.9),rgba(37,99,235,0.9))'}}>
+                  Add Client
+                </button>
+              </div>
+            )}
+
+            {donnyClients.length===0 && !showAddClient ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(59,130,246,0.08)'}}>
+                <div className="text-4xl mb-3">🤝</div>
+                <div className="text-white font-bold mb-1">No clients yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add your first client above</div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {donnyClients.map(client => {
+                  const isEditing = editingClientId===client.id;
+                  const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
+                  return (
+                    <div key={client.id} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(59,130,246,0.15)'}}>
+                      <div className="p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0" style={{background:'rgba(59,130,246,0.15)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>
+                              {client.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="text-white font-bold">{client.name}</div>
+                              {client.company && <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.6)'}}>{client.company}</div>}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={()=>setEditingClientId(isEditing?null:client.id)} className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(59,130,246,0.1)',color:'#3b82f6',border:'1px solid rgba(59,130,246,0.2)'}}>{isEditing?'✕':'✏️'}</button>
+                            <button onClick={()=>{if(window.confirm(`Remove ${client.name}?`)) saveClients(donnyClients.filter(c=>c.id!==client.id));}} className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          {client.phone&&<a href={`tel:${client.phone}`} className="text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5" style={{background:'rgba(59,130,246,0.08)',color:'rgba(59,130,246,0.8)',border:'1px solid rgba(59,130,246,0.15)'}}>📞 {client.phone}</a>}
+                          {client.email&&<a href={`mailto:${client.email}`} className="text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 truncate" style={{background:'rgba(59,130,246,0.08)',color:'rgba(59,130,246,0.8)',border:'1px solid rgba(59,130,246,0.15)'}}>📧 {client.email}</a>}
+                          {client.address&&<div className="text-xs px-3 py-1.5 rounded-lg col-span-2" style={{background:'rgba(59,130,246,0.08)',color:'rgba(59,130,246,0.8)',border:'1px solid rgba(59,130,246,0.15)'}}>📍 {client.address}</div>}
+                        </div>
+                        {linkedJobs.length>0&&<div className="mt-3 flex flex-wrap gap-1.5">{linkedJobs.map(j=><span key={j.id} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(249,115,22,0.08)',color:'rgba(249,115,22,0.7)',border:'1px solid rgba(249,115,22,0.2)'}}>🔨 {j.jobNumber?`#${j.jobNumber} `:''}  {j.title}</span>)}</div>}
+                        {isEditing&&(
+                          <div className="mt-4 pt-4 space-y-3" style={{borderTop:'1px solid rgba(59,130,246,0.1)'}}>
+                            {[{key:'name',label:'NAME'},{key:'company',label:'COMPANY'},{key:'phone',label:'PHONE'},{key:'email',label:'EMAIL'},{key:'address',label:'ADDRESS'}].map(f=>(
+                              <div key={f.key}>
+                                <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>{f.label}</div>
+                                <input value={client[f.key]||''} onChange={e=>saveClients(donnyClients.map(c=>c.id===client.id?{...c,[f.key]:e.target.value}:c))}
+                                  className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                              </div>
+                            ))}
+                            {donnyJobs.length>0&&<div>
+                              <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>LINKED JOBS</div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {donnyJobs.map(job=>{const linked=(client.jobIds||[]).includes(job.id); return(
+                                  <button key={job.id} onClick={()=>saveClients(donnyClients.map(c=>c.id===client.id?{...c,jobIds:linked?(c.jobIds||[]).filter(id=>id!==job.id):[...(c.jobIds||[]),job.id]}:c))}
+                                    className="text-xs px-2.5 py-1 rounded-lg"
+                                    style={{background:linked?'rgba(59,130,246,0.2)':'rgba(255,255,255,0.03)',border:linked?'1px solid rgba(59,130,246,0.4)':'1px solid rgba(255,255,255,0.06)',color:linked?'#3b82f6':'rgba(148,163,184,0.5)'}}>
+                                    {job.jobNumber?`#${job.jobNumber} `:''}  {job.title}
+                                  </button>
+                                );})}
+                              </div>
+                            </div>}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ── QUOTES ──────────────────────────────────────────────────────────────
+    if (activeView === 'donny-quotes') {
+      const saveQuotes = (updated) => { setDonnyQuotes(updated); try { localStorage.setItem('muzz_donny_quotes', JSON.stringify(updated)); } catch {} };
+      const blankLine = () => ({ id:Date.now()+Math.random(), desc:'', qty:1, unit:'', rate:'', type:'labour' });
+      const calcQuote = (q) => {
+        const sub = (q.lineItems||[]).reduce((s,l)=>s+(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0),0);
+        const tax = sub*(parseFloat(q.taxRate)||0)/100;
+        return { sub, tax, total:sub+tax };
+      };
+      const selectedQuote = donnyQuotes.find(q=>q.id===selectedQuoteId);
+      if (selectedQuote) {
+        const { sub, tax, total } = calcQuote(selectedQuote);
+        const job = donnyJobs.find(j=>j.id===selectedQuote.jobId);
+        const client = donnyClients.find(c=>c.id===selectedQuote.clientId);
+        const updateQ = (updated) => saveQuotes(donnyQuotes.map(q=>q.id===selectedQuote.id?updated:q));
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6" style={{borderBottom:'1px solid rgba(168,85,247,0.2)',background:'rgba(168,85,247,0.03)'}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={()=>setSelectedQuoteId(null)} className="mb-4 font-medium flex items-center gap-1 text-xs" style={{color:'rgba(168,85,247,0.8)'}}>← All Quotes</button>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:'rgba(168,85,247,0.5)',letterSpacing:'3px'}}>// QUOTE</div>
+                    <h1 className="text-2xl font-bold text-white" style={{fontFamily:"'Orbitron',monospace"}}>{selectedQuote.quoteNumber||`Q-${selectedQuote.id.toString().slice(-4)}`}</h1>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs font-mono" style={{color:'rgba(168,85,247,0.5)'}}>TOTAL</div>
+                    <div className="text-2xl font-black" style={{color:'#a855f7'}}>${total.toFixed(2)}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              {/* Meta */}
+              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.2)'}}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB</div>
+                    <select value={selectedQuote.jobId||''} onChange={e=>updateQ({...selectedQuote,jobId:e.target.value||null})}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No job linked</option>
+                      {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} `:''}  {j.title}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🤝 CLIENT</div>
+                    <select value={selectedQuote.clientId||''} onChange={e=>updateQ({...selectedQuote,clientId:e.target.value||null})}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No client</option>
+                      {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}{c.company?` — ${c.company}`:''}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>GST RATE (%)</div>
+                    <input value={selectedQuote.taxRate} onChange={e=>updateQ({...selectedQuote,taxRate:e.target.value})} placeholder="10"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>VALID (DAYS)</div>
+                    <input value={selectedQuote.validDays} onChange={e=>updateQ({...selectedQuote,validDays:e.target.value})} placeholder="30"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+              </div>
+              {/* Line items */}
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.2)'}}>
+                <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(168,85,247,0.1)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(168,85,247,0.6)'}}>// LINE ITEMS</div>
+                  <button onClick={()=>updateQ({...selectedQuote,lineItems:[...(selectedQuote.lineItems||[]),blankLine()]})}
+                    className="text-xs px-3 py-1 rounded-lg font-bold" style={{background:'rgba(168,85,247,0.15)',color:'#a855f7',border:'1px solid rgba(168,85,247,0.3)'}}>+ Add Line</button>
+                </div>
+                <div className="px-5 py-2 grid text-xs font-mono" style={{gridTemplateColumns:'1fr 60px 80px 80px 40px',color:'rgba(148,163,184,0.4)',gap:'8px'}}>
+                  <div>DESCRIPTION</div><div>QTY</div><div>UNIT</div><div>RATE</div><div></div>
+                </div>
+                {(selectedQuote.lineItems||[]).map((line,i)=>(
+                  <div key={line.id} className="px-5 py-2 grid items-center" style={{gridTemplateColumns:'1fr 60px 80px 80px 40px',gap:'8px',borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+                    <input value={line.desc} onChange={e=>updateQ({...selectedQuote,lineItems:selectedQuote.lineItems.map((l,j)=>j===i?{...l,desc:e.target.value}:l)})}
+                      placeholder="Description..." className="bg-transparent text-white text-sm focus:outline-none"/>
+                    <input type="number" value={line.qty} onChange={e=>updateQ({...selectedQuote,lineItems:selectedQuote.lineItems.map((l,j)=>j===i?{...l,qty:e.target.value}:l)})}
+                      className="bg-transparent text-white text-sm focus:outline-none text-center"/>
+                    <input value={line.unit} onChange={e=>updateQ({...selectedQuote,lineItems:selectedQuote.lineItems.map((l,j)=>j===i?{...l,unit:e.target.value}:l)})}
+                      placeholder="hrs/m/ea" className="bg-transparent text-white text-xs focus:outline-none"/>
+                    <input type="number" value={line.rate} onChange={e=>updateQ({...selectedQuote,lineItems:selectedQuote.lineItems.map((l,j)=>j===i?{...l,rate:e.target.value}:l)})}
+                      placeholder="0.00" className="bg-transparent text-white text-sm focus:outline-none"/>
+                    <button onClick={()=>updateQ({...selectedQuote,lineItems:selectedQuote.lineItems.filter((_,j)=>j!==i)})} style={{color:'rgba(239,68,68,0.5)',fontSize:'16px'}}>×</button>
+                  </div>
+                ))}
+                {(selectedQuote.lineItems||[]).length===0&&<div className="px-5 py-6 text-center text-sm" style={{color:'rgba(148,163,184,0.3)'}}>No line items yet — add one above</div>}
+                <div className="px-5 py-4 space-y-1.5" style={{borderTop:'1px solid rgba(168,85,247,0.15)',background:'rgba(168,85,247,0.04)'}}>
+                  {[{label:'Subtotal',val:sub},{label:`GST (${selectedQuote.taxRate||10}%)`,val:tax}].map(r=>(
+                    <div key={r.label} className="flex justify-between text-sm"><span style={{color:'rgba(148,163,184,0.6)'}}>{r.label}</span><span className="text-white">${r.val.toFixed(2)}</span></div>
+                  ))}
+                  <div className="flex justify-between items-center pt-2" style={{borderTop:'1px solid rgba(168,85,247,0.2)'}}>
+                    <span className="text-sm font-bold text-white">TOTAL</span>
+                    <span className="text-xl font-black" style={{color:'#a855f7'}}>${total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+              {/* Notes */}
+              <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.12)'}}>
+                <div className="text-xs font-mono mb-2" style={{color:'rgba(168,85,247,0.5)'}}>// NOTES</div>
+                <textarea value={selectedQuote.notes||''} onChange={e=>updateQ({...selectedQuote,notes:e.target.value})} rows={3} placeholder="Payment terms, inclusions, exclusions..."
+                  className="w-full bg-transparent text-white text-sm focus:outline-none resize-none"/>
+              </div>
+              <button onClick={()=>{if(window.confirm('Delete this quote?')){saveQuotes(donnyQuotes.filter(q=>q.id!==selectedQuote.id));setSelectedQuoteId(null);}}}
+                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete Quote</button>
+            </div>
+          </div>
+        );
+      }
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="QUOTES" icon="📄" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={()=>{
+              const q={id:Date.now(),quoteNumber:`Q-${(donnyQuotes.length+1).toString().padStart(3,'0')}`,jobId:'',clientId:'',lineItems:[blankLine()],notes:'',taxRate:'10',validDays:'30',createdAt:new Date().toISOString()};
+              saveQuotes([q,...donnyQuotes]);setSelectedQuoteId(q.id);
+            }} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(168,85,247,0.1)',border:'1px solid rgba(168,85,247,0.3)',color:'#a855f7'}}>
+              + New Quote
+            </button>
+            {donnyQuotes.length===0&&<div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(168,85,247,0.08)'}}><div className="text-4xl mb-3">📄</div><div className="text-white font-bold mb-1">No quotes yet</div><div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Create your first quote above</div></div>}
+            {donnyQuotes.map(q=>{
+              const {total}=calcQuote(q);
+              const job=donnyJobs.find(j=>j.id===q.jobId);
+              const client=donnyClients.find(c=>c.id===q.clientId);
+              return(
+                <button key={q.id} onClick={()=>setSelectedQuoteId(q.id)} className="w-full rounded-2xl p-4 text-left" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.15)'}}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-white">{q.quoteNumber}</div>
+                      <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{client?client.name:'No client'}{job?` · ${job.title}`:''}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-black" style={{color:'#a855f7'}}>${total.toFixed(2)}</div>
+                      <div className="text-xs" style={{color:'rgba(148,163,184,0.4)'}}>{(q.lineItems||[]).length} items</div>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ── INVOICES ─────────────────────────────────────────────────────────────
+    if (activeView === 'donny-invoices') {
+      const saveInvoices = (updated) => { setDonnyInvoices(updated); try { localStorage.setItem('muzz_donny_invoices', JSON.stringify(updated)); } catch {} };
+      const blankLine = () => ({ id:Date.now()+Math.random(), desc:'', qty:1, unit:'', rate:'' });
+      const calcInv = (inv) => {
+        const sub=(inv.lineItems||[]).reduce((s,l)=>s+(parseFloat(l.qty)||0)*(parseFloat(l.rate)||0),0);
+        const tax=sub*(parseFloat(inv.taxRate)||0)/100;
+        return {sub,tax,total:sub+tax};
+      };
+      const statusColors = {unpaid:'#f97316',paid:'#22c55e',overdue:'#ef4444'};
+      const selectedInv = donnyInvoices.find(i=>i.id===selectedInvoiceId);
+
+      if (selectedInv) {
+        const {sub,tax,total}=calcInv(selectedInv);
+        const job=donnyJobs.find(j=>j.id===selectedInv.jobId);
+        const client=donnyClients.find(c=>c.id===selectedInv.clientId);
+        const updateI=(updated)=>saveInvoices(donnyInvoices.map(i=>i.id===selectedInv.id?updated:i));
+        const statusColor=statusColors[selectedInv.status||'unpaid']||'#f97316';
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6" style={{borderBottom:'1px solid rgba(168,85,247,0.2)',background:'rgba(168,85,247,0.03)'}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={()=>setSelectedInvoiceId(null)} className="mb-4 font-medium flex items-center gap-1 text-xs" style={{color:'rgba(168,85,247,0.8)'}}>← All Invoices</button>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:'rgba(168,85,247,0.5)',letterSpacing:'3px'}}>// INVOICE</div>
+                    <h1 className="text-2xl font-bold text-white" style={{fontFamily:"'Orbitron',monospace"}}>{selectedInv.invoiceNumber||`INV-${selectedInv.id.toString().slice(-4)}`}</h1>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>TOTAL</div>
+                    <div className="text-2xl font-black" style={{color:'#a855f7'}}>${total.toFixed(2)}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              {/* Status */}
+              <div className="flex gap-2">
+                {['unpaid','paid','overdue'].map(s=>(
+                  <button key={s} onClick={()=>updateI({...selectedInv,status:s})}
+                    className="flex-1 py-2.5 rounded-xl text-xs font-bold capitalize"
+                    style={{background:selectedInv.status===s?`${statusColors[s]}20`:'rgba(255,255,255,0.04)',border:selectedInv.status===s?`1px solid ${statusColors[s]}60`:'1px solid rgba(255,255,255,0.08)',color:selectedInv.status===s?statusColors[s]:'rgba(148,163,184,0.5)'}}>
+                    {s==='unpaid'?'⏳':s==='paid'?'✅':'🔴'} {s}
+                  </button>
+                ))}
+              </div>
+              {/* Meta */}
+              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.2)'}}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB</div>
+                    <select value={selectedInv.jobId||''} onChange={e=>updateI({...selectedInv,jobId:e.target.value||null})}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No job linked</option>
+                      {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} `:''}  {j.title}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🤝 CLIENT</div>
+                    <select value={selectedInv.clientId||''} onChange={e=>updateI({...selectedInv,clientId:e.target.value||null})}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No client</option>
+                      {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}{c.company?` — ${c.company}`:''}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DUE DATE</div>
+                    <input type="date" value={selectedInv.dueDate||''} onChange={e=>updateI({...selectedInv,dueDate:e.target.value})}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>GST RATE (%)</div>
+                    <input value={selectedInv.taxRate||'10'} onChange={e=>updateI({...selectedInv,taxRate:e.target.value})}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+              </div>
+              {/* Pull from timesheets */}
+              {selectedInv.jobId && donnyTimesheets.filter(e=>e.jobId===selectedInv.jobId).length>0 && (
+                <button onClick={()=>{
+                  const tsEntries=donnyTimesheets.filter(e=>e.jobId===selectedInv.jobId);
+                  const byMember=donnyTeam.map(m=>{
+                    const hrs=tsEntries.filter(e=>e.memberId===m.id).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                    return hrs>0?{id:Date.now()+Math.random(),desc:`Labour — ${m.name}`,qty:hrs,unit:'hrs',rate:m.hourlyRate||'0'}:null;
+                  }).filter(Boolean);
+                  updateI({...selectedInv,lineItems:[...(selectedInv.lineItems||[]),...byMember]});
+                }} className="w-full py-3 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                  ⏱️ Import Labour from Timesheets
+                </button>
+              )}
+              {/* Pull from daily costs */}
+              {selectedInv.jobId && donnyCosts.filter(c=>c.jobId===selectedInv.jobId).length>0 && (
+                <button onClick={()=>{
+                  const costEntries=donnyCosts.filter(c=>c.jobId===selectedInv.jobId);
+                  const matTotal=costEntries.filter(c=>c.type==='material').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+                  const otherTotal=costEntries.filter(c=>c.type==='other').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+                  const newLines=[];
+                  if(matTotal>0) newLines.push({id:Date.now()+Math.random(),desc:'Materials',qty:1,unit:'lot',rate:matTotal.toFixed(2)});
+                  if(otherTotal>0) newLines.push({id:Date.now()+Math.random()+1,desc:'Other Costs',qty:1,unit:'lot',rate:otherTotal.toFixed(2)});
+                  updateI({...selectedInv,lineItems:[...(selectedInv.lineItems||[]),...newLines]});
+                }} className="w-full py-3 rounded-xl text-sm font-bold" style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.3)',color:'#22c55e'}}>
+                  🔧 Import Costs from Daily Cost Tracker
+                </button>
+              )}
+              {/* Line items */}
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.2)'}}>
+                <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(168,85,247,0.1)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(168,85,247,0.6)'}}>// LINE ITEMS</div>
+                  <button onClick={()=>updateI({...selectedInv,lineItems:[...(selectedInv.lineItems||[]),blankLine()]})}
+                    className="text-xs px-3 py-1 rounded-lg font-bold" style={{background:'rgba(168,85,247,0.15)',color:'#a855f7',border:'1px solid rgba(168,85,247,0.3)'}}>+ Add Line</button>
+                </div>
+                <div className="px-5 py-2 grid text-xs font-mono" style={{gridTemplateColumns:'1fr 60px 80px 80px 40px',color:'rgba(148,163,184,0.4)',gap:'8px'}}>
+                  <div>DESCRIPTION</div><div>QTY</div><div>UNIT</div><div>RATE</div><div></div>
+                </div>
+                {(selectedInv.lineItems||[]).map((line,i)=>(
+                  <div key={line.id} className="px-5 py-2 grid items-center" style={{gridTemplateColumns:'1fr 60px 80px 80px 40px',gap:'8px',borderTop:'1px solid rgba(255,255,255,0.04)'}}>
+                    <input value={line.desc} onChange={e=>updateI({...selectedInv,lineItems:selectedInv.lineItems.map((l,j)=>j===i?{...l,desc:e.target.value}:l)})}
+                      placeholder="Description..." className="bg-transparent text-white text-sm focus:outline-none"/>
+                    <input type="number" value={line.qty} onChange={e=>updateI({...selectedInv,lineItems:selectedInv.lineItems.map((l,j)=>j===i?{...l,qty:e.target.value}:l)})}
+                      className="bg-transparent text-white text-sm focus:outline-none text-center"/>
+                    <input value={line.unit} onChange={e=>updateI({...selectedInv,lineItems:selectedInv.lineItems.map((l,j)=>j===i?{...l,unit:e.target.value}:l)})}
+                      placeholder="hrs/m/ea" className="bg-transparent text-white text-xs focus:outline-none"/>
+                    <input type="number" value={line.rate} onChange={e=>updateI({...selectedInv,lineItems:selectedInv.lineItems.map((l,j)=>j===i?{...l,rate:e.target.value}:l)})}
+                      placeholder="0.00" className="bg-transparent text-white text-sm focus:outline-none"/>
+                    <button onClick={()=>updateI({...selectedInv,lineItems:selectedInv.lineItems.filter((_,j)=>j!==i)})} style={{color:'rgba(239,68,68,0.5)',fontSize:'16px'}}>×</button>
+                  </div>
+                ))}
+                {(selectedInv.lineItems||[]).length===0&&<div className="px-5 py-6 text-center text-sm" style={{color:'rgba(148,163,184,0.3)'}}>No line items — add manually or import from timesheets/costs</div>}
+                <div className="px-5 py-4 space-y-1.5" style={{borderTop:'1px solid rgba(168,85,247,0.15)',background:'rgba(168,85,247,0.04)'}}>
+                  {[{label:'Subtotal',val:sub},{label:`GST (${selectedInv.taxRate||10}%)`,val:tax}].map(r=>(
+                    <div key={r.label} className="flex justify-between text-sm"><span style={{color:'rgba(148,163,184,0.6)'}}>{r.label}</span><span className="text-white">${r.val.toFixed(2)}</span></div>
+                  ))}
+                  <div className="flex justify-between items-center pt-2" style={{borderTop:'1px solid rgba(168,85,247,0.2)'}}>
+                    <span className="text-sm font-bold text-white">TOTAL DUE</span>
+                    <span className="text-xl font-black" style={{color:'#a855f7'}}>${total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+              {/* Notes */}
+              <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(168,85,247,0.12)'}}>
+                <div className="text-xs font-mono mb-2" style={{color:'rgba(168,85,247,0.5)'}}>// NOTES / PAYMENT DETAILS</div>
+                <textarea value={selectedInv.notes||''} onChange={e=>updateI({...selectedInv,notes:e.target.value})} rows={3} placeholder="BSB / Account number, payment terms..."
+                  className="w-full bg-transparent text-white text-sm focus:outline-none resize-none"/>
+              </div>
+              <button onClick={()=>{if(window.confirm('Delete this invoice?')){saveInvoices(donnyInvoices.filter(i=>i.id!==selectedInv.id));setSelectedInvoiceId(null);}}}
+                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete Invoice</button>
+            </div>
+          </div>
+        );
+      }
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="INVOICES" icon="🧾" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={()=>{
+              const inv={id:Date.now(),invoiceNumber:`INV-${(donnyInvoices.length+1).toString().padStart(3,'0')}`,jobId:'',clientId:'',lineItems:[blankLine()],notes:'',taxRate:'10',dueDate:'',status:'unpaid',createdAt:new Date().toISOString()};
+              saveInvoices([inv,...donnyInvoices]);setSelectedInvoiceId(inv.id);
+            }} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(168,85,247,0.1)',border:'1px solid rgba(168,85,247,0.3)',color:'#a855f7'}}>
+              + New Invoice
+            </button>
+            {donnyInvoices.length===0&&<div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(168,85,247,0.08)'}}><div className="text-4xl mb-3">🧾</div><div className="text-white font-bold mb-1">No invoices yet</div><div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Create your first invoice above</div></div>}
+            {/* Summary stats */}
+            {donnyInvoices.length>0&&(()=>{
+              const unpaidTotal=donnyInvoices.filter(i=>i.status!=='paid').reduce((s,i)=>s+calcInv(i).total,0);
+              const paidTotal=donnyInvoices.filter(i=>i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0);
+              return(
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                    <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>OUTSTANDING</div>
+                    <div className="text-xl font-black mt-1" style={{color:'#f97316'}}>${unpaidTotal.toFixed(2)}</div>
+                  </div>
+                  <div className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                    <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.6)'}}>COLLECTED</div>
+                    <div className="text-xl font-black mt-1" style={{color:'#22c55e'}}>${paidTotal.toFixed(2)}</div>
+                  </div>
+                </div>
+              );
+            })()}
+            {donnyInvoices.map(inv=>{
+              const {total}=calcInv(inv);
+              const job=donnyJobs.find(j=>j.id===inv.jobId);
+              const client=donnyClients.find(c=>c.id===inv.clientId);
+              const sc=statusColors[inv.status||'unpaid'];
+              return(
+                <button key={inv.id} onClick={()=>setSelectedInvoiceId(inv.id)} className="w-full rounded-2xl p-4 text-left" style={{background:'rgba(5,15,30,0.9)',border:`1px solid rgba(168,85,247,0.15)`}}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-white">{inv.invoiceNumber}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-bold capitalize" style={{background:`${sc}15`,color:sc,border:`1px solid ${sc}30`}}>{inv.status||'unpaid'}</span>
+                      </div>
+                      <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{client?client.name:'No client'}{job?` · ${job.title}`:''}{inv.dueDate?` · Due ${new Date(inv.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}`:''}</div>
+                    </div>
+                    <div className="text-lg font-black" style={{color:'#a855f7'}}>${total.toFixed(2)}</div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       );
