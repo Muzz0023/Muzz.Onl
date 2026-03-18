@@ -1775,6 +1775,9 @@ function MuzzApp() {
   const [donnyJobs, setDonnyJobs] = useState(() => {
     try { const s = localStorage.getItem('muzz_donny_jobs'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
+  const [donnyTeam, setDonnyTeam] = useState(() => {
+    try { const s = localStorage.getItem('muzz_donny_team'); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
   const [donnyMistakes, setDonnyMistakes] = useState(() => {
     try { const s = localStorage.getItem('muzz_donny_mistakes'); return s ? JSON.parse(s) : []; } catch { return []; }
   });
@@ -13987,6 +13990,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       ];
       const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'2-digit'}) : '—';
       const isOverdue = (d) => d && new Date(d) < new Date();
+      const [editingJobId, setEditingJobId] = React.useState(null);
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
@@ -14014,39 +14018,81 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="rounded-xl p-4 text-center text-xs" style={{background:'rgba(255,255,255,0.02)',border:`1px dashed ${col.color}30`,color:'rgba(148,163,184,0.3)'}}>No jobs</div>
                         )}
                         {col.jobs.map(job => (
-                          <div key={job.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${col.color}30`}}>
+                          <div key={job.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${editingJobId===job.id ? col.color+'80' : col.color+'30'}`}}>
                             <div className="flex items-start justify-between mb-2">
                               {job.jobNumber ? (
                                 <div className="text-xs font-mono px-2 py-0.5 rounded-md" style={{background:`${col.color}15`,color:col.color,border:`1px solid ${col.color}30`}}>#{job.jobNumber}</div>
                               ) : <div/>}
-                              <button onClick={() => { if(window.confirm('Delete this job?')) saveDonnyJobs(donnyJobs.filter(j => j.id !== job.id)); }}
-                                className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
-                            </div>
-                            <div className="text-white font-bold text-sm mb-3 cursor-pointer" onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobs'); }}>{job.title}</div>
-                            <div className="space-y-1.5 mb-3">
-                              <div className="flex items-center justify-between text-xs">
-                                <span style={{color:'rgba(148,163,184,0.5)'}}>Start</span>
-                                <span className="text-white">{formatDate(job.startDate)}</span>
-                              </div>
-                              <div className="flex items-center justify-between text-xs">
-                                <span style={{color:'rgba(148,163,184,0.5)'}}>Due</span>
-                                <span style={{color: isOverdue(job.dueDate) && !job.completed ? '#ef4444' : 'white'}}>{formatDate(job.dueDate)}</span>
+                              <div className="flex gap-1.5">
+                                <button onClick={() => setEditingJobId(editingJobId===job.id ? null : job.id)}
+                                  className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>
+                                  {editingJobId===job.id ? '✕' : '✏️'}
+                                </button>
+                                <button onClick={() => { if(window.confirm('Delete this job?')) saveDonnyJobs(donnyJobs.filter(j => j.id !== job.id)); }}
+                                  className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                               </div>
                             </div>
-                            <div className="flex gap-2 pt-3" style={{borderTop:`1px solid ${col.color}15`}}>
-                              {!job.started && !job.completed && (
-                                <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,started:true}:j))}
-                                  className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>Start →</button>
-                              )}
-                              {job.started && !job.completed && (
-                                <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:true}:j))}
-                                  className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(34,197,94,0.15)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.3)'}}>Complete ✓</button>
-                              )}
-                              {job.completed && (
-                                <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j))}
-                                  className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>Reopen</button>
-                              )}
-                            </div>
+
+                            {editingJobId === job.id ? (
+                              /* INLINE EDIT FORM */
+                              <div className="space-y-3 mt-2">
+                                <div>
+                                  <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>JOB TITLE</div>
+                                  <input value={job.title} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,title:e.target.value}:j))}
+                                    className="w-full bg-transparent text-white font-bold focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(249,115,22,0.3)'}}/>
+                                </div>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <div>
+                                    <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>JOB #</div>
+                                    <input value={job.jobNumber||''} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,jobNumber:e.target.value}:j))}
+                                      placeholder="042" className="w-full bg-transparent text-white text-xs focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                                  </div>
+                                  <div>
+                                    <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>START</div>
+                                    <input type="date" value={job.startDate||''} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,startDate:e.target.value}:j))}
+                                      className="w-full bg-transparent text-white text-xs focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                                  </div>
+                                  <div>
+                                    <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>DUE</div>
+                                    <input type="date" value={job.dueDate||''} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,dueDate:e.target.value}:j))}
+                                      className="w-full bg-transparent text-white text-xs focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                                  </div>
+                                </div>
+                                <button onClick={() => setEditingJobId(null)}
+                                  className="w-full py-2 rounded-xl text-xs font-bold text-white" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                                  Done ✓
+                                </button>
+                              </div>
+                            ) : (
+                              /* NORMAL VIEW */
+                              <>
+                                <div className="text-white font-bold text-sm mb-3">{job.title}</div>
+                                <div className="space-y-1.5 mb-3">
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span style={{color:'rgba(148,163,184,0.5)'}}>Start</span>
+                                    <span className="text-white">{formatDate(job.startDate)}</span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span style={{color:'rgba(148,163,184,0.5)'}}>Due</span>
+                                    <span style={{color: isOverdue(job.dueDate) && !job.completed ? '#ef4444' : 'white'}}>{formatDate(job.dueDate)}</span>
+                                  </div>
+                                </div>
+                                <div className="flex gap-2 pt-3" style={{borderTop:`1px solid ${col.color}15`}}>
+                                  {!job.started && !job.completed && (
+                                    <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,started:true}:j))}
+                                      className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>Start →</button>
+                                  )}
+                                  {job.started && !job.completed && (
+                                    <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:true}:j))}
+                                      className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(34,197,94,0.15)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.3)'}}>Complete ✓</button>
+                                  )}
+                                  {job.completed && (
+                                    <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j))}
+                                      className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>Reopen</button>
+                                  )}
+                                </div>
+                              </>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -14056,7 +14102,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="mt-6 flex justify-center">
                   <button onClick={() => setActiveView('donny-newjob')} className="px-8 py-2.5 rounded-xl font-bold text-sm" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
                 </div>
-
                 {/* MASTER TABLE */}
                 <div className="mt-8 rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
                   <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
@@ -14070,12 +14115,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
                     const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
                     return (
-                      <div key={job.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02] transition-all"
-                        style={{gridTemplateColumns:'80px 1fr 110px 110px 120px',borderBottom: i < donnyJobs.length-1 ? '1px solid rgba(255,255,255,0.03)' : 'none'}}>
-                        <div className="font-mono text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{job.jobNumber ? `#${job.jobNumber}` : '—'}</div>
+                      <div key={job.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02]"
+                        style={{gridTemplateColumns:'80px 1fr 110px 110px 120px',borderBottom:i<donnyJobs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                        <div className="font-mono text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
                         <div className="text-white font-medium truncate pr-4">{job.title}</div>
-                        <div className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{formatDate(job.startDate)}</div>
-                        <div className="text-xs" style={{color: isOverdue(job.dueDate) && !job.completed ? '#ef4444' : 'rgba(148,163,184,0.6)'}}>{formatDate(job.dueDate)}</div>
+                        <div className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
+                        <div className="text-xs" style={{color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?'#ef4444':'rgba(148,163,184,0.6)'}}>{job.dueDate?new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
                         <div><span className="text-xs font-bold px-2 py-1 rounded-lg" style={{background:`${statusColor}15`,color:statusColor,border:`1px solid ${statusColor}30`}}>{status}</span></div>
                       </div>
                     );
@@ -14249,21 +14294,213 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       );
     }
 
+    // TEAM
+    if (activeView === 'donny-team') {
+      const saveTeam = (updated) => { setDonnyTeam(updated); try { localStorage.setItem('muzz_donny_team', JSON.stringify(updated)); } catch {} };
+      const [showAddMember, setShowAddMember] = React.useState(false);
+      const [editingMemberId, setEditingMemberId] = React.useState(null);
+      const [newMember, setNewMember] = React.useState({ name:'', role:'', position:'', hourlyRate:'', jobAccess:[] });
+      const ROLES = [
+        { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
+        { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
+        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson','Licenced Electrician'] },
+        { group:'ENTRY', options:['Apprentice','Intern','Labourer','Trainee'] },
+      ];
+      const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
+      const allRoleOptions = ROLES.flatMap(g => g.options);
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="TEAM" icon="👷" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }}
+              className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+              {showAddMember ? '✕ Cancel' : '+ Add Team Member'}
+            </button>
+            {showAddMember && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.5)'}}>// NEW MEMBER</div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👤 FULL NAME</div>
+                  <input value={newMember.name} onChange={e => setNewMember(p=>({...p,name:e.target.value}))} placeholder="e.g. James Smith"
+                    className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>💼 ROLE</div>
+                  {ROLES.map(group => (
+                    <div key={group.group} className="mb-3">
+                      <div className="text-xs mb-1.5" style={{color:'rgba(249,115,22,0.4)',letterSpacing:'2px'}}>{group.group}</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {group.options.map(opt => (
+                          <button key={opt} onClick={() => setNewMember(p=>({...p,role:opt}))}
+                            className="text-xs px-3 py-1 rounded-lg font-medium"
+                            style={{background:newMember.role===opt?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:newMember.role===opt?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:newMember.role===opt?'#f97316':'rgba(148,163,184,0.6)'}}>
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🏅 POSITION</div>
+                    <select value={newMember.position} onChange={e => setNewMember(p=>({...p,position:e.target.value}))}
+                      className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1 appearance-none" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">Select...</option>
+                      {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 HOURLY RATE (AUD)</div>
+                    <input value={newMember.hourlyRate} onChange={e => setNewMember(p=>({...p,hourlyRate:e.target.value}))}
+                      placeholder="e.g. 45.00" type="number"
+                      className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+                {donnyJobs.length > 0 && (
+                  <div>
+                    <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB ACCESS</div>
+                    <div className="flex flex-wrap gap-2">
+                      {donnyJobs.map(job => (
+                        <button key={job.id} onClick={() => setNewMember(p=>({...p,jobAccess:p.jobAccess.includes(job.id)?p.jobAccess.filter(id=>id!==job.id):[...p.jobAccess,job.id]}))}
+                          className="text-xs px-3 py-1 rounded-lg font-medium"
+                          style={{background:newMember.jobAccess.includes(job.id)?'rgba(34,197,94,0.15)':'rgba(255,255,255,0.04)',border:newMember.jobAccess.includes(job.id)?'1px solid rgba(34,197,94,0.4)':'1px solid rgba(255,255,255,0.08)',color:newMember.jobAccess.includes(job.id)?'#22c55e':'rgba(148,163,184,0.6)'}}>
+                          {job.jobNumber?`#${job.jobNumber} `:''}{ job.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <button onClick={() => {
+                  if (!newMember.name.trim()) return;
+                  saveTeam([...donnyTeam, {...newMember, id:Date.now()}]);
+                  setNewMember({name:'',role:'',position:'',hourlyRate:'',jobAccess:[]});
+                  setShowAddMember(false);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                  Add Member
+                </button>
+              </div>
+            )}
+            {donnyTeam.length === 0 && !showAddMember ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+                <div className="text-4xl mb-3">👷</div>
+                <div className="text-white font-bold mb-1">No team members yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add your crew above</div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {[...donnyTeam].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); }).map(member => {
+                  const isEditing = editingMemberId === member.id;
+                  return (
+                    <div key={member.id} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                      <div className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0"
+                            style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                            {member.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-white font-bold">{member.name}</span>
+                              {member.position && <span className="text-xs px-2 py-0.5 rounded-full font-mono" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.8)',border:'1px solid rgba(249,115,22,0.2)'}}>{member.position}</span>}
+                            </div>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              {member.role && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{member.role}</span>}
+                              {member.hourlyRate && <span className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>💰 ${member.hourlyRate}/hr</span>}
+                            </div>
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            <button onClick={() => setEditingMemberId(isEditing?null:member.id)}
+                              className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>
+                              {isEditing?'✕':'✏️'}
+                            </button>
+                            <button onClick={() => { if(window.confirm(`Remove ${member.name}?`)) saveTeam(donnyTeam.filter(m=>m.id!==member.id)); }}
+                              className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          </div>
+                        </div>
+                        {(member.jobAccess||[]).length > 0 && (
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {(member.jobAccess||[]).map(jid => { const job=donnyJobs.find(j=>j.id===jid); return job?(<span key={jid} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(34,197,94,0.08)',color:'rgba(34,197,94,0.7)',border:'1px solid rgba(34,197,94,0.2)'}}>🔨 {job.jobNumber?`#${job.jobNumber} `:''}{ job.title}</span>):null; })}
+                          </div>
+                        )}
+                        {isEditing && (
+                          <div className="mt-4 pt-4 space-y-3" style={{borderTop:'1px solid rgba(249,115,22,0.1)'}}>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>NAME</div>
+                                <input value={member.name} onChange={e => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,name:e.target.value}:m))}
+                                  className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                              </div>
+                              <div>
+                                <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>HOURLY RATE</div>
+                                <input value={member.hourlyRate} onChange={e => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,hourlyRate:e.target.value}:m))}
+                                  type="number" className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>ROLE</div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {allRoleOptions.map(opt => (
+                                  <button key={opt} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,role:opt}:m))}
+                                    className="text-xs px-2.5 py-1 rounded-lg"
+                                    style={{background:member.role===opt?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:member.role===opt?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:member.role===opt?'#f97316':'rgba(148,163,184,0.5)'}}>
+                                    {opt}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>POSITION</div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {POSITIONS.map(pos => (
+                                  <button key={pos} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,position:pos}:m))}
+                                    className="text-xs px-2.5 py-1 rounded-lg"
+                                    style={{background:member.position===pos?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:member.position===pos?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:member.position===pos?'#f97316':'rgba(148,163,184,0.5)'}}>
+                                    {pos}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            {donnyJobs.length > 0 && (
+                              <div>
+                                <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>JOB ACCESS</div>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {donnyJobs.map(job => { const hasAccess=(member.jobAccess||[]).includes(job.id); return (
+                                    <button key={job.id} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,jobAccess:hasAccess?(m.jobAccess||[]).filter(id=>id!==job.id):[...(m.jobAccess||[]),job.id]}:m))}
+                                      className="text-xs px-2.5 py-1 rounded-lg"
+                                      style={{background:hasAccess?'rgba(34,197,94,0.15)':'rgba(255,255,255,0.03)',border:hasAccess?'1px solid rgba(34,197,94,0.3)':'1px solid rgba(255,255,255,0.06)',color:hasAccess?'#22c55e':'rgba(148,163,184,0.5)'}}>
+                                      {job.jobNumber?`#${job.jobNumber} `:''}{ job.title}
+                                    </button>
+                                  ); })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     // MISTAKES
     if (activeView === 'donny-mistakes') {
-      const saveMistakes = (updated) => {
-        setDonnyMistakes(updated);
-        try { localStorage.setItem('muzz_donny_mistakes', JSON.stringify(updated)); } catch {}
-      };
+      const saveMistakes = (updated) => { setDonnyMistakes(updated); try { localStorage.setItem('muzz_donny_mistakes', JSON.stringify(updated)); } catch {} };
       const [showNewMistake, setShowNewMistake] = React.useState(false);
       const [newMistake, setNewMistake] = React.useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
-      const allEmployees = [...new Set(donnyJobs.flatMap(j => (j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
+      const teamNames = donnyTeam.map(m => m.name);
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="MISTAKES" icon="❌" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            <button onClick={() => setShowNewMistake(s => !s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
+            <button onClick={() => setShowNewMistake(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
               {showNewMistake ? '✕ Cancel' : '+ Log a Mistake'}
             </button>
             {showNewMistake && (
@@ -14272,10 +14509,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👤 WHO MADE IT</div>
-                    <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))}
-                      placeholder="Name..." list="mistake-employees"
+                    <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who"
                       className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    <datalist id="mistake-employees">{allEmployees.map(e => <option key={e} value={e}/>)}</datalist>
+                    <datalist id="mistake-who">{teamNames.map(n=><option key={n} value={n}/>)}</datalist>
                   </div>
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
@@ -14285,31 +14521,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <div>
                   <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>❌ WHAT HAPPENED</div>
-                  <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))}
-                    placeholder="Describe the mistake..." rows={2}
+                  <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
                     className="w-full bg-transparent text-white font-medium focus:outline-none text-sm resize-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                 </div>
                 <div>
                   <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔧 WHAT WAS AFFECTED</div>
-                  <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))}
-                    placeholder="Gear, materials, people affected..." rows={2}
+                  <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
                     className="w-full bg-transparent text-white font-medium focus:outline-none text-sm resize-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                 </div>
                 <div>
                   <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 RELATED JOB (OPTIONAL)</div>
-                  <input value={newMistake.jobRef} onChange={e => setNewMistake(p=>({...p,jobRef:e.target.value}))}
-                    placeholder="Job name or number..." list="mistake-jobs"
+                  <input value={newMistake.jobRef} onChange={e => setNewMistake(p=>({...p,jobRef:e.target.value}))} placeholder="Job name or number..." list="mistake-jobs"
                     className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  <datalist id="mistake-jobs">{donnyJobs.map(j => <option key={j.id} value={j.jobNumber ? `#${j.jobNumber} ${j.title}` : j.title}/>)}</datalist>
+                  <datalist id="mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
                 </div>
                 <button onClick={() => {
                   if (!newMistake.what.trim()) return;
                   saveMistakes([{...newMistake, id:Date.now()}, ...donnyMistakes]);
                   setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
                   setShowNewMistake(false);
-                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>
-                  Log Mistake
-                </button>
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>Log Mistake</button>
               </div>
             )}
             {donnyMistakes.length === 0 && !showNewMistake ? (
@@ -14322,47 +14553,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div key={m.id} className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <div className="font-bold text-white">{m.who || 'Unknown'}</div>
-                    <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.date ? new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}) : ''}{m.jobRef ? ` · ${m.jobRef}` : ''}</div>
+                    <div className="font-bold text-white">{m.who||'Unknown'}</div>
+                    <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):''}{m.jobRef?` · ${m.jobRef}`:''}</div>
                   </div>
-                  <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x => x.id !== m.id)); }}
+                  <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x=>x.id!==m.id)); }}
                     className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                 </div>
                 <div className="text-sm text-white mb-2">{m.what}</div>
-                {m.affected && (
-                  <div className="text-xs px-3 py-1.5 rounded-lg inline-block" style={{background:'rgba(239,68,68,0.08)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.15)'}}>🔧 {m.affected}</div>
-                )}
+                {m.affected && <div className="text-xs px-3 py-1.5 rounded-lg inline-block" style={{background:'rgba(239,68,68,0.08)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.15)'}}>🔧 {m.affected}</div>}
               </div>
             ))}
-          </div>
-        </div>
-      );
-    }
-
-    // TEAM
-    if (activeView === 'donny-team') {
-      const allEmployees = [...new Set(donnyJobs.flatMap(j => (j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
-      return (
-        <div className="min-h-screen bg-transparent pb-24">
-          <Sidebar /><SaveIndicator />
-          <DonnyHeader title="TEAM" icon="👷" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            {allEmployees.length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.1)"}}><div className="text-4xl mb-3">👷</div><div className="text-white">No team members yet</div><div className="text-sm mt-1" style={{color:"rgba(148,163,184,0.5)"}}>Add employees when creating jobs</div></div>
-            ) : allEmployees.map(emp => {
-              const empJobs = donnyJobs.filter(j => (j.employees||'').includes(emp));
-              const mistakes = donnyJobs.filter(j => (j.mistakes||'').toLowerCase().includes(emp.toLowerCase()));
-              return (
-                <div key={emp} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.15)"}}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold" style={{background:"rgba(249,115,22,0.15)",color:"#f97316"}}>{emp[0]}</div>
-                    <div><div className="font-semibold text-white">{emp}</div><div className="text-xs" style={{color:"rgba(249,115,22,0.5)"}}>{empJobs.length} job{empJobs.length!==1?'s':''}</div></div>
-                  </div>
-                  <div className="text-xs" style={{color:"rgba(148,163,184,0.5)"}}>{empJobs.map(j=>j.title).join(', ')}</div>
-                  {mistakes.length > 0 && <div className="mt-2 text-xs" style={{color:"rgba(239,68,68,0.6)"}}>⚠️ Noted in mistakes log</div>}
-                </div>
-              );
-            })}
           </div>
         </div>
       );
