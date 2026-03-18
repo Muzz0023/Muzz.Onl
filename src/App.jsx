@@ -1816,8 +1816,6 @@ function MuzzApp() {
   const [donnySchedule, setDonnySchedule] = useState(() => { try { const s=localStorage.getItem('muzz_donny_schedule'); return s?JSON.parse(s):{}; } catch { return {}; } });
   const [schedPickJob, setSchedPickJob] = useState(null);
   const [schedPickMember, setSchedPickMember] = useState(null);
-  // Donny Job Costing
-  const [costingJobId, setCostingJobId] = useState(null);
   // Donny Subcontractors
   const [donnySubs, setDonnySubs] = useState(() => { try { const s=localStorage.getItem('muzz_donny_subs'); return s?JSON.parse(s):[]; } catch { return []; } });
   const [showAddSub, setShowAddSub] = useState(false);
@@ -2489,7 +2487,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️' },
                   { section:'JOBS', id:'donny-joblog', label:'Job Log', icon:'📝' },
-                  { section:'JOBS', id:'donny-costing', label:'Job Costing', icon:'📊' },
                   { section:'JOBS', id:'donny-recurring', label:'Recurring', icon:'🔁' },
                   { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
                   { section:'TEAM', id:'donny-timesheets', label:'Timesheets', icon:'⏱️' },
@@ -14037,7 +14034,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:"Jobs",       emoji:"🔨", view:"donny-masterview"},
                 {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler"},
                 {label:"Job Log",    emoji:"📝", view:"donny-joblog"},
-                {label:"Costing",    emoji:"📊", view:"donny-costing"},
+                {label:"Recurring",  emoji:"🔁", view:"donny-recurring"},
                 {label:"Team",       emoji:"👷", view:"donny-team"},
                 {label:"Timesheets", emoji:"⏱️", view:"donny-timesheets"},
                 {label:"Subs",       emoji:"🔩", view:"donny-subs"},
