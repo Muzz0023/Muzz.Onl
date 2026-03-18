@@ -2498,11 +2498,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝' },
                   { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸' },
                   { section:'SITE', id:'donny-checklists', label:'SWMS', icon:'✅' },
-                  { section:'SITE', id:'donny-materialslog', label:'Extra Materials', icon:'📦' },
                   { section:'SITE', id:'donny-incidents', label:'Incidents', icon:'🚨' },
                   { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
                   { section:'COSTS', id:'donny-dailycosts', label:'Daily Costs', icon:'📅' },
+                  { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', icon:'📦' },
                   { section:'COSTS', id:'donny-suppliers', label:'Price Book', icon:'🏭' },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
                 ];
