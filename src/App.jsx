@@ -13981,13 +13981,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const greeting = hour < 12 ? "G'morning" : hour < 17 ? "G'day" : "G'evening";
       const today = new Date().toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long'});
       const activeJobs = donnyJobs.filter(j => !j.completed);
+      const completedJobs = donnyJobs.filter(j => j.completed);
       const overdueJobs = activeJobs.filter(j => j.dueDate && new Date(j.dueDate) < new Date());
       const totalLabourCost = donnyTimesheets.reduce((sum, e) => {
         const m = donnyTeam.find(x => x.id === e.memberId);
         return sum + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const totalMaterialCost = donnyCosts.reduce((sum, c) => sum + (parseFloat(c.amount)||0), 0);
-      const totalCosts = totalLabourCost + totalMaterialCost;
 
       return (
         <div className="min-h-screen bg-transparent pb-24">
