@@ -14610,13 +14610,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div key={group.group} className="mb-3">
                       <div className="text-xs mb-1.5" style={{color:'rgba(249,115,22,0.4)',letterSpacing:'2px'}}>{group.group}</div>
                       <div className="flex flex-wrap gap-1.5">
-                        {group.options.map(opt => (
-                          <button key={opt} onClick={() => setNewMember(p=>({...p,role:opt}))}
-                            className="text-xs px-3 py-1 rounded-lg font-medium"
-                            style={{background:newMember.role===opt?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:newMember.role===opt?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:newMember.role===opt?'#f97316':'rgba(148,163,184,0.6)'}}>
-                            {opt}
-                          </button>
-                        ))}
+                        {group.options.map(opt => {
+                          const active = (newMember.roles||[]).includes(opt);
+                          return (
+                            <button key={opt} onClick={() => setNewMember(p=>({...p,roles:active?(p.roles||[]).filter(r=>r!==opt):[...(p.roles||[]),opt]}))}
+                              className="text-xs px-3 py-1 rounded-lg font-medium"
+                              style={{background:active?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:active?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:active?'#f97316':'rgba(148,163,184,0.6)'}}>
+                              {opt}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -14654,7 +14657,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <button onClick={() => {
                   if (!newMember.name.trim()) return;
                   saveTeam([...donnyTeam, {...newMember, id:Date.now()}]);
-                  setNewMember({name:'',role:'',position:'',hourlyRate:'',jobAccess:[]});
+                  setNewMember({name:'',roles:[],position:'',hourlyRate:'',jobAccess:[]});
                   setShowAddMember(false);
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
                   Add Member
