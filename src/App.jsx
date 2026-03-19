@@ -6730,16 +6730,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
             {[
-              {label:"Habits",emoji:"🔥",view:"habits"},
-              {label:"Sleep",emoji:"🌙",view:"gym"},
-              {label:"Mood",emoji:"🧠",view:"gym"},
-              {label:"Work",emoji:"💼",view:"work"},
-              {label:"Diet",emoji:"🥗",view:"diet"},
-              {label:"Bills",emoji:"💸",view:"varied"},
-              {label:"Invest",emoji:"📈",view:"investments"},
-              {label:"Tasks",emoji:"✅",view:"tasks"},
+              {label:"Habits",emoji:"🔥",view:"habits",key:"habits"},
+              {label:"Sleep",emoji:"🌙",view:"gym",key:"sleep"},
+              {label:"Mood",emoji:"🧠",view:"gym",key:"mood"},
+              {label:"Work",emoji:"💼",view:"work",key:"work"},
+              {label:"Diet",emoji:"🥗",view:"diet",key:"diet"},
+              {label:"Bills",emoji:"💸",view:"varied",key:"bills"},
+              {label:"Invest",emoji:"📈",view:"investments",key:"invest"},
+              {label:"Tasks",emoji:"✅",view:"tasks",key:"tasks"},
             ].map(s => (
-              <button key={s.view} onClick={() => setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
+              <button key={s.key} onClick={() => setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
                 <span className="text-2xl mb-1">{s.emoji}</span>
                 <span className="text-xs text-slate-400">{s.label}</span>
               </button>
@@ -14036,20 +14036,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             <div className="grid grid-cols-4 gap-2">
               {[
-                {label:"Jobs",       emoji:"🔨", view:"donny-masterview"},
-                {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler"},
-                {label:"Job Log",    emoji:"📝", view:"donny-joblog"},
-                {label:"Recurring",  emoji:"🔁", view:"donny-recurring"},
-                {label:"Team",       emoji:"👷", view:"donny-team"},
-                {label:"Timesheets", emoji:"⏱️", view:"donny-timesheets"},
-                {label:"Subs",       emoji:"🔩", view:"donny-subs"},
-                {label:"Clients",    emoji:"🤝", view:"donny-clients"},
-                {label:"Photos",     emoji:"📸", view:"donny-photos"},
-                {label:"SWMS",       emoji:"✅", view:"donny-checklists"},
-                {label:"Incidents",  emoji:"🚨", view:"donny-incidents"},
-                {label:"Reports",    emoji:"📊", view:"donny-reports"},
+                {label:"Jobs",       emoji:"🔨", view:"donny-masterview",  key:"d-jobs"},
+                {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler",   key:"d-sched"},
+                {label:"Job Log",    emoji:"📝", view:"donny-joblog",       key:"d-log"},
+                {label:"Recurring",  emoji:"🔁", view:"donny-recurring",   key:"d-recur"},
+                {label:"Team",       emoji:"👷", view:"donny-team",         key:"d-team"},
+                {label:"Timesheets", emoji:"⏱️", view:"donny-timesheets",  key:"d-time"},
+                {label:"Subs",       emoji:"🔩", view:"donny-subs",         key:"d-subs"},
+                {label:"Clients",    emoji:"🤝", view:"donny-clients",      key:"d-clients"},
+                {label:"Photos",     emoji:"📸", view:"donny-photos",       key:"d-photos"},
+                {label:"SWMS",       emoji:"✅", view:"donny-checklists",   key:"d-swms"},
+                {label:"Incidents",  emoji:"🚨", view:"donny-incidents",    key:"d-inc"},
+                {label:"Reports",    emoji:"📊", view:"donny-reports",      key:"d-rep"},
               ].map(s => (
-                <button key={s.view} onClick={() => setActiveView(s.view)}
+                <button key={s.key} onClick={() => setActiveView(s.view)}
                   className="rounded-xl p-3 flex flex-col items-center gap-1"
                   style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
                   <span className="text-2xl">{s.emoji}</span>
