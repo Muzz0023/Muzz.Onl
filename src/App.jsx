@@ -14975,43 +14975,216 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-reports') {
+      // JOBS
       const activeJobs = donnyJobs.filter(j=>!j.completed);
       const completedJobs = donnyJobs.filter(j=>j.completed);
-      const allEmployees = [...new Set(donnyJobs.flatMap(j=>(j.employees||'').split(',').map(e=>e.trim()).filter(Boolean)))];
-      const jobsWithProblems = donnyJobs.filter(j=>j.problems);
-      const jobsWithMistakes = donnyJobs.filter(j=>j.mistakes);
+      const overdueJobs = activeJobs.filter(j=>j.dueDate && new Date(j.dueDate)<new Date());
+      const todoJobs = activeJobs.filter(j=>!j.started);
+      const inProgressJobs = activeJobs.filter(j=>j.started);
+
+      // TEAM & LABOUR
+      const totalLabourHrs = donnyTimesheets.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+      const totalLabourCost = donnyTimesheets.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); },0);
+      const teamHours = donnyTeam.map(m=>{ const hrs=donnyTimesheets.filter(e=>e.memberId===m.id).reduce((s,e)=>s+(parseFloat(e.hours)||0),0); const pay=hrs*(parseFloat(m.hourlyRate)||0); return {...m,hrs,pay}; }).filter(x=>x.hrs>0).sort((a,b)=>b.hrs-a.hrs);
+
+      // COSTS
+      const totalMaterialCost = donnyCosts.reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+      const matByType = { material: donnyCosts.filter(c=>c.type==='material').reduce((s,c)=>s+(parseFloat(c.amount)||0),0), labour: donnyCosts.filter(c=>c.type==='labour').reduce((s,c)=>s+(parseFloat(c.amount)||0),0), other: donnyCosts.filter(c=>c.type==='other').reduce((s,c)=>s+(parseFloat(c.amount)||0),0) };
+
+      // EXTRA MATERIALS
+      const recentMaterials = donnyMaterialsLog.slice(0,5);
+
+      // SITE SAFETY
+      const totalIncidents = donnyIncidents.length;
+      const incidentsByType = donnyIncidents.reduce((acc,i)=>{ acc[i.type]=(acc[i.type]||0)+1; return acc; },{});
+      const openRisks = donnyJobs.filter(j=>j.risk&&!j.completed).length;
+      const totalMistakes = donnyMistakes.length;
+      const totalSWMS = donnyChecklists.filter(c=>c.type==='swms').length;
+      const completedSWMS = donnyChecklists.filter(c=>c.type==='swms'&&c.items.length>0&&c.items.every(i=>i.done)).length;
+
+      // SCHEDULER
+      const today = new Date().toISOString().split('T')[0];
+      const thisWeekAssignments = Object.entries(donnySchedule).filter(([d])=>d>=today).flatMap(([d,entries])=>entries.map(e=>({...e,date:d}))).slice(0,8);
+
+      const Section = ({title,color,children}) => (
+        <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${color}20`}}>
+          <div className="px-5 py-3 font-semibold text-white text-sm flex items-center gap-2" style={{borderBottom:`1px solid ${color}15`,background:`${color}08`}}>{title}</div>
+          <div className="p-4 space-y-3">{children}</div>
+        </div>
+      );
+      const StatRow = ({label,value,color='#f97316',sub}) => (
+        <div className="flex items-center justify-between py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+          <span className="text-sm" style={{color:'rgba(148,163,184,0.7)'}}>{label}</span>
+          <div className="text-right">
+            <span className="text-sm font-bold" style={{color}}>{value}</span>
+            {sub && <div className="text-xs" style={{color:'rgba(148,163,184,0.4)'}}>{sub}</div>}
+          </div>
+        </div>
+      );
+
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="REPORTS" icon="📊" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+
+            {/* Summary stat cards */}
+            <div className="grid grid-cols-4 gap-3">
               {[
-                {label:'Total Jobs',value:donnyJobs.length,color:'#f97316'},
-                {label:'Active',value:activeJobs.length,color:'#f97316'},
-                {label:'Completed',value:completedJobs.length,color:'#22c55e'},
-                {label:'Team Size',value:allEmployees.length,color:'#f97316'},
-                {label:'Open Problems',value:jobsWithProblems.filter(j=>!j.completed).length,color:'#ef4444'},
-                {label:'Mistakes Logged',value:jobsWithMistakes.length,color:'#f59e0b'},
-              ].map((s,i) => (
-                <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${s.color}25`}}>
-                  <div className="text-2xl font-bold mb-1" style={{color:s.color}}>{s.value}</div>
-                  <div className="text-xs" style={{color:"rgba(148,163,184,0.6)"}}>{s.label}</div>
+                {label:'Active Jobs', value:activeJobs.length, color:'#f97316'},
+                {label:'Overdue', value:overdueJobs.length, color: overdueJobs.length>0?'#ef4444':'#22c55e'},
+                {label:'Team Members', value:donnyTeam.length, color:'#f97316'},
+                {label:'Clients', value:donnyClients.length, color:'#3b82f6'},
+              ].map((s,i)=>(
+                <div key={i} className="rounded-2xl p-3 text-center" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${s.color}20`}}>
+                  <div className="text-2xl font-black" style={{color:s.color}}>{s.value}</div>
+                  <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{s.label}</div>
                 </div>
               ))}
             </div>
-            {jobsWithProblems.length > 0 && (
-              <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.2)"}}>
-                <div className="p-4 font-semibold text-white" style={{borderBottom:"1px solid rgba(239,68,68,0.1)"}}>🚨 Problems Log</div>
-                {jobsWithProblems.map(j => <div key={j.id} className="p-4" style={{borderBottom:"1px solid rgba(239,68,68,0.06)"}}><div className="text-sm font-medium text-white">{j.title}</div><div className="text-sm mt-1" style={{color:"rgba(239,68,68,0.7)"}}>{j.problems}</div></div>)}
-              </div>
+
+            {/* JOBS */}
+            <Section title="🔨 Jobs" color="#f97316">
+              <StatRow label="Total jobs" value={donnyJobs.length}/>
+              <StatRow label="Active" value={activeJobs.length}/>
+              <StatRow label="In progress" value={inProgressJobs.length} color="#f97316"/>
+              <StatRow label="To do" value={todoJobs.length} color="#94a3b8"/>
+              <StatRow label="Completed" value={completedJobs.length} color="#22c55e"/>
+              <StatRow label="Overdue" value={overdueJobs.length} color={overdueJobs.length>0?'#ef4444':'#22c55e'}/>
+              {overdueJobs.length>0 && (
+                <div className="mt-2 space-y-1.5">
+                  {overdueJobs.map(j=>(
+                    <div key={j.id} className="flex items-center justify-between text-xs px-3 py-2 rounded-lg" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.15)'}}>
+                      <span className="text-white">{j.title}</span>
+                      <span style={{color:'#ef4444'}}>Due {new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Section>
+
+            {/* LABOUR */}
+            <Section title="⏱️ Labour" color="#f97316">
+              <StatRow label="Total hours logged" value={`${totalLabourHrs.toFixed(1)}h`}/>
+              <StatRow label="Total labour cost" value={`$${totalLabourCost.toFixed(0)}`} color="#22c55e"/>
+              <StatRow label="Team members" value={donnyTeam.length}/>
+              {teamHours.length>0 && (
+                <div className="mt-2 rounded-xl overflow-hidden" style={{border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <div className="grid text-xs font-mono px-4 py-2" style={{gridTemplateColumns:'1fr 60px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>MEMBER</div><div>HOURS</div><div>COST</div>
+                  </div>
+                  {teamHours.map(m=>(
+                    <div key={m.id} className="grid px-4 py-2.5 text-sm" style={{gridTemplateColumns:'1fr 60px 80px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                      <span className="text-white font-medium">{m.name}</span>
+                      <span style={{color:'#f97316'}}>{m.hrs.toFixed(1)}h</span>
+                      <span style={{color:'#22c55e'}}>${m.pay.toFixed(0)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {teamHours.length===0 && <div className="text-xs" style={{color:'rgba(148,163,184,0.3)'}}>No timesheets logged yet</div>}
+            </Section>
+
+            {/* COSTS */}
+            <Section title="💰 Costs" color="#22c55e">
+              <StatRow label="Total costs tracked" value={`$${totalMaterialCost.toFixed(0)}`} color="#22c55e"/>
+              <StatRow label="Materials" value={`$${matByType.material.toFixed(0)}`} color="#22c55e"/>
+              <StatRow label="Labour (daily)" value={`$${matByType.labour.toFixed(0)}`} color="#f97316"/>
+              <StatRow label="Other" value={`$${matByType.other.toFixed(0)}`} color="#a78bfa"/>
+              <StatRow label="Combined (labour + costs)" value={`$${(totalLabourCost+totalMaterialCost).toFixed(0)}`} color="#00c8ff"/>
+            </Section>
+
+            {/* EXTRA MATERIALS */}
+            {donnyMaterialsLog.length > 0 && (
+              <Section title="📦 Extra Materials Logged" color="#f97316">
+                <StatRow label="Total items logged" value={donnyMaterialsLog.length}/>
+                <div className="mt-2 space-y-2">
+                  {recentMaterials.map(m=>{
+                    const job=donnyJobs.find(j=>j.id===m.jobId);
+                    return(
+                      <div key={m.id} className="flex items-start justify-between text-xs px-3 py-2 rounded-lg" style={{background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.12)'}}>
+                        <div>
+                          <span className="text-white font-medium">{m.item}</span>
+                          {(m.qty||m.unit)&&<span className="ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{m.qty}{m.unit?` ${m.unit}`:''}</span>}
+                          {m.note&&<div className="mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.note}</div>}
+                        </div>
+                        {job&&<span style={{color:'rgba(148,163,184,0.4)'}}>{job.title.slice(0,20)}</span>}
+                      </div>
+                    );
+                  })}
+                  {donnyMaterialsLog.length>5&&<div className="text-xs text-center" style={{color:'rgba(148,163,184,0.3)'}}>+ {donnyMaterialsLog.length-5} more items</div>}
+                </div>
+              </Section>
             )}
-            {jobsWithMistakes.length > 0 && (
-              <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(245,158,11,0.2)"}}>
-                <div className="p-4 font-semibold text-white" style={{borderBottom:"1px solid rgba(245,158,11,0.1)"}}>❌ Mistakes Log</div>
-                {jobsWithMistakes.map(j => <div key={j.id} className="p-4" style={{borderBottom:"1px solid rgba(245,158,11,0.06)"}}><div className="text-sm font-medium text-white">{j.title}</div><div className="text-sm mt-1" style={{color:"rgba(245,158,11,0.7)"}}>{j.mistakes}</div></div>)}
-              </div>
+
+            {/* SITE SAFETY */}
+            <Section title="🦺 Site Safety" color="#ef4444">
+              <StatRow label="Incidents logged" value={totalIncidents} color={totalIncidents>0?'#ef4444':'#22c55e'}/>
+              <StatRow label="Open risks" value={openRisks} color={openRisks>0?'#f59e0b':'#22c55e'}/>
+              <StatRow label="Mistakes logged" value={totalMistakes} color={totalMistakes>0?'#f59e0b':'#22c55e'}/>
+              <StatRow label="SWMS completed" value={`${completedSWMS}/${totalSWMS}`} color="#22c55e"/>
+              {totalIncidents>0&&(
+                <div className="mt-2 space-y-1.5">
+                  {Object.entries(incidentsByType).map(([type,count])=>(
+                    <div key={type} className="flex items-center justify-between text-xs px-3 py-1.5 rounded-lg" style={{background:'rgba(239,68,68,0.06)',border:'1px solid rgba(239,68,68,0.12)'}}>
+                      <span className="text-white capitalize">{type.replace('_',' ')}</span>
+                      <span style={{color:'#ef4444'}}>{count}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Section>
+
+            {/* SCHEDULER */}
+            {thisWeekAssignments.length>0&&(
+              <Section title="🗓️ Upcoming Schedule" color="#3b82f6">
+                {thisWeekAssignments.map((entry,i)=>{
+                  const job=donnyJobs.find(j=>j.id===entry.jobId);
+                  const member=donnyTeam.find(m=>m.id===entry.memberId);
+                  return(
+                    <div key={i} className="flex items-center justify-between text-xs py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <span className="text-white font-medium">{member?.name||'?'}</span>
+                      <span style={{color:'rgba(148,163,184,0.5)'}}>{new Date(entry.date+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</span>
+                      <span style={{color:'#3b82f6'}}>{job?.title?.slice(0,25)||'?'}</span>
+                    </div>
+                  );
+                })}
+              </Section>
             )}
+
+            {/* SUBCONTRACTORS */}
+            {donnySubs.length>0&&(
+              <Section title="🔩 Subcontractors" color="#f97316">
+                <StatRow label="Total subcontractors" value={donnySubs.length}/>
+                {donnySubs.map(s=>(
+                  <div key={s.id} className="flex items-center justify-between text-xs py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <span className="text-white font-medium">{s.name}</span>
+                    {s.trade&&<span style={{color:'rgba(148,163,184,0.5)'}}>{s.trade}</span>}
+                    {s.rate&&<span style={{color:'#22c55e'}}>${s.rate}/{s.rateType}</span>}
+                  </div>
+                ))}
+              </Section>
+            )}
+
+            {/* CLIENTS */}
+            {donnyClients.length>0&&(
+              <Section title="🤝 Clients" color="#3b82f6">
+                <StatRow label="Total clients" value={donnyClients.length} color="#3b82f6"/>
+                {donnyClients.map(c=>{
+                  const linked=(c.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
+                  return(
+                    <div key={c.id} className="flex items-center justify-between text-xs py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div>
+                        <span className="text-white font-medium">{c.name}</span>
+                        {c.company&&<span className="ml-2" style={{color:'rgba(148,163,184,0.5)'}}>{c.company}</span>}
+                      </div>
+                      <span style={{color:'rgba(59,130,246,0.7)'}}>{linked.length} job{linked.length!==1?'s':''}</span>
+                    </div>
+                  );
+                })}
+              </Section>
+            )}
+
           </div>
         </div>
       );
