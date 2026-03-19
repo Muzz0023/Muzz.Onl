@@ -1827,6 +1827,10 @@ function MuzzApp() {
   const [donnySchedule, setDonnySchedule] = useState(() => { try { const s=localStorage.getItem('muzz_donny_schedule'); return s?JSON.parse(s):{}; } catch { return {}; } });
   const [schedPickJob, setSchedPickJob] = useState(null);
   const [schedPickMember, setSchedPickMember] = useState(null);
+  const [schedTab, setSchedTab] = useState('week');
+  const [schedPickDay, setSchedPickDay] = useState(null);
+  const [schedPickStart, setSchedPickStart] = useState(7);
+  const [schedPickEnd, setSchedPickEnd] = useState(15);
   // Donny Subcontractors
   const [donnySubs, setDonnySubs] = useState(() => { try { const s=localStorage.getItem('muzz_donny_subs'); return s?JSON.parse(s):[]; } catch { return []; } });
   const [showAddSub, setShowAddSub] = useState(false);
@@ -13729,7 +13733,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView === 'timetable') {
     if (!isElite) return <LockedFeature featureName="Timetable" setActiveView={setActiveView} />;
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    const hours = Array.from({length:16},(_,i)=>i+7);
+    const hours = Array.from({length:24},(_,i)=>i);
     const fmt12 = (h) => h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
     const today = new Date().toLocaleDateString('en-AU',{weekday:'short'}).slice(0,3);
     const hexToRgba = (hex, a) => {
@@ -13746,7 +13750,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const saveBlock = () => {
       if (!formBlock.title.trim()) return;
       if (ttEditingId) { setTtEditingId(null); setTtTab('week'); }
-      else { setTimetableBlocks(prev=>[...prev,{...ttNewBlock,id:Date.now()}]); setTtNewBlock({title:'',type:'uni',day:'Mon',startHour:9,endHour:10,color:'#8b5cf6',location:''}); setTtTab('week'); }
+      else { setTimetableBlocks(prev=>[...prev,{...ttNewBlock,id:Date.now()}]); setTtNewBlock({title:'',type:'uni',day:'Mon',startHour:8,endHour:9,color:'#8b5cf6',location:''}); setTtTab('week'); }
     };
     const presets = ['#8b5cf6','#3b82f6','#22c55e','#ef4444','#f97316','#f59e0b','#14b8a6','#ec4899'];
     return (
@@ -14916,89 +14920,199 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // ── SCHEDULER ────────────────────────────────────────────────────────────
     if (activeView === 'donny-scheduler') {
       const saveSched = (updated) => { setDonnySchedule(updated); try { localStorage.setItem('muzz_donny_schedule', JSON.stringify(updated)); } catch {} };
+      const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      const hours = Array.from({length:24},(_,i)=>i);
+      const fmt12 = (h) => h===0?'12am':h<12?`${h}am`:h===12?'12pm':`${h-12}pm`;
       const getWeekDates = (offset) => {
         const now = new Date(); const dow = now.getDay();
-        const mon = new Date(now); mon.setDate(now.getDate() - (dow===0?6:dow-1) + offset*7);
+        const mon = new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)+offset*7);
         return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; });
       };
       const weekDates = getWeekDates(schedulerWeekOffset);
-      const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
       const todayStr = new Date().toISOString().split('T')[0];
+      const today = new Date().toLocaleDateString('en-AU',{weekday:'short'}).slice(0,3);
+      const dateKeys = weekDates.map(d=>d.toISOString().split('T')[0]);
+      // scheduleBlocks: { [dateKey]: [{id, memberId, jobId, startHour, endHour, color}] }
+      const allBlocks = Object.entries(donnySchedule).flatMap(([date, entries]) =>
+        Array.isArray(entries) ? entries.filter(e=>e.startHour!==undefined).map(e=>({...e,date})) : []
+      );
+      const memberColors = ['#f97316','#3b82f6','#22c55e','#a855f7','#ef4444','#f59e0b','#14b8a6','#ec4899'];
+      const getMemberColor = (memberId) => {
+        const idx = donnyTeam.findIndex(m=>m.id===memberId);
+        return memberColors[idx%memberColors.length]||'#f97316';
+      };
+      const hexToRgba = (hex,a) => { try { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; } catch { return `rgba(249,115,22,${a})`; }};
+
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="SCHEDULER" icon="🗓️" />
-          <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <button onClick={()=>setSchedulerWeekOffset(p=>p-1)} className="px-4 py-2 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>← Prev</button>
-              <div className="text-sm font-mono text-center" style={{color:'rgba(249,115,22,0.7)'}}>
-                {weekDates[0].toLocaleDateString('en-AU',{day:'numeric',month:'short'})} — {weekDates[6].toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})}
-                {schedulerWeekOffset===0 && <span className="ml-2 text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>This week</span>}
+          <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
+
+            {/* Tabs */}
+            <div className="flex gap-2 flex-wrap items-center justify-between">
+              <div className="flex gap-2">
+                {[{id:'week',label:'Week View'},{id:'add',label:'+ Add Block'}].map(t=>(
+                  <button key={t.id} onClick={()=>setSchedTab?setSchedTab(t.id):setTtTab(t.id)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium"
+                    style={{background:(schedTab||ttTab)===t.id?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:(schedTab||ttTab)===t.id?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.08)',color:(schedTab||ttTab)===t.id?'#f97316':'rgba(148,163,184,0.6)'}}>
+                    {t.label}
+                  </button>
+                ))}
               </div>
-              <button onClick={()=>setSchedulerWeekOffset(p=>p+1)} className="px-4 py-2 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>Next →</button>
+              <div className="flex items-center gap-2">
+                <button onClick={()=>setSchedulerWeekOffset(p=>p-1)} className="px-3 py-1.5 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>←</button>
+                <span className="text-xs font-mono" style={{color:'rgba(249,115,22,0.7)'}}>
+                  {weekDates[0].toLocaleDateString('en-AU',{day:'numeric',month:'short'})} — {weekDates[6].toLocaleDateString('en-AU',{day:'numeric',month:'short'})}
+                  {schedulerWeekOffset===0&&<span className="ml-2 px-1.5 py-0.5 rounded-full text-xs" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>This week</span>}
+                </span>
+                <button onClick={()=>setSchedulerWeekOffset(p=>p+1)} className="px-3 py-1.5 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>→</button>
+              </div>
             </div>
-            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-              {weekDates.map((date, di) => {
-                const dateStr = date.toISOString().split('T')[0];
-                const dayEntries = donnySchedule[dateStr] || [];
-                const isToday = dateStr === todayStr;
-                const isPast = dateStr < todayStr;
-                return (
-                  <div key={dateStr} style={{borderBottom: di<6 ? '1px solid rgba(255,255,255,0.04)' : 'none', opacity: isPast ? 0.6 : 1}}>
-                    <div className="flex items-start gap-3 p-4">
-                      <div className="flex-shrink-0 w-14 text-center">
-                        <div className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{dayLabels[di]}</div>
-                        <div className="text-lg font-bold mt-0.5" style={{color: isToday ? '#f97316' : 'white'}}>{date.getDate()}</div>
-                        {isToday && <div className="w-1.5 h-1.5 rounded-full mx-auto mt-1" style={{background:'#f97316'}}/>}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap gap-1.5 mb-2">
-                          {dayEntries.map((entry, ei) => {
-                            const job = donnyJobs.find(j=>j.id===entry.jobId);
-                            const member = donnyTeam.find(m=>m.id===entry.memberId);
+
+            {/* Team colour legend */}
+            {donnyTeam.length>0 && (
+              <div className="flex flex-wrap gap-2">
+                {donnyTeam.map(m=>(
+                  <div key={m.id} className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium" style={{background:`${getMemberColor(m.id)}15`,border:`1px solid ${getMemberColor(m.id)}30`,color:'white'}}>
+                    <div className="w-2.5 h-2.5 rounded-full" style={{background:getMemberColor(m.id)}}/>
+                    {m.name}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* WEEK GRID */}
+            {(!schedTab||schedTab==='week'||ttTab==='week') && (
+              <div className="rounded-2xl overflow-x-auto" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.12)'}}>
+                <div style={{minWidth:'600px'}}>
+                  {/* Header row */}
+                  <div style={{display:'grid',gridTemplateColumns:'52px repeat(7,1fr)',borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                    <div/>
+                    {days.map((d,i)=>{
+                      const isToday = dateKeys[i]===todayStr;
+                      return (
+                        <div key={d} style={{padding:'8px',textAlign:'center',fontSize:'11px',fontFamily:'monospace',fontWeight:'bold',color:isToday?'#f97316':'rgba(148,163,184,0.6)',background:isToday?'rgba(249,115,22,0.05)':'transparent'}}>
+                          <div>{d}</div>
+                          <div style={{fontSize:'10px',fontWeight:'normal',color:isToday?'rgba(249,115,22,0.6)':'rgba(148,163,184,0.3)'}}>{weekDates[i].getDate()}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* Grid body */}
+                  <div style={{display:'flex'}}>
+                    {/* Time labels */}
+                    <div style={{width:'52px',flexShrink:0}}>
+                      {hours.map(h=>(
+                        <div key={h} style={{height:'40px',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',borderTop:'1px solid rgba(249,115,22,0.05)',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
+                          {fmt12(h)}
+                        </div>
+                      ))}
+                    </div>
+                    {/* Day columns */}
+                    {days.map((d,di)=>{
+                      const dateKey = dateKeys[di];
+                      const isToday = dateKey===todayStr;
+                      const dayBlocks = allBlocks.filter(b=>b.date===dateKey);
+                      return (
+                        <div key={d} style={{flex:1,position:'relative',background:isToday?'rgba(249,115,22,0.01)':'transparent'}}>
+                          {hours.map(h=>(
+                            <div key={h} style={{height:'40px',borderTop:'1px solid rgba(249,115,22,0.05)',borderLeft:'1px solid rgba(249,115,22,0.04)'}}/>
+                          ))}
+                          {dayBlocks.map((block,bi)=>{
+                            const startIdx = block.startHour||0;
+                            const endIdx = block.endHour||startIdx+1;
+                            const ROW_H = 41;
+                            const top = startIdx*ROW_H+1;
+                            const height = (endIdx-startIdx)*ROW_H-4;
+                            const color = getMemberColor(block.memberId);
+                            const member = donnyTeam.find(m=>m.id===block.memberId);
+                            const job = donnyJobs.find(j=>j.id===block.jobId);
                             return (
-                              <div key={ei} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium" style={{background:'rgba(249,115,22,0.12)',border:'1px solid rgba(249,115,22,0.25)',color:'rgba(255,255,255,0.8)'}}>
-                                <span>{member?.name||'?'}</span>
-                                <span style={{color:'rgba(249,115,22,0.6)'}}>→</span>
-                                <span style={{color:'#f97316'}}>{job?.title?.slice(0,20)||'?'}</span>
-                                <button onClick={()=>{ const updated={...donnySchedule,[dateStr]:dayEntries.filter((_,i)=>i!==ei)}; saveSched(updated); }} style={{color:'rgba(239,68,68,0.5)',marginLeft:'2px',fontSize:'14px',lineHeight:1}}>×</button>
+                              <div key={bi}
+                                onClick={()=>{ const updated={...donnySchedule,[dateKey]:(donnySchedule[dateKey]||[]).filter(e=>e.id!==block.id)}; saveSched(updated); }}
+                                style={{position:'absolute',top:`${top}px`,left:'2px',right:'2px',height:`${height}px`,background:hexToRgba(color,0.25),border:`1px solid ${hexToRgba(color,0.7)}`,borderRadius:'6px',padding:'3px 5px',cursor:'pointer',zIndex:2,overflow:'hidden'}}>
+                                <div style={{fontSize:'11px',fontWeight:600,color:'white',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{member?.name||'?'}</div>
+                                <div style={{fontSize:'10px',color:'rgba(255,255,255,0.6)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{job?.title?.slice(0,18)||'?'}</div>
                               </div>
                             );
                           })}
                         </div>
-                        {!isPast && (
-                          <div className="flex gap-2 flex-wrap">
-                            <select value={schedPickMember||''} onChange={e=>setSchedPickMember(e.target.value||null)}
-                              className="bg-transparent text-xs focus:outline-none rounded-lg px-2 py-1" style={{border:'1px solid rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.7)',colorScheme:'dark'}}>
-                              <option value="">+ Member...</option>
-                              {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
-                            </select>
-                            <select value={schedPickJob||''} onChange={e=>setSchedPickJob(e.target.value||null)}
-                              className="bg-transparent text-xs focus:outline-none rounded-lg px-2 py-1" style={{border:'1px solid rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.7)',colorScheme:'dark'}}>
-                              <option value="">+ Job...</option>
-                              {donnyJobs.filter(j=>!j.completed).map(j=><option key={j.id} value={j.id}>{j.title}</option>)}
-                            </select>
-                            {schedPickMember && schedPickJob && (
-                              <button onClick={()=>{
-                                const entry={jobId:schedPickJob,memberId:schedPickMember};
-                                const updated={...donnySchedule,[dateStr]:[...(donnySchedule[dateStr]||[]),entry]};
-                                saveSched(updated); setSchedPickMember(null); setSchedPickJob(null);
-                              }} className="text-xs px-3 py-1 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.2)',color:'#f97316',border:'1px solid rgba(249,115,22,0.4)'}}>Assign</button>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ADD BLOCK FORM */}
+            {(schedTab==='add') && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// ADD SCHEDULE BLOCK</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
+                    <select value={schedPickMember||''} onChange={e=>setSchedPickMember(e.target.value||null)}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">Select member...</option>
+                      {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB</div>
+                    <select value={schedPickJob||''} onChange={e=>setSchedPickJob(e.target.value||null)}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">Select job...</option>
+                      {donnyJobs.filter(j=>!j.completed).map(j=><option key={j.id} value={j.id}>{j.title}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DAY</div>
+                    <select value={schedPickDay||dateKeys[0]} onChange={e=>setSchedPickDay?setSchedPickDay(e.target.value):null}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      {days.map((d,i)=><option key={d} value={dateKeys[i]}>{d} {weekDates[i].getDate()}</option>)}
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>FROM</div>
+                      <select value={schedPickStart!==undefined?schedPickStart:7} onChange={e=>setSchedPickStart?setSchedPickStart(parseInt(e.target.value)):null}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                        {hours.map(h=><option key={h} value={h}>{fmt12(h)}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TO</div>
+                      <select value={schedPickEnd!==undefined?schedPickEnd:15} onChange={e=>setSchedPickEnd?setSchedPickEnd(parseInt(e.target.value)):null}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                        {hours.filter(h=>h>(schedPickStart!==undefined?schedPickStart:7)).map(h=><option key={h} value={h}>{fmt12(h)}</option>)}
+                      </select>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+                <button onClick={()=>{
+                  if(!schedPickMember||!schedPickJob) return;
+                  const dateKey = schedPickDay||dateKeys[0];
+                  const entry = { id:Date.now(), memberId:schedPickMember, jobId:schedPickJob, startHour:schedPickStart!==undefined?schedPickStart:7, endHour:schedPickEnd!==undefined?schedPickEnd:15 };
+                  const updated = {...donnySchedule,[dateKey]:[...(donnySchedule[dateKey]||[]),entry]};
+                  saveSched(updated);
+                  setSchedPickMember(null); setSchedPickJob(null);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                  + Add to Schedule
+                </button>
+              </div>
+            )}
+
+            {donnyTeam.length===0 && (
+              <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add team members first to start scheduling</div>
+              </div>
+            )}
           </div>
         </div>
       );
     }
 
-    // ── RECURRING JOBS ────────────────────────────────────────────────────────
     if (activeView === 'donny-recurring') {
       const saveRecurring = (updated) => { setDonnyRecurring(updated); try { localStorage.setItem('muzz_donny_recurring', JSON.stringify(updated)); } catch {} };
       const freqLabels = { daily:'Daily', weekly:'Weekly', fortnightly:'Fortnightly', monthly:'Monthly', quarterly:'Quarterly', yearly:'Yearly' };
