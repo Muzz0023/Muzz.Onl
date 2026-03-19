@@ -2501,10 +2501,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️' },
-                  { section:'JOBS', id:'donny-joblog', label:'Job Log', icon:'📝' },
+                  { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', icon:'📋' },
                   { section:'JOBS', id:'donny-recurring', label:'Recurring', icon:'🔁' },
                   { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
-                  { section:'TEAM', id:'donny-timesheets', label:'Timesheets', icon:'⏱️' },
                   { section:'TEAM', id:'donny-subs', label:'Subcontractors', icon:'🔩' },
                   { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝' },
                   { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸' },
@@ -14042,10 +14041,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {[
                 {label:"Jobs",       emoji:"🔨", view:"donny-masterview",  key:"d-jobs"},
                 {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler",   key:"d-sched"},
-                {label:"Job Log",    emoji:"📝", view:"donny-joblog",       key:"d-log"},
+                {label:"Daily Report",emoji:"📋", view:"donny-dailyreport", key:"d-report"},
                 {label:"Recurring",  emoji:"🔁", view:"donny-recurring",   key:"d-recur"},
                 {label:"Team",       emoji:"👷", view:"donny-team",         key:"d-team"},
-                {label:"Timesheets", emoji:"⏱️", view:"donny-timesheets",  key:"d-time"},
                 {label:"Subs",       emoji:"🔩", view:"donny-subs",         key:"d-subs"},
                 {label:"Clients",    emoji:"🤝", view:"donny-clients",      key:"d-clients"},
                 {label:"Photos",     emoji:"📸", view:"donny-photos",       key:"d-photos"},
@@ -14271,131 +14269,233 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     // JOB LOG
-    if (activeView === 'donny-joblog') {
-      const saveNotes = (updated) => {
-        setDonnyNotes(updated);
-        try { localStorage.setItem('muzz_donny_notes', JSON.stringify(updated)); } catch {}
-      };
-      const activeJob = noteJobId ? donnyJobs.find(j => j.id === noteJobId) : null;
-      const jobNotes = activeJob ? (donnyNotes[activeJob.id] || []) : [];
-      const today = new Date().toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+    if (activeView === 'donny-dailyreport') {
+      const saveNotes = (updated) => { setDonnyNotes(updated); try { localStorage.setItem('muzz_donny_notes', JSON.stringify(updated)); } catch {} };
+      const saveTS = (updated) => { setDonnyTimesheets(updated); try { localStorage.setItem('muzz_donny_timesheets', JSON.stringify(updated)); } catch {} };
 
-      if (activeJob) {
+      // DRILL-IN: specific job
+      if (noteJobId) {
+        const activeJob = donnyJobs.find(j => j.id === noteJobId);
+        if (!activeJob) { setNoteJobId(null); }
+        const jobNotes = activeJob ? (donnyNotes[activeJob.id] || []) : [];
+        const today = new Date().toISOString().split('T')[0];
+        const todayStr = new Date().toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long'});
+
+        // Timesheet data for this job
+        const jobTS = donnyTimesheets.filter(e => e.jobId === noteJobId);
+        const jobTotals = donnyTeam.map(m => {
+          const entries = jobTS.filter(e => e.memberId === m.id);
+          const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+          const pay = hrs * (parseFloat(m.hourlyRate)||0);
+          return { member: m, hrs, pay };
+        }).filter(x => x.hrs > 0);
+        const totalHrs = jobTotals.reduce((s,x) => s + x.hrs, 0);
+        const totalPay = jobTotals.reduce((s,x) => s + x.pay, 0);
+
         return (
           <div className="min-h-screen bg-transparent pb-24">
             <Sidebar /><SaveIndicator />
             <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
               <div className="max-w-4xl mx-auto">
-                <button onClick={() => setNoteJobId(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Job Log</button>
+                <button onClick={() => { setNoteJobId(null); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Daily Reports</button>
                 <div className="flex items-center gap-3">
-                  <div className="text-3xl">📝</div>
+                  <div className="text-3xl">📋</div>
                   <div>
-                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// JOB LOG</div>
-                    <h1 className="text-2xl font-bold text-white">{activeJob.title}</h1>
-                    {activeJob.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{activeJob.jobNumber}</div>}
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// DAILY REPORT</div>
+                    <h1 className="text-2xl font-bold text-white">{activeJob?.title}</h1>
+                    {activeJob?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{activeJob.jobNumber} · {todayStr}</div>}
                   </div>
                 </div>
               </div>
             </div>
             <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW ENTRY · {today.toUpperCase()}</div>
-                <textarea
-                  value={newNoteText}
-                  onChange={e => setNewNoteText(e.target.value)}
-                  placeholder="What happened today? What needs to be done tomorrow?"
-                  rows={4}
-                  className="w-full bg-transparent text-white focus:outline-none text-sm resize-none leading-relaxed"
-                  style={{borderBottom:'1px solid rgba(249,115,22,0.15)',paddingBottom:'12px'}}
-                />
-                <button onClick={() => {
-                  if (!newNoteText.trim()) return;
-                  const updated = {
-                    ...donnyNotes,
-                    [activeJob.id]: [
-                      { id: Date.now(), text: newNoteText.trim(), createdAt: new Date().toISOString() },
-                      ...(donnyNotes[activeJob.id] || [])
-                    ]
-                  };
-                  saveNotes(updated);
-                  setNewNoteText('');
-                }} className="w-full py-3 rounded-xl text-sm font-bold text-white"
-                  style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                  + Post Update
-                </button>
-              </div>
-              {jobNotes.length > 0 ? (
-                <div className="space-y-3">
-                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// {jobNotes.length} PREVIOUS ENTR{jobNotes.length===1?'Y':'IES'}</div>
-                  {jobNotes.map(note => (
-                    <div key={note.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.5)'}}>
-                          {new Date(note.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(note.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
-                        </div>
-                        <button onClick={() => saveNotes({...donnyNotes,[activeJob.id]:jobNotes.filter(n=>n.id!==note.id)})}
-                          className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
-                      </div>
-                      <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">{note.text}</div>
+
+              {/* ── HOURS SECTION ── */}
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="px-5 py-3 font-semibold text-sm text-white" style={{borderBottom:'1px solid rgba(249,115,22,0.1)',background:'rgba(249,115,22,0.05)'}}>⏱️ Log Hours Today</div>
+                <div className="p-4 space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
+                      <select value={tsSelectedMember||''} onChange={e=>setTsSelectedMember(e.target.value||null)}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                        <option value="">Select member...</option>
+                        {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}{m.hourlyRate?` ($${m.hourlyRate}/hr)`:''}</option>)}
+                      </select>
                     </div>
-                  ))}
+                    <div>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>⏱️ HOURS</div>
+                      <input type="number" value={tsHours} onChange={e=>setTsHours(e.target.value)} placeholder="e.g. 8" min="0" step="0.5"
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION (OPTIONAL)</div>
+                    <input value={tsDesc} onChange={e=>setTsDesc(e.target.value)} placeholder="e.g. Cable install, Level 2"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  {tsSelectedMember && tsHours && (
+                    <div className="rounded-xl p-2.5 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                      <span className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Pay: </span>
+                      <span className="font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>m.id===tsSelectedMember)?.hourlyRate)||0)).toFixed(2)}</span>
+                    </div>
+                  )}
+                  <button onClick={() => {
+                    if (!tsSelectedMember||!tsHours) return;
+                    const entry = { id:Date.now(), jobId:noteJobId, memberId:tsSelectedMember, date:today, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString() };
+                    saveTS([entry,...donnyTimesheets]);
+                    setTsHours(''); setTsDesc(''); setTsSelectedMember(null);
+                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                    + Log Hours
+                  </button>
+                  {/* Today's hours summary */}
+                  {jobTotals.length > 0 && (
+                    <div className="rounded-xl overflow-hidden" style={{border:'1px solid rgba(255,255,255,0.05)'}}>
+                      <div className="grid text-xs font-mono px-4 py-2" style={{gridTemplateColumns:'1fr 70px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                        <div>MEMBER</div><div>HOURS</div><div>PAY</div>
+                      </div>
+                      {jobTotals.map(x => (
+                        <div key={x.member.id} className="grid px-4 py-2 text-sm" style={{gridTemplateColumns:'1fr 70px 80px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                          <span className="text-white">{x.member.name}</span>
+                          <span style={{color:'#f97316'}}>{x.hrs.toFixed(1)}h</span>
+                          <span style={{color:'#22c55e'}}>${x.pay.toFixed(0)}</span>
+                        </div>
+                      ))}
+                      <div className="grid px-4 py-2" style={{gridTemplateColumns:'1fr 70px 80px',background:'rgba(249,115,22,0.05)',borderTop:'1px solid rgba(249,115,22,0.1)'}}>
+                        <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL</div>
+                        <div className="text-sm font-black" style={{color:'#f97316'}}>{totalHrs.toFixed(1)}h</div>
+                        <div className="text-sm font-black" style={{color:'#22c55e'}}>${totalPay.toFixed(0)}</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No entries yet — post your first update above</div>
+              </div>
+
+              {/* ── SITE DIARY SECTION ── */}
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="px-5 py-3 font-semibold text-sm text-white" style={{borderBottom:'1px solid rgba(249,115,22,0.1)',background:'rgba(249,115,22,0.05)'}}>📝 Site Diary</div>
+                <div className="p-4 space-y-3">
+                  <textarea
+                    value={newNoteText}
+                    onChange={e => setNewNoteText(e.target.value)}
+                    placeholder="What happened today? Any issues, progress, or notes for tomorrow?"
+                    rows={4}
+                    className="w-full bg-transparent text-white focus:outline-none text-sm resize-none leading-relaxed"
+                    style={{borderBottom:'1px solid rgba(249,115,22,0.15)',paddingBottom:'12px'}}
+                  />
+                  <button onClick={() => {
+                    if (!newNoteText.trim()) return;
+                    const updated = { ...donnyNotes, [activeJob.id]: [{ id:Date.now(), text:newNoteText.trim(), createdAt:new Date().toISOString() }, ...(donnyNotes[activeJob.id]||[])] };
+                    saveNotes(updated);
+                    setNewNoteText('');
+                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                    + Post Update
+                  </button>
+                </div>
+              </div>
+
+              {/* ── HISTORY FEED ── */}
+              {(jobNotes.length > 0 || jobTS.length > 0) && (
+                <div className="space-y-3">
+                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// HISTORY</div>
+                  {/* Merge and sort notes + timesheet entries by date */}
+                  {[
+                    ...jobNotes.map(n => ({ ...n, _type:'note' })),
+                    ...jobTS.map(e => ({ ...e, _type:'ts' }))
+                  ].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).map(item => {
+                    if (item._type === 'note') {
+                      return (
+                        <div key={'n'+item.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>📝 diary</span>
+                              <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.4)'}}>{new Date(item.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(item.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</span>
+                            </div>
+                            <button onClick={() => saveNotes({...donnyNotes,[activeJob.id]:jobNotes.filter(n=>n.id!==item.id)})}
+                              className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          </div>
+                          <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">{item.text}</div>
+                        </div>
+                      );
+                    } else {
+                      const m = donnyTeam.find(x=>x.id===item.memberId);
+                      const pay = (item.hours||0)*(parseFloat(m?.hourlyRate)||0);
+                      return (
+                        <div key={'t'+item.id} className="rounded-2xl px-4 py-3 flex items-center justify-between" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.2)'}}>⏱️ hours</span>
+                            <div>
+                              <div className="text-sm text-white font-medium">{m?.name||'Unknown'} · <span style={{color:'#f97316'}}>{item.hours}h</span></div>
+                              <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{item.date}{item.desc?` · ${item.desc}`:''}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold" style={{color:'#22c55e'}}>${pay.toFixed(0)}</span>
+                            <button onClick={() => saveTS(donnyTimesheets.filter(e=>e.id!==item.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
                 </div>
               )}
+
             </div>
           </div>
         );
       }
 
+      // JOB LIST
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="JOB LOG" icon="📝" />
+          <DonnyHeader title="DAILY REPORTS" icon="📋" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             {donnyJobs.length === 0 ? (
               <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                <div className="text-4xl mb-3">📝</div>
+                <div className="text-4xl mb-3">📋</div>
                 <div className="text-white font-bold mb-1">No jobs yet</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start logging</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start daily reports</div>
               </div>
             ) : (
               <>
-                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB TO LOG</div>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
                 {donnyJobs.filter(j=>!j.completed).map(job => {
-                  const entries = donnyNotes[job.id]||[];
-                  const lastEntry = entries[0];
+                  const notes = donnyNotes[job.id]||[];
+                  const tsEntries = donnyTimesheets.filter(e=>e.jobId===job.id);
+                  const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                  const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))[0];
                   return (
-                    <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); }}
+                    <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
                       className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
                       style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📝</div>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📋</div>
                       <div className="flex-1 min-w-0">
                         <div className="text-white font-semibold truncate">{job.title}</div>
                         <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
-                          {job.jobNumber ? `#${job.jobNumber} · ` : ''}{entries.length} entr{entries.length===1?'y':'ies'}
-                          {lastEntry ? ` · Last: ${new Date(lastEntry.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ' · No entries yet'}
+                          {job.jobNumber?`#${job.jobNumber} · `:''}{notes.length} entr{notes.length===1?'y':'ies'} · {totalHrs.toFixed(1)}h logged
+                          {lastActivity ? ` · ${new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
                         </div>
                       </div>
                       <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
                     </button>
                   );
                 })}
-                {donnyJobs.filter(j=>j.completed && (donnyNotes[j.id]||[]).length>0).length > 0 && (
+                {donnyJobs.filter(j=>j.completed).length > 0 && (
                   <>
                     <div className="text-xs font-mono px-1 pt-2" style={{color:'rgba(34,197,94,0.5)',letterSpacing:'2px'}}>// COMPLETED JOBS</div>
-                    {donnyJobs.filter(j=>j.completed && (donnyNotes[j.id]||[]).length>0).map(job => {
-                      const entries = donnyNotes[job.id]||[];
+                    {donnyJobs.filter(j=>j.completed).map(job => {
+                      const notes = donnyNotes[job.id]||[];
+                      const tsEntries = donnyTimesheets.filter(e=>e.jobId===job.id);
+                      const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                       return (
-                        <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); }}
+                        <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
                           className="w-full rounded-2xl p-4 text-left flex items-center gap-4 opacity-60"
                           style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.1)'}}>
                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)'}}>✅</div>
                           <div className="flex-1 min-w-0">
                             <div className="text-white font-semibold truncate">{job.title}</div>
-                            <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{entries.length} entr{entries.length===1?'y':'ies'}</div>
+                            <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{notes.length} entr{notes.length===1?'y':'ies'} · {totalHrs.toFixed(1)}h logged</div>
                           </div>
                           <span style={{color:'rgba(148,163,184,0.3)',fontSize:'20px'}}>›</span>
                         </button>
@@ -15293,171 +15393,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     // ── TIMESHEETS ──────────────────────────────────────────────────────────
-    if (activeView === 'donny-timesheets') {
-      const saveTS = (updated) => { setDonnyTimesheets(updated); try { localStorage.setItem('muzz_donny_timesheets', JSON.stringify(updated)); } catch {} };
-
-      // Drill-in: specific job selected
-      if (tsSelectedJob) {
-        const job = donnyJobs.find(j => j.id === tsSelectedJob);
-        const jobTotals = donnyTeam.map(m => {
-          const entries = donnyTimesheets.filter(e => e.jobId === tsSelectedJob && e.memberId === m.id);
-          const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-          const pay = hrs * (parseFloat(m.hourlyRate)||0);
-          return { member: m, hrs, pay, entries };
-        }).filter(x => x.hrs > 0);
-        const totalHrs = jobTotals.reduce((s,x) => s + x.hrs, 0);
-        const totalPay = jobTotals.reduce((s,x) => s + x.pay, 0);
-        const allEntries = donnyTimesheets.filter(e => e.jobId === tsSelectedJob);
-
-        return (
-          <div className="min-h-screen bg-transparent pb-24">
-            <Sidebar /><SaveIndicator />
-            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
-              <div className="max-w-4xl mx-auto">
-                <button onClick={() => setTsSelectedJob(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Timesheets</button>
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl">⏱️</div>
-                  <div>
-                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// TIMESHEETS</div>
-                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
-                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-              {/* Log entry */}
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG HOURS</div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
-                    <select value={tsSelectedMember||''} onChange={e=>setTsSelectedMember(e.target.value||null)}
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                      <option value="">Select member...</option>
-                      {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}{m.hourlyRate?` ($${m.hourlyRate}/hr)`:''}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
-                    <input type="date" value={tsDate} onChange={e=>setTsDate(e.target.value)}
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>⏱️ HOURS</div>
-                    <input type="number" value={tsHours} onChange={e=>setTsHours(e.target.value)} placeholder="e.g. 8" min="0" step="0.5"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION</div>
-                    <input value={tsDesc} onChange={e=>setTsDesc(e.target.value)} placeholder="e.g. Cable install"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                </div>
-                {tsSelectedMember && tsHours && (
-                  <div className="rounded-xl p-3 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
-                    <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>Pay: </span>
-                    <span className="text-lg font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>m.id===tsSelectedMember)?.hourlyRate)||0)).toFixed(2)}</span>
-                  </div>
-                )}
-                <button onClick={() => {
-                  if (!tsSelectedMember||!tsHours) return;
-                  const entry = { id:Date.now(), jobId:tsSelectedJob, memberId:tsSelectedMember, date:tsDate, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString() };
-                  saveTS([entry,...donnyTimesheets]);
-                  setTsHours(''); setTsDesc('');
-                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ Log Hours</button>
-              </div>
-              {/* Summary */}
-              {jobTotals.length > 0 && (
-                <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 80px 80px 100px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>MEMBER</div><div>RATE</div><div>HOURS</div><div>PAY</div>
-                  </div>
-                  {jobTotals.map(x => (
-                    <div key={x.member.id} className="grid px-5 py-3 text-sm items-center" style={{gridTemplateColumns:'1fr 80px 80px 100px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
-                      <div className="text-white font-medium">{x.member.name}</div>
-                      <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>${x.member.hourlyRate||0}/hr</div>
-                      <div className="font-bold" style={{color:'#f97316'}}>{x.hrs.toFixed(1)}h</div>
-                      <div className="font-black" style={{color:'#22c55e'}}>${x.pay.toFixed(2)}</div>
-                    </div>
-                  ))}
-                  <div className="grid px-5 py-3" style={{gridTemplateColumns:'1fr 80px 80px 100px',background:'rgba(249,115,22,0.05)',borderTop:'1px solid rgba(249,115,22,0.15)'}}>
-                    <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL</div>
-                    <div/>
-                    <div className="text-sm font-black" style={{color:'#f97316'}}>{totalHrs.toFixed(1)}h</div>
-                    <div className="text-sm font-black" style={{color:'#22c55e'}}>${totalPay.toFixed(2)}</div>
-                  </div>
-                </div>
-              )}
-              {/* Entries */}
-              {allEntries.length > 0 && (
-                <div className="space-y-2">
-                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// ALL ENTRIES</div>
-                  {allEntries.map(entry => {
-                    const m = donnyTeam.find(x=>x.id===entry.memberId);
-                    const pay = (entry.hours||0)*(parseFloat(m?.hourlyRate)||0);
-                    return (
-                      <div key={entry.id} className="rounded-xl px-4 py-3 flex items-center justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                        <div>
-                          <div className="text-sm text-white font-medium">{m?.name||'Unknown'} <span className="text-xs ml-2" style={{color:'rgba(249,115,22,0.6)'}}>{entry.hours}h</span></div>
-                          <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{entry.date}{entry.desc?` · ${entry.desc}`:''}</div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-bold" style={{color:'#22c55e'}}>${pay.toFixed(2)}</span>
-                          <button onClick={() => saveTS(donnyTimesheets.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      }
-
-      // Job list view
-      return (
-        <div className="min-h-screen bg-transparent pb-24">
-          <Sidebar /><SaveIndicator />
-          <DonnyHeader title="TIMESHEETS" icon="⏱️" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
-            {donnyJobs.filter(j=>!j.completed).length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                <div className="text-4xl mb-3">⏱️</div>
-                <div className="text-white font-bold mb-1">No active jobs</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log timesheets</div>
-              </div>
-            ) : (
-              <>
-                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
-                {donnyJobs.filter(j=>!j.completed).map(job => {
-                  const entries = donnyTimesheets.filter(e=>e.jobId===job.id);
-                  const totalHrs = entries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
-                  const totalPay = entries.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); },0);
-                  return (
-                    <button key={job.id} onClick={() => { setTsSelectedJob(job.id); setTsSelectedMember(null); }}
-                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
-                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>⏱️</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-white font-semibold truncate">{job.title}</div>
-                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
-                          {job.jobNumber?`#${job.jobNumber} · `:''}{entries.length} entries · {totalHrs.toFixed(1)}h logged
-                          {totalPay > 0 ? ` · $${totalPay.toFixed(0)}` : ''}
-                        </div>
-                      </div>
-                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
-                    </button>
-                  );
-                })}
-              </>
-            )}
-          </div>
-        </div>
-      );
-    }
-
     if (activeView === 'donny-clients') {
       const saveClients = (updated) => { setDonnyClients(updated); try { localStorage.setItem('muzz_donny_clients', JSON.stringify(updated)); } catch {} };
       return (
