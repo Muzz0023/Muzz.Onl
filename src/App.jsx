@@ -15393,6 +15393,198 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     // ── TIMESHEETS ──────────────────────────────────────────────────────────
+    // ── PRICE BOOK ──────────────────────────────────────────────────────────
+    if (activeView === 'donny-suppliers') {
+      const saveSuppliers = (updated) => { setDonnySuppliers(updated); try { localStorage.setItem('muzz_donny_suppliers', JSON.stringify(updated)); } catch {} };
+
+      // Drill-in: editing a supplier
+      if (editingSupplierId) {
+        const supplier = donnySuppliers.find(s => s.id === editingSupplierId);
+        if (!supplier) { setEditingSupplierId(null); }
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => { setEditingSupplierId(null); setSupplierNewItem({desc:'',unit:'',price:''}); }} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(34,197,94,0.8)"}}>← Price Book</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">🏭</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(34,197,94,0.5)",letterSpacing:"2px"}}>// PRICE BOOK</div>
+                    <h1 className="text-2xl font-bold text-white">{supplier?.name}</h1>
+                    {supplier?.contact && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>{supplier.contact}{supplier.phone ? ` · ${supplier.phone}` : ''}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              {/* Contact info */}
+              <div className="grid grid-cols-2 gap-3">
+                {[{k:'name',l:'SUPPLIER NAME'},{k:'contact',l:'CONTACT'},{k:'phone',l:'PHONE'},{k:'email',l:'EMAIL'}].map(f=>(
+                  <div key={f.k} className="rounded-xl p-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.1)'}}>
+                    <div className="text-xs font-mono mb-1" style={{color:'rgba(34,197,94,0.5)'}}>{f.l}</div>
+                    <input value={supplier[f.k]||''} onChange={e=>saveSuppliers(donnySuppliers.map(s=>s.id===supplier.id?{...s,[f.k]:e.target.value}:s))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none" placeholder="—"/>
+                  </div>
+                ))}
+              </div>
+              {/* Add item */}
+              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.6)'}}>// ADD ITEM TO PRICE BOOK</div>
+                <div className="grid gap-3" style={{gridTemplateColumns:'1fr 80px 90px'}}>
+                  <div>
+                    <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>ITEM</div>
+                    <input value={supplierNewItem.desc} onChange={e=>setSupplierNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. 2.5mm TPS Cable"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>UNIT</div>
+                    <input value={supplierNewItem.unit} onChange={e=>setSupplierNewItem(p=>({...p,unit:e.target.value}))} placeholder="m / ea"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>PRICE ($)</div>
+                    <input type="number" value={supplierNewItem.price} onChange={e=>setSupplierNewItem(p=>({...p,price:e.target.value}))} placeholder="0.00"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+                <button onClick={()=>{
+                  if(!supplierNewItem.desc.trim()||!supplierNewItem.price) return;
+                  saveSuppliers(donnySuppliers.map(s=>s.id===supplier.id?{...s,items:[...(s.items||[]),{...supplierNewItem}]}:s));
+                  setSupplierNewItem({desc:'',unit:'',price:''});
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>
+                  + Add Item
+                </button>
+              </div>
+              {/* Item list */}
+              {(supplier?.items||[]).length > 0 ? (
+                <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.12)'}}>
+                  <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 80px 90px 40px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>ITEM</div><div>UNIT</div><div>PRICE</div><div></div>
+                  </div>
+                  {(supplier.items||[]).map((item,i)=>(
+                    <div key={i} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 80px 90px 40px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                      <span className="text-white text-sm">{item.desc}</span>
+                      <span className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>{item.unit||'—'}</span>
+                      <span className="text-sm font-bold" style={{color:'#22c55e'}}>${parseFloat(item.price).toFixed(2)}</span>
+                      <button onClick={()=>saveSuppliers(donnySuppliers.map(s=>s.id===supplier.id?{...s,items:s.items.filter((_,j)=>j!==i)}:s))}
+                        style={{color:'rgba(239,68,68,0.5)',fontSize:'16px',textAlign:'center'}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.06)'}}>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No items yet — add your first price above</div>
+                </div>
+              )}
+              <button onClick={()=>{ if(window.confirm(`Remove ${supplier.name}?`)){ saveSuppliers(donnySuppliers.filter(s=>s.id!==supplier.id)); setEditingSupplierId(null); }}}
+                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete Supplier</button>
+            </div>
+          </div>
+        );
+      }
+
+      // LIST VIEW
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="PRICE BOOK" icon="🏭" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+
+            {/* Master table at top */}
+            {donnySuppliers.length > 0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(34,197,94,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(34,197,94,0.7)'}}>// SUPPLIER TABLE</div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e'}}>{donnySuppliers.length} suppliers</span>
+                    <button onClick={()=>setShowAddSupplier(s=>!s)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(34,197,94,0.15)',border:'1px solid rgba(34,197,94,0.3)',color:'#22c55e'}}>
+                      {showAddSupplier ? '✕ Cancel' : '+ Add Supplier'}
+                    </button>
+                  </div>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 80px 60px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>NAME</div><div>CONTACT</div><div>PHONE</div><div>ITEMS</div>
+                </div>
+                {donnySuppliers.map((s,i)=>(
+                  <button key={s.id} onClick={()=>setEditingSupplierId(s.id)}
+                    className="w-full grid px-5 py-3 text-sm items-center text-left hover:bg-white/[0.02]"
+                    style={{gridTemplateColumns:'1fr 1fr 80px 60px',borderBottom:i<donnySuppliers.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(34,197,94,0.15)',color:'#22c55e'}}>{s.name.charAt(0).toUpperCase()}</div>
+                      <span className="text-white font-medium truncate">{s.name}</span>
+                    </div>
+                    <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{s.contact||'—'}</div>
+                    <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>{s.phone||'—'}</div>
+                    <div className="text-xs font-bold" style={{color:'#22c55e'}}>{(s.items||[]).length}</div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Add supplier form */}
+            {(showAddSupplier || donnySuppliers.length === 0) && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.6)'}}>// NEW SUPPLIER</div>
+                  {donnySuppliers.length > 0 && <button onClick={()=>setShowAddSupplier(false)} style={{color:'rgba(148,163,184,0.4)',fontSize:'18px'}}>×</button>}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[{k:'name',l:'🏭 SUPPLIER NAME',p:'Haymans Electrical'},{k:'contact',l:'👤 CONTACT',p:'John Smith'},{k:'phone',l:'📞 PHONE',p:'07 XXXX XXXX'},{k:'email',l:'📧 EMAIL',p:'sales@supplier.com.au'}].map(f=>(
+                    <div key={f.k}>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>{f.l}</div>
+                      <input value={newSupplier[f.k]} onChange={e=>setNewSupplier(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={()=>{
+                  if(!newSupplier.name.trim()) return;
+                  saveSuppliers([...donnySuppliers,{...newSupplier,id:Date.now(),items:[]}]);
+                  setNewSupplier({name:'',contact:'',phone:'',email:'',items:[]});
+                  setShowAddSupplier(false);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>
+                  Add Supplier
+                </button>
+              </div>
+            )}
+
+            {donnySuppliers.length === 0 && !showAddSupplier && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.06)'}}>
+                <div className="text-4xl mb-3">🏭</div>
+                <div className="text-white font-bold mb-1">No suppliers yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add suppliers and their material prices</div>
+              </div>
+            )}
+
+            {/* Supplier cards */}
+            {donnySuppliers.length > 0 && !showAddSupplier && (
+              <>
+                <div className="text-xs font-mono px-1" style={{color:'rgba(34,197,94,0.5)',letterSpacing:'2px'}}>// TAP TO VIEW & EDIT</div>
+                {donnySuppliers.map(supplier=>(
+                  <button key={supplier.id} onClick={()=>setEditingSupplierId(supplier.id)}
+                    className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                    style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.12)'}}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0" style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.2)',color:'#22c55e'}}>
+                      {supplier.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-semibold">{supplier.name}</div>
+                      <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
+                        {supplier.contact||''}{supplier.phone?` · ${supplier.phone}`:''} · {(supplier.items||[]).length} item{(supplier.items||[]).length!==1?'s':''}
+                      </div>
+                    </div>
+                    <span style={{color:'rgba(34,197,94,0.5)',fontSize:'20px'}}>›</span>
+                  </button>
+                ))}
+              </>
+            )}
+
+          </div>
+        </div>
+      );
+    }
+
     if (activeView === 'donny-clients') {
       const saveClients = (updated) => { setDonnyClients(updated); try { localStorage.setItem('muzz_donny_clients', JSON.stringify(updated)); } catch {} };
       return (
