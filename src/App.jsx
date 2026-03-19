@@ -15394,6 +15394,193 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── TIMESHEETS ──────────────────────────────────────────────────────────
     // ── PRICE BOOK ──────────────────────────────────────────────────────────
+    // ── SUBCONTRACTORS ───────────────────────────────────────────────────────
+    if (activeView === 'donny-subs') {
+      const saveSubs = (updated) => { setDonnySubs(updated); try { localStorage.setItem('muzz_donny_subs', JSON.stringify(updated)); } catch {} };
+
+      // Drill-in: editing a sub
+      if (editingSubId) {
+        const sub = donnySubs.find(s => s.id === editingSubId);
+        if (!sub) { setEditingSubId(null); }
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => setEditingSubId(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Subcontractors</button>
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>{sub?.name?.charAt(0).toUpperCase()}</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// SUBCONTRACTOR</div>
+                    <h1 className="text-2xl font-bold text-white">{sub?.name}</h1>
+                    {sub?.trade && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>{sub.trade}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              {/* Editable fields */}
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="grid grid-cols-2 gap-4">
+                  {[{k:'name',l:'👤 NAME'},{k:'company',l:'🏢 COMPANY'},{k:'trade',l:'🔧 TRADE'},{k:'phone',l:'📞 PHONE'},{k:'email',l:'📧 EMAIL'},{k:'abn',l:'ABN'},{k:'licenceNo',l:'LICENCE NO.'}].map(f=>(
+                    <div key={f.k}>
+                      <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>{f.l}</div>
+                      <input value={sub[f.k]||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,[f.k]:e.target.value}:s))}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  ))}
+                  <div>
+                    <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>💰 RATE</div>
+                    <div className="flex gap-2 items-end">
+                      <input value={sub.rate||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rate:e.target.value}:s))}
+                        placeholder="0.00" type="number"
+                        className="flex-1 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                      <select value={sub.rateType||'hr'} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rateType:e.target.value}:s))}
+                        className="bg-transparent text-white text-xs focus:outline-none pb-1 border-b" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                        <option value="hr">/hr</option><option value="day">/day</option><option value="job">/job</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Job access */}
+              {donnyJobs.length > 0 && (
+                <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                  <div className="text-xs font-mono mb-3" style={{color:'rgba(249,115,22,0.6)'}}>// JOB ACCESS</div>
+                  <div className="flex flex-wrap gap-2">
+                    {donnyJobs.map(job=>{ const has=(sub.jobIds||[]).includes(job.id); return (
+                      <button key={job.id} onClick={()=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,jobIds:has?(s.jobIds||[]).filter(id=>id!==job.id):[...(s.jobIds||[]),job.id]}:s))}
+                        className="text-xs px-3 py-1.5 rounded-xl font-medium"
+                        style={{background:has?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:has?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.08)',color:has?'#f97316':'rgba(148,163,184,0.5)'}}>
+                        {job.jobNumber?`#${job.jobNumber} `:''}  {job.title}
+                      </button>
+                    );})}
+                  </div>
+                </div>
+              )}
+              {/* Contact buttons */}
+              <div className="grid grid-cols-2 gap-3">
+                {sub.phone && <a href={`tel:${sub.phone}`} className="py-3 rounded-xl text-sm font-bold text-center" style={{background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>📞 Call</a>}
+                {sub.email && <a href={`mailto:${sub.email}`} className="py-3 rounded-xl text-sm font-bold text-center" style={{background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>📧 Email</a>}
+              </div>
+              <button onClick={()=>{ if(window.confirm(`Remove ${sub.name}?`)){ saveSubs(donnySubs.filter(s=>s.id!==sub.id)); setEditingSubId(null); }}}
+                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete Subcontractor</button>
+            </div>
+          </div>
+        );
+      }
+
+      // LIST VIEW
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="SUBCONTRACTORS" icon="🔩" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+
+            {/* Master table */}
+            {donnySubs.length > 0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// SUBCONTRACTOR TABLE</div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnySubs.length} subs</span>
+                    <button onClick={()=>setShowAddSub(s=>!s)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                      {showAddSub?'✕ Cancel':'+ Add Sub'}
+                    </button>
+                  </div>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 100px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>NAME</div><div>TRADE</div><div>PHONE</div><div>RATE</div>
+                </div>
+                {donnySubs.map((s,i)=>(
+                  <button key={s.id} onClick={()=>setEditingSubId(s.id)}
+                    className="w-full grid px-5 py-3 text-sm items-center text-left hover:bg-white/[0.02]"
+                    style={{gridTemplateColumns:'1fr 1fr 100px 80px',borderBottom:i<donnySubs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{s.name.charAt(0).toUpperCase()}</div>
+                      <span className="text-white font-medium truncate">{s.name}</span>
+                    </div>
+                    <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{s.trade||s.company||'—'}</div>
+                    <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>{s.phone||'—'}</div>
+                    <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Add form */}
+            {showAddSub && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW SUBCONTRACTOR</div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[{k:'name',l:'👤 NAME',p:'John Smith'},{k:'company',l:'🏢 COMPANY',p:'Smith Electrical'},{k:'trade',l:'🔧 TRADE',p:'Electrician'},{k:'phone',l:'📞 PHONE',p:'04XX XXX XXX'},{k:'email',l:'📧 EMAIL',p:'john@example.com'},{k:'abn',l:'ABN',p:'12 345 678 901'},{k:'licenceNo',l:'LICENCE NO.',p:'NSW123456'}].map(f=>(
+                    <div key={f.k}>
+                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>{f.l}</div>
+                      <input value={newSub[f.k]} onChange={e=>setNewSub(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
+                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  ))}
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 RATE</div>
+                    <div className="flex gap-2">
+                      <input value={newSub.rate} onChange={e=>setNewSub(p=>({...p,rate:e.target.value}))} placeholder="120" type="number"
+                        className="flex-1 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                      <select value={newSub.rateType} onChange={e=>setNewSub(p=>({...p,rateType:e.target.value}))}
+                        className="bg-transparent text-white text-xs focus:outline-none" style={{colorScheme:'dark'}}>
+                        <option value="hr">/hr</option><option value="day">/day</option><option value="job">/job</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <button onClick={()=>{
+                  if(!newSub.name.trim()) return;
+                  saveSubs([...donnySubs,{...newSub,id:Date.now(),jobIds:[]}]);
+                  setNewSub({name:'',company:'',trade:'',phone:'',email:'',rate:'',rateType:'hr',abn:'',licenceNo:'',jobIds:[]});
+                  setShowAddSub(false);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>Add Subcontractor</button>
+              </div>
+            )}
+
+            {donnySubs.length === 0 && !showAddSub && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.06)'}}>
+                <div className="text-4xl mb-3">🔩</div>
+                <div className="text-white font-bold mb-1">No subcontractors yet</div>
+                <div className="text-sm mb-4" style={{color:'rgba(148,163,184,0.4)'}}>Add external tradies you bring in</div>
+                <button onClick={()=>setShowAddSub(true)} className="px-6 py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ Add Subcontractor</button>
+              </div>
+            )}
+
+            {/* Cards */}
+            {donnySubs.length > 0 && !showAddSub && (
+              <>
+                <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// TAP TO VIEW & EDIT</div>
+                {donnySubs.map(sub=>(
+                  <button key={sub.id} onClick={()=>setEditingSubId(sub.id)}
+                    className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                    style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                      {sub.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-semibold">{sub.name}</div>
+                      <div className="text-xs mt-0.5 flex gap-2 flex-wrap" style={{color:'rgba(148,163,184,0.5)'}}>
+                        {sub.trade && <span>{sub.trade}</span>}
+                        {sub.company && <span>{sub.company}</span>}
+                        {sub.rate && <span style={{color:'rgba(34,197,94,0.7)'}}>💰 ${sub.rate}/{sub.rateType||'hr'}</span>}
+                        {sub.abn && <span>ABN {sub.abn}</span>}
+                      </div>
+                    </div>
+                    <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                  </button>
+                ))}
+              </>
+            )}
+
+          </div>
+        </div>
+      );
+    }
+
     if (activeView === 'donny-suppliers') {
       const saveSuppliers = (updated) => { setDonnySuppliers(updated); try { localStorage.setItem('muzz_donny_suppliers', JSON.stringify(updated)); } catch {} };
 
