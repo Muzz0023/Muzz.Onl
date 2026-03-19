@@ -14819,108 +14819,117 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // ── EXTRA MATERIALS LOG ─────────────────────────────────────────────────
     if (activeView === 'donny-materialslog') {
       const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); try { localStorage.setItem('muzz_donny_materials_log', JSON.stringify(updated)); } catch {} };
-      const jobEntries = matLogJobId ? donnyMaterialsLog.filter(e => e.jobId === matLogJobId) : [];
-      const today = new Date().toISOString().split('T')[0];
+
+      if (matLogJobId) {
+        const job = donnyJobs.find(j=>j.id===matLogJobId);
+        const jobEntries = donnyMaterialsLog.filter(e=>e.jobId===matLogJobId);
+        const today = new Date().toISOString().split('T')[0];
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => setMatLogJobId(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Extra Materials</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">📦</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// EXTRA MATERIALS</div>
+                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
+                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="col-span-2">
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
+                    <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="e.g. 2C+E 2.5mm TPS Cable"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
+                    <div className="flex gap-1">
+                      <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
+                        className="flex-1 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                      <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="m"
+                        className="w-10 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTE FOR BOSS</div>
+                  <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. Ran short, need more by Thursday"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <button onClick={() => {
+                  if (!newMatEntry.item.trim()) return;
+                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString() };
+                  saveMatLog([entry, ...donnyMaterialsLog]);
+                  setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ Log Material</button>
+              </div>
+              {jobEntries.length > 0 ? (
+                <div className="space-y-2">
+                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// {jobEntries.length} ITEM{jobEntries.length!==1?'S':''} LOGGED</div>
+                  {jobEntries.map(entry => (
+                    <div key={entry.id} className="rounded-xl px-4 py-3 flex items-start justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-white font-medium text-sm">{entry.item}</span>
+                          {(entry.qty||entry.unit) && <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
+                        </div>
+                        {entry.note && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
+                        <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</div>
+                      </div>
+                      <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No materials logged yet for this job</div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="EXTRA MATERIALS" icon="📦" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-
-            {/* Job selector */}
-            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-              <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(249,115,22,0.6)',borderBottom:'1px solid rgba(249,115,22,0.1)'}}>// SELECT JOB</div>
-              <div className="p-3 flex flex-wrap gap-2">
-                {donnyJobs.filter(j => !j.completed).map(job => (
-                  <button key={job.id} onClick={() => setMatLogJobId(job.id)}
-                    className="px-3 py-2 rounded-xl text-sm font-medium"
-                    style={{background:matLogJobId===job.id?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:matLogJobId===job.id?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:matLogJobId===job.id?'#f97316':'rgba(148,163,184,0.7)'}}>
-                    {job.jobNumber?`#${job.jobNumber} · `:''}  {job.title}
-                    {donnyMaterialsLog.filter(e=>e.jobId===job.id).length > 0 && (
-                      <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.2)',color:'#f97316'}}>{donnyMaterialsLog.filter(e=>e.jobId===job.id).length}</span>
-                    )}
-                  </button>
-                ))}
-                {donnyJobs.filter(j=>!j.completed).length===0 && <div className="text-sm p-2" style={{color:'rgba(148,163,184,0.4)'}}>No active jobs</div>}
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {donnyJobs.filter(j=>!j.completed).length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                <div className="text-4xl mb-3">📦</div>
+                <div className="text-white font-bold mb-1">No active jobs</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log materials</div>
               </div>
-            </div>
-
-            {matLogJobId && (
+            ) : (
               <>
-                {/* Log entry form */}
-                <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-                  <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="col-span-2">
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
-                      <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))}
-                        placeholder="e.g. 2C+E 2.5mm TPS Cable"
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
-                      <div className="flex gap-1">
-                        <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))}
-                          placeholder="10" type="number"
-                          className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                        <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))}
-                          placeholder="m" 
-                          className="w-12 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTE FOR BOSS (OPTIONAL)</div>
-                    <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))}
-                      placeholder="e.g. Ran short on site, need more by Thursday"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <button onClick={() => {
-                    if (!newMatEntry.item.trim()) return;
-                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, loggedBy:'', date:today, createdAt:new Date().toISOString() };
-                    saveMatLog([entry, ...donnyMaterialsLog]);
-                    setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
-                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                    + Log Material
-                  </button>
-                </div>
-
-                {/* Entries */}
-                {jobEntries.length === 0 ? (
-                  <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
-                    <div className="text-3xl mb-2">📦</div>
-                    <div className="text-white font-bold">No materials logged yet</div>
-                    <div className="text-sm mt-1" style={{color:'rgba(148,163,184,0.4)'}}>Log extra materials used or needed on this job</div>
-                  </div>
-                ) : (
-                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
-                    <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(249,115,22,0.08)'}}>
-                      <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// {jobEntries.length} ITEM{jobEntries.length!==1?'S':''} LOGGED</div>
-                    </div>
-                    {jobEntries.map((entry, i) => (
-                      <div key={entry.id} className="px-5 py-4" style={{borderBottom: i < jobEntries.length-1 ? '1px solid rgba(255,255,255,0.04)' : 'none'}}>
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-white font-medium text-sm">{entry.item}</span>
-                              {(entry.qty || entry.unit) && (
-                                <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>
-                                  {entry.qty}{entry.unit ? ` ${entry.unit}` : ''}
-                                </span>
-                              )}
-                            </div>
-                            {entry.note && <div className="text-xs mt-1.5" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
-                            <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>
-                              {new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
-                            </div>
-                          </div>
-                          <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e => e.id !== entry.id))}
-                            className="text-xs px-2 py-1 rounded-lg flex-shrink-0" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                {donnyJobs.filter(j=>!j.completed).map(job => {
+                  const entries = donnyMaterialsLog.filter(e=>e.jobId===job.id);
+                  return (
+                    <button key={job.id} onClick={() => setMatLogJobId(job.id)}
+                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📦</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-semibold truncate">{job.title}</div>
+                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
+                          {job.jobNumber?`#${job.jobNumber} · `:''}{entries.length} item{entries.length!==1?'s':''} logged
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
+                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                    </button>
+                  );
+                })}
               </>
             )}
           </div>
@@ -14928,15 +14937,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       );
     }
 
-    // MISTAKES
     if (activeView === 'donny-mistakes') {
       const saveMistakes = (updated) => { setDonnyMistakes(updated); try { localStorage.setItem('muzz_donny_mistakes', JSON.stringify(updated)); } catch {} };
       const teamNames = donnyTeam.map(m => m.name);
+      const selectedMistake = donnyMistakes.find(m => m.id === selectedDonnyJob?.mistakeId);
+
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="MISTAKES" icon="❌" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             <button onClick={() => setShowNewMistake(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
               {showNewMistake ? '✕ Cancel' : '+ Log a Mistake'}
             </button>
@@ -14986,44 +14996,90 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-white font-bold mb-1">No mistakes logged</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Keep it that way!</div>
               </div>
-            ) : donnyMistakes.map(m => (
-              <div key={m.id} className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="font-bold text-white">{m.who||'Unknown'}</div>
-                    <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):''}{m.jobRef?` · ${m.jobRef}`:''}</div>
+            ) : (
+              <div className="space-y-3">
+                {donnyMistakes.map(m => (
+                  <div key={m.id} className="rounded-2xl p-4 flex items-start gap-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.12)'}}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.2)'}}>❌</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <div className="text-white font-semibold">{m.who||'Unknown'}</div>
+                        <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x=>x.id!==m.id)); }}
+                          className="text-xs px-2 py-0.5 rounded-lg ml-2" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                      </div>
+                      <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):''}{m.jobRef?` · ${m.jobRef}`:''}</div>
+                      <div className="text-sm text-white mt-2">{m.what}</div>
+                      {m.affected && <div className="text-xs mt-1.5 px-2 py-1 rounded-lg inline-block" style={{background:'rgba(239,68,68,0.08)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.15)'}}>🔧 {m.affected}</div>}
+                    </div>
                   </div>
-                  <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x=>x.id!==m.id)); }}
-                    className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
-                </div>
-                <div className="text-sm text-white mb-2">{m.what}</div>
-                {m.affected && <div className="text-xs px-3 py-1.5 rounded-lg inline-block" style={{background:'rgba(239,68,68,0.08)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.15)'}}>🔧 {m.affected}</div>}
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
       );
     }
 
-    // SAFETY
     if (activeView === 'donny-safety') {
+      // If a job is selected, drill into it
+      const safetyJob = donnyJobs.find(j => j.id === selectedDonnyJob?.id && j.risk);
       const jobsWithRisks = donnyJobs.filter(j => j.risk);
+
+      if (selectedDonnyJob && selectedDonnyJob.risk) {
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(239,68,68,0.2)",background:"rgba(239,68,68,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => setSelectedDonnyJob(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(239,68,68,0.8)"}}>← Risk Register</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">⚠️</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(239,68,68,0.5)",letterSpacing:"2px"}}>// RISK REGISTER</div>
+                    <h1 className="text-2xl font-bold text-white">{selectedDonnyJob.title}</h1>
+                    {selectedDonnyJob.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{selectedDonnyJob.jobNumber}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.2)'}}>
+                <div><div className="text-xs font-mono mb-2" style={{color:'rgba(239,68,68,0.6)'}}>⚠️ BIGGEST RISK</div><div className="text-white text-sm leading-relaxed">{selectedDonnyJob.risk}</div></div>
+                {selectedDonnyJob.riskAvoid && <div><div className="text-xs font-mono mb-2" style={{color:'rgba(34,197,94,0.6)'}}>🛡️ HOW TO AVOID</div><div className="text-white text-sm leading-relaxed">{selectedDonnyJob.riskAvoid}</div></div>}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="RISK REGISTER" icon="⚠️" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             {jobsWithRisks.length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.1)"}}><div className="text-4xl mb-3">✅</div><div className="text-white">No risks logged yet</div></div>
-            ) : jobsWithRisks.map(job => (
-              <div key={job.id} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.2)"}}>
-                <div className="p-3 text-sm font-semibold text-white" style={{background:"rgba(239,68,68,0.08)",borderBottom:"1px solid rgba(239,68,68,0.15)"}}>{job.title}</div>
-                <div className="p-4 space-y-3">
-                  <div><div className="text-xs font-mono mb-1" style={{color:"rgba(239,68,68,0.6)"}}>⚠️ RISK</div><div className="text-sm text-white">{job.risk}</div></div>
-                  {job.riskAvoid && <div><div className="text-xs font-mono mb-1" style={{color:"rgba(34,197,94,0.6)"}}>🛡️ HOW TO AVOID</div><div className="text-sm text-white">{job.riskAvoid}</div></div>}
-                </div>
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.08)'}}>
+                <div className="text-4xl mb-3">✅</div>
+                <div className="text-white font-bold mb-1">No risks logged</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add risks when creating or editing a job</div>
               </div>
-            ))}
+            ) : (
+              <>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(239,68,68,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                {jobsWithRisks.map(job => (
+                  <button key={job.id} onClick={() => setSelectedDonnyJob(job)}
+                    className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                    style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.2)'}}>⚠️</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-semibold truncate">{job.title}</div>
+                      <div className="text-xs mt-0.5 truncate" style={{color:'rgba(148,163,184,0.5)'}}>{job.risk}</div>
+                    </div>
+                    <span style={{color:'rgba(239,68,68,0.4)',fontSize:'20px'}}>›</span>
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         </div>
       );
@@ -15253,256 +15309,305 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // ── TIMESHEETS ──────────────────────────────────────────────────────────
     if (activeView === 'donny-timesheets') {
       const saveTS = (updated) => { setDonnyTimesheets(updated); try { localStorage.setItem('muzz_donny_timesheets', JSON.stringify(updated)); } catch {} };
-      const jobEntries = tsSelectedJob ? donnyTimesheets.filter(e => e.jobId === tsSelectedJob) : [];
-      const memberEntries = tsSelectedMember ? jobEntries.filter(e => e.memberId === tsSelectedMember) : jobEntries;
-      const member = donnyTeam.find(m => m.id === tsSelectedMember);
-      const jobTotals = donnyTeam.map(m => {
-        const entries = donnyTimesheets.filter(e => e.jobId === tsSelectedJob && e.memberId === m.id);
-        const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-        const pay = hrs * (parseFloat(m.hourlyRate)||0);
-        return { member: m, hrs, pay, entries };
-      }).filter(x => x.hrs > 0);
-      const totalHrs = jobTotals.reduce((s,x) => s + x.hrs, 0);
-      const totalPay = jobTotals.reduce((s,x) => s + x.pay, 0);
+
+      // Drill-in: specific job selected
+      if (tsSelectedJob) {
+        const job = donnyJobs.find(j => j.id === tsSelectedJob);
+        const jobTotals = donnyTeam.map(m => {
+          const entries = donnyTimesheets.filter(e => e.jobId === tsSelectedJob && e.memberId === m.id);
+          const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+          const pay = hrs * (parseFloat(m.hourlyRate)||0);
+          return { member: m, hrs, pay, entries };
+        }).filter(x => x.hrs > 0);
+        const totalHrs = jobTotals.reduce((s,x) => s + x.hrs, 0);
+        const totalPay = jobTotals.reduce((s,x) => s + x.pay, 0);
+        const allEntries = donnyTimesheets.filter(e => e.jobId === tsSelectedJob);
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => setTsSelectedJob(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Timesheets</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">⏱️</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// TIMESHEETS</div>
+                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
+                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              {/* Log entry */}
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG HOURS</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
+                    <select value={tsSelectedMember||''} onChange={e=>setTsSelectedMember(e.target.value||null)}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">Select member...</option>
+                      {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}{m.hourlyRate?` ($${m.hourlyRate}/hr)`:''}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
+                    <input type="date" value={tsDate} onChange={e=>setTsDate(e.target.value)}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>⏱️ HOURS</div>
+                    <input type="number" value={tsHours} onChange={e=>setTsHours(e.target.value)} placeholder="e.g. 8" min="0" step="0.5"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION</div>
+                    <input value={tsDesc} onChange={e=>setTsDesc(e.target.value)} placeholder="e.g. Cable install"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+                {tsSelectedMember && tsHours && (
+                  <div className="rounded-xl p-3 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                    <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>Pay: </span>
+                    <span className="text-lg font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>m.id===tsSelectedMember)?.hourlyRate)||0)).toFixed(2)}</span>
+                  </div>
+                )}
+                <button onClick={() => {
+                  if (!tsSelectedMember||!tsHours) return;
+                  const entry = { id:Date.now(), jobId:tsSelectedJob, memberId:tsSelectedMember, date:tsDate, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString() };
+                  saveTS([entry,...donnyTimesheets]);
+                  setTsHours(''); setTsDesc('');
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ Log Hours</button>
+              </div>
+              {/* Summary */}
+              {jobTotals.length > 0 && (
+                <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
+                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 80px 80px 100px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>MEMBER</div><div>RATE</div><div>HOURS</div><div>PAY</div>
+                  </div>
+                  {jobTotals.map(x => (
+                    <div key={x.member.id} className="grid px-5 py-3 text-sm items-center" style={{gridTemplateColumns:'1fr 80px 80px 100px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                      <div className="text-white font-medium">{x.member.name}</div>
+                      <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>${x.member.hourlyRate||0}/hr</div>
+                      <div className="font-bold" style={{color:'#f97316'}}>{x.hrs.toFixed(1)}h</div>
+                      <div className="font-black" style={{color:'#22c55e'}}>${x.pay.toFixed(2)}</div>
+                    </div>
+                  ))}
+                  <div className="grid px-5 py-3" style={{gridTemplateColumns:'1fr 80px 80px 100px',background:'rgba(249,115,22,0.05)',borderTop:'1px solid rgba(249,115,22,0.15)'}}>
+                    <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL</div>
+                    <div/>
+                    <div className="text-sm font-black" style={{color:'#f97316'}}>{totalHrs.toFixed(1)}h</div>
+                    <div className="text-sm font-black" style={{color:'#22c55e'}}>${totalPay.toFixed(2)}</div>
+                  </div>
+                </div>
+              )}
+              {/* Entries */}
+              {allEntries.length > 0 && (
+                <div className="space-y-2">
+                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// ALL ENTRIES</div>
+                  {allEntries.map(entry => {
+                    const m = donnyTeam.find(x=>x.id===entry.memberId);
+                    const pay = (entry.hours||0)*(parseFloat(m?.hourlyRate)||0);
+                    return (
+                      <div key={entry.id} className="rounded-xl px-4 py-3 flex items-center justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                        <div>
+                          <div className="text-sm text-white font-medium">{m?.name||'Unknown'} <span className="text-xs ml-2" style={{color:'rgba(249,115,22,0.6)'}}>{entry.hours}h</span></div>
+                          <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{entry.date}{entry.desc?` · ${entry.desc}`:''}</div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-bold" style={{color:'#22c55e'}}>${pay.toFixed(2)}</span>
+                          <button onClick={() => saveTS(donnyTimesheets.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      // Job list view
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="TIMESHEETS" icon="⏱️" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            {/* Job selector */}
-            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-              <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(249,115,22,0.6)',borderBottom:'1px solid rgba(249,115,22,0.1)'}}>// SELECT JOB</div>
-              <div className="p-3 flex flex-wrap gap-2">
-                {donnyJobs.filter(j=>!j.completed).map(job => (
-                  <button key={job.id} onClick={() => { setTsSelectedJob(job.id); setTsSelectedMember(null); }}
-                    className="px-3 py-2 rounded-xl text-sm font-medium"
-                    style={{background:tsSelectedJob===job.id?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:tsSelectedJob===job.id?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:tsSelectedJob===job.id?'#f97316':'rgba(148,163,184,0.7)'}}>
-                    {job.jobNumber?`#${job.jobNumber} · `:''}  {job.title}
-                  </button>
-                ))}
-                {donnyJobs.filter(j=>!j.completed).length===0 && <div className="text-sm p-2" style={{color:'rgba(148,163,184,0.4)'}}>No active jobs</div>}
-              </div>
-            </div>
-
-            {tsSelectedJob && (
-              <>
-                {/* Log entry form */}
-                <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.25)'}}>
-                  <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG HOURS</div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
-                      <select value={tsSelectedMember||''} onChange={e=>setTsSelectedMember(e.target.value||null)}
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                        <option value="">Select member...</option>
-                        {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}{m.hourlyRate?` ($${m.hourlyRate}/hr)`:''}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
-                      <input type="date" value={tsDate} onChange={e=>setTsDate(e.target.value)}
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>⏱️ HOURS WORKED</div>
-                      <input type="number" value={tsHours} onChange={e=>setTsHours(e.target.value)} placeholder="e.g. 8" min="0" step="0.5"
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION (OPTIONAL)</div>
-                      <input value={tsDesc} onChange={e=>setTsDesc(e.target.value)} placeholder="e.g. Cable install, Level 2"
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                  </div>
-                  {tsSelectedMember && tsHours && (
-                    <div className="rounded-xl p-3 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
-                      <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>Calculated pay: </span>
-                      <span className="text-lg font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>m.id===tsSelectedMember)?.hourlyRate)||0)).toFixed(2)}</span>
-                    </div>
-                  )}
-                  <button onClick={() => {
-                    if (!tsSelectedMember||!tsHours) return;
-                    const entry = { id:Date.now(), jobId:tsSelectedJob, memberId:tsSelectedMember, date:tsDate, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString() };
-                    saveTS([entry,...donnyTimesheets]);
-                    setTsHours(''); setTsDesc('');
-                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                    + Log Hours
-                  </button>
-                </div>
-
-                {/* Summary table */}
-                {jobTotals.length > 0 && (
-                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
-                      <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// JOB SUMMARY</div>
-                      <span className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>{donnyJobs.find(j=>j.id===tsSelectedJob)?.title}</span>
-                    </div>
-                    <div className="grid text-xs font-mono px-5 py-2" style={{gridTemplateColumns:'1fr 80px 80px 100px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                      <div>MEMBER</div><div>RATE</div><div>HOURS</div><div>PAY</div>
-                    </div>
-                    {jobTotals.map(x => (
-                      <div key={x.member.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02]" style={{gridTemplateColumns:'1fr 80px 80px 100px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
-                        <div className="text-white font-medium">{x.member.name}</div>
-                        <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>${x.member.hourlyRate||0}/hr</div>
-                        <div className="font-bold" style={{color:'#f97316'}}>{x.hrs.toFixed(1)}h</div>
-                        <div className="font-black" style={{color:'#22c55e'}}>${x.pay.toFixed(2)}</div>
-                      </div>
-                    ))}
-                    <div className="grid px-5 py-3" style={{gridTemplateColumns:'1fr 80px 80px 100px',background:'rgba(249,115,22,0.05)',borderTop:'1px solid rgba(249,115,22,0.15)'}}>
-                      <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL</div>
-                      <div/>
-                      <div className="text-sm font-black" style={{color:'#f97316'}}>{totalHrs.toFixed(1)}h</div>
-                      <div className="text-sm font-black" style={{color:'#22c55e'}}>${totalPay.toFixed(2)}</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Individual entries */}
-                {donnyTimesheets.filter(e=>e.jobId===tsSelectedJob).length > 0 && (
-                  <div className="space-y-2">
-                    <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// ALL ENTRIES</div>
-                    {donnyTimesheets.filter(e=>e.jobId===tsSelectedJob).map(entry => {
-                      const m = donnyTeam.find(x=>x.id===entry.memberId);
-                      const pay = (entry.hours||0)*(parseFloat(m?.hourlyRate)||0);
-                      return (
-                        <div key={entry.id} className="rounded-xl px-4 py-3 flex items-center justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                          <div>
-                            <div className="text-sm text-white font-medium">{m?.name||'Unknown'} <span className="text-xs ml-2" style={{color:'rgba(249,115,22,0.6)'}}>{entry.hours}h</span></div>
-                            <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{entry.date}{entry.desc?` · ${entry.desc}`:''}</div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold" style={{color:'#22c55e'}}>${pay.toFixed(2)}</span>
-                            <button onClick={() => saveTS(donnyTimesheets.filter(e2=>e2.id!==entry.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </>
-            )}
-            {!tsSelectedJob && donnyJobs.filter(j=>!j.completed).length > 0 && (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {donnyJobs.filter(j=>!j.completed).length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
                 <div className="text-4xl mb-3">⏱️</div>
-                <div className="text-white font-bold mb-1">Select a job above</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Pick a job to view and log timesheets</div>
+                <div className="text-white font-bold mb-1">No active jobs</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log timesheets</div>
               </div>
+            ) : (
+              <>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                {donnyJobs.filter(j=>!j.completed).map(job => {
+                  const entries = donnyTimesheets.filter(e=>e.jobId===job.id);
+                  const totalHrs = entries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                  const totalPay = entries.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); },0);
+                  return (
+                    <button key={job.id} onClick={() => { setTsSelectedJob(job.id); setTsSelectedMember(null); }}
+                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>⏱️</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-semibold truncate">{job.title}</div>
+                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
+                          {job.jobNumber?`#${job.jobNumber} · `:''}{entries.length} entries · {totalHrs.toFixed(1)}h logged
+                          {totalPay > 0 ? ` · $${totalPay.toFixed(0)}` : ''}
+                        </div>
+                      </div>
+                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                    </button>
+                  );
+                })}
+              </>
             )}
           </div>
         </div>
       );
     }
 
-    // ── DAILY COST TRACKER ──────────────────────────────────────────────────
     if (activeView === 'donny-dailycosts') {
       const saveDC = (updated) => { setDonnyCosts(updated); try { localStorage.setItem('muzz_donny_daily_costs', JSON.stringify(updated)); } catch {} };
-      const jobCosts = dcSelectedJob ? donnyCosts.filter(c=>c.jobId===dcSelectedJob) : [];
-      const totalMat = jobCosts.filter(c=>c.type==='material').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
-      const totalLab = jobCosts.filter(c=>c.type==='labour').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
-      const totalOther = jobCosts.filter(c=>c.type==='other').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
-      const grandTotal = totalMat+totalLab+totalOther;
-      const byDate = jobCosts.reduce((acc,c) => { if(!acc[c.date]) acc[c.date]=[]; acc[c.date].push(c); return acc; }, {});
       const typeColors = { material:'#22c55e', labour:'#f97316', other:'#a78bfa' };
-      const typeLabels = { material:'🔧 Material', labour:'👷 Labour', other:'📦 Other' };
+
+      if (dcSelectedJob) {
+        const job = donnyJobs.find(j=>j.id===dcSelectedJob);
+        const jobCosts = donnyCosts.filter(c=>c.jobId===dcSelectedJob);
+        const totalMat = jobCosts.filter(c=>c.type==='material').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+        const totalLab = jobCosts.filter(c=>c.type==='labour').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+        const totalOther = jobCosts.filter(c=>c.type==='other').reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+        const grandTotal = totalMat+totalLab+totalOther;
+        const byDate = jobCosts.reduce((acc,c) => { if(!acc[c.date]) acc[c.date]=[]; acc[c.date].push(c); return acc; }, {});
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => setDcSelectedJob(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(34,197,94,0.8)"}}>← Daily Costs</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">📅</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(34,197,94,0.5)",letterSpacing:"2px"}}>// DAILY COSTS</div>
+                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
+                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              <div className="grid grid-cols-4 gap-3">
+                {[{label:'Materials',val:totalMat,c:'#22c55e'},{label:'Labour',val:totalLab,c:'#f97316'},{label:'Other',val:totalOther,c:'#a78bfa'},{label:'TOTAL',val:grandTotal,c:'#00c8ff'}].map((s,i)=>(
+                  <div key={i} className="rounded-2xl p-3 text-center" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${s.c}25`}}>
+                    <div className="text-xs font-mono mb-1" style={{color:`${s.c}80`}}>{s.label}</div>
+                    <div className="text-lg font-black" style={{color:s.c}}>${s.val.toFixed(0)}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.6)'}}>// ADD COST</div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
+                    <input type="date" value={dcNewItem.date} onChange={e=>setDcNewItem(p=>({...p,date:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TYPE</div>
+                    <div className="flex gap-1">
+                      {['material','labour','other'].map(t=>(
+                        <button key={t} onClick={()=>setDcNewItem(p=>({...p,type:t}))}
+                          className="flex-1 text-xs py-1.5 rounded-lg font-medium capitalize"
+                          style={{background:dcNewItem.type===t?`${typeColors[t]}20`:'rgba(255,255,255,0.04)',border:dcNewItem.type===t?`1px solid ${typeColors[t]}60`:'1px solid rgba(255,255,255,0.08)',color:dcNewItem.type===t?typeColors[t]:'rgba(148,163,184,0.5)'}}>
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 AMOUNT ($)</div>
+                    <input type="number" value={dcNewItem.amount} onChange={e=>setDcNewItem(p=>({...p,amount:e.target.value}))} placeholder="0.00"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION</div>
+                  <input value={dcNewItem.desc} onChange={e=>setDcNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. 100m TPS Cable"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <button onClick={() => {
+                  if (!dcNewItem.desc.trim()||!dcNewItem.amount) return;
+                  saveDC([{...dcNewItem,id:Date.now(),jobId:dcSelectedJob},...donnyCosts]);
+                  setDcNewItem(p=>({...p,desc:'',amount:''}));
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>+ Add Cost</button>
+              </div>
+              {Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date => {
+                const dayTotal = byDate[date].reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+                return (
+                  <div key={date} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.12)'}}>
+                    <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(34,197,94,0.08)',background:'rgba(34,197,94,0.04)'}}>
+                      <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.7)'}}>{new Date(date+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</div>
+                      <div className="text-sm font-black" style={{color:'#22c55e'}}>${dayTotal.toFixed(2)}</div>
+                    </div>
+                    {byDate[date].map(c=>(
+                      <div key={c.id} className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs px-2 py-0.5 rounded-lg font-mono capitalize" style={{background:`${typeColors[c.type]}15`,color:typeColors[c.type],border:`1px solid ${typeColors[c.type]}30`}}>{c.type}</span>
+                          <span className="text-sm text-white">{c.desc}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-bold" style={{color:typeColors[c.type]}}>${parseFloat(c.amount).toFixed(2)}</span>
+                          <button onClick={()=>saveDC(donnyCosts.filter(x=>x.id!==c.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+              {jobCosts.length === 0 && <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.08)'}}><div className="text-3xl mb-2">💰</div><div className="text-white font-bold">No costs logged yet</div></div>}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="DAILY COSTS" icon="📅" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-            {/* Job selector */}
-            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
-              <div className="text-xs font-mono px-5 py-3" style={{color:'rgba(34,197,94,0.6)',borderBottom:'1px solid rgba(34,197,94,0.1)'}}>// SELECT JOB</div>
-              <div className="p-3 flex flex-wrap gap-2">
-                {donnyJobs.map(job => (
-                  <button key={job.id} onClick={() => setDcSelectedJob(job.id)}
-                    className="px-3 py-2 rounded-xl text-sm font-medium"
-                    style={{background:dcSelectedJob===job.id?'rgba(34,197,94,0.2)':'rgba(255,255,255,0.04)',border:dcSelectedJob===job.id?'1px solid rgba(34,197,94,0.5)':'1px solid rgba(255,255,255,0.08)',color:dcSelectedJob===job.id?'#22c55e':'rgba(148,163,184,0.7)'}}>
-                    {job.jobNumber?`#${job.jobNumber} · `:''}  {job.title}
-                  </button>
-                ))}
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {donnyJobs.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                <div className="text-4xl mb-3">📅</div>
+                <div className="text-white font-bold mb-1">No jobs yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to track costs</div>
               </div>
-            </div>
-
-            {dcSelectedJob && (
+            ) : (
               <>
-                {/* Running total */}
-                <div className="grid grid-cols-4 gap-3">
-                  {[{label:'Materials',val:totalMat,c:'#22c55e'},{label:'Labour',val:totalLab,c:'#f97316'},{label:'Other',val:totalOther,c:'#a78bfa'},{label:'TOTAL',val:grandTotal,c:'#00c8ff'}].map((s,i)=>(
-                    <div key={i} className="rounded-2xl p-3 text-center" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${s.c}25`}}>
-                      <div className="text-xs font-mono mb-1" style={{color:`${s.c}80`}}>{s.label}</div>
-                      <div className="text-lg font-black" style={{color:s.c}}>${s.val.toFixed(0)}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Add cost entry */}
-                <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.25)'}}>
-                  <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.6)'}}>// ADD COST</div>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
-                      <input type="date" value={dcNewItem.date} onChange={e=>setDcNewItem(p=>({...p,date:e.target.value}))}
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                    </div>
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TYPE</div>
-                      <div className="flex gap-1.5">
-                        {['material','labour','other'].map(t=>(
-                          <button key={t} onClick={()=>setDcNewItem(p=>({...p,type:t}))}
-                            className="flex-1 text-xs py-1.5 rounded-lg font-medium"
-                            style={{background:dcNewItem.type===t?`${typeColors[t]}20`:'rgba(255,255,255,0.04)',border:dcNewItem.type===t?`1px solid ${typeColors[t]}60`:'1px solid rgba(255,255,255,0.08)',color:dcNewItem.type===t?typeColors[t]:'rgba(148,163,184,0.5)'}}>
-                            {t}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 AMOUNT ($)</div>
-                      <input type="number" value={dcNewItem.amount} onChange={e=>setDcNewItem(p=>({...p,amount:e.target.value}))} placeholder="0.00"
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 DESCRIPTION</div>
-                    <input value={dcNewItem.desc} onChange={e=>setDcNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. 100m TPS Cable, Conduit, etc."
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <button onClick={() => {
-                    if (!dcNewItem.desc.trim()||!dcNewItem.amount) return;
-                    saveDC([{...dcNewItem,id:Date.now(),jobId:dcSelectedJob},...donnyCosts]);
-                    setDcNewItem(p=>({...p,desc:'',amount:''}));
-                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>
-                    + Add Cost
-                  </button>
-                </div>
-
-                {/* Entries by date */}
-                {Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date => {
-                  const dayTotal = byDate[date].reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(34,197,94,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                {donnyJobs.map(job => {
+                  const costs = donnyCosts.filter(c=>c.jobId===job.id);
+                  const total = costs.reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
                   return (
-                    <div key={date} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.12)'}}>
-                      <div className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(34,197,94,0.08)',background:'rgba(34,197,94,0.04)'}}>
-                        <div className="text-xs font-mono" style={{color:'rgba(34,197,94,0.7)'}}>{new Date(date+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</div>
-                        <div className="text-sm font-black" style={{color:'#22c55e'}}>${dayTotal.toFixed(2)}</div>
-                      </div>
-                      {byDate[date].map(c=>(
-                        <div key={c.id} className="flex items-center justify-between px-5 py-3" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs px-2 py-0.5 rounded-lg font-mono" style={{background:`${typeColors[c.type]}15`,color:typeColors[c.type],border:`1px solid ${typeColors[c.type]}30`}}>{c.type}</span>
-                            <span className="text-sm text-white">{c.desc}</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold" style={{color:typeColors[c.type]}}>${parseFloat(c.amount).toFixed(2)}</span>
-                            <button onClick={()=>saveDC(donnyCosts.filter(x=>x.id!==c.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
-                          </div>
+                    <button key={job.id} onClick={() => setDcSelectedJob(job.id)}
+                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>📅</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-semibold truncate">{job.title}</div>
+                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
+                          {job.jobNumber?`#${job.jobNumber} · `:''}{costs.length} entries{total > 0 ? ` · $${total.toFixed(0)} tracked` : ' · No costs yet'}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                      <span style={{color:'rgba(34,197,94,0.5)',fontSize:'20px'}}>›</span>
+                    </button>
                   );
                 })}
-                {jobCosts.length===0 && <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.08)'}}><div className="text-3xl mb-2">💰</div><div className="text-white font-bold">No costs logged yet</div></div>}
               </>
             )}
           </div>
@@ -15510,7 +15615,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       );
     }
 
-    // ── CLIENTS ─────────────────────────────────────────────────────────────
     if (activeView === 'donny-clients') {
       const saveClients = (updated) => { setDonnyClients(updated); try { localStorage.setItem('muzz_donny_clients', JSON.stringify(updated)); } catch {} };
       return (
