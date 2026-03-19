@@ -15339,7 +15339,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add your first client above</div>
               </div>
             ) : (
-              <div className="space-y-3">
+              <>
+                {/* Master Table */}
+                {donnyClients.length > 0 && (
+                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(59,130,246,0.15)'}}>
+                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(59,130,246,0.1)'}}>
+                      <div className="text-xs font-mono tracking-widest" style={{color:'rgba(59,130,246,0.7)'}}>// CLIENT TABLE</div>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(59,130,246,0.1)',color:'#3b82f6'}}>{donnyClients.length} clients</span>
+                    </div>
+                    <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 130px 120px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div>NAME</div><div>COMPANY</div><div>PHONE</div><div>JOBS</div>
+                    </div>
+                    {donnyClients.map((client, i) => {
+                      const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
+                      return (
+                        <div key={client.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
+                          style={{gridTemplateColumns:'1fr 1fr 130px 120px',borderBottom:i<donnyClients.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(59,130,246,0.15)',color:'#3b82f6'}}>{client.name.charAt(0).toUpperCase()}</div>
+                            <span className="text-white font-medium text-sm truncate">{client.name}</span>
+                          </div>
+                          <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{client.company||'—'}</div>
+                          <div>
+                            {client.phone
+                              ? <a href={`tel:${client.phone}`} className="text-xs" style={{color:'rgba(59,130,246,0.7)'}}>{client.phone}</a>
+                              : <span className="text-xs" style={{color:'rgba(148,163,184,0.3)'}}>—</span>}
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {linkedJobs.length > 0
+                              ? linkedJobs.map(j => <span key={j.id} className="text-xs px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.7)'}}>{j.jobNumber?`#${j.jobNumber}`:j.title.slice(0,8)}</span>)
+                              : <span className="text-xs" style={{color:'rgba(148,163,184,0.3)'}}>—</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Client cards */}
+                <div className="space-y-3">
                 {donnyClients.map(client => {
                   const isEditing = editingClientId===client.id;
                   const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
@@ -15395,6 +15433,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   );
                 })}
               </div>
+              </>
             )}
           </div>
         </div>
