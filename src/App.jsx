@@ -14913,6 +14913,558 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     // ── EXTRA MATERIALS LOG ─────────────────────────────────────────────────
+    // ── SCHEDULER ────────────────────────────────────────────────────────────
+    if (activeView === 'donny-scheduler') {
+      const saveSched = (updated) => { setDonnySchedule(updated); try { localStorage.setItem('muzz_donny_schedule', JSON.stringify(updated)); } catch {} };
+      const getWeekDates = (offset) => {
+        const now = new Date(); const dow = now.getDay();
+        const mon = new Date(now); mon.setDate(now.getDate() - (dow===0?6:dow-1) + offset*7);
+        return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; });
+      };
+      const weekDates = getWeekDates(schedulerWeekOffset);
+      const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      const todayStr = new Date().toISOString().split('T')[0];
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="SCHEDULER" icon="🗓️" />
+          <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <button onClick={()=>setSchedulerWeekOffset(p=>p-1)} className="px-4 py-2 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>← Prev</button>
+              <div className="text-sm font-mono text-center" style={{color:'rgba(249,115,22,0.7)'}}>
+                {weekDates[0].toLocaleDateString('en-AU',{day:'numeric',month:'short'})} — {weekDates[6].toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})}
+                {schedulerWeekOffset===0 && <span className="ml-2 text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>This week</span>}
+              </div>
+              <button onClick={()=>setSchedulerWeekOffset(p=>p+1)} className="px-4 py-2 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>Next →</button>
+            </div>
+            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+              {weekDates.map((date, di) => {
+                const dateStr = date.toISOString().split('T')[0];
+                const dayEntries = donnySchedule[dateStr] || [];
+                const isToday = dateStr === todayStr;
+                const isPast = dateStr < todayStr;
+                return (
+                  <div key={dateStr} style={{borderBottom: di<6 ? '1px solid rgba(255,255,255,0.04)' : 'none', opacity: isPast ? 0.6 : 1}}>
+                    <div className="flex items-start gap-3 p-4">
+                      <div className="flex-shrink-0 w-14 text-center">
+                        <div className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{dayLabels[di]}</div>
+                        <div className="text-lg font-bold mt-0.5" style={{color: isToday ? '#f97316' : 'white'}}>{date.getDate()}</div>
+                        {isToday && <div className="w-1.5 h-1.5 rounded-full mx-auto mt-1" style={{background:'#f97316'}}/>}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                          {dayEntries.map((entry, ei) => {
+                            const job = donnyJobs.find(j=>j.id===entry.jobId);
+                            const member = donnyTeam.find(m=>m.id===entry.memberId);
+                            return (
+                              <div key={ei} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium" style={{background:'rgba(249,115,22,0.12)',border:'1px solid rgba(249,115,22,0.25)',color:'rgba(255,255,255,0.8)'}}>
+                                <span>{member?.name||'?'}</span>
+                                <span style={{color:'rgba(249,115,22,0.6)'}}>→</span>
+                                <span style={{color:'#f97316'}}>{job?.title?.slice(0,20)||'?'}</span>
+                                <button onClick={()=>{ const updated={...donnySchedule,[dateStr]:dayEntries.filter((_,i)=>i!==ei)}; saveSched(updated); }} style={{color:'rgba(239,68,68,0.5)',marginLeft:'2px',fontSize:'14px',lineHeight:1}}>×</button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {!isPast && (
+                          <div className="flex gap-2 flex-wrap">
+                            <select value={schedPickMember||''} onChange={e=>setSchedPickMember(e.target.value||null)}
+                              className="bg-transparent text-xs focus:outline-none rounded-lg px-2 py-1" style={{border:'1px solid rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.7)',colorScheme:'dark'}}>
+                              <option value="">+ Member...</option>
+                              {donnyTeam.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
+                            </select>
+                            <select value={schedPickJob||''} onChange={e=>setSchedPickJob(e.target.value||null)}
+                              className="bg-transparent text-xs focus:outline-none rounded-lg px-2 py-1" style={{border:'1px solid rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.7)',colorScheme:'dark'}}>
+                              <option value="">+ Job...</option>
+                              {donnyJobs.filter(j=>!j.completed).map(j=><option key={j.id} value={j.id}>{j.title}</option>)}
+                            </select>
+                            {schedPickMember && schedPickJob && (
+                              <button onClick={()=>{
+                                const entry={jobId:schedPickJob,memberId:schedPickMember};
+                                const updated={...donnySchedule,[dateStr]:[...(donnySchedule[dateStr]||[]),entry]};
+                                saveSched(updated); setSchedPickMember(null); setSchedPickJob(null);
+                              }} className="text-xs px-3 py-1 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.2)',color:'#f97316',border:'1px solid rgba(249,115,22,0.4)'}}>Assign</button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── RECURRING JOBS ────────────────────────────────────────────────────────
+    if (activeView === 'donny-recurring') {
+      const saveRecurring = (updated) => { setDonnyRecurring(updated); try { localStorage.setItem('muzz_donny_recurring', JSON.stringify(updated)); } catch {} };
+      const freqLabels = { daily:'Daily', weekly:'Weekly', fortnightly:'Fortnightly', monthly:'Monthly', quarterly:'Quarterly', yearly:'Yearly' };
+      const freqColors = { daily:'#ef4444', weekly:'#f97316', fortnightly:'#f59e0b', monthly:'#22c55e', quarterly:'#3b82f6', yearly:'#a855f7' };
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="RECURRING JOBS" icon="🔁" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={()=>setShowNewRecurring(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+              {showNewRecurring?'✕ Cancel':'+ Add Recurring Job'}
+            </button>
+            {showNewRecurring && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW RECURRING JOB</div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>JOB TITLE</div>
+                  <input value={newRecurring.title} onChange={e=>setNewRecurring(p=>({...p,title:e.target.value}))} placeholder="e.g. Monthly Maintenance — Westfield"
+                    className="w-full bg-transparent text-white font-bold focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🤝 CLIENT</div>
+                    <select value={newRecurring.clientId} onChange={e=>setNewRecurring(p=>({...p,clientId:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No client</option>
+                      {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔁 FREQUENCY</div>
+                    <select value={newRecurring.freq} onChange={e=>setNewRecurring(p=>({...p,freq:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 NEXT DATE</div>
+                    <input type="date" value={newRecurring.nextDate} onChange={e=>setNewRecurring(p=>({...p,nextDate:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTES</div>
+                    <input value={newRecurring.notes} onChange={e=>setNewRecurring(p=>({...p,notes:e.target.value}))} placeholder="Optional..."
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+                <button onClick={()=>{ if(!newRecurring.title.trim()) return; saveRecurring([{...newRecurring,id:Date.now(),createdAt:new Date().toISOString()},...donnyRecurring]); setNewRecurring({title:'',clientId:'',freq:'monthly',nextDate:'',notes:''}); setShowNewRecurring(false); }}
+                  className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>Add Recurring Job</button>
+              </div>
+            )}
+            {donnyRecurring.length===0 && !showNewRecurring && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+                <div className="text-4xl mb-3">🔁</div>
+                <div className="text-white font-bold mb-1">No recurring jobs</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add maintenance contracts that repeat</div>
+              </div>
+            )}
+            {donnyRecurring.map(r => {
+              const client = donnyClients.find(c=>c.id===r.clientId);
+              const fc = freqColors[r.freq]||'#f97316';
+              const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
+              return (
+                <div key={r.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-white font-bold">{r.title}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${fc}15`,color:fc,border:`1px solid ${fc}30`}}>{freqLabels[r.freq]}</span>
+                      </div>
+                      {client && <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>🤝 {client.name}</div>}
+                      {r.nextDate && <div className="text-xs mt-1" style={{color: daysUntil !== null && daysUntil <= 7 ? '#f97316' : 'rgba(148,163,184,0.5)'}}>
+                        Next: {new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {daysUntil<0?'Overdue':daysUntil===0?'Today':`${daysUntil}d away`}
+                      </div>}
+                      {r.notes && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.4)'}}>{r.notes}</div>}
+                    </div>
+                    <button onClick={()=>{ if(window.confirm('Delete?')) saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); }}
+                      className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ── PHOTOS ────────────────────────────────────────────────────────────────
+    if (activeView === 'donny-photos') {
+      const savePhotos = (updated) => { setDonnyPhotos(updated); try { localStorage.setItem('muzz_donny_photos', JSON.stringify(updated)); } catch {} };
+      const jobPhotos = photoJobId ? (donnyPhotos[photoJobId]||[]) : [];
+      const filtered = photoFilter==='all' ? jobPhotos : jobPhotos.filter(p=>p.tag===photoFilter);
+      const handlePhotoUpload = (e) => {
+        const files = Array.from(e.target.files||[]);
+        files.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const photo = { id:Date.now()+Math.random(), url:ev.target.result, tag:photoFilter==='all'?'before':photoFilter, caption:'', createdAt:new Date().toISOString() };
+            const updated = { ...donnyPhotos, [photoJobId]: [...(donnyPhotos[photoJobId]||[]), photo] };
+            savePhotos(updated);
+          };
+          reader.readAsDataURL(file);
+        });
+      };
+
+      if (photoJobId) {
+        const job = donnyJobs.find(j=>j.id===photoJobId);
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={()=>{ setPhotoJobId(null); setPhotoFilter('all'); }} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Photos</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">📸</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// PHOTO LOG</div>
+                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
+                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                {['all','before','after','progress','defect'].map(t=>(
+                  <button key={t} onClick={()=>setPhotoFilter(t)}
+                    className="px-3 py-1.5 rounded-xl text-xs font-medium capitalize"
+                    style={{background:photoFilter===t?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:photoFilter===t?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.08)',color:photoFilter===t?'#f97316':'rgba(148,163,184,0.6)'}}>
+                    {t==='all'?`All (${jobPhotos.length})`:t}
+                  </button>
+                ))}
+              </div>
+              <label className="w-full py-4 rounded-2xl font-bold text-white text-sm flex items-center justify-center gap-2 cursor-pointer" style={{background:'rgba(249,115,22,0.1)',border:'2px dashed rgba(249,115,22,0.3)',color:'#f97316'}}>
+                📸 Add Photos
+                <input type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoUpload}/>
+              </label>
+              {filtered.length===0 ? (
+                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No {photoFilter==='all'?'':photoFilter} photos yet</div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {filtered.map(photo=>(
+                    <div key={photo.id} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
+                      <img src={photo.url} alt={photo.caption||photo.tag} className="w-full object-cover" style={{maxHeight:'180px'}}/>
+                      <div className="p-3">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-xs px-2 py-0.5 rounded-full capitalize font-medium" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>{photo.tag}</span>
+                          <button onClick={()=>{ const updated={...donnyPhotos,[photoJobId]:(donnyPhotos[photoJobId]||[]).filter(p=>p.id!==photo.id)}; savePhotos(updated); }}
+                            className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                        </div>
+                        <input value={photo.caption||''} onChange={e=>{ const updated={...donnyPhotos,[photoJobId]:(donnyPhotos[photoJobId]||[]).map(p=>p.id===photo.id?{...p,caption:e.target.value}:p)}; savePhotos(updated); }}
+                          placeholder="Add caption..." className="w-full bg-transparent text-white text-xs focus:outline-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                        <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(photo.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="PHOTOS" icon="📸" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {donnyJobs.length===0 ? (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}><div className="text-4xl mb-3">📸</div><div className="text-white font-bold">No jobs yet</div></div>
+            ) : (
+              <>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                {donnyJobs.map(job => {
+                  const photos = donnyPhotos[job.id]||[];
+                  return (
+                    <button key={job.id} onClick={()=>{ setPhotoJobId(job.id); setPhotoFilter('all'); }}
+                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📸</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-semibold truncate">{job.title}</div>
+                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{job.jobNumber?`#${job.jobNumber} · `:''}{photos.length} photo{photos.length!==1?'s':''}</div>
+                      </div>
+                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                    </button>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ── CHECKLISTS / SWMS ─────────────────────────────────────────────────────
+    if (activeView === 'donny-checklists') {
+      const saveChecklists = (updated) => { setDonnyChecklists(updated); try { localStorage.setItem('muzz_donny_checklists', JSON.stringify(updated)); } catch {} };
+      const typeColors = { swms:'#ef4444', checklist:'#22c55e', inspection:'#3b82f6', toolbox:'#f59e0b' };
+      const typeLabels = { swms:'SWMS', checklist:'Checklist', inspection:'Inspection', toolbox:'Toolbox Talk' };
+      const SWMS_TEMPLATES = [
+        { title:'Working at Heights', items:['Identify fall hazards','Inspect harness and PPE','Check anchor points','Barricade exclusion zone','Brief all workers','Spotter assigned'] },
+        { title:'Electrical Isolation', items:['Identify isolation point','Lock Out / Tag Out applied','Test for dead','Permit issued','PPE checked','Authorised person only'] },
+        { title:'Confined Space Entry', items:['Atmospheric testing complete','Entry permit issued','Standby person assigned','Rescue equipment ready','Communication established','Emergency plan briefed'] },
+        { title:'General Site Induction', items:['Emergency procedures','First aid location','Amenities location','PPE requirements','Site rules understood','Hazards briefed'] },
+      ];
+
+      if (selectedChecklistId) {
+        const selected = donnyChecklists.find(c=>c.id===selectedChecklistId);
+        if (!selected) { setSelectedChecklistId(null); }
+        const updateCL = (updated) => saveChecklists(donnyChecklists.map(c=>c.id===selected.id?updated:c));
+        const tc = typeColors[selected?.type]||'#f97316';
+        const allDone = selected?.items.length>0 && selected?.items.every(i=>i.done);
+        const job = donnyJobs.find(j=>j.id===selected?.jobId);
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:`1px solid ${tc}30`,background:`${tc}05`,position:"relative",overflow:"hidden"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={()=>setSelectedChecklistId(null)} className="mb-4 font-medium flex items-center gap-1 text-xs" style={{color:`${tc}cc`}}>← Checklists</button>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[selected?.type]}</span>
+                    <h1 className="text-2xl font-bold text-white mt-1">{selected?.title}</h1>
+                    {job&&<div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 {job.title}</div>}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-black" style={{color:allDone?'#22c55e':tc}}>{selected?.items.filter(i=>i.done).length}/{selected?.items.length}</div>
+                    <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>complete</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+              {selected?.items.map((item,i)=>(
+                <div key={item.id} className="flex items-center gap-3 rounded-xl px-4 py-3" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${item.done?'rgba(34,197,94,0.2)':'rgba(255,255,255,0.06)'}`}}>
+                  <button onClick={()=>updateCL({...selected,items:selected.items.map((x,j)=>j===i?{...x,done:!x.done}:x)})}
+                    className="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center text-sm"
+                    style={{background:item.done?'rgba(34,197,94,0.2)':'rgba(255,255,255,0.06)',border:item.done?'1px solid rgba(34,197,94,0.4)':'1px solid rgba(255,255,255,0.1)',color:'#22c55e'}}>
+                    {item.done&&'✓'}
+                  </button>
+                  <input value={item.text} onChange={e=>updateCL({...selected,items:selected.items.map((x,j)=>j===i?{...x,text:e.target.value}:x)})}
+                    className="flex-1 bg-transparent text-sm focus:outline-none" style={{color:item.done?'rgba(148,163,184,0.5)':'white',textDecoration:item.done?'line-through':'none'}}/>
+                  <button onClick={()=>updateCL({...selected,items:selected.items.filter((_,j)=>j!==i)})} style={{color:'rgba(239,68,68,0.4)',fontSize:'18px',lineHeight:1}}>×</button>
+                </div>
+              ))}
+              <button onClick={()=>updateCL({...selected,items:[...selected.items,{id:Date.now(),text:'',done:false}]})}
+                className="w-full py-3 rounded-xl text-sm font-bold" style={{background:'rgba(255,255,255,0.04)',border:'1px dashed rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.5)'}}>
+                + Add Item
+              </button>
+              {allDone && selected?.items.length>0 && (
+                <div className="rounded-2xl p-4 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                  <div className="text-2xl mb-1">✅</div>
+                  <div className="text-white font-bold">All items complete!</div>
+                </div>
+              )}
+              <button onClick={()=>{ if(window.confirm('Delete?')){ saveChecklists(donnyChecklists.filter(c=>c.id!==selected.id)); setSelectedChecklistId(null); }}}
+                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete</button>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="CHECKLISTS / SWMS" icon="✅" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={()=>setShowNewChecklist(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.3)',color:'#22c55e'}}>
+              {showNewChecklist?'✕ Cancel':'+ New Checklist / SWMS'}
+            </button>
+            {showNewChecklist && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TYPE</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {Object.entries(typeLabels).map(([v,l])=>(
+                        <button key={v} onClick={()=>setNewChecklist(p=>({...p,type:v}))} className="text-xs px-2.5 py-1 rounded-lg font-bold"
+                          style={{background:newChecklist.type===v?`${typeColors[v]}20`:'rgba(255,255,255,0.04)',border:newChecklist.type===v?`1px solid ${typeColors[v]}50`:'1px solid rgba(255,255,255,0.08)',color:newChecklist.type===v?typeColors[v]:'rgba(148,163,184,0.6)'}}>
+                          {l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB</div>
+                    <select value={newChecklist.jobId} onChange={e=>setNewChecklist(p=>({...p,jobId:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No job</option>
+                      {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.title}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TITLE</div>
+                  <input value={newChecklist.title} onChange={e=>setNewChecklist(p=>({...p,title:e.target.value}))} placeholder="e.g. Roof access SWMS"
+                    className="w-full bg-transparent text-white font-bold focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                {newChecklist.type==='swms' && (
+                  <div>
+                    <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>QUICK TEMPLATES</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {SWMS_TEMPLATES.map(t=>(
+                        <button key={t.title} onClick={()=>setNewChecklist(p=>({...p,title:t.title,items:t.items.map((txt,i)=>({id:Date.now()+i,text:txt,done:false}))}))}
+                          className="text-xs px-2.5 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.2)'}}>
+                          {t.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <button onClick={()=>{
+                  if(!newChecklist.title.trim()) return;
+                  const cl={...newChecklist,id:Date.now(),items:newChecklist.items.length>0?newChecklist.items:[{id:Date.now(),text:'',done:false}],createdAt:new Date().toISOString()};
+                  saveChecklists([cl,...donnyChecklists]); setSelectedChecklistId(cl.id); setShowNewChecklist(false);
+                  setNewChecklist({title:'',type:'swms',jobId:'',items:[]});
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>Create</button>
+              </div>
+            )}
+            {donnyChecklists.length===0 && !showNewChecklist && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.08)'}}>
+                <div className="text-4xl mb-3">✅</div><div className="text-white font-bold mb-1">No checklists yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Create SWMS, checklists, inspections</div>
+              </div>
+            )}
+            {donnyChecklists.map(cl=>{
+              const tc=typeColors[cl.type]||'#f97316'; const done=cl.items.filter(i=>i.done).length; const total=cl.items.length;
+              const job=donnyJobs.find(j=>j.id===cl.jobId);
+              return(
+                <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)} className="w-full rounded-2xl p-4 text-left flex items-center gap-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${tc}20`}}>
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:`${tc}10`,border:`1px solid ${tc}25`}}>✅</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[cl.type]||cl.type}</span>
+                      <span className="text-white font-bold">{cl.title}</span>
+                    </div>
+                    {job&&<div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>🔨 {job.title}</div>}
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-3">
+                    <div className="text-sm font-black" style={{color:done===total&&total>0?'#22c55e':tc}}>{done}/{total}</div>
+                    {total>0&&<div className="w-12 h-1.5 rounded-full mt-1 overflow-hidden" style={{background:'rgba(255,255,255,0.06)'}}><div className="h-full rounded-full" style={{width:`${total>0?(done/total*100):0}%`,background:done===total?'#22c55e':tc}}/></div>}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ── INCIDENTS ─────────────────────────────────────────────────────────────
+    if (activeView === 'donny-incidents') {
+      const saveIncidents = (updated) => { setDonnyIncidents(updated); try { localStorage.setItem('muzz_donny_incidents', JSON.stringify(updated)); } catch {} };
+      const typeColors = { near_miss:'#f59e0b', first_aid:'#f97316', medical:'#ef4444', lost_time:'#dc2626', property:'#3b82f6', environmental:'#22c55e' };
+      const typeLabels = { near_miss:'Near Miss', first_aid:'First Aid', medical:'Medical Treatment', lost_time:'Lost Time Injury', property:'Property Damage', environmental:'Environmental' };
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="INCIDENT REGISTER" icon="🚨" />
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+            <button onClick={()=>setShowNewIncident(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
+              {showNewIncident?'✕ Cancel':'+ Log Incident'}
+            </button>
+            {showNewIncident && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.2)'}}>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
+                    <input type="date" value={newIncident.date} onChange={e=>setNewIncident(p=>({...p,date:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🕐 TIME</div>
+                    <input type="time" value={newIncident.time} onChange={e=>setNewIncident(p=>({...p,time:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TYPE</div>
+                    <select value={newIncident.type} onChange={e=>setNewIncident(p=>({...p,type:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      {Object.entries(typeLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB</div>
+                    <select value={newIncident.jobId} onChange={e=>setNewIncident(p=>({...p,jobId:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="">No job</option>
+                      {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.title}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👤 WHO WAS INVOLVED</div>
+                  <input value={newIncident.who} onChange={e=>setNewIncident(p=>({...p,who:e.target.value}))} placeholder="Name(s)" list="incident-who"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  <datalist id="incident-who">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📋 DESCRIPTION</div>
+                  <textarea value={newIncident.description} onChange={e=>setNewIncident(p=>({...p,description:e.target.value}))} rows={3} placeholder="What happened? Where? How?"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none resize-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🏥 INJURY / DAMAGE</div>
+                  <input value={newIncident.injury} onChange={e=>setNewIncident(p=>({...p,injury:e.target.value}))} placeholder="Nature of injury or damage"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>✅ CORRECTIVE ACTION</div>
+                  <input value={newIncident.action} onChange={e=>setNewIncident(p=>({...p,action:e.target.value}))} placeholder="What was done to prevent recurrence?"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <div className="w-6 h-6 rounded-lg flex items-center justify-center text-sm" style={{background:newIncident.reported?'rgba(34,197,94,0.2)':'rgba(255,255,255,0.06)',border:newIncident.reported?'1px solid rgba(34,197,94,0.4)':'1px solid rgba(255,255,255,0.1)',color:'#22c55e'}}
+                    onClick={()=>setNewIncident(p=>({...p,reported:!p.reported}))}>
+                    {newIncident.reported&&'✓'}
+                  </div>
+                  <span className="text-sm text-white">Reported to regulator (SafeWork / WorkSafe)</span>
+                </label>
+                <button onClick={()=>{
+                  if(!newIncident.description.trim()) return;
+                  saveIncidents([{...newIncident,id:Date.now(),createdAt:new Date().toISOString()},...donnyIncidents]);
+                  setNewIncident({date:new Date().toISOString().split('T')[0],time:'',jobId:'',who:'',type:'near_miss',description:'',injury:'',action:'',reported:false});
+                  setShowNewIncident(false);
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>Log Incident</button>
+              </div>
+            )}
+            {donnyIncidents.length===0 && !showNewIncident && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.06)'}}>
+                <div className="text-4xl mb-3">✅</div><div className="text-white font-bold mb-1">No incidents logged</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Keep it that way — stay safe out there</div>
+              </div>
+            )}
+            {donnyIncidents.map(inc=>{
+              const tc=typeColors[inc.type]||'#f97316'; const job=donnyJobs.find(j=>j.id===inc.jobId);
+              return(
+                <div key={inc.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${tc}20`}}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[inc.type]}</span>
+                      <div className="text-xs mt-1.5 flex gap-3" style={{color:'rgba(148,163,184,0.5)'}}>
+                        <span>{inc.date}{inc.time?` · ${inc.time}`:''}</span>
+                        {inc.who&&<span>👤 {inc.who}</span>}
+                        {job&&<span>🔨 {job.title}</span>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {inc.reported&&<span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(34,197,94,0.1)',color:'rgba(34,197,94,0.7)',border:'1px solid rgba(34,197,94,0.2)'}}>Reported</span>}
+                      <button onClick={()=>{if(window.confirm('Delete?'))saveIncidents(donnyIncidents.filter(i=>i.id!==inc.id));}} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                    </div>
+                  </div>
+                  <div className="text-sm text-white mb-2">{inc.description}</div>
+                  {inc.injury&&<div className="text-xs px-3 py-1.5 rounded-lg mb-1.5 inline-block" style={{background:`${tc}08`,color:tc,border:`1px solid ${tc}15`}}>🏥 {inc.injury}</div>}
+                  {inc.action&&<div className="text-xs mt-2" style={{color:'rgba(34,197,94,0.7)'}}>✅ {inc.action}</div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
     if (activeView === 'donny-materialslog') {
       const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); try { localStorage.setItem('muzz_donny_materials_log', JSON.stringify(updated)); } catch {} };
 
