@@ -13996,7 +13996,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(249,115,22,0.15)",position:"relative",overflow:"hidden"}}>
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.25)"}}>🐨</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm mb-0.5" style={{color:"rgba(255,255,255,0.5)"}}>{greeting}, boss · {today}</div>
@@ -14007,14 +14007,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       ? "No active jobs 🤙"
                       : `${activeJobs.length} job${activeJobs.length>1?'s':''} on the go 🔨`}
                   </div>
-                </div>
-              </div>
-              <div className="rounded-2xl p-4" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)"}}>
-                <div className="text-sm mb-1" style={{color:"rgba(249,115,22,0.7)"}}>Total costs tracked</div>
-                <div className="text-4xl font-bold text-white">${totalCosts.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-                <div className="flex gap-4 mt-2">
-                  <span className="text-xs" style={{color:"rgba(255,255,255,0.4)"}}>Labour <span className="text-white font-semibold">${totalLabourCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</span></span>
-                  <span className="text-xs" style={{color:"rgba(255,255,255,0.4)"}}>Materials <span className="text-white font-semibold">${totalMaterialCost.toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}</span></span>
+                  <div className="text-sm mt-1" style={{color:"rgba(148,163,184,0.5)"}}>
+                    {donnyTeam.length} team · {donnyClients.length} client{donnyClients.length!==1?'s':''} · {completedJobs.length} completed
+                  </div>
                 </div>
               </div>
             </div>
