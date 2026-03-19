@@ -14685,7 +14685,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {member.position && <span className="text-xs px-2 py-0.5 rounded-full font-mono" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.8)',border:'1px solid rgba(249,115,22,0.2)'}}>{member.position}</span>}
                             </div>
                             <div className="flex items-center gap-3 mt-0.5">
-                              {member.role && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{member.role}</span>}
+                              {(member.roles||[member.role]).filter(Boolean).length > 0 && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')}</span>}
                               {member.hourlyRate && <span className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>💰 ${member.hourlyRate}/hr</span>}
                             </div>
                           </div>
@@ -15082,34 +15082,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             {/* LABOUR */}
             <Section title="⏱️ Labour" color="#f97316">
-              <StatRow label="Total hours logged" value={`${totalLabourHrs.toFixed(1)}h`}/>
-              <StatRow label="Total labour cost" value={`$${totalLabourCost.toFixed(0)}`} color="#22c55e"/>
               <StatRow label="Team members" value={donnyTeam.length}/>
-              {teamHours.length>0 && (
+              <StatRow label="Combined hourly rate" value={`$${donnyTeam.reduce((s,m)=>s+(parseFloat(m.hourlyRate)||0),0).toFixed(2)}/hr`} color="#22c55e"/>
+              {donnyTeam.length > 0 && (
                 <div className="mt-2 rounded-xl overflow-hidden" style={{border:'1px solid rgba(255,255,255,0.05)'}}>
-                  <div className="grid text-xs font-mono px-4 py-2" style={{gridTemplateColumns:'1fr 60px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>MEMBER</div><div>HOURS</div><div>COST</div>
+                  <div className="grid text-xs font-mono px-4 py-2" style={{gridTemplateColumns:'1fr 1fr 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>MEMBER</div><div>ROLE</div><div>RATE</div>
                   </div>
-                  {teamHours.map(m=>(
-                    <div key={m.id} className="grid px-4 py-2.5 text-sm" style={{gridTemplateColumns:'1fr 60px 80px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                  {donnyTeam.map(m=>(
+                    <div key={m.id} className="grid px-4 py-2.5 text-sm" style={{gridTemplateColumns:'1fr 1fr 90px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
                       <span className="text-white font-medium">{m.name}</span>
-                      <span style={{color:'#f97316'}}>{m.hrs.toFixed(1)}h</span>
-                      <span style={{color:'#22c55e'}}>${m.pay.toFixed(0)}</span>
+                      <span className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||'—'}</span>
+                      <span style={{color:'#22c55e'}}>{m.hourlyRate?`$${m.hourlyRate}/hr`:'—'}</span>
                     </div>
                   ))}
                 </div>
               )}
-              {teamHours.length===0 && <div className="text-xs" style={{color:'rgba(148,163,184,0.3)'}}>No timesheets logged yet</div>}
+              {totalLabourHrs > 0 && (
+                <>
+                  <StatRow label="Hours logged (timesheets)" value={`${totalLabourHrs.toFixed(1)}h`}/>
+                  <StatRow label="Labour cost (timesheets)" value={`$${totalLabourCost.toFixed(0)}`} color="#22c55e"/>
+                </>
+              )}
             </Section>
 
-            {/* COSTS */}
-            <Section title="💰 Costs" color="#22c55e">
-              <StatRow label="Total costs tracked" value={`$${totalMaterialCost.toFixed(0)}`} color="#22c55e"/>
-              <StatRow label="Materials" value={`$${matByType.material.toFixed(0)}`} color="#22c55e"/>
-              <StatRow label="Labour (daily)" value={`$${matByType.labour.toFixed(0)}`} color="#f97316"/>
-              <StatRow label="Other" value={`$${matByType.other.toFixed(0)}`} color="#a78bfa"/>
-              <StatRow label="Combined (labour + costs)" value={`$${(totalLabourCost+totalMaterialCost).toFixed(0)}`} color="#00c8ff"/>
-            </Section>
+            {/* DAILY COSTS — only show if data exists */}
+            {donnyCosts.length > 0 && (
+              <Section title="💰 Daily Costs" color="#22c55e">
+                <StatRow label="Total costs tracked" value={`$${totalMaterialCost.toFixed(0)}`} color="#22c55e"/>
+                <StatRow label="Materials" value={`$${matByType.material.toFixed(0)}`} color="#22c55e"/>
+                <StatRow label="Labour" value={`$${matByType.labour.toFixed(0)}`} color="#f97316"/>
+                <StatRow label="Other" value={`$${matByType.other.toFixed(0)}`} color="#a78bfa"/>
+              </Section>
+            )}
 
             {/* EXTRA MATERIALS */}
             {donnyMaterialsLog.length > 0 && (
