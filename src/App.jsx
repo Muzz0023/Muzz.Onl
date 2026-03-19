@@ -232,6 +232,19 @@ const StarryBackground = ({ children }) => {
           background: linear-gradient(90deg, transparent, #00c8ff, transparent);
           animation: headerScan 4s ease-in-out infinite;
         }
+        @keyframes headerScanOrange {
+          0% { transform: translateX(-100%); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateX(100%); opacity: 0; }
+        }
+        .header-scan-orange::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, #f97316, transparent);
+          animation: headerScanOrange 4s ease-in-out infinite;
+        }
 
         /* Progress bar glow */
         .progress-glow {
@@ -13961,7 +13974,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     ];
 
     const DonnyHeader = ({ title, icon }) => (
-      <div className="pt-16 pb-6 px-6" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)"}}>
+      <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.2)",background:"rgba(249,115,22,0.03)",position:"relative",overflow:"hidden"}}>
         <div className="max-w-4xl mx-auto">
           <button onClick={() => setActiveView('donny')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(249,115,22,0.8)",fontSize:"13px"}}>← Dashboard</button>
           <div className="flex items-center gap-3">
@@ -13994,7 +14007,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar />
           <SaveIndicator />
 
-          <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(249,115,22,0.15)",position:"relative",overflow:"hidden"}}>
+          <div className="pt-16 pb-6 px-6 header-scan-orange" style={{borderBottom:"1px solid rgba(249,115,22,0.15)",position:"relative",overflow:"hidden"}}>
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.25)"}}>🐨</div>
