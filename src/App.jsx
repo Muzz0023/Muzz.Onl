@@ -15458,11 +15458,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </div>
               )}
-              {/* Contact buttons */}
-              <div className="grid grid-cols-2 gap-3">
-                {sub.phone && <a href={`tel:${sub.phone}`} className="py-3 rounded-xl text-sm font-bold text-center" style={{background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>📞 Call</a>}
-                {sub.email && <a href={`mailto:${sub.email}`} className="py-3 rounded-xl text-sm font-bold text-center" style={{background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>📧 Email</a>}
-              </div>
               <button onClick={()=>{ if(window.confirm(`Remove ${sub.name}?`)){ saveSubs(donnySubs.filter(s=>s.id!==sub.id)); setEditingSubId(null); }}}
                 className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete Subcontractor</button>
             </div>
