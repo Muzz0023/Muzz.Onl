@@ -15979,14 +15979,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-xs font-mono tracking-widest" style={{color:'rgba(239,68,68,0.7)'}}>// MISTAKES TABLE</div>
                       <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444'}}>{donnyMistakes.length} logged</span>
                     </div>
-                    <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'90px 1fr 1fr',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                      <div>DATE</div><div>WHO</div><div>WHAT</div>
+                    <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'90px 1fr 1fr 1fr',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div>DATE</div><div>WHO</div><div>WHAT</div><div>JOB</div>
                     </div>
                     {donnyMistakes.map((m,i)=>(
-                      <div key={m.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'90px 1fr 1fr',borderBottom:i<donnyMistakes.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                      <div key={m.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'90px 1fr 1fr 1fr',borderBottom:i<donnyMistakes.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
                         <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</span>
                         <span className="text-sm text-white font-medium truncate pr-2">{m.who||'Unknown'}</span>
-                        <span className="text-xs truncate" style={{color:'rgba(148,163,184,0.5)'}}>{m.what}</span>
+                        <span className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{m.what}</span>
+                        <span className="text-xs truncate" style={{color:'rgba(249,115,22,0.6)'}}>{m.jobRef||'—'}</span>
                       </div>
                     ))}
                   </div>
