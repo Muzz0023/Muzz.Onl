@@ -1868,6 +1868,9 @@ function MuzzApp() {
   const [editingIncidentId, setEditingIncidentId] = useState(null);
   const [editingMistakeId, setEditingMistakeId] = useState(null);
   const [editingRiskJobId, setEditingRiskJobId] = useState(null);
+  const [newRiskJobId, setNewRiskJobId] = useState(null);
+  const [newRiskText, setNewRiskText] = useState('');
+  const [newRiskAvoid, setNewRiskAvoid] = useState('');
   const [newRecurring, setNewRecurring] = useState({ title:'', clientId:'', freq:'monthly', nextDate:'', notes:'' });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
@@ -16172,29 +16175,73 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 ))}
               </div>
             )}
-            {jobsWithRisks.length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.08)'}}>
-                <div className="text-4xl mb-3">✅</div>
-                <div className="text-white font-bold mb-1">No risks logged</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add risks when creating or editing a job</div>
+            {/* Add Risk form — always visible */}
+            {donnyJobs.length > 0 && (
+              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.2)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(239,68,68,0.6)'}}>// ADD / UPDATE RISK</div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB</div>
+                  <select value={newRiskJobId||''} onChange={e=>setNewRiskJobId(e.target.value||null)}
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                    <option value="">Select a job...</option>
+                    {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.title}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>⚠️ BIGGEST RISK</div>
+                  <textarea value={newRiskText} onChange={e=>setNewRiskText(e.target.value)}
+                    placeholder="e.g. Working at height — risk of falling from scaffold"
+                    rows={3} className="w-full bg-transparent text-white text-sm focus:outline-none resize-none leading-relaxed border-b"
+                    style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🛡️ HOW TO AVOID</div>
+                  <textarea value={newRiskAvoid} onChange={e=>setNewRiskAvoid(e.target.value)}
+                    placeholder="e.g. Full harness required, anchor points checked before start"
+                    rows={3} className="w-full bg-transparent text-white text-sm focus:outline-none resize-none leading-relaxed border-b"
+                    style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <button onClick={()=>{
+                  if(!newRiskJobId||!newRiskText.trim()) return;
+                  const updated = donnyJobs.map(j=>j.id===newRiskJobId?{...j,risk:newRiskText.trim(),riskAvoid:newRiskAvoid.trim()}:j);
+                  saveDonnyJobs(updated);
+                  setNewRiskJobId(null); setNewRiskText(''); setNewRiskAvoid('');
+                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>
+                  + Save Risk
+                </button>
               </div>
-            ) : (
+            )}
+
+            {donnyJobs.length === 0 && (
+              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.08)'}}>
+                <div className="text-4xl mb-3">⚠️</div>
+                <div className="text-white font-bold mb-1">No jobs yet</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log risks</div>
+              </div>
+            )}
+
+            {jobsWithRisks.length > 0 && (
               <>
-                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(239,68,68,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(239,68,68,0.5)',letterSpacing:'2px'}}>// RISKS LOGGED</div>
                 {jobsWithRisks.map(job => (
                   <button key={job.id} onClick={() => setSelectedDonnyJob(job)}
                     className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
-                    style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                    style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.2)'}}>⚠️</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-white font-semibold truncate">{job.title}</div>
-                      <div className="text-xs mt-0.5 truncate" style={{color:'rgba(148,163,184,0.5)'}}>{job.risk}</div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-white font-semibold">{job.title}</span>
+                        {job.jobNumber && <span className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>#{job.jobNumber}</span>}
+                      </div>
+                      <div className="text-xs mt-0.5 truncate" style={{color:'rgba(239,68,68,0.6)'}}>{job.risk}</div>
+                      {job.riskAvoid && <div className="text-xs mt-0.5 truncate" style={{color:'rgba(34,197,94,0.5)'}}>🛡️ {job.riskAvoid}</div>}
                     </div>
                     <span style={{color:'rgba(239,68,68,0.4)',fontSize:'20px'}}>›</span>
                   </button>
                 ))}
               </>
             )}
+
           </div>
         </div>
       );
