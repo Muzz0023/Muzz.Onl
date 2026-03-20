@@ -16203,7 +16203,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <button onClick={()=>{
                   if(!newRiskJobId||!newRiskText.trim()) return;
-                  const updated = donnyJobs.map(j=>j.id===newRiskJobId?{...j,risk:newRiskText.trim(),riskAvoid:newRiskAvoid.trim()}:j);
+                  const updated = donnyJobs.map(j=>String(j.id)===String(newRiskJobId)?{...j,risk:newRiskText.trim(),riskAvoid:newRiskAvoid.trim()}:j);
                   saveDonnyJobs(updated);
                   setNewRiskJobId(null); setNewRiskText(''); setNewRiskAvoid('');
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>
