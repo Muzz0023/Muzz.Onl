@@ -1864,6 +1864,7 @@ function MuzzApp() {
   // Donny Recurring Jobs
   const [donnyRecurring, setDonnyRecurring] = useState(() => { try { const s=localStorage.getItem('muzz_donny_recurring'); return s?JSON.parse(s):[]; } catch { return []; } });
   const [showNewRecurring, setShowNewRecurring] = useState(false);
+  const [editingRecurringId, setEditingRecurringId] = useState(null);
   const [newRecurring, setNewRecurring] = useState({ title:'', clientId:'', freq:'monthly', nextDate:'', notes:'' });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
@@ -15264,10 +15265,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const client = donnyClients.find(c=>c.id===r.clientId);
               const fc = freqColors[r.freq]||'#f97316';
               const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
+              const isEditing = editingRecurringId === r.id;
               return (
-                <div key={r.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                <div key={r.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${isEditing?'rgba(249,115,22,0.4)':'rgba(249,115,22,0.15)'}`}}>
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-white font-bold">{r.title}</span>
                         <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${fc}15`,color:fc,border:`1px solid ${fc}30`}}>{freqLabels[r.freq]}</span>
@@ -15276,11 +15278,59 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {r.nextDate && <div className="text-xs mt-1" style={{color: daysUntil !== null && daysUntil <= 7 ? '#f97316' : 'rgba(148,163,184,0.5)'}}>
                         Next: {new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {daysUntil<0?'Overdue':daysUntil===0?'Today':`${daysUntil}d away`}
                       </div>}
-                      {r.notes && <div className="text-sm mt-2 leading-relaxed whitespace-pre-wrap" style={{color:'rgba(148,163,184,0.6)'}}>{r.notes}</div>}
+                      {r.notes && !isEditing && <div className="text-sm mt-2 leading-relaxed whitespace-pre-wrap" style={{color:'rgba(148,163,184,0.6)'}}>{r.notes}</div>}
                     </div>
-                    <button onClick={()=>{ if(window.confirm('Delete?')) saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); }}
-                      className="text-xs px-2 py-1 rounded-lg ml-3 flex-shrink-0" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                    <div className="flex gap-2 ml-3 flex-shrink-0">
+                      <button onClick={()=>setEditingRecurringId(isEditing?null:r.id)}
+                        className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>
+                        {isEditing?'✕':'✏️'}
+                      </button>
+                      <button onClick={()=>{ if(window.confirm('Delete?')) saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); }}
+                        className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                    </div>
                   </div>
+                  {isEditing && (
+                    <div className="mt-4 pt-4 space-y-3" style={{borderTop:'1px solid rgba(249,115,22,0.15)'}}>
+                      <div>
+                        <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>JOB TITLE</div>
+                        <input value={r.title} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,title:e.target.value}:x))}
+                          className="w-full bg-transparent text-white font-bold focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>🤝 CLIENT</div>
+                          <select value={r.clientId||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,clientId:e.target.value}:x))}
+                            className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                            <option value="">No client</option>
+                            {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>🔁 FREQUENCY</div>
+                          <select value={r.freq} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,freq:e.target.value}:x))}
+                            className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                            {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>📅 NEXT DATE</div>
+                          <input type="date" value={r.nextDate||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,nextDate:e.target.value}:x))}
+                            className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>📝 NOTES</div>
+                        <textarea value={r.notes||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,notes:e.target.value}:x))}
+                          placeholder="Scope of work, access details, materials needed..."
+                          rows={4} className="w-full bg-transparent text-white text-sm focus:outline-none resize-none leading-relaxed border-b"
+                          style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                      </div>
+                      <button onClick={()=>setEditingRecurringId(null)}
+                        className="w-full py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                        ✓ Done
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
