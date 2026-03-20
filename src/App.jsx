@@ -14944,7 +14944,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         Array.isArray(entries) ? entries.filter(e=>e.startHour!==undefined).map(e=>({...e,date})) : []
       );
       const memberColors = ['#f97316','#3b82f6','#22c55e','#a855f7','#ef4444','#f59e0b','#14b8a6','#ec4899'];
-      const getMemberColor = (memberId) => { const idx=donnyTeam.findIndex(m=>m.id===memberId); return memberColors[idx%memberColors.length]||'#f97316'; };
+      const getMemberColor = (memberId) => { const idx=donnyTeam.findIndex(m=>String(m.id)===String(memberId)); return memberColors[idx%memberColors.length]||'#f97316'; };
       const hexToRgba = (hex,a) => { try { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; } catch { return `rgba(249,115,22,${a})`; }};
       const colorPresets = ['#f97316','#3b82f6','#22c55e','#a855f7','#ef4444','#f59e0b','#14b8a6','#ec4899'];
 
@@ -15023,15 +15023,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             const startIdx=block.startHour||0; const endIdx=block.endHour||startIdx+1;
                             const ROW_H=41; const top=startIdx*ROW_H+1; const height=(endIdx-startIdx)*ROW_H-4;
                             const color=block.color||getMemberColor(block.memberId);
-                            const member=donnyTeam.find(m=>m.id===block.memberId);
-                            const job=donnyJobs.find(j=>j.id===block.jobId);
+                            const member=donnyTeam.find(m=>String(m.id)===String(block.memberId));
+                            const job=donnyJobs.find(j=>String(j.id)===String(block.jobId));
                             return (
                               <div key={bi}
-                                onClick={()=>{ if(window.confirm('Remove this block?')){ const updated={...donnySchedule,[dateKey]:(donnySchedule[dateKey]||[]).filter(e=>e.id!==block.id)}; saveSched(updated); }}}
                                 style={{position:'absolute',top:`${top}px`,left:'2px',right:'2px',height:`${height}px`,background:hexToRgba(color,0.25),border:`1px solid ${hexToRgba(color,0.7)}`,borderRadius:'6px',padding:'4px',cursor:'pointer',zIndex:2,overflow:'hidden'}}>
-                                <div style={{fontSize:'11px',fontWeight:600,color:'white',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{member?.name||'?'}</div>
-                                <div style={{fontSize:'10px',color:'rgba(255,255,255,0.6)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{job?.title?.slice(0,18)||'?'}</div>
-                                <div style={{fontSize:'9px',color:hexToRgba(color,0.8),whiteSpace:'nowrap'}}>{fmt12(startIdx)}–{fmt12(endIdx)}</div>
+                                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+                                  <div style={{flex:1,overflow:'hidden'}}>
+                                    <div style={{fontSize:'11px',fontWeight:600,color:'white',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{member?.name||'?'}</div>
+                                    <div style={{fontSize:'10px',color:'rgba(255,255,255,0.6)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{job?.title?.slice(0,18)||'?'}</div>
+                                    <div style={{fontSize:'9px',color:hexToRgba(color,0.8),whiteSpace:'nowrap'}}>{fmt12(startIdx)}–{fmt12(endIdx)}</div>
+                                  </div>
+                                  <button onClick={(e)=>{ e.stopPropagation(); const updated={...donnySchedule,[dateKey]:(donnySchedule[dateKey]||[]).filter(e=>e.id!==block.id)}; saveSched(updated); }}
+                                    style={{fontSize:'12px',color:'rgba(255,255,255,0.6)',lineHeight:1,padding:'0 2px',flexShrink:0}}>×</button>
+                                </div>
                               </div>
                             );
                           })}
@@ -15062,8 +15067,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-xs font-mono mb-2 px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>{d.toUpperCase()} {weekDates[di].getDate()}{isToday?' — TODAY':''}</div>
                       {dayBlocks.map((block,bi)=>{
                         const color=block.color||getMemberColor(block.memberId);
-                        const member=donnyTeam.find(m=>m.id===block.memberId);
-                        const job=donnyJobs.find(j=>j.id===block.jobId);
+                        const member=donnyTeam.find(m=>String(m.id)===String(block.memberId));
+                        const job=donnyJobs.find(j=>String(j.id)===String(block.jobId));
                         return (
                           <div key={bi} className="flex items-center gap-3 p-3 rounded-xl mb-2" style={{background:'rgba(5,15,30,0.8)',border:`1px solid ${hexToRgba(color,0.3)}`}}>
                             <div className="w-3 h-3 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 8px ${color}`}}/>
@@ -15147,7 +15152,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     if(!schedPickMember||!schedPickJob) return;
                     const dateKey=schedPickDay||dateKeys[0];
                     const color=schedBlockColor||getMemberColor(schedPickMember);
-                    const entry={id:Date.now(),memberId:schedPickMember,jobId:schedPickJob,startHour:schedPickStart,endHour:schedPickEnd,color};
+                    const entry={id:Date.now(),memberId:String(schedPickMember),jobId:String(schedPickJob),startHour:schedPickStart,endHour:schedPickEnd,color};
                     const updated={...donnySchedule,[dateKey]:[...(donnySchedule[dateKey]||[]),entry]};
                     saveSched(updated);
                     setSchedPickMember(null); setSchedPickJob(null); setSchedPickStart(7); setSchedPickEnd(15); setSchedTab('week');
