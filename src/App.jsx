@@ -15426,6 +15426,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}><div className="text-4xl mb-3">📸</div><div className="text-white font-bold">No jobs yet</div></div>
             ) : (
               <>
+                {/* Master table */}
+                {Object.keys(donnyPhotos).some(id=>donnyPhotos[id]?.length>0) && (
+                  <div className="rounded-2xl overflow-hidden mb-2" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                      <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// PHOTO TABLE</div>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{Object.values(donnyPhotos).reduce((s,p)=>s+(p?.length||0),0)} photos</span>
+                    </div>
+                    <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 50px 50px 50px 50px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div>JOB</div><div>Before</div><div>After</div><div>Prog.</div><div>Defect</div>
+                    </div>
+                    {donnyJobs.filter(j=>(donnyPhotos[j.id]||[]).length>0).map((job,i,arr)=>{
+                      const photos=donnyPhotos[job.id]||[];
+                      return(
+                        <div key={job.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 50px 50px 50px 50px',borderBottom:i<arr.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                          <span className="text-white font-medium text-sm truncate pr-2">{job.title}</span>
+                          {['before','after','progress','defect'].map(tag=>(
+                            <span key={tag} className="text-xs font-bold text-center" style={{color:photos.filter(p=>p.tag===tag).length>0?'#f97316':'rgba(148,163,184,0.25)'}}>
+                              {photos.filter(p=>p.tag===tag).length||'—'}
+                            </span>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                 <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
                 {donnyJobs.map(job => {
                   const photos = donnyPhotos[job.id]||[];
@@ -15580,6 +15605,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Create SWMS, checklists, inspections</div>
               </div>
             )}
+            {donnyChecklists.length>0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(34,197,94,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(34,197,94,0.7)'}}>// CHECKLIST TABLE</div>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e'}}>{donnyChecklists.length} total</span>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 100px 80px 70px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>TITLE</div><div>TYPE</div><div>JOB</div><div>DONE</div>
+                </div>
+                {donnyChecklists.map((cl,i)=>{
+                  const tc=typeColors[cl.type]||'#22c55e';
+                  const done=cl.items.filter(x=>x.done).length; const total=cl.items.length;
+                  const job=donnyJobs.find(j=>j.id===cl.jobId);
+                  return(
+                    <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
+                      className="w-full grid px-5 py-3 items-center text-left hover:bg-white/[0.02]"
+                      style={{gridTemplateColumns:'1fr 100px 80px 70px',borderBottom:i<donnyChecklists.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                      <span className="text-white font-medium text-sm truncate pr-2">{cl.title}</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-bold inline-block" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[cl.type]||cl.type}</span>
+                      <span className="text-xs truncate" style={{color:'rgba(148,163,184,0.5)'}}>{job?.title?.slice(0,12)||'—'}</span>
+                      <span className="text-xs font-bold" style={{color:done===total&&total>0?'#22c55e':tc}}>{done}/{total}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
             {donnyChecklists.map(cl=>{
               const tc=typeColors[cl.type]||'#f97316'; const done=cl.items.filter(i=>i.done).length; const total=cl.items.length;
               const job=donnyJobs.find(j=>j.id===cl.jobId);
@@ -15687,6 +15738,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.06)'}}>
                 <div className="text-4xl mb-3">✅</div><div className="text-white font-bold mb-1">No incidents logged</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Keep it that way — stay safe out there</div>
+              </div>
+            )}
+            {donnyIncidents.length>0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(239,68,68,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(239,68,68,0.7)'}}>// INCIDENT TABLE</div>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444'}}>{donnyIncidents.length} logged</span>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'90px 1fr 1fr 70px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>DATE</div><div>TYPE</div><div>WHO</div><div>REPORTED</div>
+                </div>
+                {donnyIncidents.map((inc,i)=>{
+                  const tc=typeColors[inc.type]||'#ef4444';
+                  const job=donnyJobs.find(j=>j.id===inc.jobId);
+                  return(
+                    <div key={inc.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'90px 1fr 1fr 70px',borderBottom:i<donnyIncidents.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                      <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{inc.date||'—'}</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-bold inline-block mr-2" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[inc.type]||inc.type}</span>
+                      <span className="text-xs truncate" style={{color:'rgba(148,163,184,0.6)'}}>{inc.who||'—'}{job?` · ${job.title.slice(0,12)}`:''}</span>
+                      <span className="text-xs font-bold" style={{color:inc.reported?'#22c55e':'rgba(148,163,184,0.3)'}}>{inc.reported?'Yes':'No'}</span>
+                    </div>
+                  );
+                })}
               </div>
             )}
             {donnyIncidents.map(inc=>{
@@ -15898,6 +15972,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Keep it that way!</div>
               </div>
             ) : (
+              <>
+                {donnyMistakes.length>0 && (
+                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
+                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(239,68,68,0.1)'}}>
+                      <div className="text-xs font-mono tracking-widest" style={{color:'rgba(239,68,68,0.7)'}}>// MISTAKES TABLE</div>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444'}}>{donnyMistakes.length} logged</span>
+                    </div>
+                    <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'90px 1fr 1fr',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                      <div>DATE</div><div>WHO</div><div>WHAT</div>
+                    </div>
+                    {donnyMistakes.map((m,i)=>(
+                      <div key={m.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'90px 1fr 1fr',borderBottom:i<donnyMistakes.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                        <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</span>
+                        <span className="text-sm text-white font-medium truncate pr-2">{m.who||'Unknown'}</span>
+                        <span className="text-xs truncate" style={{color:'rgba(148,163,184,0.5)'}}>{m.what}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               <div className="space-y-3">
                 {donnyMistakes.map(m => (
                   <div key={m.id} className="rounded-2xl p-4 flex items-start gap-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.12)'}}>
@@ -15915,6 +16008,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 ))}
               </div>
+              </>
             )}
           </div>
         </div>
@@ -15958,6 +16052,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="RISK REGISTER" icon="⚠️" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {jobsWithRisks.length>0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(239,68,68,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(239,68,68,0.7)'}}>// RISK TABLE</div>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444'}}>{jobsWithRisks.length} risks</span>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>JOB</div><div>BIGGEST RISK</div>
+                </div>
+                {jobsWithRisks.map((job,i)=>(
+                  <button key={job.id} onClick={()=>setSelectedDonnyJob(job)}
+                    className="w-full grid px-5 py-3 items-center text-left hover:bg-white/[0.02]"
+                    style={{gridTemplateColumns:'1fr 1fr',borderBottom:i<jobsWithRisks.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                    <span className="text-white font-medium text-sm truncate pr-2">{job.title}</span>
+                    <span className="text-xs truncate" style={{color:'rgba(239,68,68,0.6)'}}>{job.risk}</span>
+                  </button>
+                ))}
+              </div>
+            )}
             {jobsWithRisks.length === 0 ? (
               <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(239,68,68,0.08)'}}>
                 <div className="text-4xl mb-3">✅</div>
