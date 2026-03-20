@@ -15174,6 +15174,41 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           <DonnyHeader title="RECURRING JOBS" icon="🔁" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
+
+            {/* Master table */}
+            {donnyRecurring.length > 0 && (
+              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// RECURRING TABLE</div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyRecurring.length} jobs</span>
+                    <button onClick={()=>setShowNewRecurring(s=>!s)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                      {showNewRecurring?'✕ Cancel':'+ Add Job'}
+                    </button>
+                  </div>
+                </div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 100px 110px 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>TITLE</div><div>CLIENT</div><div>NEXT DATE</div><div>FREQ</div>
+                </div>
+                {donnyRecurring.map((r,i) => {
+                  const client = donnyClients.find(c=>c.id===r.clientId);
+                  const fc = freqColors[r.freq]||'#f97316';
+                  const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
+                  return (
+                    <div key={r.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 100px 110px 90px',borderBottom:i<donnyRecurring.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                      <div className="text-white font-medium text-sm truncate pr-2">{r.title}</div>
+                      <div className="text-xs truncate" style={{color:'rgba(148,163,184,0.5)'}}>{client?.name||'—'}</div>
+                      <div className="text-xs" style={{color: daysUntil!==null&&daysUntil<=7?'#f97316':'rgba(148,163,184,0.5)'}}>
+                        {r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—'}
+                        {daysUntil!==null && <span className="ml-1">{daysUntil<0?'⚠️':daysUntil===0?'· Today':''}</span>}
+                      </div>
+                      <div><span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${fc}15`,color:fc,border:`1px solid ${fc}30`}}>{freqLabels[r.freq]}</span></div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
             <button onClick={()=>setShowNewRecurring(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
               {showNewRecurring?'✕ Cancel':'+ Add Recurring Job'}
             </button>
@@ -15206,11 +15241,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <input type="date" value={newRecurring.nextDate} onChange={e=>setNewRecurring(p=>({...p,nextDate:e.target.value}))}
                       className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
                   </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTES</div>
-                    <input value={newRecurring.notes} onChange={e=>setNewRecurring(p=>({...p,notes:e.target.value}))} placeholder="Optional..."
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTES</div>
+                  <textarea value={newRecurring.notes} onChange={e=>setNewRecurring(p=>({...p,notes:e.target.value}))}
+                    placeholder="Scope of work, access details, materials needed, anything important..."
+                    rows={5} className="w-full bg-transparent text-white text-sm focus:outline-none resize-none leading-relaxed border-b"
+                    style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                 </div>
                 <button onClick={()=>{ if(!newRecurring.title.trim()) return; saveRecurring([{...newRecurring,id:Date.now(),createdAt:new Date().toISOString()},...donnyRecurring]); setNewRecurring({title:'',clientId:'',freq:'monthly',nextDate:'',notes:''}); setShowNewRecurring(false); }}
                   className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>Add Recurring Job</button>
@@ -15239,10 +15276,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {r.nextDate && <div className="text-xs mt-1" style={{color: daysUntil !== null && daysUntil <= 7 ? '#f97316' : 'rgba(148,163,184,0.5)'}}>
                         Next: {new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {daysUntil<0?'Overdue':daysUntil===0?'Today':`${daysUntil}d away`}
                       </div>}
-                      {r.notes && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.4)'}}>{r.notes}</div>}
+                      {r.notes && <div className="text-sm mt-2 leading-relaxed whitespace-pre-wrap" style={{color:'rgba(148,163,184,0.6)'}}>{r.notes}</div>}
                     </div>
                     <button onClick={()=>{ if(window.confirm('Delete?')) saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); }}
-                      className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                      className="text-xs px-2 py-1 rounded-lg ml-3 flex-shrink-0" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                   </div>
                 </div>
               );
