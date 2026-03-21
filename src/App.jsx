@@ -2654,7 +2654,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       { section:'COSTS', id:'donny-suppliers', label:'Price Book', icon:'🏭', workerOk:false },
                       { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊', workerOk:false },
                     ];
-                    return isBoss ? all : all.filter(x => x.workerOk);
+                    return isBoss ? all : all;
                   })()),
                 ];
                 const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', CLIENTS:'#3b82f6', SITE:'#ef4444', COSTS:'#22c55e', REPORTS:'#f97316' };
@@ -2666,14 +2666,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-xs font-mono mb-1 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
                       {items.map(item => {
                         const active = activeView === item.id;
+                        const workerLocked = donnyRole === 'worker' && !item.workerOk;
                         return (
                           <button key={item.id}
-                            onClick={() => { setActiveView(item.id); setSidebarOpen(false); }}
+                            onClick={() => { if(workerLocked) return; setActiveView(item.id); setSidebarOpen(false); }}
                             className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-left transition-all"
-                            style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
+                            style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`,opacity:workerLocked?0.4:1,cursor:workerLocked?'default':'pointer'}}>
                             <span className="text-base leading-none">{item.icon}</span>
                             <span className="text-sm font-medium" style={{color:active?color:'rgba(255,255,255,0.8)'}}>{item.label}</span>
-                            {active && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}/>}
+                            {workerLocked && <span className="ml-auto text-xs">🔒</span>}
+                            {active && !workerLocked && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}/>}
                           </button>
                         );
                       })}
@@ -14268,14 +14270,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:"SWMS",       emoji:"✅", view:"donny-checklists",   key:"d-swms",    workerOk:true},
                 {label:"Incidents",  emoji:"🚨", view:"donny-incidents",    key:"d-inc",     workerOk:true},
                 {label:"Reports",    emoji:"📊", view:"donny-reports",      key:"d-rep",     workerOk:false},
-              ].filter(s => donnyRole !== 'worker' || s.workerOk).map(s => (
-                <button key={s.key} onClick={() => setActiveView(s.view)}
-                  className="rounded-xl p-3 flex flex-col items-center gap-1"
-                  style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
-                  <span className="text-2xl">{s.emoji}</span>
-                  <span className="text-xs text-slate-400 leading-tight text-center">{s.label}</span>
-                </button>
-              ))}
+              ].map(s => {
+                const workerLocked = donnyRole === 'worker' && !s.workerOk;
+                return (
+                  <button key={s.key} onClick={() => { if(!workerLocked) setActiveView(s.view); }}
+                    className="rounded-xl p-3 flex flex-col items-center gap-1 relative"
+                    style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)",opacity:workerLocked?0.4:1,cursor:workerLocked?'default':'pointer'}}>
+                    <span className="text-2xl">{s.emoji}</span>
+                    <span className="text-xs text-slate-400 leading-tight text-center">{s.label}</span>
+                    {workerLocked && <span className="absolute top-1 right-1 text-xs">🔒</span>}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
