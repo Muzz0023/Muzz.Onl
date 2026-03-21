@@ -2630,7 +2630,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
-                  { section:'JOBS', id:'donny-join', label:'Join Workspace', icon:'🔗' },
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️' },
                   { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', icon:'📋' },
@@ -14324,6 +14323,67 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 ))}
               </div>
             )}
+
+            {/* ── WORKSPACE CARD ── */}
+            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
+              <div className="px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)',background:'rgba(249,115,22,0.05)'}}>
+                <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// WORKSPACE</div>
+              </div>
+              <div className="p-5 space-y-4">
+                {donnyRole === 'worker' ? (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">👷 Worker Mode</div>
+                      <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>You're logged into a boss's workspace</div>
+                    </div>
+                    <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); }}
+                      className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.8)'}}>
+                      Leave
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>YOUR CODE — share with workers</div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 py-3 px-4 rounded-xl text-center font-black tracking-widest text-xl" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)',color:'#f97316',fontFamily:"'Orbitron',monospace"}}>
+                          {donnyWorkspaceCode || '———'}
+                        </div>
+                        <button onClick={()=>{ ensureWorkspaceCode(); }} className="px-4 py-3 rounded-xl font-bold text-sm flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                          {donnyWorkspaceCode ? '📋 Copy' : 'Generate'}
+                        </button>
+                      </div>
+                      {donnyWorkspaceCode && (
+                        <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode).then(()=>alert('Copied! 📋'))}
+                          className="w-full mt-2 py-2 rounded-xl text-xs font-bold" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.7)'}}>
+                          Copy {donnyWorkspaceCode} to clipboard
+                        </button>
+                      )}
+                    </div>
+                    <div style={{borderTop:'1px solid rgba(255,255,255,0.05)',paddingTop:'16px'}}>
+                      <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>JOIN A WORKSPACE — enter boss's code</div>
+                      <div className="flex gap-2">
+                        <input
+                          value={donnyJoinInput}
+                          onChange={e=>setDonnyJoinInput(e.target.value.toUpperCase())}
+                          placeholder="ABC-1234"
+                          maxLength={8}
+                          className="flex-1 text-center font-black bg-transparent focus:outline-none py-3 rounded-xl tracking-widest text-lg"
+                          style={{color:'#f97316',fontFamily:"'Orbitron',monospace",background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.2)'}}
+                        />
+                        <button onClick={joinWorkspace} disabled={donnyJoinLoading||donnyJoinInput.length<7}
+                          className="px-4 py-3 rounded-xl font-bold text-white text-sm flex-shrink-0"
+                          style={{background:donnyJoinInput.length>=7?'linear-gradient(135deg,#f97316,#ea580c)':'rgba(255,255,255,0.06)',opacity:donnyJoinLoading?0.6:1}}>
+                          {donnyJoinLoading?'..':'→ Join'}
+                        </button>
+                      </div>
+                      {donnyJoinError && <div className="text-xs mt-2 text-center" style={{color:'rgba(239,68,68,0.8)'}}>{donnyJoinError}</div>}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
 
           </div>
         </div>
