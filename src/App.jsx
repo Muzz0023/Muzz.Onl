@@ -1785,20 +1785,12 @@ function MuzzApp() {
   const [gymTab, setGymTab] = useState('steps');
   const [appMode, setAppMode] = useState('muzz');
   const [donnyTab, setDonnyTab] = useState('jobs');
-  const [donnyJobs, setDonnyJobs] = useState(() => {
-    try { const s = localStorage.getItem('muzz_donny_jobs'); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
-  const [donnyTeam, setDonnyTeam] = useState(() => {
-    try { const s = localStorage.getItem('muzz_donny_team'); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
-  const [donnyMistakes, setDonnyMistakes] = useState(() => {
-    try { const s = localStorage.getItem('muzz_donny_mistakes'); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
+  const [donnyJobs, setDonnyJobs] = useState([]);
+  const [donnyTeam, setDonnyTeam] = useState([]);
+  const [donnyMistakes, setDonnyMistakes] = useState([]);
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [editingJobId, setEditingJobId] = useState(null);
-  const [donnyNotes, setDonnyNotes] = useState(() => {
-    try { const s = localStorage.getItem('muzz_donny_notes'); return s ? JSON.parse(s) : {}; } catch { return {}; }
-  });
+  const [donnyNotes, setDonnyNotes] = useState({});
   const [newNoteText, setNewNoteText] = useState('');
   const [noteJobId, setNoteJobId] = useState(null);
   const [showAddMember, setShowAddMember] = useState(false);
@@ -1809,22 +1801,22 @@ function MuzzApp() {
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
   const [newDonnyJob, setNewDonnyJob] = useState({ title:'', jobNumber:'', startDate:'', dueDate:'', employees:'', risk:'', riskAvoid:'', materials:'', costs:'', avgTime:'', mistakes:'', problems:'', notes:'' });
   // Donny Timesheets
-  const [donnyTimesheets, setDonnyTimesheets] = useState(() => { try { const s=localStorage.getItem('muzz_donny_timesheets'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyTimesheets, setDonnyTimesheets] = useState([]);
   const [tsSelectedJob, setTsSelectedJob] = useState(null);
   const [tsSelectedMember, setTsSelectedMember] = useState(null);
   const [tsHours, setTsHours] = useState('');
   const [tsDate, setTsDate] = useState(new Date().toISOString().split('T')[0]);
   const [tsDesc, setTsDesc] = useState('');
   // Donny Daily Cost Tracker
-  const [donnyCosts, setDonnyCosts] = useState(() => { try { const s=localStorage.getItem('muzz_donny_daily_costs'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyCosts, setDonnyCosts] = useState([]);
   // Donny Clients
-  const [donnyClients, setDonnyClients] = useState(() => { try { const s=localStorage.getItem('muzz_donny_clients'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyClients, setDonnyClients] = useState([]);
   const [showAddClient, setShowAddClient] = useState(false);
   const [newClient, setNewClient] = useState({ name:'', company:'', phone:'', email:'', address:'', jobIds:[] });
   const [editingClientId, setEditingClientId] = useState(null);
   // Donny Scheduler
   const [schedulerWeekOffset, setSchedulerWeekOffset] = useState(0);
-  const [donnySchedule, setDonnySchedule] = useState(() => { try { const s=localStorage.getItem('muzz_donny_schedule'); return s?JSON.parse(s):{}; } catch { return {}; } });
+  const [donnySchedule, setDonnySchedule] = useState({});
   const [schedPickJob, setSchedPickJob] = useState(null);
   const [schedPickMember, setSchedPickMember] = useState(null);
   const [schedTab, setSchedTab] = useState('week');
@@ -1833,36 +1825,36 @@ function MuzzApp() {
   const [schedPickEnd, setSchedPickEnd] = useState(15);
   const [schedBlockColor, setSchedBlockColor] = useState(null);
   // Donny Subcontractors
-  const [donnySubs, setDonnySubs] = useState(() => { try { const s=localStorage.getItem('muzz_donny_subs'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnySubs, setDonnySubs] = useState([]);
   const [showAddSub, setShowAddSub] = useState(false);
   const [newSub, setNewSub] = useState({ name:'', company:'', trade:'', phone:'', email:'', rate:'', rateType:'hr', abn:'', licenceNo:'', jobIds:[] });
   const [editingSubId, setEditingSubId] = useState(null);
   // Donny Photos
-  const [donnyPhotos, setDonnyPhotos] = useState(() => { try { const s=localStorage.getItem('muzz_donny_photos'); return s?JSON.parse(s):{}; } catch { return {}; } });
+  const [donnyPhotos, setDonnyPhotos] = useState({});
   const [photoJobId, setPhotoJobId] = useState(null);
   const [photoFilter, setPhotoFilter] = useState('all');
   // Donny Materials Log
-  const [donnyMaterialsLog, setDonnyMaterialsLog] = useState(() => { try { const s=localStorage.getItem('muzz_donny_materials_log'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyMaterialsLog, setDonnyMaterialsLog] = useState([]);
   const [matLogJobId, setMatLogJobId] = useState(null);
   const [newMatEntry, setNewMatEntry] = useState({ item:'', qty:'', unit:'', note:'' });
   // Donny Checklists / SWMS
-  const [donnyChecklists, setDonnyChecklists] = useState(() => { try { const s=localStorage.getItem('muzz_donny_checklists'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyChecklists, setDonnyChecklists] = useState([]);
   const [checklistJobId, setChecklistJobId] = useState(null);
   const [selectedChecklistId, setSelectedChecklistId] = useState(null);
   const [showNewChecklist, setShowNewChecklist] = useState(false);
   const [newChecklist, setNewChecklist] = useState({ title:'', type:'swms', jobId:'', items:[] });
   // Donny Incidents
-  const [donnyIncidents, setDonnyIncidents] = useState(() => { try { const s=localStorage.getItem('muzz_donny_incidents'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyIncidents, setDonnyIncidents] = useState([]);
   const [showNewIncident, setShowNewIncident] = useState(false);
   const [newIncident, setNewIncident] = useState({ date:new Date().toISOString().split('T')[0], time:'', jobId:'', who:'', type:'near_miss', description:'', injury:'', action:'', reported:false });
   // Donny Supplier Price Book
-  const [donnySuppliers, setDonnySuppliers] = useState(() => { try { const s=localStorage.getItem('muzz_donny_suppliers'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnySuppliers, setDonnySuppliers] = useState([]);
   const [showAddSupplier, setShowAddSupplier] = useState(false);
   const [newSupplier, setNewSupplier] = useState({ name:'', contact:'', phone:'', email:'', items:[] });
   const [editingSupplierId, setEditingSupplierId] = useState(null);
   const [supplierNewItem, setSupplierNewItem] = useState({ desc:'', unit:'', price:'' });
   // Donny Recurring Jobs
-  const [donnyRecurring, setDonnyRecurring] = useState(() => { try { const s=localStorage.getItem('muzz_donny_recurring'); return s?JSON.parse(s):[]; } catch { return []; } });
+  const [donnyRecurring, setDonnyRecurring] = useState([]);
   const [showNewRecurring, setShowNewRecurring] = useState(false);
   const [editingRecurringId, setEditingRecurringId] = useState(null);
   const [editingIncidentId, setEditingIncidentId] = useState(null);
@@ -2098,6 +2090,21 @@ function MuzzApp() {
           if (d.bucketList) setBucketList(d.bucketList);
           if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
           if (d.mapPins) setMapPins(d.mapPins);
+          // Donny data
+          if (d.donnyJobs) setDonnyJobs(d.donnyJobs);
+          if (d.donnyTeam) setDonnyTeam(d.donnyTeam);
+          if (d.donnyNotes) setDonnyNotes(d.donnyNotes);
+          if (d.donnyTimesheets) setDonnyTimesheets(d.donnyTimesheets);
+          if (d.donnyClients) setDonnyClients(d.donnyClients);
+          if (d.donnySubs) setDonnySubs(d.donnySubs);
+          if (d.donnySuppliers) setDonnySuppliers(d.donnySuppliers);
+          if (d.donnyMaterialsLog) setDonnyMaterialsLog(d.donnyMaterialsLog);
+          if (d.donnyMistakes) setDonnyMistakes(d.donnyMistakes);
+          if (d.donnyIncidents) setDonnyIncidents(d.donnyIncidents);
+          if (d.donnyChecklists) setDonnyChecklists(d.donnyChecklists);
+          if (d.donnyPhotos) setDonnyPhotos(d.donnyPhotos);
+          if (d.donnySchedule) setDonnySchedule(d.donnySchedule);
+          if (d.donnyRecurring) setDonnyRecurring(d.donnyRecurring);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -2181,7 +2188,22 @@ function MuzzApp() {
           countdowns,
           bucketList,
           assetMapNodes,
-          mapPins
+          mapPins,
+          // Donny data
+          donnyJobs,
+          donnyTeam,
+          donnyNotes,
+          donnyTimesheets,
+          donnyClients,
+          donnySubs,
+          donnySuppliers,
+          donnyMaterialsLog,
+          donnyMistakes,
+          donnyIncidents,
+          donnyChecklists,
+          donnyPhotos,
+          donnySchedule,
+          donnyRecurring
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -2195,7 +2217,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -13966,7 +13988,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     const saveDonnyJobs = (updated) => {
       setDonnyJobs(updated);
-      try { localStorage.setItem('muzz_donny_jobs', JSON.stringify(updated)); } catch {}
+
     };
 
     const fields = [
@@ -14282,8 +14304,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // JOB LOG
     if (activeView === 'donny-dailyreport') {
-      const saveNotes = (updated) => { setDonnyNotes(updated); try { localStorage.setItem('muzz_donny_notes', JSON.stringify(updated)); } catch {} };
-      const saveTS = (updated) => { setDonnyTimesheets(updated); try { localStorage.setItem('muzz_donny_timesheets', JSON.stringify(updated)); } catch {} };
+      const saveNotes = (updated) => { setDonnyNotes(updated) };
+      const saveTS = (updated) => { setDonnyTimesheets(updated) };
 
       // DRILL-IN: specific job
       if (noteJobId) {
@@ -14684,7 +14706,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // TEAM
     if (activeView === 'donny-team') {
-      const saveTeam = (updated) => { setDonnyTeam(updated); try { localStorage.setItem('muzz_donny_team', JSON.stringify(updated)); } catch {} };
+      const saveTeam = (updated) => { setDonnyTeam(updated) };
       const ROLES = [
         { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
         { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
@@ -14927,7 +14949,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // ── EXTRA MATERIALS LOG ─────────────────────────────────────────────────
     // ── SCHEDULER ────────────────────────────────────────────────────────────
     if (activeView === 'donny-scheduler') {
-      const saveSched = (updated) => { setDonnySchedule(updated); try { localStorage.setItem('muzz_donny_schedule', JSON.stringify(updated)); } catch {} };
+      const saveSched = (updated) => { setDonnySchedule(updated) };
       const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
       const hours = Array.from({length:24},(_,i)=>i);
       const fmt12 = (h) => h===0?'12am':h<12?`${h}am`:h===12?'12pm':`${h-12}pm`;
@@ -15178,7 +15200,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-recurring') {
-      const saveRecurring = (updated) => { setDonnyRecurring(updated); try { localStorage.setItem('muzz_donny_recurring', JSON.stringify(updated)); } catch {} };
+      const saveRecurring = (updated) => { setDonnyRecurring(updated) };
       const freqLabels = { daily:'Daily', weekly:'Weekly', fortnightly:'Fortnightly', monthly:'Monthly', quarterly:'Quarterly', yearly:'Yearly' };
       const freqColors = { daily:'#ef4444', weekly:'#f97316', fortnightly:'#f59e0b', monthly:'#22c55e', quarterly:'#3b82f6', yearly:'#a855f7' };
       return (
@@ -15352,7 +15374,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── PHOTOS ────────────────────────────────────────────────────────────────
     if (activeView === 'donny-photos') {
-      const savePhotos = (updated) => { setDonnyPhotos(updated); try { localStorage.setItem('muzz_donny_photos', JSON.stringify(updated)); } catch {} };
+      const savePhotos = (updated) => { setDonnyPhotos(updated) };
       const jobPhotos = photoJobId ? (donnyPhotos[photoJobId]||[]) : [];
       const filtered = photoFilter==='all' ? jobPhotos : jobPhotos.filter(p=>p.tag===photoFilter);
       const handlePhotoUpload = (e) => {
@@ -15490,7 +15512,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── CHECKLISTS / SWMS ─────────────────────────────────────────────────────
     if (activeView === 'donny-checklists') {
-      const saveChecklists = (updated) => { setDonnyChecklists(updated); try { localStorage.setItem('muzz_donny_checklists', JSON.stringify(updated)); } catch {} };
+      const saveChecklists = (updated) => { setDonnyChecklists(updated) };
       const typeColors = { swms:'#ef4444', checklist:'#22c55e', inspection:'#3b82f6', toolbox:'#f59e0b' };
       const typeLabels = { swms:'SWMS', checklist:'Checklist', inspection:'Inspection', toolbox:'Toolbox Talk' };
       const SWMS_TEMPLATES = [
@@ -15677,7 +15699,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── INCIDENTS ─────────────────────────────────────────────────────────────
     if (activeView === 'donny-incidents') {
-      const saveIncidents = (updated) => { setDonnyIncidents(updated); try { localStorage.setItem('muzz_donny_incidents', JSON.stringify(updated)); } catch {} };
+      const saveIncidents = (updated) => { setDonnyIncidents(updated) };
       const typeColors = { near_miss:'#f59e0b', first_aid:'#f97316', medical:'#ef4444', lost_time:'#dc2626', property:'#3b82f6', environmental:'#22c55e' };
       const typeLabels = { near_miss:'Near Miss', first_aid:'First Aid', medical:'Medical Treatment', lost_time:'Lost Time Injury', property:'Property Damage', environmental:'Environmental' };
       return (
@@ -15850,7 +15872,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-materialslog') {
-      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); try { localStorage.setItem('muzz_donny_materials_log', JSON.stringify(updated)); } catch {} };
+      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated) };
 
       if (matLogJobId) {
         const job = donnyJobs.find(j=>j.id===matLogJobId);
@@ -15970,7 +15992,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-mistakes') {
-      const saveMistakes = (updated) => { setDonnyMistakes(updated); try { localStorage.setItem('muzz_donny_mistakes', JSON.stringify(updated)); } catch {} };
+      const saveMistakes = (updated) => { setDonnyMistakes(updated) };
       const teamNames = donnyTeam.map(m => m.name);
       const selectedMistake = donnyMistakes.find(m => m.id === selectedDonnyJob?.mistakeId);
 
@@ -16467,7 +16489,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // ── PRICE BOOK ──────────────────────────────────────────────────────────
     // ── SUBCONTRACTORS ───────────────────────────────────────────────────────
     if (activeView === 'donny-subs') {
-      const saveSubs = (updated) => { setDonnySubs(updated); try { localStorage.setItem('muzz_donny_subs', JSON.stringify(updated)); } catch {} };
+      const saveSubs = (updated) => { setDonnySubs(updated) };
 
       // Drill-in: editing a sub
       if (editingSubId) {
@@ -16648,7 +16670,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-suppliers') {
-      const saveSuppliers = (updated) => { setDonnySuppliers(updated); try { localStorage.setItem('muzz_donny_suppliers', JSON.stringify(updated)); } catch {} };
+      const saveSuppliers = (updated) => { setDonnySuppliers(updated) };
 
       // Drill-in: editing a supplier
       if (editingSupplierId) {
@@ -16839,7 +16861,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-clients') {
-      const saveClients = (updated) => { setDonnyClients(updated); try { localStorage.setItem('muzz_donny_clients', JSON.stringify(updated)); } catch {} };
+      const saveClients = (updated) => { setDonnyClients(updated) };
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
