@@ -14376,7 +14376,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   )}
                   <button onClick={() => {
                     if (!tsSelectedMember||!tsHours) return;
-                    const entry = { id:Date.now(), jobId:noteJobId, memberId:tsSelectedMember, date:today, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString() };
+                    const entry = { id:Date.now(), jobId:noteJobId, memberId:tsSelectedMember, date:today, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                     saveTS([entry,...donnyTimesheets]);
                     setTsHours(''); setTsDesc(''); setTsSelectedMember(null);
                   }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
@@ -14419,7 +14419,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   />
                   <button onClick={() => {
                     if (!newNoteText.trim()) return;
-                    const updated = { ...donnyNotes, [activeJob.id]: [{ id:Date.now(), text:newNoteText.trim(), createdAt:new Date().toISOString() }, ...(donnyNotes[activeJob.id]||[])] };
+                    const updated = { ...donnyNotes, [activeJob.id]: [{ id:Date.now(), text:newNoteText.trim(), createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() }, ...(donnyNotes[activeJob.id]||[])] };
                     saveNotes(updated);
                     setNewNoteText('');
                   }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
@@ -14449,6 +14449,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                           </div>
                           <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">{item.text}</div>
+                          {item.loggedBy&&<div className="text-xs mt-1.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {item.loggedBy} · {new Date(item.loggedAt||item.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>}
                         </div>
                       );
                     } else {
@@ -14461,6 +14462,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div>
                               <div className="text-sm text-white font-medium">{m?.name||'Unknown'} · <span style={{color:'#f97316'}}>{item.hours}h</span></div>
                               <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{item.date}{item.desc?` · ${item.desc}`:''}</div>
+                              {item.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {item.loggedBy}</div>}
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
@@ -15382,7 +15384,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         files.forEach(file => {
           const reader = new FileReader();
           reader.onload = (ev) => {
-            const photo = { id:Date.now()+Math.random(), url:ev.target.result, tag:photoFilter==='all'?'before':photoFilter, caption:'', createdAt:new Date().toISOString() };
+            const photo = { id:Date.now()+Math.random(), url:ev.target.result, tag:photoFilter==='all'?'before':photoFilter, caption:'', createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
             const updated = { ...donnyPhotos, [photoJobId]: [...(donnyPhotos[photoJobId]||[]), photo] };
             savePhotos(updated);
           };
@@ -15440,6 +15442,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <input value={photo.caption||''} onChange={e=>{ const updated={...donnyPhotos,[photoJobId]:(donnyPhotos[photoJobId]||[]).map(p=>p.id===photo.id?{...p,caption:e.target.value}:p)}; savePhotos(updated); }}
                           placeholder="Add caption..." className="w-full bg-transparent text-white text-xs focus:outline-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                         <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(photo.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>
+                        {photo.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {photo.loggedBy}</div>}
                       </div>
                     </div>
                   ))}
@@ -15629,7 +15632,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 )}
                 <button onClick={()=>{
                   if(!newChecklist.title.trim()) return;
-                  const cl={...newChecklist,id:Date.now(),items:newChecklist.items.length>0?newChecklist.items:[{id:Date.now(),text:'',done:false}],createdAt:new Date().toISOString()};
+                  const cl={...newChecklist,id:Date.now(),loggedBy:eliteName||userEmail,loggedAt:new Date().toISOString(),items:newChecklist.items.length>0?newChecklist.items:[{id:Date.now(),text:'',done:false}],createdAt:new Date().toISOString()};
                   saveChecklists([cl,...donnyChecklists]); setSelectedChecklistId(cl.id); setShowNewChecklist(false);
                   setNewChecklist({title:'',type:'swms',jobId:'',items:[]});
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(34,197,94,0.9),rgba(21,128,61,0.9))'}}>Create</button>
@@ -15680,6 +15683,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <span className="text-white font-bold">{cl.title}</span>
                     </div>
                     {job&&<div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>🔨 {job.jobNumber?`#${job.jobNumber} · `:''}{job.title}</div>}
+                    {cl.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {cl.loggedBy}</div>}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <div className="text-right mr-1">
@@ -15769,7 +15773,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </label>
                 <button onClick={()=>{
                   if(!newIncident.description.trim()) return;
-                  saveIncidents([{...newIncident,id:Date.now(),createdAt:new Date().toISOString()},...donnyIncidents]);
+                  saveIncidents([{...newIncident,id:Date.now(),createdAt:new Date().toISOString(),loggedBy:eliteName||userEmail,loggedAt:new Date().toISOString()},...donnyIncidents]);
                   setNewIncident({date:new Date().toISOString().split('T')[0],time:'',jobId:'',who:'',type:'near_miss',description:'',injury:'',action:'',reported:false});
                   setShowNewIncident(false);
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>Log Incident</button>
@@ -15921,7 +15925,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <button onClick={() => {
                   if (!newMatEntry.item.trim()) return;
-                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString() };
+                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                   saveMatLog([entry, ...donnyMaterialsLog]);
                   setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ Log Material</button>
@@ -15938,6 +15942,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {entry.note && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
                         <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</div>
+                        {entry.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {entry.loggedBy}</div>}
                       </div>
                       <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
                     </div>
@@ -16038,7 +16043,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <button onClick={() => {
                   if (!newMistake.what.trim()) return;
-                  saveMistakes([{...newMistake, id:Date.now()}, ...donnyMistakes]);
+                  saveMistakes([{...newMistake, id:Date.now(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString()}, ...donnyMistakes]);
                   setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
                   setShowNewMistake(false);
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>Log Mistake</button>
@@ -16090,6 +16095,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):''}{m.jobRef?` · ${m.jobRef}`:''}</div>
                           <div className="text-sm text-white mt-2">{m.what}</div>
                           {m.affected && <div className="text-xs mt-1.5 px-2 py-1 rounded-lg inline-block" style={{background:'rgba(239,68,68,0.08)',color:'rgba(239,68,68,0.7)',border:'1px solid rgba(239,68,68,0.15)'}}>🔧 {m.affected}</div>}
+                          {m.loggedBy&&<div className="text-xs mt-2" style={{color:'rgba(249,115,22,0.5)'}}>👤 {m.loggedBy} · {new Date(m.loggedAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>}
                         </>}
                         {isEditing && (
                           <div className="mt-3 space-y-3" style={{borderTop:'1px solid rgba(239,68,68,0.15)',paddingTop:'12px'}}>
@@ -16170,6 +16176,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.2)'}}>
                   <div><div className="text-xs font-mono mb-2" style={{color:'rgba(239,68,68,0.6)'}}>⚠️ BIGGEST RISK</div><div className="text-white text-sm leading-relaxed">{riskJob.risk}</div></div>
                   {riskJob.riskAvoid && <div><div className="text-xs font-mono mb-2" style={{color:'rgba(34,197,94,0.6)'}}>🛡️ HOW TO AVOID</div><div className="text-white text-sm leading-relaxed">{riskJob.riskAvoid}</div></div>}
+                  {riskJob.riskLoggedBy&&<div className="text-xs mt-2" style={{color:'rgba(249,115,22,0.5)'}}>👤 {riskJob.riskLoggedBy} · {riskJob.riskLoggedAt&&new Date(riskJob.riskLoggedAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>}
                 </div>
               )}
             </div>
@@ -16230,7 +16237,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <button onClick={()=>{
                   if(!newRiskJobId||!newRiskText.trim()) return;
-                  const updated = donnyJobs.map(j=>String(j.id)===String(newRiskJobId)?{...j,risk:newRiskText.trim(),riskAvoid:newRiskAvoid.trim()}:j);
+                  const updated = donnyJobs.map(j=>String(j.id)===String(newRiskJobId)?{...j,risk:newRiskText.trim(),riskAvoid:newRiskAvoid.trim(),riskLoggedBy:eliteName||userEmail,riskLoggedAt:new Date().toISOString()}:j);
                   saveDonnyJobs(updated);
                   setNewRiskJobId(null); setNewRiskText(''); setNewRiskAvoid('');
                 }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(239,68,68,0.8),rgba(220,38,38,0.8))'}}>
