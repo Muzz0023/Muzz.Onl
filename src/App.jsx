@@ -1777,6 +1777,90 @@ function MuzzApp() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
   const doExport = () => { try { const d=JSON.stringify({subscriptions,stocks,assets,habits,habitLog,dailyTasks,countdowns,birthdays,sleepData,mentalHealthData,timesheetData,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+
+  // Generate a workspace code for the boss
+  const generateWorkspaceCode = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const part1 = Array.from({length:3},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+    const part2 = Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+    return `${part1}-${part2}`;
+  };
+
+  const ensureWorkspaceCode = () => {
+    if (!donnyWorkspaceCode) {
+      const code = generateWorkspaceCode();
+      setDonnyWorkspaceCode(code);
+    }
+  };
+
+  // Worker joins a workspace by entering boss's code
+  const joinWorkspace = async () => {
+    const code = donnyJoinInput.trim().toUpperCase();
+    if (!code) return;
+    setDonnyJoinLoading(true);
+    setDonnyJoinError('');
+    try {
+      // Search all user_data rows for a matching workspace code
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?select=user_id,data_json`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const rows = await r.json();
+      const match = rows.find(row => row.data_json?.donnyWorkspaceCode === code);
+      if (!match) {
+        setDonnyJoinError('Code not found. Check with your boss and try again.');
+        setDonnyJoinLoading(false);
+        return;
+      }
+      if (match.user_id === userId) {
+        setDonnyJoinError("That's your own code!");
+        setDonnyJoinLoading(false);
+        return;
+      }
+      // Load boss's Donny data into this worker's app
+      const bossData = match.data_json;
+      setDonnyRole('worker');
+      setDonnyBossUserId(match.user_id);
+      if (bossData.donnyJobs) setDonnyJobs(bossData.donnyJobs);
+      if (bossData.donnyTeam) setDonnyTeam(bossData.donnyTeam);
+      if (bossData.donnyNotes) setDonnyNotes(bossData.donnyNotes);
+      if (bossData.donnyTimesheets) setDonnyTimesheets(bossData.donnyTimesheets);
+      if (bossData.donnyClients) setDonnyClients(bossData.donnyClients);
+      if (bossData.donnySubs) setDonnySubs(bossData.donnySubs);
+      if (bossData.donnySuppliers) setDonnySuppliers(bossData.donnySuppliers);
+      if (bossData.donnyMaterialsLog) setDonnyMaterialsLog(bossData.donnyMaterialsLog);
+      if (bossData.donnyMistakes) setDonnyMistakes(bossData.donnyMistakes);
+      if (bossData.donnyIncidents) setDonnyIncidents(bossData.donnyIncidents);
+      if (bossData.donnyChecklists) setDonnyChecklists(bossData.donnyChecklists);
+      if (bossData.donnyPhotos) setDonnyPhotos(bossData.donnyPhotos);
+      if (bossData.donnySchedule) setDonnySchedule(bossData.donnySchedule);
+      if (bossData.donnyRecurring) setDonnyRecurring(bossData.donnyRecurring);
+      setDonnyJoinInput('');
+      setDonnyJoinLoading(false);
+      alert(`Joined! Welcome to ${bossData.eliteName || 'the'} workspace 🐨`);
+    } catch(e) {
+      setDonnyJoinError('Something went wrong. Try again.');
+      setDonnyJoinLoading(false);
+    }
+  };
+
+  // Worker saves data back to boss's Supabase row
+  const saveWorkerDataToBoss = async (updates) => {
+    if (donnyRole !== 'worker' || !donnyBossUserId) return;
+    try {
+      // First load current boss data
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${donnyBossUserId}&select=*`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const rows = await r.json();
+      if (!rows[0]) return;
+      const merged = { ...rows[0].data_json, ...updates };
+      await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${donnyBossUserId}`, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ data_json: merged })
+      });
+    } catch(e) { console.error('Worker save error:', e); }
+  };
   const doImport = (e) => { const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=(ev)=>{ try{ const d=JSON.parse(ev.target.result); if(d.subscriptions) setSubscriptions(d.subscriptions); if(d.stocks) setStocks(d.stocks); if(d.assets) setAssets(d.assets); if(d.habits) setHabits(d.habits); if(d.habitLog) setHabitLog(d.habitLog); if(d.dailyTasks) setDailyTasks(d.dailyTasks); if(d.countdowns) setCountdowns(d.countdowns); if(d.birthdays) setBirthdays(d.birthdays); if(d.sleepData) setSleepData(d.sleepData); if(d.mentalHealthData) setMentalHealthData(d.mentalHealthData); if(d.timesheetData) setTimesheetData(d.timesheetData); if(d.donnyJobs) setDonnyJobs(d.donnyJobs); if(d.donnyTeam) setDonnyTeam(d.donnyTeam); if(d.donnyNotes) setDonnyNotes(d.donnyNotes); if(d.donnyTimesheets) setDonnyTimesheets(d.donnyTimesheets); if(d.donnyClients) setDonnyClients(d.donnyClients); if(d.donnySubs) setDonnySubs(d.donnySubs); if(d.donnySuppliers) setDonnySuppliers(d.donnySuppliers); if(d.donnyMaterialsLog) setDonnyMaterialsLog(d.donnyMaterialsLog); if(d.donnyMistakes) setDonnyMistakes(d.donnyMistakes); if(d.donnyIncidents) setDonnyIncidents(d.donnyIncidents); if(d.donnyChecklists) setDonnyChecklists(d.donnyChecklists); if(d.donnyPhotos) setDonnyPhotos(d.donnyPhotos); if(d.donnySchedule) setDonnySchedule(d.donnySchedule); if(d.donnyRecurring) setDonnyRecurring(d.donnyRecurring); }catch(err){alert('Invalid file');} }; r.readAsText(file); };
   const [openSections, setOpenSections] = useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
   const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
@@ -1855,6 +1939,13 @@ function MuzzApp() {
   const [supplierNewItem, setSupplierNewItem] = useState({ desc:'', unit:'', price:'' });
   // Donny Recurring Jobs
   const [donnyRecurring, setDonnyRecurring] = useState([]);
+  const [donnyWorkspaceCode, setDonnyWorkspaceCode] = useState('');
+  const [donnyRole, setDonnyRole] = useState('boss'); // 'boss' or 'worker'
+  const [donnyBossUserId, setDonnyBossUserId] = useState(null);
+  const [donnyJoinInput, setDonnyJoinInput] = useState('');
+  const [donnyJoinError, setDonnyJoinError] = useState('');
+  const [donnyJoinLoading, setDonnyJoinLoading] = useState(false);
+  const [showDonnyCode, setShowDonnyCode] = useState(false);
   const [showNewRecurring, setShowNewRecurring] = useState(false);
   const [editingRecurringId, setEditingRecurringId] = useState(null);
   const [editingIncidentId, setEditingIncidentId] = useState(null);
@@ -2105,6 +2196,9 @@ function MuzzApp() {
           if (d.donnyPhotos) setDonnyPhotos(d.donnyPhotos);
           if (d.donnySchedule) setDonnySchedule(d.donnySchedule);
           if (d.donnyRecurring) setDonnyRecurring(d.donnyRecurring);
+          if (d.donnyWorkspaceCode) setDonnyWorkspaceCode(d.donnyWorkspaceCode);
+          if (d.donnyRole) setDonnyRole(d.donnyRole);
+          if (d.donnyBossUserId) setDonnyBossUserId(d.donnyBossUserId);
           // Only set dataLoaded true AFTER data is successfully loaded
           setDataLoaded(true);
         } else {
@@ -2203,7 +2297,10 @@ function MuzzApp() {
           donnyChecklists,
           donnyPhotos,
           donnySchedule,
-          donnyRecurring
+          donnyRecurring,
+          donnyWorkspaceCode,
+          donnyRole,
+          donnyBossUserId
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -2217,7 +2314,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyWorkspaceCode, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -2533,6 +2630,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
+                  { section:'JOBS', id:'donny-join', label:'Join Workspace', icon:'🔗' },
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️' },
                   { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', icon:'📋' },
@@ -13991,6 +14089,69 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     };
 
+    // ── JOIN WORKSPACE ──────────────────────────────────────────────────────
+    if (activeView === 'donny-join') {
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <DonnyHeader title="JOIN WORKSPACE" icon="🔗" />
+          <div className="max-w-lg mx-auto px-6 py-8 space-y-6">
+            {donnyRole === 'worker' ? (
+              <div className="rounded-2xl p-6 text-center space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                <div className="text-5xl">👷</div>
+                <div className="text-white font-bold text-xl">You're in Worker Mode</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>You're currently viewing a boss's workspace</div>
+                <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setActiveView('donny'); }}
+                  className="w-full py-3 rounded-xl font-bold text-sm" style={{background:'rgba(239,68,68,0.15)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
+                  Leave Workspace
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="rounded-2xl p-6 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.6)'}}>// ENTER A WORKSPACE CODE</div>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Your boss will give you a code that looks like <span style={{color:'#f97316',fontFamily:"'Orbitron',monospace"}}>ABC-1234</span></div>
+                  <input
+                    value={donnyJoinInput}
+                    onChange={e=>setDonnyJoinInput(e.target.value.toUpperCase())}
+                    placeholder="ABC-1234"
+                    maxLength={8}
+                    className="w-full text-center text-3xl font-black bg-transparent focus:outline-none py-4 rounded-xl tracking-widest"
+                    style={{color:'#f97316',fontFamily:"'Orbitron',monospace",background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.25)'}}
+                  />
+                  {donnyJoinError && <div className="text-sm text-center" style={{color:'rgba(239,68,68,0.8)'}}>{donnyJoinError}</div>}
+                  <button onClick={joinWorkspace} disabled={donnyJoinLoading||donnyJoinInput.length<7}
+                    className="w-full py-4 rounded-xl font-bold text-white text-sm"
+                    style={{background:donnyJoinInput.length>=7?'linear-gradient(135deg,#f97316,#ea580c)':'rgba(255,255,255,0.06)',opacity:donnyJoinLoading?0.6:1}}>
+                    {donnyJoinLoading?'Searching...':'→ Join Workspace'}
+                  </button>
+                </div>
+                <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(148,163,184,0.4)'}}>// YOUR WORKSPACE CODE</div>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Share this with your workers:</div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 py-3 px-4 rounded-xl text-center font-black tracking-widest text-xl" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)',color:'#f97316',fontFamily:"'Orbitron',monospace"}}>
+                      {donnyWorkspaceCode||'———'}
+                    </div>
+                    <button onClick={()=>{ ensureWorkspaceCode(); }} className="px-4 py-3 rounded-xl font-bold text-sm flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                      {donnyWorkspaceCode?'Refresh':'Generate'}
+                    </button>
+                  </div>
+                  {donnyWorkspaceCode&&(
+                    <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode).then(()=>alert('Copied! 📋'))}
+                      className="w-full py-2.5 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)',color:'#f97316'}}>
+                      📋 Copy Code to Clipboard
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+
     const fields = [
       { key:'employees', label:'👷 Employees', placeholder:'James, Peter, Sam' },
       { key:'risk', label:'⚠️ Biggest Risk', placeholder:'Falling off ladder' },
@@ -14053,6 +14214,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {donnyTeam.length} team · {donnyClients.length} client{donnyClients.length!==1?'s':''} · {completedJobs.length} completed
                   </div>
                 </div>
+              </div>
+              {/* Workspace code row */}
+              <div className="mt-4 flex items-center gap-3 flex-wrap">
+                {donnyRole === 'boss' ? (
+                  <>
+                    <button onClick={() => { ensureWorkspaceCode(); setShowDonnyCode(s=>!s); }}
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold"
+                      style={{background:'rgba(249,115,22,0.12)',border:'1px solid rgba(249,115,22,0.25)',color:'#f97316'}}>
+                      🔑 {showDonnyCode ? 'Hide Code' : 'My Workspace Code'}
+                    </button>
+                    {showDonnyCode && donnyWorkspaceCode && (
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.3)'}}>
+                        <span className="text-lg font-black tracking-widest" style={{color:'#f97316',fontFamily:"'Orbitron',monospace"}}>{donnyWorkspaceCode}</span>
+                        <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode)} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>Copy</button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',color:'rgba(34,197,94,0.8)'}}>
+                    👷 Worker mode · <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave workspace</button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -14304,8 +14487,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // JOB LOG
     if (activeView === 'donny-dailyreport') {
-      const saveNotes = (updated) => { setDonnyNotes(updated) };
-      const saveTS = (updated) => { setDonnyTimesheets(updated) };
+      const saveNotes = (updated) => { setDonnyNotes(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyNotes:updated}); };
+      const saveTS = (updated) => { setDonnyTimesheets(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyTimesheets:updated}); };
 
       // DRILL-IN: specific job
       if (noteJobId) {
@@ -15376,7 +15559,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── PHOTOS ────────────────────────────────────────────────────────────────
     if (activeView === 'donny-photos') {
-      const savePhotos = (updated) => { setDonnyPhotos(updated) };
+      const savePhotos = (updated) => { setDonnyPhotos(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyPhotos:updated}); };
       const jobPhotos = photoJobId ? (donnyPhotos[photoJobId]||[]) : [];
       const filtered = photoFilter==='all' ? jobPhotos : jobPhotos.filter(p=>p.tag===photoFilter);
       const handlePhotoUpload = (e) => {
@@ -15515,7 +15698,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── CHECKLISTS / SWMS ─────────────────────────────────────────────────────
     if (activeView === 'donny-checklists') {
-      const saveChecklists = (updated) => { setDonnyChecklists(updated) };
+      const saveChecklists = (updated) => { setDonnyChecklists(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyChecklists:updated}); };
       const typeColors = { swms:'#ef4444', checklist:'#22c55e', inspection:'#3b82f6', toolbox:'#f59e0b' };
       const typeLabels = { swms:'SWMS', checklist:'Checklist', inspection:'Inspection', toolbox:'Toolbox Talk' };
       const SWMS_TEMPLATES = [
@@ -15703,7 +15886,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── INCIDENTS ─────────────────────────────────────────────────────────────
     if (activeView === 'donny-incidents') {
-      const saveIncidents = (updated) => { setDonnyIncidents(updated) };
+      const saveIncidents = (updated) => { setDonnyIncidents(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyIncidents:updated}); };
       const typeColors = { near_miss:'#f59e0b', first_aid:'#f97316', medical:'#ef4444', lost_time:'#dc2626', property:'#3b82f6', environmental:'#22c55e' };
       const typeLabels = { near_miss:'Near Miss', first_aid:'First Aid', medical:'Medical Treatment', lost_time:'Lost Time Injury', property:'Property Damage', environmental:'Environmental' };
       return (
@@ -15876,7 +16059,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-materialslog') {
-      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated) };
+      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyMaterialsLog:updated}); };
 
       if (matLogJobId) {
         const job = donnyJobs.find(j=>j.id===matLogJobId);
@@ -15997,7 +16180,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     if (activeView === 'donny-mistakes') {
-      const saveMistakes = (updated) => { setDonnyMistakes(updated) };
+      const saveMistakes = (updated) => { setDonnyMistakes(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyMistakes:updated}); };
       const teamNames = donnyTeam.map(m => m.name);
       const selectedMistake = donnyMistakes.find(m => m.id === selectedDonnyJob?.mistakeId);
 
