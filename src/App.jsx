@@ -17705,6 +17705,73 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
+  // EXPORT VIEW
+  if (activeView === 'export') {
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="mb-4 text-sm flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white">Export Data</h1>
+          </div>
+        </div>
+        <div className="max-w-lg mx-auto px-6 py-10 space-y-6">
+          <div className="rounded-2xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+            <div className="text-4xl text-center">📤</div>
+            <div className="text-white font-bold text-lg text-center">Download Your Backup</div>
+            <div className="text-sm text-center" style={{color:"rgba(148,163,184,0.6)"}}>
+              Downloads a <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file containing all your Muzz and Donny data. Keep it safe — you can use it to restore your data anytime.
+            </div>
+            <button onClick={() => { doExport(); }}
+              className="w-full py-4 rounded-2xl font-bold text-white text-base"
+              style={{background:"linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))",boxShadow:"0 0 20px rgba(0,200,255,0.2)"}}>
+              📥 Download muzz-backup.json
+            </button>
+          </div>
+          <div className="rounded-2xl p-4 text-sm" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)",color:"rgba(249,115,22,0.8)"}}>
+            💡 Tip: Export regularly to keep a fresh backup. Store it in iCloud, Google Drive, or email it to yourself.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // IMPORT VIEW
+  if (activeView === 'import') {
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+          <div className="max-w-4xl mx-auto">
+            <button onClick={() => setActiveView('home')} className="mb-4 text-sm flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)"}}>← Back</button>
+            <h1 className="text-3xl font-bold text-white">Import Data</h1>
+          </div>
+        </div>
+        <div className="max-w-lg mx-auto px-6 py-10 space-y-6">
+          <div className="rounded-2xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+            <div className="text-4xl text-center">📥</div>
+            <div className="text-white font-bold text-lg text-center">Restore From Backup</div>
+            <div className="text-sm text-center" style={{color:"rgba(148,163,184,0.6)"}}>
+              Select your <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file to restore all your data. This will overwrite your current data.
+            </div>
+            <label className="w-full py-4 rounded-2xl font-bold text-white text-base flex items-center justify-center gap-2 cursor-pointer"
+              style={{background:"linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))",boxShadow:"0 0 20px rgba(0,200,255,0.2)"}}>
+              📂 Select Backup File
+              <input type="file" accept=".json" className="hidden" onChange={(e) => {
+                doImport(e);
+                setTimeout(() => setActiveView('home'), 500);
+              }}/>
+            </label>
+          </div>
+          <div className="rounded-2xl p-4 text-sm" style={{background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.2)",color:"rgba(239,68,68,0.8)"}}>
+            ⚠️ Warning: Importing will replace all your current data with the backup. Make sure you're selecting the right file.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // FALLBACK
   return (
     <div className="min-h-screen bg-transparent pb-24">
