@@ -1852,17 +1852,25 @@ function MuzzApp() {
   const saveWorkerDataToBoss = async (updates) => {
     if (donnyRole !== 'worker' || !donnyBossUserId) return;
     try {
-      // First load current boss data
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${donnyBossUserId}&select=*`, {
+      // First load current boss data via RPC (bypasses RLS)
+      const readRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/find_donny_workspace`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: donnyWorkspaceCode || '__lookup_by_boss_id__' })
+      });
+      // Fall back to direct read of boss row using the RPC save function
+      // Get current boss data_json first
+      const readRes2 = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${donnyBossUserId}&select=data_json`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
-      const rows = await r.json();
-      if (!rows[0]) return;
-      const merged = { ...rows[0].data_json, ...updates };
-      await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${donnyBossUserId}`, {
-        method: 'PATCH',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ data_json: merged })
+      const rows = await readRes2.json();
+      const currentData = rows?.[0]?.data_json || {};
+      const merged = { ...currentData, ...updates };
+      // Use RPC to write back (bypasses RLS)
+      await fetch(`${SUPABASE_URL}/rest/v1/rpc/save_worker_data`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ boss_id: donnyBossUserId, new_data: merged })
       });
     } catch(e) { console.error('Worker save error:', e); }
   };
