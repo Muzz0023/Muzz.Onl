@@ -1800,12 +1800,18 @@ function MuzzApp() {
     setDonnyJoinLoading(true);
     setDonnyJoinError('');
     try {
-      // Search all user_data rows for a matching workspace code
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?select=user_id,data_json`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      // Use a Supabase RPC function that bypasses RLS to search by workspace code
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/find_donny_workspace`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code })
       });
       const rows = await r.json();
-      const match = rows.find(row => row.data_json?.donnyWorkspaceCode === code);
+      const match = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
       if (!match) {
         setDonnyJoinError('Code not found. Check with your boss and try again.');
         setDonnyJoinLoading(false);
@@ -1816,7 +1822,6 @@ function MuzzApp() {
         setDonnyJoinLoading(false);
         return;
       }
-      // Load boss's Donny data into this worker's app
       const bossData = match.data_json;
       setDonnyRole('worker');
       setDonnyBossUserId(match.user_id);
@@ -14214,28 +14219,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </div>
               </div>
-              {/* Workspace code row */}
-              <div className="mt-4 flex items-center gap-3 flex-wrap">
-                {donnyRole === 'boss' ? (
-                  <>
-                    <button onClick={() => { ensureWorkspaceCode(); setShowDonnyCode(s=>!s); }}
-                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold"
-                      style={{background:'rgba(249,115,22,0.12)',border:'1px solid rgba(249,115,22,0.25)',color:'#f97316'}}>
-                      🔑 {showDonnyCode ? 'Hide Code' : 'My Workspace Code'}
-                    </button>
-                    {showDonnyCode && donnyWorkspaceCode && (
-                      <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.3)'}}>
-                        <span className="text-lg font-black tracking-widest" style={{color:'#f97316',fontFamily:"'Orbitron',monospace"}}>{donnyWorkspaceCode}</span>
-                        <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode)} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>Copy</button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',color:'rgba(34,197,94,0.8)'}}>
-                    👷 Worker mode · <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave workspace</button>
-                  </div>
-                )}
-              </div>
+              {/* Worker mode indicator */}
+              {donnyRole === 'worker' && (
+                <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl text-xs w-fit" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',color:'rgba(34,197,94,0.8)'}}>
+                  👷 Worker mode · <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave</button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -14345,18 +14334,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <>
                     <div>
                       <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>YOUR CODE — share with workers</div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1 py-3 px-4 rounded-xl text-center font-black tracking-widest text-xl" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)',color:'#f97316',fontFamily:"'Orbitron',monospace"}}>
-                          {donnyWorkspaceCode || '———'}
-                        </div>
-                        <button onClick={()=>{ ensureWorkspaceCode(); }} className="px-4 py-3 rounded-xl font-bold text-sm flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
-                          {donnyWorkspaceCode ? '📋 Copy' : 'Generate'}
-                        </button>
+                      <div className="py-3 px-4 rounded-xl text-center font-black tracking-widest text-2xl mb-3" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)',color:'#f97316',fontFamily:"'Orbitron',monospace"}}>
+                        {donnyWorkspaceCode || '———'}
                       </div>
+                      {!donnyWorkspaceCode && (
+                        <button onClick={ensureWorkspaceCode} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                          Generate Code
+                        </button>
+                      )}
                       {donnyWorkspaceCode && (
                         <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode).then(()=>alert('Copied! 📋'))}
-                          className="w-full mt-2 py-2 rounded-xl text-xs font-bold" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.7)'}}>
-                          Copy {donnyWorkspaceCode} to clipboard
+                          className="w-full py-3 rounded-xl text-sm font-bold text-white" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                          📋 Copy {donnyWorkspaceCode} to Clipboard
                         </button>
                       )}
                     </div>
