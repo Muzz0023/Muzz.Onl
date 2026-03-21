@@ -2634,22 +2634,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyItems = [
-                  { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨' },
-                  { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋' },
-                  { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️' },
-                  { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', icon:'📋' },
-                  { section:'JOBS', id:'donny-recurring', label:'Recurring', icon:'🔁' },
-                  { section:'TEAM', id:'donny-team', label:'Team', icon:'👷' },
-                  { section:'TEAM', id:'donny-subs', label:'Subcontractors', icon:'🔩' },
-                  { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝' },
-                  { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸' },
-                  { section:'SITE', id:'donny-checklists', label:'SWMS', icon:'✅' },
-                  { section:'SITE', id:'donny-incidents', label:'Incidents', icon:'🚨' },
-                  { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️' },
-                  { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌' },
-                  { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', icon:'📦' },
-                  { section:'COSTS', id:'donny-suppliers', label:'Price Book', icon:'🏭' },
-                  { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊' },
+                  ...((() => {
+                    const isBoss = donnyRole !== 'worker';
+                    const all = [
+                      { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨', workerOk:true },
+                      { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋', workerOk:false },
+                      { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️', workerOk:false },
+                      { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', icon:'📋', workerOk:true },
+                      { section:'JOBS', id:'donny-recurring', label:'Recurring', icon:'🔁', workerOk:false },
+                      { section:'TEAM', id:'donny-team', label:'Team', icon:'👷', workerOk:false },
+                      { section:'TEAM', id:'donny-subs', label:'Subcontractors', icon:'🔩', workerOk:false },
+                      { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝', workerOk:false },
+                      { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸', workerOk:true },
+                      { section:'SITE', id:'donny-checklists', label:'SWMS', icon:'✅', workerOk:true },
+                      { section:'SITE', id:'donny-incidents', label:'Incidents', icon:'🚨', workerOk:true },
+                      { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️', workerOk:true },
+                      { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌', workerOk:true },
+                      { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', icon:'📦', workerOk:true },
+                      { section:'COSTS', id:'donny-suppliers', label:'Price Book', icon:'🏭', workerOk:false },
+                      { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊', workerOk:false },
+                    ];
+                    return isBoss ? all : all.filter(x => x.workerOk);
+                  })()),
                 ];
                 const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', CLIENTS:'#3b82f6', SITE:'#ef4444', COSTS:'#22c55e', REPORTS:'#f97316' };
                 return donnySections.map(sec => {
@@ -14088,6 +14094,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   if (activeView && activeView.startsWith('donny')) {
     if (!isElite) return <LockedFeature featureName="Donny Business System" setActiveView={setActiveView} />;
 
+    // Redirect workers away from boss-only views
+    const bossOnlyViews = ['donny-masterview','donny-scheduler','donny-recurring','donny-team','donny-subs','donny-clients','donny-suppliers','donny-reports'];
+    if (donnyRole === 'worker' && bossOnlyViews.includes(activeView)) {
+      setActiveView('donny');
+      return null;
+    }
+
     const saveDonnyJobs = (updated) => {
       setDonnyJobs(updated);
 
@@ -14244,18 +14257,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             <div className="grid grid-cols-4 gap-2">
               {[
-                {label:"Jobs",       emoji:"🔨", view:"donny-masterview",  key:"d-jobs"},
-                {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler",   key:"d-sched"},
-                {label:"Daily Report",emoji:"📋", view:"donny-dailyreport", key:"d-report"},
-                {label:"Recurring",  emoji:"🔁", view:"donny-recurring",   key:"d-recur"},
-                {label:"Team",       emoji:"👷", view:"donny-team",         key:"d-team"},
-                {label:"Subs",       emoji:"🔩", view:"donny-subs",         key:"d-subs"},
-                {label:"Clients",    emoji:"🤝", view:"donny-clients",      key:"d-clients"},
-                {label:"Photos",     emoji:"📸", view:"donny-photos",       key:"d-photos"},
-                {label:"SWMS",       emoji:"✅", view:"donny-checklists",   key:"d-swms"},
-                {label:"Incidents",  emoji:"🚨", view:"donny-incidents",    key:"d-inc"},
-                {label:"Reports",    emoji:"📊", view:"donny-reports",      key:"d-rep"},
-              ].map(s => (
+                {label:"Jobs",       emoji:"🔨", view:"donny-masterview",  key:"d-jobs",    workerOk:false},
+                {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler",   key:"d-sched",   workerOk:false},
+                {label:"Daily Report",emoji:"📋", view:"donny-dailyreport", key:"d-report",  workerOk:true},
+                {label:"Recurring",  emoji:"🔁", view:"donny-recurring",   key:"d-recur",   workerOk:false},
+                {label:"Team",       emoji:"👷", view:"donny-team",         key:"d-team",    workerOk:false},
+                {label:"Subs",       emoji:"🔩", view:"donny-subs",         key:"d-subs",    workerOk:false},
+                {label:"Clients",    emoji:"🤝", view:"donny-clients",      key:"d-clients", workerOk:false},
+                {label:"Photos",     emoji:"📸", view:"donny-photos",       key:"d-photos",  workerOk:true},
+                {label:"SWMS",       emoji:"✅", view:"donny-checklists",   key:"d-swms",    workerOk:true},
+                {label:"Incidents",  emoji:"🚨", view:"donny-incidents",    key:"d-inc",     workerOk:true},
+                {label:"Reports",    emoji:"📊", view:"donny-reports",      key:"d-rep",     workerOk:false},
+              ].filter(s => donnyRole !== 'worker' || s.workerOk).map(s => (
                 <button key={s.key} onClick={() => setActiveView(s.view)}
                   className="rounded-xl p-3 flex flex-col items-center gap-1"
                   style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
@@ -14677,8 +14690,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>📝 diary</span>
                               <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.4)'}}>{new Date(item.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(item.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</span>
                             </div>
-                            <button onClick={() => saveNotes({...donnyNotes,[activeJob.id]:jobNotes.filter(n=>n.id!==item.id)})}
-                              className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                            {donnyRole !== 'worker' && <button onClick={() => saveNotes({...donnyNotes,[activeJob.id]:jobNotes.filter(n=>n.id!==item.id)})}
+                              className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                           </div>
                           <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">{item.text}</div>
                           {item.loggedBy&&<div className="text-xs mt-1.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {item.loggedBy} · {new Date(item.loggedAt||item.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>}
@@ -14699,7 +14712,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div className="flex items-center gap-3">
                             <span className="font-bold" style={{color:'#22c55e'}}>${pay.toFixed(0)}</span>
-                            <button onClick={() => saveTS(donnyTimesheets.filter(e=>e.id!==item.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                            {donnyRole !== 'worker' && <button onClick={() => saveTS(donnyTimesheets.filter(e=>e.id!==item.id))} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                           </div>
                         </div>
                       );
@@ -15668,8 +15681,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="p-3">
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="text-xs px-2 py-0.5 rounded-full capitalize font-medium" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>{photo.tag}</span>
-                          <button onClick={()=>{ const updated={...donnyPhotos,[photoJobId]:(donnyPhotos[photoJobId]||[]).filter(p=>p.id!==photo.id)}; savePhotos(updated); }}
-                            className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                          {donnyRole !== 'worker' && <button onClick={()=>{ const updated={...donnyPhotos,[photoJobId]:(donnyPhotos[photoJobId]||[]).filter(p=>p.id!==photo.id)}; savePhotos(updated); }}
+                            className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                         </div>
                         <input value={photo.caption||''} onChange={e=>{ const updated={...donnyPhotos,[photoJobId]:(donnyPhotos[photoJobId]||[]).map(p=>p.id===photo.id?{...p,caption:e.target.value}:p)}; savePhotos(updated); }}
                           placeholder="Add caption..." className="w-full bg-transparent text-white text-xs focus:outline-none border-b" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
@@ -15806,8 +15819,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="text-white font-bold">All items complete!</div>
                 </div>
               )}
-              <button onClick={()=>{ if(window.confirm('Delete?')){ saveChecklists(donnyChecklists.filter(c=>c.id!==selected.id)); setSelectedChecklistId(null); }}}
-                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete</button>
+              {donnyRole !== 'worker' && <button onClick={()=>{ if(window.confirm('Delete?')){ saveChecklists(donnyChecklists.filter(c=>c.id!==selected.id)); setSelectedChecklistId(null); }}}
+                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete</button>}
             </div>
           </div>
         );
@@ -15923,7 +15936,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {total>0&&<div className="w-12 h-1.5 rounded-full mt-1 overflow-hidden" style={{background:'rgba(255,255,255,0.06)'}}><div className="h-full rounded-full" style={{width:`${total>0?(done/total*100):0}%`,background:done===total?'#22c55e':tc}}/></div>}
                     </div>
                     <button onClick={()=>setSelectedChecklistId(cl.id)} className="text-xs px-2 py-1.5 rounded-lg font-bold" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>✏️ Edit</button>
-                    <button onClick={()=>{ if(window.confirm('Delete?')) saveChecklists(donnyChecklists.filter(c=>c.id!==cl.id)); }} className="text-xs px-2 py-1.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                    {donnyRole !== 'worker' && <button onClick={()=>{ if(window.confirm('Delete?')) saveChecklists(donnyChecklists.filter(c=>c.id!==cl.id)); }} className="text-xs px-2 py-1.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                   </div>
                 </div>
               );
@@ -16057,8 +16070,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     <div className="flex items-center gap-2">
                       {inc.reported&&<span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(34,197,94,0.1)',color:'rgba(34,197,94,0.7)',border:'1px solid rgba(34,197,94,0.2)'}}>Reported</span>}
-                      <button onClick={()=>setEditingIncidentId(isEditing?null:inc.id)} className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.2)'}}>{isEditing?'✕':'✏️'}</button>
-                      <button onClick={()=>{if(window.confirm('Delete?'))saveIncidents(donnyIncidents.filter(i=>i.id!==inc.id));}} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                      {donnyRole !== 'worker' && <button onClick={()=>setEditingIncidentId(isEditing?null:inc.id)} className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.2)'}}>{isEditing?'✕':'✏️'}</button>}
+                      {donnyRole !== 'worker' && <button onClick={()=>{if(window.confirm('Delete?'))saveIncidents(donnyIncidents.filter(i=>i.id!==inc.id));}} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                     </div>
                   </div>
                   {!isEditing && <>
@@ -16176,7 +16189,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</div>
                         {entry.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {entry.loggedBy}</div>}
                       </div>
-                      <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                      {donnyRole !== 'worker' && <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                     </div>
                   ))}
                 </div>
@@ -16319,8 +16332,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="flex items-center justify-between">
                           <div className="text-white font-semibold">{m.who||'Unknown'}</div>
                           <div className="flex gap-2 ml-2">
-                            <button onClick={()=>setEditingMistakeId(isEditing?null:m.id)} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.2)'}}>{isEditing?'✕':'✏️'}</button>
-                            <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x=>x.id!==m.id)); }} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                            {donnyRole !== 'worker' && <button onClick={()=>setEditingMistakeId(isEditing?null:m.id)} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.2)'}}>{isEditing?'✕':'✏️'}</button>}
+                            {donnyRole !== 'worker' && <button onClick={() => { if(window.confirm('Delete this mistake log?')) saveMistakes(donnyMistakes.filter(x=>x.id!==m.id)); }} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
                           </div>
                         </div>
                         {!isEditing && <>
@@ -16387,9 +16400,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {riskJob.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{riskJob.jobNumber}</div>}
                     </div>
                   </div>
-                  <button onClick={()=>setEditingRiskJobId(editingRiskJobId===riskJob.id?null:riskJob.id)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.3)'}}>
+                  {donnyRole !== 'worker' && <button onClick={()=>setEditingRiskJobId(editingRiskJobId===riskJob.id?null:riskJob.id)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.3)'}}>
                     {editingRiskJobId===riskJob.id?'✕ Cancel':'✏️ Edit'}
-                  </button>
+                  </button>}
                 </div>
               </div>
             </div>
