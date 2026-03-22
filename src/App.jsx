@@ -1852,21 +1852,25 @@ function MuzzApp() {
   const saveWorkerDataToBoss = async (updates) => {
     if (donnyRole !== 'worker' || !donnyBossUserId) return;
     try {
-      // First load current boss data via RPC (bypasses RLS)
-      const readRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/find_donny_workspace`, {
+      // Get current boss data first
+      const readRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_boss_data`, {
         method: 'POST',
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: donnyWorkspaceCode || '__lookup_by_boss_id__' })
+        body: JSON.stringify({ boss_id: donnyBossUserId })
       });
-      // Fall back to direct read of boss row using the RPC save function
-      // Get current boss data_json first
-      const readRes2 = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${donnyBossUserId}&select=data_json`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      const rows = await readRes2.json();
-      const currentData = rows?.[0]?.data_json || {};
-      const merged = { ...currentData, ...updates };
-      // Use RPC to write back (bypasses RLS)
+      const currentData = await readRes.json();
+      if (!currentData) return;
+      // Only merge the specific fields being updated — never overwrite with empty
+      const safeUpdates = {};
+      for (const [key, val] of Object.entries(updates)) {
+        // Only include if value is non-empty
+        if (Array.isArray(val) && val.length === 0) continue;
+        if (val === null || val === undefined) continue;
+        safeUpdates[key] = val;
+      }
+      if (Object.keys(safeUpdates).length === 0) return;
+      const merged = { ...currentData, ...safeUpdates };
+      // Write back via RPC
       await fetch(`${SUPABASE_URL}/rest/v1/rpc/save_worker_data`, {
         method: 'POST',
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
