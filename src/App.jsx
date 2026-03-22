@@ -14132,7 +14132,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-5xl">👷</div>
                 <div className="text-white font-bold text-xl">You're in Worker Mode</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>You're currently viewing a boss's workspace</div>
-                <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setActiveView('donny'); }}
+                <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]); setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]); setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({}); setDonnySchedule({}); setDonnyRecurring([]); setActiveView('donny'); }}
                   className="w-full py-3 rounded-xl font-bold text-sm" style={{background:'rgba(239,68,68,0.15)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
                   Leave Workspace
                 </button>
@@ -14249,7 +14249,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Worker mode indicator */}
               {donnyRole === 'worker' && (
                 <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl text-xs w-fit" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',color:'rgba(34,197,94,0.8)'}}>
-                  👷 Worker mode · <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave</button>
+                  👷 Worker mode · <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]); setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]); setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({}); setDonnySchedule({}); setDonnyRecurring([]); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave</button>
                 </div>
               )}
             </div>
@@ -14356,7 +14356,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-white font-bold">👷 Worker Mode</div>
                       <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>You're logged into a boss's workspace</div>
                     </div>
-                    <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); }}
+                    <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]); setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]); setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({}); setDonnySchedule({}); setDonnyRecurring([]); }}
                       className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.8)'}}>
                       Leave
                     </button>
