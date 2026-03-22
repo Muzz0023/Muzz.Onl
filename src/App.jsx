@@ -14278,7 +14278,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.25)"}}>🐨</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm mb-0.5" style={{color:"rgba(255,255,255,0.5)"}}>{greeting}, boss · {today}</div>
+                  <div className="text-sm mb-0.5" style={{color:"rgba(255,255,255,0.5)"}}>{greeting}, {eliteName || 'boss'} · {today}</div>
                   <div className="text-2xl font-bold text-white">
                     {overdueJobs.length > 0
                       ? `${overdueJobs.length} job${overdueJobs.length>1?'s':''} overdue ⚠️`
