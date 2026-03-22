@@ -6860,7 +6860,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex items-center gap-4 mb-4">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
               <div className="flex-1">
-                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : "mate"}!</div>
+                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} className="underline" style={{color:"rgba(0,200,255,0.7)"}}>set your name</button>}!</div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
                   {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:"rgba(255,215,0,0.15)",border:"1px solid rgba(255,215,0,0.3)"}}><span className="text-xs font-bold" style={{color:"#FFD700"}}>⚡ ELITE</span></div>}
@@ -8773,6 +8773,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-3xl p-6 text-center">
               <p className="text-amber-800 font-semibold">VIP Account — Lifetime Elite Access</p>
               <p className="text-amber-600 text-sm mt-1">You're a founder. No subscription needed, ever.</p>
+            </div>
+          )}
+
+          {/* Display Name */}
+          {isElite && (
+            <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">✏️</span>
+                <h2 className="text-white font-bold text-lg">Your Display Name</h2>
+              </div>
+              <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>Shows on your dashboard greeting and in Donny logs — e.g. "G'day, <span style={{color:"#00c8ff"}}>Muzz</span>"</p>
+              <div className="flex gap-3">
+                <input
+                  value={eliteName}
+                  onChange={e => setEliteName(e.target.value)}
+                  placeholder="Enter your name..."
+                  className="flex-1 px-4 py-3 rounded-2xl text-white font-medium focus:outline-none text-lg"
+                  style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}
+                />
+              </div>
+              {eliteName && <div className="text-sm" style={{color:"rgba(0,200,255,0.6)"}}>✓ Saved automatically — G'day, {eliteName}!</div>}
             </div>
           )}
 
