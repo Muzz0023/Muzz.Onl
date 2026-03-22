@@ -1786,6 +1786,30 @@ function MuzzApp() {
     return `${part1}-${part2}`;
   };
 
+  const leaveWorkspace = async () => {
+    // Clear all Donny state
+    setDonnyRole("boss");
+    setDonnyBossUserId(null);
+    setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]);
+    setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]);
+    setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({});
+    setDonnySchedule({}); setDonnyRecurring([]);
+    // Also clear from own Supabase row immediately
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+      });
+      const rows = await r.json();
+      const current = rows?.[0]?.data_json || {};
+      const cleared = { ...current, donnyJobs:[], donnyTeam:[], donnyNotes:{}, donnyTimesheets:[], donnyClients:[], donnySubs:[], donnySuppliers:[], donnyMaterialsLog:[], donnyMistakes:[], donnyIncidents:[], donnyChecklists:[], donnyPhotos:{}, donnySchedule:{}, donnyRecurring:[], donnyRole:"boss", donnyBossUserId:null };
+      await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+        method: "PATCH",
+        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
+        body: JSON.stringify({ data_json: cleared })
+      });
+    } catch(e) { console.error("Leave workspace clear error:", e); }
+  };
+
   const ensureWorkspaceCode = () => {
     if (!donnyWorkspaceCode) {
       const code = generateWorkspaceCode();
@@ -14132,7 +14156,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="text-5xl">👷</div>
                 <div className="text-white font-bold text-xl">You're in Worker Mode</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>You're currently viewing a boss's workspace</div>
-                <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]); setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]); setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({}); setDonnySchedule({}); setDonnyRecurring([]); setActiveView('donny'); }}
+                <button onClick={()=>{ leaveWorkspace(); setActiveView('donny'); }}
                   className="w-full py-3 rounded-xl font-bold text-sm" style={{background:'rgba(239,68,68,0.15)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
                   Leave Workspace
                 </button>
@@ -14249,7 +14273,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Worker mode indicator */}
               {donnyRole === 'worker' && (
                 <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl text-xs w-fit" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',color:'rgba(34,197,94,0.8)'}}>
-                  👷 Worker mode · <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]); setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]); setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({}); setDonnySchedule({}); setDonnyRecurring([]); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave</button>
+                  👷 Worker mode · <button onClick={()=>{ leaveWorkspace(); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave</button>
                 </div>
               )}
             </div>
@@ -14356,7 +14380,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-white font-bold">👷 Worker Mode</div>
                       <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>You're logged into a boss's workspace</div>
                     </div>
-                    <button onClick={()=>{ setDonnyRole('boss'); setDonnyBossUserId(null); setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]); setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]); setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({}); setDonnySchedule({}); setDonnyRecurring([]); }}
+                    <button onClick={()=>{ leaveWorkspace(); }}
                       className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.8)'}}>
                       Leave
                     </button>
