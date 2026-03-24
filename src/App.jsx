@@ -14117,18 +14117,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <div>
                   <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)"}}>START</div>
-                  <select value={formBlock.startHour} onChange={e=>setForm({startHour:parseInt(e.target.value)})}
+                  <select value={formBlock.startHour} onChange={e=>setForm({startHour:parseFloat(e.target.value)})}
                     className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
-                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
-                    {hours.map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{fmt12(h)}</option>)}
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)",colorScheme:'dark'}}>
+                    {Array.from({length:96},(_,i)=>i*0.25).map(h=>{const hr=Math.floor(h);const min=Math.round((h-hr)*60);const label=`${hr===0?12:hr>12?hr-12:hr}:${min.toString().padStart(2,'0')}${hr<12?'am':'pm'}`;return <option key={h} value={h} style={{background:'#020c1b'}}>{label}</option>;})}
                   </select>
                 </div>
                 <div>
                   <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)"}}>END</div>
-                  <select value={formBlock.endHour} onChange={e=>setForm({endHour:parseInt(e.target.value)})}
+                  <select value={formBlock.endHour} onChange={e=>setForm({endHour:parseFloat(e.target.value)})}
                     className="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
-                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}>
-                    {hours.filter(h=>h>formBlock.startHour).map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{fmt12(h)}</option>)}
+                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)",colorScheme:'dark'}}>
+                    {Array.from({length:96},(_,i)=>i*0.25).filter(h=>h>formBlock.startHour).map(h=>{const hr=Math.floor(h);const min=Math.round((h-hr)*60);const label=`${hr===0?12:hr>12?hr-12:hr}:${min.toString().padStart(2,'0')}${hr<12?'am':'pm'}`;return <option key={h} value={h} style={{background:'#020c1b'}}>{label}</option>;})}
                   </select>
                 </div>
               </div>
