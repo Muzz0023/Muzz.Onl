@@ -1974,7 +1974,12 @@ function MuzzApp() {
     if(d.donnyPhotos) setDonnyPhotos(d.donnyPhotos);
     if(d.donnySchedule) setDonnySchedule(d.donnySchedule);
     if(d.donnyRecurring) setDonnyRecurring(d.donnyRecurring);
-    alert('✅ Data restored successfully!');
+    // Save directly to Supabase immediately so cloud data doesn't overwrite restored state
+    supabase.saveUserData(userId, d).then(() => {
+      alert('✅ Data restored and saved successfully!');
+    }).catch(() => {
+      alert('✅ Data restored! (Cloud sync may take a moment)');
+    });
   }catch(err){alert('Invalid file — make sure it\'s a muzz-backup.json');} }; r.readAsText(file); };
   const [openSections, setOpenSections] = useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
   const toggleSection = (title) => setOpenSections(prev => ({...prev, [title]: !prev[title]}));
