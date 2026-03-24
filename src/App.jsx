@@ -13952,7 +13952,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (!isElite) return <LockedFeature featureName="Timetable" setActiveView={setActiveView} />;
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const hours = Array.from({length:24},(_,i)=>i);
-    const fmt12 = (h) => h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
+    const fmt12 = (h) => { const hr=Math.floor(h); const min=Math.round((h-hr)*60); const period=hr<12?'am':'pm'; const displayHr=hr===0?12:hr>12?hr-12:hr; return min>0?`${displayHr}:${min.toString().padStart(2,'0')}${period}`:`${displayHr}${period}`; };
     const today = new Date().toLocaleDateString('en-AU',{weekday:'short'}).slice(0,3);
     const hexToRgba = (hex, a) => {
       try { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
@@ -15287,7 +15287,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const saveSched = (updated) => { setDonnySchedule(updated) };
       const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
       const hours = Array.from({length:24},(_,i)=>i);
-      const fmt12 = (h) => h===0?'12am':h<12?`${h}am`:h===12?'12pm':`${h-12}pm`;
+      const fmt12 = (h) => { const hr=Math.floor(h); const min=Math.round((h-hr)*60); const period=hr<12?'am':'pm'; const displayHr=hr===0?12:hr>12?hr-12:hr; return min>0?`${displayHr}:${min.toString().padStart(2,'0')}${period}`:`${displayHr}${period}`; };
       const getWeekDates = (offset) => {
         const now = new Date(); const dow = now.getDay();
         const mon = new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)+offset*7);
