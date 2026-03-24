@@ -17452,7 +17452,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
             <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🔥 Habit Tracker</h1>
-            <p className="text-white/70 mt-1">Build streaks. Build discipline.</p>
+            <p className="text-white/70 mt-1">Track your daily habits. Small wins compound.</p>
           </div>
         </div>
         <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
