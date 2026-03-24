@@ -16020,9 +16020,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {cl.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {cl.loggedBy}</div>}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <div className="text-right mr-1">
+                    <div className="text-right" style={{minWidth:'36px'}}>
                       <div className="text-sm font-black" style={{color:done===total&&total>0?'#22c55e':tc}}>{done}/{total}</div>
-                      {total>0&&<div className="w-12 h-1.5 rounded-full mt-1 overflow-hidden" style={{background:'rgba(255,255,255,0.06)'}}><div className="h-full rounded-full" style={{width:`${total>0?(done/total*100):0}%`,background:done===total?'#22c55e':tc}}/></div>}
+                      {total>0&&<div className="h-1 rounded-full mt-1 overflow-hidden" style={{width:'36px',background:'rgba(255,255,255,0.06)'}}><div className="h-full rounded-full" style={{width:`${total>0?(done/total*100):0}%`,background:done===total?'#22c55e':tc}}/></div>}
                     </div>
                     <button onClick={()=>setSelectedChecklistId(cl.id)} className="text-xs px-2 py-1.5 rounded-lg font-bold" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>✏️ Edit</button>
                     {donnyRole !== 'worker' && <button onClick={()=>{ if(window.confirm('Delete?')) saveChecklists(donnyChecklists.filter(c=>c.id!==cl.id)); }} className="text-xs px-2 py-1.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
@@ -16854,15 +16854,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   ))}
                   <div>
                     <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>💰 RATE</div>
-                    <div className="flex gap-2 items-end">
-                      <input value={sub.rate||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rate:e.target.value}:s))}
-                        placeholder="0.00" type="number"
-                        className="flex-1 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                      <select value={sub.rateType||'hr'} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rateType:e.target.value}:s))}
-                        className="bg-transparent text-white text-xs focus:outline-none pb-1 border-b" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                        <option value="hr">/hr</option><option value="day">/day</option><option value="job">/job</option>
-                      </select>
-                    </div>
+                    <input value={sub.rate||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rate:e.target.value}:s))}
+                      placeholder="0.00" type="number"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1 mb-2" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                    <select value={sub.rateType||'hr'} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rateType:e.target.value}:s))}
+                      className="w-full bg-transparent text-white text-xs focus:outline-none pb-1 border-b" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
+                    </select>
                   </div>
                 </div>
               </div>
