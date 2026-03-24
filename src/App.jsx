@@ -1947,7 +1947,7 @@ function MuzzApp() {
   const [schedTab, setSchedTab] = useState('week');
   const [schedPickDay, setSchedPickDay] = useState(null);
   const [schedPickStart, setSchedPickStart] = useState(7);
-  const [schedPickEnd, setSchedPickEnd] = useState(15);
+  const [schedPickEnd, setSchedPickEnd] = useState(15.25);
   const [schedBlockColor, setSchedBlockColor] = useState(null);
   // Donny Subcontractors
   const [donnySubs, setDonnySubs] = useState([]);
@@ -14673,7 +14673,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {tsSelectedMember && tsHours && (
                     <div className="rounded-xl p-2.5 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
                       <span className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Pay: </span>
-                      <span className="font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>m.id===tsSelectedMember)?.hourlyRate)||0)).toFixed(2)}</span>
+                      <span className="font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>String(m.id)===String(tsSelectedMember))?.hourlyRate)||0)).toFixed(2)}</span>
                     </div>
                   )}
                   <button onClick={() => {
@@ -15039,18 +15039,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ Add Member</button>
                     </div>
                   </div>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 140px 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>NAME</div><div>ROLE</div><div>POSITION</div><div>RATE</div>
+                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                    <div>NAME</div><div>ROLE</div><div>RATE</div>
                   </div>
                   {sorted.map((member,i) => (
                     <div key={member.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
-                      style={{gridTemplateColumns:'1fr 1fr 140px 90px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
+                      style={{gridTemplateColumns:'1fr 1fr 80px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{member.name.charAt(0).toUpperCase()}</div>
-                        <span className="text-white font-medium text-sm truncate">{member.name}</span>
+                        <div>
+                          <span className="text-white font-medium text-sm truncate block">{member.name}</span>
+                          {member.position&&<span className="text-xs" style={{color:'rgba(249,115,22,0.6)'}}>{member.position}</span>}
+                        </div>
                       </div>
                       <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')||'—'}</div>
-                      <div className="text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{member.position||'—'}</div>
                       <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{member.hourlyRate?`$${member.hourlyRate}/hr`:'—'}</div>
                     </div>
                   ))}
@@ -15447,18 +15449,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>START</div>
-                      <select value={schedPickStart} onChange={e=>setSchedPickStart(parseInt(e.target.value))}
+                      <select value={schedPickStart} onChange={e=>setSchedPickStart(parseFloat(e.target.value))}
                         className="w-full px-3 py-3 rounded-xl text-white focus:outline-none"
                         style={{background:'rgba(249,115,22,0.05)',border:'1px solid rgba(249,115,22,0.2)',colorScheme:'dark'}}>
-                        {hours.map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{fmt12(h)}</option>)}
+                        {Array.from({length:96},(_,i)=>i*0.25).map(h=>{const hr=Math.floor(h);const min=Math.round((h-hr)*60);const label=`${hr===0?12:hr>12?hr-12:hr}:${min.toString().padStart(2,'0')}${hr<12?'am':'pm'}`;return <option key={h} value={h} style={{background:'#020c1b'}}>{label}</option>;})}
                       </select>
                     </div>
                     <div>
                       <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>END</div>
-                      <select value={schedPickEnd} onChange={e=>setSchedPickEnd(parseInt(e.target.value))}
+                      <select value={schedPickEnd} onChange={e=>setSchedPickEnd(parseFloat(e.target.value))}
                         className="w-full px-3 py-3 rounded-xl text-white focus:outline-none"
                         style={{background:'rgba(249,115,22,0.05)',border:'1px solid rgba(249,115,22,0.2)',colorScheme:'dark'}}>
-                        {hours.filter(h=>h>schedPickStart).map(h=><option key={h} value={h} style={{background:'#020c1b'}}>{fmt12(h)}</option>)}
+                        {Array.from({length:96},(_,i)=>i*0.25).filter(h=>h>schedPickStart).map(h=>{const hr=Math.floor(h);const min=Math.round((h-hr)*60);const label=`${hr===0?12:hr>12?hr-12:hr}:${min.toString().padStart(2,'0')}${hr<12?'am':'pm'}`;return <option key={h} value={h} style={{background:'#020c1b'}}>{label}</option>;})}
                       </select>
                     </div>
                   </div>
@@ -15952,8 +15954,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="text-xs font-mono tracking-widest" style={{color:'rgba(34,197,94,0.7)'}}>// CHECKLIST TABLE</div>
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e'}}>{donnyChecklists.length} total</span>
                 </div>
-                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 100px 70px 80px 70px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                  <div>TITLE</div><div>TYPE</div><div>JOB #</div><div>JOB</div><div>DONE</div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 90px 60px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>TITLE</div><div>TYPE</div><div>DONE</div>
                 </div>
                 {donnyChecklists.map((cl,i)=>{
                   const tc=typeColors[cl.type]||'#22c55e';
@@ -15962,11 +15964,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   return(
                     <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
                       className="w-full grid px-5 py-3 items-center text-left hover:bg-white/[0.02]"
-                      style={{gridTemplateColumns:'1fr 100px 70px 80px 70px',borderBottom:i<donnyChecklists.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
-                      <span className="text-white font-medium text-sm truncate pr-2">{cl.title}</span>
+                      style={{gridTemplateColumns:'1fr 90px 60px',borderBottom:i<donnyChecklists.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                      <div>
+                        <span className="text-white font-medium text-sm truncate pr-2 block">{cl.title}</span>
+                        {job&&<span className="text-xs" style={{color:'rgba(148,163,184,0.4)'}}>{job.jobNumber?`#${job.jobNumber} · `:''}{job.title?.slice(0,15)}</span>}
+                      </div>
                       <span className="text-xs px-2 py-0.5 rounded-full font-bold inline-block" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[cl.type]||cl.type}</span>
-                      <span className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>{job?.jobNumber?`#${job.jobNumber}`:'—'}</span>
-                      <span className="text-xs truncate" style={{color:'rgba(148,163,184,0.5)'}}>{job?.title?.slice(0,12)||'—'}</span>
                       <span className="text-xs font-bold" style={{color:done===total&&total>0?'#22c55e':tc}}>{done}/{total}</span>
                     </button>
                   );
@@ -16093,19 +16096,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div className="text-xs font-mono tracking-widest" style={{color:'rgba(239,68,68,0.7)'}}>// INCIDENT TABLE</div>
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444'}}>{donnyIncidents.length} logged</span>
                 </div>
-                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'90px 1fr 70px 1fr 70px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                  <div>DATE</div><div>TYPE</div><div>JOB #</div><div>WHO</div><div>REPORTED</div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'85px 1fr 1fr 55px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>DATE</div><div>TYPE</div><div>WHO</div><div>REP.</div>
                 </div>
                 {donnyIncidents.map((inc,i)=>{
                   const tc=typeColors[inc.type]||'#ef4444';
                   const job=donnyJobs.find(j=>j.id===inc.jobId);
                   return(
-                    <div key={inc.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'90px 1fr 70px 1fr 70px',borderBottom:i<donnyIncidents.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
-                      <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{inc.date||'—'}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full font-bold inline-block mr-2" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[inc.type]||inc.type}</span>
-                      <span className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>{job?.jobNumber?`#${job.jobNumber}`:'—'}</span>
+                    <div key={inc.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'85px 1fr 1fr 55px',borderBottom:i<donnyIncidents.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                      <span className="text-xs font-mono" style={{color:'rgba(148,163,184,0.5)'}}>{inc.date?new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</span>
+                      <div>
+                        <span className="text-xs px-1.5 py-0.5 rounded-full font-bold inline-block" style={{background:`${tc}15`,color:tc,border:`1px solid ${tc}30`}}>{typeLabels[inc.type]||inc.type}</span>
+                        {job&&<div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.4)'}}>{job.jobNumber?`#${job.jobNumber}`:job.title?.slice(0,10)}</div>}
+                      </div>
                       <span className="text-xs truncate" style={{color:'rgba(148,163,184,0.6)'}}>{inc.who||'—'}</span>
-                      <span className="text-xs font-bold" style={{color:inc.reported?'#22c55e':'rgba(148,163,184,0.3)'}}>{inc.reported?'Yes':'No'}</span>
+                      <span className="text-xs font-bold" style={{color:inc.reported?'#22c55e':'rgba(148,163,184,0.3)'}}>{inc.reported?'✓':'—'}</span>
                     </div>
                   );
                 })}
@@ -16873,19 +16878,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </button>
                   </div>
                 </div>
-                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 100px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                  <div>NAME</div><div>TRADE</div><div>PHONE</div><div>RATE</div>
+                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div>NAME</div><div>TRADE</div><div>RATE</div>
                 </div>
                 {donnySubs.map((s,i)=>(
                   <button key={s.id} onClick={()=>setEditingSubId(s.id)}
                     className="w-full grid px-5 py-3 text-sm items-center text-left hover:bg-white/[0.02]"
-                    style={{gridTemplateColumns:'1fr 1fr 100px 80px',borderBottom:i<donnySubs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                    style={{gridTemplateColumns:'1fr 1fr 80px',borderBottom:i<donnySubs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{s.name.charAt(0).toUpperCase()}</div>
                       <span className="text-white font-medium truncate">{s.name}</span>
                     </div>
                     <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{s.trade||s.company||'—'}</div>
-                    <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>{s.phone||'—'}</div>
                     <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</div>
                   </button>
                 ))}
@@ -16906,14 +16910,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   ))}
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 RATE</div>
-                    <div className="flex gap-2">
-                      <input value={newSub.rate} onChange={e=>setNewSub(p=>({...p,rate:e.target.value}))} placeholder="120" type="number"
-                        className="flex-1 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                      <select value={newSub.rateType} onChange={e=>setNewSub(p=>({...p,rateType:e.target.value}))}
-                        className="bg-transparent text-white text-xs focus:outline-none" style={{colorScheme:'dark'}}>
-                        <option value="hr">/hr</option><option value="day">/day</option><option value="job">/job</option>
-                      </select>
-                    </div>
+                    <input value={newSub.rate} onChange={e=>setNewSub(p=>({...p,rate:e.target.value}))} placeholder="e.g. 120" type="number"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>RATE TYPE</div>
+                    <select value={newSub.rateType} onChange={e=>setNewSub(p=>({...p,rateType:e.target.value}))}
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
+                    </select>
                   </div>
                 </div>
                 <button onClick={()=>{
