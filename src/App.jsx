@@ -7271,7 +7271,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
             </div>
             <div className="p-4">
-              <div className="space-y-2">
+              <div style={{overflowX:'auto'}}>
+              <div className="space-y-2" style={{minWidth:'420px'}}>
                 {(billsType === 'personal' ? subscriptions : businessSubscriptions).map((sub, index) => (
                   <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
                     <span className="w-8 text-right text-gray-400 text-sm">{index + 1}.</span>
@@ -7340,6 +7341,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 ))}
               </div>
+              </div>{/* end scroll */}
               <button
                 onClick={() => {
                   if (billsType === 'personal') {
@@ -7851,7 +7853,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     for (let day = 1; day <= daysInMonth; day++) {
                       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                       const dayBills = calendarBills[dateKey] || [];
-                      const totalForDay = dayBills.reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0);
+                      // Auto-include recurring bills from subscriptions that have this day as due date
+                      const recurringBills = subscriptions.filter(s => {
+                        if (!s.name || !s.dueDate) return false;
+                        const dueDayNum = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
+                        return dueDayNum === day;
+                      }).map(s => ({ name: s.name, amount: String(s.monthly||0), recurring: true }));
+                      const allDayBills = [...dayBills, ...recurringBills];
+                      const totalForDay = allDayBills.reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0);
                       const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
                       
                       days.push(
@@ -7930,6 +7939,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     
                     {/* Bills for selected day */}
+                    {/* Show recurring bills from subscriptions for this date */}
+                    {selectedCalendarDate && subscriptions.filter(s => {
+                      if (!s.name || !s.dueDate) return false;
+                      const day = new Date(selectedCalendarDate + 'T00:00:00').getDate();
+                      const dueDayNum = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
+                      return dueDayNum === day;
+                    }).map((s, i) => (
+                      <div key={`rec-${i}`} className="flex items-center justify-between py-2 px-3 rounded-xl mb-2" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                        <div>
+                          <span className="text-sm text-white font-medium">{s.name}</span>
+                          <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.8)'}}>🔁 Recurring</span>
+                        </div>
+                        <span className="text-sm font-bold" style={{color:'#ef4444'}}>-${s.monthly}</span>
+                      </div>
+                    ))}
                     {(calendarBills[selectedCalendarDate] || []).length > 0 && (
                       <div className="space-y-2">
                         <h3 className="text-sm font-semibold text-gray-600">Bills on this day:</h3>
@@ -8609,8 +8633,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <h3 className="font-bold text-gray-800 text-lg mb-4">❓ FAQ</h3>
             <div className="space-y-3">
               {[
-                { q: "How do I upgrade to Elite?", a: "Head to the 'Upgrade to Elite' section in the sidebar. It's $4.99/month and unlocks all features!" },
-                { q: "Is my data safe?", a: "Your data is stored securely in the cloud and only you can access it." },
+                { q: "What plans are available?", a: "Two plans: 🦘 Muzz Elite at $4.99/month gives you the full personal finance and life management system. 🦘🐨 Muzz & Donny at $7.99/month adds the full Donny trade business system on top." },
+                { q: "How do I upgrade to Elite?", a: "Head to the Elite section in the sidebar. Choose Muzz Elite ($4.99/mo) for personal finance, or Muzz & Donny ($7.99/mo) if you also want the Donny business system." },
+                { q: "What is Donny?", a: "Donny 🐨 is a trade business management system built into Muzz. It includes job tracking, scheduler, team management, SWMS, incident logs, price book, reports, and a multi-user workspace system so your crew can log in as workers." },
+                { q: "How does the Donny workspace work?", a: "As a boss, you get a unique join code to share with your workers. Workers enter the code in their app to join your workspace. They can log daily reports, photos, incidents, materials and more — and it all syncs to your account in real time." },
+                { q: "Is my data safe?", a: "Your data is stored securely in the cloud via Supabase and only you can access it. Export a backup anytime from the Settings section." },
                 { q: "How do I cancel my subscription?", a: "Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period." },
                 { q: "Can I use Muzz on my phone?", a: "Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl." },
               ].map((faq, i) => (
@@ -14482,7 +14509,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
                     </div>
                   </div>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'70px 1fr 90px 90px 100px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div style={{overflowX:'auto'}}>
+                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'70px minmax(120px,1fr) 85px 85px 95px',minWidth:'430px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
                     <div>JOB #</div><div>NAME</div><div>START</div><div>DUE</div><div>STATUS</div>
                   </div>
                   {donnyJobs.map((job, i) => {
@@ -14490,7 +14518,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
                     return (
                       <div key={job.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02]"
-                        style={{gridTemplateColumns:'70px 1fr 90px 90px 100px',borderBottom:i<donnyJobs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                        style={{gridTemplateColumns:'70px minmax(120px,1fr) 85px 85px 95px',minWidth:'430px',borderBottom:i<donnyJobs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
                         <div className="font-mono text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
                         <div className="text-white font-medium truncate pr-4">{job.title}</div>
                         <div className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
@@ -14499,6 +14527,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     );
                   })}
+                  </div>{/* end scroll */}
                 </div>
 
                 {/* KANBAN */}
