@@ -1776,7 +1776,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
   // Generate a workspace code for the boss
   const generateWorkspaceCode = () => {
@@ -1974,8 +1974,85 @@ function MuzzApp() {
     if(d.donnyPhotos) setDonnyPhotos(d.donnyPhotos);
     if(d.donnySchedule) setDonnySchedule(d.donnySchedule);
     if(d.donnyRecurring) setDonnyRecurring(d.donnyRecurring);
-    // Save directly to Supabase immediately so cloud data doesn't overwrite restored state
-    supabase.saveUserData(userId, d).then(() => {
+    if(d.donnyCosts) setDonnyCosts(d.donnyCosts);
+    if(d.donnyWorkspaceCode) setDonnyWorkspaceCode(d.donnyWorkspaceCode);
+    // Build the complete merged data object with everything and save directly to Supabase
+    const fullData = {
+      subscriptions: d.subscriptions||[],
+      businessSubscriptions: d.businessSubscriptions||[],
+      muzzPersonality: d.muzzPersonality!==undefined?d.muzzPersonality:true,
+      funnyGreetings: d.funnyGreetings||false,
+      customDiets: d.customDiets||[],
+      trackedStocks: d.trackedStocks||[],
+      monthlySalary: d.monthlySalary||'',
+      monthlySalaryStr: d.monthlySalaryStr||'',
+      assets: d.assets||[],
+      stocks: d.stocks||[],
+      investmentSettings: d.investmentSettings||{yearsToProject:'10',expectedGrowthRate:'7',yearlyContribution:''},
+      smallGoals: d.smallGoals||[],
+      bigGoals: d.bigGoals||[],
+      holdingsResearch: d.holdingsResearch||[],
+      futureStocks: d.futureStocks||[],
+      futureResearch: d.futureResearch||[],
+      futureResearchColumns: d.futureResearchColumns||[],
+      investmentSmallGoals: d.investmentSmallGoals||[],
+      investmentBigGoals: d.investmentBigGoals||[],
+      investmentNotes: d.investmentNotes||'',
+      declinedCompanies: d.declinedCompanies||[],
+      companyEconomics: d.companyEconomics||[],
+      economicsColumns: d.economicsColumns||[],
+      researchColumns: d.researchColumns||[],
+      biggestRisks: d.biggestRisks||[],
+      risksColumns: d.risksColumns||[],
+      billSmallGoals: d.billSmallGoals||[],
+      billBigGoals: d.billBigGoals||[],
+      debts: d.debts||[],
+      calendarBills: d.calendarBills||{},
+      tasks: d.tasks||[],
+      dailyTasks: d.dailyTasks||[],
+      weeklyTasks: d.weeklyTasks||[],
+      generalTasks: d.generalTasks||[],
+      dailyRotation: d.dailyRotation||[],
+      birthdays: d.birthdays||[],
+      reminders: d.reminders||[],
+      groceries: d.groceries||[],
+      shoppingLists: d.shoppingLists||[{id:'default',name:'Groceries',emoji:'🛒'}],
+      dailyMeals: d.dailyMeals||{},
+      waterIntake: d.waterIntake||{days:{},goal:3,goalStr:'3'},
+      dailySteps: d.dailySteps||{},
+      workoutPlan: d.workoutPlan||{weeks:{},stepsGoal:10000},
+      sleepData: d.sleepData||{},
+      mentalHealthData: d.mentalHealthData||{},
+      timesheetData: d.timesheetData||{jobs:[{id:1,name:'Job 1',shifts:{},hourlyRate:0,hourlyRateStr:''}],activeJobId:1},
+      customCategories: d.customCategories||[],
+      eliteName: d.eliteName||'',
+      stripeElite: d.stripeElite||false,
+      timetableBlocks: d.timetableBlocks||[],
+      habits: d.habits||[],
+      habitLog: d.habitLog||{},
+      journalEntries: d.journalEntries||{},
+      countdowns: d.countdowns||[],
+      bucketList: d.bucketList||[],
+      assetMapNodes: d.assetMapNodes||[{id:'root',name:'My Assets',emoji:'🏠',parentId:null}],
+      mapPins: d.mapPins||[],
+      donnyJobs: d.donnyJobs||[],
+      donnyTeam: d.donnyTeam||[],
+      donnyNotes: d.donnyNotes||{},
+      donnyTimesheets: d.donnyTimesheets||[],
+      donnyClients: d.donnyClients||[],
+      donnySubs: d.donnySubs||[],
+      donnySuppliers: d.donnySuppliers||[],
+      donnyMaterialsLog: d.donnyMaterialsLog||[],
+      donnyMistakes: d.donnyMistakes||[],
+      donnyIncidents: d.donnyIncidents||[],
+      donnyChecklists: d.donnyChecklists||[],
+      donnyPhotos: d.donnyPhotos||{},
+      donnySchedule: d.donnySchedule||{},
+      donnyRecurring: d.donnyRecurring||[],
+      donnyCosts: d.donnyCosts||[],
+      donnyWorkspaceCode: d.donnyWorkspaceCode||'',
+    };
+    supabase.saveUserData(userId, fullData).then(() => {
       alert('✅ Data restored and saved successfully!');
     }).catch(() => {
       alert('✅ Data restored! (Cloud sync may take a moment)');
