@@ -7586,13 +7586,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Muzz Advice Categories Info - Personal Only */}
           {billsType === 'personal' && filledSubs.length === 0 && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl shadow-sm border border-blue-200 overflow-hidden">
+            <div className="rounded-3xl overflow-hidden" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.15)"}}>
               <div className="p-6">
                 <div className="flex items-start gap-4">
                   <div className="text-3xl">🦘</div>
                   <div className="flex-1">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-2">Muzz Can Help You Save On...</h2>
-                    <p className="text-sm text-gray-600 mb-4">Add your bills above and I'll give you personalised money-saving tips for:</p>
+                    <h2 className="text-lg font-semibold text-white mb-2">Muzz Can Help You Save On...</h2>
+                    <p className="text-sm mb-4" style={{color:"rgba(148,163,184,0.7)"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                       {[
                         {icon:'📺', label:'Streaming Services'},
@@ -7602,7 +7602,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {icon:'🛡️', label:'Insurance'},
                         {icon:'🧠', label:'Subscription Audits'},
                       ].map((item,i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
+                        <div key={i} className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.15)",color:"rgba(255,255,255,0.8)"}}>
                           {item.icon} {item.label}
                         </div>
                       ))}
