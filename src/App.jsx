@@ -2054,8 +2054,10 @@ function MuzzApp() {
     };
     supabase.saveUserData(userId, fullData).then(() => {
       alert('✅ Data restored and saved successfully!');
+      setActiveView('home');
     }).catch(() => {
       alert('✅ Data restored! (Cloud sync may take a moment)');
+      setActiveView('home');
     });
   }catch(err){alert('Invalid file — make sure it\'s a muzz-backup.json');} }; r.readAsText(file); };
   const [openSections, setOpenSections] = useState({'LIFE':true,'FINANCE':false,'HEALTH & WORK':false,'CUSTOM':false,'ACCOUNT':false});
@@ -17977,7 +17979,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               📂 Select Backup File
               <input type="file" accept=".json" className="hidden" onChange={(e) => {
                 doImport(e);
-                setTimeout(() => setActiveView('home'), 500);
               }}/>
             </label>
           </div>
