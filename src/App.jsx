@@ -7594,24 +7594,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <h2 className="text-lg font-semibold text-gray-800 mb-2">Muzz Can Help You Save On...</h2>
                     <p className="text-sm text-gray-600 mb-4">Add your bills above and I'll give you personalised money-saving tips for:</p>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                      <div className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
-                        <span>📺</span> Streaming Services
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
-                        <span>🥕</span> Groceries & Food
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
-                        <span>💪</span> Gym Memberships
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
-                        <span>📱</span> Phone & Internet
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
-                        <span>🛡️</span> Insurance
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
-                        <span>🧠</span> Subscription Audits
-                      </div>
+                      {[
+                        {icon:'📺', label:'Streaming Services'},
+                        {icon:'🥕', label:'Groceries & Food'},
+                        {icon:'💪', label:'Gym Memberships'},
+                        {icon:'📱', label:'Phone & Internet'},
+                        {icon:'🛡️', label:'Insurance'},
+                        {icon:'🧠', label:'Subscription Audits'},
+                      ].map((item,i) => (
+                        <div key={i} className="flex items-center gap-2 text-sm text-gray-700 bg-white px-3 py-2 rounded-lg">
+                          {item.icon} {item.label}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -14488,7 +14482,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
                     </div>
                   </div>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'80px 1fr 110px 110px 120px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'70px 1fr 90px 90px 100px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
                     <div>JOB #</div><div>NAME</div><div>START</div><div>DUE</div><div>STATUS</div>
                   </div>
                   {donnyJobs.map((job, i) => {
@@ -14496,7 +14490,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
                     return (
                       <div key={job.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02]"
-                        style={{gridTemplateColumns:'80px 1fr 110px 110px 120px',borderBottom:i<donnyJobs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                        style={{gridTemplateColumns:'70px 1fr 90px 90px 100px',borderBottom:i<donnyJobs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
                         <div className="font-mono text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
                         <div className="text-white font-medium truncate pr-4">{job.title}</div>
                         <div className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
@@ -16210,7 +16204,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
               <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
                 <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
                     <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="e.g. 2C+E 2.5mm TPS Cable"
@@ -16218,12 +16212,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
-                    <div className="flex gap-1">
-                      <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
-                        className="flex-1 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                      <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="m"
-                        className="w-10 bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
+                    <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>UNIT</div>
+                    <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. m, ea, kg"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                   </div>
                 </div>
                 <div>
@@ -16746,21 +16741,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </Section>
 
             {/* SCHEDULER */}
-            {thisWeekAssignments.length>0&&(
-              <Section title="🗓️ Upcoming Schedule" color="#3b82f6">
-                {thisWeekAssignments.map((entry,i)=>{
-                  const job=donnyJobs.find(j=>j.id===entry.jobId);
-                  const member=donnyTeam.find(m=>m.id===entry.memberId);
-                  return(
-                    <div key={i} className="flex items-center justify-between text-xs py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                      <span className="text-white font-medium">{member?.name||'?'}</span>
-                      <span style={{color:'rgba(148,163,184,0.5)'}}>{new Date(entry.date+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}</span>
-                      <span style={{color:'#3b82f6'}}>{job?.title?.slice(0,25)||'?'}</span>
-                    </div>
-                  );
-                })}
-              </Section>
-            )}
+
 
             {/* SUBCONTRACTORS */}
             {donnySubs.length>0&&(
