@@ -14483,7 +14483,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // TIMETABLE VIEW
   // DONNY VIEWS
   if (activeView && activeView.startsWith('donny')) {
-    if (!isElite && !donnyWorkerAccess) return (
+    if (!isElite && donnyRole !== 'worker') return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
         <div className="max-w-lg mx-auto px-6 pt-24 space-y-6">
@@ -14512,8 +14512,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const entered = donnyWorkerCodeInput.trim().toUpperCase().replace(/\s+/g, '');
               const expected = DONNY_WORKER_CODE.trim().toUpperCase().replace(/\s+/g, '');
               if (entered === expected) {
-                // Generic worker access code
-                setDonnyWorkerAccess(true);
+                // Generic worker access code - just set role, no permanent flag
                 setDonnyRole('worker');
                 setDonnyWorkerCodeInput('');
               } else {
@@ -14529,7 +14528,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const match = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
                   if (match && match.user_id !== userId) {
                     const bossData = match.data_json;
-                    setDonnyWorkerAccess(true);
                     setDonnyRole('worker');
                     setDonnyBossUserId(match.user_id);
                     if (bossData.donnyJobs) setDonnyJobs(bossData.donnyJobs);
