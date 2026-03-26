@@ -13305,9 +13305,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setPerfError('');
               setPerfData(null);
               try {
-                const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5y`;
-                const proxy = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-                const r = await fetch(proxy);
+                const r = await fetch(`/api/stock?ticker=${ticker}`);
                 if (!r.ok) throw new Error('fetch failed');
                 const json = await r.json();
                 const chart = json?.chart?.result?.[0];
