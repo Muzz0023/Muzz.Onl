@@ -1720,6 +1720,51 @@ function MuzzApp() {
   const [perfData, setPerfData] = useState(null);
   const [perfLoading, setPerfLoading] = useState(false);
   const [perfError, setPerfError] = useState('');
+
+  const fetchPerformance = async () => {
+    const ticker = perfTicker.trim().toUpperCase();
+    if (!ticker) return;
+    setPerfLoading(true);
+    setPerfError('');
+    setPerfData(null);
+    try {
+      const r = await fetch(`/api/stock?ticker=${ticker}`);
+      if (!r.ok) throw new Error('not found');
+      const json = await r.json();
+      const chart = json?.chart?.result?.[0];
+      if (!chart) throw new Error('no data');
+      const timestamps = chart.timestamp || [];
+      const rawCloses = chart.indicators?.quote?.[0]?.close || [];
+      const closes = rawCloses.map((v, i) => ({ t: timestamps[i], v })).filter(x => x.v != null);
+      if (!closes.length) throw new Error('no closes');
+      const now = Date.now() / 1000;
+      const currentPrice = closes[closes.length - 1].v;
+      const priceNDaysAgo = (days) => {
+        const target = now - days * 86400;
+        for (let i = closes.length - 1; i >= 0; i--) {
+          if (closes[i].t <= target) return closes[i].v;
+        }
+        return closes[0].v;
+      };
+      const calcChange = (old) => old ? ((currentPrice - old) / old * 100) : null;
+      setPerfData({
+        ticker,
+        currentPrice,
+        results: {
+          '1d':  { change: calcChange(priceNDaysAgo(1)) },
+          '5d':  { change: calcChange(priceNDaysAgo(5)) },
+          '1mo': { change: calcChange(priceNDaysAgo(30)) },
+          '3mo': { change: calcChange(priceNDaysAgo(90)) },
+          '6mo': { change: calcChange(priceNDaysAgo(180)) },
+          '1y':  { change: calcChange(priceNDaysAgo(365)) },
+          '5y':  { change: calcChange(closes[0].v) },
+        }
+      });
+    } catch(e) {
+      setPerfError('Could not fetch data. Check the ticker and try again.');
+    }
+    setPerfLoading(false);
+  };
   const [holdingsResearch, setHoldingsResearch] = useState([]);
   const [billSmallGoals, setBillSmallGoals] = useState([]);
   const [billBigGoals, setBillBigGoals] = useState([]);
@@ -13297,151 +13342,88 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
-          {investmentsSubTab === 'performance' && (() => {
-            const fetchPerformance = async () => {
-              const ticker = perfTicker.trim().toUpperCase();
-              if (!ticker) return;
-              setPerfLoading(true);
-              setPerfError('');
-              setPerfData(null);
-              try {
-                const r = await fetch(`/api/stock?ticker=${ticker}`);
-                if (!r.ok) throw new Error('fetch failed');
-                const json = await r.json();
-                const chart = json?.chart?.result?.[0];
-                if (!chart) { setPerfError('Ticker not found. Check the symbol and try again.'); setPerfLoading(false); return; }
-                
-                const timestamps = chart.timestamp || [];
-                const rawCloses = chart.indicators?.quote?.[0]?.close || [];
-                const closes = rawCloses.map((v, i) => ({ t: timestamps[i], v })).filter(x => x.v != null);
-                const now = Date.now() / 1000;
-                
-                const priceNDaysAgo = (days) => {
-                  const target = now - days * 86400;
-                  for (let i = closes.length - 1; i >= 0; i--) {
-                    if (closes[i].t <= target) return closes[i].v;
-                  }
-                  return closes[0]?.v || null;
-                };
-                
-                const currentPrice = closes[closes.length - 1]?.v;
-                if (!currentPrice) { setPerfError('No price data found for this ticker.'); setPerfLoading(false); return; }
-                
-                const calcChange = (oldPrice) => oldPrice ? ((currentPrice - oldPrice) / oldPrice * 100) : null;
-                
-                const results = {
-                  '1d':  { change: calcChange(priceNDaysAgo(1)) },
-                  '5d':  { change: calcChange(priceNDaysAgo(5)) },
-                  '1mo': { change: calcChange(priceNDaysAgo(30)) },
-                  '3mo': { change: calcChange(priceNDaysAgo(90)) },
-                  '6mo': { change: calcChange(priceNDaysAgo(180)) },
-                  '1y':  { change: calcChange(priceNDaysAgo(365)) },
-                  '5y':  { change: calcChange(closes[0]?.v) },
-                };
-                
-                setPerfData({ ticker, results, currentPrice });
-              } catch(e) {
-                setPerfError('Could not fetch data. Try again in a moment.');
-              }
-              setPerfLoading(false);
-            };
-
-            const periods = [
-              {key:'1d', label:'1 Day'},
-              {key:'5d', label:'1 Week'},
-              {key:'1mo', label:'1 Month'},
-              {key:'3mo', label:'3 Months'},
-              {key:'6mo', label:'6 Months'},
-              {key:'1y', label:'1 Year'},
-              {key:'5y', label:'5 Years'},
-              {key:'max', label:'All Time'},
-            ];
-
-            return (
-              <div className="space-y-4">
-                {/* Search */}
-                <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)'}}>
-                  <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>// COMPANY PERFORMANCE</div>
-                  <div className="flex gap-3">
-                    <input
-                      value={perfTicker}
-                      onChange={e => setPerfTicker(e.target.value.toUpperCase())}
-                      onKeyDown={e => e.key === 'Enter' && fetchPerformance()}
-                      placeholder="e.g. AAPL, GOOG, BRK-B"
-                      className="flex-1 px-4 py-3 rounded-xl bg-transparent text-white font-bold text-lg focus:outline-none tracking-widest"
-                      style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)',fontFamily:"'Orbitron',monospace"}}
-                    />
-                    <button onClick={fetchPerformance} disabled={perfLoading || !perfTicker.trim()}
-                      className="px-5 py-3 rounded-xl font-bold text-white flex-shrink-0"
-                      style={{background: perfTicker.trim() ? 'linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))' : 'rgba(255,255,255,0.06)'}}>
-                      {perfLoading ? '⏳' : '→ Go'}
-                    </button>
-                  </div>
-                  {perfError && <div className="text-sm" style={{color:'rgba(239,68,68,0.8)'}}>{perfError}</div>}
+          {investmentsSubTab === 'performance' && (
+            <div className="space-y-4">
+              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)'}}>
+                <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>// COMPANY PERFORMANCE</div>
+                <div className="flex gap-3">
+                  <input
+                    value={perfTicker}
+                    onChange={e => setPerfTicker(e.target.value.toUpperCase())}
+                    onKeyDown={e => e.key === 'Enter' && fetchPerformance()}
+                    placeholder="e.g. AAPL, GOOG, BRK-B"
+                    className="flex-1 px-4 py-3 rounded-xl bg-transparent text-white font-bold text-lg focus:outline-none"
+                    style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}}
+                  />
+                  <button onClick={fetchPerformance} disabled={perfLoading || !perfTicker.trim()}
+                    className="px-5 py-3 rounded-xl font-bold text-white flex-shrink-0"
+                    style={{background: perfTicker.trim() ? 'linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))' : 'rgba(255,255,255,0.06)'}}>
+                    {perfLoading ? '⏳' : '→ Go'}
+                  </button>
                 </div>
-
-                {/* Results */}
-                {perfData && (
-                  <div className="space-y-4">
-                    {/* Current price + header */}
-                    <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(0,200,255,0.2)'}}>
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="text-2xl font-black tracking-widest" style={{color:'#00c8ff',fontFamily:"'Orbitron',monospace"}}>{perfData.ticker}</div>
-                        <div className="text-3xl font-black text-white">${perfData.currentPrice?.toFixed(2) || '—'}</div>
-                      </div>
-                      <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Current Price (USD)</div>
-                    </div>
-
-                    {/* Performance table */}
-                    <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.1)'}}>
-                      <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(0,200,255,0.05)',borderBottom:'1px solid rgba(0,200,255,0.1)',color:'rgba(0,200,255,0.5)'}}>
-                        <div>PERIOD</div><div className="text-center">CHANGE</div><div className="text-right">RETURN</div>
-                      </div>
-                      {periods.map(({key, label}) => {
-                        const d = perfData.results[key];
-                        const change = d?.change;
-                        const isPos = change > 0;
-                        const isNeg = change < 0;
-                        const color = isPos ? '#22c55e' : isNeg ? '#ef4444' : 'rgba(148,163,184,0.5)';
-                        return (
-                          <div key={key} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 1fr 1fr',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                            <div className="text-white text-sm font-medium">{label}</div>
-                            <div className="text-center">
-                              <span className="text-sm font-bold" style={{color}}>
-                                {change !== null ? `${isPos?'+':''}${change.toFixed(2)}%` : '—'}
-                              </span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-xs px-2 py-1 rounded-lg" style={{
-                                background: isPos ? 'rgba(34,197,94,0.1)' : isNeg ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)',
-                                color,
-                                border: `1px solid ${isPos ? 'rgba(34,197,94,0.2)' : isNeg ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.1)'}`
-                              }}>
-                                {isPos ? '↑ Up' : isNeg ? '↓ Down' : '— Flat'}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Last at current price note */}
-                    <div className="rounded-2xl p-4 text-sm text-center" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.1)',color:'rgba(148,163,184,0.6)'}}>
-                      💡 Data sourced from Yahoo Finance. Prices in USD. For personal research only — not financial advice.
-                    </div>
-                  </div>
-                )}
-
-                {!perfData && !perfLoading && (
-                  <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.6)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                    <div className="text-4xl mb-3">📈</div>
-                    <div className="text-white font-bold mb-1">Search any stock</div>
-                    <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Enter a ticker above to see performance across all time periods</div>
-                  </div>
-                )}
+                {perfError && <div className="text-sm" style={{color:'rgba(239,68,68,0.8)'}}>{perfError}</div>}
               </div>
-            );
-          })()}
+              {perfData && (
+                <div className="space-y-4">
+                  <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(0,200,255,0.2)'}}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="text-2xl font-black tracking-widest" style={{color:'#00c8ff'}}>{perfData.ticker}</div>
+                      <div className="text-3xl font-black text-white">${perfData.currentPrice?.toFixed(2) || '—'}</div>
+                    </div>
+                    <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Current Price (USD)</div>
+                  </div>
+                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.1)'}}>
+                    <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(0,200,255,0.05)',borderBottom:'1px solid rgba(0,200,255,0.1)',color:'rgba(0,200,255,0.5)'}}>
+                      <div>PERIOD</div><div className="text-center">CHANGE</div><div className="text-right">RETURN</div>
+                    </div>
+                    {[
+                      {key:'1d', label:'1 Day'},
+                      {key:'5d', label:'1 Week'},
+                      {key:'1mo', label:'1 Month'},
+                      {key:'3mo', label:'3 Months'},
+                      {key:'6mo', label:'6 Months'},
+                      {key:'1y', label:'1 Year'},
+                      {key:'5y', label:'5 Years'},
+                    ].map(({key, label}) => {
+                      const change = perfData.results[key]?.change;
+                      const isPos = change > 0;
+                      const isNeg = change < 0;
+                      const color = isPos ? '#22c55e' : isNeg ? '#ef4444' : 'rgba(148,163,184,0.5)';
+                      return (
+                        <div key={key} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 1fr 1fr',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                          <div className="text-white text-sm font-medium">{label}</div>
+                          <div className="text-center">
+                            <span className="text-sm font-bold" style={{color}}>
+                              {change != null ? `${isPos?'+':''}${change.toFixed(2)}%` : '—'}
+                            </span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-xs px-2 py-1 rounded-lg" style={{
+                              background: isPos ? 'rgba(34,197,94,0.1)' : isNeg ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)',
+                              color, border: `1px solid ${isPos ? 'rgba(34,197,94,0.2)' : isNeg ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.1)'}`
+                            }}>
+                              {isPos ? '↑ Up' : isNeg ? '↓ Down' : '— Flat'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="rounded-2xl p-4 text-sm text-center" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.1)',color:'rgba(148,163,184,0.6)'}}>
+                    💡 Yahoo Finance data · USD · Not financial advice
+                  </div>
+                </div>
+              )}
+              {!perfData && !perfLoading && (
+                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.6)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <div className="text-4xl mb-3">📈</div>
+                  <div className="text-white font-bold mb-1">Search any stock</div>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Enter a ticker above to see performance across all time periods</div>
+                </div>
+              )}
+            </div>
+          )}
+
 
           {investmentsSubTab === 'accounting' && (
             <>
