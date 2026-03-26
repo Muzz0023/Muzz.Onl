@@ -771,6 +771,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // Gemini key is now server-side in /api/chat.js
 
 // VIP Users - Always Elite, no subscription needed
+const DONNY_WORKER_CODE = 'DONNY-WORKER';
+
 const VIP_EMAILS = [
   'lauchy23@outlook.com',
   'sarah.addison78@gmail.com',
@@ -2191,7 +2193,7 @@ function MuzzApp() {
   const [donnyWorkerAccess, setDonnyWorkerAccess] = useState(false);
   const [donnyWorkerCodeInput, setDonnyWorkerCodeInput] = useState('');
   const [donnyWorkerCodeError, setDonnyWorkerCodeError] = useState('');
-  const DONNY_WORKER_CODE = 'DONNY-WORKER';
+
   const [donnyRole, setDonnyRole] = useState('boss'); // 'boss' or 'worker'
   const [donnyBossUserId, setDonnyBossUserId] = useState(null);
   const [donnyJoinInput, setDonnyJoinInput] = useState('');
