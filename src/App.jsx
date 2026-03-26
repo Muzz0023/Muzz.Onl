@@ -10370,7 +10370,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     : 'text-slate-400 hover:text-slate-200 transition-colors'
                 }`}
               >
-                📈 Performance
+                Performance
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('sp500')}
@@ -13305,23 +13305,38 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setPerfError('');
               setPerfData(null);
               try {
-                const periods = ['1d','5d','1mo','3mo','6mo','1y','5y','max'];
+                const periods = [
+                  {key:'1d', range:'1d', interval:'5m'},
+                  {key:'5d', range:'5d', interval:'30m'},
+                  {key:'1mo', range:'1mo', interval:'1d'},
+                  {key:'3mo', range:'3mo', interval:'1d'},
+                  {key:'6mo', range:'6mo', interval:'1d'},
+                  {key:'1y', range:'1y', interval:'1d'},
+                  {key:'5y', range:'5y', interval:'1wk'},
+                  {key:'max', range:'max', interval:'1mo'},
+                ];
                 const results = {};
-                for (const period of periods) {
-                  const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=${period==='1d'?'5m':period==='5d'?'30m':'1d'}&range=${period}`);
-                  const json = await r.json();
-                  const chart = json?.chart?.result?.[0];
-                  if (chart) {
-                    const closes = chart.indicators?.quote?.[0]?.close?.filter(Boolean) || [];
-                    const first = closes[0];
-                    const last = closes[closes.length - 1];
-                    const change = first && last ? ((last - first) / first * 100) : null;
-                    const currentPrice = last || null;
-                    results[period] = { change, currentPrice, first, last };
-                  }
+                // Use allorigins proxy to bypass CORS
+                const base = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}`;
+                for (const p of periods) {
+                  try {
+                    const url = `${base}?interval=${p.interval}&range=${p.range}`;
+                    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                    const r = await fetch(proxy);
+                    const raw = await r.json();
+                    const json = JSON.parse(raw.contents);
+                    const chart = json?.chart?.result?.[0];
+                    if (chart) {
+                      const closes = chart.indicators?.quote?.[0]?.close?.filter(v => v != null) || [];
+                      const first = closes[0];
+                      const last = closes[closes.length - 1];
+                      const change = first && last ? ((last - first) / first * 100) : null;
+                      results[p.key] = { change, currentPrice: last, first, last };
+                    }
+                  } catch(e) { results[p.key] = { change: null }; }
                 }
-                // Find when price was last at current level
-                const currentPrice = results['1d']?.currentPrice;
+                const currentPrice = results['1d']?.currentPrice || results['5d']?.currentPrice;
+                if (!currentPrice) { setPerfError('No data found. Check the ticker symbol and try again.'); setPerfLoading(false); return; }
                 setPerfData({ ticker, results, currentPrice });
               } catch(e) {
                 setPerfError('Could not fetch data. Check the ticker and try again.');
