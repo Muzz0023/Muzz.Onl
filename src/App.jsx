@@ -1841,6 +1841,7 @@ function MuzzApp() {
     // Clear all Donny state
     setDonnyRole("boss");
     setDonnyBossUserId(null);
+    setDonnyWorkerAccess(false);
     setDonnyJobs([]); setDonnyTeam([]); setDonnyNotes({}); setDonnyTimesheets([]);
     setDonnyClients([]); setDonnySubs([]); setDonnySuppliers([]); setDonnyMaterialsLog([]);
     setDonnyMistakes([]); setDonnyIncidents([]); setDonnyChecklists([]); setDonnyPhotos({});
@@ -1852,7 +1853,7 @@ function MuzzApp() {
       });
       const rows = await r.json();
       const current = rows?.[0]?.data_json || {};
-      const cleared = { ...current, donnyJobs:[], donnyTeam:[], donnyNotes:{}, donnyTimesheets:[], donnyClients:[], donnySubs:[], donnySuppliers:[], donnyMaterialsLog:[], donnyMistakes:[], donnyIncidents:[], donnyChecklists:[], donnyPhotos:{}, donnySchedule:{}, donnyRecurring:[], donnyRole:"boss", donnyBossUserId:null };
+      const cleared = { ...current, donnyJobs:[], donnyTeam:[], donnyNotes:{}, donnyTimesheets:[], donnyClients:[], donnySubs:[], donnySuppliers:[], donnyMaterialsLog:[], donnyMistakes:[], donnyIncidents:[], donnyChecklists:[], donnyPhotos:{}, donnySchedule:{}, donnyRecurring:[], donnyRole:"boss", donnyBossUserId:null, donnyWorkerAccess:false };
       await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
         method: "PATCH",
         headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json", "Prefer": "return=minimal" },
