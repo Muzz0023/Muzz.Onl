@@ -13308,7 +13308,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 // Single call - get 5 years of daily data, calculate all periods from it
                 const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5y`;
                 const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const r = await fetch(proxy, {signal: AbortSignal.timeout(15000)});
+                const r = await fetch(proxy);
                 const raw = await r.json();
                 const json = JSON.parse(raw.contents);
                 const chart = json?.chart?.result?.[0];
