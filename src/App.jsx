@@ -9015,26 +9015,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          {/* Display Name */}
-          {isElite && (
-            <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xl">✏️</span>
-                <h2 className="text-white font-bold text-lg">Your Display Name</h2>
-              </div>
-              <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>Shows on your dashboard greeting and in Donny logs — e.g. "G'day, <span style={{color:"#00c8ff"}}>Muzz</span>"</p>
-              <div className="flex gap-3">
-                <input
-                  value={eliteName}
-                  onChange={e => setEliteName(e.target.value)}
-                  placeholder="Enter your name..."
-                  className="flex-1 px-4 py-3 rounded-2xl text-white font-medium focus:outline-none text-lg"
-                  style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}
-                />
-              </div>
-              {eliteName && <div className="text-sm" style={{color:"rgba(0,200,255,0.6)"}}>✓ Saved automatically — G'day, {eliteName}!</div>}
+          {/* Display Name - available to all users */}
+          <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xl">✏️</span>
+              <h2 className="text-white font-bold text-lg">Your Display Name</h2>
             </div>
-          )}
+            <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>Shows on your dashboard greeting and in Donny logs — e.g. "G'day, <span style={{color:"#00c8ff"}}>Muzz</span>"</p>
+            <div className="flex gap-3">
+              <input
+                value={eliteName}
+                onChange={e => setEliteName(e.target.value)}
+                placeholder="Enter your name..."
+                className="flex-1 px-4 py-3 rounded-2xl text-white font-medium focus:outline-none text-lg"
+                style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}
+              />
+            </div>
+            {eliteName && <div className="text-sm" style={{color:"rgba(0,200,255,0.6)"}}>✓ Saved — G'day, {eliteName}!</div>}
+          </div>
 
           {/* Giving Back */}
           <div className="rounded-3xl overflow-hidden" style={{border:"1px solid rgba(255,200,0,0.2)",background:"rgba(5,15,30,0.8)"}}>
@@ -14500,6 +14498,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
             <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// WORKER ACCESS CODE</div>
             <p className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Enter the workspace code your boss shared with you — looks like <span style={{color:'#f97316'}}>ABC-1234</span></p>
+                  <div className="space-y-2">
+                    <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.5)'}}>YOUR NAME (for logs)</div>
+                    <input
+                      value={eliteName}
+                      onChange={e => setEliteName(e.target.value)}
+                      placeholder="e.g. Muzz"
+                      className="w-full px-4 py-2.5 rounded-xl bg-transparent text-white focus:outline-none text-sm"
+                      style={{background:'rgba(249,115,22,0.05)',border:'1px solid rgba(249,115,22,0.2)'}}
+                    />
+                  </div>
             <input
               value={donnyWorkerCodeInput}
               onChange={e => { setDonnyWorkerCodeInput(e.target.value.toUpperCase()); setDonnyWorkerCodeError(''); }}
