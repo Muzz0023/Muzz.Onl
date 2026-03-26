@@ -14508,12 +14508,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             />
             {donnyWorkerCodeError && <div className="text-xs text-center" style={{color:'rgba(239,68,68,0.8)'}}>{donnyWorkerCodeError}</div>}
             <button onClick={() => {
-              if (donnyWorkerCodeInput.trim() === DONNY_WORKER_CODE) {
+              const entered = donnyWorkerCodeInput.trim().toUpperCase().replace(/\s+/g, '');
+              const expected = DONNY_WORKER_CODE.trim().toUpperCase().replace(/\s+/g, '');
+              if (entered === expected) {
                 setDonnyWorkerAccess(true);
                 setDonnyRole('worker');
                 setDonnyWorkerCodeInput('');
               } else {
-                setDonnyWorkerCodeError('Invalid code. Check with your boss.');
+                setDonnyWorkerCodeError(`Invalid code. Got: "${entered}" Expected: "${expected}"`);
               }
             }} className="w-full py-3 rounded-xl font-bold text-white text-sm"
               style={{background:donnyWorkerCodeInput.length>5?'linear-gradient(135deg,#f97316,#ea580c)':'rgba(255,255,255,0.06)'}}>
