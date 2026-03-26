@@ -14498,7 +14498,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </button>
           <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
             <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// WORKER ACCESS CODE</div>
-            <p className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Your boss will give you a code to access Donny for free as a worker.</p>
+            <p className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Enter the workspace code your boss shared with you — looks like <span style={{color:'#f97316'}}>ABC-1234</span></p>
             <input
               value={donnyWorkerCodeInput}
               onChange={e => { setDonnyWorkerCodeInput(e.target.value.toUpperCase()); setDonnyWorkerCodeError(''); }}
@@ -14507,15 +14507,51 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               style={{color:'#f97316',fontFamily:"'Orbitron',monospace",background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.25)'}}
             />
             {donnyWorkerCodeError && <div className="text-xs text-center" style={{color:'rgba(239,68,68,0.8)'}}>{donnyWorkerCodeError}</div>}
-            <button onClick={() => {
+            <button onClick={async () => {
               const entered = donnyWorkerCodeInput.trim().toUpperCase().replace(/\s+/g, '');
               const expected = DONNY_WORKER_CODE.trim().toUpperCase().replace(/\s+/g, '');
               if (entered === expected) {
+                // Generic worker access code
                 setDonnyWorkerAccess(true);
                 setDonnyRole('worker');
                 setDonnyWorkerCodeInput('');
               } else {
-                setDonnyWorkerCodeError(`Invalid code. Got: "${entered}" Expected: "${expected}"`);
+                // Try it as a workspace join code
+                setDonnyWorkerCodeError('Checking code...');
+                try {
+                  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/find_donny_workspace`, {
+                    method: 'POST',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: entered })
+                  });
+                  const rows = await r.json();
+                  const match = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+                  if (match && match.user_id !== userId) {
+                    const bossData = match.data_json;
+                    setDonnyWorkerAccess(true);
+                    setDonnyRole('worker');
+                    setDonnyBossUserId(match.user_id);
+                    if (bossData.donnyJobs) setDonnyJobs(bossData.donnyJobs);
+                    if (bossData.donnyTeam) setDonnyTeam(bossData.donnyTeam);
+                    if (bossData.donnyNotes) setDonnyNotes(bossData.donnyNotes);
+                    if (bossData.donnyTimesheets) setDonnyTimesheets(bossData.donnyTimesheets);
+                    if (bossData.donnyClients) setDonnyClients(bossData.donnyClients);
+                    if (bossData.donnySubs) setDonnySubs(bossData.donnySubs);
+                    if (bossData.donnySuppliers) setDonnySuppliers(bossData.donnySuppliers);
+                    if (bossData.donnyMaterialsLog) setDonnyMaterialsLog(bossData.donnyMaterialsLog);
+                    if (bossData.donnyMistakes) setDonnyMistakes(bossData.donnyMistakes);
+                    if (bossData.donnyIncidents) setDonnyIncidents(bossData.donnyIncidents);
+                    if (bossData.donnyChecklists) setDonnyChecklists(bossData.donnyChecklists);
+                    if (bossData.donnyPhotos) setDonnyPhotos(bossData.donnyPhotos);
+                    if (bossData.donnySchedule) setDonnySchedule(bossData.donnySchedule);
+                    if (bossData.donnyRecurring) setDonnyRecurring(bossData.donnyRecurring);
+                    setDonnyWorkerCodeInput('');
+                  } else {
+                    setDonnyWorkerCodeError('Invalid code. Get the code from your boss.');
+                  }
+                } catch(e) {
+                  setDonnyWorkerCodeError('Invalid code. Get the code from your boss.');
+                }
               }
             }} className="w-full py-3 rounded-xl font-bold text-white text-sm"
               style={{background:donnyWorkerCodeInput.length>5?'linear-gradient(135deg,#f97316,#ea580c)':'rgba(255,255,255,0.06)'}}>
