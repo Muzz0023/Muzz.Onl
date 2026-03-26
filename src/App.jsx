@@ -7078,7 +7078,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex items-center gap-4 mb-4">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
               <div className="flex-1">
-                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {isElite && eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} className="underline" style={{color:"rgba(0,200,255,0.7)"}}>set your name</button>}!</div>
+                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} className="underline" style={{color:"rgba(0,200,255,0.7)"}}>set your name</button>}!</div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
                   {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:"rgba(255,215,0,0.15)",border:"1px solid rgba(255,215,0,0.3)"}}><span className="text-xs font-bold" style={{color:"#FFD700"}}>⚡ ELITE</span></div>}
