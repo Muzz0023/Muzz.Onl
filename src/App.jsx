@@ -1730,7 +1730,7 @@ function MuzzApp() {
     setPerfError('');
     setPerfData(null);
     try {
-      const r = await fetch(`/api/stock?ticker=${ticker}`);
+      const r = await fetch(`https://muzz.onl/api/stock?ticker=${ticker}`);
       if (!r.ok) throw new Error('not found');
       const json = await r.json();
       const chart = json?.chart?.result?.[0];
