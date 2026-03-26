@@ -13305,41 +13305,47 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setPerfError('');
               setPerfData(null);
               try {
-                const periods = [
-                  {key:'1d', range:'1d', interval:'5m'},
-                  {key:'5d', range:'5d', interval:'30m'},
-                  {key:'1mo', range:'1mo', interval:'1d'},
-                  {key:'3mo', range:'3mo', interval:'1d'},
-                  {key:'6mo', range:'6mo', interval:'1d'},
-                  {key:'1y', range:'1y', interval:'1d'},
-                  {key:'5y', range:'5y', interval:'1wk'},
-                  {key:'max', range:'max', interval:'1mo'},
-                ];
-                const results = {};
-                // Use allorigins proxy to bypass CORS
-                const base = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}`;
-                for (const p of periods) {
-                  try {
-                    const url = `${base}?interval=${p.interval}&range=${p.range}`;
-                    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                    const r = await fetch(proxy);
-                    const raw = await r.json();
-                    const json = JSON.parse(raw.contents);
-                    const chart = json?.chart?.result?.[0];
-                    if (chart) {
-                      const closes = chart.indicators?.quote?.[0]?.close?.filter(v => v != null) || [];
-                      const first = closes[0];
-                      const last = closes[closes.length - 1];
-                      const change = first && last ? ((last - first) / first * 100) : null;
-                      results[p.key] = { change, currentPrice: last, first, last };
-                    }
-                  } catch(e) { results[p.key] = { change: null }; }
-                }
-                const currentPrice = results['1d']?.currentPrice || results['5d']?.currentPrice;
-                if (!currentPrice) { setPerfError('No data found. Check the ticker symbol and try again.'); setPerfLoading(false); return; }
+                // Single call - get 5 years of daily data, calculate all periods from it
+                const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5y`;
+                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const r = await fetch(proxy, {signal: AbortSignal.timeout(15000)});
+                const raw = await r.json();
+                const json = JSON.parse(raw.contents);
+                const chart = json?.chart?.result?.[0];
+                if (!chart) { setPerfError('Ticker not found. Check the symbol and try again.'); setPerfLoading(false); return; }
+                
+                const timestamps = chart.timestamp || [];
+                const closes = chart.indicators?.quote?.[0]?.close || [];
+                const now = Date.now() / 1000;
+                
+                // Helper: get price N days ago
+                const priceNDaysAgo = (days) => {
+                  const target = now - days * 86400;
+                  let best = null;
+                  for (let i = timestamps.length - 1; i >= 0; i--) {
+                    if (timestamps[i] <= target) { best = closes[i]; break; }
+                  }
+                  return best;
+                };
+                
+                const currentPrice = closes.filter(v => v != null).slice(-1)[0];
+                if (!currentPrice) { setPerfError('No price data found for this ticker.'); setPerfLoading(false); return; }
+                
+                const calcChange = (oldPrice) => oldPrice ? ((currentPrice - oldPrice) / oldPrice * 100) : null;
+                
+                const results = {
+                  '1d':  { change: calcChange(priceNDaysAgo(1)),   currentPrice },
+                  '5d':  { change: calcChange(priceNDaysAgo(5)),   currentPrice },
+                  '1mo': { change: calcChange(priceNDaysAgo(30)),  currentPrice },
+                  '3mo': { change: calcChange(priceNDaysAgo(90)),  currentPrice },
+                  '6mo': { change: calcChange(priceNDaysAgo(180)), currentPrice },
+                  '1y':  { change: calcChange(priceNDaysAgo(365)), currentPrice },
+                  '5y':  { change: calcChange(closes.filter(v=>v!=null)[0]), currentPrice },
+                };
+                
                 setPerfData({ ticker, results, currentPrice });
               } catch(e) {
-                setPerfError('Could not fetch data. Check the ticker and try again.');
+                setPerfError('Could not fetch data. Try again in a moment.');
               }
               setPerfLoading(false);
             };
