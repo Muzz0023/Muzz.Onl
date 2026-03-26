@@ -1716,6 +1716,10 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
+  const [perfTicker, setPerfTicker] = useState('');
+  const [perfData, setPerfData] = useState(null);
+  const [perfLoading, setPerfLoading] = useState(false);
+  const [perfError, setPerfError] = useState('');
   const [holdingsResearch, setHoldingsResearch] = useState([]);
   const [billSmallGoals, setBillSmallGoals] = useState([]);
   const [billBigGoals, setBillBigGoals] = useState([]);
@@ -1776,7 +1780,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
   // Generate a workspace code for the boss
   const generateWorkspaceCode = () => {
@@ -2051,6 +2055,7 @@ function MuzzApp() {
       donnyRecurring: d.donnyRecurring||[],
       donnyCosts: d.donnyCosts||[],
       donnyWorkspaceCode: d.donnyWorkspaceCode||'',
+      donnyWorkerAccess: d.donnyWorkerAccess||false,
     };
     supabase.saveUserData(userId, fullData).then(() => {
       alert('✅ Data restored and saved successfully!');
@@ -2138,6 +2143,10 @@ function MuzzApp() {
   // Donny Recurring Jobs
   const [donnyRecurring, setDonnyRecurring] = useState([]);
   const [donnyWorkspaceCode, setDonnyWorkspaceCode] = useState('');
+  const [donnyWorkerAccess, setDonnyWorkerAccess] = useState(false);
+  const [donnyWorkerCodeInput, setDonnyWorkerCodeInput] = useState('');
+  const [donnyWorkerCodeError, setDonnyWorkerCodeError] = useState('');
+  const DONNY_WORKER_CODE = 'DONNY-WORKER';
   const [donnyRole, setDonnyRole] = useState('boss'); // 'boss' or 'worker'
   const [donnyBossUserId, setDonnyBossUserId] = useState(null);
   const [donnyJoinInput, setDonnyJoinInput] = useState('');
@@ -2396,6 +2405,7 @@ function MuzzApp() {
           if (d.donnyRecurring) setDonnyRecurring(d.donnyRecurring);
           if (d.donnyCosts) setDonnyCosts(d.donnyCosts);
           if (d.donnyWorkspaceCode) setDonnyWorkspaceCode(d.donnyWorkspaceCode);
+          if (d.donnyWorkerAccess) setDonnyWorkerAccess(d.donnyWorkerAccess);
           if (d.donnyRole) setDonnyRole(d.donnyRole);
           if (d.donnyBossUserId) setDonnyBossUserId(d.donnyBossUserId);
           // Only set dataLoaded true AFTER data is successfully loaded
@@ -2499,6 +2509,7 @@ function MuzzApp() {
           donnyRecurring,
           donnyCosts,
           donnyWorkspaceCode,
+          donnyWorkerAccess,
           donnyRole,
           donnyBossUserId
         };
@@ -2514,7 +2525,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -10352,6 +10363,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 Accounting
               </button>
               <button
+                onClick={() => setInvestmentsSubTab('performance')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                  investmentsSubTab === 'performance'
+                    ? 'text-white cyber-tab-active'
+                    : 'text-slate-400 hover:text-slate-200 transition-colors'
+                }`}
+              >
+                📈 Performance
+              </button>
+              <button
                 onClick={() => setInvestmentsSubTab('sp500')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                   investmentsSubTab === 'sp500'
@@ -13276,6 +13297,135 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
+          {investmentsSubTab === 'performance' && (() => {
+            const fetchPerformance = async () => {
+              const ticker = perfTicker.trim().toUpperCase();
+              if (!ticker) return;
+              setPerfLoading(true);
+              setPerfError('');
+              setPerfData(null);
+              try {
+                const periods = ['1d','5d','1mo','3mo','6mo','1y','5y','max'];
+                const results = {};
+                for (const period of periods) {
+                  const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=${period==='1d'?'5m':period==='5d'?'30m':'1d'}&range=${period}`);
+                  const json = await r.json();
+                  const chart = json?.chart?.result?.[0];
+                  if (chart) {
+                    const closes = chart.indicators?.quote?.[0]?.close?.filter(Boolean) || [];
+                    const first = closes[0];
+                    const last = closes[closes.length - 1];
+                    const change = first && last ? ((last - first) / first * 100) : null;
+                    const currentPrice = last || null;
+                    results[period] = { change, currentPrice, first, last };
+                  }
+                }
+                // Find when price was last at current level
+                const currentPrice = results['1d']?.currentPrice;
+                setPerfData({ ticker, results, currentPrice });
+              } catch(e) {
+                setPerfError('Could not fetch data. Check the ticker and try again.');
+              }
+              setPerfLoading(false);
+            };
+
+            const periods = [
+              {key:'1d', label:'1 Day'},
+              {key:'5d', label:'1 Week'},
+              {key:'1mo', label:'1 Month'},
+              {key:'3mo', label:'3 Months'},
+              {key:'6mo', label:'6 Months'},
+              {key:'1y', label:'1 Year'},
+              {key:'5y', label:'5 Years'},
+              {key:'max', label:'All Time'},
+            ];
+
+            return (
+              <div className="space-y-4">
+                {/* Search */}
+                <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)'}}>
+                  <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>// COMPANY PERFORMANCE</div>
+                  <div className="flex gap-3">
+                    <input
+                      value={perfTicker}
+                      onChange={e => setPerfTicker(e.target.value.toUpperCase())}
+                      onKeyDown={e => e.key === 'Enter' && fetchPerformance()}
+                      placeholder="e.g. AAPL, GOOG, BRK-B"
+                      className="flex-1 px-4 py-3 rounded-xl bg-transparent text-white font-bold text-lg focus:outline-none tracking-widest"
+                      style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)',fontFamily:"'Orbitron',monospace"}}
+                    />
+                    <button onClick={fetchPerformance} disabled={perfLoading || !perfTicker.trim()}
+                      className="px-5 py-3 rounded-xl font-bold text-white flex-shrink-0"
+                      style={{background: perfTicker.trim() ? 'linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))' : 'rgba(255,255,255,0.06)'}}>
+                      {perfLoading ? '⏳' : '→ Go'}
+                    </button>
+                  </div>
+                  {perfError && <div className="text-sm" style={{color:'rgba(239,68,68,0.8)'}}>{perfError}</div>}
+                </div>
+
+                {/* Results */}
+                {perfData && (
+                  <div className="space-y-4">
+                    {/* Current price + header */}
+                    <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(0,200,255,0.2)'}}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-2xl font-black tracking-widest" style={{color:'#00c8ff',fontFamily:"'Orbitron',monospace"}}>{perfData.ticker}</div>
+                        <div className="text-3xl font-black text-white">${perfData.currentPrice?.toFixed(2) || '—'}</div>
+                      </div>
+                      <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Current Price (USD)</div>
+                    </div>
+
+                    {/* Performance table */}
+                    <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.1)'}}>
+                      <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(0,200,255,0.05)',borderBottom:'1px solid rgba(0,200,255,0.1)',color:'rgba(0,200,255,0.5)'}}>
+                        <div>PERIOD</div><div className="text-center">CHANGE</div><div className="text-right">RETURN</div>
+                      </div>
+                      {periods.map(({key, label}) => {
+                        const d = perfData.results[key];
+                        const change = d?.change;
+                        const isPos = change > 0;
+                        const isNeg = change < 0;
+                        const color = isPos ? '#22c55e' : isNeg ? '#ef4444' : 'rgba(148,163,184,0.5)';
+                        return (
+                          <div key={key} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 1fr 1fr',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
+                            <div className="text-white text-sm font-medium">{label}</div>
+                            <div className="text-center">
+                              <span className="text-sm font-bold" style={{color}}>
+                                {change !== null ? `${isPos?'+':''}${change.toFixed(2)}%` : '—'}
+                              </span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-xs px-2 py-1 rounded-lg" style={{
+                                background: isPos ? 'rgba(34,197,94,0.1)' : isNeg ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)',
+                                color,
+                                border: `1px solid ${isPos ? 'rgba(34,197,94,0.2)' : isNeg ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.1)'}`
+                              }}>
+                                {isPos ? '↑ Up' : isNeg ? '↓ Down' : '— Flat'}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Last at current price note */}
+                    <div className="rounded-2xl p-4 text-sm text-center" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.1)',color:'rgba(148,163,184,0.6)'}}>
+                      💡 Data sourced from Yahoo Finance. Prices in USD. For personal research only — not financial advice.
+                    </div>
+                  </div>
+                )}
+
+                {!perfData && !perfLoading && (
+                  <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.6)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                    <div className="text-4xl mb-3">📈</div>
+                    <div className="text-white font-bold mb-1">Search any stock</div>
+                    <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Enter a ticker above to see performance across all time periods</div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
           {investmentsSubTab === 'accounting' && (
             <>
               {/* Muzz's Accounting Header */}
@@ -14331,7 +14481,47 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // TIMETABLE VIEW
   // DONNY VIEWS
   if (activeView && activeView.startsWith('donny')) {
-    if (!isElite) return <LockedFeature featureName="Donny Business System" setActiveView={setActiveView} />;
+    if (!isElite && !donnyWorkerAccess) return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div className="max-w-lg mx-auto px-6 pt-24 space-y-6">
+          <div className="text-center space-y-3">
+            <div className="text-6xl">🐨</div>
+            <h2 className="text-2xl font-bold text-white">Donny Business System</h2>
+            <p className="text-sm" style={{color:'rgba(148,163,184,0.6)'}}>Upgrade to Elite to access Donny, or enter your worker access code below.</p>
+          </div>
+          <button onClick={() => setActiveView('upgrade')}
+            className="w-full py-4 rounded-2xl font-bold text-white"
+            style={{background:'linear-gradient(135deg,#f97316,#ea580c)',boxShadow:'0 0 20px rgba(249,115,22,0.3)'}}>
+            ⚡ Upgrade to Elite
+          </button>
+          <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+            <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// WORKER ACCESS CODE</div>
+            <p className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Your boss will give you a code to access Donny for free as a worker.</p>
+            <input
+              value={donnyWorkerCodeInput}
+              onChange={e => { setDonnyWorkerCodeInput(e.target.value.toUpperCase()); setDonnyWorkerCodeError(''); }}
+              placeholder="e.g. DONNY-WORKER"
+              className="w-full text-center text-lg font-black bg-transparent focus:outline-none py-3 rounded-xl tracking-widest"
+              style={{color:'#f97316',fontFamily:"'Orbitron',monospace",background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.25)'}}
+            />
+            {donnyWorkerCodeError && <div className="text-xs text-center" style={{color:'rgba(239,68,68,0.8)'}}>{donnyWorkerCodeError}</div>}
+            <button onClick={() => {
+              if (donnyWorkerCodeInput.trim() === DONNY_WORKER_CODE) {
+                setDonnyWorkerAccess(true);
+                setDonnyRole('worker');
+                setDonnyWorkerCodeInput('');
+              } else {
+                setDonnyWorkerCodeError('Invalid code. Check with your boss.');
+              }
+            }} className="w-full py-3 rounded-xl font-bold text-white text-sm"
+              style={{background:donnyWorkerCodeInput.length>5?'linear-gradient(135deg,#f97316,#ea580c)':'rgba(255,255,255,0.06)'}}>
+              → Unlock Donny
+            </button>
+          </div>
+        </div>
+      </div>
+    );
 
     // Redirect workers away from boss-only views
     const bossOnlyViews = ['donny-masterview','donny-scheduler','donny-recurring','donny-team','donny-subs','donny-clients','donny-suppliers','donny-reports'];
