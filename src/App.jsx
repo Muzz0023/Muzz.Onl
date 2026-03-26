@@ -13305,42 +13305,40 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               setPerfError('');
               setPerfData(null);
               try {
-                // Single call - get 5 years of daily data, calculate all periods from it
                 const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5y`;
-                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const proxy = `https://corsproxy.io/?${encodeURIComponent(url)}`;
                 const r = await fetch(proxy);
-                const raw = await r.json();
-                const json = JSON.parse(raw.contents);
+                if (!r.ok) throw new Error('fetch failed');
+                const json = await r.json();
                 const chart = json?.chart?.result?.[0];
                 if (!chart) { setPerfError('Ticker not found. Check the symbol and try again.'); setPerfLoading(false); return; }
                 
                 const timestamps = chart.timestamp || [];
-                const closes = chart.indicators?.quote?.[0]?.close || [];
+                const rawCloses = chart.indicators?.quote?.[0]?.close || [];
+                const closes = rawCloses.map((v, i) => ({ t: timestamps[i], v })).filter(x => x.v != null);
                 const now = Date.now() / 1000;
                 
-                // Helper: get price N days ago
                 const priceNDaysAgo = (days) => {
                   const target = now - days * 86400;
-                  let best = null;
-                  for (let i = timestamps.length - 1; i >= 0; i--) {
-                    if (timestamps[i] <= target) { best = closes[i]; break; }
+                  for (let i = closes.length - 1; i >= 0; i--) {
+                    if (closes[i].t <= target) return closes[i].v;
                   }
-                  return best;
+                  return closes[0]?.v || null;
                 };
                 
-                const currentPrice = closes.filter(v => v != null).slice(-1)[0];
+                const currentPrice = closes[closes.length - 1]?.v;
                 if (!currentPrice) { setPerfError('No price data found for this ticker.'); setPerfLoading(false); return; }
                 
                 const calcChange = (oldPrice) => oldPrice ? ((currentPrice - oldPrice) / oldPrice * 100) : null;
                 
                 const results = {
-                  '1d':  { change: calcChange(priceNDaysAgo(1)),   currentPrice },
-                  '5d':  { change: calcChange(priceNDaysAgo(5)),   currentPrice },
-                  '1mo': { change: calcChange(priceNDaysAgo(30)),  currentPrice },
-                  '3mo': { change: calcChange(priceNDaysAgo(90)),  currentPrice },
-                  '6mo': { change: calcChange(priceNDaysAgo(180)), currentPrice },
-                  '1y':  { change: calcChange(priceNDaysAgo(365)), currentPrice },
-                  '5y':  { change: calcChange(closes.filter(v=>v!=null)[0]), currentPrice },
+                  '1d':  { change: calcChange(priceNDaysAgo(1)) },
+                  '5d':  { change: calcChange(priceNDaysAgo(5)) },
+                  '1mo': { change: calcChange(priceNDaysAgo(30)) },
+                  '3mo': { change: calcChange(priceNDaysAgo(90)) },
+                  '6mo': { change: calcChange(priceNDaysAgo(180)) },
+                  '1y':  { change: calcChange(priceNDaysAgo(365)) },
+                  '5y':  { change: calcChange(closes[0]?.v) },
                 };
                 
                 setPerfData({ ticker, results, currentPrice });
