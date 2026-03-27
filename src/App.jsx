@@ -2264,13 +2264,28 @@ function MuzzApp() {
       try {
         const result = await RevenueCat.purchaseElite();
         if (result.success) {
-          // Update Supabase to mark user as Elite
-          await fetch(api('/api/sync-apple-purchase'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, userEmail }),
-          });
+          // Save Elite status directly to Supabase immediately
           setStripeElite(true);
+          try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const rows = await r.json();
+            const current = rows?.[0]?.data_json || {};
+            await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+              method: 'PATCH',
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+              body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
+            });
+          } catch(e) { console.log('Supabase elite save error:', e); }
+          // Also try the sync API
+          try {
+            await fetch(api('/api/sync-apple-purchase'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId, userEmail }),
+            });
+          } catch(e) { console.log('Sync API error:', e); }
           alert('Welcome to Elite! 🎉');
           setActiveView('home');
         } else if (result.cancelled) {
@@ -2307,12 +2322,26 @@ function MuzzApp() {
     try {
       const result = await RevenueCat.restorePurchases();
       if (result.success) {
-        await fetch(api('/api/sync-apple-purchase'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, userEmail }),
-        });
         setStripeElite(true);
+        try {
+          const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          const rows = await r.json();
+          const current = rows?.[0]?.data_json || {};
+          await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+            method: 'PATCH',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
+          });
+        } catch(e) { console.log('Supabase elite save error:', e); }
+        try {
+          await fetch(api('/api/sync-apple-purchase'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, userEmail }),
+          });
+        } catch(e) { console.log('Sync API error:', e); }
         alert('Purchases restored! Welcome back Elite! 🎉');
       } else {
         alert('No previous purchases found.');
