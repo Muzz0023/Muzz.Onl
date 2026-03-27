@@ -8789,17 +8789,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   if (activeView === 'feedback') {
-
-    const handleSendFeedback = () => {
-      if (!feedbackMsg.trim()) return;
-      const subject = feedbackType === 'feedback' ? 'Muzz App Feedback' : feedbackType === 'bug' ? 'Muzz Bug Report' : 'Muzz Support Request';
-      const body = encodeURIComponent(`From: ${userEmail}\nType: ${feedbackType}\n\n${feedbackMsg}`);
-      window.open(`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(subject)}&body=${body}`);
-      setFeedbackSent(true);
-      setFeedbackMsg('');
-      setTimeout(() => setFeedbackSent(false), 3000);
-    };
-
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
@@ -8807,63 +8796,59 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
-            <p className="text-white/80">We'd love to hear from you, legend.</p>
+            <p className="text-white/70">We'd love to hear from you 🦘</p>
           </div>
         </div>
-        <div className="max-w-2xl mx-auto px-4 -mt-6">
-          <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
-            <div className="flex gap-2 mb-6">
-              {[{ id: 'feedback', label: '💡 Feedback', desc: 'Ideas & suggestions' }, { id: 'bug', label: '🐛 Bug Report', desc: 'Something broken?' }, { id: 'support', label: '🆘 Support', desc: 'Need help?' }].map(t => (
-                <button key={t.id} onClick={() => setFeedbackType(t.id)} className={`flex-1 p-3 rounded-2xl text-center transition-all ${feedbackType === t.id ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200 transition-colors'}`}>
-                  <div className="text-lg font-bold">{t.label}</div>
-                  <div className={`text-xs mt-1 ${feedbackType === t.id ? 'text-white/80' : 'text-gray-400'}`}>{t.desc}</div>
-                </button>
-              ))}
+        <div className="max-w-lg mx-auto px-6 py-8 space-y-4">
+          <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+            <div className="text-center space-y-2">
+              <div className="text-4xl">📬</div>
+              <h2 className="text-white font-bold text-xl">Get in Touch</h2>
+              <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>For feedback, bug reports or support — send us an email and we'll get back to you ASAP.</p>
             </div>
-            <textarea
-              value={feedbackMsg}
-              onChange={e => setFeedbackMsg(e.target.value)}
-              placeholder={feedbackType === 'feedback' ? "What features would you love to see? What could be better?" : feedbackType === 'bug' ? "Describe the bug — what happened and what did you expect?" : "What do you need help with?"}
-              className="w-full p-4 border-2 border-gray-200 rounded-2xl h-40 resize-none focus:outline-none focus:border-orange-400 transition-colors text-sm"
-            />
-            <button onClick={handleSendFeedback} disabled={!feedbackMsg.trim()} className="w-full mt-4 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl font-bold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-              <Send className="w-4 h-4" /> Send {feedbackType === 'feedback' ? 'Feedback' : feedbackType === 'bug' ? 'Bug Report' : 'Support Request'}
-            </button>
-            {feedbackSent && (
-              <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-2xl text-center text-sm font-medium flex items-center justify-center gap-2">
-                <CheckCircle2 className="w-4 h-4" /> Thanks legend! Your message is on its way 🦘
+            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App"
+              className="flex items-center gap-4 p-4 rounded-2xl w-full"
+              style={{background:"linear-gradient(135deg,rgba(249,115,22,0.15),rgba(234,88,12,0.1))",border:"1px solid rgba(249,115,22,0.3)"}}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"linear-gradient(135deg,#f97316,#ea580c)"}}>
+                <Mail className="w-6 h-6 text-white" />
               </div>
-            )}
-          </div>
-
-          <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
-            <h3 className="font-bold text-gray-800 text-lg mb-4">📬 Contact Us Directly</h3>
-            <a href="mailto:Muzz.onl@outlook.com" className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center"><Mail className="w-5 h-5 text-white" /></div>
               <div>
-                <div className="font-medium text-white">Email Support</div>
-                <div className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Muzz.onl@outlook.com</div>
+                <div className="font-bold text-white">Email Us</div>
+                <div className="text-sm" style={{color:"rgba(249,115,22,0.8)"}}>Muzz.onl@outlook.com</div>
               </div>
             </a>
+            <div className="grid grid-cols-3 gap-3 pt-2">
+              {[
+                {emoji:'💡', label:'Feedback', subject:'Muzz App Feedback'},
+                {emoji:'🐛', label:'Bug Report', subject:'Muzz Bug Report'},
+                {emoji:'🆘', label:'Support', subject:'Muzz Support Request'},
+              ].map((t,i) => (
+                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`}
+                  className="flex flex-col items-center gap-2 p-3 rounded-2xl text-center"
+                  style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)"}}>
+                  <span className="text-2xl">{t.emoji}</span>
+                  <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.7)"}}>{t.label}</span>
+                </a>
+              ))}
+            </div>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-xl p-6">
-            <h3 className="font-bold text-gray-800 text-lg mb-4">❓ FAQ</h3>
-            <div className="space-y-3">
+          <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+            <h3 className="font-bold text-white text-lg">❓ FAQ</h3>
+            <div className="space-y-2">
               {[
-                { q: "What plans are available?", a: "Two plans: 🦘 Muzz Elite at $4.99/month gives you the full personal finance and life management system. 🦘🐨 Muzz & Donny at $7.99/month adds the full Donny trade business system on top." },
-                { q: "How do I upgrade to Elite?", a: "Head to the Elite section in the sidebar. Choose Muzz Elite ($4.99/mo) for personal finance, or Muzz & Donny ($7.99/mo) if you also want the Donny business system." },
-                { q: "What is Donny?", a: "Donny 🐨 is a trade business management system built into Muzz. It includes job tracking, scheduler, team management, SWMS, incident logs, price book, reports, and a multi-user workspace system so your crew can log in as workers." },
-                { q: "How does the Donny workspace work?", a: "As a boss, you get a unique join code to share with your workers. Workers enter the code in their app to join your workspace. They can log daily reports, photos, incidents, materials and more — and it all syncs to your account in real time." },
-                { q: "Is my data safe?", a: "Your data is stored securely in the cloud via Supabase and only you can access it. Export a backup anytime from the Settings section." },
+                { q: "What plans are available?", a: "🦘 Muzz Elite at $4.99/month for personal finance & life management. 🦘🐨 Muzz & Donny at $7.99/month adds the full Donny trade business system." },
+                { q: "What is Donny?", a: "Donny 🐨 is a trade business management system. It includes job tracking, scheduler, team management, SWMS, incident logs, price book, reports, and a multi-user workspace." },
+                { q: "How does the Donny workspace work?", a: "As a boss, generate a join code and share it with your workers. Workers enter the code to access your workspace and log daily reports, photos, incidents and more in real time." },
+                { q: "Is my data safe?", a: "Your data is stored securely in the cloud via Supabase. Only you can access it. Export a backup anytime from Settings." },
                 { q: "How do I cancel my subscription?", a: "Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period." },
                 { q: "Can I use Muzz on my phone?", a: "Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl." },
               ].map((faq, i) => (
-                <details key={i} className="group">
-                  <summary className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors font-medium text-gray-700 text-sm">
-                    <HelpCircle className="w-4 h-4 text-orange-400 flex-shrink-0" /> {faq.q}
+                <details key={i} className="group rounded-2xl overflow-hidden" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)"}}>
+                  <summary className="flex items-center gap-2 p-4 cursor-pointer font-medium text-white text-sm">
+                    <HelpCircle className="w-4 h-4 flex-shrink-0" style={{color:"rgba(249,115,22,0.7)"}} /> {faq.q}
                   </summary>
-                  <div className="px-4 py-2 text-sm text-gray-500 ml-6">{faq.a}</div>
+                  <div className="px-4 pb-4 text-sm" style={{color:"rgba(148,163,184,0.7)"}}>{faq.a}</div>
                 </details>
               ))}
             </div>
@@ -8872,6 +8857,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       </div>
     );
   }
+
 
   // UPGRADE / ELITE STATUS VIEW
   if (activeView === 'upgrade') {
