@@ -1,6 +1,8 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+const DONNY_PRICE_ID = 'price_1TFVgF1gOtfSeAhJBMyEmEmo';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -13,17 +15,27 @@ export default async function handler(req, res) {
     if (!userEmail) return res.status(400).json({ error: 'Missing userEmail' });
 
     const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
-    if (customers.data.length === 0) return res.status(200).json({ isElite: false, subscription: null });
+    if (customers.data.length === 0) return res.status(200).json({ isElite: false, isDonnyElite: false, subscription: null });
 
-    const subscriptions = await stripe.subscriptions.list({ customer: customers.data[0].id, status: 'active', limit: 1 });
+    const subscriptions = await stripe.subscriptions.list({ customer: customers.data[0].id, status: 'active', limit: 5 });
     if (subscriptions.data.length > 0) {
+      // Check all active subs for Donny tier
+      let isDonnyElite = false;
       const sub = subscriptions.data[0];
+      for (const s of subscriptions.data) {
+        const priceIds = s.items.data.map(i => i.price.id);
+        if (priceIds.includes(DONNY_PRICE_ID)) {
+          isDonnyElite = true;
+          break;
+        }
+      }
       return res.status(200).json({
         isElite: true,
+        isDonnyElite,
         subscription: { id: sub.id, status: sub.status, currentPeriodEnd: sub.current_period_end, cancelAtPeriodEnd: sub.cancel_at_period_end },
       });
     }
-    return res.status(200).json({ isElite: false, subscription: null });
+    return res.status(200).json({ isElite: false, isDonnyElite: false, subscription: null });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
