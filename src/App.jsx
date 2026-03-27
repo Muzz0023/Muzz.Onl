@@ -71,7 +71,6 @@ const RevenueCat = {
       return { success: false };
     }
     try {
-      // Get the StoreKit product directly
       const { products } = await this.Purchases.getProducts({ productIdentifiers: [MONTHLY_PRODUCT_ID] });
       if (!products || products.length === 0) {
         alert('Product not found. Please try again later.');
@@ -90,7 +89,32 @@ const RevenueCat = {
       return { success: false, error: err };
     }
   },
-  
+
+  async purchaseDonnyElite() {
+    if (!this.initialized || !this.Purchases) {
+      alert('Purchases not available on this device');
+      return { success: false };
+    }
+    try {
+      const { products } = await this.Purchases.getProducts({ productIdentifiers: [DONNY_PRODUCT_ID] });
+      if (!products || products.length === 0) {
+        alert('Product not found. Please try again later.');
+        return { success: false };
+      }
+      const product = products[0];
+      const { customerInfo } = await this.Purchases.purchaseStoreProduct({ product });
+      const isDonnyElite = customerInfo.entitlements.active[DONNY_ENTITLEMENT_ID] !== undefined;
+      return { success: isDonnyElite, customerInfo };
+    } catch (err) {
+      if (err.code === '1' || err.userCancelled || err.code === 'PURCHASE_CANCELLED') {
+        return { success: false, cancelled: true };
+      }
+      console.log('Purchase error:', err);
+      alert('Purchase failed: ' + (err.message || err));
+      return { success: false, error: err };
+    }
+  },
+
   async restorePurchases() {
     if (!this.initialized || !this.Purchases) {
       alert('Purchases not available on this device');
@@ -99,7 +123,8 @@ const RevenueCat = {
     try {
       const { customerInfo } = await this.Purchases.restorePurchases();
       const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
-      return { success: isElite, customerInfo };
+      const isDonnyElite = customerInfo.entitlements.active[DONNY_ENTITLEMENT_ID] !== undefined;
+      return { success: isElite || isDonnyElite, isElite, isDonnyElite, customerInfo };
     } catch (err) {
       console.log('Restore error:', err);
       alert('Could not restore purchases. Please try again.');
@@ -2293,12 +2318,10 @@ function MuzzApp() {
 
   // Handle Stripe checkout
   const handleUpgrade = async () => {
-    // Check if on iOS native app - use RevenueCat
     if (isNative && window.Capacitor?.getPlatform() === 'ios') {
       try {
         const result = await RevenueCat.purchaseElite();
         if (result.success) {
-          // Save Elite status directly to Supabase immediately
           setStripeElite(true);
           try {
             const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
@@ -2312,7 +2335,6 @@ function MuzzApp() {
               body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
             });
           } catch(e) { console.log('Supabase elite save error:', e); }
-          // Also try the sync API
           try {
             await fetch(api('/api/sync-apple-purchase'), {
               method: 'POST',
@@ -2331,7 +2353,6 @@ function MuzzApp() {
       }
       return;
     }
-    
     // Web - use Stripe
     try {
       const res = await fetch(api('/api/create-checkout-session'), {
@@ -2349,14 +2370,62 @@ function MuzzApp() {
       alert('Connection error. Please try again.');
     }
   };
+
+  const handleUpgradeDonny = async () => {
+    if (isNative && window.Capacitor?.getPlatform() === 'ios') {
+      try {
+        const result = await RevenueCat.purchaseDonnyElite();
+        if (result.success) {
+          setStripeDonnyElite(true);
+          setStripeElite(true);
+          try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const rows = await r.json();
+            const current = rows?.[0]?.data_json || {};
+            await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+              method: 'PATCH',
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+              body: JSON.stringify({ data_json: { ...current, stripeElite: true, stripeDonnyElite: true } })
+            });
+          } catch(e) { console.log('Supabase donny elite save error:', e); }
+          alert('Welcome to Muzz & Donny Elite! 🦘🐨🎉');
+          setActiveView('home');
+        } else if (result.cancelled) {
+          // User cancelled - do nothing
+        }
+      } catch (e) {
+        console.log('Purchase error:', e);
+        alert('Purchase failed. Please try again.');
+      }
+      return;
+    }
+    // Web - use Stripe with Donny price
+    try {
+      const res = await fetch(api('/api/create-checkout-session'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, userEmail, plan: 'donny' }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (e) {
+      alert('Connection error. Please try again.');
+    }
+  };
   
-  // Handle restore purchases (iOS)
   const handleRestorePurchases = async () => {
     if (!isNative) return;
     try {
       const result = await RevenueCat.restorePurchases();
       if (result.success) {
-        setStripeElite(true);
+        if (result.isElite) setStripeElite(true);
+        if (result.isDonnyElite) { setStripeDonnyElite(true); setStripeElite(true); }
         try {
           const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -2366,17 +2435,10 @@ function MuzzApp() {
           await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
             method: 'PATCH',
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-            body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
+            body: JSON.stringify({ data_json: { ...current, stripeElite: result.isElite || result.isDonnyElite, stripeDonnyElite: result.isDonnyElite || false } })
           });
         } catch(e) { console.log('Supabase elite save error:', e); }
-        try {
-          await fetch(api('/api/sync-apple-purchase'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, userEmail }),
-          });
-        } catch(e) { console.log('Sync API error:', e); }
-        alert('Purchases restored! Welcome back Elite! 🎉');
+        alert('Purchases restored! Welcome back! 🎉');
       } else {
         alert('No previous purchases found.');
       }
@@ -8937,12 +8999,89 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" />
               <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
             </svg>
-            <h1 className="text-4xl font-bold text-white mb-2">{isElite ? 'Elite Member' : 'Upgrade to Elite'}</h1>
-            <p className="text-white/80">{isElite ? "You've got the full Muzz experience, legend." : '$4.99/month — Unlock everything Muzz has to offer'}</p>
+            <h1 className="text-4xl font-bold text-white mb-2">
+              {isDonnyElite ? '🦘🐨 Muzz & Donny Elite' : isElite ? '🦘 Muzz Elite' : 'Choose Your Plan'}
+            </h1>
+            <p className="text-white/80">
+              {isDonnyElite ? "Full access to Muzz + Donny. Legend." : isElite ? "You've got full Muzz access. Upgrade to add Donny 🐨" : 'Unlock everything Muzz has to offer'}
+            </p>
           </div>
         </div>
 
         <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+
+          {/* Pricing Cards */}
+          {!isDonnyElite && (
+            <div className="grid grid-cols-1 gap-4" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'}}>
+
+              {/* Muzz Elite Card */}
+              <div className="rounded-3xl p-6 space-y-4 relative" style={{background: isElite && !isDonnyElite ? "rgba(245,158,11,0.08)" : "rgba(5,15,30,0.8)", border: isElite && !isDonnyElite ? "1px solid rgba(245,158,11,0.4)" : "1px solid rgba(0,200,255,0.15)"}}>
+                {isElite && !isDonnyElite && (
+                  <div className="absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-bold" style={{background:"rgba(245,158,11,0.2)",color:"#f59e0b",border:"1px solid rgba(245,158,11,0.3)"}}>CURRENT PLAN</div>
+                )}
+                <div>
+                  <div className="text-3xl mb-2">🦘</div>
+                  <h2 className="text-xl font-bold text-white">Muzz Elite</h2>
+                  <p className="text-3xl font-bold text-white mt-2">$4.99 <span className="text-base font-normal text-gray-400">/month</span></p>
+                  <p className="text-sm text-gray-400 mt-1">Personal finance & life management</p>
+                </div>
+                <div className="space-y-2">
+                  {['Health & Sleep Tracker','Work & Timesheet','Bills & Debt Tracker','Assets Management','Investment Portfolio','Unlimited Custom Categories','AI Chat (30 msgs/day)','Elite Badge & Name'].map((f,i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-white"><span style={{color:"#f59e0b"}}>✓</span>{f}</div>
+                  ))}
+                </div>
+                {!isElite && (
+                  <button onClick={handleUpgrade}
+                    className="w-full py-3 rounded-2xl font-bold text-white transition-all hover:scale-105"
+                    style={{background:"linear-gradient(135deg,#f59e0b,#f97316)",boxShadow:"0 0 20px rgba(245,158,11,0.3)"}}>
+                    {isNative ? 'Subscribe — $4.99/month' : 'Subscribe — $4.99/month'}
+                  </button>
+                )}
+                {isElite && !isDonnyElite && (
+                  <div className="w-full py-3 rounded-2xl text-center text-sm font-medium" style={{background:"rgba(245,158,11,0.1)",color:"#f59e0b",border:"1px solid rgba(245,158,11,0.2)"}}>⚡ Active Plan</div>
+                )}
+              </div>
+
+              {/* Muzz & Donny Card */}
+              <div className="rounded-3xl p-6 space-y-4 relative" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.3)"}}>
+                <div className="absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-bold" style={{background:"rgba(249,115,22,0.2)",color:"#f97316",border:"1px solid rgba(249,115,22,0.3)"}}>BEST VALUE</div>
+                <div>
+                  <div className="text-3xl mb-2">🦘🐨</div>
+                  <h2 className="text-xl font-bold text-white">Muzz & Donny</h2>
+                  <p className="text-3xl font-bold text-white mt-2">$7.99 <span className="text-base font-normal text-gray-400">/month</span></p>
+                  <p className="text-sm text-gray-400 mt-1">Everything in Muzz + full Donny trade system</p>
+                </div>
+                <div className="space-y-2">
+                  {['Everything in Muzz Elite','Job Tracking & Scheduler','Team & Subcontractor Management','Client Management','SWMS & Incident Logs','Price Book','Reports','Multi-user Workspace'].map((f,i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-white"><span style={{color:"#f97316"}}>✓</span>{f}</div>
+                  ))}
+                </div>
+                <button onClick={handleUpgradeDonny}
+                  className="w-full py-3 rounded-2xl font-bold text-white transition-all hover:scale-105"
+                  style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
+                  {isNative ? 'Subscribe — $7.99/month' : 'Subscribe — $7.99/month'}
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {/* Legal text for iOS */}
+          {!isElite && isNative && (
+            <div className="text-xs text-gray-400 space-y-1 text-center">
+              <p>Auto-renewable subscription • Payment charged to Apple ID at confirmation</p>
+              <p>Subscription renews unless cancelled at least 24 hours before end of current period.</p>
+            </div>
+          )}
+
+          {/* Restore Purchases - iOS only */}
+          {isNative && !isDonnyElite && (
+            <div className="text-center">
+              <button onClick={handleRestorePurchases} className="text-sm text-orange-500 hover:text-orange-600 underline">
+                Restore Previous Purchase
+              </button>
+            </div>
+          )}
 
           {/* Feature Comparison */}
           <div className="rounded-3xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
@@ -8952,73 +9091,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div>
               <div className="flex items-center px-6 py-2" style={{background:"rgba(0,200,255,0.08)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
                 <span className="flex-1 text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>FEATURE</span>
-                <span className="w-16 text-center text-xs font-mono" style={{color:"rgba(148,163,184,0.6)",letterSpacing:"1px"}}>FREE</span>
-                <span className="w-16 text-center text-xs font-mono" style={{color:"#f59e0b",letterSpacing:"1px"}}>ELITE</span>
+                <span className="w-14 text-center text-xs font-mono" style={{color:"rgba(148,163,184,0.6)"}}>FREE</span>
+                <span className="w-14 text-center text-xs font-mono" style={{color:"#f59e0b"}}>🦘</span>
+                <span className="w-14 text-center text-xs font-mono" style={{color:"#f97316"}}>🦘🐨</span>
               </div>
               {[
-                { feature: 'Tasks & Daily Planner', free: true, elite: true },
-                { feature: 'Reminders & Birthdays', free: true, elite: true },
-                { feature: 'Diet (Groceries, Meals, Water)', free: true, elite: true },
-                { feature: '1 Custom Category', free: true, elite: true },
-                { feature: 'AI Chat (10 msgs/day)', free: true, elite: false },
-                { feature: 'AI Chat (30 msgs/day)', free: false, elite: true },
-                { feature: 'Health & Sleep Tracker', free: false, elite: true },
-                { feature: 'Work & Timesheet', free: false, elite: true },
-                { feature: 'Bills & Debt Tracker', free: false, elite: true },
-                { feature: 'Assets Management', free: false, elite: true },
-                { feature: 'Investment Portfolio', free: false, elite: true },
-                { feature: 'Unlimited Custom Categories', free: false, elite: true },
-                { feature: 'Elite Badge & Name', free: false, elite: true },
-                { feature: 'Ad Free', free: false, elite: true },
+                { feature: 'Tasks & Daily Planner', free: true, elite: true, donny: true },
+                { feature: 'Reminders & Birthdays', free: true, elite: true, donny: true },
+                { feature: 'Diet (Groceries, Meals, Water)', free: true, elite: true, donny: true },
+                { feature: '1 Custom Category', free: true, elite: true, donny: true },
+                { feature: 'AI Chat (10 msgs/day)', free: true, elite: false, donny: false },
+                { feature: 'AI Chat (30 msgs/day)', free: false, elite: true, donny: true },
+                { feature: 'Health & Sleep Tracker', free: false, elite: true, donny: true },
+                { feature: 'Work & Timesheet', free: false, elite: true, donny: true },
+                { feature: 'Bills & Debt Tracker', free: false, elite: true, donny: true },
+                { feature: 'Assets Management', free: false, elite: true, donny: true },
+                { feature: 'Investment Portfolio', free: false, elite: true, donny: true },
+                { feature: 'Unlimited Custom Categories', free: false, elite: true, donny: true },
+                { feature: 'Elite Badge & Name', free: false, elite: true, donny: true },
+                { feature: 'Donny Job Tracking', free: false, elite: false, donny: true },
+                { feature: 'Donny Team Management', free: false, elite: false, donny: true },
+                { feature: 'Donny SWMS & Safety Docs', free: false, elite: false, donny: true },
+                { feature: 'Donny Multi-user Workspace', free: false, elite: false, donny: true },
               ].map((row, i) => (
-                <div key={i} className="flex items-center px-6 py-3 transition-all" style={{borderBottom:"1px solid rgba(0,200,255,0.06)",background: row.elite && !row.free ? "rgba(0,200,255,0.03)" : "transparent"}}>
+                <div key={i} className="flex items-center px-6 py-3" style={{borderBottom:"1px solid rgba(0,200,255,0.06)"}}>
                   <span className="flex-1 text-sm text-white">{row.feature}</span>
-                  <span className="w-16 text-center text-base">{row.free ? '✅' : <span style={{color:"rgba(239,68,68,0.7)",fontSize:"18px"}}>✕</span>}</span>
-                  <span className="w-16 text-center text-base">{row.elite ? '✅' : '—'}</span>
+                  <span className="w-14 text-center">{row.free ? '✅' : <span style={{color:"rgba(239,68,68,0.7)"}}>✕</span>}</span>
+                  <span className="w-14 text-center">{row.elite ? '✅' : '—'}</span>
+                  <span className="w-14 text-center">{row.donny ? '✅' : '—'}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Upgrade Button */}
-          {!isElite && (
-            <div className="text-center space-y-4">
-              <button
-                onClick={handleUpgrade}
-                className="px-8 py-4 text-white rounded-2xl text-lg font-bold transition-all hover:scale-105" style={{background:"linear-gradient(135deg,#f59e0b,#f97316)",boxShadow:"0 0 30px rgba(245,158,11,0.4), 0 4px 20px rgba(249,115,22,0.3)",border:"1px solid rgba(255,200,0,0.3)",letterSpacing:"1px",animation:"kangPulse 3s ease-in-out infinite"}}
-              >
-                {isNative ? 'Become Elite — $4.99/month' : 'Become Elite — $4.99/month'}
-              </button>
-              <p className="text-xs text-gray-400">Cancel anytime. Your data stays safe.</p>
-              
-              {/* Required subscription info */}
-              <div className="text-xs text-gray-400 space-y-1">
-                <p>Auto-renewable subscription • $4.99 AUD/month</p>
-                <p>Payment will be charged to your Apple ID account at confirmation of purchase. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.</p>
-              </div>
-              
-              {/* Restore Purchases - iOS only */}
-              {isNative && (
-                <button
-                  onClick={handleRestorePurchases}
-                  className="text-sm text-orange-500 hover:text-orange-600 underline"
-                >
-                  Restore Previous Purchase
-                </button>
-              )}
-            </div>
-          )}
-
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
-            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
+            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <h2 className="text-xl font-semibold text-white">Subscription</h2>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active</span></p>
                   {subscriptionInfo.currentPeriodEnd && (
                     <p className="text-xs text-gray-400">
-                      {subscriptionInfo.cancelAtPeriodEnd 
+                      {subscriptionInfo.cancelAtPeriodEnd
                         ? `Cancels on ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU')}`
                         : `Renews on ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU')}`
                       }
@@ -9026,19 +9141,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   )}
                 </div>
                 {subscriptionInfo.cancelAtPeriodEnd ? (
-                  <button
-                    onClick={handleReactivateSubscription}
-                    className="px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-medium hover:bg-green-600 transition-colors"
-                  >
-                    Reactivate
-                  </button>
+                  <button onClick={handleReactivateSubscription} className="px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-medium hover:bg-green-600 transition-colors">Reactivate</button>
                 ) : (
-                  <button
-                    onClick={handleCancelSubscription}
-                    className="px-4 py-2 bg-gray-100 text-gray-500 rounded-xl text-sm font-medium hover:bg-red-100 hover:text-red-500 transition-colors"
-                  >
-                    Cancel Subscription
-                  </button>
+                  <button onClick={handleCancelSubscription} className="px-4 py-2 bg-gray-100 text-gray-500 rounded-xl text-sm font-medium hover:bg-red-100 hover:text-red-500 transition-colors">Cancel Subscription</button>
                 )}
               </div>
             </div>
@@ -9046,14 +9151,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
+            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
               <h2 className="text-xl font-semibold text-white">Subscription</h2>
               <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
-              <p className="text-xs text-gray-400">To manage or cancel your subscription, go to your iPhone Settings → Apple ID → Subscriptions.</p>
-              <button
-                onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
-                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
-              >
+              <p className="text-xs text-gray-400">To manage or cancel, go to iPhone Settings → Apple ID → Subscriptions.</p>
+              <button onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
+                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors">
                 Manage Apple Subscription
               </button>
             </div>
@@ -14539,12 +14642,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="text-center space-y-3">
             <div className="text-6xl">🐨</div>
             <h2 className="text-2xl font-bold text-white">Donny Business System</h2>
-            <p className="text-sm" style={{color:'rgba(148,163,184,0.6)'}}>Upgrade to Elite to access Donny, or enter your worker access code below.</p>
+            <p className="text-sm" style={{color:'rgba(148,163,184,0.6)'}}>Upgrade to Muzz & Donny ($7.99/month) to access Donny, or enter your worker access code below.</p>
           </div>
           <button onClick={() => setActiveView('upgrade')}
             className="w-full py-4 rounded-2xl font-bold text-white"
             style={{background:'linear-gradient(135deg,#f97316,#ea580c)',boxShadow:'0 0 20px rgba(249,115,22,0.3)'}}>
-            ⚡ Upgrade to Elite
+            🐨 Upgrade to Muzz & Donny
           </button>
           <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
             <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// WORKER ACCESS CODE</div>
