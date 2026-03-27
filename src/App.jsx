@@ -6,7 +6,9 @@ import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar,
 // ============================================
 const REVENUECAT_API_KEY = 'appl_QEohIcdAgxVGnNuXLmxwhyLClVD';
 const ELITE_ENTITLEMENT_ID = 'Muzz.onl Pro';
+const DONNY_ENTITLEMENT_ID = 'Muzz.onl Pro + Donny';
 const MONTHLY_PRODUCT_ID = 'muzz_elite_monthly';
+const DONNY_PRODUCT_ID = 'muzz_donny_monthly';
 
 // RevenueCat helper for iOS purchases
 const RevenueCat = {
@@ -48,6 +50,17 @@ const RevenueCat = {
       return customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
     } catch (err) {
       console.log('Error checking elite status:', err);
+      return false;
+    }
+  },
+
+  async checkDonnyEliteStatus() {
+    if (!this.initialized || !this.Purchases) return false;
+    try {
+      const { customerInfo } = await this.Purchases.getCustomerInfo();
+      return customerInfo.entitlements.active[DONNY_ENTITLEMENT_ID] !== undefined;
+    } catch (err) {
+      console.log('Error checking donny elite status:', err);
       return false;
     }
   },
@@ -1568,7 +1581,9 @@ function MuzzApp() {
   const userEmail = authUser?.email?.toLowerCase() || '';
   const isVIP = VIP_EMAILS.includes(userEmail);
   const [stripeElite, setStripeElite] = useState(false);
-  const isElite = isVIP || stripeElite;
+  const [stripeDonnyElite, setStripeDonnyElite] = useState(false);
+  const isElite = isVIP || stripeElite || stripeDonnyElite;
+  const isDonnyElite = isVIP || stripeDonnyElite;
   const [eliteName, setEliteName] = useState('');
   const [subscriptionInfo, setSubscriptionInfo] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -1827,7 +1842,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
   // Generate a workspace code for the boss
   const generateWorkspaceCode = () => {
@@ -2004,6 +2019,7 @@ function MuzzApp() {
     if(d.customCategories) setCustomCategories(d.customCategories);
     if(d.eliteName) setEliteName(d.eliteName);
     if(d.stripeElite!==undefined) setStripeElite(d.stripeElite);
+    if(d.stripeDonnyElite!==undefined) setStripeDonnyElite(d.stripeDonnyElite);
     if(d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
     if(d.habits) setHabits(d.habits);
     if(d.habitLog) setHabitLog(d.habitLog);
@@ -2079,6 +2095,7 @@ function MuzzApp() {
       customCategories: d.customCategories||[],
       eliteName: d.eliteName||'',
       stripeElite: d.stripeElite||false,
+      stripeDonnyElite: d.stripeDonnyElite||false,
       timetableBlocks: d.timetableBlocks||[],
       habits: d.habits||[],
       habitLog: d.habitLog||{},
@@ -2229,6 +2246,10 @@ function MuzzApp() {
           setStripeElite(true);
           setSubscriptionInfo(data.subscription);
         }
+        if (data.isDonnyElite) {
+          setStripeDonnyElite(true);
+          setSubscriptionInfo(data.subscription);
+        }
       } catch (e) {
         console.error('Subscription check error:', e);
       }
@@ -2244,8 +2265,10 @@ function MuzzApp() {
       
       // Check if user already has Elite from Apple
       const hasElite = await RevenueCat.checkEliteStatus();
-      if (hasElite) {
-        setStripeElite(true);
+      const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
+      if (hasElite || hasDonnyElite) {
+        if (hasElite) setStripeElite(true);
+        if (hasDonnyElite) setStripeDonnyElite(true);
         // Persist directly to Supabase data_json so it survives app restarts
         if (userId) {
           try {
@@ -2254,11 +2277,11 @@ function MuzzApp() {
             });
             const rows = await r.json();
             const current = rows?.[0]?.data_json || {};
-            if (!current.stripeElite) {
+            if ((hasElite && !current.stripeElite) || (hasDonnyElite && !current.stripeDonnyElite)) {
               await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
                 method: 'PATCH',
                 headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-                body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
+                body: JSON.stringify({ data_json: { ...current, stripeElite: hasElite ? true : current.stripeElite, stripeDonnyElite: hasDonnyElite ? true : current.stripeDonnyElite } })
               });
             }
           } catch(e) { console.log('Supabase elite sync error:', e); }
@@ -2468,6 +2491,7 @@ function MuzzApp() {
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
           if (d.stripeElite) setStripeElite(d.stripeElite);
+          if (d.stripeDonnyElite) setStripeDonnyElite(d.stripeDonnyElite);
           if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           if (d.habits) setHabits(d.habits);
           if (d.habitLog) setHabitLog(d.habitLog);
@@ -2572,6 +2596,7 @@ function MuzzApp() {
           customCategories,
           eliteName,
           stripeElite,
+          stripeDonnyElite,
           timetableBlocks,
           habits,
           habitLog,
@@ -2613,7 +2638,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, stripeElite, stripeDonnyElite, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -14507,7 +14532,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // TIMETABLE VIEW
   // DONNY VIEWS
   if (activeView && activeView.startsWith('donny')) {
-    if (!isElite && donnyRole !== 'worker') return (
+    if (!isDonnyElite && donnyRole !== 'worker') return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
         <div className="max-w-lg mx-auto px-6 pt-24 space-y-6">
