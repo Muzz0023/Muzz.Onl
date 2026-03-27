@@ -1,6 +1,8 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+const DONNY_PRICE_ID = 'price_1TFVgF1gOtfSeAhJBMyEmEmo';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -9,8 +11,10 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { userId, userEmail } = req.body;
+    const { userId, userEmail, plan } = req.body;
     if (!userId || !userEmail) return res.status(400).json({ error: 'Missing userId or userEmail' });
+
+    const priceId = plan === 'donny' ? DONNY_PRICE_ID : process.env.STRIPE_PRICE_ID;
 
     const existingCustomers = await stripe.customers.list({ email: userEmail, limit: 1 });
     let customer;
@@ -23,12 +27,12 @@ export default async function handler(req, res) {
     const session = await stripe.checkout.sessions.create({
       customer: customer.id,
       payment_method_types: ['card'],
-      line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+      line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       success_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=success',
       cancel_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=cancelled',
-      metadata: { supabase_user_id: userId },
-      subscription_data: { metadata: { supabase_user_id: userId } },
+      metadata: { supabase_user_id: userId, plan: plan || 'elite' },
+      subscription_data: { metadata: { supabase_user_id: userId, plan: plan || 'elite' } },
     });
 
     return res.status(200).json({ url: session.url });
