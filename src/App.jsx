@@ -2244,14 +2244,25 @@ function MuzzApp() {
       
       // Check if user already has Elite from Apple
       const hasElite = await RevenueCat.checkEliteStatus();
-      if (hasElite && !isElite) {
-        // Sync to Supabase
-        await fetch(api('/api/sync-apple-purchase'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, userEmail }),
-        });
-        setStripeElite(true); // Using same flag for simplicity
+      if (hasElite) {
+        setStripeElite(true);
+        // Persist directly to Supabase data_json so it survives app restarts
+        if (userId) {
+          try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const rows = await r.json();
+            const current = rows?.[0]?.data_json || {};
+            if (!current.stripeElite) {
+              await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+                method: 'PATCH',
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                body: JSON.stringify({ data_json: { ...current, stripeElite: true } })
+              });
+            }
+          } catch(e) { console.log('Supabase elite sync error:', e); }
+        }
       }
     };
     initRevenueCat();
