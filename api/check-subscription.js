@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const DONNY_PRICE_ID = 'price_1TFVgF1gOtfSeAhJBMyEmEmo';
+
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       const sub = subscriptions.data[0];
       for (const s of subscriptions.data) {
         const priceIds = s.items.data.map(i => i.price.id);
-        if (priceIds.includes(DONNY_PRICE_ID)) {
+        if (priceIds.includes(process.env.DONNY_PRICE_ID)) {
           isDonnyElite = true;
           break;
         }
