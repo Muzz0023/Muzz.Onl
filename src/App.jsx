@@ -2275,6 +2275,25 @@ function MuzzApp() {
           setStripeDonnyElite(true);
           setSubscriptionInfo(data.subscription);
         }
+        // If Stripe says no active sub, clear flags from Supabase to prevent stale Elite access
+        if (!data.isElite && !data.isDonnyElite && userId) {
+          setStripeElite(false);
+          setStripeDonnyElite(false);
+          try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const rows = await r.json();
+            const current = rows?.[0]?.data_json || {};
+            if (current.stripeElite || current.stripeDonnyElite) {
+              await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+                method: 'PATCH',
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                body: JSON.stringify({ data_json: { ...current, stripeElite: false, stripeDonnyElite: false } })
+              });
+            }
+          } catch(e) { console.log('Supabase elite clear error:', e); }
+        }
       } catch (e) {
         console.error('Subscription check error:', e);
       }
