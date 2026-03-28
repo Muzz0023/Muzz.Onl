@@ -1,8 +1,6 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const DONNY_PRICE_ID = 'price_1TFVgF1gOtfSeAhJBMyEmEmo';
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -14,7 +12,7 @@ export default async function handler(req, res) {
     const { userId, userEmail, plan } = req.body;
     if (!userId || !userEmail) return res.status(400).json({ error: 'Missing userId or userEmail' });
 
-    const priceId = plan === 'donny' ? DONNY_PRICE_ID : process.env.STRIPE_PRICE_ID;
+    const priceId = plan === 'donny' ? process.env.DONNY_PRICE_ID : process.env.STRIPE_PRICE_ID;
 
     const existingCustomers = await stripe.customers.list({ email: userEmail, limit: 1 });
     let customer;
