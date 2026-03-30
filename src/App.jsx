@@ -8979,6 +8979,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
+          <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
+            <div className="text-center space-y-2">
+              <div className="text-4xl">📸</div>
+              <h2 className="text-white font-bold text-xl">Stay Updated</h2>
+              <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>Follow us on Instagram for updates, new features and behind the scenes.</p>
+            </div>
+            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-4 p-4 rounded-2xl w-full"
+              style={{background:"linear-gradient(135deg,rgba(225,48,108,0.15),rgba(193,53,132,0.1))",border:"1px solid rgba(225,48,108,0.3)"}}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)"}}>
+                <span className="text-white text-xl">📷</span>
+              </div>
+              <div>
+                <div className="font-bold text-white">Follow @muzz.onl</div>
+                <div className="text-sm" style={{color:"rgba(225,48,108,0.8)"}}>instagram.com/muzz.onl</div>
+              </div>
+            </a>
+          </div>
+
           <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
             <h3 className="font-bold text-white text-lg">❓ FAQ</h3>
             <div className="space-y-2">
