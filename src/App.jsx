@@ -2043,8 +2043,11 @@ function MuzzApp() {
     if(d.timesheetData) setTimesheetData(d.timesheetData);
     if(d.customCategories) setCustomCategories(d.customCategories);
     if(d.eliteName) setEliteName(d.eliteName);
-    if(d.stripeElite!==undefined) setStripeElite(d.stripeElite);
-    if(d.stripeDonnyElite!==undefined) setStripeDonnyElite(d.stripeDonnyElite);
+    // On iOS, always let RevenueCat set elite status — never load from Supabase cache
+    if(!isNative) {
+      if(d.stripeElite!==undefined) setStripeElite(d.stripeElite);
+      if(d.stripeDonnyElite!==undefined) setStripeDonnyElite(d.stripeDonnyElite);
+    }
     if(d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
     if(d.habits) setHabits(d.habits);
     if(d.habitLog) setHabitLog(d.habitLog);
@@ -2601,8 +2604,10 @@ function MuzzApp() {
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
-          if (d.stripeElite) setStripeElite(d.stripeElite);
-          if (d.stripeDonnyElite) setStripeDonnyElite(d.stripeDonnyElite);
+          if (!isNative) {
+            if (d.stripeElite) setStripeElite(d.stripeElite);
+            if (d.stripeDonnyElite) setStripeDonnyElite(d.stripeDonnyElite);
+          }
           if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           if (d.habits) setHabits(d.habits);
           if (d.habitLog) setHabitLog(d.habitLog);
