@@ -78,8 +78,8 @@ const RevenueCat = {
       }
       const product = products[0];
       const { customerInfo } = await this.Purchases.purchaseStoreProduct({ product });
-      const isElite = customerInfo.entitlements.active[ELITE_ENTITLEMENT_ID] !== undefined;
-      return { success: isElite, customerInfo };
+      // Purchase completed successfully — trust RevenueCat, don't re-check entitlement
+      return { success: true, customerInfo };
     } catch (err) {
       if (err.code === '1' || err.userCancelled || err.code === 'PURCHASE_CANCELLED') {
         return { success: false, cancelled: true };
@@ -103,8 +103,8 @@ const RevenueCat = {
       }
       const product = products[0];
       const { customerInfo } = await this.Purchases.purchaseStoreProduct({ product });
-      const isDonnyElite = customerInfo.entitlements.active[DONNY_ENTITLEMENT_ID] !== undefined;
-      return { success: isDonnyElite, customerInfo };
+      // Purchase completed successfully — trust RevenueCat, don't re-check entitlement
+      return { success: true, customerInfo };
     } catch (err) {
       if (err.code === '1' || err.userCancelled || err.code === 'PURCHASE_CANCELLED') {
         return { success: false, cancelled: true };
@@ -2259,6 +2259,7 @@ function MuzzApp() {
   // Check Stripe subscription on load
   useEffect(() => {
     if (!userEmail || isVIP) return;
+    if (isNative) return; // iOS uses RevenueCat, not Stripe
     const checkSub = async () => {
       try {
         const res = await fetch(api('/api/check-subscription'), {
@@ -2303,17 +2304,16 @@ function MuzzApp() {
 
   // Initialize RevenueCat for iOS and check for existing purchases
   useEffect(() => {
-    const initRevenueCat = async () => {
-      if (!isNative) return;
-      await RevenueCat.init();
-      
-      // Check if user already has Elite from Apple
+    if (!isNative) return;
+
+    const checkRevenueCatStatus = async () => {
+      if (!RevenueCat.initialized) await RevenueCat.init();
       const hasElite = await RevenueCat.checkEliteStatus();
       const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
+
       if (hasElite || hasDonnyElite) {
         if (hasElite) setStripeElite(true);
         if (hasDonnyElite) setStripeDonnyElite(true);
-        // Persist directly to Supabase data_json so it survives app restarts
         if (userId) {
           try {
             const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
@@ -2330,9 +2330,39 @@ function MuzzApp() {
             }
           } catch(e) { console.log('Supabase elite sync error:', e); }
         }
+      } else {
+        // No active entitlements — clear elite flags
+        setStripeElite(false);
+        setStripeDonnyElite(false);
+        if (userId) {
+          try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const rows = await r.json();
+            const current = rows?.[0]?.data_json || {};
+            if (current.stripeElite || current.stripeDonnyElite) {
+              await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+                method: 'PATCH',
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                body: JSON.stringify({ data_json: { ...current, stripeElite: false, stripeDonnyElite: false } })
+              });
+            }
+          } catch(e) { console.log('Supabase elite clear error:', e); }
+        }
       }
     };
-    initRevenueCat();
+
+    checkRevenueCatStatus();
+
+    // Re-check when app comes back to foreground
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        checkRevenueCatStatus();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, [userId, userEmail]);
 
   // Handle Stripe checkout
