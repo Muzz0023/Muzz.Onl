@@ -2311,45 +2311,29 @@ function MuzzApp() {
       const hasElite = await RevenueCat.checkEliteStatus();
       const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
 
-      if (hasElite || hasDonnyElite) {
-        if (hasElite) setStripeElite(true);
-        if (hasDonnyElite) setStripeDonnyElite(true);
-        if (userId) {
-          try {
-            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
-              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      // Set state based on RevenueCat entitlements
+      setStripeElite(hasElite || hasDonnyElite);
+      setStripeDonnyElite(hasDonnyElite);
+
+      // Sync to Supabase if needed (webhook should handle this but this is a fallback)
+      if (userId) {
+        try {
+          const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+          });
+          const rows = await r.json();
+          const current = rows?.[0]?.data_json || {};
+          const needsUpdate = 
+            current.stripeElite !== (hasElite || hasDonnyElite) || 
+            current.stripeDonnyElite !== hasDonnyElite;
+          if (needsUpdate) {
+            await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+              method: 'PATCH',
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+              body: JSON.stringify({ data_json: { ...current, stripeElite: hasElite || hasDonnyElite, stripeDonnyElite: hasDonnyElite } })
             });
-            const rows = await r.json();
-            const current = rows?.[0]?.data_json || {};
-            if ((hasElite && !current.stripeElite) || (hasDonnyElite && !current.stripeDonnyElite)) {
-              await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-                body: JSON.stringify({ data_json: { ...current, stripeElite: hasElite ? true : current.stripeElite, stripeDonnyElite: hasDonnyElite ? true : current.stripeDonnyElite } })
-              });
-            }
-          } catch(e) { console.log('Supabase elite sync error:', e); }
-        }
-      } else {
-        // No active entitlements — clear elite flags
-        setStripeElite(false);
-        setStripeDonnyElite(false);
-        if (userId) {
-          try {
-            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
-              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            const rows = await r.json();
-            const current = rows?.[0]?.data_json || {};
-            if (current.stripeElite || current.stripeDonnyElite) {
-              await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-                body: JSON.stringify({ data_json: { ...current, stripeElite: false, stripeDonnyElite: false } })
-              });
-            }
-          } catch(e) { console.log('Supabase elite clear error:', e); }
-        }
+          }
+        } catch(e) { console.log('Supabase elite sync error:', e); }
       }
     };
 
@@ -2357,13 +2341,11 @@ function MuzzApp() {
 
     // Re-check when app comes back to foreground
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        checkRevenueCatStatus();
-      }
+      if (document.visibilityState === 'visible') checkRevenueCatStatus();
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
-    // Also poll every 30 seconds on iOS to catch subscription changes
+    // Poll every 30 seconds to catch subscription changes while app is open
     const pollInterval = setInterval(checkRevenueCatStatus, 30000);
 
     return () => {
