@@ -2043,11 +2043,8 @@ function MuzzApp() {
     if(d.timesheetData) setTimesheetData(d.timesheetData);
     if(d.customCategories) setCustomCategories(d.customCategories);
     if(d.eliteName) setEliteName(d.eliteName);
-    // On iOS, always let RevenueCat set elite status — never load from Supabase cache
-    if(!isNative) {
-      if(d.stripeElite!==undefined) setStripeElite(d.stripeElite);
-      if(d.stripeDonnyElite!==undefined) setStripeDonnyElite(d.stripeDonnyElite);
-    }
+    if(d.stripeElite!==undefined) setStripeElite(d.stripeElite);
+    if(d.stripeDonnyElite!==undefined) setStripeDonnyElite(d.stripeDonnyElite);
     if(d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
     if(d.habits) setHabits(d.habits);
     if(d.habitLog) setHabitLog(d.habitLog);
@@ -2365,7 +2362,14 @@ function MuzzApp() {
       }
     };
     document.addEventListener('visibilitychange', handleVisibility);
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
+
+    // Also poll every 30 seconds on iOS to catch subscription changes
+    const pollInterval = setInterval(checkRevenueCatStatus, 30000);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      clearInterval(pollInterval);
+    };
   }, [userId, userEmail]);
 
   // Handle Stripe checkout
@@ -2604,10 +2608,8 @@ function MuzzApp() {
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
-          if (!isNative) {
-            if (d.stripeElite) setStripeElite(d.stripeElite);
-            if (d.stripeDonnyElite) setStripeDonnyElite(d.stripeDonnyElite);
-          }
+          if (d.stripeElite) setStripeElite(d.stripeElite);
+          if (d.stripeDonnyElite) setStripeDonnyElite(d.stripeDonnyElite);
           if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           if (d.habits) setHabits(d.habits);
           if (d.habitLog) setHabitLog(d.habitLog);
