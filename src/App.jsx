@@ -9250,7 +9250,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="p-6 text-center" style={{background:"linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,120,0,0.05))",borderBottom:"1px solid rgba(255,200,0,0.15)"}}>
               <div className="text-3xl mb-2">💛</div>
               <h2 className="text-xl font-bold text-white mb-1" style={{letterSpacing:"1px"}}>Giving Back</h2>
-              <p className="text-sm" style={{color:"rgba(255,200,100,0.7)"}}>$3 from every Elite subscription goes directly to charity</p>
+              <p className="text-sm" style={{color:"rgba(255,200,100,0.7)"}}>$2 from every Elite subscription goes directly to charity</p>
             </div>
             <div style={{borderTop:"1px solid rgba(255,200,0,0.08)"}}>
               {[
