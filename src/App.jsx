@@ -1616,6 +1616,7 @@ function MuzzApp() {
   const userEmail = authUser?.email?.toLowerCase() || '';
   const isVIP = VIP_EMAILS.includes(userEmail);
   const [stripeElite, setStripeElite] = useState(false);
+  const justPurchasedRef = useRef(false);
   const [stripeDonnyElite, setStripeDonnyElite] = useState(false);
   const isElite = isVIP || stripeElite || stripeDonnyElite;
   const isDonnyElite = isVIP || stripeDonnyElite;
@@ -2314,6 +2315,7 @@ function MuzzApp() {
       try {
         const result = await RevenueCat.purchaseElite();
         if (result.success) {
+          justPurchasedRef.current = true;
           setStripeElite(true);
           try {
             const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
@@ -2368,6 +2370,7 @@ function MuzzApp() {
       try {
         const result = await RevenueCat.purchaseDonnyElite();
         if (result.success) {
+          justPurchasedRef.current = true;
           setStripeDonnyElite(true);
           setStripeElite(true);
           try {
@@ -2603,17 +2606,23 @@ function MuzzApp() {
         // Read current elite flags from Supabase — only webhooks can set these to false
         let savedStripeElite = stripeElite;
         let savedStripeDonnyElite = stripeDonnyElite;
-        try {
-          const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-          });
-          const rows = await r.json();
-          if (rows?.[0]?.data_json) {
-            // Always keep the higher value — if either source says true, it's true
-            savedStripeElite = rows[0].data_json.stripeElite === true ? true : stripeElite;
-            savedStripeDonnyElite = rows[0].data_json.stripeDonnyElite === true ? true : stripeDonnyElite;
-          }
-        } catch(e) {}
+
+        if (justPurchasedRef.current) {
+          // Just purchased — trust React state, don't read Supabase (purchase already wrote it)
+          justPurchasedRef.current = false;
+        } else {
+          try {
+            const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const rows = await r.json();
+            if (rows?.[0]?.data_json) {
+              // Always keep the higher value — if either source says true, it's true
+              savedStripeElite = rows[0].data_json.stripeElite === true ? true : stripeElite;
+              savedStripeDonnyElite = rows[0].data_json.stripeDonnyElite === true ? true : stripeDonnyElite;
+            }
+          } catch(e) {}
+        }
 
         const allData = {
           subscriptions,
