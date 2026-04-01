@@ -2315,7 +2315,6 @@ function MuzzApp() {
   // Initialize RevenueCat for iOS and check for existing purchases
   useEffect(() => {
     if (!isNative) return;
-
     const initAndCheck = async () => {
       await RevenueCat.init();
       await RevenueCat.login(userId);
@@ -2324,28 +2323,7 @@ function MuzzApp() {
       setStripeElite(hasElite || hasDonnyElite);
       setStripeDonnyElite(hasDonnyElite);
     };
-
-    const checkOnly = async () => {
-      if (!RevenueCat.initialized) return;
-      const hasElite = await RevenueCat.checkEliteStatus();
-      const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
-      setStripeElite(hasElite || hasDonnyElite);
-      setStripeDonnyElite(hasDonnyElite);
-    };
-
     initAndCheck();
-
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') checkOnly();
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    const pollInterval = setInterval(checkOnly, 30000);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-      clearInterval(pollInterval);
-    };
   }, [userId, userEmail]);
 
   // Handle Stripe checkout
