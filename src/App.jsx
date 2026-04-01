@@ -43,6 +43,16 @@ const RevenueCat = {
     }
   },
   
+  async login(userId) {
+    if (!this.initialized || !this.Purchases || !userId) return;
+    try {
+      await this.Purchases.logIn({ appUserID: userId });
+      console.log('RevenueCat logged in:', userId);
+    } catch (err) {
+      console.log('RevenueCat login error:', err);
+    }
+  },
+
   async checkEliteStatus() {
     if (!this.initialized || !this.Purchases) return false;
     try {
@@ -2308,6 +2318,7 @@ function MuzzApp() {
 
     const checkRevenueCatStatus = async () => {
       if (!RevenueCat.initialized) await RevenueCat.init();
+      await RevenueCat.login(userId);
       const hasElite = await RevenueCat.checkEliteStatus();
       const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
 
