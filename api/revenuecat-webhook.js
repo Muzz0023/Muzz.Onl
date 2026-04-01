@@ -12,14 +12,9 @@ async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
     const data = await loadRes.json();
     const existing = data[0]?.data_json || {};
 
-    // Update flags
     if (isElite !== null) existing.stripeElite = isElite;
     if (isDonnyElite !== null) existing.stripeDonnyElite = isDonnyElite;
-
-    // If Donny elite, also set stripeElite true (includes everything)
     if (isDonnyElite === true) existing.stripeElite = true;
-
-    // If both are false, clear everything
     if (isElite === false && isDonnyElite === false) {
       existing.stripeElite = false;
       existing.stripeDonnyElite = false;
@@ -48,7 +43,6 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Verify webhook secret if set
   if (REVENUECAT_WEBHOOK_SECRET) {
     const authHeader = req.headers['authorization'];
     if (authHeader !== REVENUECAT_WEBHOOK_SECRET) {
@@ -62,7 +56,6 @@ export default async function handler(req, res) {
 
     if (!app_user_id) return res.status(400).json({ error: 'Missing app_user_id' });
 
-    // Determine if this is a Donny purchase
     const isDonnyProduct = product_id === DONNY_PRODUCT_ID;
 
     console.log(`RevenueCat webhook: type=${type}, user=${app_user_id}, product=${product_id}, isDonny=${isDonnyProduct}`);
@@ -82,7 +75,8 @@ export default async function handler(req, res) {
       case 'EXPIRATION':
       case 'BILLING_ISSUE':
         if (isDonnyProduct) {
-          await updateUserEliteStatus(app_user_id, null, false);
+          // Clear both — Donny includes Muzz so both should go
+          await updateUserEliteStatus(app_user_id, false, false);
         } else {
           await updateUserEliteStatus(app_user_id, false, null);
         }
