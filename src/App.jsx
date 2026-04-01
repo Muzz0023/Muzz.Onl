@@ -2322,30 +2322,9 @@ function MuzzApp() {
       const hasElite = await RevenueCat.checkEliteStatus();
       const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
 
-      // Set state based on RevenueCat entitlements
+      // Only update React state — webhook handles Supabase
       setStripeElite(hasElite || hasDonnyElite);
       setStripeDonnyElite(hasDonnyElite);
-
-      // Sync to Supabase if needed (webhook should handle this but this is a fallback)
-      if (userId) {
-        try {
-          const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-          });
-          const rows = await r.json();
-          const current = rows?.[0]?.data_json || {};
-          const needsUpdate = 
-            current.stripeElite !== (hasElite || hasDonnyElite) || 
-            current.stripeDonnyElite !== hasDonnyElite;
-          if (needsUpdate) {
-            await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
-              method: 'PATCH',
-              headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-              body: JSON.stringify({ data_json: { ...current, stripeElite: hasElite || hasDonnyElite, stripeDonnyElite: hasDonnyElite } })
-            });
-          }
-        } catch(e) { console.log('Supabase elite sync error:', e); }
-      }
     };
 
     checkRevenueCatStatus();
