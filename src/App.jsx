@@ -7436,7 +7436,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isElite && (
             <div className="rounded-2xl p-4 flex items-center gap-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)"}}>
               <span className="text-lg">💛</span>
-              <span className="text-sm text-slate-400">Muzz proudly supports Endometriosis Australia, Charlie Teo Foundation & Mark Hughes Foundation</span>
+              <span className="text-sm text-slate-400">Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
             </div>
           )}
 
@@ -9255,7 +9255,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{borderTop:"1px solid rgba(255,200,0,0.08)"}}>
               {[
                 {emoji:"🎗️",name:"Endometriosis Australia",url:"https://www.endometriosisaustralia.org",color:"rgba(255,180,0,0.1)"},
-                {emoji:"🧠",name:"Charlie Teo Foundation",url:"https://charlieteofoundation.org.au",color:"rgba(180,100,255,0.1)"},
                 {emoji:"🏉",name:"Mark Hughes Foundation",url:"https://www.markhughesfoundation.com.au",color:"rgba(0,150,255,0.1)"},
               ].map((c,i) => (
                 <div key={i} className="p-5 flex items-center gap-4" style={{borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
