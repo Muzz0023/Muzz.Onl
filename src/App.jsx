@@ -2316,27 +2316,31 @@ function MuzzApp() {
   useEffect(() => {
     if (!isNative) return;
 
-    const checkRevenueCatStatus = async () => {
-      if (!RevenueCat.initialized) await RevenueCat.init();
+    const initAndCheck = async () => {
+      await RevenueCat.init();
       await RevenueCat.login(userId);
       const hasElite = await RevenueCat.checkEliteStatus();
       const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
-
-      // Only update React state — webhook handles Supabase
       setStripeElite(hasElite || hasDonnyElite);
       setStripeDonnyElite(hasDonnyElite);
     };
 
-    checkRevenueCatStatus();
+    const checkOnly = async () => {
+      if (!RevenueCat.initialized) return;
+      const hasElite = await RevenueCat.checkEliteStatus();
+      const hasDonnyElite = await RevenueCat.checkDonnyEliteStatus();
+      setStripeElite(hasElite || hasDonnyElite);
+      setStripeDonnyElite(hasDonnyElite);
+    };
 
-    // Re-check when app comes back to foreground
+    initAndCheck();
+
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible') checkRevenueCatStatus();
+      if (document.visibilityState === 'visible') checkOnly();
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
-    // Poll every 30 seconds to catch subscription changes while app is open
-    const pollInterval = setInterval(checkRevenueCatStatus, 30000);
+    const pollInterval = setInterval(checkOnly, 30000);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibility);
