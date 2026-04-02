@@ -939,6 +939,20 @@ const supabase = {
   },
   
   async saveUserData(userId, data) {
+    // Read current data first to preserve webhook-managed fields
+    try {
+      const existing = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
+        headers: this.headers()
+      });
+      const rows = await existing.json();
+      if (rows?.[0]?.data_json) {
+        const current = rows[0].data_json;
+        // Preserve stripeElite and stripeDonnyElite from Supabase — only webhooks manage these
+        if (current.stripeElite !== undefined) data.stripeElite = current.stripeElite;
+        if (current.stripeDonnyElite !== undefined) data.stripeDonnyElite = current.stripeDonnyElite;
+      }
+    } catch(e) {}
+
     // Try PATCH first (update existing row)
     const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
       method: 'PATCH',
