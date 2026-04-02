@@ -4,6 +4,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+async function buffer(readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
 async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
   try {
     const updateData = {};
@@ -34,12 +48,15 @@ async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
+  const buf = await buffer(req);
+  const sig = req.headers['stripe-signature'];
+
   let stripeEvent;
   try {
     if (process.env.STRIPE_WEBHOOK_SECRET) {
-      stripeEvent = stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
+      stripeEvent = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } else {
-      stripeEvent = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      stripeEvent = JSON.parse(buf.toString());
     }
   } catch (err) {
     return res.status(400).send('Webhook Error: ' + err.message);
@@ -77,6 +94,7 @@ export default async function handler(req, res) {
       }
     }
   } catch (error) {
+    console.error('Webhook processing error:', error);
     return res.status(500).send('Webhook error');
   }
 
