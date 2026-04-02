@@ -12,6 +12,10 @@ async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
     const data = await loadRes.json();
     const existing = data[0]?.data_json || {};
 
+    // Always ensure both fields exist with valid values
+    existing.stripeElite = existing.stripeElite || false;
+    existing.stripeDonnyElite = existing.stripeDonnyElite || false;
+
     if (isElite !== null) existing.stripeElite = isElite;
     if (isDonnyElite !== null) existing.stripeDonnyElite = isDonnyElite;
     if (isDonnyElite === true) existing.stripeElite = true;
@@ -75,7 +79,6 @@ export default async function handler(req, res) {
       case 'EXPIRATION':
       case 'BILLING_ISSUE':
         if (isDonnyProduct) {
-          // Clear both — Donny includes Muzz so both should go
           await updateUserEliteStatus(app_user_id, false, false);
         } else {
           await updateUserEliteStatus(app_user_id, false, null);
