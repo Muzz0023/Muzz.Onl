@@ -2600,21 +2600,6 @@ function MuzzApp() {
     setSaveStatus('saving');
     const saveData = async () => {
       try {
-        // Read current elite flags from Supabase — only webhooks can set these to false
-        let savedStripeElite = stripeElite;
-        let savedStripeDonnyElite = stripeDonnyElite;
-        try {
-          const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-          });
-          const rows = await r.json();
-          if (rows?.[0]?.data_json) {
-            // Always keep the higher value — if either source says true, it's true
-            savedStripeElite = rows[0].data_json.stripeElite === true ? true : stripeElite;
-            savedStripeDonnyElite = rows[0].data_json.stripeDonnyElite === true ? true : stripeDonnyElite;
-          }
-        } catch(e) {}
-
         const allData = {
           subscriptions,
           businessSubscriptions,
@@ -2664,8 +2649,6 @@ function MuzzApp() {
           timesheetData,
           customCategories,
           eliteName,
-          stripeElite: savedStripeElite,
-          stripeDonnyElite: savedStripeDonnyElite,
           timetableBlocks,
           habits,
           habitLog,
