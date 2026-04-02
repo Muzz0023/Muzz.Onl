@@ -939,20 +939,6 @@ const supabase = {
   },
   
   async saveUserData(userId, data) {
-    // Read current data first to preserve webhook-managed fields
-    try {
-      const existing = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=data_json`, {
-        headers: this.headers()
-      });
-      const rows = await existing.json();
-      if (rows?.[0]?.data_json) {
-        const current = rows[0].data_json;
-        // Preserve stripeElite and stripeDonnyElite from Supabase — only webhooks manage these
-        if (current.stripeElite !== undefined) data.stripeElite = current.stripeElite;
-        if (current.stripeDonnyElite !== undefined) data.stripeDonnyElite = current.stripeDonnyElite;
-      }
-    } catch(e) {}
-
     // Try PATCH first (update existing row)
     const r = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
       method: 'PATCH',
@@ -961,7 +947,6 @@ const supabase = {
     });
     if (!r.ok) {
       console.error('Save patch failed:', r.status, await r.text());
-      // Fallback: try INSERT for new users
       const r2 = await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
         method: 'POST',
         headers: { ...this.headers(), 'Prefer': 'return=minimal' },
@@ -2067,8 +2052,6 @@ function MuzzApp() {
     if(d.timesheetData) setTimesheetData(d.timesheetData);
     if(d.customCategories) setCustomCategories(d.customCategories);
     if(d.eliteName) setEliteName(d.eliteName);
-    if(d.stripeElite!==undefined) setStripeElite(d.stripeElite);
-    if(d.stripeDonnyElite!==undefined) setStripeDonnyElite(d.stripeDonnyElite);
     if(d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
     if(d.habits) setHabits(d.habits);
     if(d.habitLog) setHabitLog(d.habitLog);
@@ -2510,6 +2493,9 @@ function MuzzApp() {
         const result = await supabase.loadUserData(userId);
         if (result?.data_json) {
           const d = result.data_json;
+          // Read elite status from dedicated columns, not data_json
+          if (result.stripe_elite !== undefined) setStripeElite(result.stripe_elite);
+          if (result.stripe_donny_elite !== undefined) setStripeDonnyElite(result.stripe_donny_elite);
           if (d.subscriptions) setSubscriptions(d.subscriptions);
           if (d.businessSubscriptions) setBusinessSubscriptions(d.businessSubscriptions);
           if (d.muzzPersonality !== undefined) setMuzzPersonality(d.muzzPersonality);
@@ -2558,8 +2544,6 @@ function MuzzApp() {
           if (d.timesheetData) setTimesheetData(d.timesheetData);
           if (d.customCategories) setCustomCategories(d.customCategories);
           if (d.eliteName) setEliteName(d.eliteName);
-          if (d.stripeElite) setStripeElite(d.stripeElite);
-          if (d.stripeDonnyElite) setStripeDonnyElite(d.stripeDonnyElite);
           if (d.timetableBlocks) setTimetableBlocks(d.timetableBlocks);
           if (d.habits) setHabits(d.habits);
           if (d.habitLog) setHabitLog(d.habitLog);
