@@ -6,30 +6,26 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
   try {
-    const loadRes = await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}&select=*`, {
-      headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` },
-    });
-    const data = await loadRes.json();
-    const existing = data[0]?.data_json || {};
-
-    if (isElite !== null) existing.stripeElite = isElite;
-    if (isDonnyElite !== null) existing.stripeDonnyElite = isDonnyElite;
-    if (isDonnyElite === true) existing.stripeElite = true;
+    const updateData = {};
+    if (isElite !== null) updateData.stripe_elite = isElite;
+    if (isDonnyElite !== null) updateData.stripe_donny_elite = isDonnyElite;
+    if (isDonnyElite === true) updateData.stripe_elite = true;
     if (isElite === false && isDonnyElite === false) {
-      existing.stripeElite = false;
-      existing.stripeDonnyElite = false;
+      updateData.stripe_elite = false;
+      updateData.stripe_donny_elite = false;
     }
 
-    await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
-      method: 'POST',
+    await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
+      method: 'PATCH',
       headers: {
         'apikey': SUPABASE_SERVICE_KEY,
         'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
         'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
+        'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ user_id: userId, data_json: existing, updated_at: new Date().toISOString() }),
+      body: JSON.stringify({ ...updateData, updated_at: new Date().toISOString() }),
     });
+    console.log(`Updated elite status for ${userId}:`, updateData);
   } catch (error) {
     console.error('Error updating elite status:', error);
   }
