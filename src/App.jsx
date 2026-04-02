@@ -821,14 +821,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // VIP Users - Always Elite, no subscription needed
 const DONNY_WORKER_CODE = 'DONNY-WORKER';
 
-const VIP_EMAILS = [
-  'lauchy23@outlook.com',
-  'sarah.addison78@gmail.com',
-  'cooperkb05@gmail.com',
-  'kirstykb44@gmail.com',
-  'tylarjohn@gmail.com',
-  'barbarafremlin370@msn.com',
-];
+const VIP_EMAILS = [];
 
 // Elite limits
 const FREE_AI_LIMIT = 10;
@@ -9183,13 +9176,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors">
                 Manage Apple Subscription
               </button>
-            </div>
-          )}
-
-          {isElite && isVIP && (
-            <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-3xl p-6 text-center">
-              <p className="text-amber-800 font-semibold">VIP Account — Lifetime Elite Access</p>
-              <p className="text-amber-600 text-sm mt-1">You're a founder. No subscription needed, ever.</p>
             </div>
           )}
 
