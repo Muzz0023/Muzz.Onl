@@ -1,6 +1,6 @@
 {
   "appId": "com.muzz.app",
-  "appName": "Muzz",
+  "appName": "Muzz onl",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"
@@ -19,8 +19,9 @@
       "backgroundColor": "#F59E0B"
     },
     "Keyboard": {
-      "resize": "body",
-      "style": "LIGHT"
+      "resize": "ionic",
+      "style": "LIGHT",
+      "resizeOnFullScreen": true
     }
   },
   "ios": {
