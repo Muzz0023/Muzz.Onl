@@ -2263,22 +2263,22 @@ function MuzzApp() {
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
   const [ttEditingId, setTtEditingId] = useState(null);
 
-  // Global keyboard scroll fix — scrolls any focused input into view on iOS
+  // Global keyboard fix — pushes content up when keyboard opens on iOS
   useEffect(() => {
     if (!isNative) return;
-    const handleFocus = (e) => {
-      const tag = e.target.tagName.toLowerCase();
-      if (tag === 'input' || tag === 'textarea' || tag === 'select') {
-        setTimeout(() => {
-          e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 400);
-        setTimeout(() => {
-          e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 800);
+    const handleResize = () => {
+      if (window.visualViewport) {
+        const keyboardHeight = window.innerHeight - window.visualViewport.height;
+        document.body.style.paddingBottom = keyboardHeight > 0 ? `${keyboardHeight}px` : '';
+        if (keyboardHeight > 0 && document.activeElement) {
+          setTimeout(() => {
+            document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
       }
     };
-    document.addEventListener('focusin', handleFocus);
-    return () => document.removeEventListener('focusin', handleFocus);
+    window.visualViewport?.addEventListener('resize', handleResize);
+    return () => window.visualViewport?.removeEventListener('resize', handleResize);
   }, []);
 
   // Check Stripe subscription on load
