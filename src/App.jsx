@@ -7506,46 +7506,77 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          {/* STOCK FEED + SPARKLINE ROW */}
+          {/* WEALTH MILESTONES + STOCK FEED ROW */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
 
-          {/* NET WORTH SPARKLINE */}
+          {/* WEALTH MILESTONES */}
           {(() => {
-            const history = netWorthHistory.slice(-30);
-            if (history.length < 2) return (
-              <div style={palantirPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Net Worth Trend</span>
-                </div>
-                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>BUILDING HISTORY — CHECK BACK TOMORROW</div>
-              </div>
-            );
-            const vals = history.map(h => h.value);
-            const min = Math.min(...vals), max = Math.max(...vals), range = max - min || 1;
-            const w = 280, h = 60;
-            const pts = vals.map((v,i) => `${(i/(vals.length-1))*w},${h-((v-min)/range)*h}`).join(' ');
-            const trend = vals[vals.length-1] - vals[0];
+            const milestones = [
+              {label:"$100K", value:100000},
+              {label:"$250K", value:250000},
+              {label:"$500K", value:500000},
+              {label:"$1M", value:1000000},
+              {label:"$2M", value:2000000},
+              {label:"$5M", value:5000000},
+              {label:"$10M", value:10000000},
+            ];
+            const currentIdx = milestones.findIndex(m => netWorth < m.value);
+            const completed = currentIdx === -1 ? milestones.length : currentIdx;
+            const nextMilestone = milestones[completed];
+            const prevMilestone = milestones[completed - 1];
+            const progressToNext = nextMilestone
+              ? ((netWorth - (prevMilestone?.value || 0)) / (nextMilestone.value - (prevMilestone?.value || 0))) * 100
+              : 100;
+
             return (
               <div style={palantirPanel} onClick={() => setActiveView('assets')} >
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Net Worth Trend</span>
-                  <span style={{fontSize:"10px",fontFamily:"monospace",color:trend>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"}}>{trend>=0?"+":""}{trend>=0?"+":""}{`$${Math.abs(trend).toLocaleString()}`}</span>
+                  <span style={{...palantirLabel,marginBottom:0}}>Wealth Milestones</span>
+                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>${netWorth.toLocaleString()}</span>
                 </div>
-                <div style={{padding:"12px 16px"}}>
-                  <svg width="100%" viewBox={`0 0 ${w} ${h+10}`} preserveAspectRatio="none" style={{height:"60px"}}>
-                    <defs>
-                      <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#00c8ff" stopOpacity="0.3"/>
-                        <stop offset="100%" stopColor="#00c8ff" stopOpacity="0"/>
-                      </linearGradient>
-                    </defs>
-                    <polyline points={pts} fill="none" stroke="#00c8ff" strokeWidth="1.5" vectorEffect="non-scaling-stroke"/>
-                    <polygon points={`0,${h} ${pts} ${w},${h}`} fill="url(#sparkGrad)"/>
-                  </svg>
-                  <div style={{display:"flex",justifyContent:"space-between",marginTop:"4px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{history[0]?.date}</span>
-                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{history[history.length-1]?.date}</span>
+                <div style={{padding:"16px 20px"}}>
+                  {/* Progress track */}
+                  <div style={{position:"relative",marginBottom:"16px"}}>
+                    <div style={{height:"3px",background:"rgba(255,255,255,0.06)",borderRadius:"2px",marginBottom:"8px"}}>
+                      <div style={{height:"3px",background:"linear-gradient(90deg,#00c8ff,rgba(168,85,247,0.9))",borderRadius:"2px",width:`${Math.min((completed/milestones.length)*100,100)}%`,transition:"width 1s ease"}} />
+                    </div>
+                    {/* Milestone dots */}
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>
+                      {milestones.map((m,i) => {
+                        const done = netWorth >= m.value;
+                        const isCurrent = i === completed;
+                        return (
+                          <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"4px"}}>
+                            <div style={{
+                              width: isCurrent ? "10px" : done ? "8px" : "6px",
+                              height: isCurrent ? "10px" : done ? "8px" : "6px",
+                              borderRadius:"50%",
+                              background: done ? "#00c8ff" : isCurrent ? "rgba(0,200,255,0.5)" : "rgba(255,255,255,0.1)",
+                              boxShadow: done ? "0 0 6px #00c8ff" : isCurrent ? "0 0 10px rgba(0,200,255,0.8)" : "none",
+                              border: isCurrent ? "1px solid #00c8ff" : "none",
+                              animation: isCurrent ? "blink 2s infinite" : "none",
+                            }} />
+                            <span style={{fontSize:"8px",color:done?"#00c8ff":isCurrent?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{m.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
+                  {/* Next milestone progress */}
+                  {nextMilestone && (
+                    <div>
+                      <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
+                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NEXT: {nextMilestone.label}</span>
+                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace"}}>${(nextMilestone.value - netWorth).toLocaleString()} to go</span>
+                      </div>
+                      <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                        <div style={{height:"2px",background:"rgba(0,200,255,0.5)",borderRadius:"1px",width:`${Math.max(progressToNext,1)}%`,transition:"width 1s ease"}} />
+                      </div>
+                    </div>
+                  )}
+                  {completed === milestones.length && (
+                    <div style={{textAlign:"center",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px"}}>ALL MILESTONES COMPLETE 🏆</div>
+                  )}
                 </div>
               </div>
             );
