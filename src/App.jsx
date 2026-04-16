@@ -7522,7 +7522,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* WEALTH MILESTONES + STOCK FEED ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(0,1fr)",gap:"8px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
 
           {/* WEALTH MILESTONES */}
           {(() => {
@@ -7633,7 +7633,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(0,1fr)",gap:"8px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
             {/* ACHIEVEMENTS — Palantir style */}
             <div style={palantirPanel}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
