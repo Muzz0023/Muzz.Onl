@@ -7476,7 +7476,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:"Annual Income", value:salaryNum>0?`$${(salaryNum*12).toLocaleString()}`:"NOT SET", view:"work", color:"rgba(34,197,94,0.7)"},
                 {label:"Annual Savings", value:salaryNum>0?`$${Math.max(0,(salaryNum-totalMonthly)*12).toLocaleString()}`:"NOT SET", view:"varied", color:"rgba(0,200,255,0.7)"},
                 {label:"Total Debt", value:`$${debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0).toLocaleString()}`, view:"varied", color:"rgba(239,68,68,0.7)"},
-                {label:"Next Bill Due", value:(() => { const today2=new Date().toISOString().split('T')[0]; const upcoming=subscriptions.filter(s=>s.dueDate&&s.name).map(s=>({name:s.name,days:Math.ceil((new Date(`${new Date().getFullYear()}-${String(s.dueDate).padStart(2,'0')}-01`)-new Date())/86400000)})).filter(s=>s.days>=0).sort((a,b)=>a.days-b.days)[0]; return upcoming?`${upcoming.name} (${upcoming.days}d)`:"—"; })(), view:"varied", color:"rgba(251,191,36,0.7)"},
+                {label:"Next Bill Due", value:(() => {
+                  const now = new Date();
+                  const upcoming = subscriptions.filter(s=>s.dueDate&&s.name&&s.monthly>0).map(s=>{
+                    const day = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
+                    if (!day) return null;
+                    let next = new Date(now.getFullYear(), now.getMonth(), day);
+                    if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
+                    const days = Math.ceil((next - now) / 86400000);
+                    return {name:s.name, days};
+                  }).filter(Boolean).sort((a,b)=>a.days-b.days);
+                  return upcoming[0] ? `${upcoming[0].name} (${upcoming[0].days}d)` : "—";
+                })(), view:"varied", color:"rgba(251,191,36,0.7)"},
               ].map((item,i) => (
                 <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
                   <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
