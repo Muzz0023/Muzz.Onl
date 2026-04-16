@@ -1587,6 +1587,7 @@ function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showHealthModal, setShowHealthModal] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
   const sidebarScrollRef = useRef(null);
@@ -7232,6 +7233,37 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       }
     }
 
+    const calcHealthScore = () => {
+      let score = 0; const factors = [];
+      if (savingsRate >= 50) { score+=25; factors.push({label:"Savings Rate",score:25,max:25,status:"EXCELLENT",hint:"Outstanding — keep it up"}); }
+      else if (savingsRate >= 30) { score+=18; factors.push({label:"Savings Rate",score:18,max:25,status:"GOOD",hint:"Reach 50% saving rate for EXCELLENT (+7 pts)"}); }
+      else if (savingsRate >= 20) { score+=12; factors.push({label:"Savings Rate",score:12,max:25,status:"FAIR",hint:"Reach 30% saving rate for GOOD (+6 pts)"}); }
+      else if (savingsRate > 0) { score+=5; factors.push({label:"Savings Rate",score:5,max:25,status:"WEAK",hint:"Reach 20% saving rate for FAIR (+7 pts)"}); }
+      else { factors.push({label:"Savings Rate",score:0,max:25,status:"CRITICAL",hint:"Set your income in Bills section to start tracking"}); }
+      if (netWorth >= 500000) { score+=25; factors.push({label:"Net Worth",score:25,max:25,status:"EXCELLENT",hint:"Outstanding wealth position"}); }
+      else if (netWorth >= 100000) { score+=20; factors.push({label:"Net Worth",score:20,max:25,status:"STRONG",hint:"Reach $500K for EXCELLENT (+5 pts)"}); }
+      else if (netWorth >= 50000) { score+=14; factors.push({label:"Net Worth",score:14,max:25,status:"GOOD",hint:"Reach $100K for STRONG (+6 pts)"}); }
+      else if (netWorth >= 10000) { score+=8; factors.push({label:"Net Worth",score:8,max:25,status:"FAIR",hint:"Reach $50K for GOOD (+6 pts)"}); }
+      else { score+=3; factors.push({label:"Net Worth",score:3,max:25,status:"BUILDING",hint:"Reach $10K for FAIR (+5 pts)"}); }
+      if (stocks.length >= 10) { score+=20; factors.push({label:"Portfolio",score:20,max:20,status:"DIVERSIFIED",hint:"Excellent diversification"}); }
+      else if (stocks.length >= 5) { score+=14; factors.push({label:"Portfolio",score:14,max:20,status:"GOOD",hint:"Track 10+ stocks for DIVERSIFIED (+6 pts)"}); }
+      else if (stocks.length >= 1) { score+=8; factors.push({label:"Portfolio",score:8,max:20,status:"STARTING",hint:"Track 5+ stocks for GOOD (+6 pts)"}); }
+      else { factors.push({label:"Portfolio",score:0,max:20,status:"NONE",hint:"Add stocks in Investments (+8 pts)"}); }
+      const totalDebtVal = debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0);
+      if (totalDebtVal === 0) { score+=15; factors.push({label:"Debt Load",score:15,max:15,status:"DEBT FREE",hint:"Perfect — no debt"}); }
+      else if (salaryNum>0 && totalDebtVal<salaryNum*6) { score+=10; factors.push({label:"Debt Load",score:10,max:15,status:"MANAGED",hint:"Under 6x monthly income — reduce to zero for max (+5 pts)"}); }
+      else if (salaryNum>0 && totalDebtVal<salaryNum*12) { score+=5; factors.push({label:"Debt Load",score:5,max:15,status:"HIGH",hint:"Over 6x monthly income — reduce urgently"}); }
+      else { factors.push({label:"Debt Load",score:0,max:15,status:"CRITICAL",hint:"Over 12x monthly income — prioritise repayment"}); }
+      if (assets.length >= 5) { score+=15; factors.push({label:"Asset Tracking",score:15,max:15,status:"COMPLETE",hint:"All major assets tracked"}); }
+      else if (assets.length >= 2) { score+=10; factors.push({label:"Asset Tracking",score:10,max:15,status:"PARTIAL",hint:"Track 5+ assets for COMPLETE (+5 pts)"}); }
+      else if (assets.length >= 1) { score+=5; factors.push({label:"Asset Tracking",score:5,max:15,status:"MINIMAL",hint:"Track 2+ assets for PARTIAL (+5 pts)"}); }
+      else { factors.push({label:"Asset Tracking",score:0,max:15,status:"NONE",hint:"Add assets in Assets section (+5 pts)"}); }
+      const rating = score>=85?"ELITE":score>=70?"STRONG":score>=55?"GOOD":score>=40?"FAIR":score>=25?"WEAK":"CRITICAL";
+      const color = score>=85?"#00c8ff":score>=70?"rgba(34,197,94,0.9)":score>=55?"rgba(251,191,36,0.9)":score>=40?"rgba(251,146,60,0.9)":"rgba(239,68,68,0.9)";
+      return {score, factors, rating, color};
+    };
+    const health = calcHealthScore();
+
     const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px, transparent 1px)",backgroundSize:"20px 20px"};
     const palantirLabel = {fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace"};
     const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
@@ -7695,68 +7727,84 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* FINANCIAL HEALTH SCORE */}
           {(() => {
-            let score = 0;
-            const factors = [];
-            // Savings rate (0-25 pts)
-            if (savingsRate >= 50) { score += 25; factors.push({label:"Savings Rate", score:25, max:25, status:"EXCELLENT"}); }
-            else if (savingsRate >= 30) { score += 18; factors.push({label:"Savings Rate", score:18, max:25, status:"GOOD"}); }
-            else if (savingsRate >= 20) { score += 12; factors.push({label:"Savings Rate", score:12, max:25, status:"FAIR"}); }
-            else if (savingsRate > 0) { score += 5; factors.push({label:"Savings Rate", score:5, max:25, status:"WEAK"}); }
-            else { factors.push({label:"Savings Rate", score:0, max:25, status:"CRITICAL"}); }
-            // Net worth (0-25 pts)
-            if (netWorth >= 500000) { score += 25; factors.push({label:"Net Worth", score:25, max:25, status:"EXCELLENT"}); }
-            else if (netWorth >= 100000) { score += 20; factors.push({label:"Net Worth", score:20, max:25, status:"STRONG"}); }
-            else if (netWorth >= 50000) { score += 14; factors.push({label:"Net Worth", score:14, max:25, status:"GOOD"}); }
-            else if (netWorth >= 10000) { score += 8; factors.push({label:"Net Worth", score:8, max:25, status:"FAIR"}); }
-            else { score += 3; factors.push({label:"Net Worth", score:3, max:25, status:"BUILDING"}); }
-            // Portfolio (0-20 pts)
-            if (stocks.length >= 10) { score += 20; factors.push({label:"Portfolio", score:20, max:20, status:"DIVERSIFIED"}); }
-            else if (stocks.length >= 5) { score += 14; factors.push({label:"Portfolio", score:14, max:20, status:"GOOD"}); }
-            else if (stocks.length >= 1) { score += 8; factors.push({label:"Portfolio", score:8, max:20, status:"STARTING"}); }
-            else { factors.push({label:"Portfolio", score:0, max:20, status:"NONE"}); }
-            // Debt (0-15 pts)
-            const totalDebt = debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0);
-            if (totalDebt === 0) { score += 15; factors.push({label:"Debt Load", score:15, max:15, status:"NONE"}); }
-            else if (salaryNum > 0 && totalDebt < salaryNum * 6) { score += 10; factors.push({label:"Debt Load", score:10, max:15, status:"MANAGED"}); }
-            else if (salaryNum > 0 && totalDebt < salaryNum * 12) { score += 5; factors.push({label:"Debt Load", score:5, max:15, status:"HIGH"}); }
-            else { factors.push({label:"Debt Load", score:0, max:15, status:"CRITICAL"}); }
-            // Assets tracked (0-15 pts)
-            if (assets.length >= 5) { score += 15; factors.push({label:"Asset Tracking", score:15, max:15, status:"COMPLETE"}); }
-            else if (assets.length >= 2) { score += 10; factors.push({label:"Asset Tracking", score:10, max:15, status:"PARTIAL"}); }
-            else if (assets.length >= 1) { score += 5; factors.push({label:"Asset Tracking", score:5, max:15, status:"MINIMAL"}); }
-            else { factors.push({label:"Asset Tracking", score:0, max:15, status:"NONE"}); }
-
-            const rating = score >= 85?"ELITE":score>=70?"STRONG":score>=55?"GOOD":score>=40?"FAIR":score>=25?"WEAK":"CRITICAL";
-            const ratingColor = score>=85?"#00c8ff":score>=70?"rgba(34,197,94,0.9)":score>=55?"rgba(251,191,36,0.9)":score>=40?"rgba(251,146,60,0.9)":"rgba(239,68,68,0.9)";
-
+            const {score, factors, rating, color} = health;
             return (
-              <div style={palantirPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Financial Health Score</span>
-                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>OUT OF 100</span>
-                </div>
-                <div style={{padding:"16px 20px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:"20px",marginBottom:"16px"}}>
+              <>
+                <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setShowHealthModal(true)}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{...palantirLabel,marginBottom:0}}>Financial Health Score</span>
+                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP FOR BREAKDOWN →</span>
+                  </div>
+                  <div style={{padding:"16px 20px",display:"flex",alignItems:"center",gap:"20px"}}>
                     <div>
-                      <div style={{fontSize:"52px",color:ratingColor,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{score}</div>
-                      <div style={{fontSize:"11px",color:ratingColor,fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px",border:`0.5px solid ${ratingColor}`,padding:"2px 8px",display:"inline-block"}}>{rating}</div>
+                      <div style={{fontSize:"52px",color,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{score}</div>
+                      <div style={{fontSize:"11px",color,fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px",border:`0.5px solid ${color}`,padding:"2px 8px",display:"inline-block"}}>{rating}</div>
                     </div>
                     <div style={{flex:1}}>
                       <div style={{height:"4px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",marginBottom:"12px"}}>
-                        <div style={{height:"4px",width:`${score}%`,background:`linear-gradient(90deg, rgba(239,68,68,0.8), rgba(251,191,36,0.9), ${ratingColor})`,borderRadius:"2px",transition:"width 1s ease"}} />
+                        <div style={{height:"4px",width:`${score}%`,background:`linear-gradient(90deg,rgba(239,68,68,0.8),rgba(251,191,36,0.9),${color})`,borderRadius:"2px"}} />
                       </div>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
                         {factors.map((f,i) => (
                           <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"4px 8px",background:"rgba(255,255,255,0.02)",borderRadius:"3px"}}>
                             <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{f.label}</span>
-                            <span style={{fontSize:"9px",color:f.score===f.max?"#00c8ff":f.score>f.max*0.6?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{f.status}</span>
+                            <span style={{fontSize:"9px",color:f.score===f.max?"#00c8ff":f.score>f.max*0.6?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.6)",fontFamily:"monospace"}}>{f.status}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+
+                {/* HEALTH MODAL */}
+                {showHealthModal && (
+                  <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:200,background:"rgba(0,0,0,0.8)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}} onClick={() => setShowHealthModal(false)}>
+                    <div style={{background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"8px",width:"100%",maxWidth:"560px",maxHeight:"80vh",overflowY:"auto"}} onClick={e => e.stopPropagation()}>
+                      <div style={{padding:"16px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"3px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                        <div>
+                          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCIAL HEALTH BREAKDOWN</div>
+                          <div style={{display:"flex",alignItems:"baseline",gap:"12px"}}>
+                            <span style={{fontSize:"36px",color,fontFamily:"monospace",fontWeight:500}}>{score}</span>
+                            <span style={{fontSize:"13px",color,fontFamily:"monospace",letterSpacing:"2px",border:`0.5px solid ${color}`,padding:"2px 10px"}}>{rating}</span>
+                          </div>
+                        </div>
+                        <button onClick={() => setShowHealthModal(false)} style={{background:"none",border:"0.5px solid rgba(0,200,255,0.3)",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"11px",padding:"4px 10px",cursor:"pointer",borderRadius:"3px",letterSpacing:"1px"}}>CLOSE</button>
+                      </div>
+                      <div style={{padding:"16px 20px"}}>
+                        <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",marginBottom:"20px"}}>
+                          <div style={{height:"3px",width:`${score}%`,background:`linear-gradient(90deg,rgba(239,68,68,0.8),rgba(251,191,36,0.9),${color})`,borderRadius:"2px"}} />
+                        </div>
+                        {factors.map((f,i) => {
+                          const fc = f.score===f.max?"#00c8ff":f.score>f.max*0.6?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.8)";
+                          return (
+                            <div key={i} style={{marginBottom:"16px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(0,200,255,0.08)",borderRadius:"4px",borderLeft:`2px solid ${fc}`}}>
+                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
+                                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{f.label}</span>
+                                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{f.score}/{f.max} pts</span>
+                                  <span style={{fontSize:"10px",color:fc,fontFamily:"monospace",letterSpacing:"1px",border:`0.5px solid ${fc}`,padding:"1px 6px"}}>{f.status}</span>
+                                </div>
+                              </div>
+                              <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px",marginBottom:"8px"}}>
+                                <div style={{height:"2px",width:`${(f.score/f.max)*100}%`,background:fc,borderRadius:"1px"}} />
+                              </div>
+                              <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>{f.hint}</div>
+                            </div>
+                          );
+                        })}
+                        <div style={{marginTop:"16px",padding:"10px 16px",background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"4px"}}>
+                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATING SCALE</div>
+                          <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+                            {[["85-100","ELITE","#00c8ff"],["70-84","STRONG","rgba(34,197,94,0.9)"],["55-69","GOOD","rgba(251,191,36,0.9)"],["40-54","FAIR","rgba(251,146,60,0.9)"],["0-39","WEAK","rgba(239,68,68,0.8)"]].map(([range,label,c])=>(
+                              <span key={label} style={{fontSize:"9px",color:c,fontFamily:"monospace",border:`0.5px solid ${c}`,padding:"1px 6px",opacity:rating===label?1:0.4}}>{range} {label}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
             );
           })()}
 
