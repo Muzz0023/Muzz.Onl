@@ -1589,6 +1589,17 @@ function MuzzApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
+
+  // Daily net worth snapshot
+  useEffect(() => {
+    if (!dataLoaded || netWorth <= 0) return;
+    const today = new Date().toISOString().split('T')[0];
+    setNetWorthHistory(prev => {
+      const existing = prev.find(p => p.date === today);
+      if (existing) return prev.map(p => p.date === today ? {...p, value: netWorth} : p);
+      return [...prev, {date: today, value: netWorth}].slice(-365);
+    });
+  }, [netWorth, dataLoaded]);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -1875,6 +1886,7 @@ function MuzzApp() {
   ]);
   const [showMapControls, setShowMapControls] = useState(true);
   const [mapPins, setMapPins] = useState([]);
+  const [netWorthHistory, setNetWorthHistory] = useState([]);
   const worldMapRef = useRef(null);
 
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -2063,6 +2075,7 @@ function MuzzApp() {
     if(d.bucketList) setBucketList(d.bucketList);
     if(d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
     if(d.mapPins) setMapPins(d.mapPins);
+    if(d.netWorthHistory) setNetWorthHistory(d.netWorthHistory);
     if(d.donnyJobs) setDonnyJobs(d.donnyJobs);
     if(d.donnyTeam) setDonnyTeam(d.donnyTeam);
     if(d.donnyNotes) setDonnyNotes(d.donnyNotes);
@@ -2139,6 +2152,7 @@ function MuzzApp() {
       bucketList: d.bucketList||[],
       assetMapNodes: d.assetMapNodes||[{id:'root',name:'My Assets',emoji:'🏠',parentId:null}],
       mapPins: d.mapPins||[],
+      netWorthHistory: d.netWorthHistory||[],
       donnyJobs: d.donnyJobs||[],
       donnyTeam: d.donnyTeam||[],
       donnyNotes: d.donnyNotes||{},
@@ -2676,6 +2690,7 @@ function MuzzApp() {
           bucketList,
           assetMapNodes,
           mapPins,
+          netWorthHistory,
           donnyJobs,
           donnyTeam,
           donnyNotes,
@@ -7434,28 +7449,129 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
           </div>
 
-          {/* TODAY SUMMARY */}
+          {/* TODAY SUMMARY — always populated */}
           <div style={palantirPanel}>
             <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{...palantirLabel,marginBottom:0}}>Today's Intel</span>
+              <span style={{...palantirLabel,marginBottom:0}}>Financial Intel</span>
               <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
                 <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"#00c8ff",display:"inline-block",boxShadow:"0 0 4px #00c8ff",animation:"blink 2s infinite"}}></span>
                 <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
               </div>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"0"}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"0"}}>
               {[
-                {label:"Recovery Index",value:lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h sleep` : "NO DATA",view:"gym",color:"rgba(99,102,241,0.7)"},
-                {label:"Cognitive State",value:todayMood.mood ? ({great:"Optimal",good:"Good",okay:"Nominal",low:"Degraded",sad:"Critical",angry:"Elevated"}[todayMood.mood]||"—") : "NO DATA",view:"gym",color:"rgba(236,72,153,0.7)"},
-                {label:"Field Hours",value:weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h this week` : "NO DATA",view:"work",color:"rgba(59,130,246,0.7)"},
-                {label:"Mission Completion",value:dailyTasks.length > 0 ? `${completedDailyTasks} / ${dailyTasks.length} tasks` : "NO DATA",view:"tasks",color:"rgba(139,92,246,0.7)"},
+                {label:"Annual Income", value:salaryNum>0?`$${(salaryNum*12).toLocaleString()}`:"NOT SET", view:"work", color:"rgba(34,197,94,0.7)"},
+                {label:"Annual Savings", value:salaryNum>0?`$${Math.max(0,(salaryNum-totalMonthly)*12).toLocaleString()}`:"NOT SET", view:"varied", color:"rgba(0,200,255,0.7)"},
+                {label:"Total Debt", value:debts.length>0?`$${debts.reduce((s,d)=>s+(parseFloat(d.amount)||0),0).toLocaleString()}`:"$0", view:"varied", color:"rgba(239,68,68,0.7)"},
+                {label:"Next Bill Due", value:(() => { const today2=new Date().toISOString().split('T')[0]; const upcoming=subscriptions.filter(s=>s.dueDate&&s.name).map(s=>({name:s.name,days:Math.ceil((new Date(`${new Date().getFullYear()}-${String(s.dueDate).padStart(2,'0')}-01`)-new Date())/86400000)})).filter(s=>s.days>=0).sort((a,b)=>a.days-b.days)[0]; return upcoming?`${upcoming.name} (${upcoming.days}d)`:"—"; })(), view:"varied", color:"rgba(251,191,36,0.7)"},
               ].map((item,i) => (
-                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
+                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
                   <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
-                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
+                  <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* LIFE INTEL — health/work/tasks */}
+          <div style={palantirPanel}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Life Intel</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"0"}}>
+              {[
+                {label:"Recovery Index", value:lastNightSleep.hoursSlept?`${lastNightSleep.hoursSlept}h sleep`:"NO DATA", view:"gym", color:"rgba(99,102,241,0.7)"},
+                {label:"Cognitive State", value:todayMood.mood?({great:"Optimal",good:"Good",okay:"Nominal",low:"Degraded",sad:"Critical",angry:"Elevated"}[todayMood.mood]||"—"):"NO DATA", view:"gym", color:"rgba(236,72,153,0.7)"},
+                {label:"Field Hours", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h this wk`:"NO DATA", view:"work", color:"rgba(59,130,246,0.7)"},
+                {label:"Mission Completion", value:dailyTasks.length>0?`${completedDailyTasks}/${dailyTasks.length} tasks`:"NO TASKS", view:"tasks", color:"rgba(139,92,246,0.7)"},
+              ].map((item,i) => (
+                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i<3?"0.5px solid rgba(168,85,247,0.08)":"none",cursor:"pointer"}}>
+                  <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
+                  <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* STOCK FEED + SPARKLINE ROW */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+
+          {/* NET WORTH SPARKLINE */}
+          {(() => {
+            const history = netWorthHistory.slice(-30);
+            if (history.length < 2) return (
+              <div style={palantirPanel}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Net Worth Trend</span>
+                </div>
+                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>BUILDING HISTORY — CHECK BACK TOMORROW</div>
+              </div>
+            );
+            const vals = history.map(h => h.value);
+            const min = Math.min(...vals), max = Math.max(...vals), range = max - min || 1;
+            const w = 280, h = 60;
+            const pts = vals.map((v,i) => `${(i/(vals.length-1))*w},${h-((v-min)/range)*h}`).join(' ');
+            const trend = vals[vals.length-1] - vals[0];
+            return (
+              <div style={palantirPanel} onClick={() => setActiveView('assets')} >
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Net Worth Trend</span>
+                  <span style={{fontSize:"10px",fontFamily:"monospace",color:trend>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"}}>{trend>=0?"+":""}{trend>=0?"+":""}{`$${Math.abs(trend).toLocaleString()}`}</span>
+                </div>
+                <div style={{padding:"12px 16px"}}>
+                  <svg width="100%" viewBox={`0 0 ${w} ${h+10}`} preserveAspectRatio="none" style={{height:"60px"}}>
+                    <defs>
+                      <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#00c8ff" stopOpacity="0.3"/>
+                        <stop offset="100%" stopColor="#00c8ff" stopOpacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <polyline points={pts} fill="none" stroke="#00c8ff" strokeWidth="1.5" vectorEffect="non-scaling-stroke"/>
+                    <polygon points={`0,${h} ${pts} ${w},${h}`} fill="url(#sparkGrad)"/>
+                  </svg>
+                  <div style={{display:"flex",justifyContent:"space-between",marginTop:"4px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{history[0]?.date}</span>
+                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{history[history.length-1]?.date}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* LIVE STOCK FEED */}
+          {(() => {
+            const topStocks = trackedStocks.filter(s => s.ticker).slice(0,5);
+            return (
+              <div style={palantirPanel}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}} onClick={() => setActiveView('investments')}>
+                  <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Portfolio Feed</span>
+                  <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                    <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(168,85,247,0.9)",display:"inline-block",animation:"blink 2s infinite"}}></span>
+                    <span style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
+                  </div>
+                </div>
+                {topStocks.length === 0 ? (
+                  <div style={{padding:"20px",textAlign:"center",color:"rgba(168,85,247,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>NO STOCKS TRACKED</div>
+                ) : topStocks.map((stock,i) => {
+                  const ticker = stock.ticker?.toUpperCase();
+                  const priceData = ticker ? livePrices[ticker] : null;
+                  const currentPrice = priceData?.c || 0;
+                  const dailyChange = (priceData?.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : null;
+                  const shares = parseFloat(stock.shares) || 0;
+                  const avgCost = parseFloat(stock.avgCost) || 0;
+                  const pl = shares > 0 && currentPrice > 0 ? ((currentPrice - avgCost) / avgCost * 100) : null;
+                  return (
+                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"9px 16px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none"}}>
+                      <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,minWidth:"60px"}}>{ticker}</span>
+                      <span style={{fontSize:"12px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
+                      <span style={{fontSize:"11px",fontFamily:"monospace",color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)",minWidth:"60px",textAlign:"right"}}>{dailyChange===null?"NO PRICE":`${dailyChange>=0?"+":""}${dailyChange.toFixed(2)}%`}</span>
+                      <span style={{fontSize:"10px",fontFamily:"monospace",color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.6)":"rgba(239,68,68,0.6)",minWidth:"55px",textAlign:"right"}}>{pl===null?"":` P&L ${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
           </div>
 
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
