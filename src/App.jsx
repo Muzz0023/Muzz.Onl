@@ -7193,10 +7193,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
 
-    const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"4px"};
-    const palantirLabel = {fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"3px"};
-    const palantirValue = {fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
-    const palantirSubValue = {fontSize:"11px",color:"rgba(0,200,180,0.7)",fontFamily:"monospace",marginTop:"1px"};
+    const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"6px"};
+    const palantirLabel = {fontSize:"11px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px"};
+    const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
+    const palantirSubValue = {fontSize:"13px",color:"rgba(0,200,180,0.7)",fontFamily:"monospace",marginTop:"2px"};
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
@@ -7204,45 +7204,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,180,0.15)",position:"relative",overflow:"hidden",padding:"56px 24px 16px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(0,200,180,0.15)",position:"relative",overflow:"hidden",padding:"64px 28px 20px"}}>
           <div className="max-w-4xl mx-auto">
-            <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"12px"}}>
-              <div style={{fontSize:"28px"}}>🦘</div>
+            <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
+              <div style={{fontSize:"36px"}}>🦘</div>
               <div style={{flex:1}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"2px",textTransform:"uppercase"}}>{greeting} // {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} style={{color:"rgba(0,200,180,0.7)",textDecoration:"underline",background:"none",border:"none",cursor:"pointer",fontSize:"9px",letterSpacing:"2px"}}>SET NAME</button>}</div>
-                <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap",marginTop:"2px"}}>
-                  <div style={{fontSize:"16px",color:"#e0eaff",fontWeight:500}}>{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
-                  {isElite && <div style={{fontSize:"9px",color:"#00c8b4",border:"0.5px solid rgba(0,200,180,0.4)",padding:"2px 8px",letterSpacing:"1.5px"}}>⚡ ELITE</div>}
+                <div style={{fontSize:"12px",color:"rgba(0,200,180,0.5)",letterSpacing:"2px",textTransform:"uppercase"}}>{greeting} // {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} style={{color:"rgba(0,200,180,0.7)",textDecoration:"underline",background:"none",border:"none",cursor:"pointer",fontSize:"12px",letterSpacing:"2px"}}>SET NAME</button>}</div>
+                <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontWeight:500}}>{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
+                  {isElite && <div style={{fontSize:"11px",color:"#00c8b4",border:"0.5px solid rgba(0,200,180,0.4)",padding:"3px 10px",letterSpacing:"1.5px"}}>⚡ ELITE</div>}
                 </div>
               </div>
             </div>
             {/* NET WORTH PANEL */}
-            <div style={{...palantirPanel,padding:"12px 16px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
+            <div style={{...palantirPanel,padding:"16px 20px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
               <div>
                 <div style={palantirLabel}>Net Worth</div>
-                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${netWorth.toLocaleString()}</div>
+                <div style={{fontSize:"40px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${netWorth.toLocaleString()}</div>
               </div>
               <div style={{textAlign:"right"}}>
                 <div style={{...palantirLabel,textAlign:"right"}}>Portfolio</div>
-                <div style={{fontSize:"18px",color:"#00c8b4",fontFamily:"monospace",fontWeight:500}}>${totalStocks.toLocaleString()}</div>
+                <div style={{fontSize:"24px",color:"#00c8b4",fontFamily:"monospace",fontWeight:500}}>${totalStocks.toLocaleString()}</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 py-4" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+        <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* METRICS ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"6px"}}>
-            <div style={{...palantirPanel,padding:"10px 12px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}}>
+            <div style={{...palantirPanel,padding:"14px 16px"}}>
               <div style={palantirLabel}>Monthly Bills</div>
               <div style={palantirValue}>${totalMonthly.toFixed(0)}</div>
             </div>
-            <div style={{...palantirPanel,padding:"10px 12px"}}>
+            <div style={{...palantirPanel,padding:"14px 16px"}}>
               <div style={palantirLabel}>Savings Rate</div>
               <div style={palantirValue}>{savingsRate.toFixed(0)}%</div>
             </div>
-            <div style={{...palantirPanel,padding:"10px 12px"}}>
+            <div style={{...palantirPanel,padding:"14px 16px"}}>
               <div style={palantirLabel}>Work Hrs / Wk</div>
               <div style={palantirValue}>{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : "—"}</div>
             </div>
@@ -7250,26 +7250,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* TODAY SUMMARY */}
           <div style={palantirPanel}>
-            <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <span style={{...palantirLabel,marginBottom:0}}>Today's Intel</span>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"0"}}>
               {[
-                {label:"Sleep",value:lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : "—",view:"gym",color:"rgba(99,102,241,0.6)"},
-                {label:"Mood",value:todayMood.mood ? ({great:"Great",good:"Good",okay:"Okay",low:"Low",sad:"Sad",angry:"Angry"}[todayMood.mood]||"—") : "—",view:"gym",color:"rgba(236,72,153,0.6)"},
-                {label:"This Week",value:weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h worked` : "—",view:"work",color:"rgba(59,130,246,0.6)"},
-                {label:"Tasks",value:`${completedDailyTasks} / ${dailyTasks.length} done`,view:"tasks",color:"rgba(139,92,246,0.6)"},
+                {label:"Sleep",value:lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : "—",view:"gym",color:"rgba(99,102,241,0.7)"},
+                {label:"Mood",value:todayMood.mood ? ({great:"Great",good:"Good",okay:"Okay",low:"Low",sad:"Sad",angry:"Angry"}[todayMood.mood]||"—") : "—",view:"gym",color:"rgba(236,72,153,0.7)"},
+                {label:"This Week",value:weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h worked` : "—",view:"work",color:"rgba(59,130,246,0.7)"},
+                {label:"Tasks",value:`${completedDailyTasks} / ${dailyTasks.length} done`,view:"tasks",color:"rgba(139,92,246,0.7)"},
               ].map((item,i) => (
-                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"10px 12px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,180,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,180,0.08)":"none",cursor:"pointer"}}>
+                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,180,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,180,0.08)":"none",cursor:"pointer"}}>
                   <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
+                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
                 </button>
               ))}
             </div>
           </div>
 
           {/* NAV GRID */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"6px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px"}}>
             {[
               {label:"Habits",emoji:"🔥",view:"habits"},
               {label:"Sleep",emoji:"🌙",view:"gym"},
@@ -7280,16 +7280,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {label:"Tasks",emoji:"✅",view:"tasks"},
               {label:"Assets",emoji:"🏠",view:"assets"},
             ].map(s => (
-              <button key={s.label} onClick={() => setActiveView(s.view)} style={{...palantirPanel,padding:"10px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",cursor:"pointer",border:"0.5px solid rgba(0,200,180,0.12)"}}>
-                <span style={{fontSize:"18px"}}>{s.emoji}</span>
+              <button key={s.label} onClick={() => setActiveView(s.view)} style={{...palantirPanel,padding:"14px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:"6px",cursor:"pointer",border:"0.5px solid rgba(0,200,180,0.12)"}}>
+                <span style={{fontSize:"22px"}}>{s.emoji}</span>
                 <span style={{...palantirLabel,marginBottom:0,textAlign:"center"}}>{s.label}</span>
               </button>
             ))}
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
             <div style={palantirPanel}>
-              <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.1)"}}>
                 <span style={{...palantirLabel,marginBottom:0}}>Achievements</span>
               </div>
               <div style={{maxHeight:"320px",overflowY:"auto"}}>
@@ -7327,10 +7327,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const progress = Math.min((a.current/a.target)*100,100);
                     const isComplete = progress >= 100;
                     return (
-                      <div key={a.id} style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
-                          <span style={{fontSize:"11px",color:isComplete?"#00c8b4":"rgba(148,163,184,0.8)",fontFamily:"monospace"}}>{a.icon} {a.title}</span>
-                          <span style={{fontSize:"10px",color:isComplete?"#00c8b4":"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{isComplete?"DONE":progress.toFixed(0)+"%"}</span>
+                      <div key={a.id} style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"5px"}}>
+                          <span style={{fontSize:"13px",color:isComplete?"#00c8b4":"rgba(148,163,184,0.8)",fontFamily:"monospace"}}>{a.icon} {a.title}</span>
+                          <span style={{fontSize:"11px",color:isComplete?"#00c8b4":"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{isComplete?"DONE":progress.toFixed(0)+"%"}</span>
                         </div>
                         <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
                           <div style={{height:"2px",width:`${progress}%`,background:isComplete?"#00c8b4":"rgba(0,200,180,0.4)",borderRadius:"1px"}} />
@@ -7342,9 +7342,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"4px"}}>
-              <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)"}}>
-                <span style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Coming Up</span>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"6px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.1)"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Coming Up</span>
               </div>
               {(() => {
                 const thisYear = new Date().getFullYear();
@@ -7362,11 +7362,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   id:c.id, title:c.title, emoji:c.emoji||"⏳", days:Math.ceil((new Date(c.date)-new Date())/86400000)
                 }));
                 const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
-                if (all.length===0) return <div style={{padding:"12px",fontSize:"11px",color:"rgba(148,163,184,0.4)",textAlign:"center"}}>No upcoming events</div>;
+                if (all.length===0) return <div style={{padding:"14px",fontSize:"13px",color:"rgba(148,163,184,0.4)",textAlign:"center"}}>No upcoming events</div>;
                 return all.map(ev => (
-                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
-                    <span style={{fontSize:"11px",color:"#e0eaff"}}>{ev.emoji} {ev.title}</span>
-                    <span style={{fontSize:"10px",color:"rgba(0,200,180,0.6)",fontFamily:"monospace"}}>{ev.days}d</span>
+                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
+                    <span style={{fontSize:"13px",color:"#e0eaff"}}>{ev.emoji} {ev.title}</span>
+                    <span style={{fontSize:"12px",color:"rgba(0,200,180,0.6)",fontFamily:"monospace"}}>{ev.days}d</span>
                   </div>
                 ));
               })()}
@@ -7374,33 +7374,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {reminders && reminders.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"4px"}}>
-              <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Reminders</span>
-                <button onClick={() => setActiveView('reminders')} style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",background:"none",border:"none",cursor:"pointer",letterSpacing:"1px"}}>VIEW ALL →</button>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"6px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Reminders</span>
+                <button onClick={() => setActiveView('reminders')} style={{fontSize:"10px",color:"rgba(0,200,180,0.5)",background:"none",border:"none",cursor:"pointer",letterSpacing:"1px"}}>VIEW ALL →</button>
               </div>
               {reminders.filter(r => r.title).slice(0,4).map(r => (
-                <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
-                  <span style={{fontSize:"11px",color:"#e0eaff"}}>{r.title}</span>
+                <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
+                  <span style={{fontSize:"13px",color:"#e0eaff"}}>{r.title}</span>
                   {r.permanent ? (
-                    <span style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1px"}}>PINNED</span>
+                    <span style={{fontSize:"10px",color:"rgba(0,200,180,0.5)",letterSpacing:"1px"}}>PINNED</span>
                   ) : r.date ? (
-                    <span style={{fontSize:"10px",color:"rgba(0,200,180,0.5)",fontFamily:"monospace"}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
+                    <span style={{fontSize:"12px",color:"rgba(0,200,180,0.5)",fontFamily:"monospace"}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
                   ) : null}
                 </div>
               ))}
             </div>
           )}
 
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.1)",borderRadius:"4px",padding:"12px 16px"}}>
-            <div style={{fontSize:"12px",fontStyle:"italic",color:"rgba(224,234,255,0.7)",marginBottom:"4px"}}>"{todayQuote.quote}"</div>
-            <div style={{fontSize:"9px",color:"rgba(0,200,180,0.4)",letterSpacing:"1px"}}>— {todayQuote.author}</div>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.1)",borderRadius:"6px",padding:"16px 20px"}}>
+            <div style={{fontSize:"14px",fontStyle:"italic",color:"rgba(224,234,255,0.7)",marginBottom:"6px"}}>"{todayQuote.quote}"</div>
+            <div style={{fontSize:"11px",color:"rgba(0,200,180,0.4)",letterSpacing:"1px"}}>— {todayQuote.author}</div>
           </div>
 
           {isElite && (
-            <div style={{display:"flex",alignItems:"center",gap:"8px",padding:"10px 14px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"4px"}}>
-              <span style={{fontSize:"12px"}}>💛</span>
-              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
+            <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"6px"}}>
+              <span style={{fontSize:"14px"}}>💛</span>
+              <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
             </div>
           )}
 
