@@ -7193,95 +7193,106 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
 
+    const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"4px"};
+    const palantirLabel = {fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"3px"};
+    const palantirValue = {fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
+    const palantirSubValue = {fontSize:"11px",color:"rgba(0,200,180,0.7)",fontFamily:"monospace",marginTop:"1px"};
+
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
 
-        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+        {/* HEADER */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,180,0.15)",position:"relative",overflow:"hidden",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.25)"}}>🦘</div>
-              <div className="flex-1">
-                <div className="text-sm" style={{color:"rgba(255,255,255,0.6)"}}>{greeting}, {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} className="underline" style={{color:"rgba(0,200,255,0.7)"}}>set your name</button>}!</div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="text-2xl font-bold text-white">{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
-                  {isElite && <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{background:"rgba(255,215,0,0.15)",border:"1px solid rgba(255,215,0,0.3)"}}><span className="text-xs font-bold" style={{color:"#FFD700"}}>⚡ ELITE</span></div>}
+            <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"12px"}}>
+              <div style={{fontSize:"28px"}}>🦘</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"2px",textTransform:"uppercase"}}>{greeting} // {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} style={{color:"rgba(0,200,180,0.7)",textDecoration:"underline",background:"none",border:"none",cursor:"pointer",fontSize:"9px",letterSpacing:"2px"}}>SET NAME</button>}</div>
+                <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap",marginTop:"2px"}}>
+                  <div style={{fontSize:"16px",color:"#e0eaff",fontWeight:500}}>{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
+                  {isElite && <div style={{fontSize:"9px",color:"#00c8b4",border:"0.5px solid rgba(0,200,180,0.4)",padding:"2px 8px",letterSpacing:"1.5px"}}>⚡ ELITE</div>}
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl p-4" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)"}}>
-              <div className="text-sm" style={{color:"rgba(0,200,255,0.8)"}}>Net Worth</div>
-              <div className="text-4xl font-bold text-white">${netWorth.toLocaleString()}</div>
+            {/* NET WORTH PANEL */}
+            <div style={{...palantirPanel,padding:"12px 16px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
+              <div>
+                <div style={palantirLabel}>Net Worth</div>
+                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${netWorth.toLocaleString()}</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{...palantirLabel,textAlign:"right"}}>Portfolio</div>
+                <div style={{fontSize:"18px",color:"#00c8b4",fontFamily:"monospace",fontWeight:500}}>${totalStocks.toLocaleString()}</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+        <div className="max-w-4xl mx-auto px-6 py-4" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="text-xs text-slate-400">Monthly Bills</div>
-              <div className="text-xl font-bold text-white">${totalMonthly.toFixed(0)}</div>
+          {/* METRICS ROW */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"6px"}}>
+            <div style={{...palantirPanel,padding:"10px 12px"}}>
+              <div style={palantirLabel}>Monthly Bills</div>
+              <div style={palantirValue}>${totalMonthly.toFixed(0)}</div>
             </div>
-            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="text-xs text-slate-400">Savings Rate</div>
-              <div className="text-xl font-bold text-white">{savingsRate.toFixed(0)}%</div>
+            <div style={{...palantirPanel,padding:"10px 12px"}}>
+              <div style={palantirLabel}>Savings Rate</div>
+              <div style={palantirValue}>{savingsRate.toFixed(0)}%</div>
             </div>
-            <div className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="text-xs text-slate-400">Portfolio</div>
-              <div className="text-xl font-bold text-white">${totalStocks.toLocaleString()}</div>
+            <div style={{...palantirPanel,padding:"10px 12px"}}>
+              <div style={palantirLabel}>Work Hrs / Wk</div>
+              <div style={palantirValue}>{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : "—"}</div>
             </div>
           </div>
 
-          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-            <h3 className="font-semibold text-white mb-3 flex items-center gap-2"><span>📊</span> Today's Summary</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <button onClick={() => setActiveView("gym")} className="rounded-xl p-3 text-left" style={{background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.2)"}}>
-                <div className="text-2xl mb-1">🌙</div>
-                <div className="text-xs font-medium" style={{color:"rgba(129,140,248,0.9)"}}>Last Night</div>
-                <div className="text-xl font-bold text-white">{lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : "—"}</div>
-              </button>
-              <button onClick={() => setActiveView("gym")} className="rounded-xl p-3 text-left" style={{background:"rgba(236,72,153,0.1)",border:"1px solid rgba(236,72,153,0.2)"}}>
-                <div className="text-2xl mb-1">🧠</div>
-                <div className="text-xs font-medium" style={{color:"rgba(244,114,182,0.9)"}}>Mood</div>
-                <div className="text-xl font-bold text-white">{todayMood.mood ? ({great:"😊",good:"😌",okay:"😐",low:"😔",sad:"😢",angry:"😡"}[todayMood.mood]||"—") : "—"}</div>
-              </button>
-              <button onClick={() => setActiveView("work")} className="rounded-xl p-3 text-left" style={{background:"rgba(59,130,246,0.1)",border:"1px solid rgba(59,130,246,0.2)"}}>
-                <div className="text-2xl mb-1">💼</div>
-                <div className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>This Week</div>
-                <div className="text-xl font-bold text-white">{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : "—"}</div>
-              </button>
-              <button onClick={() => setActiveView("tasks")} className="rounded-xl p-3 text-left" style={{background:"rgba(139,92,246,0.1)",border:"1px solid rgba(139,92,246,0.2)"}}>
-                <div className="text-2xl mb-1">✅</div>
-                <div className="text-xs font-medium" style={{color:"rgba(192,132,252,0.9)"}}>Tasks</div>
-                <div className="text-xl font-bold text-white">{completedDailyTasks}/{dailyTasks.length}</div>
-              </button>
+          {/* TODAY SUMMARY */}
+          <div style={palantirPanel}>
+            <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <span style={{...palantirLabel,marginBottom:0}}>Today's Intel</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"0"}}>
+              {[
+                {label:"Sleep",value:lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : "—",view:"gym",color:"rgba(99,102,241,0.6)"},
+                {label:"Mood",value:todayMood.mood ? ({great:"Great",good:"Good",okay:"Okay",low:"Low",sad:"Sad",angry:"Angry"}[todayMood.mood]||"—") : "—",view:"gym",color:"rgba(236,72,153,0.6)"},
+                {label:"This Week",value:weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h worked` : "—",view:"work",color:"rgba(59,130,246,0.6)"},
+                {label:"Tasks",value:`${completedDailyTasks} / ${dailyTasks.length} done`,view:"tasks",color:"rgba(139,92,246,0.6)"},
+              ].map((item,i) => (
+                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"10px 12px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,180,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,180,0.08)":"none",cursor:"pointer"}}>
+                  <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+          {/* NAV GRID */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"6px"}}>
             {[
-              {label:"Habits",emoji:"🔥",view:"habits",key:"habits"},
-              {label:"Sleep",emoji:"🌙",view:"gym",key:"sleep"},
-              {label:"Mood",emoji:"🧠",view:"gym",key:"mood"},
-              {label:"Work",emoji:"💼",view:"work",key:"work"},
-              {label:"Diet",emoji:"🥗",view:"diet",key:"diet"},
-              {label:"Bills",emoji:"💸",view:"varied",key:"bills"},
-              {label:"Invest",emoji:"📈",view:"investments",key:"invest"},
-              {label:"Tasks",emoji:"✅",view:"tasks",key:"tasks"},
+              {label:"Habits",emoji:"🔥",view:"habits"},
+              {label:"Sleep",emoji:"🌙",view:"gym"},
+              {label:"Diet",emoji:"🥗",view:"diet"},
+              {label:"Bills",emoji:"💸",view:"varied"},
+              {label:"Invest",emoji:"📈",view:"investments"},
+              {label:"Work",emoji:"💼",view:"work"},
+              {label:"Tasks",emoji:"✅",view:"tasks"},
+              {label:"Assets",emoji:"🏠",view:"assets"},
             ].map(s => (
-              <button key={s.key} onClick={() => setActiveView(s.view)} className="rounded-xl p-3 flex flex-col items-center" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.1)"}}>
-                <span className="text-2xl mb-1">{s.emoji}</span>
-                <span className="text-xs text-slate-400">{s.label}</span>
+              <button key={s.label} onClick={() => setActiveView(s.view)} style={{...palantirPanel,padding:"10px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",cursor:"pointer",border:"0.5px solid rgba(0,200,180,0.12)"}}>
+                <span style={{fontSize:"18px"}}>{s.emoji}</span>
+                <span style={{...palantirLabel,marginBottom:0,textAlign:"center"}}>{s.label}</span>
               </button>
             ))}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-4 h-4" style={{color:"#f59e0b"}} />Achievements</div>
-              <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+            <div style={palantirPanel}>
+              <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)"}}>
+                <span style={{...palantirLabel,marginBottom:0}}>Achievements</span>
+              </div>
+              <div style={{maxHeight:"320px",overflowY:"auto"}}>
                 {(() => {
                   const achievementData = [
                     { id:"first_1k", icon:"💰", title:"First $1K", current:netWorth, target:1000, unit:"$" },
@@ -7316,21 +7327,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const progress = Math.min((a.current/a.target)*100,100);
                     const isComplete = progress >= 100;
                     return (
-                      <div key={a.id} className="p-3 rounded-xl" style={isComplete?{background:"rgba(245,158,11,0.1)",border:"1px solid rgba(245,158,11,0.3)"}:{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className={`text-2xl ${isComplete?"":"grayscale opacity-60"}`}>{a.icon}</div>
-                          <div className="flex-1">
-                            <div className="font-medium text-white">{a.title}</div>
-                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>
-                              {isComplete ? "🎉 Complete!" : `${a.unit==="$"?"$":""}${a.current.toLocaleString(undefined,{maximumFractionDigits:0})}${a.unit!=="$"?a.unit:""} / ${a.unit==="$"?"$":""}${a.target.toLocaleString()}${a.unit!=="$"?a.unit:""}`}
-                            </div>
-                          </div>
-                          {isComplete && <Trophy className="w-5 h-5" style={{color:"#f59e0b"}} />}
+                      <div key={a.id} style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
+                          <span style={{fontSize:"11px",color:isComplete?"#00c8b4":"rgba(148,163,184,0.8)",fontFamily:"monospace"}}>{a.icon} {a.title}</span>
+                          <span style={{fontSize:"10px",color:isComplete?"#00c8b4":"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{isComplete?"DONE":progress.toFixed(0)+"%"}</span>
                         </div>
-                        <div className="h-2 rounded-full overflow-hidden" style={{background:"rgba(255,255,255,0.06)"}}>
-                          <div className="h-full rounded-full transition-all duration-500" style={{width:`${progress}%`,background:isComplete?"linear-gradient(90deg,#f59e0b,#f97316)":"rgba(0,200,255,0.5)"}} />
+                        <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                          <div style={{height:"2px",width:`${progress}%`,background:isComplete?"#00c8b4":"rgba(0,200,180,0.4)",borderRadius:"1px"}} />
                         </div>
-                        {!isComplete && <div className="text-xs text-right mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{progress.toFixed(0)}%</div>}
                       </div>
                     );
                   });
@@ -7338,8 +7342,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="font-semibold text-white mb-3">📅 Coming Up</div>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"4px"}}>
+              <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)"}}>
+                <span style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Coming Up</span>
+              </div>
               {(() => {
                 const thisYear = new Date().getFullYear();
                 const permanentReminders = (reminders||[]).filter(r => r.permanent && r.title).map(r => ({
@@ -7356,11 +7362,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   id:c.id, title:c.title, emoji:c.emoji||"⏳", days:Math.ceil((new Date(c.date)-new Date())/86400000)
                 }));
                 const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
-                if (all.length===0) return <div className="text-sm text-center py-4" style={{color:"rgba(148,163,184,0.4)"}}>No upcoming events</div>;
+                if (all.length===0) return <div style={{padding:"12px",fontSize:"11px",color:"rgba(148,163,184,0.4)",textAlign:"center"}}>No upcoming events</div>;
                 return all.map(ev => (
-                  <div key={ev.id} className="flex items-center justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-                    <span className="text-sm text-white">{ev.emoji} {ev.title}</span>
-                    <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.6)"}}>{ev.days}d</span>
+                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
+                    <span style={{fontSize:"11px",color:"#e0eaff"}}>{ev.emoji} {ev.title}</span>
+                    <span style={{fontSize:"10px",color:"rgba(0,200,180,0.6)",fontFamily:"monospace"}}>{ev.days}d</span>
                   </div>
                 ));
               })()}
@@ -7368,35 +7374,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {reminders && reminders.length > 0 && (
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="font-semibold text-white flex items-center gap-2">📌 Reminders</div>
-                <button onClick={() => setActiveView('reminders')} className="text-xs" style={{color:"rgba(0,200,255,0.5)"}}>view all →</button>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.15)",borderRadius:"4px"}}>
+              <div style={{padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1.5px",textTransform:"uppercase"}}>Reminders</span>
+                <button onClick={() => setActiveView('reminders')} style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",background:"none",border:"none",cursor:"pointer",letterSpacing:"1px"}}>VIEW ALL →</button>
               </div>
-              <div className="space-y-2">
-                {reminders.filter(r => r.title).slice(0,4).map(r => (
-                  <div key={r.id} className="flex items-center justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-                    <span className="text-sm text-white">{r.title}</span>
-                    {r.permanent ? (
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(0,200,255,0.1)",color:"rgba(0,200,255,0.6)"}}>📌 always</span>
-                    ) : r.date ? (
-                      <span className="text-xs font-mono" style={{color:"rgba(0,200,255,0.5)"}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
+              {reminders.filter(r => r.title).slice(0,4).map(r => (
+                <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderBottom:"0.5px solid rgba(0,200,180,0.06)"}}>
+                  <span style={{fontSize:"11px",color:"#e0eaff"}}>{r.title}</span>
+                  {r.permanent ? (
+                    <span style={{fontSize:"9px",color:"rgba(0,200,180,0.5)",letterSpacing:"1px"}}>PINNED</span>
+                  ) : r.date ? (
+                    <span style={{fontSize:"10px",color:"rgba(0,200,180,0.5)",fontFamily:"monospace"}}>{Math.ceil((new Date(r.date)-new Date())/86400000)}d</span>
+                  ) : null}
+                </div>
+              ))}
             </div>
           )}
 
-          <div className="rounded-2xl p-5" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.08)"}}>
-            <div className="text-base italic text-white mb-2">"{todayQuote.quote}"</div>
-            <div className="text-xs text-slate-400">— {todayQuote.author}</div>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,180,0.1)",borderRadius:"4px",padding:"12px 16px"}}>
+            <div style={{fontSize:"12px",fontStyle:"italic",color:"rgba(224,234,255,0.7)",marginBottom:"4px"}}>"{todayQuote.quote}"</div>
+            <div style={{fontSize:"9px",color:"rgba(0,200,180,0.4)",letterSpacing:"1px"}}>— {todayQuote.author}</div>
           </div>
 
           {isElite && (
-            <div className="rounded-2xl p-4 flex items-center gap-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)"}}>
-              <span className="text-lg">💛</span>
-              <span className="text-sm text-slate-400">Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
+            <div style={{display:"flex",alignItems:"center",gap:"8px",padding:"10px 14px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"4px"}}>
+              <span style={{fontSize:"12px"}}>💛</span>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
             </div>
           )}
 
