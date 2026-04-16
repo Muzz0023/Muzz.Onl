@@ -361,6 +361,10 @@ const StarryBackground = ({ children }) => {
           0%, 100% { opacity: 0.3; }
           50% { opacity: 0.8; }
         }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
         .star-twinkle {
           animation: twinkle ease-in-out infinite;
         }
@@ -7225,7 +7229,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }`}</style>
 
         {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:"60px 28px 20px"}}>
