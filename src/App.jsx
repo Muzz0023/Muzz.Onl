@@ -7236,14 +7236,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
               <svg width="44" height="54" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#dashEliteGrad)" />
-                <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.95" />
-                <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
+                <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
+                <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div style={{flex:1}}>
                 <div style={{fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"2px",textTransform:"uppercase",fontFamily:"monospace"}}>{greeting} // {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} style={{color:"rgba(0,200,255,0.7)",textDecoration:"underline",background:"none",border:"none",cursor:"pointer",fontSize:"11px",letterSpacing:"2px",fontFamily:"monospace"}}>SET NAME</button>}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
                   <div style={{fontSize:"20px",color:"#e0eaff",fontWeight:500}}>{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
-                  {isElite && <div style={{fontSize:"11px",color:"#FFD700",border:"0.5px solid rgba(255,215,0,0.4)",padding:"3px 10px",letterSpacing:"1.5px",fontFamily:"monospace"}}>⚡ ELITE</div>}
+                  {isElite && <div style={{fontSize:"11px",color:"#e8f0ff",border:"0.5px solid rgba(232,240,255,0.4)",padding:"3px 10px",letterSpacing:"1.5px",fontFamily:"monospace"}}>⚡ ELITE</div>}
                 </div>
               </div>
             </div>
@@ -9048,8 +9048,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-3xl mx-auto text-center">
             <svg width="64" height="80" viewBox="0 0 24 32" fill="none" className="mx-auto mb-4">
               <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
-              <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="white" fillOpacity="0.9" />
-              <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#FFD700"/><stop offset="1" stopColor="#FFA500"/></linearGradient></defs>
+              <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
+              <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
             </svg>
             <h1 className="text-4xl font-bold text-white mb-2">
               {isDonnyElite ? '🦘🐨 Muzz & Donny Elite' : isElite ? '🦘 Muzz Elite' : 'Choose Your Plan'}
