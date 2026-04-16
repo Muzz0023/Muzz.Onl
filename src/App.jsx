@@ -7218,6 +7218,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <span style={{fontSize:"11px",color:"#00c8ff",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500}}>MUZZ.ONL</span>
             <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>|</span>
             <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{liveDate}</span>
+            {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>{eliteName.toUpperCase()}</span></>}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
             <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{liveClock}</span>
@@ -7229,7 +7230,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-
         {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:"60px 28px 20px"}}>
           <div className="max-w-4xl mx-auto">
@@ -7240,9 +7240,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div style={{flex:1}}>
-                <div style={{fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"2px",textTransform:"uppercase",fontFamily:"monospace"}}>{greeting} // {eliteName ? eliteName : <button onClick={()=>setActiveView('upgrade')} style={{color:"rgba(0,200,255,0.7)",textDecoration:"underline",background:"none",border:"none",cursor:"pointer",fontSize:"11px",letterSpacing:"2px",fontFamily:"monospace"}}>SET NAME</button>}</div>
+                <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>FINANCIAL INTELLIGENCE SYSTEM</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontWeight:500}}>{funnyGreetings ? dashFunnyGreeting : (hour < 12 ? "Good morning legend! ☀️" : hour < 17 ? "Good afternoon legend! 🌤️" : hour < 21 ? "Good evening legend! 🌙" : "Burning the midnight oil legend! 🌑")}</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}>WELCOME BACK{eliteName ? `, ${eliteName.toUpperCase()}` : ""}</div>
                   {isElite && <div style={{fontSize:"11px",color:"#e8f0ff",border:"0.5px solid rgba(232,240,255,0.4)",padding:"3px 10px",letterSpacing:"1.5px",fontFamily:"monospace"}}>⚡ ELITE</div>}
                 </div>
               </div>
@@ -7294,6 +7294,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
+          {/* FINANCIAL CHART */}
+          {(() => {
+            const chartData = [
+              {label:"INCOME", value:salaryNum, color:"#00c8ff"},
+              {label:"BILLS", value:totalMonthly, color:"rgba(239,68,68,0.8)"},
+              {label:"SAVED", value:Math.max(0, salaryNum - totalMonthly), color:"rgba(34,197,94,0.8)"},
+              {label:"PORTFOLIO", value:totalStocks, color:"rgba(168,85,247,0.8)"},
+              {label:"NET WORTH", value:netWorth, color:"rgba(251,191,36,0.8)"},
+            ];
+            const maxVal = Math.max(...chartData.map(d => d.value), 1);
+            return (
+              <div style={{...palantirPanel}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Financial Overview</span>
+                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>MONTHLY SNAPSHOT</span>
+                </div>
+                <div style={{padding:"16px 20px"}}>
+                  <div style={{display:"flex",alignItems:"flex-end",gap:"10px",height:"80px"}}>
+                    {chartData.map((d,i) => {
+                      const pct = maxVal > 0 ? (d.value / maxVal) * 100 : 0;
+                      return (
+                        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end"}}>
+                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{d.value > 0 ? `$${d.value >= 1000 ? (d.value/1000).toFixed(0)+"k" : d.value.toFixed(0)}` : "—"}</span>
+                          <div style={{width:"100%",background:d.color,borderRadius:"2px 2px 0 0",height:`${Math.max(pct,2)}%`,transition:"height 0.5s ease",boxShadow:`0 0 8px ${d.color}`}}></div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{display:"flex",gap:"10px",marginTop:"8px",borderTop:"0.5px solid rgba(0,200,255,0.08)",paddingTop:"8px"}}>
+                    {chartData.map((d,i) => (
+                      <div key={i} style={{flex:1,textAlign:"center"}}>
+                        <span style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{d.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* TODAY SUMMARY */}
           <div style={palantirPanel}>
             <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -7305,10 +7345,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"0"}}>
               {[
-                {label:"Sleep",value:lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h` : "—",view:"gym",color:"rgba(99,102,241,0.7)"},
-                {label:"Mood",value:todayMood.mood ? ({great:"Great",good:"Good",okay:"Okay",low:"Low",sad:"Sad",angry:"Angry"}[todayMood.mood]||"—") : "—",view:"gym",color:"rgba(236,72,153,0.7)"},
-                {label:"This Week",value:weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h worked` : "—",view:"work",color:"rgba(59,130,246,0.7)"},
-                {label:"Tasks",value:`${completedDailyTasks} / ${dailyTasks.length} done`,view:"tasks",color:"rgba(139,92,246,0.7)"},
+                {label:"Recovery Index",value:lastNightSleep.hoursSlept ? `${lastNightSleep.hoursSlept}h sleep` : "NO DATA",view:"gym",color:"rgba(99,102,241,0.7)"},
+                {label:"Cognitive State",value:todayMood.mood ? ({great:"Optimal",good:"Good",okay:"Nominal",low:"Degraded",sad:"Critical",angry:"Elevated"}[todayMood.mood]||"—") : "NO DATA",view:"gym",color:"rgba(236,72,153,0.7)"},
+                {label:"Field Hours",value:weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h this week` : "NO DATA",view:"work",color:"rgba(59,130,246,0.7)"},
+                {label:"Mission Completion",value:dailyTasks.length > 0 ? `${completedDailyTasks} / ${dailyTasks.length} tasks` : "NO DATA",view:"tasks",color:"rgba(139,92,246,0.7)"},
               ].map((item,i) => (
                 <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
                   <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
