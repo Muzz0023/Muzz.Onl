@@ -7497,26 +7497,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          {/* LIFE INTEL — health/work/tasks */}
-          <div style={palantirPanel}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Life Intel</span>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"0"}}>
-              {[
-                {label:"Recovery Index", value:lastNightSleep.hoursSlept?`${lastNightSleep.hoursSlept}h sleep`:"NO DATA", view:"gym", color:"rgba(99,102,241,0.7)"},
-                {label:"Cognitive State", value:todayMood.mood?({great:"Optimal",good:"Good",okay:"Nominal",low:"Degraded",sad:"Critical",angry:"Elevated"}[todayMood.mood]||"—"):"NO DATA", view:"gym", color:"rgba(236,72,153,0.7)"},
-                {label:"Field Hours", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h this wk`:"NO DATA", view:"work", color:"rgba(59,130,246,0.7)"},
-                {label:"Mission Completion", value:dailyTasks.length>0?`${completedDailyTasks}/${dailyTasks.length} tasks`:"NO TASKS", view:"tasks", color:"rgba(139,92,246,0.7)"},
-              ].map((item,i) => (
-                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i<3?"0.5px solid rgba(168,85,247,0.08)":"none",cursor:"pointer"}}>
-                  <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
-                  <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* WEALTH MILESTONES + STOCK FEED ROW */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
 
@@ -7630,33 +7610,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+            {/* ACHIEVEMENTS — Palantir style */}
             <div style={palantirPanel}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <span style={{...palantirLabel,marginBottom:0}}>Achievements</span>
+                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{[...new Set([netWorth>=1000,netWorth>=5000,netWorth>=10000,netWorth>=25000,netWorth>=50000,netWorth>=100000,savingsRate>=10,savingsRate>=20,savingsRate>=50,stocks.length>=1,stocks.length>=5,assets.length>=1])].filter(Boolean).length}/20 COMPLETE</span>
               </div>
-              <div style={{maxHeight:"320px",overflowY:"auto"}}>
+              <div style={{maxHeight:"280px",overflowY:"auto"}}>
                 {(() => {
                   const achievementData = [
-                    { id:"first_1k", icon:"💰", title:"First $1K", current:netWorth, target:1000, unit:"$" },
-                    { id:"5k_club", icon:"💵", title:"$5K Club", current:netWorth, target:5000, unit:"$" },
-                    { id:"10k_club", icon:"🏆", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
-                    { id:"25k_club", icon:"💎", title:"$25K Club", current:netWorth, target:25000, unit:"$" },
-                    { id:"50k_club", icon:"👑", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
-                    { id:"100k_club", icon:"🚀", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
-                    { id:"250k_club", icon:"⭐", title:"$250K Club", current:netWorth, target:250000, unit:"$" },
-                    { id:"500k_club", icon:"🌟", title:"$500K Club", current:netWorth, target:500000, unit:"$" },
-                    { id:"1m_club", icon:"🎯", title:"Millionaire", current:netWorth, target:1000000, unit:"$" },
-                    { id:"saver_10", icon:"🌱", title:"Baby Saver", current:savingsRate, target:10, unit:"%" },
-                    { id:"saver_20", icon:"🌿", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
-                    { id:"super_saver", icon:"💪", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
-                    { id:"mega_saver", icon:"🦸", title:"Mega Saver", current:savingsRate, target:70, unit:"%" },
-                    { id:"first_stock", icon:"📈", title:"First Investment", current:stocks.length, target:1, unit:" stocks" },
-                    { id:"diversified", icon:"🎯", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
-                    { id:"portfolio_pro", icon:"📊", title:"Portfolio Pro", current:stocks.length, target:10, unit:" stocks" },
-                    { id:"task_starter", icon:"✅", title:"Task Starter", current:completedDailyTasks, target:1, unit:" tasks" },
-                    { id:"task_master", icon:"🏅", title:"Task Master", current:completedDailyTasks, target:5, unit:" tasks" },
-                    { id:"asset_owner", icon:"🏠", title:"Asset Owner", current:assets.length, target:1, unit:" assets" },
-                    { id:"asset_collector", icon:"🏰", title:"Asset Collector", current:assets.length, target:5, unit:" assets" },
+                    { id:"first_1k", title:"First $1K", current:netWorth, target:1000, unit:"$" },
+                    { id:"5k_club", title:"$5K Club", current:netWorth, target:5000, unit:"$" },
+                    { id:"10k_club", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
+                    { id:"25k_club", title:"$25K Club", current:netWorth, target:25000, unit:"$" },
+                    { id:"50k_club", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
+                    { id:"100k_club", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
+                    { id:"250k_club", title:"$250K Club", current:netWorth, target:250000, unit:"$" },
+                    { id:"500k_club", title:"$500K Club", current:netWorth, target:500000, unit:"$" },
+                    { id:"1m_club", title:"Millionaire", current:netWorth, target:1000000, unit:"$" },
+                    { id:"saver_10", title:"Baby Saver", current:savingsRate, target:10, unit:"%" },
+                    { id:"saver_20", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
+                    { id:"super_saver", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
+                    { id:"mega_saver", title:"Mega Saver", current:savingsRate, target:70, unit:"%" },
+                    { id:"first_stock", title:"First Investment", current:stocks.length, target:1, unit:" stocks" },
+                    { id:"diversified", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
+                    { id:"portfolio_pro", title:"Portfolio Pro", current:stocks.length, target:10, unit:" stocks" },
+                    { id:"asset_owner", title:"Asset Owner", current:assets.length, target:1, unit:" assets" },
+                    { id:"asset_collector", title:"Asset Collector", current:assets.length, target:5, unit:" assets" },
                   ];
                   const sorted = [...achievementData].sort((a,b) => {
                     const ap = Math.min((a.current/a.target)*100,100);
@@ -7668,14 +7648,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   return sorted.map(a => {
                     const progress = Math.min((a.current/a.target)*100,100);
                     const isComplete = progress >= 100;
+                    const status = isComplete ? "COMPLETE" : progress > 0 ? "IN PROGRESS" : "LOCKED";
+                    const statusColor = isComplete ? "#00c8ff" : progress > 0 ? "rgba(251,191,36,0.8)" : "rgba(148,163,184,0.2)";
                     return (
-                      <div key={a.id} style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"5px"}}>
-                          <span style={{fontSize:"13px",color:isComplete?"#00c8ff":"rgba(148,163,184,0.8)",fontFamily:"monospace"}}>{a.icon} {a.title}</span>
-                          <span style={{fontSize:"11px",color:isComplete?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{isComplete?"DONE":progress.toFixed(0)+"%"}</span>
-                        </div>
-                        <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                          <div style={{height:"2px",width:`${progress}%`,background:isComplete?"#00c8ff":"rgba(0,200,255,0.4)",borderRadius:"1px"}} />
+                      <div key={a.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
+                        <span style={{fontSize:"11px",color:isComplete?"#e0eaff":progress>0?"rgba(224,234,255,0.6)":"rgba(148,163,184,0.3)",fontFamily:"monospace",flex:1}}>{a.title}</span>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                          {!isComplete && <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{progress.toFixed(0)}%</span>}
+                          <span style={{fontSize:"9px",color:statusColor,fontFamily:"monospace",letterSpacing:"1px",border:`0.5px solid ${statusColor}`,padding:"1px 5px"}}>{status}</span>
                         </div>
                       </div>
                     );
@@ -7684,36 +7664,101 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Coming Up</span>
+            {/* UPCOMING EVENTS */}
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.15)",borderLeft:"2px solid rgba(251,191,36,0.8)"}}>
+                <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Upcoming Events</span>
               </div>
               {(() => {
                 const thisYear = new Date().getFullYear();
-                const permanentReminders = (reminders||[]).filter(r => r.permanent && r.title).map(r => ({
-                  id:'r'+r.id, title:r.title, emoji:'📌', days:-1, permanent:true
-                }));
                 const bdayEvents = (birthdays||[]).map(b => {
                   if (!b.date) return null;
                   const parts = b.date.split("-");
                   let next = `${thisYear}-${parts[1]}-${parts[2]}`;
                   if (next < today) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
-                  return { id:"b"+b.id, title:`${b.name}'s Birthday`, emoji:"🎂", days:Math.ceil((new Date(next)-new Date())/86400000) };
+                  return { id:"b"+b.id, title:`${b.name}'s Birthday`, days:Math.ceil((new Date(next)-new Date())/86400000) };
                 }).filter(Boolean);
                 const cdEvents = (countdowns||[]).filter(c=>c.date>=today).map(c=>({
-                  id:c.id, title:c.title, emoji:c.emoji||"⏳", days:Math.ceil((new Date(c.date)-new Date())/86400000)
+                  id:c.id, title:c.title, days:Math.ceil((new Date(c.date)-new Date())/86400000)
                 }));
                 const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
-                if (all.length===0) return <div style={{padding:"14px",fontSize:"13px",color:"rgba(148,163,184,0.4)",textAlign:"center"}}>No upcoming events</div>;
+                if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:"monospace",letterSpacing:"1px"}}>NO EVENTS SCHEDULED</div>;
                 return all.map(ev => (
-                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                    <span style={{fontSize:"13px",color:"#e0eaff"}}>{ev.emoji} {ev.title}</span>
-                    <span style={{fontSize:"12px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace"}}>{ev.days}d</span>
+                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.06)"}}>
+                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace"}}>{ev.title}</span>
+                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",border:"0.5px solid rgba(251,191,36,0.3)",padding:"1px 6px"}}>{ev.days}D</span>
                   </div>
                 ));
               })()}
             </div>
           </div>
+
+          {/* FINANCIAL HEALTH SCORE */}
+          {(() => {
+            let score = 0;
+            const factors = [];
+            // Savings rate (0-25 pts)
+            if (savingsRate >= 50) { score += 25; factors.push({label:"Savings Rate", score:25, max:25, status:"EXCELLENT"}); }
+            else if (savingsRate >= 30) { score += 18; factors.push({label:"Savings Rate", score:18, max:25, status:"GOOD"}); }
+            else if (savingsRate >= 20) { score += 12; factors.push({label:"Savings Rate", score:12, max:25, status:"FAIR"}); }
+            else if (savingsRate > 0) { score += 5; factors.push({label:"Savings Rate", score:5, max:25, status:"WEAK"}); }
+            else { factors.push({label:"Savings Rate", score:0, max:25, status:"CRITICAL"}); }
+            // Net worth (0-25 pts)
+            if (netWorth >= 500000) { score += 25; factors.push({label:"Net Worth", score:25, max:25, status:"EXCELLENT"}); }
+            else if (netWorth >= 100000) { score += 20; factors.push({label:"Net Worth", score:20, max:25, status:"STRONG"}); }
+            else if (netWorth >= 50000) { score += 14; factors.push({label:"Net Worth", score:14, max:25, status:"GOOD"}); }
+            else if (netWorth >= 10000) { score += 8; factors.push({label:"Net Worth", score:8, max:25, status:"FAIR"}); }
+            else { score += 3; factors.push({label:"Net Worth", score:3, max:25, status:"BUILDING"}); }
+            // Portfolio (0-20 pts)
+            if (stocks.length >= 10) { score += 20; factors.push({label:"Portfolio", score:20, max:20, status:"DIVERSIFIED"}); }
+            else if (stocks.length >= 5) { score += 14; factors.push({label:"Portfolio", score:14, max:20, status:"GOOD"}); }
+            else if (stocks.length >= 1) { score += 8; factors.push({label:"Portfolio", score:8, max:20, status:"STARTING"}); }
+            else { factors.push({label:"Portfolio", score:0, max:20, status:"NONE"}); }
+            // Debt (0-15 pts)
+            const totalDebt = debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0);
+            if (totalDebt === 0) { score += 15; factors.push({label:"Debt Load", score:15, max:15, status:"NONE"}); }
+            else if (salaryNum > 0 && totalDebt < salaryNum * 6) { score += 10; factors.push({label:"Debt Load", score:10, max:15, status:"MANAGED"}); }
+            else if (salaryNum > 0 && totalDebt < salaryNum * 12) { score += 5; factors.push({label:"Debt Load", score:5, max:15, status:"HIGH"}); }
+            else { factors.push({label:"Debt Load", score:0, max:15, status:"CRITICAL"}); }
+            // Assets tracked (0-15 pts)
+            if (assets.length >= 5) { score += 15; factors.push({label:"Asset Tracking", score:15, max:15, status:"COMPLETE"}); }
+            else if (assets.length >= 2) { score += 10; factors.push({label:"Asset Tracking", score:10, max:15, status:"PARTIAL"}); }
+            else if (assets.length >= 1) { score += 5; factors.push({label:"Asset Tracking", score:5, max:15, status:"MINIMAL"}); }
+            else { factors.push({label:"Asset Tracking", score:0, max:15, status:"NONE"}); }
+
+            const rating = score >= 85?"ELITE":score>=70?"STRONG":score>=55?"GOOD":score>=40?"FAIR":score>=25?"WEAK":"CRITICAL";
+            const ratingColor = score>=85?"#00c8ff":score>=70?"rgba(34,197,94,0.9)":score>=55?"rgba(251,191,36,0.9)":score>=40?"rgba(251,146,60,0.9)":"rgba(239,68,68,0.9)";
+
+            return (
+              <div style={palantirPanel}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Financial Health Score</span>
+                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>OUT OF 100</span>
+                </div>
+                <div style={{padding:"16px 20px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"20px",marginBottom:"16px"}}>
+                    <div>
+                      <div style={{fontSize:"52px",color:ratingColor,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{score}</div>
+                      <div style={{fontSize:"11px",color:ratingColor,fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px",border:`0.5px solid ${ratingColor}`,padding:"2px 8px",display:"inline-block"}}>{rating}</div>
+                    </div>
+                    <div style={{flex:1}}>
+                      <div style={{height:"4px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",marginBottom:"12px"}}>
+                        <div style={{height:"4px",width:`${score}%`,background:`linear-gradient(90deg, rgba(239,68,68,0.8), rgba(251,191,36,0.9), ${ratingColor})`,borderRadius:"2px",transition:"width 1s ease"}} />
+                      </div>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+                        {factors.map((f,i) => (
+                          <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"4px 8px",background:"rgba(255,255,255,0.02)",borderRadius:"3px"}}>
+                            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{f.label}</span>
+                            <span style={{fontSize:"9px",color:f.score===f.max?"#00c8ff":f.score>f.max*0.6?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{f.status}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {reminders && reminders.length > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px"}}>
@@ -7723,7 +7768,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
               {reminders.filter(r => r.title).slice(0,4).map(r => (
                 <div key={r.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  <span style={{fontSize:"13px",color:"#e0eaff"}}>{r.title}</span>
+                  <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{r.title}</span>
                   {r.permanent ? (
                     <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",letterSpacing:"1px"}}>PINNED</span>
                   ) : r.date ? (
@@ -7734,9 +7779,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"16px 20px"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"16px 20px",position:"relative"}}>
             <div style={{fontSize:"14px",fontStyle:"italic",color:"rgba(224,234,255,0.7)",marginBottom:"6px"}}>"{todayQuote.quote}"</div>
             <div style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",letterSpacing:"1px"}}>— {todayQuote.author}</div>
+            <div style={{position:"absolute",bottom:"10px",right:"16px",fontSize:"9px",color:"rgba(0,200,255,0.15)",fontFamily:"monospace",letterSpacing:"0.5px"}}>28.0001°S 153.4000°E</div>
           </div>
 
           {isElite && (
