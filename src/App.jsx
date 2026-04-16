@@ -7291,7 +7291,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
               {[
                 {label:"Monthly Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
-                {label:"Savings Rate", value:`${savingsRate.toFixed(1)}%`, ok:savingsRate>=20, warn:savingsRate>0&&savingsRate<20},
+                {label:"Bills / Income", value:salaryNum>0?`${((totalMonthly/salaryNum)*100).toFixed(1)}%`:"—", ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
                 {label:"Work Hrs / Wk", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
                 {label:"Stocks", value:`${stocks.length} positions`, ok:stocks.length>0, warn:false},
                 {label:"Assets", value:`${assets.length} tracked`, ok:assets.length>0, warn:false},
