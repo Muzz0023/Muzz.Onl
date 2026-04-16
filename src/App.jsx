@@ -7476,7 +7476,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:"Annual Income", value:salaryNum>0?`$${(salaryNum*12).toLocaleString()}`:"NOT SET", view:"work", color:"rgba(34,197,94,0.7)"},
                 {label:"Annual Savings", value:salaryNum>0?`$${Math.max(0,(salaryNum-totalMonthly)*12).toLocaleString()}`:"NOT SET", view:"varied", color:"rgba(0,200,255,0.7)"},
                 {label:"Total Debt", value:`$${debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0).toLocaleString()}`, view:"varied", color:"rgba(239,68,68,0.7)"},
-                {label:"Next Bill Due", value:(() => {
+                {label:"Next Monthly Bill", value:(() => {
                   const now = new Date();
                   const upcoming = subscriptions.filter(s=>s.dueDate&&s.name&&s.monthly>0).map(s=>{
                     const day = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
