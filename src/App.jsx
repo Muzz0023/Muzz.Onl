@@ -829,7 +829,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // VIP Users - Always Elite, no subscription needed
 const DONNY_WORKER_CODE = 'DONNY-WORKER';
 
-const VIP_EMAILS = [];
+const VIP_EMAILS = ['muzz.onl@outlook.com'];
 
 // Elite limits
 const FREE_AI_LIMIT = 10;
@@ -7282,23 +7282,30 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-          {/* METRICS ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}}>
-            <div style={{...palantirPanel,padding:"14px 16px"}}>
-              <div style={palantirLabel}>Monthly Bills</div>
-              <div style={palantirValue}>${totalMonthly.toFixed(0)}</div>
-            </div>
-            <div style={{...palantirPanel,padding:"14px 16px"}}>
-              <div style={palantirLabel}>Savings Rate</div>
-              <div style={palantirValue}>{savingsRate.toFixed(0)}%</div>
-            </div>
-            <div style={{...palantirPanel,padding:"14px 16px"}}>
-              <div style={palantirLabel}>Work Hrs / Wk</div>
-              <div style={palantirValue}>{weeklyWorkHours > 0 ? `${weeklyWorkHours.toFixed(0)}h` : "—"}</div>
+          {/* KPI STRIP */}
+          <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+              {[
+                {label:"Monthly Bills", value:`$${totalMonthly.toFixed(0)}`, ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
+                {label:"Savings Rate", value:`${savingsRate.toFixed(1)}%`, ok:savingsRate>=20, warn:savingsRate>0&&savingsRate<20},
+                {label:"Work Hrs / Wk", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
+                {label:"Stocks", value:`${stocks.length} positions`, ok:stocks.length>0, warn:false},
+                {label:"Assets", value:`${assets.length} tracked`, ok:assets.length>0, warn:false},
+              ].map((k,i) => (
+                <div key={i} style={{padding:"12px 16px",borderRight:i<4?"0.5px solid rgba(0,200,255,0.08)":"none"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.45)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px"}}>{k.label}</div>
+                  <div style={{fontSize:"20px",color:k.warn?"rgba(239,68,68,0.9)":k.ok?"#e0eaff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontWeight:500}}>{k.value}</div>
+                  <div style={{height:"2px",marginTop:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"1px"}}>
+                    <div style={{height:"2px",width:k.ok?"100%":k.warn?"60%":"20%",background:k.warn?"rgba(239,68,68,0.6)":k.ok?"#00c8ff":"rgba(148,163,184,0.2)",borderRadius:"1px",transition:"width 0.8s ease"}} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* FINANCIAL CHART */}
+          {/* CHARTS ROW */}
+          <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:"8px"}}>
+          {/* FINANCIAL BAR CHART */}
           {(() => {
             const chartData = [
               {label:"INCOME", value:salaryNum, color:"#00c8ff", view:"work"},
@@ -7337,6 +7344,81 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
           })()}
+
+          {/* ASSET ALLOCATION DONUT */}
+          {(() => {
+            const donutCategories = [
+              {label:"Property", ids:["property","rental","vacation","land"], color:"#00c8ff"},
+              {label:"Stocks", ids:["stocks","etfs","mutualfunds","bonds"], color:"rgba(168,85,247,0.9)"},
+              {label:"Cash", ids:["cash","super"], color:"rgba(34,197,94,0.9)"},
+              {label:"Business", ids:["business"], color:"rgba(251,191,36,0.9)"},
+              {label:"Other", ids:["crypto","vehicle","jewellery","art","collectibles","lifeinsurance","loansowed","other"], color:"rgba(239,68,68,0.8)"},
+            ];
+            const donutData = donutCategories.map(cat => ({
+              ...cat,
+              value: assets.filter(a => cat.ids.includes(a.category)).reduce((sum,a) => sum+(parseFloat(a.value)||0), 0)
+            })).filter(d => d.value > 0);
+            const totalVal = donutData.reduce((s,d) => s+d.value, 0);
+            // Also add stocks portfolio
+            if (totalStocks > 0) {
+              const existing = donutData.find(d => d.label === "Stocks");
+              if (existing) existing.value += totalStocks;
+              else donutData.push({label:"Stocks", color:"rgba(168,85,247,0.9)", value:totalStocks});
+            }
+            const total = donutData.reduce((s,d) => s+d.value, 0);
+
+            if (total === 0) return (
+              <div style={{...palantirPanel}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
+                </div>
+                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace"}}>NO ASSETS TRACKED</div>
+              </div>
+            );
+
+            // Build SVG donut
+            let cumulative = 0;
+            const cx=70, cy=70, r=50, inner=32;
+            const slices = donutData.map(d => {
+              const pct = d.value / total;
+              const startAngle = cumulative * 2 * Math.PI - Math.PI/2;
+              cumulative += pct;
+              const endAngle = cumulative * 2 * Math.PI - Math.PI/2;
+              const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
+              const x2=cx+r*Math.cos(endAngle), y2=cy+r*Math.sin(endAngle);
+              const xi1=cx+inner*Math.cos(startAngle), yi1=cy+inner*Math.sin(startAngle);
+              const xi2=cx+inner*Math.cos(endAngle), yi2=cy+inner*Math.sin(endAngle);
+              const large = pct > 0.5 ? 1 : 0;
+              return {...d, path:`M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${inner},${inner} 0 ${large},0 ${xi1},${yi1} Z`, pct};
+            });
+
+            return (
+              <div style={{...palantirPanel}} onClick={() => setActiveView('assets')} >
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",cursor:"pointer"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
+                </div>
+                <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
+                  <svg width="140" height="140" viewBox="0 0 140 140" style={{flexShrink:0}}>
+                    {slices.map((s,i) => (
+                      <path key={i} d={s.path} fill={s.color} stroke="rgba(5,12,24,0.9)" strokeWidth="1.5" />
+                    ))}
+                    <text x="70" y="66" textAnchor="middle" style={{fontSize:"10px",fill:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>TOTAL</text>
+                    <text x="70" y="80" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:"monospace",fontWeight:"bold"}}>${total>=1000?(total/1000).toFixed(0)+"k":total.toFixed(0)}</text>
+                  </svg>
+                  <div style={{display:"flex",flexDirection:"column",gap:"6px",flex:1}}>
+                    {donutData.map((d,i) => (
+                      <div key={i} style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                        <div style={{width:"6px",height:"6px",borderRadius:"50%",background:d.color,flexShrink:0}}></div>
+                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",flex:1,letterSpacing:"0.5px"}}>{d.label}</span>
+                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(0)}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+          </div>
 
           {/* TODAY SUMMARY */}
           <div style={palantirPanel}>
