@@ -7316,17 +7316,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
             {/* STATUS STRIP */}
-            <div style={{display:"flex",alignItems:"center",gap:"16px",marginTop:"10px",padding:"6px 4px"}}>
+            <div style={{display:"flex",alignItems:"center",gap:"12px",marginTop:"10px",padding:"6px 4px",flexWrap:"wrap"}}>
               {[
                 {label:"SYNC", value:"OK", ok:true},
                 {label:"DATA", value:"LIVE", ok:true},
                 {label:"ELITE", value:isElite?"ACTIVE":"INACTIVE", ok:isElite},
-                {label:"MO.SAVING", value:savingsRate>0?`${savingsRate.toFixed(0)}%`:"—", ok:savingsRate>20},
+                {label:"SAVING", value:savingsRate>0?`${savingsRate.toFixed(0)}%`:"—", ok:savingsRate>20},
               ].map(s => (
-                <div key={s.label} style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                <div key={s.label} style={{display:"flex",alignItems:"center",gap:"4px"}}>
                   <span style={{width:"5px",height:"5px",borderRadius:"50%",background:s.ok?"#00c8ff":"rgba(148,163,184,0.3)",display:"inline-block",boxShadow:s.ok?"0 0 4px #00c8ff":"none"}}></span>
-                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}:</span>
-                  <span style={{fontSize:"10px",color:s.ok?"rgba(0,200,255,0.8)":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.value}</span>
+                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}:</span>
+                  <span style={{fontSize:"9px",color:s.ok?"rgba(0,200,255,0.8)":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.value}</span>
                 </div>
               ))}
             </div>
@@ -7361,8 +7361,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
 
-          {/* CHARTS ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"minmax(0,1.4fr) minmax(0,1fr)",gap:"8px"}}>
+          {/* CHARTS ROW — stacks on mobile */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
           {/* FINANCIAL BAR CHART */}
           {(() => {
             const chartData = [
