@@ -7329,7 +7329,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {label:"SYNC", value:"OK", ok:true},
                 {label:"DATA", value:"LIVE", ok:true},
                 {label:"ELITE", value:isElite?"ACTIVE":"INACTIVE", ok:isElite},
-                {label:"SAVINGS", value:savingsRate>0?`${savingsRate.toFixed(0)}%`:"—", ok:savingsRate>20},
+                {label:"MO.SAVING", value:savingsRate>0?`${savingsRate.toFixed(0)}%`:"—", ok:savingsRate>20},
               ].map(s => (
                 <div key={s.label} style={{display:"flex",alignItems:"center",gap:"5px"}}>
                   <span style={{width:"5px",height:"5px",borderRadius:"50%",background:s.ok?"#00c8ff":"rgba(148,163,184,0.3)",display:"inline-block",boxShadow:s.ok?"0 0 4px #00c8ff":"none"}}></span>
