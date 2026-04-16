@@ -1589,14 +1589,6 @@ function MuzzApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
-
-  // Auto-fetch stock prices on load and every 5 minutes
-  useEffect(() => {
-    if (!dataLoaded || trackedStocks.length === 0) return;
-    fetchLivePrices();
-    const interval = setInterval(fetchLivePrices, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [dataLoaded, trackedStocks.length]);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -1762,28 +1754,6 @@ function MuzzApp() {
   const [trackedStocks, setTrackedStocks] = useState([]);
   const [livePrices, setLivePrices] = useState({});
   const [pricesLoading, setPricesLoading] = useState(false);
-
-  const fetchLivePrices = async () => {
-    const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
-    if (tickers.length === 0) return;
-    setPricesLoading(true);
-    try {
-      const response = await fetch(api('/api/stocks'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tickers })
-      });
-      if (!response.ok) throw new Error('API error');
-      const data = await response.json();
-      if (data.prices) {
-        setLivePrices(data.prices);
-        setPricesLastUpdated(new Date().toLocaleTimeString());
-      }
-    } catch (err) {
-      console.error('Failed to fetch prices:', err);
-    }
-    setPricesLoading(false);
-  };
   const [pricesLastUpdated, setPricesLastUpdated] = useState(null);
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
@@ -7238,7 +7208,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
 
-    // Record daily net worth snapshot
+    // Auto-fetch stock prices on dashboard load
+    const todayPriceKey = new Date().toISOString().split('T')[0];
+    if (dataLoaded && trackedStocks.length > 0 && Object.keys(livePrices).length === 0 && !pricesLoading) {
+      const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
+      if (tickers.length > 0) {
+        setPricesLoading(true);
+        fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) })
+          .then(r => r.json())
+          .then(data => { if (data.prices) { setLivePrices(data.prices); setPricesLastUpdated(new Date().toLocaleTimeString()); } })
+          .catch(err => console.error('Auto price fetch failed:', err))
+          .finally(() => setPricesLoading(false));
+      }
+    }
     const todaySnap = new Date().toISOString().split('T')[0];
     if (dataLoaded && netWorth > 0) {
       const existing = netWorthHistory.find(p => p.date === todaySnap);
@@ -11193,7 +11175,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <span className="text-xs text-gray-400">Updated: {pricesLastUpdated}</span>
                       )}
                     <button
-                      onClick={fetchLivePrices}
+                      onClick={async () => {
+                        const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
+                        if (tickers.length === 0) return;
+                        setPricesLoading(true);
+                        try {
+                          const response = await fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) });
+                          if (!response.ok) throw new Error('API error');
+                          const data = await response.json();
+                          if (data.prices) { setLivePrices(data.prices); setPricesLastUpdated(new Date().toLocaleTimeString()); }
+                        } catch (err) { console.error('Failed to fetch prices:', err); }
+                        setPricesLoading(false);
+                      }}
                       disabled={pricesLoading || trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').length === 0}
                       className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all disabled:opacity-50"
                     >
