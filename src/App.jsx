@@ -365,6 +365,10 @@ const StarryBackground = ({ children }) => {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
         }
+        @keyframes ticker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
         .star-twinkle {
           animation: twinkle ease-in-out infinite;
         }
@@ -2985,7 +2989,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     return (
       <>
-        <button onClick={() => setSidebarOpen(true)} className="fixed z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"36px",left:"16px",background:"rgba(5,15,30,0.9)",border:"1px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
+        <button onClick={() => setSidebarOpen(true)} className="fixed z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"60px",left:"16px",background:"rgba(5,15,30,0.9)",border:"1px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
@@ -7199,7 +7203,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
 
-    const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px"};
+    const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px, transparent 1px)",backgroundSize:"20px 20px"};
     const palantirLabel = {fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace"};
     const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
     const palantirSubValue = {fontSize:"13px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",marginTop:"2px"};
@@ -7230,8 +7234,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
+        {/* TICKER STRIP */}
+        <div style={{position:"fixed",top:"33px",left:0,right:0,zIndex:49,background:"rgba(0,10,20,0.98)",borderBottom:"0.5px solid rgba(0,200,255,0.12)",overflow:"hidden",height:"22px",display:"flex",alignItems:"center"}}>
+          <div style={{display:"inline-flex",animation:"ticker 28s linear infinite",whiteSpace:"nowrap"}}>
+            {[
+              {label:"NET WORTH", value:`$${netWorth.toLocaleString()}`, color:"#00c8ff"},
+              {label:"PORTFOLIO", value:`$${totalStocks.toLocaleString()}`, color:"rgba(168,85,247,0.9)"},
+              {label:"MONTHLY BILLS", value:`$${totalMonthly.toFixed(0)}`, color:"rgba(239,68,68,0.8)"},
+              {label:"SAVINGS RATE", value:`${savingsRate.toFixed(1)}%`, color:"rgba(34,197,94,0.8)"},
+              {label:"INCOME", value:salaryNum > 0 ? `$${salaryNum.toLocaleString()}` : "NOT SET", color:"rgba(251,191,36,0.8)"},
+              {label:"ASSETS", value:`${assets.length} tracked`, color:"rgba(99,102,241,0.8)"},
+              {label:"STOCKS", value:`${stocks.length} positions`, color:"rgba(236,72,153,0.8)"},
+              {label:"SYSTEM", value:"OPERATIONAL", color:"rgba(34,197,94,0.9)"},
+              // duplicate for seamless loop
+              {label:"NET WORTH", value:`$${netWorth.toLocaleString()}`, color:"#00c8ff"},
+              {label:"PORTFOLIO", value:`$${totalStocks.toLocaleString()}`, color:"rgba(168,85,247,0.9)"},
+              {label:"MONTHLY BILLS", value:`$${totalMonthly.toFixed(0)}`, color:"rgba(239,68,68,0.8)"},
+              {label:"SAVINGS RATE", value:`${savingsRate.toFixed(1)}%`, color:"rgba(34,197,94,0.8)"},
+              {label:"INCOME", value:salaryNum > 0 ? `$${salaryNum.toLocaleString()}` : "NOT SET", color:"rgba(251,191,36,0.8)"},
+              {label:"ASSETS", value:`${assets.length} tracked`, color:"rgba(99,102,241,0.8)"},
+              {label:"STOCKS", value:`${stocks.length} positions`, color:"rgba(236,72,153,0.8)"},
+              {label:"SYSTEM", value:"OPERATIONAL", color:"rgba(34,197,94,0.9)"},
+            ].map((item, i) => (
+              <span key={i} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"0 20px",fontSize:"10px",fontFamily:"monospace"}}>
+                <span style={{color:"rgba(0,200,255,0.35)",letterSpacing:"1px"}}>{item.label}</span>
+                <span style={{color:item.color,letterSpacing:"1px",fontWeight:500}}>{item.value}</span>
+                <span style={{color:"rgba(0,200,255,0.15)",marginLeft:"8px"}}>◆</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:"60px 28px 20px"}}>
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:"78px 28px 20px"}}>
           <div className="max-w-4xl mx-auto">
             <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
               <svg width="44" height="54" viewBox="0 0 24 32" fill="none">
@@ -7297,11 +7332,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* FINANCIAL CHART */}
           {(() => {
             const chartData = [
-              {label:"INCOME", value:salaryNum, color:"#00c8ff"},
-              {label:"BILLS", value:totalMonthly, color:"rgba(239,68,68,0.8)"},
-              {label:"SAVED", value:Math.max(0, salaryNum - totalMonthly), color:"rgba(34,197,94,0.8)"},
-              {label:"PORTFOLIO", value:totalStocks, color:"rgba(168,85,247,0.8)"},
-              {label:"NET WORTH", value:netWorth, color:"rgba(251,191,36,0.8)"},
+              {label:"INCOME", value:salaryNum, color:"#00c8ff", view:"work"},
+              {label:"BILLS", value:totalMonthly, color:"rgba(239,68,68,0.8)", view:"varied"},
+              {label:"SAVED", value:Math.max(0, salaryNum - totalMonthly), color:"rgba(34,197,94,0.8)", view:null},
+              {label:"PORTFOLIO", value:totalStocks, color:"rgba(168,85,247,0.8)", view:"investments"},
+              {label:"NET WORTH", value:netWorth, color:"rgba(251,191,36,0.8)", view:"assets"},
             ];
             const maxVal = Math.max(...chartData.map(d => d.value), 1);
             return (
@@ -7315,7 +7350,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {chartData.map((d,i) => {
                       const pct = maxVal > 0 ? (d.value / maxVal) * 100 : 0;
                       return (
-                        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end"}}>
+                        <div key={i} onClick={() => d.view && setActiveView(d.view)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end",cursor:d.view?"pointer":"default"}}>
                           <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{d.value > 0 ? `$${d.value.toLocaleString()}` : "—"}</span>
                           <div style={{width:"100%",background:d.color,borderRadius:"2px 2px 0 0",height:`${Math.max(pct,2)}%`,transition:"height 0.5s ease",boxShadow:`0 0 8px ${d.color}`}}></div>
                         </div>
