@@ -7240,7 +7240,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div style={{flex:1}}>
-                <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>FINANCIAL INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>LIFE INTELLIGENCE SYSTEM</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
                   <div style={{fontSize:"22px",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}>WELCOME BACK{eliteName ? `, ${eliteName.toUpperCase()}` : ""}</div>
                   {isElite && <div style={{fontSize:"11px",color:"#e8f0ff",border:"0.5px solid rgba(232,240,255,0.4)",padding:"3px 10px",letterSpacing:"1.5px",fontFamily:"monospace"}}>⚡ ELITE</div>}
@@ -7316,7 +7316,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const pct = maxVal > 0 ? (d.value / maxVal) * 100 : 0;
                       return (
                         <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end"}}>
-                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{d.value > 0 ? `$${d.value >= 1000 ? (d.value/1000).toFixed(0)+"k" : d.value.toFixed(0)}` : "—"}</span>
+                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{d.value > 0 ? `$${d.value.toLocaleString()}` : "—"}</span>
                           <div style={{width:"100%",background:d.color,borderRadius:"2px 2px 0 0",height:`${Math.max(pct,2)}%`,transition:"height 0.5s ease",boxShadow:`0 0 8px ${d.color}`}}></div>
                         </div>
                       );
