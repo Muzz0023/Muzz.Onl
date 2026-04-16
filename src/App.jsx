@@ -7290,8 +7290,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
             <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
               {[
-                {label:"Monthly Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
-                {label:"Bills / Income", value:salaryNum>0?`${((totalMonthly/salaryNum)*100).toFixed(1)}%`:"—", ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
+                {label:"Annual Bills", value:`$${(totalMonthly*12).toLocaleString()}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
+                {label:"Annual Saving Rate", value:salaryNum>0?`${((totalMonthly/salaryNum)*100).toFixed(1)}%`:"—", ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
                 {label:"Work Hrs / Wk", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
                 {label:"Stocks", value:`${stocks.length} positions`, ok:stocks.length>0, warn:false},
                 {label:"Assets", value:`${assets.length} tracked`, ok:assets.length>0, warn:false},
