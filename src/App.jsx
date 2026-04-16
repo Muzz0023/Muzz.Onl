@@ -1583,6 +1583,8 @@ function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [liveTime, setLiveTime] = useState(() => new Date());
+  useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -7202,8 +7204,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
     const palantirSubValue = {fontSize:"13px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",marginTop:"2px"};
     const accentHeader = {padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"};
-    const [liveTime, setLiveTime] = React.useState(() => new Date());
-    React.useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
     const liveClock = liveTime.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
     const liveDate = liveTime.toLocaleDateString('en-AU',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
 
