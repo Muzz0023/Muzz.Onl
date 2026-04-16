@@ -7827,10 +7827,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"16px 20px",position:"relative"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"16px 20px"}}>
             <div style={{fontSize:"14px",fontStyle:"italic",color:"rgba(224,234,255,0.7)",marginBottom:"6px"}}>"{todayQuote.quote}"</div>
             <div style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",letterSpacing:"1px"}}>— {todayQuote.author}</div>
-            <div style={{position:"absolute",bottom:"10px",right:"16px",fontSize:"9px",color:"rgba(0,200,255,0.15)",fontFamily:"monospace",letterSpacing:"0.5px"}}>28.0001°S 153.4000°E</div>
           </div>
 
           {isElite && (
