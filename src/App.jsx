@@ -7271,19 +7271,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* TOP COMMAND BAR */}
-        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(0,200,255,0.2)",padding:"6px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
-            <span style={{fontSize:"11px",color:"#00c8ff",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500}}>MUZZ.ONL</span>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>|</span>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{liveDate}</span>
-            {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>{eliteName.toUpperCase()}</span></>}
+        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(0,200,255,0.2)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden"}}>
+            <span style={{fontSize:"11px",color:"#00c8ff",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>MUZZ.ONL</span>
+            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
+            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
+            {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
-            <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{liveClock}</span>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>|</span>
-            <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
+            <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
+            <div style={{display:"flex",alignItems:"center",gap:"3px"}}>
               <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#00c8ff",display:"inline-block",boxShadow:"0 0 6px #00c8ff",animation:"blink 2s infinite"}}></span>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace"}}>LIVE</span>
             </div>
           </div>
         </div>
@@ -7300,7 +7299,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{flex:1}}>
                 <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>LIFE INTELLIGENCE SYSTEM</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
-                  <div style={{fontSize:"22px",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}>WELCOME BACK{eliteName ? `, ${eliteName.toUpperCase()}` : ""}</div>
+                  <div style={{fontSize:"clamp(14px,4vw,22px)",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}><span style={{whiteSpace:"nowrap"}}>WELCOME BACK{eliteName ? `, ${eliteName.toUpperCase()}` : ""}</span></div>
                   {isElite && <div style={{fontSize:"11px",color:"#e8f0ff",border:"0.5px solid rgba(232,240,255,0.4)",padding:"3px 10px",letterSpacing:"1.5px",fontFamily:"monospace"}}>⚡ ELITE</div>}
                 </div>
               </div>
@@ -7343,17 +7342,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
             <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
               {[
-                {label:"Annual Bills", value:`$${(totalMonthly*12).toLocaleString()}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
-                {label:"Annual Saving Rate", value:salaryNum>0?`${((totalMonthly/salaryNum)*100).toFixed(1)}%`:"—", ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
-                {label:"Work Hrs / Wk", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
-                {label:"Stocks", value:`${stocks.length} positions`, ok:stocks.length>0, warn:false},
-                {label:"Assets", value:`${assets.length} tracked`, ok:assets.length>0, warn:false},
+                {label:"Ann. Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
+                {label:"Bills/Inc", value:salaryNum>0?`${((totalMonthly/salaryNum)*100).toFixed(1)}%`:"—", ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
+                {label:"Wk Hours", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
+                {label:"Stocks", value:`${stocks.length}`, ok:stocks.length>0, warn:false},
+                {label:"Assets", value:`${assets.length}`, ok:assets.length>0, warn:false},
               ].map((k,i) => (
-                <div key={i} style={{padding:"12px 16px",borderRight:i<4?"0.5px solid rgba(0,200,255,0.08)":"none"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.45)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px"}}>{k.label}</div>
-                  <div style={{fontSize:"20px",color:k.warn?"rgba(239,68,68,0.9)":k.ok?"#e0eaff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontWeight:500}}>{k.value}</div>
-                  <div style={{height:"2px",marginTop:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"1px"}}>
-                    <div style={{height:"2px",width:k.ok?"100%":k.warn?"60%":"20%",background:k.warn?"rgba(239,68,68,0.6)":k.ok?"#00c8ff":"rgba(148,163,184,0.2)",borderRadius:"1px",transition:"width 0.8s ease"}} />
+                <div key={i} style={{padding:"10px 8px",borderRight:i<4?"0.5px solid rgba(0,200,255,0.08)":"none"}}>
+                  <div style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{k.label}</div>
+                  <div style={{fontSize:"16px",color:k.warn?"rgba(239,68,68,0.9)":k.ok?"#e0eaff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap"}}>{k.value}</div>
+                  <div style={{height:"2px",marginTop:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"1px"}}>
+                    <div style={{height:"2px",width:k.ok?"100%":k.warn?"60%":"20%",background:k.warn?"rgba(239,68,68,0.6)":k.ok?"#00c8ff":"rgba(148,163,184,0.2)",borderRadius:"1px"}} />
                   </div>
                 </div>
               ))}
@@ -7363,7 +7362,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
           {/* CHARTS ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:"8px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"minmax(0,1.4fr) minmax(0,1fr)",gap:"8px"}}>
           {/* FINANCIAL BAR CHART */}
           {(() => {
             const chartData = [
@@ -7496,7 +7495,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
               </div>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"0"}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"0"}}>
               {[
                 {label:"Annual Income", value:salaryNum>0?`$${(salaryNum*12).toLocaleString()}`:"NOT SET", view:"work", color:"rgba(34,197,94,0.7)"},
                 {label:"Annual Savings", value:salaryNum>0?`$${Math.max(0,(salaryNum-totalMonthly)*12).toLocaleString()}`:"NOT SET", view:"varied", color:"rgba(0,200,255,0.7)"},
@@ -7514,16 +7513,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   return upcoming[0] ? `${upcoming[0].name} (${upcoming[0].days}d)` : "—";
                 })(), view:"varied", color:"rgba(251,191,36,0.7)"},
               ].map((item,i) => (
-                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"14px 16px",textAlign:"left",background:"transparent",border:"none",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
-                  <div style={{...palantirLabel,color:item.color}}>{item.label}</div>
-                  <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
+                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"12px 14px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
+                  <div style={{...palantirLabel,color:item.color,fontSize:"9px"}}>{item.label}</div>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
                 </button>
               ))}
             </div>
           </div>
 
           {/* WEALTH MILESTONES + STOCK FEED ROW */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(0,1fr)",gap:"8px"}}>
 
           {/* WEALTH MILESTONES */}
           {(() => {
@@ -7621,11 +7620,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const avgCost = parseFloat(stock.avgCost) || 0;
                   const pl = shares > 0 && currentPrice > 0 ? ((currentPrice - avgCost) / avgCost * 100) : null;
                   return (
-                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"9px 16px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none"}}>
-                      <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,minWidth:"60px"}}>{ticker}</span>
-                      <span style={{fontSize:"12px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
-                      <span style={{fontSize:"11px",fontFamily:"monospace",color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)",minWidth:"60px",textAlign:"right"}}>{dailyChange===null?"NO PRICE":`${dailyChange>=0?"+":""}${dailyChange.toFixed(2)}%`}</span>
-                      <span style={{fontSize:"10px",fontFamily:"monospace",color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.6)":"rgba(239,68,68,0.6)",minWidth:"55px",textAlign:"right"}}>{pl===null?"":` P&L ${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
+                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",gap:"4px"}}>
+                      <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,minWidth:"45px"}}>{ticker}</span>
+                      <span style={{fontSize:"11px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace",flexShrink:0}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
+                      <span style={{fontSize:"10px",fontFamily:"monospace",color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)",flexShrink:0}}>{dailyChange===null?"—":`${dailyChange>=0?"+":""}${dailyChange.toFixed(1)}%`}</span>
+                      <span style={{fontSize:"10px",fontFamily:"monospace",color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.6)":"rgba(239,68,68,0.6)",flexShrink:0}}>{pl===null?"":` ${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
                     </div>
                   );
                 })}
@@ -7634,7 +7633,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(0,1fr)",gap:"8px"}}>
             {/* ACHIEVEMENTS — Palantir style */}
             <div style={palantirPanel}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
