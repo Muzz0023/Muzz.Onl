@@ -1589,17 +1589,6 @@ function MuzzApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
-
-  // Daily net worth snapshot
-  useEffect(() => {
-    if (!dataLoaded || netWorth <= 0) return;
-    const today = new Date().toISOString().split('T')[0];
-    setNetWorthHistory(prev => {
-      const existing = prev.find(p => p.date === today);
-      if (existing) return prev.map(p => p.date === today ? {...p, value: netWorth} : p);
-      return [...prev, {date: today, value: netWorth}].slice(-365);
-    });
-  }, [netWorth, dataLoaded]);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -7218,6 +7207,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const dayOfYear = Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
     const todayQuote = investmentQuotes[dayOfYear % investmentQuotes.length];
     const completedDailyTasks = dailyTasks.filter(t => t.completed).length;
+
+    // Record daily net worth snapshot
+    const todaySnap = new Date().toISOString().split('T')[0];
+    if (dataLoaded && netWorth > 0) {
+      const existing = netWorthHistory.find(p => p.date === todaySnap);
+      if (!existing || existing.value !== netWorth) {
+        setNetWorthHistory(prev => {
+          const filtered = prev.filter(p => p.date !== todaySnap);
+          return [...filtered, {date: todaySnap, value: netWorth}].slice(-365);
+        });
+      }
+    }
 
     const palantirPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px, transparent 1px)",backgroundSize:"20px 20px"};
     const palantirLabel = {fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace"};
