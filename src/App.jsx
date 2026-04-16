@@ -2907,7 +2907,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   ];
 
   // Calculate totals for dashboard
-  const totalMonthly = subscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0) + businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
+  const totalMonthly = subscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
+  const totalMonthlyBusiness = businessSubscriptions.reduce((sum, s) => sum + (parseFloat(s.monthly) || 0), 0);
   const totalAssets = assets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
   const totalStocks = stocks.reduce((sum, s) => sum + (parseFloat(s.currentValue) || 0), 0);
   const netWorth = totalAssets;
@@ -7284,13 +7285,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* KPI STRIP */}
           {(() => {
-            const personalBills = subscriptions.filter(s => s && s.monthly > 0).reduce((sum,s) => sum+(parseFloat(s.monthly)||0), 0);
-            const billsPct = salaryNum > 0 ? (personalBills/salaryNum)*100 : 0;
+            const billsPct = salaryNum > 0 ? (totalMonthly/salaryNum)*100 : 0;
             return (
           <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
             <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
               {[
-                {label:"Monthly Bills", value:`$${personalBills.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
+                {label:"Monthly Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
                 {label:"Savings Rate", value:`${savingsRate.toFixed(1)}%`, ok:savingsRate>=20, warn:savingsRate>0&&savingsRate<20},
                 {label:"Work Hrs / Wk", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
                 {label:"Stocks", value:`${stocks.length} positions`, ok:stocks.length>0, warn:false},
