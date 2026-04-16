@@ -2965,137 +2965,130 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
     const menuItems = [
-      { section: 'LIFE', id:'home', label:'Dashboard', icon:'🏠' },
-      { section: 'LIFE', id:'habits', label:'Habits', icon:'🔥' },
-      { section: 'LIFE', id:'tasks', label:'Tasks', icon:'✅' },
-      { section: 'LIFE', id:'countdowns', label:'Countdowns', icon:'⏳' },
-      { section: 'LIFE', id:'reminders', label:'Reminders', icon:'🔔' },
-      { section: 'HEALTH', id:'gym', label:'Health', icon:'💪', elite:true },
-      { section: 'HEALTH', id:'gymworkout', label:'Gym', icon:'🏋️', elite:true },
-      { section: 'HEALTH', id:'work', label:'Work', icon:'💼', elite:true },
-      { section: 'HEALTH', id:'diet', label:'Diet', icon:'🥗', elite:true },
-      { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'📅', elite:true },
-      { section: 'FINANCE', id:'varied', label:'Bills', icon:'💸', elite:true },
-      { section: 'FINANCE', id:'assets', label:'Assets', icon:'🏠', elite:true },
-      { section: 'FINANCE', id:'investments', label:'Investments', icon:'📈', elite:true },
-      { section: 'CUSTOM', id:'custom1', label: customCategories?.[0]?.name || 'Custom 1', icon: customCategories?.[0]?.icon || '📁' },
-      { section: 'CUSTOM', id:'custom2', label: customCategories?.[1]?.name || 'Custom 2', icon: customCategories?.[1]?.icon || '📁', elite:true },
-      { section: 'CUSTOM', id:'custom3', label: customCategories?.[2]?.name || 'Custom 3', icon: customCategories?.[2]?.icon || '📁', elite:true },
-      { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'⚡' },
-      { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'📊' },
-      { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'💬' },
-      { section: 'SETTINGS', id:'export', label:'Export Data', icon:'📤' },
-      { section: 'SETTINGS', id:'import', label:'Import Data', icon:'📥' },
-      { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account', icon:'🗑️', danger:true },
-
-
+      { section: 'LIFE', id:'home', label:'Dashboard', icon:'◈' },
+      { section: 'LIFE', id:'habits', label:'Habits', icon:'◈' },
+      { section: 'LIFE', id:'tasks', label:'Tasks', icon:'◈' },
+      { section: 'LIFE', id:'countdowns', label:'Countdowns', icon:'◈' },
+      { section: 'LIFE', id:'reminders', label:'Reminders', icon:'◈' },
+      { section: 'HEALTH', id:'gym', label:'Health', icon:'◈', elite:true },
+      { section: 'HEALTH', id:'gymworkout', label:'Gym', icon:'◈', elite:true },
+      { section: 'HEALTH', id:'work', label:'Work', icon:'◈', elite:true },
+      { section: 'HEALTH', id:'diet', label:'Diet', icon:'◈', elite:true },
+      { section: 'HEALTH', id:'timetable', label:'Timetable', icon:'◈', elite:true },
+      { section: 'FINANCE', id:'varied', label:'Bills', icon:'◈', elite:true },
+      { section: 'FINANCE', id:'assets', label:'Assets', icon:'◈', elite:true },
+      { section: 'FINANCE', id:'investments', label:'Investments', icon:'◈', elite:true },
+      { section: 'CUSTOM', id:'custom1', label: customCategories?.[0]?.name || 'Custom 1', icon:'◈' },
+      { section: 'CUSTOM', id:'custom2', label: customCategories?.[1]?.name || 'Custom 2', icon:'◈', elite:true },
+      { section: 'CUSTOM', id:'custom3', label: customCategories?.[2]?.name || 'Custom 3', icon:'◈', elite:true },
+      { section: 'ACCOUNT', id:'upgrade', label: isElite ? 'Elite Status' : 'Upgrade', icon:'◈' },
+      { section: 'ACCOUNT', id:'statsinsights', label:'Stats & Insights', icon:'◈' },
+      { section: 'ACCOUNT', id:'feedback', label:'Feedback', icon:'◈' },
+      { section: 'SETTINGS', id:'export', label:'Export Data', icon:'◈' },
+      { section: 'SETTINGS', id:'import', label:'Import Data', icon:'◈' },
+      { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account', icon:'◈', danger:true },
     ];
     const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT','SETTINGS'];
-    const sectionColors = { LIFE:'#00c8ff', HEALTH:'#f97316', FINANCE:'#22c55e', CUSTOM:'#a855f7', ACCOUNT:'#8b5cf6', SETTINGS:'#64748b' };
+    const sectionColors = { LIFE:'#00c8ff', HEALTH:'rgba(251,146,60,0.9)', FINANCE:'rgba(34,197,94,0.9)', CUSTOM:'rgba(168,85,247,0.9)', ACCOUNT:'rgba(0,200,255,0.7)', SETTINGS:'rgba(100,116,139,0.7)' };
 
     return (
       <>
-        <button onClick={() => setSidebarOpen(true)} className="fixed z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"40px",left:"16px",background:"rgba(5,15,30,0.9)",border:"1px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
+        <button onClick={() => setSidebarOpen(true)} className="fixed z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"40px",left:"16px",background:"rgba(3,8,18,0.95)",border:"0.5px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
           <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
         </button>
 
-        {sidebarOpen && <div className="fixed inset-0 z-50" style={{background:"rgba(2,8,20,0.98)",backdropFilter:"blur(20px)"}}>
-          <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none'}} />
+        {sidebarOpen && <div className="fixed inset-0 z-50" style={{background:"rgba(2,6,16,0.99)",backdropFilter:"blur(20px)"}}>
+          {/* Dot grid */}
+          <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(rgba(0,200,255,0.04) 1px,transparent 1px)',backgroundSize:'24px 24px',pointerEvents:'none'}} />
 
-          <div className="relative z-10 px-6 pt-12 pb-4" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
-            <div className="flex items-center justify-between mb-4">
+          {/* Header */}
+          <div style={{position:'relative',zIndex:10,padding:'44px 24px 16px',borderBottom:'0.5px solid rgba(0,200,255,0.12)'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'16px'}}>
               <div>
-                <div className="text-white" style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'20px',letterSpacing:'4px'}}>{appMode === 'muzz' ? 'MUZZ' : 'DONNY'}</div>
-                <div className="text-xs mt-0.5" style={{color: appMode === 'muzz' ? '#00c8ff' : '#f97316',letterSpacing:"2px"}}>{appMode === 'muzz' ? 'OPERATING SYSTEM' : 'BUSINESS SYSTEM'}</div>
+                <div style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</div>
+                <div style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',letterSpacing:'2px',fontFamily:'monospace',marginTop:'2px'}}>{appMode==='muzz'?'LIFE INTELLIGENCE SYSTEM':'BUSINESS INTELLIGENCE SYSTEM'}</div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} className="w-10 h-10 rounded-full flex items-center justify-center" style={{background:"rgba(0,200,255,0.1)",border:"1px solid rgba(0,200,255,0.3)"}}>
-                <X className="w-5 h-5" style={{color:"#00c8ff"}} />
+              <button onClick={() => setSidebarOpen(false)} style={{width:'32px',height:'32px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px'}}>
+                <X style={{color:'#00c8ff',width:'14px',height:'14px'}} />
               </button>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='muzz'?'rgba(0,200,255,0.15)':'rgba(255,255,255,0.03)',border:appMode==='muzz'?'1px solid rgba(0,200,255,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
+            {/* Mode toggle */}
+            <div style={{display:'flex',gap:'6px'}}>
+              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'8px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'11px',cursor:'pointer',borderRadius:'3px'}}>
                 🦘 MUZZ
               </button>
-              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} className="flex-1 py-2 rounded-xl text-sm font-bold transition-all" style={{background:appMode==='donny'?'rgba(249,115,22,0.15)':'rgba(255,255,255,0.03)',border:appMode==='donny'?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:"'Orbitron',monospace",letterSpacing:'2px',fontSize:'11px'}}>
+              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'8px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'11px',cursor:'pointer',borderRadius:'3px'}}>
                 🐨 DONNY
               </button>
             </div>
           </div>
 
-          <div className="relative z-10 px-4 py-2">
-            <div className="grid grid-cols-2 gap-x-3">
+          {/* Nav */}
+          <div style={{position:'relative',zIndex:10,padding:'12px 16px',overflowY:'auto',maxHeight:'calc(100vh - 200px)'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 12px'}}>
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyItems = [
-                  ...((() => {
-                    const isBoss = donnyRole !== 'worker';
-                    const all = [
-                      { section:'JOBS', id:'donny', label:'Dashboard', icon:'🐨', workerOk:true },
-                      { section:'JOBS', id:'donny-masterview', label:'Masterview', icon:'📋', workerOk:false },
-                      { section:'JOBS', id:'donny-scheduler', label:'Scheduler', icon:'🗓️', workerOk:false },
-                      { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', icon:'📋', workerOk:true },
-                      { section:'JOBS', id:'donny-recurring', label:'Recurring', icon:'🔁', workerOk:false },
-                      { section:'TEAM', id:'donny-team', label:'Team', icon:'👷', workerOk:false },
-                      { section:'TEAM', id:'donny-subs', label:'Subcontractors', icon:'🔩', workerOk:false },
-                      { section:'CLIENTS', id:'donny-clients', label:'Clients', icon:'🤝', workerOk:false },
-                      { section:'SITE', id:'donny-photos', label:'Photos', icon:'📸', workerOk:true },
-                      { section:'SITE', id:'donny-checklists', label:'SWMS', icon:'✅', workerOk:true },
-                      { section:'SITE', id:'donny-incidents', label:'Incidents', icon:'🚨', workerOk:true },
-                      { section:'SITE', id:'donny-safety', label:'Risk Register', icon:'⚠️', workerOk:true },
-                      { section:'SITE', id:'donny-mistakes', label:'Mistakes', icon:'❌', workerOk:true },
-                      { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', icon:'📦', workerOk:true },
-                      { section:'COSTS', id:'donny-suppliers', label:'Price Book', icon:'🏭', workerOk:false },
-                      { section:'REPORTS', id:'donny-reports', label:'Reports', icon:'📊', workerOk:false },
-                    ];
-                    return isBoss ? all : all;
-                  })()),
+                  { section:'JOBS', id:'donny', label:'Dashboard', workerOk:true },
+                  { section:'JOBS', id:'donny-masterview', label:'Masterview', workerOk:false },
+                  { section:'JOBS', id:'donny-scheduler', label:'Scheduler', workerOk:false },
+                  { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', workerOk:true },
+                  { section:'JOBS', id:'donny-recurring', label:'Recurring', workerOk:false },
+                  { section:'TEAM', id:'donny-team', label:'Team', workerOk:false },
+                  { section:'TEAM', id:'donny-subs', label:'Subcontractors', workerOk:false },
+                  { section:'CLIENTS', id:'donny-clients', label:'Clients', workerOk:false },
+                  { section:'SITE', id:'donny-photos', label:'Photos', workerOk:true },
+                  { section:'SITE', id:'donny-checklists', label:'SWMS', workerOk:true },
+                  { section:'SITE', id:'donny-incidents', label:'Incidents', workerOk:true },
+                  { section:'SITE', id:'donny-safety', label:'Risk Register', workerOk:true },
+                  { section:'SITE', id:'donny-mistakes', label:'Mistakes', workerOk:true },
+                  { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', workerOk:true },
+                  { section:'COSTS', id:'donny-suppliers', label:'Price Book', workerOk:false },
+                  { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
                 ];
-                const donnyColors = { JOBS:'#f97316', TEAM:'#f97316', CLIENTS:'#3b82f6', SITE:'#ef4444', COSTS:'#22c55e', REPORTS:'#f97316' };
+                const donnyColors = { JOBS:'rgba(249,115,22,0.8)', TEAM:'rgba(249,115,22,0.8)', CLIENTS:'rgba(59,130,246,0.8)', SITE:'rgba(239,68,68,0.8)', COSTS:'rgba(34,197,94,0.8)', REPORTS:'rgba(249,115,22,0.8)' };
                 return donnySections.map(sec => {
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
                   return (
-                    <div key={sec} className="mb-2">
-                      <div className="text-xs font-mono mb-1 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
+                    <div key={sec} style={{marginBottom:'12px'}}>
+                      <div style={{fontSize:'9px',color:`${color}`,letterSpacing:'2px',fontFamily:'monospace',marginBottom:'4px',paddingLeft:'4px',borderLeft:`2px solid ${color}`}}>// {sec}</div>
                       {items.map(item => {
                         const active = activeView === item.id;
                         const workerLocked = donnyRole === 'worker' && !item.workerOk;
                         return (
-                          <button key={item.id}
-                            onClick={() => { if(workerLocked) return; setActiveView(item.id); setSidebarOpen(false); }}
-                            className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-left transition-all"
-                            style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`,opacity:workerLocked?0.4:1,cursor:workerLocked?'default':'pointer'}}>
-                            <span className="text-base leading-none">{item.icon}</span>
-                            <span className="text-sm font-medium" style={{color:active?color:'rgba(255,255,255,0.8)'}}>{item.label}</span>
-                            {workerLocked && <span className="ml-auto text-xs">🔒</span>}
-                            {active && !workerLocked && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}/>}
+                          <button key={item.id} onClick={() => { if(workerLocked) return; setActiveView(item.id); setSidebarOpen(false); }}
+                            style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',marginBottom:'2px',background:active?`rgba(249,115,22,0.08)`:'transparent',border:`0.5px solid ${active?'rgba(249,115,22,0.4)':'rgba(255,255,255,0.04)'}`,cursor:workerLocked?'default':'pointer',borderRadius:'3px',opacity:workerLocked?0.3:1}}>
+                            <span style={{fontSize:'11px',fontFamily:'monospace',color:active?'#f97316':'rgba(224,234,255,0.7)',letterSpacing:'0.5px'}}>{item.label}</span>
+                            {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:'#f97316',boxShadow:'0 0 6px #f97316',flexShrink:0}} />}
+                            {workerLocked && <span style={{fontSize:'9px',color:'rgba(148,163,184,0.3)'}}>🔒</span>}
                           </button>
                         );
                       })}
                     </div>
                   );
-                })
+                });
               })()
               : sections.map(sec => {
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
-                  <div key={sec} className="mb-2">
-                    <div className="text-xs font-mono mb-1 px-1" style={{color:`${color}70`,letterSpacing:'2px'}}>// {sec}</div>
+                  <div key={sec} style={{marginBottom:'12px'}}>
+                    <div style={{fontSize:'9px',color,letterSpacing:'2px',fontFamily:'monospace',marginBottom:'4px',paddingLeft:'4px',borderLeft:`2px solid ${color}`}}>// {sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
                           onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
-                          className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-left transition-all"
-                          style={{background:active?`${color}15`:'rgba(255,255,255,0.02)',border:`1px solid ${active?`${color}50`:'rgba(255,255,255,0.05)'}`}}>
-                          <span className="text-base leading-none">{item.icon}</span>
-                          <span className="text-sm font-medium" style={{color:active?color:locked?'rgba(148,163,184,0.3)':item.danger?'rgba(239,68,68,0.7)':'rgba(255,255,255,0.8)'}}>{item.label}</span>
-                          {locked && <span className="ml-auto text-xs" style={{color:'rgba(0,200,255,0.3)'}}>⚡</span>}
-                          {active && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:color,boxShadow:`0 0 6px ${color}`}}></span>}
+                          style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',marginBottom:'2px',background:active?`rgba(0,200,255,0.06)`:'transparent',border:`0.5px solid ${active?'rgba(0,200,255,0.3)':'rgba(255,255,255,0.04)'}`,cursor:'pointer',borderRadius:'3px'}}>
+                          <span style={{fontSize:'11px',fontFamily:'monospace',color:active?'#00c8ff':locked?'rgba(148,163,184,0.25)':item.danger?'rgba(239,68,68,0.6)':'rgba(224,234,255,0.7)',letterSpacing:'0.5px'}}>{item.label}</span>
+                          <div style={{display:'flex',alignItems:'center',gap:'4px'}}>
+                            {locked && <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>⚡</span>}
+                            {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 6px #00c8ff',flexShrink:0}} />}
+                          </div>
                         </button>
                       );
                     })}
@@ -3105,9 +3098,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
 
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
-            <div className="mt-3 mb-2">
-              <button onClick={() => { signOut(); setSidebarOpen(false); }} className="w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2" style={{background:'rgba(239,68,68,0.12)',border:'1px solid rgba(239,68,68,0.35)',color:'rgba(239,68,68,0.9)'}}>
-                🚪 Sign Out
+            <div style={{marginTop:'12px',borderTop:'0.5px solid rgba(0,200,255,0.08)',paddingTop:'12px'}}>
+              <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'10px',background:'rgba(239,68,68,0.06)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.7)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'2px',cursor:'pointer',borderRadius:'3px'}}>
+                SIGN OUT
               </button>
             </div>
           </div>
