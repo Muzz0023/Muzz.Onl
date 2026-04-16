@@ -7283,10 +7283,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* KPI STRIP */}
+          {(() => {
+            const personalBills = subscriptions.filter(s => s && s.monthly > 0).reduce((sum,s) => sum+(parseFloat(s.monthly)||0), 0);
+            const billsPct = salaryNum > 0 ? (personalBills/salaryNum)*100 : 0;
+            return (
           <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
             <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
               {[
-                {label:"Monthly Bills", value:`$${totalMonthly.toFixed(0)}`, ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
+                {label:"Monthly Bills", value:`$${personalBills.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
                 {label:"Savings Rate", value:`${savingsRate.toFixed(1)}%`, ok:savingsRate>=20, warn:savingsRate>0&&savingsRate<20},
                 {label:"Work Hrs / Wk", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
                 {label:"Stocks", value:`${stocks.length} positions`, ok:stocks.length>0, warn:false},
@@ -7302,6 +7306,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               ))}
             </div>
           </div>
+            );
+          })()}
 
           {/* CHARTS ROW */}
           <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:"8px"}}>
@@ -7347,24 +7353,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* ASSET ALLOCATION DONUT */}
           {(() => {
-            const donutCategories = [
-              {label:"Property", ids:["property","rental","vacation","land"], color:"#00c8ff"},
-              {label:"Stocks", ids:["stocks","etfs","mutualfunds","bonds"], color:"rgba(168,85,247,0.9)"},
-              {label:"Cash", ids:["cash","super"], color:"rgba(34,197,94,0.9)"},
-              {label:"Business", ids:["business"], color:"rgba(251,191,36,0.9)"},
-              {label:"Other", ids:["crypto","vehicle","jewellery","art","collectibles","lifeinsurance","loansowed","other"], color:"rgba(239,68,68,0.8)"},
+            const filledAssets = assets.filter(a => a.name && (parseFloat(a.value)||0) > 0).map(a => ({...a, value: parseFloat(a.value)||0}));
+            const totalAssetsVal = filledAssets.reduce((sum,a) => sum+a.value, 0);
+            const assetCats = [
+              { id: 'property', name: 'Home', color: '#00c8ff' },
+              { id: 'rental', name: 'Rental', color: '#0ea5e9' },
+              { id: 'vacation', name: 'Vacation', color: '#38bdf8' },
+              { id: 'land', name: 'Land', color: '#7dd3fc' },
+              { id: 'business', name: 'Business', color: 'rgba(251,191,36,0.9)' },
+              { id: 'super', name: 'Super', color: 'rgba(34,197,94,0.9)' },
+              { id: 'cash', name: 'Cash', color: 'rgba(74,222,128,0.9)' },
+              { id: 'stocks', name: 'Stocks', color: 'rgba(168,85,247,0.9)' },
+              { id: 'bonds', name: 'Bonds', color: 'rgba(192,132,252,0.9)' },
+              { id: 'mutualfunds', name: 'Funds', color: 'rgba(216,180,254,0.9)' },
+              { id: 'etfs', name: 'ETFs', color: 'rgba(139,92,246,0.9)' },
+              { id: 'crypto', name: 'Crypto', color: 'rgba(251,146,60,0.9)' },
+              { id: 'vehicle', name: 'Vehicles', color: 'rgba(239,68,68,0.8)' },
+              { id: 'jewellery', name: 'Jewellery', color: 'rgba(249,168,212,0.9)' },
+              { id: 'art', name: 'Art', color: 'rgba(236,72,153,0.8)' },
+              { id: 'collectibles', name: 'Collectibles', color: 'rgba(244,114,182,0.8)' },
+              { id: 'lifeinsurance', name: 'Insurance', color: 'rgba(148,163,184,0.8)' },
+              { id: 'loansowed', name: 'Loans Owed', color: 'rgba(100,116,139,0.8)' },
+              { id: 'other', name: 'Other', color: 'rgba(71,85,105,0.8)' },
             ];
-            const donutData = donutCategories.map(cat => ({
+            const donutData = assetCats.map(cat => ({
               ...cat,
-              value: assets.filter(a => cat.ids.includes(a.category)).reduce((sum,a) => sum+(parseFloat(a.value)||0), 0)
+              value: filledAssets.filter(a => a.category === cat.id).reduce((sum,a) => sum+a.value, 0)
             })).filter(d => d.value > 0);
-            const totalVal = donutData.reduce((s,d) => s+d.value, 0);
-            // Also add stocks portfolio
-            if (totalStocks > 0) {
-              const existing = donutData.find(d => d.label === "Stocks");
-              if (existing) existing.value += totalStocks;
-              else donutData.push({label:"Stocks", color:"rgba(168,85,247,0.9)", value:totalStocks});
-            }
             const total = donutData.reduce((s,d) => s+d.value, 0);
 
             if (total === 0) return (
@@ -7372,13 +7387,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
                 </div>
-                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace"}}>NO ASSETS TRACKED</div>
+                <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>NO ASSETS TRACKED</div>
               </div>
             );
 
-            // Build SVG donut
             let cumulative = 0;
-            const cx=70, cy=70, r=50, inner=32;
+            const cx=65, cy=65, r=52, inner=34;
             const slices = donutData.map(d => {
               const pct = d.value / total;
               const startAngle = cumulative * 2 * Math.PI - Math.PI/2;
@@ -7393,24 +7407,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             });
 
             return (
-              <div style={{...palantirPanel}} onClick={() => setActiveView('assets')} >
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",cursor:"pointer"}}>
+              <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setActiveView('assets')}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
-                  <svg width="140" height="140" viewBox="0 0 140 140" style={{flexShrink:0}}>
+                  <svg width="130" height="130" viewBox="0 0 130 130" style={{flexShrink:0}}>
                     {slices.map((s,i) => (
                       <path key={i} d={s.path} fill={s.color} stroke="rgba(5,12,24,0.9)" strokeWidth="1.5" />
                     ))}
-                    <text x="70" y="66" textAnchor="middle" style={{fontSize:"10px",fill:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>TOTAL</text>
-                    <text x="70" y="80" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:"monospace",fontWeight:"bold"}}>${total>=1000?(total/1000).toFixed(0)+"k":total.toFixed(0)}</text>
+                    <text x="65" y="60" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>TOTAL</text>
+                    <text x="65" y="75" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:"monospace",fontWeight:"bold"}}>${total.toLocaleString()}</text>
                   </svg>
-                  <div style={{display:"flex",flexDirection:"column",gap:"6px",flex:1}}>
-                    {donutData.map((d,i) => (
-                      <div key={i} style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                  <div style={{display:"flex",flexDirection:"column",gap:"5px",flex:1,maxHeight:"110px",overflowY:"auto"}}>
+                    {donutData.sort((a,b)=>b.value-a.value).map((d,i) => (
+                      <div key={i} style={{display:"flex",alignItems:"center",gap:"5px"}}>
                         <div style={{width:"6px",height:"6px",borderRadius:"50%",background:d.color,flexShrink:0}}></div>
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",flex:1,letterSpacing:"0.5px"}}>{d.label}</span>
-                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(0)}%</span>
+                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",flex:1}}>{d.name}</span>
+                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(1)}%</span>
                       </div>
                     ))}
                   </div>
