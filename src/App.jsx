@@ -14976,7 +14976,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
               <div className="max-w-4xl mx-auto">
-                <button onClick={() => { setNoteJobId(null); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Daily Reports</button>
+                <button onClick={() => { setNoteJobId(null); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DAILY REPORTS</button>
                 <div className="flex items-center gap-3">
                   <div className="text-3xl">📋</div>
                   <div>
@@ -14990,9 +14990,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
               {/* ── HOURS SECTION ── */}
-              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-                <div className="px-5 py-3 font-semibold text-sm text-white" style={{borderBottom:'1px solid rgba(249,115,22,0.1)',background:'rgba(249,115,22,0.05)'}}>⏱️ Log Hours Today</div>
-                <div className="p-4 space-y-3">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>LOG HOURS TODAY</span></div>
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👷 TEAM MEMBER</div>
@@ -15014,7 +15014,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                   </div>
                   {tsSelectedMember && tsHours && (
-                    <div className="rounded-xl p-2.5 text-center" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)'}}>
+                    <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"8px",textAlign:"center"}}>
                       <span className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Pay: </span>
                       <span className="font-black" style={{color:'#22c55e'}}>${((parseFloat(tsHours)||0)*(parseFloat(donnyTeam.find(m=>String(m.id)===String(tsSelectedMember))?.hourlyRate)||0)).toFixed(2)}</span>
                     </div>
@@ -15024,12 +15024,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const entry = { id:Date.now(), jobId:noteJobId, memberId:tsSelectedMember, date:today, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                     saveTS([entry,...donnyTimesheets]);
                     setTsHours(''); setTsDesc(''); setTsSelectedMember(null);
-                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                    + Log Hours
+                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    + LOG HOURS
                   </button>
                   {/* Today's hours summary */}
                   {jobTotals.length > 0 && (
-                    <div className="rounded-xl overflow-hidden" style={{border:'1px solid rgba(255,255,255,0.05)'}}>
+                    <div style={{border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"4px",overflow:"hidden"}}>
                       <div className="grid text-xs font-mono px-4 py-2" style={{gridTemplateColumns:'1fr 70px 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
                         <div>MEMBER</div><div>HOURS</div><div>PAY</div>
                       </div>
@@ -15051,9 +15051,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* ── SITE DIARY SECTION ── */}
-              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
-                <div className="px-5 py-3 font-semibold text-sm text-white" style={{borderBottom:'1px solid rgba(249,115,22,0.1)',background:'rgba(249,115,22,0.05)'}}>📝 Site Diary</div>
-                <div className="p-4 space-y-3">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>SITE DIARY</span></div>
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <textarea
                     value={newNoteText}
                     onChange={e => setNewNoteText(e.target.value)}
@@ -15067,8 +15067,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const updated = { ...donnyNotes, [activeJob.id]: [{ id:Date.now(), text:newNoteText.trim(), createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() }, ...(donnyNotes[activeJob.id]||[])] };
                     saveNotes(updated);
                     setNewNoteText('');
-                  }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                    + Post Update
+                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    + POST UPDATE
                   </button>
                 </div>
               </div>
@@ -15084,7 +15084,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   ].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).map(item => {
                     if (item._type === 'note') {
                       return (
-                        <div key={'n'+item.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                        <div key={'n'+item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.5)",padding:"12px 14px"}}>
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>📝 diary</span>
@@ -15101,7 +15101,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const m = donnyTeam.find(x=>x.id===item.memberId);
                       const pay = (item.hours||0)*(parseFloat(m?.hourlyRate)||0);
                       return (
-                        <div key={'t'+item.id} className="rounded-2xl px-4 py-3 flex items-center justify-between" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                        <div key={'t'+item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 14px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                           <div className="flex items-center gap-3">
                             <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.2)'}}>⏱️ hours</span>
                             <div>
@@ -15130,10 +15130,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="DAILY REPORTS" icon="📋" />
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>DAILY REPORTS</div>
+            </div>
+          </div>
+          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
             {donnyJobs.length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                 <div className="text-4xl mb-3">📋</div>
                 <div className="text-white font-bold mb-1">No jobs yet</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start daily reports</div>
@@ -15147,10 +15153,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                   const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))[0];
                   return (
-                    <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
-                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📋</div>
+                    <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{width:"100%",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.5)",padding:"12px 16px",textAlign:"left",display:"flex",alignItems:"center",gap:"12px",cursor:"pointer"}}>
+                      <div style={{width:"36px",height:"36px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",flexShrink:0,fontSize:"16px"}}>📋</div>
                       <div className="flex-1 min-w-0">
                         <div className="text-white font-semibold truncate">{job.title}</div>
                         <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
@@ -15170,10 +15174,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const tsEntries = donnyTimesheets.filter(e=>e.jobId===job.id);
                       const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                       return (
-                        <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                          className="w-full rounded-2xl p-4 text-left flex items-center gap-4 opacity-60"
-                          style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.1)'}}>
-                          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)'}}>✅</div>
+                        <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{width:"100%",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.3)",padding:"12px 16px",textAlign:"left",display:"flex",alignItems:"center",gap:"12px",cursor:"pointer",opacity:0.6}}>
+                          <div style={{width:"36px",height:"36px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",flexShrink:0,fontSize:"16px"}}>✅</div>
                           <div className="flex-1 min-w-0">
                             <div className="text-white font-semibold truncate">{job.title}</div>
                             <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{notes.length} entr{notes.length===1?'y':'ies'} · {totalHrs.toFixed(1)}h logged</div>
@@ -15622,27 +15624,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="SCHEDULER" icon="🗓️" />
-          <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SCHEDULER</div>
+            </div>
+          </div>
+          <div className="max-w-5xl mx-auto px-4 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
             {/* Tabs — same style as Muzz timetable */}
             <div className="flex gap-2 flex-wrap items-center justify-between">
-              <div className="flex gap-2">
-                {[{id:'week',label:'Week View'},{id:'list',label:'List'},{id:'add',label:'+ Add Block'}].map(t=>(
-                  <button key={t.id} onClick={()=>setSchedTab(t.id)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${schedTab===t.id?'palantir-tab-active':'text-slate-400 hover:text-slate-200'}`}
-                    style={schedTab===t.id?{background:'rgba(249,115,22,0.2)',border:'1px solid rgba(249,115,22,0.5)',color:'#f97316'}:{}}>
+              <div style={{display:'flex',gap:'4px'}}>
+                {[{id:'week',label:'WEEK'},{id:'list',label:'LIST'},{id:'add',label:'+ ADD'}].map(t=>(
+                  <button key={t.id} onClick={()=>setSchedTab(t.id)} style={{padding:'6px 14px',background:schedTab===t.id?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${schedTab===t.id?'rgba(249,115,22,0.4)':'transparent'}`,borderRadius:'3px',color:schedTab===t.id?'#f97316':'rgba(148,163,184,0.5)',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1.5px',cursor:'pointer'}}>
                     {t.label}
                   </button>
                 ))}
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={()=>setSchedulerWeekOffset(p=>p-1)} className="px-3 py-1.5 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>←</button>
+                <button onClick={()=>setSchedulerWeekOffset(p=>p-1)} style={{padding:'4px 10px',background:'rgba(249,115,22,0.08)',color:'rgba(249,115,22,0.7)',border:'0.5px solid rgba(249,115,22,0.3)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace',fontSize:'12px'}}>←</button>
                 <span className="text-xs font-mono" style={{color:'rgba(249,115,22,0.7)'}}>
                   {weekDates[0].toLocaleDateString('en-AU',{day:'numeric',month:'short'})} — {weekDates[6].toLocaleDateString('en-AU',{day:'numeric',month:'short'})}
                   {schedulerWeekOffset===0&&<span className="ml-2 px-1.5 py-0.5 rounded-full text-xs" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>This week</span>}
                 </span>
-                <button onClick={()=>setSchedulerWeekOffset(p=>p+1)} className="px-3 py-1.5 rounded-xl text-sm font-bold" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>→</button>
+                <button onClick={()=>setSchedulerWeekOffset(p=>p+1)} style={{padding:'4px 10px',background:'rgba(249,115,22,0.08)',color:'rgba(249,115,22,0.7)',border:'0.5px solid rgba(249,115,22,0.3)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace',fontSize:'12px'}}>→</button>
               </div>
             </div>
 
@@ -15650,7 +15656,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {donnyTeam.length>0 && schedTab==='week' && (
               <div className="flex flex-wrap gap-2">
                 {donnyTeam.map(m=>(
-                  <div key={m.id} className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium" style={{background:`${getMemberColor(m.id)}15`,border:`1px solid ${getMemberColor(m.id)}30`,color:'white'}}>
+                  <div key={m.id} style={{display:'flex',alignItems:'center',gap:'6px',padding:'3px 8px',background:`${getMemberColor(m.id)}15`,border:`0.5px solid ${getMemberColor(m.id)}30`,borderRadius:'3px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontSize:'10px'}}>
                     <div className="w-2.5 h-2.5 rounded-full" style={{background:getMemberColor(m.id)}}/>
                     {m.name}
                   </div>
@@ -15855,17 +15861,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="RECURRING JOBS" icon="🔁" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>RECURRING JOBS</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
             {/* Master table */}
             {donnyRecurring.length > 0 && (
-              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
-                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// RECURRING TABLE</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RECURRING TABLE</span>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyRecurring.length} jobs</span>
-                    <button onClick={()=>setShowNewRecurring(s=>!s)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{donnyRecurring.length} JOBS</span>
+                    <button onClick={()=>setShowNewRecurring(s=>!s)} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>
                       {showNewRecurring?'✕ Cancel':'+ Add Job'}
                     </button>
                   </div>
@@ -15892,11 +15904,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             )}
 
-            <button onClick={()=>setShowNewRecurring(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+            <button onClick={()=>setShowNewRecurring(s=>!s)} style={{width:"100%",padding:"12px",background:"rgba(249,115,22,0.06)",border:"0.5px dashed rgba(249,115,22,0.3)",borderRadius:"6px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>
               {showNewRecurring?'✕ Cancel':'+ Add Recurring Job'}
             </button>
             {showNewRecurring && (
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
                 <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW RECURRING JOB</div>
                 <div>
                   <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>JOB TITLE</div>
@@ -15933,11 +15945,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                 </div>
                 <button onClick={()=>{ if(!newRecurring.title.trim()) return; saveRecurring([{...newRecurring,id:Date.now(),createdAt:new Date().toISOString()},...donnyRecurring]); setNewRecurring({title:'',clientId:'',freq:'monthly',nextDate:'',notes:''}); setShowNewRecurring(false); }}
-                  className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>Add Recurring Job</button>
+                  style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer"}}>ADD RECURRING JOB</button>
               </div>
             )}
             {donnyRecurring.length===0 && !showNewRecurring && (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.08)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                 <div className="text-4xl mb-3">🔁</div>
                 <div className="text-white font-bold mb-1">No recurring jobs</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add maintenance contracts that repeat</div>
@@ -15949,7 +15961,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
               const isEditing = editingRecurringId === r.id;
               return (
-                <div key={r.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${isEditing?'rgba(249,115,22,0.4)':'rgba(249,115,22,0.15)'}`}}>
+                <div key={r.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isEditing?"rgba(249,115,22,0.4)":"rgba(249,115,22,0.15)"}`,borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.5)",padding:"12px 16px"}}>
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -15964,11 +15976,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     <div className="flex gap-2 ml-3 flex-shrink-0">
                       <button onClick={()=>setEditingRecurringId(isEditing?null:r.id)}
-                        className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>
+                        style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer"}}>
                         {isEditing?'✕':'✏️'}
                       </button>
                       <button onClick={()=>{ if(window.confirm('Delete?')) saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); }}
-                        className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                        style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
                     </div>
                   </div>
                   {isEditing && (
@@ -16008,7 +16020,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           style={{borderColor:'rgba(255,255,255,0.1)'}}/>
                       </div>
                       <button onClick={()=>setEditingRecurringId(null)}
-                        className="w-full py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
+                        style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer"}}>
                         ✓ Done
                       </button>
                     </div>
