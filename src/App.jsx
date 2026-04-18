@@ -1122,40 +1122,46 @@ function AuthScreen() {
     setLoading(false);
   };
 
+  const authBg = {position:'fixed',inset:0,background:'#020817',zIndex:0};
+  const dotGrid = {position:'fixed',inset:0,backgroundImage:'radial-gradient(rgba(0,200,255,0.04) 1px,transparent 1px)',backgroundSize:'24px 24px',pointerEvents:'none',zIndex:1};
+  const inputStyle = {width:'100%',background:'rgba(0,200,255,0.04)',border:'0.5px solid rgba(0,200,255,0.2)',borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'11px 14px 11px 38px',outline:'none',boxSizing:'border-box'};
+  const labelStyle = {fontSize:'9px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'2px',display:'block',marginBottom:'6px'};
+
   // Reset Password Screen
   if (showResetPassword) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 100%)"}}>
-        <div style={{position:'fixed',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px)',backgroundSize:'60px 60px',pointerEvents:'none'}} />
-        <div style={{position:'fixed',width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px',pointerEvents:'none'}} />
-        <div className="w-full max-w-md relative z-10">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>🦘</div>
-            <div className="text-4xl font-bold text-white mb-1" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px'}}>MUZZ</div>
-            <div className="text-sm" style={{color:'#00c8ff',letterSpacing:'2px'}}>Reset your password</div>
+      <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'24px',position:'relative'}}>
+        <div style={authBg}/>
+        <div style={dotGrid}/>
+        <div style={{position:'fixed',width:'400px',height:'400px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(0,150,255,0.06) 0%,transparent 70%)',top:'-100px',right:'-80px',pointerEvents:'none',zIndex:1}}/>
+        <div style={{width:'100%',maxWidth:'400px',position:'relative',zIndex:10}}>
+
+          {/* Logo */}
+          <div style={{textAlign:'center',marginBottom:'40px'}}>
+            <svg width="52" height="64" viewBox="0 0 24 32" fill="none" style={{margin:'0 auto 16px',display:'block'}}>
+              <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#authGrad2)"/>
+              <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#020817"/>
+              <defs><linearGradient id="authGrad2" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
+            </svg>
+            <div style={{fontFamily:'monospace',fontWeight:700,fontSize:'22px',color:'#e0eaff',letterSpacing:'6px',marginBottom:'6px'}}>MUZZ</div>
+            <div style={{fontSize:'9px',color:'rgba(0,200,255,0.4)',fontFamily:'monospace',letterSpacing:'2px'}}>RESET PASSWORD</div>
           </div>
-          <div className="rounded-3xl p-8" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)',backdropFilter:'blur(20px)'}}>
-            <h2 className="text-xl font-bold text-white mb-6 text-center">Forgot password? 🔐</h2>
-            {error && <div className="px-4 py-3 rounded-xl mb-4 text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'#fca5a5'}}>{error}</div>}
-            {successMessage && <div className="px-4 py-3 rounded-xl mb-4 text-sm" style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.3)',color:'#86efac'}}>{successMessage}</div>}
-            <form onSubmit={handleResetPassword} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{color:'rgba(0,200,255,0.8)'}}>Email</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{color:'rgba(0,200,255,0.5)'}} />
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required
-                    className="w-full pl-10 pr-4 py-3 rounded-xl transition-colors text-white placeholder-slate-500 focus:outline-none"
-                    style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}} />
-                </div>
-              </div>
-              <button type="submit" disabled={loading} className="w-full py-3 font-semibold rounded-xl transition-all disabled:opacity-50"
-                style={{background:'linear-gradient(135deg,#00a8d4,#0070a0)',color:'white',border:'1px solid rgba(0,200,255,0.3)'}}>
-                {loading ? 'Sending...' : 'Send Reset Link'}
-              </button>
-            </form>
-            <div className="mt-6 text-center">
-              <button onClick={() => { setShowResetPassword(false); setError(''); setSuccessMessage(''); }}
-                className="text-sm font-medium" style={{color:'rgba(0,200,255,0.7)'}}>← Back to Sign In</button>
+
+          {/* Panel */}
+          <div style={{background:'rgba(5,12,24,0.9)',border:'0.5px solid rgba(0,200,255,0.15)',borderRadius:'6px',padding:'28px',backdropFilter:'blur(20px)'}}>
+            <div style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',borderLeft:'2px solid #00c8ff',paddingLeft:'10px',marginBottom:'20px'}}>// RESET ACCESS</div>
+            {error && <div style={{padding:'10px 14px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'4px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',fontSize:'11px',marginBottom:'14px'}}>{error}</div>}
+            {successMessage && <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.08)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'4px',color:'rgba(34,197,94,0.9)',fontFamily:'monospace',fontSize:'11px',marginBottom:'14px'}}>{successMessage}</div>}
+            <div style={{marginBottom:'14px',position:'relative'}}>
+              <label style={labelStyle}>EMAIL ADDRESS</label>
+              <Mail style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle}/>
+            </div>
+            <button onClick={handleResetPassword} disabled={loading} style={{width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'4px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer',opacity:loading?0.5:1}}>
+              {loading ? 'SENDING...' : 'SEND RESET LINK'}
+            </button>
+            <div style={{marginTop:'16px',textAlign:'center'}}>
+              <button onClick={() => { setShowResetPassword(false); setError(''); setSuccessMessage(''); }} style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>← BACK TO SIGN IN</button>
             </div>
           </div>
         </div>
@@ -1164,69 +1170,67 @@ function AuthScreen() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 100%)"}}>
-      <div style={{position:'fixed',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px)',backgroundSize:'60px 60px',pointerEvents:'none'}} />
-      <div style={{position:'fixed',width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px',pointerEvents:'none'}} />
-      <div style={{position:'fixed',width:'300px',height:'300px',borderRadius:'50%',background:'rgba(255,120,0,0.04)',filter:'blur(80px)',bottom:'100px',left:'-60px',pointerEvents:'none'}} />
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4" style={{background:'rgba(0,200,255,0.1)',border:'1px solid rgba(0,200,255,0.25)'}}>🦘</div>
-          <div className="text-4xl font-bold text-white mb-1" style={{fontFamily:"'Orbitron',monospace",letterSpacing:'3px'}}>MUZZ</div>
-          <div className="text-sm" style={{color:'#00c8ff',letterSpacing:'2px'}}>Your Life OS</div>
+    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'24px',position:'relative'}}>
+      <div style={authBg}/>
+      <div style={dotGrid}/>
+      <div style={{position:'fixed',width:'400px',height:'400px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(0,150,255,0.06) 0%,transparent 70%)',top:'-100px',right:'-80px',pointerEvents:'none',zIndex:1}}/>
+      <div style={{position:'fixed',width:'300px',height:'300px',borderRadius:'50%',background:'radial-gradient(ellipse,rgba(0,200,255,0.03) 0%,transparent 70%)',bottom:'100px',left:'-60px',pointerEvents:'none',zIndex:1}}/>
+
+      <div style={{width:'100%',maxWidth:'400px',position:'relative',zIndex:10}}>
+
+        {/* Logo */}
+        <div style={{textAlign:'center',marginBottom:'40px'}}>
+          <svg width="52" height="64" viewBox="0 0 24 32" fill="none" style={{margin:'0 auto 16px',display:'block'}}>
+            <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#authGrad)"/>
+            <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#020817"/>
+            <defs><linearGradient id="authGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
+          </svg>
+          <div style={{fontFamily:'monospace',fontWeight:700,fontSize:'22px',color:'#e0eaff',letterSpacing:'6px',marginBottom:'6px'}}>MUZZ</div>
+          <div style={{fontSize:'9px',color:'rgba(0,200,255,0.4)',fontFamily:'monospace',letterSpacing:'2px'}}>LIFE & BUSINESS INTELLIGENCE SYSTEM</div>
         </div>
 
-        <div className="rounded-3xl p-8" style={{background:'rgba(5,15,30,0.85)',border:'1px solid rgba(0,200,255,0.15)',backdropFilter:'blur(20px)'}}>
-          <h2 className="text-xl font-bold text-white mb-6 text-center">
-            {isLogin ? 'Welcome Legend 🦘' : 'Create account'}
-          </h2>
+        {/* Panel */}
+        <div style={{background:'rgba(5,12,24,0.9)',border:'0.5px solid rgba(0,200,255,0.15)',borderRadius:'6px',padding:'28px',backdropFilter:'blur(20px)'}}>
+          <div style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',borderLeft:'2px solid #00c8ff',paddingLeft:'10px',marginBottom:'20px'}}>
+            {isLogin ? '// AUTHENTICATE' : '// CREATE ACCOUNT'}
+          </div>
 
-          {error && <div className="px-4 py-3 rounded-xl mb-4 text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'#fca5a5'}}>{error}</div>}
+          {error && <div style={{padding:'10px 14px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'4px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',fontSize:'11px',marginBottom:'14px'}}>{error}</div>}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{color:'rgba(0,200,255,0.8)'}}>Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{color:'rgba(0,200,255,0.5)'}} />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl transition-colors text-white placeholder-slate-500 focus:outline-none"
-                  style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}} />
-              </div>
+          <div style={{display:'flex',flexDirection:'column',gap:'14px',marginBottom:'16px'}}>
+            <div style={{position:'relative'}}>
+              <label style={labelStyle}>EMAIL ADDRESS</label>
+              <Mail style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required style={inputStyle}/>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{color:'rgba(0,200,255,0.8)'}}>Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{color:'rgba(0,200,255,0.5)'}} />
-                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••" required minLength={6}
-                  className="w-full pl-10 pr-12 py-3 rounded-xl transition-colors text-white placeholder-slate-500 focus:outline-none"
-                  style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.2)'}} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2" style={{color:'rgba(0,200,255,0.5)'}}>
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
+            <div style={{position:'relative'}}>
+              <label style={labelStyle}>PASSWORD</label>
+              <Lock style={{position:'absolute',left:'10px',bottom:'10px',width:'16px',height:'16px',color:'rgba(0,200,255,0.4)'}}/>
+              <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6}
+                style={{...inputStyle, paddingRight:'38px'}}/>
+              <button type="button" onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:'10px',bottom:'10px',background:'none',border:'none',cursor:'pointer',color:'rgba(0,200,255,0.4)',padding:0}}>
+                {showPassword ? <EyeOff style={{width:'16px',height:'16px'}}/> : <Eye style={{width:'16px',height:'16px'}}/>}
+              </button>
             </div>
-            <button type="submit" disabled={loading} className="w-full py-3 font-semibold rounded-xl transition-all disabled:opacity-50 mt-2"
-              style={{background:'linear-gradient(135deg,#00a8d4,#0070a0)',color:'white',border:'1px solid rgba(0,200,255,0.3)',boxShadow:'0 0 20px rgba(0,200,255,0.15)'}}>
-              {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
-            </button>
-          </form>
+          </div>
 
-          <div className="mt-6 text-center space-y-3">
+          <button onClick={handleSubmit} disabled={loading} style={{width:'100%',padding:'12px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'4px',color:'rgba(0,200,255,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer',opacity:loading?0.5:1,marginBottom:'16px'}}>
+            {loading ? 'PLEASE WAIT...' : (isLogin ? 'SIGN IN →' : 'CREATE ACCOUNT →')}
+          </button>
+
+          <div style={{display:'flex',flexDirection:'column',gap:'10px',alignItems:'center'}}>
             {isLogin && (
-              <button onClick={() => { setShowResetPassword(true); setError(''); }}
-                className="text-sm" style={{color:'rgba(148,163,184,0.7)'}}>Forgot password?</button>
+              <button onClick={() => { setShowResetPassword(true); setError(''); }} style={{fontSize:'10px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>Forgot password?</button>
             )}
-            <button onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="block w-full font-medium text-sm" style={{color:'#00c8ff'}}>
-              {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+            <button onClick={() => { setIsLogin(!isLogin); setError(''); }} style={{fontSize:'10px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'1px',background:'none',border:'none',cursor:'pointer'}}>
+              {isLogin ? 'NO ACCOUNT? SIGN UP →' : 'HAVE AN ACCOUNT? SIGN IN →'}
             </button>
           </div>
         </div>
 
-        <p className="text-center text-xs mt-6" style={{color:'rgba(148,163,184,0.4)'}}>
-          Your data is securely stored in the cloud ☁️
-        </p>
+        <div style={{textAlign:'center',marginTop:'20px',fontSize:'9px',color:'rgba(148,163,184,0.25)',fontFamily:'monospace',letterSpacing:'1px'}}>
+          DATA SECURED · ENCRYPTED · CLOUD STORED
+        </div>
       </div>
     </div>
   );
