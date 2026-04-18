@@ -3627,71 +3627,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
-              <div>
-                <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-                <h1 style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>Diet</h1>
-              </div>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",marginBottom:"16px"}}>DIET</div>
+            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              {[{id:'groceries',label:'GROCERIES'},{id:'meals',label:'MEALS'},{id:'water',label:'WATER'},{id:'plans',label:'DIET PLANS'},{id:'custom',label:'MY DIETS'}].map(tab => (
+                <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"6px 14px",background:dietSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${dietSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:dietSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-          {/* Sub-tabs */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setDietSubTab('groceries')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                dietSubTab === 'groceries'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Groceries
-            </button>
-            <button
-              onClick={() => setDietSubTab('meals')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                dietSubTab === 'meals'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Weekly Meals
-            </button>
-            <button
-              onClick={() => setDietSubTab('water')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                dietSubTab === 'water'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Water
-            </button>
-            <button
-              onClick={() => setDietSubTab('plans')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                dietSubTab === 'plans'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Diet Plans
-            </button>
-            <button
-              onClick={() => setDietSubTab('custom')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                dietSubTab === 'custom'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              My Diets
-            </button>
-          </div>
+        <div className="max-w-6xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* Groceries Tab */}
           {dietSubTab === 'groceries' && (
@@ -6589,113 +6542,91 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-                <h1 style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>Work & Timesheet</h1>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>WORK & TIMESHEET</div>
               </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>THIS WEEK</div>
+                <div style={{fontSize:"24px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>{grandTotals.hours.toFixed(1)}h</div>
+              </div>
+            </div>
+            {/* Tabs */}
+            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              <button onClick={() => setWorkSubTab('summary')} style={{padding:"6px 14px",background:workSubTab==='summary'?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${workSubTab==='summary'?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:workSubTab==='summary'?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                SUMMARY
+              </button>
+              {jobs.map(job => (
+                <button key={job.id} onClick={() => { setTimesheetData(prev => ({...prev, activeJobId: job.id})); setWorkSubTab('timesheet'); }} style={{padding:"6px 14px",background:workSubTab==='timesheet'&&activeJobId===job.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${workSubTab==='timesheet'&&activeJobId===job.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:workSubTab==='timesheet'&&activeJobId===job.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  {job.name.toUpperCase()}
+                </button>
+              ))}
+              {jobs.length < 5 && (
+                <button onClick={addJob} style={{padding:"6px 14px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  + JOB
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          {/* Sub-tabs: Summary & Jobs */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setWorkSubTab('summary')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                workSubTab === 'summary'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              📊 Total Summary
-            </button>
-            {jobs.map(job => (
-              <button
-                key={job.id}
-                onClick={() => {
-                  setTimesheetData(prev => ({ ...prev, activeJobId: job.id }));
-                  setWorkSubTab('timesheet');
-                }}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  workSubTab === 'timesheet' && activeJobId === job.id
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                💼 {job.name}
-              </button>
-            ))}
-            {jobs.length < 5 && (
-              <button
-                onClick={addJob}
-                className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
-              >
-                + Add Job
-              </button>
-            )}
-          </div>
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* Total Summary Tab */}
           {workSubTab === 'summary' && (
-            <div className="space-y-6">
-              {/* Grand Total Card */}
-              <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white">
-                <h2 className="text-2xl font-bold mb-4">📊 All Jobs - Weekly Total</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/10 rounded-xl p-4 text-center">
-                    <div className="text-4xl font-bold">{grandTotals.hours.toFixed(1)}</div>
-                    <div className="text-sm text-green-200">Total Hours</div>
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              {/* Grand Total */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.7)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>ALL JOBS — WEEKLY TOTAL</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+                  <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"12px",textAlign:"center"}}>
+                    <div style={{fontSize:"32px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>{grandTotals.hours.toFixed(1)}</div>
+                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>TOTAL HOURS</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-4 text-center">
-                    <div className="text-4xl font-bold">${grandTotals.pay.toFixed(2)}</div>
-                    <div className="text-sm text-green-200">Total Pay (before tax)</div>
+                  <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"12px",textAlign:"center"}}>
+                    <div style={{fontSize:"32px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>${grandTotals.pay.toFixed(0)}</div>
+                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>TOTAL PAY (PRE-TAX)</div>
                   </div>
                 </div>
               </div>
-              
+
               {/* Per-Job Breakdown */}
-              <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                <div className="p-4 border-b bg-gray-50">
-                  <h3 className="font-semibold text-gray-800">Breakdown by Job</h3>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>BREAKDOWN BY JOB</span>
                 </div>
-                <div className="divide-y">
-                  {jobs.map(job => {
-                    const { hours, pay } = calcJobTotals(job);
-                    return (
-                      <div key={job.id} className="p-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                            <span className="text-lg">💼</span>
-                          </div>
-                          <div>
-                            <div className="font-medium text-white">{job.name}</div>
-                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>${job.hourlyRate || 0}/hr</div>
-                          </div>
+                {jobs.map((job, i) => {
+                  const { hours, pay } = calcJobTotals(job);
+                  return (
+                    <div key={job.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",borderBottom:i<jobs.length-1?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
+                      <div>
+                        <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{job.name}</div>
+                        <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>${job.hourlyRate||0}/hr</div>
+                      </div>
+                      <div style={{display:"flex",gap:"20px",textAlign:"right"}}>
+                        <div>
+                          <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{hours.toFixed(1)}h</div>
+                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>HOURS</div>
                         </div>
-                        <div className="flex items-center gap-4 text-right">
-                          <div>
-                            <div className="font-bold text-gray-800">{hours.toFixed(1)}h</div>
-                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Hours</div>
-                          </div>
-                          <div>
-                            <div className="font-bold text-green-600">${pay.toFixed(2)}</div>
-                            <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Pay</div>
-                          </div>
+                        <div>
+                          <div style={{fontSize:"14px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>${pay.toFixed(2)}</div>
+                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>PAY</div>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-                {/* Total Row */}
-                <div className="p-4 bg-gray-50 border-t flex items-center justify-between">
-                  <div className="font-bold text-gray-800">TOTAL</div>
-                  <div className="flex items-center gap-4 text-right">
-                    <div className="font-bold text-gray-800">{grandTotals.hours.toFixed(1)}h</div>
-                    <div className="font-bold text-green-600">${grandTotals.pay.toFixed(2)}</div>
+                    </div>
+                  );
+                })}
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderTop:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(0,200,255,0.03)"}}>
+                  <span style={{fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px"}}>TOTAL</span>
+                  <div style={{display:"flex",gap:"20px",textAlign:"right"}}>
+                    <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{grandTotals.hours.toFixed(1)}h</div>
+                    <div style={{fontSize:"13px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>${grandTotals.pay.toFixed(2)}</div>
                   </div>
                 </div>
               </div>
@@ -6704,25 +6635,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Individual Job Timesheet Tab */}
           {workSubTab === 'timesheet' && (
-            <div className="space-y-6">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               {/* Job Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(59,130,246,0.7)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                     <input
                       type="text"
                       value={activeJob.name}
                       onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
-                      className="text-2xl font-bold bg-transparent border-b border-white/30 focus:outline-none focus:border-white"
+                      style={{background:"transparent",border:"none",borderBottom:"0.5px solid rgba(59,130,246,0.4)",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:500,letterSpacing:"1px"}}
                     />
                     {donnyJobs.length > 1 && (
-                      <button
-                        onClick={() => deleteJob(activeJobId)}
-                        className="p-1 text-white/60 hover:text-red-300 transition-colors"
-                        title="Delete job"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
+                      <button onClick={() => deleteJob(activeJobId)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px"}}>×</button>
                     )}
                   </div>
                   <button
@@ -6733,41 +6658,37 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         updateJob(activeJobId, 'shifts', newShifts);
                       }
                     }}
-                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
-                  >
-                    Reset Week
-                  </button>
+                    style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(59,130,246,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
+                  >RESET WEEK</button>
                 </div>
-                
+
                 {/* Hourly Rate */}
-                <div className="flex items-center gap-3 mb-4 p-3 bg-white/10 rounded-xl">
-                  <span className="text-blue-100">Hourly Rate:</span>
-                  <div className="flex items-center bg-white/20 rounded-lg px-3 py-1">
-                    <span className="text-white">$</span>
-                    <input
-                      type="text"
-                      value={activeJob.hourlyRateStr || ''}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/[^0-9.]/g, '');
-                        updateJob(activeJobId, 'hourlyRateStr', val);
-                        updateJob(activeJobId, 'hourlyRate', parseFloat(val) || 0);
-                      }}
-                      placeholder="0.00"
-                      className="w-20 bg-transparent text-white placeholder-blue-200 focus:outline-none text-center"
-                    />
-                    <span className="text-blue-200">/hr</span>
-                  </div>
+                <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"12px"}}>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>HOURLY RATE</span>
+                  <span style={{color:"rgba(59,130,246,0.7)",fontFamily:"monospace"}}>$</span>
+                  <input
+                    type="text"
+                    value={activeJob.hourlyRateStr || ''}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9.]/g, '');
+                      updateJob(activeJobId, 'hourlyRateStr', val);
+                      updateJob(activeJobId, 'hourlyRate', parseFloat(val) || 0);
+                    }}
+                    placeholder="0.00"
+                    style={{width:"70px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"3px 8px",outline:"none",textAlign:"center"}}
+                  />
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>/hr</span>
                 </div>
-                
+
                 {/* Weekly Stats */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold">{activeJobTotals.hours.toFixed(1)}</div>
-                    <div className="text-sm text-blue-200">Hours This Week</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+                  <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"28px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500}}>{activeJobTotals.hours.toFixed(1)}</div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>HOURS THIS WEEK</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold">${activeJobTotals.pay.toFixed(2)}</div>
-                    <div className="text-sm text-blue-200">Estimated Pay (before tax)</div>
+                  <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"28px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500}}>${activeJobTotals.pay.toFixed(0)}</div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>EST. PAY (PRE-TAX)</div>
                   </div>
                 </div>
               </div>
@@ -6782,74 +6703,41 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const totalHours = normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
                 const hourlyRate = activeJob.hourlyRate || 0;
                 const dayPay = (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
-                
                 return (
-                  <div 
-                    key={day.date} 
-                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
-                      day.isToday ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-100'
-                    }`}
-                  >
-                    <div className={`px-4 py-3 flex items-center justify-between ${day.isToday ? 'bg-blue-50' : 'bg-gray-50'}`}>
-                      <div className="flex items-center gap-3">
-                        <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
-                        {day.isToday && <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full">Today</span>}
+                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(59,130,246,0.4)":"rgba(0,200,255,0.12)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(59,130,246,0.8)":"rgba(0,200,255,0.2)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                        <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{day.dayName}</span>
+                        {day.isToday && <span style={{fontSize:"9px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"1px",border:"0.5px solid rgba(59,130,246,0.4)",padding:"1px 5px"}}>TODAY</span>}
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                         {totalHours > 0 && (
-                          <div className="flex items-center gap-2">
-                            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">{totalHours.toFixed(1)}h</span>
-                            <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">${dayPay.toFixed(2)}</span>
-                          </div>
+                          <>
+                            <span style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",border:"0.5px solid rgba(59,130,246,0.3)",padding:"2px 6px",borderRadius:"3px"}}>{totalHours.toFixed(1)}h</span>
+                            <span style={{fontSize:"11px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",border:"0.5px solid rgba(34,197,94,0.3)",padding:"2px 6px",borderRadius:"3px"}}>${dayPay.toFixed(2)}</span>
+                          </>
                         )}
-                        <button
-                          onClick={() => {
-                            const newShifts = { ...activeJob.shifts };
-                            delete newShifts[day.date];
-                            updateJob(activeJobId, 'shifts', newShifts);
-                          }}
-                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <button onClick={() => { const newShifts={...activeJob.shifts}; delete newShifts[day.date]; updateJob(activeJobId,'shifts',newShifts); }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
                       </div>
                     </div>
-                    
-                    <div className="p-4 space-y-4">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-blue-50 rounded-xl p-3">
-                          <label className="text-xs text-blue-600 font-medium mb-1 block">1x Normal</label>
-                          <div className="flex items-center gap-2">
-                            <input type="number" step="0.5" value={shift.normalHours || ''} onChange={(e) => updateShift(day.date, 'normalHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-blue-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-blue-400 bg-white" />
-                            <span className="text-blue-600 font-medium">hrs</span>
+                    <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"8px"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+                        {[
+                          {label:"1x NORMAL",field:"normalHours",color:"rgba(59,130,246,0.7)"},
+                          {label:"1.5x TIME & HALF",field:"timeHalfHours",color:"rgba(251,191,36,0.7)"},
+                          {label:"2x DOUBLE",field:"doubleHours",color:"rgba(251,146,60,0.7)"},
+                          {label:"2.5x DOUBLE & HALF",field:"doubleHalfHours",color:"rgba(239,68,68,0.7)"},
+                        ].map(({label,field,color}) => (
+                          <div key={field} style={{background:"rgba(255,255,255,0.02)",border:`0.5px solid ${color}30`,borderRadius:"4px",padding:"8px"}}>
+                            <div style={{fontSize:"9px",color,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>{label}</div>
+                            <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                              <input type="number" step="0.5" value={shift[field]||''} onChange={(e) => updateShift(day.date,field,e.target.value)} placeholder="0" style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:500,textAlign:"center"}} />
+                              <span style={{fontSize:"10px",color,fontFamily:"monospace"}}>hrs</span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="bg-yellow-50 rounded-xl p-3">
-                          <label className="text-xs text-yellow-600 font-medium mb-1 block">1.5x Time & Half</label>
-                          <div className="flex items-center gap-2">
-                            <input type="number" step="0.5" value={shift.timeHalfHours || ''} onChange={(e) => updateShift(day.date, 'timeHalfHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-yellow-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-yellow-400 bg-white" />
-                            <span className="text-yellow-600 font-medium">hrs</span>
-                          </div>
-                        </div>
-                        <div className="bg-orange-50 rounded-xl p-3">
-                          <label className="text-xs text-orange-600 font-medium mb-1 block">2x Double Time</label>
-                          <div className="flex items-center gap-2">
-                            <input type="number" step="0.5" value={shift.doubleHours || ''} onChange={(e) => updateShift(day.date, 'doubleHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-orange-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-orange-400 bg-white" />
-                            <span className="text-orange-600 font-medium">hrs</span>
-                          </div>
-                        </div>
-                        <div className="bg-red-50 rounded-xl p-3">
-                          <label className="text-xs text-red-600 font-medium mb-1 block">2.5x Double & Half</label>
-                          <div className="flex items-center gap-2">
-                            <input type="number" step="0.5" value={shift.doubleHalfHours || ''} onChange={(e) => updateShift(day.date, 'doubleHalfHours', e.target.value)} placeholder="0" className="w-full px-3 py-2 border-2 border-red-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-red-400 bg-white" />
-                            <span className="text-red-600 font-medium">hrs</span>
-                          </div>
-                        </div>
+                        ))}
                       </div>
-                      <div>
-                        <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Notes</label>
-                        <input type="text" value={shift.notes || ''} onChange={(e) => updateShift(day.date, 'notes', e.target.value)} placeholder="What did you work on..." className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-400" />
-                      </div>
+                      <input type="text" value={shift.notes||''} onChange={(e) => updateShift(day.date,'notes',e.target.value)} placeholder="Notes..." style={{background:"transparent",border:"none",borderTop:"0.5px solid rgba(0,200,255,0.06)",color:"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"11px",padding:"6px 0",outline:"none",width:"100%"}} />
                     </div>
                   </div>
                 );
@@ -14545,22 +14433,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={()=>setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Timetable</h1>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",marginBottom:"16px"}}>TIMETABLE</div>
+            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              {[{id:'week',label:'WEEK VIEW'},{id:'list',label:'LIST'},{id:'add',label:'+ ADD BLOCK'}].map(t => (
+                <button key={t.id} onClick={()=>{setTtTab(t.id);if(t.id!=='add')setTtEditingId(null);}}
+                  style={{padding:"6px 14px",background:ttTab===t.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${ttTab===t.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:ttTab===t.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
-          {/* Tabs */}
-          <div className="flex gap-2 flex-wrap">
-            {[{id:'week',label:'Week View'},{id:'list',label:'List'},{id:'add',label:'+ Add Block'}].map(t=>(
-              <button key={t.id} onClick={()=>{setTtTab(t.id);if(t.id!=='add')setTtEditingId(null);}}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ttTab===t.id?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>
-                {t.label}
-              </button>
-            ))}
-          </div>
+
+        <div className="max-w-5xl mx-auto px-4 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* WEEK GRID */}
           {ttTab==='week' && (
