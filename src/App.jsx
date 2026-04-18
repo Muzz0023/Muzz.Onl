@@ -18426,66 +18426,99 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+
+        {/* HEADER */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px",position:"relative"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🔥 Habit Tracker</h1>
-            <p className="text-white/70 mt-1">Track your daily habits. Small wins compound.</p>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HABIT TRACKER</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ACTIVE HABITS</div>
+                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{habits.length}</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-          {/* Add Habit */}
+
+        <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+
+          {/* ADD HABIT */}
           <button
             onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '✅', createdAt: today }])}
-            className="w-full py-4 bg-gradient-to-r from-orange-500 to-rose-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+            style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
           >
-            + Add New Habit
+            + ADD NEW HABIT
           </button>
 
           {habits.length === 0 && (
-            <div className="bg-white rounded-3xl p-12 shadow-sm border text-center">
-              <div className="text-5xl mb-4">🔥</div>
-              <p className="text-gray-500">No habits yet. Add one above to start building streaks!</p>
+            <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>
+              NO HABITS TRACKED — ADD ONE ABOVE
             </div>
           )}
 
           {habits.map(habit => {
             const streak = getStreak(habit.id);
             const completedToday = !!habitLog[`${habit.id}:${today}`];
+            const totalDone = last31.filter(d => habitLog[`${habit.id}:${d}`]).length;
+            const completionRate = Math.round((totalDone / 31) * 100);
             return (
-              <div key={habit.id} className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                <div className="p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <input
-                      type="text"
-                      value={habit.icon}
-                      onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
-                      className="w-10 h-10 text-center text-xl bg-gray-100 rounded-xl focus:outline-none"
-                    />
-                    <input
-                      type="text"
-                      value={habit.name}
-                      onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
-                      placeholder="Habit name..."
-                      className="flex-1 text-lg font-semibold bg-transparent focus:outline-none"
-                    />
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => toggleHabit(habit.id, today)}
-                        className={`w-12 h-12 rounded-xl text-2xl transition-all ${completedToday ? 'bg-green-500 text-white scale-110' : 'bg-gray-100 hover:bg-gray-200'}`}
-                      >
-                        {completedToday ? '✓' : '○'}
-                      </button>
-                      <button
-                        onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
-                        className="text-gray-300 hover:text-red-500 transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+              <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${completedToday?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.15)"}`,borderRadius:"6px",borderLeft:`2px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                {/* Habit header */}
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"10px"}}>
+                  <input
+                    type="text"
+                    value={habit.icon}
+                    onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
+                    style={{width:"32px",height:"32px",textAlign:"center",fontSize:"18px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",color:"#e0eaff",flexShrink:0}}
+                  />
+                  <input
+                    type="text"
+                    value={habit.name}
+                    onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
+                    placeholder="Habit name..."
+                    style={{flex:1,fontSize:"13px",fontFamily:"monospace",color:"#e0eaff",background:"transparent",border:"none",outline:"none",letterSpacing:"0.5px"}}
+                  />
+                  <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                    {/* Streak */}
+                    {streak > 0 && <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.4)",padding:"2px 6px"}}>🔥 {streak}d</div>}
+                    {/* Toggle today */}
+                    <button
+                      onClick={() => toggleHabit(habit.id, today)}
+                      style={{width:"36px",height:"36px",borderRadius:"4px",fontSize:"16px",background:completedToday?"#00c8ff":"rgba(0,200,255,0.08)",border:`0.5px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(0,200,255,0.6)",cursor:"pointer",fontWeight:500}}
+                    >
+                      {completedToday ? '✓' : '○'}
+                    </button>
+                    <button
+                      onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
+                      style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px"}}
+                    >
+                      <Trash2 style={{width:"14px",height:"14px"}} />
+                    </button>
                   </div>
-                  {/* Heatmap - Last 31 Days */}
-                  <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(28px, 1fr))' }}>
+                </div>
+
+                {/* Stats row */}
+                <div style={{display:"flex",alignItems:"center",gap:"16px",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                  <div>
+                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAK </span>
+                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{streak}d</span>
+                  </div>
+                  <div>
+                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>31-DAY RATE </span>
+                    <span style={{fontSize:"11px",color:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",fontFamily:"monospace"}}>{completionRate}%</span>
+                  </div>
+                  <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                    <div style={{height:"2px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"1px"}} />
+                  </div>
+                </div>
+
+                {/* Heatmap */}
+                <div style={{padding:"10px 16px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(22px, 1fr))",gap:"3px"}}>
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
@@ -18493,14 +18526,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          title={`${new Date(date).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}${done ? ' ✓' : ''}`}
-                          className="aspect-square rounded-lg cursor-pointer transition-all min-h-[28px]"
-                          style={done ? {background:'rgba(0,200,255,0.8)',boxShadow:'0 0 8px rgba(0,200,255,0.6), 0 0 16px rgba(0,200,255,0.3)'} : isToday ? {background:'rgba(0,200,255,0.15)',border:'1px solid rgba(0,200,255,0.4)'} : {background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)'}}
+                          title={`${new Date(date).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}${done?' ✓':''}`}
+                          style={{aspectRatio:"1",borderRadius:"2px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"0.5px solid rgba(0,200,255,0.4)":"none",boxShadow:done?"0 0 4px rgba(0,200,255,0.5)":"none"}}
                         />
                       );
                     })}
                   </div>
-                  <p className="text-xs mt-2" style={{color:"rgba(0,200,255,0.3)"}}>Last 31 days — tap any day to toggle</p>
+                  <div style={{fontSize:"9px",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
                 </div>
               </div>
             );
