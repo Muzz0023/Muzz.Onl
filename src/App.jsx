@@ -5339,7 +5339,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:"11px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>✓ SAVED</div>
                 )}
               </div>
-            </div>
           </div>
 
           {/* Empty State */}
