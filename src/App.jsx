@@ -14803,132 +14803,133 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="JOBS MASTERVIEW" icon="📋" />
-          <div className="max-w-6xl mx-auto px-4 py-6">
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-6xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE SYSTEM</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>JOBS MASTERVIEW</div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TOTAL JOBS</div>
+                  <div style={{fontSize:"24px",color:"#f97316",fontFamily:"monospace",fontWeight:500}}>{donnyJobs.length}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-6xl mx-auto px-4 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             {donnyJobs.length === 0 ? (
-              <div className="rounded-2xl p-12 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.1)'}}>
-                <div className="text-5xl mb-3">📋</div>
-                <div className="text-white font-bold mb-1">No jobs yet</div>
-                <div className="text-sm mb-4" style={{color:'rgba(148,163,184,0.5)'}}>Add a job to see it on the whiteboard</div>
-                <button onClick={() => setActiveView('donny-newjob')} className="px-6 py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ New Job</button>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"9px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO JOBS YET</div>
+                <button onClick={() => setActiveView('donny-newjob')} style={{padding:"8px 20px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ NEW JOB</button>
               </div>
             ) : (
               <>
                 {/* MASTER TABLE */}
-                <div className="rounded-2xl overflow-hidden mb-6" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                  <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
-                    <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// MASTER TABLE</div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyJobs.length} jobs</span>
-                      <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ New Job</button>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
+                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MASTER TABLE</span>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                      <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{donnyJobs.length} JOBS</span>
+                      <button onClick={() => setActiveView('donny-newjob')} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ NEW</button>
                     </div>
                   </div>
-                  <div style={{overflowX:'auto'}}>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'70px minmax(120px,1fr) 85px 85px 95px',minWidth:'430px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>JOB #</div><div>NAME</div><div>START</div><div>DUE</div><div>STATUS</div>
+                  <div style={{overflowX:"auto"}}>
+                    <div style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"8px 16px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                      <div>JOB #</div><div>NAME</div><div>START</div><div>DUE</div><div>STATUS</div>
+                    </div>
+                    {donnyJobs.map((job, i) => {
+                      const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
+                      const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
+                      return (
+                        <div key={job.id} style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.7)"}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
+                          <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{job.title}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?'#ef4444':'rgba(148,163,184,0.6)'}}>{job.dueDate?new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
+                          <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:700,padding:"2px 8px",letterSpacing:"0.5px",background:`${statusColor}15`,color:statusColor,border:`0.5px solid ${statusColor}30`,borderRadius:"3px"}}>{status}</span></div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  {donnyJobs.map((job, i) => {
-                    const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
-                    const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
-                    return (
-                      <div key={job.id} className="grid px-5 py-3 text-sm items-center hover:bg-white/[0.02]"
-                        style={{gridTemplateColumns:'70px minmax(120px,1fr) 85px 85px 95px',minWidth:'430px',borderBottom:i<donnyJobs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
-                        <div className="font-mono text-xs" style={{color:'rgba(249,115,22,0.7)'}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
-                        <div className="text-white font-medium truncate pr-4">{job.title}</div>
-                        <div className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
-                        <div className="text-xs" style={{color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?'#ef4444':'rgba(148,163,184,0.6)'}}>{job.dueDate?new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
-                        <div><span className="text-xs font-bold px-2 py-1 rounded-lg" style={{background:`${statusColor}15`,color:statusColor,border:`1px solid ${statusColor}30`}}>{status}</span></div>
-                      </div>
-                    );
-                  })}
-                  </div>{/* end scroll */}
                 </div>
 
                 {/* KANBAN */}
-                <div className="grid grid-cols-3 gap-4">
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:"10px"}}>
                   {columns.map(col => (
                     <div key={col.id}>
-                      <div className="flex items-center gap-2 mb-3 px-1">
-                        <div className="w-2 h-2 rounded-full" style={{background:col.color}}/>
-                        <span className="text-xs font-mono font-bold tracking-widest" style={{color:col.color}}>{col.label}</span>
-                        <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{background:`${col.color}20`,color:col.color}}>{col.jobs.length}</span>
+                      <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px",padding:"0 4px"}}>
+                        <div style={{width:"6px",height:"6px",borderRadius:"50%",background:col.color,flexShrink:0}}/>
+                        <span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:700,letterSpacing:"2px",color:col.color}}>{col.label}</span>
+                        <span style={{marginLeft:"auto",fontSize:"10px",fontFamily:"monospace",padding:"1px 6px",background:`${col.color}20`,color:col.color,border:`0.5px solid ${col.color}30`,borderRadius:"3px"}}>{col.jobs.length}</span>
                       </div>
                       <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
                         {col.jobs.length === 0 && (
-                          <div className="rounded-xl p-4 text-center text-xs" style={{background:'rgba(255,255,255,0.02)',border:`1px dashed ${col.color}30`,color:'rgba(148,163,184,0.3)'}}>No jobs</div>
+                          <div style={{padding:"16px",textAlign:"center",fontSize:"10px",fontFamily:"monospace",background:"rgba(255,255,255,0.02)",border:`0.5px dashed ${col.color}30`,borderRadius:"6px",color:"rgba(148,163,184,0.3)"}}>NO JOBS</div>
                         )}
                         {col.jobs.map(job => (
-                          <div key={job.id} className="rounded-2xl p-4" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${editingJobId===job.id ? col.color+'80' : col.color+'30'}`}}>
-                            <div className="flex items-start justify-between mb-2">
+                          <div key={job.id} style={{background:"rgba(5,12,24,0.9)",border:`0.5px solid ${editingJobId===job.id ? col.color+'80' : col.color+'30'}`,borderRadius:"6px",borderLeft:`2px solid ${col.color}50`,padding:"12px 14px"}}>
+                            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:"8px"}}>
                               {job.jobNumber ? (
-                                <div className="text-xs font-mono px-2 py-0.5 rounded-md" style={{background:`${col.color}15`,color:col.color,border:`1px solid ${col.color}30`}}>#{job.jobNumber}</div>
+                                <div style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 6px",background:`${col.color}15`,color:col.color,border:`0.5px solid ${col.color}30`,borderRadius:"3px"}}>#{job.jobNumber}</div>
                               ) : <div/>}
-                              <div className="flex gap-1.5">
+                              <div style={{display:"flex",gap:"4px"}}>
                                 <button onClick={() => setEditingJobId(editingJobId===job.id ? null : job.id)}
-                                  className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>
-                                  {editingJobId===job.id ? '✕' : '✏️'}
+                                  style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer"}}>
+                                  {editingJobId===job.id ? '✕' : 'EDIT'}
                                 </button>
                                 <button onClick={() => { if(window.confirm('Delete this job?')) saveDonnyJobs(donnyJobs.filter(j => j.id !== job.id)); }}
-                                  className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                                  style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
                               </div>
                             </div>
 
                             {editingJobId === job.id ? (
-                              /* INLINE EDIT FORM */
-                              <div className="space-y-3 mt-2">
+                              <div style={{display:"flex",flexDirection:"column",gap:"8px",marginTop:"4px"}}>
                                 <div>
-                                  <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>JOB TITLE</div>
+                                  <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(249,115,22,0.5)",letterSpacing:"1px",marginBottom:"4px"}}>JOB TITLE</div>
                                   <input value={job.title} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,title:e.target.value}:j))}
-                                    className="w-full bg-transparent text-white font-bold focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(249,115,22,0.3)'}}/>
+                                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:500,border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.3)",outline:"none",paddingBottom:"2px"}}/>
                                 </div>
-                                <div className="grid grid-cols-3 gap-2">
-                                  <div>
-                                    <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>JOB #</div>
-                                    <input value={job.jobNumber||''} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,jobNumber:e.target.value}:j))}
-                                      placeholder="042" className="w-full bg-transparent text-white text-xs focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                                  </div>
-                                  <div>
-                                    <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>START</div>
-                                    <input type="date" value={job.startDate||''} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,startDate:e.target.value}:j))}
-                                      className="w-full bg-transparent text-white text-xs focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                                  </div>
-                                  <div>
-                                    <div className="text-xs font-mono mb-1" style={{color:'rgba(249,115,22,0.5)'}}>DUE</div>
-                                    <input type="date" value={job.dueDate||''} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,dueDate:e.target.value}:j))}
-                                      className="w-full bg-transparent text-white text-xs focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                                  </div>
+                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
+                                  {[{label:"JOB #",field:"jobNumber",type:"text",ph:"042"},{label:"START",field:"startDate",type:"date",ph:""},{label:"DUE",field:"dueDate",type:"date",ph:""}].map(({label,field,type,ph}) => (
+                                    <div key={field}>
+                                      <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(249,115,22,0.4)",letterSpacing:"1px",marginBottom:"3px"}}>{label}</div>
+                                      <input type={type} value={job[field]||''} placeholder={ph} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,[field]:e.target.value}:j))}
+                                        style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(255,255,255,0.1)",outline:"none",colorScheme:"dark"}}/>
+                                    </div>
+                                  ))}
                                 </div>
-                                <button onClick={() => setEditingJobId(null)}
-                                  className="w-full py-2 rounded-xl text-xs font-bold text-white" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                                  Done ✓
+                                <button onClick={() => setEditingJobId(null)} style={{padding:"6px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>
+                                  DONE ✓
                                 </button>
                               </div>
                             ) : (
-                              /* NORMAL VIEW */
                               <>
-                                <div className="text-white font-bold text-sm mb-3">{job.title}</div>
-                                <div className="space-y-1.5 mb-3">
-                                  <div className="flex items-center justify-between text-xs">
-                                    <span style={{color:'rgba(148,163,184,0.5)'}}>Start</span>
-                                    <span className="text-white">{formatDate(job.startDate)}</span>
-                                  </div>
-                                  <div className="flex items-center justify-between text-xs">
-                                    <span style={{color:'rgba(148,163,184,0.5)'}}>Due</span>
-                                    <span style={{color: isOverdue(job.dueDate) && !job.completed ? '#ef4444' : 'white'}}>{formatDate(job.dueDate)}</span>
-                                  </div>
+                                <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:500,marginBottom:"8px"}}>{job.title}</div>
+                                <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"10px"}}>
+                                  {[{label:"START",val:formatDate(job.startDate),overdue:false},{label:"DUE",val:formatDate(job.dueDate),overdue:isOverdue(job.dueDate)&&!job.completed}].map(({label,val,overdue}) => (
+                                    <div key={label} style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:"10px"}}>
+                                      <span style={{color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{label}</span>
+                                      <span style={{color:overdue?"#ef4444":"rgba(224,234,255,0.7)",fontFamily:"monospace"}}>{val}</span>
+                                    </div>
+                                  ))}
                                 </div>
-                                <div className="flex gap-2 pt-3" style={{borderTop:`1px solid ${col.color}15`}}>
+                                <div style={{display:"flex",gap:"6px",paddingTop:"8px",borderTop:`0.5px solid ${col.color}15`}}>
                                   {!job.started && !job.completed && (
                                     <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,started:true}:j))}
-                                      className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>Start →</button>
+                                      style={{flex:1,padding:"5px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.8)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>START →</button>
                                   )}
                                   {job.started && !job.completed && (
                                     <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:true}:j))}
-                                      className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(34,197,94,0.15)',color:'#22c55e',border:'1px solid rgba(34,197,94,0.3)'}}>Complete ✓</button>
+                                      style={{flex:1,padding:"5px",background:"rgba(34,197,94,0.1)",color:"rgba(34,197,94,0.8)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>COMPLETE ✓</button>
                                   )}
                                   {job.completed && (
                                     <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j))}
-                                      className="flex-1 py-1.5 rounded-lg text-xs font-bold" style={{background:'rgba(148,163,184,0.1)',color:'rgba(148,163,184,0.6)',border:'1px solid rgba(148,163,184,0.2)'}}>Reopen</button>
+                                      style={{flex:1,padding:"5px",background:"rgba(148,163,184,0.06)",color:"rgba(148,163,184,0.5)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>REOPEN</button>
                                   )}
                                 </div>
                               </>
@@ -14939,7 +14940,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-
               </>
             )}
           </div>
