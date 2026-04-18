@@ -3648,12 +3648,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Groceries Tab */}
           {dietSubTab === 'groceries' && (
-            <div className="space-y-4">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               {/* Shopping Lists - Overview or Detail */}
               {!activeShoppingList ? (
                 <>
                   {/* Header */}
-                  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(168,85,247,0.7)",padding:"16px 20px"}}>
                     <h2 className="text-2xl font-bold mb-1">🛒 Shopping Lists</h2>
                     <p className="text-purple-200 text-sm">{shoppingLists.length} {shoppingLists.length === 1 ? 'list' : 'lists'} • {groceries.filter(g => !g.checked).length} items to buy</p>
                   </div>
@@ -3666,7 +3666,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: name.trim(), emoji: '🛍️' }]);
                       }
                     }}
-                    className="w-full py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+                    style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Create New List
                   </button>
@@ -3721,7 +3721,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
 
                   {shoppingLists.length === 0 && (
-                    <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                       <div className="text-5xl mb-4">🛒</div>
                       <p className="text-gray-500">No shopping lists yet. Create one above!</p>
                     </div>
@@ -3736,10 +3736,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const bagItems = listItems.filter(g => g.checked);
 
                 return (
-                  <div className="space-y-4">
+                  <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                     {/* Back + Header */}
                     <button onClick={() => setActiveShoppingList(null)} className="text-purple-600 font-medium text-sm">← All Lists</button>
-                    <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(168,85,247,0.7)",padding:"16px 20px"}}>
                       <h2 className="text-2xl font-bold mb-1">{list.emoji} {list.name}</h2>
                       <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
                     </div>
@@ -3776,8 +3776,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       ];
 
                       return allGroups.map(group => (
-                        <div key={group.id} className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                          <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
+                        <div key={group.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+                          <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.1)",borderLeft:"2px solid rgba(168,85,247,0.5)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                             <h3 className="font-semibold text-purple-700 flex items-center gap-2">
                               {group.id !== '_none' && (
                                 <input type="text" value={group.emoji} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c) } : l))} className="w-6 text-center bg-transparent focus:outline-none" />
@@ -3829,7 +3829,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                     {/* Shopping Bag */}
                     {bagItems.length > 0 && (
-                      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                         <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
                           <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ In Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{bagItems.length}</span></h3>
                           <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked || (g.listId || 'default') !== list.id))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear</button>
@@ -3854,7 +3854,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
 
                     {listItems.length === 0 && (
-                      <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                         <div className="text-5xl mb-4">{list.emoji}</div>
                         <p className="text-gray-500">This list is empty. Add items above!</p>
                       </div>
@@ -3867,7 +3867,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Weekly Meals Tab */}
           {dietSubTab === 'meals' && (
-            <div className="space-y-4">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               <div className="flex justify-end">
                 <button
                   onClick={() => {
@@ -3965,9 +3965,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const weekAvg = weekTotal / 7;
 
             return (
-              <div className="space-y-6">
+              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Water Bottle + Today's Progress */}
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-semibold text-white">Water Intake</h2>
@@ -4071,7 +4071,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Weekly View */}
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-semibold text-white">This Week</h2>
@@ -4130,8 +4130,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Diet Plans Tab */}
           {dietSubTab === 'plans' && (
-            <div className="space-y-4">
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                 <div className="p-6 border-b">
                   <h2 className="text-xl font-semibold text-white">Prebuilt Diet Plans</h2>
                   <p className="text-sm text-gray-500 mt-1">Tap a plan to see the full daily meal breakdown</p>
@@ -4251,8 +4251,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* My Diets Tab */}
           {dietSubTab === 'custom' && (
-            <div className="space-y-4">
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                 <div className="p-6 border-b flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-semibold text-white">My Custom Diets</h2>
