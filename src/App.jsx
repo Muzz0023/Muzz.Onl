@@ -3117,26 +3117,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // Save status indicator (separate from Sidebar to prevent scroll reset)
   const SaveIndicator = () => (
     saveStatus !== 'idle' ? (
-      <div className={`fixed top-4 right-4 z-30 px-3 py-2 rounded-2xl shadow-sm flex items-center gap-2 text-xs font-medium transition-all backdrop-blur-lg ${
-        saveStatus === 'saving' ? 'bg-orange-50/90 text-orange-600 border border-orange-100' : 
-        saveStatus === 'saved' ? 'bg-green-50/90 text-green-600 border border-green-100' : 
-        'bg-red-50/90 text-red-600 border border-red-100'
-      }`}>
-        {saveStatus === 'saving' && (
-          <span className='flex items-center gap-1'>
-            <Loader2 className='w-3 h-3 animate-spin' /> Saving...
-          </span>
-        )}
-        {saveStatus === 'saved' && (
-          <span className='flex items-center gap-1'>
-            <CheckCircle2 className='w-3 h-3' /> Saved
-          </span>
-        )}
-        {saveStatus === 'error' && (
-          <span className='flex items-center gap-1'>
-            <X className='w-3 h-3' /> Failed
-          </span>
-        )}
+      <div style={{
+        position:'fixed',top:'10px',right:'16px',zIndex:30,
+        display:'flex',alignItems:'center',gap:'6px',
+        padding:'4px 10px',
+        background:'rgba(3,8,18,0.92)',
+        border:`0.5px solid ${saveStatus==='saving'?'rgba(0,200,255,0.3)':saveStatus==='saved'?'rgba(34,197,94,0.3)':'rgba(239,68,68,0.3)'}`,
+        borderRadius:'3px',backdropFilter:'blur(8px)',
+        fontFamily:'monospace',fontSize:'9px',letterSpacing:'1.5px',
+        color:saveStatus==='saving'?'rgba(0,200,255,0.7)':saveStatus==='saved'?'rgba(34,197,94,0.7)':'rgba(239,68,68,0.7)',
+      }}>
+        <span style={{width:'5px',height:'5px',borderRadius:'50%',display:'inline-block',flexShrink:0,
+          background:saveStatus==='saving'?'#00c8ff':saveStatus==='saved'?'#22c55e':'#ef4444',
+          boxShadow:saveStatus==='saving'?'0 0 4px #00c8ff':saveStatus==='saved'?'0 0 4px #22c55e':'0 0 4px #ef4444',
+          animation:saveStatus==='saving'?'blink 1s infinite':'none',
+        }}/>
+        {saveStatus==='saving'?'SAVING':''}
+        {saveStatus==='saved'?'SAVED':''}
+        {saveStatus==='error'?'FAILED':''}
       </div>
     ) : null
   );
