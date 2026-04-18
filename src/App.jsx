@@ -3640,25 +3640,300 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
           {/* Sub-tabs */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setDietSubTab('groceries')}
-              className="palantir-tab"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                dietSubTab === 'groceries'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
+            >
+              Groceries
+            </button>
+            <button
+              onClick={() => setDietSubTab('meals')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                dietSubTab === 'meals'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
             >
               Weekly Meals
             </button>
             <button
               onClick={() => setDietSubTab('water')}
-              className="palantir-tab"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                dietSubTab === 'water'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
+            >
+              Water
+            </button>
+            <button
+              onClick={() => setDietSubTab('plans')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                dietSubTab === 'plans'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
             >
               Diet Plans
             </button>
             <button
               onClick={() => setDietSubTab('custom')}
-              className="palantir-tab">
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                dietSubTab === 'custom'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
+            >
+              My Diets
+            </button>
+          </div>
+
+          {/* Groceries Tab */}
+          {dietSubTab === 'groceries' && (
+            <div className="space-y-4">
+              {/* Shopping Lists - Overview or Detail */}
+              {!activeShoppingList ? (
+                <>
+                  {/* Header */}
+                  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                    <h2 className="text-2xl font-bold mb-1">🛒 Shopping Lists</h2>
+                    <p className="text-purple-200 text-sm">{shoppingLists.length} {shoppingLists.length === 1 ? 'list' : 'lists'} • {groceries.filter(g => !g.checked).length} items to buy</p>
+                  </div>
+
+                  {/* Create New List */}
+                  <button
+                    onClick={() => {
+                      const name = prompt('List name (e.g. Groceries, Kmart, Bunnings)');
+                      if (name?.trim()) {
+                        setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: name.trim(), emoji: '🛍️' }]);
+                      }
+                    }}
+                    className="w-full py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
+                  >
+                    + Create New List
+                  </button>
+
+                  {/* List Cards */}
+                  {shoppingLists.map(list => {
+                    const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
+                    const toBuy = listItems.filter(g => !g.checked).length;
+                    const inBag = listItems.filter(g => g.checked).length;
+                    return (
+                      <div
+                        key={list.id}
+                        onClick={() => setActiveShoppingList(list.id)}
+                        className="rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}
+                      >
+                        <input
+                          type="text"
+                          value={list.emoji}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, emoji: e.target.value.slice(0, 2) } : l))}
+                          className="w-12 h-12 text-center text-2xl bg-purple-50 rounded-xl focus:outline-none"
+                        />
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={list.name}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
+                            className="font-semibold text-gray-800 bg-transparent focus:outline-none w-full"
+                          />
+                          <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{toBuy} to buy • {inBag} in bag</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {list.id !== 'default' && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm('Delete this list and all its items?')) {
+                                  setShoppingLists(prev => prev.filter(l => l.id !== list.id));
+                                  setGroceries(prev => prev.filter(g => (g.listId || 'default') !== list.id));
+                                }
+                              }}
+                              className="text-gray-300 hover:text-red-500"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                          <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90" />
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {shoppingLists.length === 0 && (
+                    <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                      <div className="text-5xl mb-4">🛒</div>
+                      <p className="text-gray-500">No shopping lists yet. Create one above!</p>
+                    </div>
+                  )}
+                </>
+              ) : (() => {
+                /* Detail view for a single list */
+                const list = shoppingLists.find(l => l.id === activeShoppingList);
+                if (!list) { setActiveShoppingList(null); return null; }
+                const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
+                const toBuyItems = listItems.filter(g => !g.checked);
+                const bagItems = listItems.filter(g => g.checked);
+
+                return (
+                  <div className="space-y-4">
+                    {/* Back + Header */}
+                    <button onClick={() => setActiveShoppingList(null)} className="text-purple-600 font-medium text-sm">← All Lists</button>
+                    <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                      <h2 className="text-2xl font-bold mb-1">{list.emoji} {list.name}</h2>
+                      <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
+                    </div>
+
+                    {/* Sub-categories + Add */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => {
+                          const name = prompt('Category name (e.g. Fridge, Freezer, Pantry)');
+                          if (name?.trim()) {
+                            setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: [...(l.subCategories || []), { id: Date.now().toString(), name: name.trim(), emoji: '📦' }] } : l));
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium hover:bg-purple-200 transition-colors"
+                      >+ Add Category</button>
+                      {(list.subCategories || []).map(cat => (
+                        <span key={cat.id} className="px-3 py-1.5 bg-gray-100 rounded-full text-xs font-medium text-gray-600 flex items-center gap-1">
+                          {cat.emoji} {cat.name}
+                          <button onClick={() => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).filter(c => c.id !== cat.id) } : l))} className="text-gray-400 hover:text-red-500 ml-1">×</button>
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Items grouped by sub-category */}
+                    {(() => {
+                      const cats = list.subCategories || [];
+                      const uncategorised = toBuyItems.filter(g => !g.subCategory || !cats.find(c => c.id === g.subCategory));
+                      const allGroups = [
+                        ...cats.map(cat => ({
+                          ...cat,
+                          items: toBuyItems.filter(g => g.subCategory === cat.id)
+                        })),
+                        ...(uncategorised.length > 0 ? [{ id: '_none', name: cats.length > 0 ? 'Uncategorised' : 'Need to Buy', emoji: '🛍️', items: uncategorised }] : [])
+                      ];
+
+                      return allGroups.map(group => (
+                        <div key={group.id} className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                          <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
+                            <h3 className="font-semibold text-purple-700 flex items-center gap-2">
+                              {group.id !== '_none' && (
+                                <input type="text" value={group.emoji} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c) } : l))} className="w-6 text-center bg-transparent focus:outline-none" />
+                              )}
+                              {group.id === '_none' ? group.name : (
+                                <input type="text" value={group.name} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, name: e.target.value } : c) } : l))} className="bg-transparent focus:outline-none font-semibold text-purple-700" />
+                              )}
+                              {group.items.length > 0 && <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{group.items.length}</span>}
+                            </h3>
+                            <button
+                              onClick={() => setGroceries(prev => [...prev, { id: Date.now(), item: '', quantity: '1', listId: list.id, subCategory: group.id === '_none' ? '' : group.id, checked: false }])}
+                              className="w-7 h-7 bg-purple-500 text-white rounded-lg flex items-center justify-center text-sm hover:bg-purple-600 transition-colors"
+                            >+</button>
+                          </div>
+                          {group.items.length > 0 && (
+                            <div className="divide-y">
+                              {group.items.map(item => (
+                                <div key={item.id} className="px-4 py-3 flex items-center gap-3">
+                                  <button
+                                    onClick={() => updateGrocery(item.id, 'checked', true)}
+                                    className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={item.item}
+                                    onFocus={scrollInputIntoView}
+                                    onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
+                                    placeholder="Item name"
+                                    className="flex-1 text-sm font-medium bg-transparent focus:outline-none"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={item.quantity || ''}
+                                    onFocus={scrollInputIntoView}
+                                    onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
+                                    placeholder="Qty"
+                                    className="w-14 text-sm text-center bg-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:bg-purple-50"
+                                  />
+                                  <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ));
+                    })()}
+
+                    {/* Shopping Bag */}
+                    {bagItems.length > 0 && (
+                      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                        <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
+                          <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ In Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{bagItems.length}</span></h3>
+                          <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked || (g.listId || 'default') !== list.id))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear</button>
+                        </div>
+                        <div className="divide-y">
+                          {bagItems.map(item => (
+                            <div key={item.id} className="px-4 py-3 flex items-center gap-3 opacity-60">
+                              <button
+                                onClick={() => updateGrocery(item.id, 'checked', false)}
+                                className="w-6 h-6 rounded-lg bg-green-500 flex-shrink-0 flex items-center justify-center"
+                              >
+                                <span className="text-white text-xs">✓</span>
+                              </button>
+                              <span className="flex-1 text-sm line-through text-gray-500">{item.item || 'Unnamed'}</span>
+                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {listItems.length === 0 && (
+                      <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
+                        <div className="text-5xl mb-4">{list.emoji}</div>
+                        <p className="text-gray-500">This list is empty. Add items above!</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Weekly Meals Tab */}
+          {dietSubTab === 'meals' && (
+            <div className="space-y-4">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    const resetMeals = {};
+                    weekDays.forEach(d => { resetMeals[d.date] = []; });
+                    setDailyMeals(prev => ({ ...prev, ...resetMeals }));
+                  }}
+                  className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
+                >
+                  Reset Week
+                </button>
+              </div>
+              {weekDays.map(day => {
+                const dayMeals = dailyMeals[day.date] || [];
+                return (
+                  <div key={day.date} className={`bg-white rounded-3xl shadow-sm border overflow-hidden ${day.isToday ? 'ring-2 ring-orange-500' : ''}`}>
                     <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${day.isToday ? '' : 'bg-gray-200 text-gray-600'}`}>
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${day.isToday ? 'text-white cyber-tab-active' : 'bg-gray-200 text-gray-600'}`}>
                           <span className="text-sm font-bold">{day.dayShort}</span>
                         </div>
                         <div>
@@ -3739,10 +4014,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             return (
               <div className="space-y-6">
                 {/* Water Bottle + Today's Progress */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
-                      <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Water Intake</h2>
+                      <h2 className="text-xl font-semibold text-white">Water Intake</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Stay hydrated, legend</p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -3843,10 +4118,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Weekly View */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b flex items-center justify-between">
                     <div>
-                      <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>This Week</h2>
+                      <h2 className="text-xl font-semibold text-white">This Week</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
                         Weekly avg: {weekAvg.toFixed(1)}L / day • Total: {weekTotal.toFixed(1)}L
                       </p>
@@ -3903,9 +4178,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Diet Plans Tab */}
           {dietSubTab === 'plans' && (
             <div className="space-y-4">
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Prebuilt Diet Plans</h2>
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-semibold text-white">Prebuilt Diet Plans</h2>
                   <p className="text-sm text-gray-500 mt-1">Tap a plan to see the full daily meal breakdown</p>
                 </div>
                 <div className="p-6 space-y-4">
@@ -4024,10 +4299,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* My Diets Tab */}
           {dietSubTab === 'custom' && (
             <div className="space-y-4">
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-6 border-b flex items-center justify-between">
                   <div>
-                    <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>My Custom Diets</h2>
+                    <h2 className="text-xl font-semibold text-white">My Custom Diets</h2>
                     <p className="text-sm text-gray-500 mt-1">Build your own meal plans</p>
                   </div>
                   <button
@@ -4255,14 +4530,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
         <div className="max-w-5xl mx-auto px-6 py-6 space-y-6">
-          <div style={{display:"flex",gap:"4px"}}>
+          <div className="flex gap-2">
             <button onClick={() => setGymTab('steps')} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${gymTab==='steps'?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>👟 Weekly Steps</button>
             <button onClick={() => setGymTab('plan')} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${gymTab==='plan'?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>💪 Workout Plan</button>
           </div>
 
           {gymTab === 'steps' && (
             <div className="space-y-4">
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"14px 16px"}}>
+              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
                 <h2 className="text-lg font-semibold text-white mb-2">👟 Weekly Steps & Workouts</h2>
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-slate-400">Goal:</span>
@@ -7283,24 +7558,72 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
           {/* Sub-tabs */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setBillsSubTab('bills')}
-              className="palantir-tab"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                billsSubTab === 'bills'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
+            >
+              Bills
+            </button>
+            <button
+              onClick={() => setBillsSubTab('calendar')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                billsSubTab === 'calendar'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
             >
               Calendar
             </button>
             <button
               onClick={() => setBillsSubTab('goals')}
-              className="palantir-tab"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                billsSubTab === 'goals'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
+            >
+              Goals
+            </button>
+            <button
+              onClick={() => setBillsSubTab('debts')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                billsSubTab === 'debts'
+                  ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
             >
               Debts
             </button>
             <button
               onClick={() => setBillsSubTab('debtCalc')}
-              className="palantir-tab"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                billsSubTab === 'debtCalc'
+                  ? 'text-white cyber-tab-active'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
+            >
+              Debt Payoff Calc
+            </button>
+          </div>
+
+          {billsSubTab === 'bills' && (
+            <>
+          {/* Personal/Business Toggle */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setBillsType('personal')}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                billsType === 'personal'
+                  ? 'bg-green-500 text-white'
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
+              }`}
             >
               🍺 Personal
             </button>
@@ -7309,7 +7632,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 billsType === 'business'
                   ? 'bg-purple-500 text-white'
-                  : ''
+                  : 'text-slate-400 hover:text-slate-200 transition-colors'
               }`}
             >
               💼 Business
@@ -7317,9 +7640,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* Salary Input */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
+          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
             </div>
             <div className="p-4">
               <div className="flex items-center gap-2">
@@ -7339,9 +7662,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Salary Breakdown */}
           {salaryNum > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
+            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div className="p-6 border-b">
+                <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -7373,9 +7696,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {/* Bills List - Personal or Business */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
             <div className={`p-6 border-b ${billsType === 'business' ? 'bg-purple-50' : ''}`}>
-              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
+              <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
             </div>
             <div className="p-4">
               <div style={{overflowX:'auto'}}>
@@ -7470,9 +7793,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Breakdown Table */}
           {filledSubs.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Cost Breakdown</h2>
+            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div className="p-6 border-b">
+                <h2 className="text-xl font-semibold text-white">Cost Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
@@ -7793,7 +8116,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div className="text-4xl">🦘</div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-3">
-                        <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Muzz's Money Tips</h2>
+                        <h2 className="text-xl font-semibold text-white">Muzz's Money Tips</h2>
                         {tips.length > 1 && (
                           <span className="text-xs text-blue-200">{tipIndex + 1} / {tips.length}</span>
                         )}
@@ -7824,9 +8147,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Bills vs Salary Comparison */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Bills vs Income</h2>
+            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div className="p-6 border-b">
+                <h2 className="text-xl font-semibold text-white">Bills vs Income</h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -7904,17 +8227,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
           )}
-            </>
-          )}
 
           {billsSubTab === 'calendar' && (
             <>
               {/* Calendar View - Mobile Optimized */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-4 border-b">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Bills Calendar</h2>
+                      <h2 className="text-xl font-semibold text-white">Bills Calendar</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track when bills are due</p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -7995,7 +8316,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Add/Edit Bill Modal for Selected Date */}
               {selectedCalendarDate && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-4 border-b flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-semibold">
@@ -8093,7 +8414,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
 
               {/* Bills List for Current Month */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                 <div className="p-4 border-b">
                   <h2 className="text-lg font-semibold">Bills This Month</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
@@ -8156,9 +8477,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {billsSubTab === 'goals' && (
             <>
               {/* Small Goals */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Small Goals</h2>
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
@@ -8255,9 +8576,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Big Goals */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Big Goals</h2>
+              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
                 </div>
                 <div className="p-4 space-y-4">
@@ -8527,7 +8848,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             return (
               <div className="space-y-6">
                 {/* Overview Card */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6">
                     <h2 className="text-xl font-semibold mb-1">Debt Overview</h2>
                     <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
@@ -8563,11 +8884,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Personal Debts */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b bg-green-50">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Personal Debts</h2>
+                        <h2 className="text-xl font-semibold text-white">Personal Debts</h2>
                         <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
@@ -8584,11 +8905,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Business Debts */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
+                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
                   <div className="p-6 border-b bg-purple-50">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Business Debts</h2>
+                        <h2 className="text-xl font-semibold text-white">Business Debts</h2>
                         <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
@@ -8622,8 +8943,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">💳 Debt Payoff Calculator</h2>
                   <div className="flex gap-3 mb-6">
-                    <button onClick={() => setDebtCalcMethod('snowball')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'snowball' ? '' : 'bg-gray-100 text-gray-600'}`}>❄️ Snowball (Smallest First)</button>
-                    <button onClick={() => setDebtCalcMethod('avalanche')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'avalanche' ? '' : 'bg-gray-100 text-gray-600'}`}>🏔️ Avalanche (Highest Rate First)</button>
+                    <button onClick={() => setDebtCalcMethod('snowball')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'snowball' ? 'text-white cyber-tab-active' : 'bg-gray-100 text-gray-600'}`}>❄️ Snowball (Smallest First)</button>
+                    <button onClick={() => setDebtCalcMethod('avalanche')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'avalanche' ? 'text-white cyber-tab-active' : 'bg-gray-100 text-gray-600'}`}>🏔️ Avalanche (Highest Rate First)</button>
                   </div>
                   <div className="bg-gray-50 rounded-xl p-4 mb-4">
                     <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{debtCalcMethod === 'snowball' ? '❄️ Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : '🏔️ Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
@@ -9152,8 +9473,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </table>
               </div>
             </div>
-          )}
-            </>
           )}
 
           {assetsSubTab === 'goals' && (
