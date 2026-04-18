@@ -3087,7 +3087,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const locked = item.elite && !isElite;
                       return (
                         <button key={item.id}
-                          onClick={() => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){if(window.confirm('Are you sure you want to delete your account? This cannot be undone.')){supabase.deleteUserData(userId).then(()=>signOut());}}else{setActiveView(item.id);} setSidebarOpen(false); }}
+                          onClick={async () => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){const confirmed=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(confirmed){try{await supabase.deleteUserData(userId);}catch(e){console.error('Delete error:',e);}finally{await signOut();}}}else{setActiveView(item.id);} setSidebarOpen(false); }}
                           style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',marginBottom:'2px',background:active?`rgba(0,200,255,0.06)`:'transparent',border:`0.5px solid ${active?'rgba(0,200,255,0.3)':'rgba(255,255,255,0.04)'}`,cursor:'pointer',borderRadius:'3px'}}>
                           <span style={{fontSize:'11px',fontFamily:'monospace',color:active?'#00c8ff':locked?'rgba(148,163,184,0.25)':item.danger?'rgba(239,68,68,0.6)':'rgba(224,234,255,0.7)',letterSpacing:'0.5px'}}>{item.label}</span>
                           <div style={{display:'flex',alignItems:'center',gap:'4px'}}>
