@@ -14505,7 +14505,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="JOIN WORKSPACE" icon="🔗" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-2xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>WORKSPACE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>JOIN WORKSPACE</div>
+            </div>
+          </div>
           <div className="max-w-lg mx-auto px-6 py-8 space-y-6">
             {donnyRole === 'worker' ? (
               <div className="rounded-2xl p-6 text-center space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
@@ -15261,7 +15267,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="ALL JOBS" icon="🔨" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>ALL JOBS</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             <button onClick={() => setActiveView('donny-newjob')} className="w-full py-4 rounded-xl font-bold text-white" style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>+ New Job</button>
             {selectedDonnyJob ? (
@@ -15325,7 +15337,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="NEW JOB" icon="➕" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>NEW JOB</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             <div className="rounded-2xl p-5" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.25)"}}>
               <input value={newDonnyJob.title} onChange={e => setNewDonnyJob(p=>({...p,title:e.target.value}))}
@@ -16120,7 +16138,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="PHOTOS" icon="📸" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>PHOTOS</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             {donnyJobs.length===0 ? (
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}><div className="text-4xl mb-3">📸</div><div className="text-white font-bold">No jobs yet</div></div>
@@ -16248,13 +16272,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="CHECKLISTS / SWMS" icon="✅" />
+          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SWMS</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-            <button onClick={()=>setShowNewChecklist(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(34,197,94,0.1)',border:'1px solid rgba(34,197,94,0.3)',color:'#22c55e'}}>
+            <button onClick={()=>setShowNewChecklist(s=>!s)} style={{width:'100%',padding:'12px',background:'rgba(34,197,94,0.06)',border:'0.5px dashed rgba(34,197,94,0.3)',borderRadius:'6px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',fontSize:'12px',letterSpacing:'1.5px',cursor:'pointer'}}>
               {showNewChecklist?'✕ Cancel':'+ New Checklist / SWMS'}
             </button>
             {showNewChecklist && (
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.2)'}}>
+              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(34,197,94,0.2)',borderRadius:'6px',borderLeft:'2px solid rgba(34,197,94,0.6)',padding:'16px'}}>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>TYPE</div>
@@ -16303,13 +16333,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             )}
             {donnyChecklists.length===0 && !showNewChecklist && (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(34,197,94,0.08)'}}>
+              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(34,197,94,0.08)',borderRadius:'6px',padding:'40px',textAlign:'center'}}>
                 <div className="text-4xl mb-3">✅</div><div className="text-white font-bold mb-1">No checklists yet</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Create SWMS, checklists, inspections</div>
               </div>
             )}
             {donnyChecklists.length>0 && (
-              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(34,197,94,0.15)'}}>
+              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(34,197,94,0.2)',borderRadius:'6px',overflow:'hidden'}}>
                 <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(34,197,94,0.1)'}}>
                   <div className="text-xs font-mono tracking-widest" style={{color:'rgba(34,197,94,0.7)'}}>// CHECKLIST TABLE</div>
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e'}}>{donnyChecklists.length} total</span>
@@ -16374,13 +16404,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="INCIDENT REGISTER" icon="🚨" />
+          <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>INCIDENT REGISTER</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             <button onClick={()=>setShowNewIncident(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
               {showNewIncident?'✕ Cancel':'+ Log Incident'}
             </button>
             {showNewIncident && (
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.2)'}}>
+              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(239,68,68,0.2)',borderRadius:'6px',borderLeft:'2px solid rgba(239,68,68,0.6)',padding:'16px'}}>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 DATE</div>
@@ -16451,7 +16487,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             )}
             {donnyIncidents.length>0 && (
-              <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
+              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(239,68,68,0.2)',borderRadius:'6px',overflow:'hidden'}}>
                 <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(239,68,68,0.1)'}}>
                   <div className="text-xs font-mono tracking-widest" style={{color:'rgba(239,68,68,0.7)'}}>// INCIDENT TABLE</div>
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(239,68,68,0.1)',color:'#ef4444'}}>{donnyIncidents.length} logged</span>
@@ -16670,6 +16706,134 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       );
     }
 
+    if (activeView === 'donny-materialslog') {
+      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyMaterialsLog:updated}); };
+
+      if (matLogJobId) {
+        const job = donnyJobs.find(j=>j.id===matLogJobId);
+        const jobEntries = donnyMaterialsLog.filter(e=>e.jobId===matLogJobId);
+        const today = new Date().toISOString().split('T')[0];
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24">
+            <Sidebar /><SaveIndicator />
+            <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+              <div className="max-w-4xl mx-auto">
+                <button onClick={() => setMatLogJobId(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Extra Materials</button>
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">📦</div>
+                  <div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// EXTRA MATERIALS</div>
+                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
+                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
+                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
+                    <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="e.g. 2C+E 2.5mm TPS Cable"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
+                    <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>UNIT</div>
+                    <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. m, ea, kg"
+                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTE FOR BOSS</div>
+                  <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. Ran short, need more by Thursday"
+                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+                </div>
+                <button onClick={() => {
+                  if (!newMatEntry.item.trim()) return;
+                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
+                  saveMatLog([entry, ...donnyMaterialsLog]);
+                  setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                }} style={{width:'100%',padding:'10px',background:'rgba(249,115,22,0.1)',border:'0.5px solid rgba(249,115,22,0.4)',borderRadius:'4px',color:'rgba(249,115,22,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer'}}>+ Log Material</button>
+              </div>
+              {jobEntries.length > 0 ? (
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// {jobEntries.length} ITEM{jobEntries.length!==1?'S':''} LOGGED</div>
+                  {jobEntries.map(entry => (
+                    <div key={entry.id} className="rounded-xl px-4 py-3 flex items-start justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-white font-medium text-sm">{entry.item}</span>
+                          {(entry.qty||entry.unit) && <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
+                        </div>
+                        {entry.note && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
+                        <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</div>
+                        {entry.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {entry.loggedBy}</div>}
+                      </div>
+                      {donnyRole !== 'worker' && <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No materials logged yet for this job</div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar /><SaveIndicator />
+          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>EXTRA MATERIALS</div>
+            </div>
+          </div>
+          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {donnyJobs.filter(j=>!j.completed).length === 0 ? (
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
+                <div className="text-4xl mb-3">📦</div>
+                <div className="text-white font-bold mb-1">No active jobs</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log materials</div>
+              </div>
+            ) : (
+              <>
+                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
+                {donnyJobs.filter(j=>!j.completed).map(job => {
+                  const entries = donnyMaterialsLog.filter(e=>e.jobId===job.id);
+                  return (
+                    <button key={job.id} onClick={() => setMatLogJobId(job.id)}
+                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
+                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📦</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-semibold truncate">{job.title}</div>
+                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
+                          {job.jobNumber?`#${job.jobNumber} · `:''}{entries.length} item{entries.length!==1?'s':''} logged
+                        </div>
+                      </div>
+                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                    </button>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     if (activeView === 'donny-mistakes') {
       const saveMistakes = (updated) => { setDonnyMistakes(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyMistakes:updated}); };
       const teamNames = donnyTeam.map(m => m.name);
@@ -16678,7 +16842,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="MISTAKES" icon="❌" />
+          <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MISTAKES</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             <button onClick={() => setShowNewMistake(s=>!s)} className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.9)'}}>
               {showNewMistake ? '✕ Cancel' : '+ Log a Mistake'}
@@ -16861,7 +17031,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="RISK REGISTER" icon="⚠️" />
+          <div style={{borderBottom:"0.5px solid rgba(251,191,36,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(251,191,36,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>RISK REGISTER</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             {jobsWithRisks.length>0 && (
               <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(239,68,68,0.15)'}}>
