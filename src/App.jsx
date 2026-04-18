@@ -5272,99 +5272,71 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
-        
-        {/* Header */}
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-6xl mx-auto">
-            <div>
-              <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-              <div className="flex items-center gap-4">
-                <input
-                  type="text"
-                  value={customCat.name}
-                  onChange={(e) => updateCategory({ name: e.target.value })}
-                  placeholder="Name this category..."
-                  className="text-4xl font-bold focus:outline-none flex-1 text-white w-full px-4 py-2 rounded-xl"
-                  style={{background:"transparent",border:"1px solid rgba(0,200,255,0.3)",color:"white",outline:"none"}}
-                />
-              </div>
-              
-              {/* Sub-Tabs */}
-              <div className="flex items-center gap-2 mt-4 flex-wrap">
-                {(customCat.subTabs || []).map(tab => (
-                  <div key={tab.id} className="relative group">
-                    <button
-                      onClick={() => updateCategory({ activeSubTab: tab.id })}
-                      className="px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0"
-                      style={customCat.activeSubTab === tab.id ? {background:'rgba(0,200,255,0.15)',border:'1px solid rgba(0,200,255,0.4)',color:'#00c8ff'} : {background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.1)',color:'rgba(148,163,184,0.8)'}}
-                    >
-                      {tab.name}
-                    </button>
-                    {/* Edit/Delete on hover */}
-                    {customCat.activeSubTab === tab.id && (customCat.subTabs || []).length > 1 && (
-                      <button
-                        onClick={() => deleteSubTab(tab.id)}
-                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                      >×</button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  onClick={addSubTab}
-                  className="px-3 py-2 rounded-full text-sm font-medium transition-all" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.2)",color:"rgba(0,200,255,0.8)"}}
-                >
-                  + Add Tab
-                </button>
-              </div>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"8px"}}>CUSTOM CATEGORY</div>
+            <input
+              type="text"
+              value={customCat.name}
+              onChange={(e) => updateCategory({ name: e.target.value })}
+              placeholder="Name this category..."
+              style={{fontSize:"22px",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",color:"#e0eaff",background:"transparent",border:"none",borderBottom:"0.5px solid rgba(0,200,255,0.3)",outline:"none",width:"100%",marginBottom:"16px",paddingBottom:"4px"}}
+            />
+            {/* Sub-Tabs */}
+            <div style={{display:"flex",alignItems:"center",gap:"4px",flexWrap:"wrap"}}>
+              {(customCat.subTabs || []).map(tab => (
+                <div key={tab.id} style={{position:"relative"}}>
+                  <button
+                    onClick={() => updateCategory({ activeSubTab: tab.id })}
+                    style={{padding:"6px 14px",background:customCat.activeSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${customCat.activeSubTab===tab.id?"rgba(0,200,255,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:customCat.activeSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}
+                  >
+                    {tab.name.toUpperCase()}
+                  </button>
+                  {customCat.activeSubTab === tab.id && (customCat.subTabs || []).length > 1 && (
+                    <button onClick={() => deleteSubTab(tab.id)} style={{position:"absolute",top:"-4px",right:"-4px",width:"14px",height:"14px",background:"rgba(239,68,68,0.8)",border:"none",borderRadius:"50%",color:"white",fontSize:"9px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>×</button>
+                  )}
+                </div>
+              ))}
+              <button onClick={addSubTab} style={{padding:"6px 14px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                + TAB
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
-          {/* Tab Name Editor & Toolbar */}
-          <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-            <div className="flex flex-wrap gap-3 items-center justify-between">
-              <div className="flex flex-wrap gap-2 items-center">
-                {/* Current Tab Name */}
-                <input
-                  type="text"
-                  value={currentSubTab?.name || ''}
-                  onChange={(e) => renameSubTab(customCat.activeSubTab, e.target.value)}
-                  placeholder="Tab name..."
-                  className="px-3 py-2 rounded-xl text-sm font-medium focus:outline-none text-white" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}
-                />
-                
-                {/* Add Section Dropdown */}
-                <div className="relative">
-                  <button 
-                    onClick={() => setShowAddSection(!showAddSection)}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl text-sm font-medium hover:scale-105 transition-transform"
-                  >
-                    + Add Section
-                  </button>
-                  {showAddSection && (
-                    <div className="absolute top-full left-0 mt-2 rounded-xl p-2 flex flex-wrap gap-1 z-10 w-max max-w-xl" style={{background:"rgba(5,15,30,0.95)",border:"1px solid rgba(0,200,255,0.2)",backdropFilter:"blur(20px)"}}>
-                      {sectionTypes.map(st => (
-                        <button
-                          key={st.type}
-                          onClick={() => { addSection(st.type); showSaveFeedback(); setShowAddSection(false); }}
-                          className={`px-3 py-2 bg-gradient-to-r ${st.color} text-white rounded-lg text-sm font-medium hover:scale-105 transition-transform whitespace-nowrap`}
-                        >
-                          {st.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                {/* Save Feedback */}
-                {savingFeedback && (
-                  <div className="flex items-center gap-2 text-green-600 animate-pulse">
-                    <span className="text-lg">✓</span>
-                    <span className="text-sm font-medium">Saved!</span>
+        <div className="max-w-6xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          {/* Toolbar */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"12px 16px",display:"flex",flexWrap:"wrap",gap:"10px",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{display:"flex",flexWrap:"wrap",gap:"8px",alignItems:"center"}}>
+              <input
+                type="text"
+                value={currentSubTab?.name || ''}
+                onChange={(e) => renameSubTab(customCat.activeSubTab, e.target.value)}
+                placeholder="Tab name..."
+                style={{padding:"4px 10px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",outline:"none",width:"120px"}}
+              />
+              <div style={{position:"relative"}}>
+                <button
+                  onClick={() => setShowAddSection(!showAddSection)}
+                  style={{padding:"6px 14px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}
+                >+ ADD SECTION</button>
+                {showAddSection && (
+                  <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,background:"rgba(3,8,18,0.98)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"8px",display:"flex",flexWrap:"wrap",gap:"4px",zIndex:10,minWidth:"200px",backdropFilter:"blur(20px)"}}>
+                    {sectionTypes.map(st => (
+                      <button key={st.type} onClick={() => { addSection(st.type); showSaveFeedback(); setShowAddSection(false); }} style={{padding:"6px 12px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                        {st.label}
+                      </button>
+                    ))}
                   </div>
+                )}
+              </div>
+            </div>
+              <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                {savingFeedback && (
+                  <div style={{fontSize:"11px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>✓ SAVED</div>
                 )}
               </div>
             </div>
@@ -5372,33 +5344,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Empty State */}
           {currentSections.length === 0 && (
-            <div className="bg-white rounded-3xl shadow-sm border p-8 md:p-12">
-              <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="text-7xl">🦘</div>
-                <div className="text-center md:text-left">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-3">G'day! Use Custom Categories to manage other aspects of your life.</h3>
-                  <p className="text-gray-600 mb-4">Some areas this might help with:</p>
-                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                    <span className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">📚 Books & Learning</span>
-                    <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">💼 Work</span>
-                    <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">📊 Sales</span>
-                    <span className="px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">📋 Projects</span>
-                    <span className="px-3 py-1.5 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">✈️ Travel</span>
-                    <span className="px-3 py-1.5 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">🏠 Home Inventory</span>
-                    <span className="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">📓 Journal / Mood</span>
-                    <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium">🎄 Christmas List</span>
-                    <span className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">🛒 Shopping List</span>
-                    <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">🎁 Wish List</span>
-                    <span className="px-3 py-1.5 bg-teal-100 text-teal-700 rounded-full text-sm font-medium">🔧 Warranty Tracker</span>
-                    <span className="px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium">🐾 Pet Management</span>
-                    <span className="px-3 py-1.5 bg-sky-100 text-sky-700 rounded-full text-sm font-medium">🚗 Car / Vehicle Log</span>
-                    <span className="px-3 py-1.5 bg-violet-100 text-violet-700 rounded-full text-sm font-medium">🏥 Medical / Health</span>
-                    <span className="px-3 py-1.5 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">🩸 Period / Cycle Tracker</span>
-                    <span className="px-3 py-1.5 bg-lime-100 text-lime-700 rounded-full text-sm font-medium">📚 Studying</span>
-                  </div>
-                  <p className="text-gray-500 text-sm mt-4">Click "+ Add Section" above to get started!</p>
-                </div>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"32px",textAlign:"center"}}>
+              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>CUSTOM CATEGORY — USE FOR ANYTHING</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:"6px",justifyContent:"center",marginBottom:"12px"}}>
+                {['📚 Books & Learning','💼 Work','📊 Sales','📋 Projects','✈️ Travel','🏠 Home Inventory','📓 Journal','🎄 Christmas List','🛒 Shopping List','🎁 Wish List','🔧 Warranty Tracker','🐾 Pet Management','🚗 Vehicle Log','🏥 Medical','📚 Studying'].map(s => (
+                  <span key={s} style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"3px 8px"}}>{s}</span>
+                ))}
               </div>
+              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP + ADD SECTION TO GET STARTED</div>
             </div>
           )}
 
@@ -5416,33 +5369,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 }
                 setDraggedSection(null);
               }}
-              className={`bg-white rounded-3xl shadow-sm border overflow-hidden transition-all ${draggedSection === index ? 'opacity-50 scale-95' : ''}`}
+              style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",opacity:draggedSection===index?0.5:1,backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}
             >
               {/* Section Header */}
-              <div className={`p-4 border-b flex items-center justify-between bg-gradient-to-r ${getSectionGradient(section.type)} cursor-move`}>
-                <div className="flex items-center gap-3 flex-1">
-                  <span className="text-white/60 cursor-grab">⋮⋮</span>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"move"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"10px",flex:1}}>
+                  <span style={{color:"rgba(0,200,255,0.3)",fontSize:"12px",cursor:"grab"}}>⋮⋮</span>
                   <input
                     type="text"
                     value={section.title}
                     onChange={(e) => { updateSection(section.id, { title: e.target.value }); }}
                     placeholder="Section title..."
-                    className="bg-transparent text-white placeholder-white/70 font-semibold focus:outline-none flex-1"
+                    style={{background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",letterSpacing:"0.5px",flex:1}}
                   />
                 </div>
-                <div className="flex items-center gap-2">
-                  {/* Collapse */}
-                  <button onClick={() => updateSection(section.id, { collapsed: !section.collapsed })} className="text-white/70 hover:text-white">
+                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                  <button onClick={() => updateSection(section.id, { collapsed: !section.collapsed })} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(0,200,255,0.4)",fontSize:"12px"}}>
                     {section.collapsed ? '▼' : '▲'}
                   </button>
-                  {/* Delete */}
-                  <button onClick={() => { deleteSection(section.id); showSaveFeedback(); }} className="text-white/70 hover:text-white"><Trash2 className="w-4 h-4" /></button>
+                  <button onClick={() => { deleteSection(section.id); showSaveFeedback(); }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px"}}>×</button>
                 </div>
               </div>
 
               {/* Section Content */}
               {!section.collapsed && (
-                <div className="p-4">
+                <div style={{padding:"14px 16px"}}>
                   {/* NOTES */}
                   {section.type === 'notes' && (
                     <div className="space-y-3">
@@ -8863,89 +8814,72 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar />
         <SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl font-bold text-white mb-2">Feedback & Support</h1>
-            <p className="text-white/70">We'd love to hear from you 🦘</p>
+          <div className="max-w-3xl mx-auto">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>MUZZ.ONL</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>FEEDBACK & SUPPORT</div>
           </div>
         </div>
-        <div className="max-w-lg mx-auto px-6 py-8 space-y-4">
-          <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
-            <div className="text-center space-y-2">
-              <div className="text-4xl">📬</div>
-              <h2 className="text-white font-bold text-xl">Get in Touch</h2>
-              <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>For feedback, bug reports or support — send us an email and we'll get back to you ASAP.</p>
-            </div>
-            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App"
-              className="flex items-center gap-4 p-4 rounded-2xl w-full"
-              style={{background:"linear-gradient(135deg,rgba(249,115,22,0.15),rgba(234,88,12,0.1))",border:"1px solid rgba(249,115,22,0.3)"}}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"linear-gradient(135deg,#f97316,#ea580c)"}}>
-                <Mail className="w-6 h-6 text-white" />
-              </div>
+        <div className="max-w-lg mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          {/* Contact */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>GET IN TOUCH</div>
+            <a href="mailto:Muzz.onl@outlook.com?subject=Muzz App" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"4px",textDecoration:"none",marginBottom:"10px"}}>
+              <Mail style={{width:"18px",height:"18px",color:"rgba(249,115,22,0.8)",flexShrink:0}} />
               <div>
-                <div className="font-bold text-white">Email Us</div>
-                <div className="text-sm" style={{color:"rgba(249,115,22,0.8)"}}>Muzz.onl@outlook.com</div>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>EMAIL US</div>
+                <div style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace"}}>Muzz.onl@outlook.com</div>
               </div>
             </a>
-            <div className="grid grid-cols-3 gap-3 pt-2">
+            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}}>
               {[
-                {emoji:'💡', label:'Feedback', subject:'Muzz App Feedback'},
-                {emoji:'🐛', label:'Bug Report', subject:'Muzz Bug Report'},
-                {emoji:'🆘', label:'Support', subject:'Muzz Support Request'},
+                {emoji:'💡',label:'FEEDBACK',subject:'Muzz App Feedback'},
+                {emoji:'🐛',label:'BUG REPORT',subject:'Muzz Bug Report'},
+                {emoji:'🆘',label:'SUPPORT',subject:'Muzz Support Request'},
               ].map((t,i) => (
-                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`}
-                  className="flex flex-col items-center gap-2 p-3 rounded-2xl text-center"
-                  style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)"}}>
-                  <span className="text-2xl">{t.emoji}</span>
-                  <span className="text-xs font-medium" style={{color:"rgba(148,163,184,0.7)"}}>{t.label}</span>
+                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"6px",padding:"10px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"4px",textDecoration:"none"}}>
+                  <span style={{fontSize:"20px"}}>{t.emoji}</span>
+                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{t.label}</span>
                 </a>
               ))}
             </div>
           </div>
-
-          <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-            <div className="text-center space-y-2">
-              <div className="text-4xl">📸</div>
-              <h2 className="text-white font-bold text-xl">Stay Updated</h2>
-              <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>Follow us on Instagram for updates, new features and behind the scenes.</p>
-            </div>
-            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 rounded-2xl w-full"
-              style={{background:"linear-gradient(135deg,rgba(225,48,108,0.15),rgba(193,53,132,0.1))",border:"1px solid rgba(225,48,108,0.3)"}}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)"}}>
-                <span className="text-white text-xl">📷</span>
-              </div>
+          {/* Instagram */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(225,48,108,0.6)",padding:"16px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(225,48,108,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>STAY UPDATED</div>
+            <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(225,48,108,0.06)",border:"0.5px solid rgba(225,48,108,0.3)",borderRadius:"4px",textDecoration:"none"}}>
+              <span style={{fontSize:"20px",flexShrink:0}}>📷</span>
               <div>
-                <div className="font-bold text-white">Follow @muzz.onl</div>
-                <div className="text-sm" style={{color:"rgba(225,48,108,0.8)"}}>instagram.com/muzz.onl</div>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>FOLLOW @MUZZ.ONL</div>
+                <div style={{fontSize:"10px",color:"rgba(225,48,108,0.7)",fontFamily:"monospace"}}>instagram.com/muzz.onl</div>
               </div>
             </a>
           </div>
-
-          <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.1)"}}>
-            <h3 className="font-bold text-white text-lg">❓ FAQ</h3>
-            <div className="space-y-2">
-              {[
-                { q: "What plans are available?", a: "🦘 Muzz Elite at $4.99/month for personal finance & life management. 🦘🐨 Muzz & Donny at $7.99/month adds the full Donny trade business system." },
-                { q: "What is Donny?", a: "Donny 🐨 is a trade business management system. It includes job tracking, scheduler, team management, SWMS, incident logs, price book, reports, and a multi-user workspace." },
-                { q: "How does the Donny workspace work?", a: "As a boss, generate a join code and share it with your workers. Workers enter the code to access your workspace and log daily reports, photos, incidents and more in real time." },
-                { q: "Is my data safe?", a: "Your data is stored securely in the cloud via Supabase. Only you can access it. Export a backup anytime from Settings." },
-                { q: "How do I cancel my subscription?", a: "Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period." },
-                { q: "Can I use Muzz on my phone?", a: "Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl." },
-              ].map((faq, i) => (
-                <details key={i} className="group rounded-2xl overflow-hidden" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)"}}>
-                  <summary className="flex items-center gap-2 p-4 cursor-pointer font-medium text-white text-sm">
-                    <HelpCircle className="w-4 h-4 flex-shrink-0" style={{color:"rgba(249,115,22,0.7)"}} /> {faq.q}
-                  </summary>
-                  <div className="px-4 pb-4 text-sm" style={{color:"rgba(148,163,184,0.7)"}}>{faq.a}</div>
-                </details>
-              ))}
+          {/* FAQ */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.6)",overflow:"hidden"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+              <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FAQ</span>
             </div>
+            {[
+              {q:"What plans are available?",a:"🦘 Muzz Elite at $4.99/month. 🦘🐨 Muzz & Donny at $7.99/month adds the full Donny trade business system."},
+              {q:"What is Donny?",a:"Donny 🐨 is a trade business management system with job tracking, scheduler, team management, SWMS, incident logs, price book, reports and multi-user workspace."},
+              {q:"How does the Donny workspace work?",a:"As a boss, generate a join code and share it with workers. Workers enter the code to access your workspace in real time."},
+              {q:"Is my data safe?",a:"Stored securely in the cloud via Supabase. Only you can access it. Export a backup anytime from Settings."},
+              {q:"How do I cancel?",a:"Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period."},
+              {q:"Can I use Muzz on my phone?",a:"Yeah mate! Download Muzz from the App Store, or use it in any browser at muzz.onl."},
+            ].map((faq,i,arr) => (
+              <details key={i} style={{borderBottom:i<arr.length-1?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",listStyle:"none",display:"flex",gap:"8px",alignItems:"center"}}>
+                  <span style={{color:"rgba(251,191,36,0.5)"}}>?</span> {faq.q}
+                </summary>
+                <div style={{padding:"0 16px 12px 28px",fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",lineHeight:"1.6"}}>{faq.a}</div>
+              </details>
+            ))}
           </div>
         </div>
       </div>
     );
   }
-
 
   // UPGRADE / ELITE STATUS VIEW
   if (activeView === 'upgrade') {
@@ -8954,41 +8888,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar />
         <SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
-          <div className="max-w-3xl mx-auto text-center">
-            <svg width="64" height="80" viewBox="0 0 24 32" fill="none" className="mx-auto mb-4">
-              <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
-              <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
-              <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
-            </svg>
-            <h1 className="text-4xl font-bold text-white mb-2">
-              {isDonnyElite ? '🦘🐨 Muzz & Donny Elite' : isElite ? '🦘 Muzz Elite' : 'Choose Your Plan'}
-            </h1>
-            <p className="text-white/80">
-              {isDonnyElite ? "Full access to Muzz + Donny. Legend." : isElite ? "You've got full Muzz access. Upgrade to add Donny 🐨" : 'Unlock everything Muzz has to offer'}
-            </p>
+          <div className="max-w-3xl mx-auto">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
+              <svg width="40" height="50" viewBox="0 0 24 32" fill="none">
+                <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#eliteGradBig)" />
+                <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
+                <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
+              </svg>
+              <div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>MUZZ.ONL</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>{isDonnyElite?'MUZZ & DONNY ELITE':isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px"}}>{isDonnyElite?"Full access to Muzz + Donny.":isElite?"Full Muzz access. Upgrade to add Donny 🐨":"Unlock everything Muzz has to offer"}</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+        <div className="max-w-3xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* Pricing Cards */}
           {!isDonnyElite && (
             <div className="grid grid-cols-1 gap-4" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'}}>
 
               {/* Muzz Elite Card */}
-              <div className="rounded-3xl p-6 space-y-4 relative" style={{background: isElite && !isDonnyElite ? "rgba(245,158,11,0.08)" : "rgba(5,15,30,0.8)", border: isElite && !isDonnyElite ? "1px solid rgba(245,158,11,0.4)" : "1px solid rgba(0,200,255,0.15)"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"6px",padding:"20px",position:"relative",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}} style={{background: isElite && !isDonnyElite ? "rgba(245,158,11,0.08)" : "rgba(5,15,30,0.8)", border: isElite && !isDonnyElite ? "1px solid rgba(245,158,11,0.4)" : "1px solid rgba(0,200,255,0.15)"}}>
                 {isElite && !isDonnyElite && (
-                  <div className="absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-bold" style={{background:"rgba(245,158,11,0.2)",color:"#f59e0b",border:"1px solid rgba(245,158,11,0.3)"}}>CURRENT PLAN</div>
+                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"2px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px"}}>CURRENT PLAN</div>
                 )}
                 <div>
                   <div className="text-3xl mb-2">🦘</div>
-                  <h2 className="text-xl font-bold text-white">Muzz Elite</h2>
+                  <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>Muzz Elite</h2>
                   <p className="text-3xl font-bold text-white mt-2">$4.99 <span className="text-base font-normal text-gray-400">/month</span></p>
                   <p className="text-sm text-gray-400 mt-1">Personal finance & life management</p>
                 </div>
-                <div className="space-y-2">
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {['Health & Sleep Tracker','Work & Timesheet','Bills & Debt Tracker','Assets Management','Investment Portfolio','Unlimited Custom Categories','AI Chat (30 msgs/day)','Elite Badge & Name'].map((f,i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-white"><span style={{color:"#f59e0b"}}>✓</span>{f}</div>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"12px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",marginBottom:"4px"}}><span style={{color:"#f59e0b"}}>✓</span>{f}</div>
                   ))}
                 </div>
                 {!isElite && (
@@ -8999,22 +8935,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </button>
                 )}
                 {isElite && !isDonnyElite && (
-                  <div className="w-full py-3 rounded-2xl text-center text-sm font-medium" style={{background:"rgba(245,158,11,0.1)",color:"#f59e0b",border:"1px solid rgba(245,158,11,0.2)"}}>⚡ Active Plan</div>
+                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"4px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"11px",textAlign:"center",letterSpacing:"1px",marginTop:"8px"}}>⚡ Active Plan</div>
                 )}
               </div>
 
               {/* Muzz & Donny Card */}
-              <div className="rounded-3xl p-6 space-y-4 relative" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.3)"}}>
-                <div className="absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-bold" style={{background:"rgba(249,115,22,0.2)",color:"#f97316",border:"1px solid rgba(249,115,22,0.3)"}}>BEST VALUE</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"6px",padding:"20px",position:"relative",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}} style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.3)"}}>
+                <div style={{position:"absolute",top:"12px",right:"12px",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.9)",border:"0.5px solid rgba(249,115,22,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px"}}>BEST VALUE</div>
                 <div>
                   <div className="text-3xl mb-2">🦘🐨</div>
-                  <h2 className="text-xl font-bold text-white">Muzz & Donny</h2>
+                  <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>Muzz & Donny</h2>
                   <p className="text-3xl font-bold text-white mt-2">$7.99 <span className="text-base font-normal text-gray-400">/month</span></p>
                   <p className="text-sm text-gray-400 mt-1">Everything in Muzz + full Donny trade system</p>
                 </div>
-                <div className="space-y-2">
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {['Everything in Muzz Elite','Job Tracking & Scheduler','Team & Subcontractor Management','Client Management','SWMS & Incident Logs','Price Book','Reports','Multi-user Workspace'].map((f,i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-white"><span style={{color:"#f97316"}}>✓</span>{f}</div>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"12px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",marginBottom:"4px"}}><span style={{color:"#f97316"}}>✓</span>{f}</div>
                   ))}
                 </div>
                 <button onClick={handleUpgradeDonny}
@@ -9038,16 +8974,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Restore Purchases - iOS only */}
           {isNative && !isDonnyElite && (
             <div className="text-center">
-              <button onClick={handleRestorePurchases} className="text-sm text-orange-500 hover:text-orange-600 underline">
+              <button onClick={handleRestorePurchases} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",textDecoration:"none"}}>
                 Restore Previous Purchase
               </button>
             </div>
           )}
 
           {/* Feature Comparison */}
-          <div className="rounded-3xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
             <div className="p-6" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
-              <h2 className="text-xl font-semibold text-white" style={{fontFamily:"'Share Tech Mono',monospace",letterSpacing:"2px"}}>// WHAT YOU GET</h2>
+              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}} style={{fontFamily:"'Share Tech Mono',monospace",letterSpacing:"2px"}}>// WHAT YOU GET</h2>
             </div>
             <div>
               <div className="flex items-center px-6 py-2" style={{background:"rgba(0,200,255,0.08)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
@@ -9087,8 +9023,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
-            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <h2 className="text-xl font-semibold text-white">Subscription</h2>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"16px 20px"}}>
+              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Subscription</h2>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active</span></p>
@@ -9112,8 +9048,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div className="rounded-3xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <h2 className="text-xl font-semibold text-white">Subscription</h2>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"16px 20px"}}>
+              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Subscription</h2>
               <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
               <p className="text-xs text-gray-400">To manage or cancel, go to iPhone Settings → Apple ID → Subscriptions.</p>
               <button onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
@@ -9124,7 +9060,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {/* Display Name - available to all users */}
-          <div className="rounded-3xl p-6 space-y-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"16px 20px"}}>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xl">✏️</span>
               <h2 className="text-white font-bold text-lg">Your Display Name</h2>
@@ -9143,7 +9079,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* Giving Back */}
-          <div className="rounded-3xl overflow-hidden" style={{border:"1px solid rgba(255,200,0,0.2)",background:"rgba(5,15,30,0.8)"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,200,0,0.2)",borderRadius:"6px",overflow:"hidden"}}>
             <div className="p-6 text-center" style={{background:"linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,120,0,0.05))",borderBottom:"1px solid rgba(255,200,0,0.15)"}}>
               <div className="text-3xl mb-2">💛</div>
               <h2 className="text-xl font-bold text-white mb-1" style={{letterSpacing:"1px"}}>Giving Back</h2>
@@ -10396,121 +10332,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-                <h1 style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>Investments Management</h1>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>INVESTMENTS</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:totalGainLoss>=0?"rgba(34,197,94,0.5)":"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>PORTFOLIO VALUE</div>
+                <div style={{fontSize:"24px",color:totalGainLoss>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>${totalStocksValue.toLocaleString()}</div>
               </div>
             </div>
-            {/* Sub-tabs - scrollable on mobile */}
-            <div className="flex gap-2 mt-4 overflow-x-auto pb-2 -mx-2 px-2">
-              <button
-                onClick={() => setInvestmentsSubTab('portfolio')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'portfolio'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Current Portfolio
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('futurePortfolio')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'futurePortfolio'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Future Portfolio
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('research')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  (investmentsSubTab === 'research' || investmentsSubTab === 'declined' || investmentsSubTab === 'economics' || investmentsSubTab === 'risks')
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Research
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('goals')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'goals'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Goals
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('notes')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'notes'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Notes
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('knowledge')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  (investmentsSubTab === 'knowledge' || investmentsSubTab === 'books')
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Knowledge Guide
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('accounting')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'accounting'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Accounting
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('performance')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'performance'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Performance
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('sp500')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'sp500'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                S&P 500
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('compound')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  investmentsSubTab === 'compound'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Compound Calc
-              </button>
+            <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
+              {[
+                {id:'portfolio',label:'PORTFOLIO'},
+                {id:'futurePortfolio',label:'FUTURE'},
+                {id:'research',label:'RESEARCH'},
+                {id:'goals',label:'GOALS'},
+                {id:'notes',label:'NOTES'},
+                {id:'knowledge',label:'GUIDE'},
+                {id:'accounting',label:'ACCOUNTING'},
+                {id:'performance',label:'PERFORMANCE'},
+                {id:'sp500',label:'S&P 500'},
+                {id:'compound',label:'COMPOUND'},
+              ].map(tab => (
+                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:investmentsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${investmentsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:investmentsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {investmentsSubTab === 'portfolio' && (
             <>
               {/* Daily Investment Quote */}
@@ -10650,8 +10508,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Stocks Input */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Stocks & ETFs</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Individual stocks, ETFs, index funds</p>
                 </div>
@@ -10764,7 +10622,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Live Stock Prices */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-4 sm:p-6 border-b">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
@@ -10988,8 +10846,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                  <div className="p-6 border-b">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                     <h2 className="text-xl font-semibold text-white">Portfolio by Name</h2>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -11069,8 +10927,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Industry Pie Chart */}
               {stocksByIndustry.length > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                  <div className="p-6 border-b">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                     <h2 className="text-xl font-semibold text-white">Portfolio by Industry</h2>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -11148,15 +11006,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Industry */}
               {stocksByIndustry.length > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                  <div className="p-6 border-b">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                     <h2 className="text-xl font-semibold text-white">Portfolio by Industry</h2>
                     <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="bg-gray-50 border-b">
+                        <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                           <th 
                             className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => {
@@ -11248,7 +11106,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Future Holdings Research - Same format as Current */}
               <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
-                <div className="p-6 border-b">
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Future Holdings Research</h2>
                   <p className="text-sm text-gray-500 mt-1">Research stocks you're considering for your portfolio</p>
                 </div>
@@ -11479,14 +11337,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
-                    <div className="p-6 border-b">
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                       <h2 className="text-xl font-semibold text-white">📋 Future Portfolio Summary</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort • Your planned investments at a glance</p>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-gray-50 border-b">
+                          <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                             <th 
                               className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
                               onClick={() => {
@@ -11589,7 +11447,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
-                    <div className="p-6 border-b">
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                       <h2 className="text-xl font-semibold text-white">⚖️ Portfolio Company Weighting</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Weight of each company in your future portfolio</p>
                     </div>
@@ -11657,8 +11515,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 let currentAngle = 0;
                 
                 return (
-                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                    <div className="p-6 border-b">
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                       <h2 className="text-xl font-semibold text-white">📊 Industry Allocation</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Breakdown of your future portfolio by industry</p>
                     </div>
@@ -11778,7 +11636,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 return (
                   <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
-                    <div className="p-6 border-b">
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                       <h2 className="text-xl font-semibold text-white">📊 Research by Industry</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Your research picks broken down by sector</p>
                     </div>
@@ -11828,14 +11686,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Master Research Table */}
               {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
                 <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
-                  <div className="p-6 border-b">
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                     <h2 className="text-xl font-semibold text-white">📋 Master Research Summary</h2>
                     <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort • All your research picks at a glance</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="bg-gray-50 border-b">
+                        <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                           <th 
                             className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => {
@@ -11956,7 +11814,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
 
               {/* Holdings Research */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
                     <h2 className="text-xl font-semibold text-white">Holdings Research</h2>
@@ -12180,7 +12038,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'economics' && (
             <>
               {/* Company Economics Table */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
                     <h2 className="text-xl font-semibold text-white">Company Economics</h2>
@@ -12313,7 +12171,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'risks' && (
             <>
               {/* Biggest Risks Table */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
                     <h2 className="text-xl font-semibold text-white">Biggest Risks</h2>
@@ -12446,8 +12304,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'goals' && (
             <>
               {/* Small Goals */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Small Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term investment targets</p>
                 </div>
@@ -12545,8 +12403,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Big Goals */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Big Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term investment targets</p>
                 </div>
@@ -12725,8 +12583,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {investmentsSubTab === 'declined' && (
             <>
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Declined Companies</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track companies you've passed on and why</p>
                 </div>
@@ -12829,8 +12687,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 return (
                   <>
-                    <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                      <div className="p-6 border-b">
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                      <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                         <h2 className="text-xl font-semibold text-white">Declined by Industry</h2>
                       </div>
                       <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
@@ -12906,14 +12764,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
 
                     {/* Breakdown Table */}
-                    <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                      <div className="p-6 border-b">
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                      <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                         <h2 className="text-xl font-semibold text-white">Declined Companies Breakdown</h2>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="bg-gray-50 border-b">
+                            <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                               <th className="text-left py-3 px-4 font-semibold">Industry</th>
                               <th className="text-center py-3 px-4 font-semibold">Companies</th>
                               <th className="text-right py-3 px-4 font-semibold">% of Declined</th>
@@ -12986,8 +12844,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Equity Investment Breakdown Guide */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📈 Equity Investment Breakdown Guide</h2>
                   <p className="text-sm text-gray-500 mt-1">Key questions to ask when analyzing a stock</p>
                 </div>
@@ -13134,8 +12992,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Yourself vs Consensus & Yourself */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">🧠 Self-Assessment Questions</h2>
                   <p className="text-sm text-gray-500 mt-1">Check yourself before you wreck yourself</p>
                 </div>
@@ -13169,8 +13027,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* 10 Don'ts & 15 Do's */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📖 Philip Fisher's Rules</h2>
                   <p className="text-sm text-gray-500 mt-1">From "Common Stocks and Uncommon Profits"</p>
                 </div>
@@ -13221,8 +13079,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Durable Competitive Advantages */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">🏰 Types of Durable Competitive Advantages</h2>
                   <p className="text-sm text-gray-500 mt-1">Buffett classifies great businesses into three categories</p>
                 </div>
@@ -13258,8 +13116,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Beer & Foam Analogy */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">🍺 The Beer & Foam Analogy</h2>
                   <p className="text-sm text-gray-500 mt-1">Understanding hype vs real value in markets</p>
                 </div>
@@ -13339,8 +13197,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Book Recommendations */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📚 Recommended Reading List</h2>
                   <p className="text-sm text-gray-500 mt-1">Books to level up your investing game</p>
                 </div>
@@ -13403,7 +13261,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {investmentsSubTab === 'performance' && (
-            <div className="space-y-4">
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)'}}>
                 <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>// COMPANY PERFORMANCE</div>
                 <div className="flex gap-3">
@@ -13424,7 +13282,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {perfError && <div className="text-sm" style={{color:'rgba(239,68,68,0.8)'}}>{perfError}</div>}
               </div>
               {perfData && (
-                <div className="space-y-4">
+                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(0,200,255,0.2)'}}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="text-2xl font-black tracking-widest" style={{color:'#00c8ff'}}>{perfData.ticker}</div>
@@ -13499,8 +13357,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Core Ratios */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📊 Core Ratios & Metrics</h2>
                   <p className="text-sm text-gray-500 mt-1">The fundamental numbers you need to track</p>
                 </div>
@@ -13560,8 +13418,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Trend Checks */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📉 Breakdown Metrics – Trend Checks</h2>
                   <p className="text-sm text-gray-500 mt-1">Track these over 10-15 years to spot red flags or strengths</p>
                 </div>
@@ -13632,8 +13490,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Income Statement Deep Dive */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📄 What to Look for in the Income Statement</h2>
                 </div>
                 <div className="p-6 space-y-4">
@@ -13696,8 +13554,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* EPS Deep Dive */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📈 EPS (Earnings Per Share) Analysis</h2>
                   <p className="text-sm text-gray-500 mt-1">EPS = Net Income / Shares Outstanding</p>
                 </div>
@@ -13737,8 +13595,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Balance Sheet Deep Dive */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📋 What to Look for in the Balance Sheet</h2>
                 </div>
                 <div className="p-6 space-y-4">
@@ -13811,8 +13669,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Cash Flow Deep Dive */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">💸 Cash Flow Statement Insights</h2>
                 </div>
                 <div className="p-6 space-y-4">
@@ -13847,8 +13705,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* When to Sell */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">🚪 When You May Consider Selling</h2>
                 </div>
                 <div className="p-6">
@@ -13897,7 +13755,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Buffett's Definition of Investing */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
                   <h2 className="text-xl font-semibold text-white">🧠 Buffett's Definition of Investing (2011)</h2>
                 </div>
@@ -13914,7 +13772,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Buffett's Will Instructions */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
                   <h2 className="text-xl font-semibold text-white">📜 Buffett's Personal Will Instructions (2013)</h2>
                 </div>
@@ -13935,7 +13793,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* S&P 500 Performance 1964-2014 */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
                   <h2 className="text-xl font-semibold text-white">📊 The Tailwind: S&P 500 vs the Dollar (1964–2014)</h2>
                 </div>
@@ -13960,7 +13818,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Voting Machine vs Weighing Machine */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-purple-50 to-violet-50">
                   <h2 className="text-xl font-semibold text-white">⚖️ Voting Machine vs Weighing Machine (2017)</h2>
                 </div>
@@ -13979,7 +13837,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Berkshire Drawdowns */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
                   <h2 className="text-xl font-semibold text-white">📉 Berkshire's Major Drawdowns — Price Crashes Are Normal</h2>
                 </div>
@@ -14016,7 +13874,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Never Use Debt */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-red-50 to-pink-50">
                   <h2 className="text-xl font-semibold text-white">🚫 The Strongest Argument Against Using Debt in Stocks</h2>
                 </div>
@@ -14037,7 +13895,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Crashes as Opportunities */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
                   <h2 className="text-xl font-semibold text-white">💎 Crashes as Opportunities (If You're Not in Debt)</h2>
                 </div>
@@ -14054,7 +13912,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* The Bet */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
                   <h2 className="text-xl font-semibold text-white">🏆 The Bet: S&P 500 vs Hedge Funds (2007–2017)</h2>
                 </div>
@@ -14093,7 +13951,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Why Hedge Funds Fail */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
                   <h2 className="text-xl font-semibold text-white">❌ Why Almost All Hedge Funds Fail Long-Term</h2>
                 </div>
@@ -14117,7 +13975,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* The American Tailwind */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
                   <h2 className="text-xl font-semibold text-white">🇺🇸 The American Tailwind (2018)</h2>
                 </div>
@@ -14155,7 +14013,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Buffett's Recommendation */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
                   <h2 className="text-xl font-semibold text-white">✅ Buffett's Recommendation (60 Years Straight)</h2>
                 </div>
@@ -14177,7 +14035,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Ultimate Lessons */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-orange-50">
                   <h2 className="text-xl font-semibold text-white">⭐ Ultimate Lessons</h2>
                 </div>
@@ -14203,7 +14061,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Classic Quotes */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b bg-gradient-to-r from-slate-50 to-gray-100">
                   <h2 className="text-xl font-semibold text-white">💬 Classic Buffett Lines</h2>
                 </div>
@@ -14249,7 +14107,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             };
             const compResult = calcCompound();
             return (
-              <div className="space-y-6">
+              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">📈 Compound Interest Calculator</h2>
                   <div className="grid grid-cols-2 gap-4 mb-6">
@@ -17844,21 +17702,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div className="text-xs font-mono mb-1" style={{color:"rgba(0,200,255,0.4)",letterSpacing:"2px"}}>// YOUR LIFE DATA</div>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Stats & Insights</h1>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>STATS & INSIGHTS</div>
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="max-w-4xl mx-auto px-4 py-5">
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(160px, 1fr))",gap:"10px"}}>
             {statCards.map((s, i) => (
-              <div key={i} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${s.color}30`,boxShadow:`inset 0 0 20px ${s.color}08`}}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono" style={{color:`${s.color}90`,letterSpacing:"1px"}}>{s.label}</span>
-                  <span className="text-base">{s.icon}</span>
-                </div>
-                <div className="text-2xl font-bold text-white" style={{textShadow:`0 0 12px ${s.color}66`}}>{s.value}</div>
-                <div className="text-xs mt-1" style={{color:"rgba(148,163,184,0.5)"}}>{s.sub}</div>
-                <div className="mt-3 h-0.5 rounded-full" style={{background:`linear-gradient(90deg,${s.color}50,transparent)`}} />
+              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${s.color}40`,borderRadius:"6px",borderLeft:`2px solid ${s.color}`,padding:"14px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"9px",color:`${s.color}90`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px"}}>{s.label}</div>
+                <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{s.value}</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{s.sub}</div>
+                <div style={{marginTop:"10px",height:"1px",background:`linear-gradient(90deg,${s.color}50,transparent)`}} />
               </div>
             ))}
           </div>
