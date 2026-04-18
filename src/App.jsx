@@ -18665,14 +18665,53 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{background:"linear-gradient(180deg,#020817 0%,#050d1a 100%)"}}>
-        <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px)',backgroundSize:'60px 60px',pointerEvents:'none'}} />
-        <div style={{position:'absolute',width:'400px',height:'400px',borderRadius:'50%',background:'rgba(0,150,255,0.06)',filter:'blur(100px)',top:'-100px',right:'-80px'}} />
-        <div className="relative z-10 flex flex-col items-center gap-6">
-          <div className="text-5xl" style={{filter:'drop-shadow(0 0 20px rgba(0,200,255,0.4))',animation:'kangPulse 2s ease-in-out infinite'}}>🦘</div>
-          <div style={{fontFamily:"'Orbitron',monospace",fontWeight:900,fontSize:'28px',color:'white',letterSpacing:'4px'}}>MUZZ</div>
-          <div style={{width:'40px',height:'40px',border:'3px solid rgba(0,200,255,0.15)',borderTop:'3px solid #00c8ff',borderRadius:'50%',animation:'spin 1s linear infinite'}}></div>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#020817",position:"relative",overflow:"hidden"}}>
+        {/* Dot grid */}
+        <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(0,200,255,0.04) 1px,transparent 1px)",backgroundSize:"24px 24px",pointerEvents:"none"}} />
+        {/* Glow orb */}
+        <div style={{position:"absolute",width:"500px",height:"500px",borderRadius:"50%",background:"radial-gradient(ellipse,rgba(0,150,255,0.07) 0%,transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none"}} />
+
+        <style>{`
+          @keyframes muzz-scan { 0%{transform:translateY(-100%)} 100%{transform:translateY(400%)} }
+          @keyframes muzz-pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+          @keyframes muzz-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        `}</style>
+
+        <div style={{position:"relative",zIndex:10,display:"flex",flexDirection:"column",alignItems:"center",gap:"28px"}}>
+
+          {/* Shield badge — same as dashboard */}
+          <div style={{position:"relative",animation:"muzz-pulse 2.5s ease-in-out infinite"}}>
+            <svg width="72" height="88" viewBox="0 0 24 32" fill="none">
+              <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#splashGrad)" />
+              <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#020817" fillOpacity="0.9" />
+              <defs>
+                <linearGradient id="splashGrad" x1="12" y1="0" x2="12" y2="32">
+                  <stop stopColor="#e8f0ff"/>
+                  <stop offset="0.5" stopColor="#ffffff"/>
+                  <stop offset="1" stopColor="#a0b4d0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            {/* Scan line over badge */}
+            <div style={{position:"absolute",inset:0,overflow:"hidden",borderRadius:"2px"}}>
+              <div style={{position:"absolute",left:0,right:0,height:"2px",background:"linear-gradient(90deg,transparent,rgba(0,200,255,0.8),transparent)",animation:"muzz-scan 2s linear infinite"}} />
+            </div>
+          </div>
+
+          {/* MUZZ wordmark */}
+          <div style={{fontFamily:"monospace",fontWeight:700,fontSize:"26px",color:"#e0eaff",letterSpacing:"8px"}}>MUZZ</div>
+
+          {/* Palantir scan bar loader */}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"10px"}}>
+            <div style={{width:"160px",height:"1px",background:"rgba(0,200,255,0.08)",position:"relative",overflow:"hidden"}}>
+              <div style={{position:"absolute",top:0,left:"-40%",width:"40%",height:"100%",background:"linear-gradient(90deg,transparent,#00c8ff,transparent)",animation:"muzz-scan 1.4s ease-in-out infinite"}} />
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+              <div style={{width:"4px",height:"4px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px #00c8ff",animation:"muzz-blink 1.4s ease-in-out infinite"}} />
+              <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.5)",letterSpacing:"3px"}}>INITIALISING</span>
+            </div>
+          </div>
+
         </div>
       </div>
     );
