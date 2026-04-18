@@ -7456,101 +7456,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-                <h1 style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>Bills</h1>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>BILLS</div>
               </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>MONTHLY TOTAL</div>
+                <div style={{fontSize:"24px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>${totalMonthly.toLocaleString()}</div>
+              </div>
+            </div>
+            {/* Main tabs */}
+            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              {[{id:'bills',label:'BILLS'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
+                <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"6px 14px",background:billsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:billsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          {/* Sub-tabs */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setBillsSubTab('bills')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                billsSubTab === 'bills'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Bills
-            </button>
-            <button
-              onClick={() => setBillsSubTab('calendar')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                billsSubTab === 'calendar'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Calendar
-            </button>
-            <button
-              onClick={() => setBillsSubTab('goals')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                billsSubTab === 'goals'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Goals
-            </button>
-            <button
-              onClick={() => setBillsSubTab('debts')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                billsSubTab === 'debts'
-                  ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Debts
-            </button>
-            <button
-              onClick={() => setBillsSubTab('debtCalc')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                billsSubTab === 'debtCalc'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Debt Payoff Calc
-            </button>
-          </div>
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {billsSubTab === 'bills' && (
             <>
           {/* Personal/Business Toggle */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => setBillsType('personal')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                billsType === 'personal'
-                  ? 'bg-green-500 text-white'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              🍺 Personal
+          <div style={{display:"flex",gap:"4px"}}>
+            <button onClick={() => setBillsType('personal')} style={{padding:"6px 14px",background:billsType==='personal'?"rgba(34,197,94,0.1)":"transparent",border:`0.5px solid ${billsType==='personal'?"rgba(34,197,94,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:billsType==='personal'?"rgba(34,197,94,0.9)":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+              PERSONAL
             </button>
-            <button
-              onClick={() => setBillsType('business')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                billsType === 'business'
-                  ? 'bg-purple-500 text-white'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              💼 Business
+            <button onClick={() => setBillsType('business')} style={{padding:"6px 14px",background:billsType==='business'?"rgba(168,85,247,0.1)":"transparent",border:`0.5px solid ${billsType==='business'?"rgba(168,85,247,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:billsType==='business'?"rgba(168,85,247,0.9)":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+              BUSINESS
             </button>
           </div>
 
           {/* Salary Input */}
-          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-            <div className="p-6 border-b">
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
               <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
             </div>
             <div className="p-4">
@@ -7571,14 +7519,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Salary Breakdown */}
           {salaryNum > 0 && (
-            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-              <div className="p-6 border-b">
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b">
+                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th className="text-left py-3 px-4 font-semibold">Period</th>
                       <th className="text-right py-3 px-4 font-semibold">Daily</th>
                       <th className="text-right py-3 px-4 font-semibold">Weekly</th>
@@ -7605,7 +7553,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           )}
 
           {/* Bills List - Personal or Business */}
-          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className={`p-6 border-b ${billsType === 'business' ? 'bg-purple-50' : ''}`}>
               <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
             </div>
@@ -7702,8 +7650,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Breakdown Table */}
           {filledSubs.length > 0 && (
-            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-              <div className="p-6 border-b">
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 className="text-xl font-semibold text-white">Cost Breakdown</h2>
               </div>
               
@@ -7834,7 +7782,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b">
+                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th 
                         className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
                         onClick={() => {
@@ -8056,14 +8004,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Bills vs Salary Comparison */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-              <div className="p-6 border-b">
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 className="text-xl font-semibold text-white">Bills vs Income</h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b">
+                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th className="text-left py-3 px-4 font-semibold">Category</th>
                       <th className="text-right py-3 px-3 font-semibold">Daily</th>
                       <th className="text-right py-3 px-3 font-semibold">Weekly</th>
@@ -8142,8 +8090,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {billsSubTab === 'calendar' && (
             <>
               {/* Calendar View - Mobile Optimized */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-4 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <h2 className="text-xl font-semibold text-white">Bills Calendar</h2>
@@ -8227,7 +8175,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Add/Edit Bill Modal for Selected Date */}
               {selectedCalendarDate && (
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-4 border-b flex items-center justify-between">
                     <div>
                       <h2 className="text-lg font-semibold">
@@ -8325,8 +8273,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
 
               {/* Bills List for Current Month */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-4 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-lg font-semibold">Bills This Month</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
                     Total: ${Object.entries(calendarBills)
@@ -8388,8 +8336,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {billsSubTab === 'goals' && (
             <>
               {/* Small Goals */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Small Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
@@ -8487,8 +8435,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Big Goals */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Big Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
                 </div>
@@ -8757,9 +8705,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             };
 
             return (
-              <div className="space-y-6">
+              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Overview Card */}
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-6">
                     <h2 className="text-xl font-semibold mb-1">Debt Overview</h2>
                     <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
@@ -8795,7 +8743,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Personal Debts */}
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-6 border-b bg-green-50">
                     <div className="flex items-center justify-between">
                       <div>
@@ -8816,7 +8764,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Business Debts */}
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-6 border-b bg-purple-50">
                     <div className="flex items-center justify-between">
                       <div>
@@ -8850,7 +8798,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const totalDebtCalc = sortedDebts.reduce((sum, d) => sum + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0);
             const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
             return (
-              <div className="space-y-6">
+              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">💳 Debt Payoff Calculator</h2>
                   <div className="flex gap-3 mb-6">
