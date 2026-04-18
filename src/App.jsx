@@ -3643,294 +3643,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
             <button
               onClick={() => setDietSubTab('groceries')}
-              className="palantir-tab" data-extra="
-                dietSubTab === 'groceries'
-                  ? ''
-                  : ''
-              }`}
-            >
-              Groceries
-            </button>
-            <button
-              onClick={() => setDietSubTab('meals')}
-              className="palantir-tab" data-extra="
-                dietSubTab === 'meals'
-                  ? ''
-                  : ''
-              }`}
+              className="palantir-tab"
             >
               Weekly Meals
             </button>
             <button
               onClick={() => setDietSubTab('water')}
-              className="palantir-tab" data-extra="
-                dietSubTab === 'water'
-                  ? ''
-                  : ''
-              }`}
-            >
-              Water
-            </button>
-            <button
-              onClick={() => setDietSubTab('plans')}
-              className="palantir-tab" data-extra="
-                dietSubTab === 'plans'
-                  ? ''
-                  : ''
-              }`}
+              className="palantir-tab"
             >
               Diet Plans
             </button>
             <button
               onClick={() => setDietSubTab('custom')}
-              className="palantir-tab" data-extra="
-                dietSubTab === 'custom'
-                  ? ''
-                  : ''
-              }`}
-            >
-              My Diets
-            </button>
-          </div>
-
-          {/* Groceries Tab */}
-          {dietSubTab === 'groceries' && (
-            <div className="space-y-4">
-              {/* Shopping Lists - Overview or Detail */}
-              {!activeShoppingList ? (
-                <>
-                  {/* Header */}
-                  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
-                    <h2 className="text-2xl font-bold mb-1">🛒 Shopping Lists</h2>
-                    <p className="text-purple-200 text-sm">{shoppingLists.length} {shoppingLists.length === 1 ? 'list' : 'lists'} • {groceries.filter(g => !g.checked).length} items to buy</p>
-                  </div>
-
-                  {/* Create New List */}
-                  <button
-                    onClick={() => {
-                      const name = prompt('List name (e.g. Groceries, Kmart, Bunnings)');
-                      if (name?.trim()) {
-                        setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: name.trim(), emoji: '🛍️' }]);
-                      }
-                    }}
-                    className="w-full py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-                  >
-                    + Create New List
-                  </button>
-
-                  {/* List Cards */}
-                  {shoppingLists.map(list => {
-                    const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
-                    const toBuy = listItems.filter(g => !g.checked).length;
-                    const inBag = listItems.filter(g => g.checked).length;
-                    return (
-                      <div
-                        key={list.id}
-                        onClick={() => setActiveShoppingList(list.id)}
-                        className="rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}
-                      >
-                        <input
-                          type="text"
-                          value={list.emoji}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, emoji: e.target.value.slice(0, 2) } : l))}
-                          className="w-12 h-12 text-center text-2xl bg-purple-50 rounded-xl focus:outline-none"
-                        />
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={list.name}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
-                            className="font-semibold text-gray-800 bg-transparent focus:outline-none w-full"
-                          />
-                          <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{toBuy} to buy • {inBag} in bag</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {list.id !== 'default' && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (confirm('Delete this list and all its items?')) {
-                                  setShoppingLists(prev => prev.filter(l => l.id !== list.id));
-                                  setGroceries(prev => prev.filter(g => (g.listId || 'default') !== list.id));
-                                }
-                              }}
-                              className="text-gray-300 hover:text-red-500"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                          <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90" />
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  {shoppingLists.length === 0 && (
-                    <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
-                      <div className="text-5xl mb-4">🛒</div>
-                      <p className="text-gray-500">No shopping lists yet. Create one above!</p>
-                    </div>
-                  )}
-                </>
-              ) : (() => {
-                /* Detail view for a single list */
-                const list = shoppingLists.find(l => l.id === activeShoppingList);
-                if (!list) { setActiveShoppingList(null); return null; }
-                const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
-                const toBuyItems = listItems.filter(g => !g.checked);
-                const bagItems = listItems.filter(g => g.checked);
-
-                return (
-                  <div className="space-y-4">
-                    {/* Back + Header */}
-                    <button onClick={() => setActiveShoppingList(null)} className="text-purple-600 font-medium text-sm">← All Lists</button>
-                    <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
-                      <h2 className="text-2xl font-bold mb-1">{list.emoji} {list.name}</h2>
-                      <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
-                    </div>
-
-                    {/* Sub-categories + Add */}
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <button
-                        onClick={() => {
-                          const name = prompt('Category name (e.g. Fridge, Freezer, Pantry)');
-                          if (name?.trim()) {
-                            setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: [...(l.subCategories || []), { id: Date.now().toString(), name: name.trim(), emoji: '📦' }] } : l));
-                          }
-                        }}
-                        className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium hover:bg-purple-200 transition-colors"
-                      >+ Add Category</button>
-                      {(list.subCategories || []).map(cat => (
-                        <span key={cat.id} className="px-3 py-1.5 bg-gray-100 rounded-full text-xs font-medium text-gray-600 flex items-center gap-1">
-                          {cat.emoji} {cat.name}
-                          <button onClick={() => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).filter(c => c.id !== cat.id) } : l))} className="text-gray-400 hover:text-red-500 ml-1">×</button>
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Items grouped by sub-category */}
-                    {(() => {
-                      const cats = list.subCategories || [];
-                      const uncategorised = toBuyItems.filter(g => !g.subCategory || !cats.find(c => c.id === g.subCategory));
-                      const allGroups = [
-                        ...cats.map(cat => ({
-                          ...cat,
-                          items: toBuyItems.filter(g => g.subCategory === cat.id)
-                        })),
-                        ...(uncategorised.length > 0 ? [{ id: '_none', name: cats.length > 0 ? 'Uncategorised' : 'Need to Buy', emoji: '🛍️', items: uncategorised }] : [])
-                      ];
-
-                      return allGroups.map(group => (
-                        <div key={group.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                          <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
-                            <h3 className="font-semibold text-purple-700 flex items-center gap-2">
-                              {group.id !== '_none' && (
-                                <input type="text" value={group.emoji} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c) } : l))} className="w-6 text-center bg-transparent focus:outline-none" />
-                              )}
-                              {group.id === '_none' ? group.name : (
-                                <input type="text" value={group.name} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, name: e.target.value } : c) } : l))} className="bg-transparent focus:outline-none font-semibold text-purple-700" />
-                              )}
-                              {group.items.length > 0 && <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{group.items.length}</span>}
-                            </h3>
-                            <button
-                              onClick={() => setGroceries(prev => [...prev, { id: Date.now(), item: '', quantity: '1', listId: list.id, subCategory: group.id === '_none' ? '' : group.id, checked: false }])}
-                              className="w-7 h-7 bg-purple-500 text-white rounded-lg flex items-center justify-center text-sm hover:bg-purple-600 transition-colors"
-                            >+</button>
-                          </div>
-                          {group.items.length > 0 && (
-                            <div className="divide-y">
-                              {group.items.map(item => (
-                                <div key={item.id} className="px-4 py-3 flex items-center gap-3">
-                                  <button
-                                    onClick={() => updateGrocery(item.id, 'checked', true)}
-                                    className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
-                                  />
-                                  <input
-                                    type="text"
-                                    value={item.item}
-                                    onFocus={scrollInputIntoView}
-                                    onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
-                                    placeholder="Item name"
-                                    className="flex-1 text-sm font-medium bg-transparent focus:outline-none"
-                                  />
-                                  <input
-                                    type="text"
-                                    value={item.quantity || ''}
-                                    onFocus={scrollInputIntoView}
-                                    onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
-                                    placeholder="Qty"
-                                    className="w-14 text-sm text-center bg-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:bg-purple-50"
-                                  />
-                                  <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ));
-                    })()}
-
-                    {/* Shopping Bag */}
-                    {bagItems.length > 0 && (
-                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                        <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
-                          <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ In Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{bagItems.length}</span></h3>
-                          <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked || (g.listId || 'default') !== list.id))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear</button>
-                        </div>
-                        <div className="divide-y">
-                          {bagItems.map(item => (
-                            <div key={item.id} className="px-4 py-3 flex items-center gap-3 opacity-60">
-                              <button
-                                onClick={() => updateGrocery(item.id, 'checked', false)}
-                                className="w-6 h-6 rounded-lg bg-green-500 flex-shrink-0 flex items-center justify-center"
-                              >
-                                <span className="text-white text-xs">✓</span>
-                              </button>
-                              <span className="flex-1 text-sm line-through text-gray-500">{item.item || 'Unnamed'}</span>
-                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {listItems.length === 0 && (
-                      <div className="bg-white rounded-2xl p-12 shadow-sm border text-center">
-                        <div className="text-5xl mb-4">{list.emoji}</div>
-                        <p className="text-gray-500">This list is empty. Add items above!</p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-            </div>
-          )}
-
-          {/* Weekly Meals Tab */}
-          {dietSubTab === 'meals' && (
-            <div className="space-y-4">
-              <div className="flex justify-end">
-                <button
-                  onClick={() => {
-                    const resetMeals = {};
-                    weekDays.forEach(d => { resetMeals[d.date] = []; });
-                    setDailyMeals(prev => ({ ...prev, ...resetMeals }));
-                  }}
-                  className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
-                >
-                  Reset Week
-                </button>
-              </div>
-              {weekDays.map(day => {
-                const dayMeals = dailyMeals[day.date] || [];
-                return (
-                  <div key={day.date} className={`bg-white rounded-3xl shadow-sm border overflow-hidden ${day.isToday ? 'ring-2 ring-orange-500' : ''}`}>
+              className="palantir-tab">
                     <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${day.isToday ? '' : 'bg-gray-200 text-gray-600'}`}>
@@ -4730,115 +4455,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
             <button
               onClick={() => setGymSubTab('sleep')}
-              className="palantir-tab" data-extra="
-                gymSubTab === 'sleep'
-                  ? ''
-                  : ''
-              }`}
-            >
-              🌙 Sleep
-            </button>
-            <button
-              onClick={() => setGymSubTab('mental')}
-              className="palantir-tab" data-extra="
-                gymSubTab === 'mental'
-                  ? ''
-                  : ''
-              }`}
+              className="palantir-tab"
             >
               🧠 Mental Health
             </button>
 
             <button
               onClick={() => setGymSubTab('journal')}
-              className="palantir-tab" data-extra="
-                gymSubTab === 'journal'
-                  ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white'
-                  : ''
-              }`}
-            >
-              📓 Journal
-            </button>
-          </div>
-
-          {/* Sleep Tracker Tab */}
-          {gymSubTab === 'sleep' && (
-            <div className="space-y-4">
-              {/* Sleep Stats Header */}
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold">🌙 Sleep Tracker</h2>
-                    <p className="text-indigo-100 mt-1">Track your sleep patterns</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (confirm('Reset all sleep data for this week?')) {
-                        const newSleepData = { ...sleepData };
-                        weekDays.forEach(day => {
-                          delete newSleepData[day.date];
-                        });
-                        setSleepData(newSleepData);
-                      }
-                    }}
-                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
-                  >
-                    Reset Week
-                  </button>
-                </div>
-                {/* Weekly Summary */}
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
-                      {(() => {
-                        const weekSleep = weekDays.map(d => sleepData[d.date]?.hoursSlept || 0).filter(h => h > 0);
-                        return weekSleep.length > 0 ? (weekSleep.reduce((a,b) => a+b, 0) / weekSleep.length).toFixed(1) : '-';
-                      })()}
-                    </div>
-                    <div className="text-xs text-indigo-200">Avg Hours</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
-                      {weekDays.filter(d => sleepData[d.date]?.bedTime && sleepData[d.date]?.wakeTime).length}
-                    </div>
-                    <div className="text-xs text-indigo-200">Days Tracked</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
-                      {(() => {
-                        const dreams = weekDays.filter(d => sleepData[d.date]?.dreamType === 'dream').length;
-                        const nightmares = weekDays.filter(d => sleepData[d.date]?.dreamType === 'nightmare').length;
-                        return `${dreams}/${nightmares}`;
-                      })()}
-                    </div>
-                    <div className="text-xs text-indigo-200">Dreams/Nightmares</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Daily Sleep Cards */}
-              {weekDays.map(day => {
-                const dayData = sleepData[day.date] || {};
-                
-                // Calculate hours slept
-                const calculateHours = (bed, wake) => {
-                  if (!bed || !wake) return 0;
-                  const [bedH, bedM] = bed.split(':').map(Number);
-                  const [wakeH, wakeM] = wake.split(':').map(Number);
-                  let bedMins = bedH * 60 + bedM;
-                  let wakeMins = wakeH * 60 + wakeM;
-                  if (wakeMins < bedMins) wakeMins += 24 * 60; // crossed midnight
-                  return ((wakeMins - bedMins) / 60).toFixed(1);
-                };
-                
-                const hoursSlept = calculateHours(dayData.bedTime, dayData.wakeTime);
-                
-                return (
-                  <div 
-                    key={day.date} 
-                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
-                      day.isToday ? 'border-indigo-400 ring-2 ring-indigo-100' : 'border-gray-100'
-                    }`}
+              className="palantir-tab"
                   >
                     {/* Day Header */}
                     <div className={`px-4 py-3 flex items-center justify-between ${
@@ -6704,26 +6328,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
             <button
               onClick={() => setWorkSubTab('summary')}
-              className="palantir-tab" data-extra="
-                workSubTab === 'summary'
-                  ? ''
-                  : ''
-              }`}
-            >
-              📊 Total Summary
-            </button>
-            {jobs.map(job => (
-              <button
-                key={job.id}
-                onClick={() => {
-                  setTimesheetData(prev => ({ ...prev, activeJobId: job.id }));
-                  setWorkSubTab('timesheet');
-                }}
-                className="palantir-tab" data-extra="
-                  workSubTab === 'timesheet' && activeJobId === job.id
-                    ? ''
-                    : ''
-                }`}
+              className="palantir-tab"
               >
                 💼 {job.name}
               </button>
@@ -7683,67 +7288,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
             <button
               onClick={() => setBillsSubTab('bills')}
-              className="palantir-tab" data-extra="
-                billsSubTab === 'bills'
-                  ? ''
-                  : ''
-              }`}
-            >
-              Bills
-            </button>
-            <button
-              onClick={() => setBillsSubTab('calendar')}
-              className="palantir-tab" data-extra="
-                billsSubTab === 'calendar'
-                  ? ''
-                  : ''
-              }`}
+              className="palantir-tab"
             >
               Calendar
             </button>
             <button
               onClick={() => setBillsSubTab('goals')}
-              className="palantir-tab" data-extra="
-                billsSubTab === 'goals'
-                  ? ''
-                  : ''
-              }`}
-            >
-              Goals
-            </button>
-            <button
-              onClick={() => setBillsSubTab('debts')}
-              className="palantir-tab" data-extra="
-                billsSubTab === 'debts'
-                  ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
-                  : ''
-              }`}
+              className="palantir-tab"
             >
               Debts
             </button>
             <button
               onClick={() => setBillsSubTab('debtCalc')}
-              className="palantir-tab" data-extra="
-                billsSubTab === 'debtCalc'
-                  ? ''
-                  : ''
-              }`}
-            >
-              Debt Payoff Calc
-            </button>
-          </div>
-
-          {billsSubTab === 'bills' && (
-            <>
-          {/* Personal/Business Toggle */}
-          <div style={{display:"flex",gap:"4px"}}>
-            <button
-              onClick={() => setBillsType('personal')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                billsType === 'personal'
-                  ? 'bg-green-500 text-white'
-                  : ''
-              }`}
+              className="palantir-tab"
             >
               🍺 Personal
             </button>
@@ -9516,304 +9073,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex gap-2 mt-4 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <button
                 onClick={() => setAssetsSubTab('assets')}
-                className="palantir-tab" data-extra="
-                  assetsSubTab === 'assets'
-                    ? ''
-                    : ''
-                }`}
-              >
-                Assets
-              </button>
-              <button
-                onClick={() => setAssetsSubTab('goals')}
-                className="palantir-tab" data-extra="
-                  assetsSubTab === 'goals'
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Goals
               </button>
               <button
                 onClick={() => setAssetsSubTab('knowledge')}
-                className="palantir-tab" data-extra="
-                  assetsSubTab === 'knowledge'
-                    ? ''
-                    : ''
-                }`}
-              >
-                Knowledge Guide
-              </button>
-              <button
-                onClick={() => setAssetsSubTab('assetMap')}
-                className="palantir-tab" data-extra="
-                  assetsSubTab === 'assetMap'
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Asset Map
               </button>
               <button
                 onClick={() => setAssetsSubTab('worldMap')}
-                className="palantir-tab" data-extra="
-                  assetsSubTab === 'worldMap'
-                    ? ''
-                    : ''
-                }`}
-              >
-                World Map
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {assetsSubTab === 'assets' && (
-            <>
-              {/* Total Assets Summary */}
-              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl p-6 text-white">
-                <p className="text-sm opacity-75 mb-1">Total Assets</p>
-                <p className="text-5xl font-bold">${totalAssets.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
-              </div>
-
-              {/* Muzz Asset Comments */}
-              {totalAssets > 0 && (
-                <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl shadow-sm border overflow-hidden text-white">
-                  <div className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="text-4xl">🦘</div>
-                      <div className="flex-1">
-                        <h2 className="text-xl font-semibold mb-2">Muzz's Thoughts</h2>
-                        <p className="text-amber-100">
-                          {totalAssets >= 1000000000000 ? "okay you can stop adding zero's now 💀" :
-                           totalAssets >= 100000000000 ? "Nah this is actually Elon 😭😭" :
-                           totalAssets >= 10000000000 ? "Yo if you just give me 1% I'll be happy 🙏" :
-                           totalAssets >= 1000000000 ? "Elon Musk? 😭😭" :
-                           totalAssets >= 100000000 ? "You know how we have been friends for a while can I maybe..... have 10 Mill 🥺😭" :
-                           totalAssets >= 10000000 ? "I reckon we chuck a mill on black 😂 (kidding ofc)" :
-                           totalAssets >= 5000000 ? "Gawd 5M+, Well at least I know who I'll be calling to come out clubbing 😂" :
-                           totalAssets >= 2000000 ? "🏆 $2 Mill+ club! You could buy a house in Sydney... well, maybe a parking spot. But still, massive flex! 🅿️" :
-                           totalAssets >= 1000000 ? "🎉 A MILLIONAIRE! Pop the champagne! 🍾 Wait, with $1 Mill+ like this, you're probably drinking the fancy stuff already!" :
-                           totalAssets >= 500000 ? "😎 $500K+! You're officially doing better than most. Time to start practicing your 'I'm not a millionaire YET' humble brag." :
-                           totalAssets >= 250000 ? "🚀 Yooo W in the chattt, my boy is 1/2 way to $500,000 🔥" :
-                           totalAssets >= 100000 ? "🎆 $100K+!!! Congrats Bro Six figures is no joke. You've got more assets than most people's lifetime savings. Proud of ya!" :
-                           totalAssets >= 50000 ? "$50K+! That's a decent car, a chunk of a house deposit, or 50,000 $1 scratchy tickets (don't do that) 😏" :
-                           totalAssets >= 10000 ? "Dammm $10K+ in assets. Remember Rome wasn't built in a day, and neither is wealth. Keep at it! 🧱" :
-                           totalAssets >= 1000 ? "$1K+ is no small feat! You're planting the seeds for your money tree to grow! 🌳💸" :
-                           "The fact you're tracking your assets bro means you're already ahead of most people. Keen to see the come up 😄"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Assets Input */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Assets</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Property, super, cash, vehicles, etc.</p>
-                </div>
-
-            {/* Assets Cards */}
-            <div className="p-4 space-y-3">
-              {assets.map((asset, index) => (
-                <div key={index} className="border-2 rounded-2xl p-4 bg-white">
-                  {/* Row 1: Name + Delete */}
-                  <div className="flex items-start gap-3 mb-3">
-                    <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
-                    <input
-                      type="text"
-                      value={asset?.name || ''}
-                      onFocus={scrollInputIntoView}
-                      onChange={(e) => updateAsset(index, 'name', e.target.value)}
-                      placeholder="Asset name (e.g. House)"
-                      className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-blue-500"
-                    />
-                    <button
-                      onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
-                      className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                  
-                  {/* Row 2: Type */}
-                  <div className="mb-3">
-                    <label className="text-xs text-gray-500 mb-1 block">Type</label>
-                    <select
-                      value={asset?.category || ''}
-                      onFocus={scrollInputIntoView}
-                      onChange={(e) => updateAsset(index, 'category', e.target.value)}
-                      className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                    >
-                      {assetCategories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  {/* Row 3: Value + Owned For */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Value</label>
-                      <div className="flex items-center">
-                        <span className="text-gray-400 mr-1">$</span>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={asset?.valueStr || ''}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => updateAsset(index, 'value', e.target.value)}
-                          placeholder="0"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Owned For</label>
-                      <input
-                        type="text"
-                        value={asset?.ownedFor || ''}
-                        onFocus={scrollInputIntoView}
-                        onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
-                        placeholder="e.g. 1y 5m"
-                        className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="p-4 border-t">
-              <button
-                onClick={() => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }])}
-                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
-              >
-                + Add Asset
-              </button>
-            </div>
-          </div>
-
-          {/* Type Breakdown */}
-          {filledAssets.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Breakdown by Type</h2>
-                <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-gray-50 border-b">
-                      <th 
-                        className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
-                        onClick={() => {
-                          if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
-                        }}
-                      >
-                        Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
-                        onClick={() => {
-                          if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
-                        }}
-                      >
-                        Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
-                        onClick={() => {
-                          if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
-                        }}
-                      >
-                        % of Total {assetsSortBy === 'percent' && (assetsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {assetCategories
-                      .map(cat => ({
-                        ...cat,
-                        total: filledAssets.filter(a => a.category === cat.id).reduce((sum, a) => sum + a.value, 0)
-                      }))
-                      .filter(cat => cat.total > 0)
-                      .sort((a, b) => {
-                        let comparison = 0;
-                        switch (assetsSortBy) {
-                          case 'type':
-                            comparison = a.name.localeCompare(b.name);
-                            break;
-                          case 'value':
-                          case 'percent':
-                            comparison = a.total - b.total;
-                            break;
-                          default:
-                            comparison = a.total - b.total;
-                        }
-                        return assetsSortDir === 'asc' ? comparison : -comparison;
-                      })
-                      .map((cat, idx) => (
-                        <tr key={idx} className="border-b hover:bg-gray-50">
-                          <td className="py-3 px-4 font-medium">{cat.emoji} {cat.name}</td>
-                          <td className="py-3 px-4 text-right">${cat.total.toLocaleString()}</td>
-                          <td className="py-3 px-4 text-right text-gray-600">{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="bg-indigo-50 font-bold text-indigo-900">
-                      <td className="py-3 px-4">Total</td>
-                      <td className="py-3 px-4 text-right">${totalAssets.toLocaleString()}</td>
-                      <td className="py-3 px-4 text-right">100%</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Assets Breakdown */}
-          {filledAssets.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",overflow:"hidden"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"2px"}}>Assets Breakdown</h2>
-              </div>
-              
-              {/* Pie Chart */}
-              <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8 border-b">
-                <div className="relative">
-                  <svg width="220" height="220" viewBox="0 0 220 220">
-                    {(() => {
-                      const sortedAssets = [...filledAssets].sort((a, b) => b.value - a.value);
-                      const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16', '#06B6D4', '#A855F7', '#F43F5E', '#22C55E', '#EAB308'];
-                      let cumulative = 0;
-                      
-                      return (
-                        <>
-                          {sortedAssets.map((asset, idx) => {
-                            const percent = (asset.value / totalAssets) * 100;
-                            const startAngle = (cumulative / 100) * 360;
-                            cumulative += percent;
-                            const endAngle = (cumulative / 100) * 360;
-                            
-                            const startRad = (startAngle - 90) * Math.PI / 180;
-                            const endRad = (endAngle - 90) * Math.PI / 180;
-                            const largeArc = percent > 50 ? 1 : 0;
-                            
-                            const x1 = 110 + 80 * Math.cos(startRad);
-                            const y1 = 110 + 80 * Math.sin(startRad);
-                            const x2 = 110 + 80 * Math.cos(endRad);
-                            const y2 = 110 + 80 * Math.sin(endRad);
-                            
-                            return (
-                              <path
-                                key={idx}
-                                d={`M 110 110 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                className="palantir-tab"
                                 fill={colors[idx % colors.length]}
                               />
                             );
@@ -10710,101 +9982,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div className="flex gap-2 mt-4 overflow-x-auto pb-2 -mx-2 px-2">
               <button
                 onClick={() => setInvestmentsSubTab('portfolio')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'portfolio'
-                    ? ''
-                    : ''
-                }`}
-              >
-                Current Portfolio
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('futurePortfolio')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'futurePortfolio'
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Future Portfolio
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('research')}
-                className="palantir-tab" data-extra="
-                  (investmentsSubTab === 'research' || investmentsSubTab === 'declined' || investmentsSubTab === 'economics' || investmentsSubTab === 'risks')
-                    ? ''
-                    : ''
-                }`}
-              >
-                Research
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('goals')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'goals'
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Goals
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('notes')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'notes'
-                    ? ''
-                    : ''
-                }`}
-              >
-                Notes
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('knowledge')}
-                className="palantir-tab" data-extra="
-                  (investmentsSubTab === 'knowledge' || investmentsSubTab === 'books')
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Knowledge Guide
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('accounting')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'accounting'
-                    ? ''
-                    : ''
-                }`}
-              >
-                Accounting
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('performance')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'performance'
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Performance
               </button>
               <button
                 onClick={() => setInvestmentsSubTab('sp500')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'sp500'
-                    ? ''
-                    : ''
-                }`}
-              >
-                S&P 500
-              </button>
-              <button
-                onClick={() => setInvestmentsSubTab('compound')}
-                className="palantir-tab" data-extra="
-                  investmentsSubTab === 'compound'
-                    ? ''
-                    : ''
-                }`}
+                className="palantir-tab"
               >
                 Compound Calc
               </button>
