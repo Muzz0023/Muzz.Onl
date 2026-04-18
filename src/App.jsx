@@ -9241,71 +9241,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-                <h1 style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>Assets Management</h1>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>ASSETS</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TOTAL VALUE</div>
+                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>${totalAssets.toLocaleString()}</div>
               </div>
             </div>
-            {/* Sub-tabs */}
-            <div className="flex gap-2 mt-4 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <button
-                onClick={() => setAssetsSubTab('assets')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  assetsSubTab === 'assets'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Assets
-              </button>
-              <button
-                onClick={() => setAssetsSubTab('goals')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  assetsSubTab === 'goals'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Goals
-              </button>
-              <button
-                onClick={() => setAssetsSubTab('knowledge')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  assetsSubTab === 'knowledge'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Knowledge Guide
-              </button>
-              <button
-                onClick={() => setAssetsSubTab('assetMap')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  assetsSubTab === 'assetMap'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                Asset Map
-              </button>
-              <button
-                onClick={() => setAssetsSubTab('worldMap')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                  assetsSubTab === 'worldMap'
-                    ? 'text-white cyber-tab-active'
-                    : 'text-slate-400 hover:text-slate-200 transition-colors'
-                }`}
-              >
-                World Map
-              </button>
+            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'knowledge',label:'GUIDE'},{id:'assetMap',label:'ASSET MAP'},{id:'worldMap',label:'WORLD MAP'}].map(tab => (
+                <button key={tab.id} onClick={() => setAssetsSubTab(tab.id)} style={{padding:"6px 14px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {assetsSubTab === 'assets' && (
             <>
               {/* Total Assets Summary */}
@@ -9347,8 +9308,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
 
               {/* Assets Input */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Assets</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Property, super, cash, vehicles, etc.</p>
                 </div>
@@ -9434,15 +9395,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Type Breakdown */}
           {filledAssets.length > 0 && (
-            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-              <div className="p-6 border-b">
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 className="text-xl font-semibold text-white">Breakdown by Type</h2>
                 <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b">
+                    <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                       <th 
                         className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
                         onClick={() => {
@@ -9516,8 +9477,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Assets Breakdown */}
           {filledAssets.length > 0 && (
-            <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-              <div className="p-6 border-b">
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 className="text-xl font-semibold text-white">Assets Breakdown</h2>
               </div>
               
@@ -9586,7 +9547,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b">
+                    <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                       <th className="text-left py-3 px-4 font-semibold">Asset</th>
                       <th className="text-left py-3 px-4 font-semibold">Type</th>
                       <th className="text-right py-3 px-4 font-semibold">Value</th>
@@ -9624,8 +9585,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {assetsSubTab === 'goals' && (
             <>
               {/* Small Goals */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Small Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
@@ -9723,8 +9684,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Big Goals */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">Big Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term wealth targets</p>
                 </div>
@@ -9837,8 +9798,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* The 3 Asset Categories */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 className="text-xl font-semibold text-white">📚 The 3 Asset Categories (Buffett's Framework)</h2>
                   <p className="text-sm text-gray-500 mt-1">Warren Buffett explains that all investments fall into one of three buckets</p>
                 </div>
@@ -10054,7 +10015,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const rootNodes = assetMapNodes.filter(n => n.parentId === null);
 
             return (
-              <div className="space-y-4">
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                 <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white flex items-center justify-between">
                   <div>
                     <h2 className="text-2xl font-bold mb-1">🗺️ Asset Map</h2>
@@ -10165,7 +10126,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             };
 
             return (
-              <div className="space-y-4">
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                 <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
                   <h2 className="text-2xl font-bold mb-1">🌍 World Map</h2>
                   <p className="text-emerald-200 text-sm">Tap anywhere on the map to drop a pin</p>
@@ -10253,11 +10214,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Pins List */}
                 {mapPins.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                     <div className="px-4 py-3 bg-emerald-50 border-b">
                       <h3 className="font-semibold text-emerald-700">📍 Your Pins ({mapPins.length})</h3>
                     </div>
-                    <div className="divide-y">
+                    <div style={{}}>
                       {mapPins.map(pin => (
                         <div key={pin.id} className="px-4 py-3 space-y-2">
                           <div className="flex items-center gap-3">
