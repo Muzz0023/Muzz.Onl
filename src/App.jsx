@@ -14604,10 +14604,297 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const activeJobs = donnyJobs.filter(j => !j.completed);
       const completedJobs = donnyJobs.filter(j => j.completed);
       const overdueJobs = activeJobs.filter(j => j.dueDate && new Date(j.dueDate) < new Date());
+      const inProgressJobs = activeJobs.filter(j => j.started);
       const totalLabourCost = donnyTimesheets.reduce((sum, e) => {
         const m = donnyTeam.find(x => x.id === e.memberId);
         return sum + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
+      const totalHours = donnyTimesheets.reduce((s,e) => s+(parseFloat(e.hours)||0), 0);
+      const totalHourlyRate = donnyTeam.reduce((s,m) => s+(parseFloat(m.hourlyRate)||0), 0);
+
+      // Labour by job for mini chart
+      const labourByJob = donnyJobs.slice(0,6).map(job => {
+        const hrs = donnyTimesheets.filter(e=>e.jobId===job.id).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+        const cost = donnyTimesheets.filter(e=>e.jobId===job.id).reduce((s,e)=>{
+          const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0);
+        },0);
+        return {title:job.title.slice(0,16), hrs, cost};
+      }).filter(j=>j.hrs>0);
+      const maxHrs = Math.max(...labourByJob.map(j=>j.hrs), 1);
+
+      // Recent activity feed
+      const recentActivity = [
+        ...donnyTimesheets.map(e=>({...e, _type:'hours', _at:new Date(e.createdAt||0)})),
+        ...Object.values(donnyNotes).flat().map(n=>({...n, _type:'note', _at:new Date(n.createdAt||0)})),
+        ...donnyMistakes?.map(m=>({...m, _type:'mistake', _at:new Date(m.createdAt||0)})) || [],
+        ...donnyIncidents?.map(i=>({...i, _type:'incident', _at:new Date(i.createdAt||0)})) || [],
+      ].sort((a,b)=>b._at-a._at).slice(0,5);
+
+      const liveClock = liveTime.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+      const liveDate = liveTime.toLocaleDateString('en-AU',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+
+      const donnyPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const donnyAccent = {padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24">
+          <Sidebar />
+          <SaveIndicator />
+
+          {/* TOP COMMAND BAR */}
+          <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(249,115,22,0.25)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
+            <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden"}}>
+              <span style={{fontSize:"11px",color:"#f97316",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>🐨 DONNY</span>
+              <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
+              <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
+              {eliteName && <><span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
+              <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
+              <div style={{display:"flex",alignItems:"center",gap:"3px"}}>
+                <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#f97316",display:"inline-block",boxShadow:"0 0 6px #f97316",animation:"blink 2s infinite"}}></span>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace"}}>LIVE</span>
+              </div>
+            </div>
+          </div>
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",position:"relative",overflow:"hidden",padding:"60px 28px 20px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-4xl mx-auto">
+              <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",letterSpacing:"2px",fontFamily:"monospace",marginBottom:"6px"}}>BUSINESS INTELLIGENCE SYSTEM</div>
+              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
+                <div>
+                  <div style={{fontSize:"clamp(14px,4vw,22px)",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}>
+                    {overdueJobs.length>0 ? `⚠️ ${overdueJobs.length} JOB${overdueJobs.length>1?'S':''} OVERDUE` : activeJobs.length===0 ? "NO ACTIVE JOBS" : `${activeJobs.length} JOB${activeJobs.length>1?'S':''} ACTIVE`}
+                  </div>
+                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{greeting}, {eliteName||'boss'} · {today}</div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TOTAL LABOUR</div>
+                  <div style={{fontSize:"28px",color:"#f97316",fontFamily:"monospace",fontWeight:500}}>${totalLabourCost.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                </div>
+              </div>
+
+              {/* STATUS STRIP */}
+              <div style={{display:"flex",alignItems:"center",gap:"12px",marginTop:"10px",padding:"6px 4px",flexWrap:"wrap"}}>
+                {[
+                  {label:"JOBS", value:`${activeJobs.length} ACTIVE`, ok:activeJobs.length>0},
+                  {label:"OVERDUE", value:overdueJobs.length>0?`${overdueJobs.length} ⚠️`:"CLEAR", ok:overdueJobs.length===0},
+                  {label:"TEAM", value:`${donnyTeam.length} CREW`, ok:donnyTeam.length>0},
+                  {label:"HOURS", value:`${totalHours.toFixed(0)}H`, ok:totalHours>0},
+                  {label:"WORKSPACE", value:donnyRole==='worker'?"WORKER":"BOSS", ok:true},
+                ].map(s => (
+                  <div key={s.label} style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                    <span style={{width:"5px",height:"5px",borderRadius:"50%",background:s.ok?"#f97316":"rgba(148,163,184,0.3)",display:"inline-block",boxShadow:s.ok?"0 0 4px rgba(249,115,22,0.6)":"none"}}></span>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}:</span>
+                    <span style={{fontSize:"9px",color:s.ok?"rgba(249,115,22,0.8)":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:"8px"}}>
+              {[
+                {label:"ACTIVE JOBS",  value:activeJobs.length,          color:"#f97316"},
+                {label:"IN PROGRESS",  value:inProgressJobs.length,       color:"#f97316"},
+                {label:"OVERDUE",      value:overdueJobs.length,          color:overdueJobs.length>0?"#ef4444":"rgba(34,197,94,0.8)"},
+                {label:"COMPLETED",    value:completedJobs.length,        color:"rgba(34,197,94,0.8)"},
+                {label:"TEAM SIZE",    value:donnyTeam.length,            color:"#f97316"},
+                {label:"CLIENTS",      value:donnyClients.length,         color:"#3b82f6"},
+              ].map((s,i) => (
+                <div key={i} style={{...donnyPanel,borderLeft:`2px solid ${s.color}`,padding:"12px 14px"}}>
+                  <div style={{fontSize:"9px",color:`${s.color}80`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>{s.label}</div>
+                  <div style={{fontSize:"26px",color:s.color,fontFamily:"monospace",fontWeight:500}}>{s.value}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* INTEL 2×2 */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+
+              {/* Active Jobs Feed */}
+              <div style={{...donnyPanel,overflow:"hidden"}}>
+                <div style={donnyAccent}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIVE JOBS</span>
+                  <button onClick={() => setActiveView('donny-newjob')} style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"2px 8px",cursor:"pointer",borderRadius:"2px"}}>+ NEW</button>
+                </div>
+                {activeJobs.length === 0 ? (
+                  <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace"}}>NO ACTIVE JOBS</div>
+                ) : activeJobs.slice(0,4).map((job,i) => {
+                  const isOverdue = job.dueDate && new Date(job.dueDate) < new Date();
+                  const sc = isOverdue?"#ef4444":job.started?"#f97316":"#475569";
+                  return (
+                    <button key={job.id} onClick={() => setActiveView('donny-masterview')} style={{width:"100%",display:"flex",alignItems:"center",gap:"8px",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(activeJobs.length,4)-1?"0.5px solid rgba(249,115,22,0.06)":"none",textAlign:"left"}}>
+                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
+                      <div style={{flex:1,overflow:"hidden"}}>
+                        <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{job.jobNumber?`#${job.jobNumber} · `:''}{isOverdue?"OVERDUE":job.started?"IN PROGRESS":"TO DO"}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+                {activeJobs.length > 4 && <div style={{padding:"6px 14px",fontSize:"9px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace"}}>+{activeJobs.length-4} more</div>}
+              </div>
+
+              {/* Labour Cost Chart */}
+              <div style={{...donnyPanel,overflow:"hidden"}}>
+                <div style={donnyAccent}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LABOUR BY JOB</span>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>${totalLabourCost.toFixed(0)}</span>
+                </div>
+                {labourByJob.length === 0 ? (
+                  <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace"}}>NO HOURS LOGGED</div>
+                ) : (
+                  <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:"6px"}}>
+                    {labourByJob.map((j,i) => (
+                      <div key={i}>
+                        <div style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}>
+                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>{j.title}</span>
+                          <span style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",flexShrink:0,marginLeft:"8px"}}>{j.hrs.toFixed(1)}h</span>
+                        </div>
+                        <div style={{height:"3px",background:"rgba(249,115,22,0.08)",borderRadius:"1px",overflow:"hidden"}}>
+                          <div style={{height:"100%",width:`${(j.hrs/maxHrs)*100}%`,background:"linear-gradient(90deg,rgba(249,115,22,0.6),rgba(249,115,22,0.3))",borderRadius:"1px"}}/>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Recent Activity */}
+              <div style={{...donnyPanel,overflow:"hidden"}}>
+                <div style={donnyAccent}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RECENT ACTIVITY</span>
+                </div>
+                {recentActivity.length === 0 ? (
+                  <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace"}}>NO ACTIVITY YET</div>
+                ) : recentActivity.map((item,i) => {
+                  const typeColor = item._type==='incident'?'#ef4444':item._type==='mistake'?'#ef4444':item._type==='hours'?'#22c55e':'#f97316';
+                  const typeLabel = item._type==='hours'?'HOURS':item._type==='note'?'DIARY':item._type==='incident'?'INCIDENT':'MISTAKE';
+                  const job = donnyJobs.find(j=>j.id===item.jobId);
+                  return (
+                    <div key={i} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"8px 14px",borderBottom:i<recentActivity.length-1?"0.5px solid rgba(249,115,22,0.05)":"none"}}>
+                      <span style={{fontSize:"9px",color:typeColor,fontFamily:"monospace",letterSpacing:"0.5px",padding:"1px 5px",background:`${typeColor}10`,border:`0.5px solid ${typeColor}30`,borderRadius:"2px",flexShrink:0,marginTop:"1px"}}>{typeLabel}</span>
+                      <div style={{flex:1,overflow:"hidden"}}>
+                        <div style={{fontSize:"10px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?.title||item.title||item.text?.slice(0,30)||'—'}</div>
+                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>{item._at.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}{item.hours?` · ${item.hours}h`:''}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Team Snapshot */}
+              <div style={{...donnyPanel,overflow:"hidden"}}>
+                <div style={donnyAccent}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TEAM SNAPSHOT</span>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>${totalHourlyRate.toFixed(0)}/hr</span>
+                </div>
+                {donnyTeam.length === 0 ? (
+                  <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace"}}>NO TEAM ADDED</div>
+                ) : donnyTeam.slice(0,5).map((m,i) => {
+                  const memberHrs = donnyTimesheets.filter(e=>String(e.memberId)===String(m.id)).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                  return (
+                    <div key={m.id} style={{display:"flex",alignItems:"center",gap:"8px",padding:"7px 14px",borderBottom:i<Math.min(donnyTeam.length,5)-1?"0.5px solid rgba(249,115,22,0.05)":"none"}}>
+                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{m.name.charAt(0).toUpperCase()}</div>
+                      <div style={{flex:1,overflow:"hidden"}}>
+                        <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{(m.roles||[m.role]).filter(Boolean)[0]||'—'}</div>
+                      </div>
+                      <div style={{textAlign:"right",flexShrink:0}}>
+                        <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>{memberHrs.toFixed(1)}h</div>
+                        {m.hourlyRate&&<div style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>${m.hourlyRate}/hr</div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* NAV GRID */}
+            <div style={{...donnyPanel,padding:"12px"}}>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// NAVIGATE</div>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(75px,1fr))",gap:"5px"}}>
+                {[
+                  {label:"JOBS",       view:"donny-masterview",  workerOk:false, color:"rgba(249,115,22,0.7)"},
+                  {label:"SCHEDULER",  view:"donny-scheduler",   workerOk:false, color:"rgba(249,115,22,0.7)"},
+                  {label:"DAILY RPT",  view:"donny-dailyreport", workerOk:true,  color:"rgba(249,115,22,0.7)"},
+                  {label:"RECURRING",  view:"donny-recurring",   workerOk:false, color:"rgba(249,115,22,0.7)"},
+                  {label:"TEAM",       view:"donny-team",        workerOk:false, color:"rgba(249,115,22,0.7)"},
+                  {label:"SUBS",       view:"donny-subs",        workerOk:false, color:"rgba(249,115,22,0.7)"},
+                  {label:"CLIENTS",    view:"donny-clients",     workerOk:false, color:"rgba(59,130,246,0.7)"},
+                  {label:"PHOTOS",     view:"donny-photos",      workerOk:true,  color:"rgba(249,115,22,0.7)"},
+                  {label:"SWMS",       view:"donny-checklists",  workerOk:true,  color:"rgba(34,197,94,0.7)"},
+                  {label:"INCIDENTS",  view:"donny-incidents",   workerOk:true,  color:"rgba(239,68,68,0.7)"},
+                  {label:"MISTAKES",   view:"donny-mistakes",    workerOk:true,  color:"rgba(239,68,68,0.7)"},
+                  {label:"RISK REG",   view:"donny-safety",      workerOk:true,  color:"rgba(251,191,36,0.7)"},
+                  {label:"MATERIALS",  view:"donny-materialslog",workerOk:true,  color:"rgba(34,197,94,0.7)"},
+                  {label:"PRICE BK",   view:"donny-suppliers",   workerOk:false, color:"rgba(249,115,22,0.7)"},
+                  {label:"REPORTS",    view:"donny-reports",     workerOk:false, color:"rgba(249,115,22,0.7)"},
+                ].map(s => {
+                  const locked = donnyRole==='worker' && !s.workerOk;
+                  return (
+                    <button key={s.view} onClick={() => { if(!locked) setActiveView(s.view); }}
+                      style={{background:`${s.color.replace('0.7','0.04')}`,border:`0.5px solid ${locked?"rgba(255,255,255,0.04)":s.color.replace('0.7','0.2')}`,borderRadius:"3px",padding:"8px 4px",display:"flex",alignItems:"center",justifyContent:"center",opacity:locked?0.25:1,cursor:locked?'default':'pointer',position:"relative"}}>
+                      <span style={{fontSize:"8px",color:locked?"rgba(148,163,184,0.4)":s.color,fontFamily:"monospace",letterSpacing:"0.3px",textAlign:"center",lineHeight:"1.3"}}>{s.label}</span>
+                      {locked && <span style={{position:"absolute",top:"3px",right:"3px",fontSize:"7px"}}>🔒</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* WORKSPACE CARD */}
+            <div style={{...donnyPanel,overflow:"hidden"}}>
+              <div style={donnyAccent}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// WORKSPACE</span>
+                <span style={{fontSize:"9px",color:donnyRole==='worker'?"rgba(34,197,94,0.6)":"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{donnyRole==='worker'?'WORKER MODE':'BOSS MODE'}</span>
+              </div>
+              <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                {donnyRole === 'worker' ? (
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <div>
+                      <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>👷 WORKER MODE</div>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"3px"}}>Logged into a boss's workspace</div>
+                    </div>
+                    <button onClick={()=>{ leaveWorkspace(); }} style={{fontSize:"10px",padding:"4px 12px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>LEAVE</button>
+                  </div>
+                ) : (
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>YOUR CODE</div>
+                      <div style={{padding:"8px",textAlign:"center",fontFamily:"monospace",fontWeight:700,letterSpacing:"5px",fontSize:"18px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",color:"#f97316",marginBottom:"6px"}}>
+                        {donnyWorkspaceCode || '— — —'}
+                      </div>
+                      {!donnyWorkspaceCode ? (
+                        <button onClick={ensureWorkspaceCode} style={{width:"100%",padding:"7px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>GENERATE</button>
+                      ) : (
+                        <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode).then(()=>alert('Copied! 📋'))} style={{width:"100%",padding:"7px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>📋 COPY</button>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>JOIN WORKSPACE</div>
+                      <input value={donnyJoinInput} onChange={e=>setDonnyJoinInput(e.target.value.toUpperCase())} placeholder="ABC-1234" maxLength={8}
+                        style={{width:"100%",textAlign:"center",fontFamily:"monospace",fontWeight:700,background:"rgba(249,115,22,0.05)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",color:"#f97316",fontSize:"16px",letterSpacing:"3px",padding:"7px",outline:"none",marginBottom:"6px",boxSizing:"border-box"}}/>
+                      <button onClick={joinWorkspace} disabled={donnyJoinLoading||donnyJoinInput.length<7}
+                        style={{width:"100%",padding:"7px",background:donnyJoinInput.length>=7?"rgba(249,115,22,0.12)":"rgba(255,255,255,0.03)",border:`0.5px solid ${donnyJoinInput.length>=7?"rgba(249,115,22,0.4)":"rgba(255,255,255,0.05)"}`,borderRadius:"3px",color:donnyJoinInput.length>=7?"rgba(249,115,22,0.9)":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",opacity:donnyJoinLoading?0.6:1}}>
+                        {donnyJoinLoading?'JOINING...':'→ JOIN'}
+                      </button>
+                      {donnyJoinError && <div style={{fontSize:"9px",marginTop:"4px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace"}}>{donnyJoinError}</div>}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
 
       return (
         <div className="min-h-screen bg-transparent pb-24">
