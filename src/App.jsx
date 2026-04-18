@@ -3412,366 +3412,211 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="bg-transparent pb-24" style={{minHeight:"100vh",overflowY:"auto"}}>
+      <div className="bg-transparent pb-24" style={{minHeight:"100vh"}}>
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+
+        {/* HEADER */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Tasks</h1>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TASKS</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>COMPLETED TODAY</div>
+                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{dailyTasks.filter(t=>t.completed).length}/{dailyTasks.length}</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          {/* Sub-tabs */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setTasksSubTab('daily')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                tasksSubTab === 'daily'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Daily Tasks
-            </button>
-            <button
-              onClick={() => setTasksSubTab('weekly')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                tasksSubTab === 'weekly'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Weekly Tasks
-            </button>
-            <button
-              onClick={() => setTasksSubTab('general')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                tasksSubTab === 'general'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              General Tasks
-            </button>
-            <button
-              onClick={() => setTasksSubTab('rotation')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                tasksSubTab === 'rotation'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Daily Rotation
-            </button>
-            <button
-              onClick={() => setTasksSubTab('pomodoro')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                tasksSubTab === 'pomodoro'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              Pomodoro
-            </button>
+        <div className="max-w-5xl mx-auto px-6 py-5">
+          {/* Tab bar */}
+          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
+            {[
+              {id:'daily', label:'DAILY'},
+              {id:'weekly', label:'WEEKLY'},
+              {id:'general', label:'GENERAL'},
+              {id:'rotation', label:'ROTATION'},
+              {id:'pomodoro', label:'POMODORO'},
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"6px 14px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          {/* Daily Tasks */}
+          {/* DAILY TASKS — Apple Notes free format */}
           {tasksSubTab === 'daily' && (
-            <>
-              <button
-                onClick={addDailyTask}
-                className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-              >
-                + Add Daily Task
-              </button>
-
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold text-white">Daily Tasks</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Tasks to complete today</p>
-                </div>
-                <div className="divide-y">
-                  {dailyTasks.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">
-                      No daily tasks. Add one above!
-                    </div>
-                  ) : (
-                    dailyTasks.map(task => (
-                      <div key={task.id} className={`p-4 hover:bg-gray-50 transition-colors ${task.completed ? 'opacity-60' : ''}`}>
-                        <div className="flex items-start gap-3">
-                          <button
-                            onClick={() => toggleDailyTask(task.id)}
-                            className={`w-6 h-6 mt-3 rounded-full flex-shrink-0 flex items-center justify-center ${
-                              task.completed 
-                                ? 'bg-green-500' 
-                                : 'border-2 border-gray-300 hover:border-blue-500'
-                            }`}
-                          >
-                            {task.completed && <span className="text-white text-xs">✓</span>}
-                          </button>
-                          <div className="flex-1 min-w-0">
-                            <textarea
-                              value={task.text}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => {
-                                setDailyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
-                              }}
-                              placeholder="What needs to be done today?"
-                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"70px"}}
-                              rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
-                            />
-                          </div>
-                          <button
-                            onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))}
-                            className="text-gray-400 hover:text-red-500 transition-colors"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DAILY TASKS — {new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase()}</span>
+                <button onClick={addDailyTask} style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(0,200,255,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
               </div>
-            </>
-          )}
-
-          {/* Weekly Tasks */}
-          {tasksSubTab === 'weekly' && (
-            <>
-              <button
-                onClick={addWeeklyTask}
-                className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-              >
-                + Add Weekly Task
-              </button>
-
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold text-white">Weekly Tasks</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Tasks to complete this week</p>
-                </div>
-                <div className="divide-y">
-                  {weeklyTasks.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">
-                      No weekly tasks. Add one above!
-                    </div>
-                  ) : (
-                    weeklyTasks.map(task => (
-                      <div key={task.id} className={`p-4 hover:bg-gray-50 transition-colors ${task.completed ? 'opacity-60' : ''}`}>
-                        <div className="flex items-start gap-3">
-                          <button
-                            onClick={() => toggleWeeklyTask(task.id)}
-                            className={`mt-3 w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center ${
-                              task.completed 
-                                ? 'bg-green-500' 
-                                : 'border-2 border-gray-300 hover:border-blue-500'
-                            }`}
-                          >
-                            {task.completed && <span className="text-white text-xs">✓</span>}
-                          </button>
-                          <div className="flex-1 space-y-2 min-w-0">
-                            <textarea
-                              value={task.text}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => {
-                                setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t));
-                              }}
-                              placeholder="What needs to be done this week?"
-                              className={`w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none ${task.completed ? 'line-through opacity-50' : 'text-white'}`} style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"70px"}}
-                              rows={Math.max(2, Math.ceil((task.text?.length || 0) / 35))}
-                            />
-                            <div className="flex flex-wrap gap-2 items-center">
-                              <div className="flex items-center gap-1">
-                                <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Start:</span>
-                                <input
-                                  type="date"
-                                  value={task.startDate || ''}
-                                  onFocus={scrollInputIntoView}
-                                  onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, startDate: e.target.value } : t))}
-                                  className="px-3 py-1 rounded-full text-xs border bg-gray-50"
-                                />
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Due:</span>
-                                <input
-                                  type="date"
-                                  value={task.dueDate || ''}
-                                  onFocus={scrollInputIntoView}
-                                  onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? { ...t, dueDate: e.target.value } : t))}
-                                  className="px-3 py-1 rounded-full text-xs border bg-gray-50"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => setWeeklyTasks(prev => prev.filter(t => t.id !== task.id))}
-                            className="text-gray-400 hover:text-red-500 transition-colors mt-1"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* General Tasks */}
-          {tasksSubTab === 'general' && (
-            <>
-              <button
-                onClick={() => setGeneralTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, dateAdded: new Date().toISOString() }])}
-                className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-              >
-                + Add General Task
-              </button>
-
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold text-white">General Tasks</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Ongoing tasks with no time limit</p>
-                </div>
-                <div className="divide-y">
-                  {generalTasks.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">
-                      No general tasks. Add one above!
-                    </div>
-                  ) : (
-                    generalTasks.map(task => (
-                      <div key={task.id} className={`p-4 hover:bg-gray-50 transition-colors ${task.completed ? 'opacity-60' : ''}`}>
-                        <div className="flex items-start gap-3">
-                          <button
-                            onClick={() => setGeneralTasks(prev => prev.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t))}
-                            className={`mt-1 w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                              task.completed 
-                                ? 'bg-green-500 border-green-500 text-white' 
-                                : 'border-gray-300 hover:border-green-400'
-                            }`}
-                          >
-                            {task.completed && <CheckCircle2 className="w-4 h-4" />}
-                          </button>
-                          <textarea
-                            value={task.text}
-                            onChange={(e) => setGeneralTasks(prev => prev.map(t => t.id === task.id ? { ...t, text: e.target.value } : t))}
-                            placeholder="Enter task..."
-                            className={`flex-1 resize-none border-0 focus:outline-none focus:ring-0 text-gray-700 bg-transparent min-h-[70px] ${task.completed ? 'line-through' : ''}`}
-                            rows={2}
-                          />
-                          <button
-                            onClick={() => setGeneralTasks(prev => prev.filter(t => t.id !== task.id))}
-                            className="text-gray-400 hover:text-red-500 transition-colors mt-1"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Daily Rotation */}
-          {tasksSubTab === 'rotation' && (
-            <>
-              <button
-                onClick={() => setDailyRotation([
-                  { time: '1am', activity: '-' },
-                  { time: '2am', activity: '-' },
-                  { time: '3am', activity: '-' },
-                  { time: '4am', activity: '-' },
-                  { time: '5am', activity: '-' },
-                  { time: '6am', activity: '-' },
-                  { time: '7am', activity: '-' },
-                  { time: '8am', activity: '-' },
-                  { time: '9am', activity: '-' },
-                  { time: '10am', activity: '-' },
-                  { time: '11am', activity: '-' },
-                  { time: '12pm', activity: '-' },
-                  { time: '1pm', activity: '-' },
-                  { time: '2pm', activity: '-' },
-                  { time: '3pm', activity: '-' },
-                  { time: '4pm', activity: '-' },
-                  { time: '5pm', activity: '-' },
-                  { time: '6pm', activity: '-' },
-                  { time: '7pm', activity: '-' },
-                  { time: '8pm', activity: '-' },
-                  { time: '9pm', activity: '-' },
-                  { time: '10pm', activity: '-' },
-                  { time: '11pm', activity: '-' },
-                  { time: '12am', activity: '-' },
-                ])}
-                className="w-full py-3 rounded-2xl font-medium transition-colors text-slate-300" style={{background:"rgba(0,200,255,0.06)",border:"1px solid rgba(0,200,255,0.15)"}}
-              >
-                Reset to Default
-              </button>
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold text-white">Daily Rotation</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Your daily schedule - click to edit activities</p>
-                </div>
-                <div className="divide-y">
-                  {dailyRotation.map((slot, index) => (
-                    <div key={index} className="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                      <div className="w-16 font-semibold text-gray-600">{slot.time}</div>
-                      <input
-                        type="text"
-                        value={slot.activity}
-                        onChange={(e) => {
-                          setDailyRotation(prev => prev.map((s, i) => i === index ? { ...s, activity: e.target.value } : s));
-                        }}
-                        className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+              {dailyTasks.length === 0 ? (
+                <div style={{padding:"32px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO TASKS — TAP + ADD TO BEGIN</div>
+              ) : (
+                <div>
+                  {dailyTasks.map((task, idx) => (
+                    <div key={task.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)"}}>
+                      <button onClick={() => toggleDailyTask(task.id)} style={{width:"18px",height:"18px",borderRadius:"50%",border:`1px solid ${task.completed?"#00c8ff":"rgba(0,200,255,0.3)"}`,background:task.completed?"#00c8ff":"transparent",flexShrink:0,marginTop:"3px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"#0a0e1a"}}>
+                        {task.completed?"✓":""}
+                      </button>
+                      <textarea
+                        value={task.text}
+                        onFocus={scrollInputIntoView}
+                        onChange={(e) => setDailyTasks(prev => prev.map(t => t.id === task.id ? {...t, text: e.target.value} : t))}
+                        placeholder="What needs to be done today..."
+                        style={{flex:1,background:"transparent",border:"none",outline:"none",color:task.completed?"rgba(148,163,184,0.4)":"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",textDecoration:task.completed?"line-through":"none",minHeight:"24px"}}
+                        rows={Math.max(1, Math.ceil((task.text?.length||0)/50))}
                       />
+                      <button onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",flexShrink:0,marginTop:"2px",fontSize:"14px"}}>×</button>
                     </div>
                   ))}
                 </div>
-              </div>
-            </>
+              )}
+            </div>
           )}
 
-          {/* Pomodoro Timer */}
+          {/* WEEKLY TASKS */}
+          {tasksSubTab === 'weekly' && (
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(99,102,241,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"10px",color:"rgba(99,102,241,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WEEKLY TASKS</span>
+                <button onClick={addWeeklyTask} style={{fontSize:"10px",color:"rgba(99,102,241,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(99,102,241,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
+              </div>
+              {weeklyTasks.length === 0 ? (
+                <div style={{padding:"32px",textAlign:"center",color:"rgba(99,102,241,0.3)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO WEEKLY TASKS — TAP + ADD TO BEGIN</div>
+              ) : (
+                <div>
+                  {weeklyTasks.map((task) => (
+                    <div key={task.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)"}}>
+                      <button onClick={() => toggleWeeklyTask(task.id)} style={{width:"18px",height:"18px",borderRadius:"50%",border:`1px solid ${task.completed?"rgba(99,102,241,0.9)":"rgba(99,102,241,0.3)"}`,background:task.completed?"rgba(99,102,241,0.9)":"transparent",flexShrink:0,marginTop:"3px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>
+                        {task.completed?"✓":""}
+                      </button>
+                      <div style={{flex:1}}>
+                        <textarea
+                          value={task.text}
+                          onFocus={scrollInputIntoView}
+                          onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? {...t, text: e.target.value} : t))}
+                          placeholder="Weekly task..."
+                          style={{width:"100%",background:"transparent",border:"none",outline:"none",color:task.completed?"rgba(148,163,184,0.4)":"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",textDecoration:task.completed?"line-through":"none",minHeight:"24px"}}
+                          rows={Math.max(1, Math.ceil((task.text?.length||0)/50))}
+                        />
+                        <div style={{display:"flex",gap:"12px",marginTop:"4px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>START</span>
+                            <input type="date" value={task.startDate||''} onFocus={scrollInputIntoView} onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? {...t, startDate: e.target.value} : t))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}} />
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>DUE</span>
+                            <input type="date" value={task.dueDate||''} onFocus={scrollInputIntoView} onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? {...t, dueDate: e.target.value} : t))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}} />
+                          </div>
+                        </div>
+                      </div>
+                      <button onClick={() => setWeeklyTasks(prev => prev.filter(t => t.id !== task.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",flexShrink:0,marginTop:"2px",fontSize:"14px"}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* GENERAL TASKS */}
+          {tasksSubTab === 'general' && (
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>GENERAL TASKS</span>
+                <button onClick={() => setGeneralTasks(prev => [...prev, {id:Date.now(), text:'', completed:false, dateAdded:new Date().toISOString()}])} style={{fontSize:"10px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(34,197,94,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
+              </div>
+              {generalTasks.length === 0 ? (
+                <div style={{padding:"32px",textAlign:"center",color:"rgba(34,197,94,0.3)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO GENERAL TASKS — TAP + ADD TO BEGIN</div>
+              ) : (
+                <div>
+                  {generalTasks.map((task) => (
+                    <div key={task.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)"}}>
+                      <button onClick={() => setGeneralTasks(prev => prev.map(t => t.id === task.id ? {...t, completed:!t.completed} : t))} style={{width:"18px",height:"18px",borderRadius:"3px",border:`1px solid ${task.completed?"rgba(34,197,94,0.9)":"rgba(34,197,94,0.3)"}`,background:task.completed?"rgba(34,197,94,0.9)":"transparent",flexShrink:0,marginTop:"3px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>
+                        {task.completed?"✓":""}
+                      </button>
+                      <textarea
+                        value={task.text}
+                        onChange={(e) => setGeneralTasks(prev => prev.map(t => t.id === task.id ? {...t, text: e.target.value} : t))}
+                        placeholder="General task..."
+                        style={{flex:1,background:"transparent",border:"none",outline:"none",color:task.completed?"rgba(148,163,184,0.4)":"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",textDecoration:task.completed?"line-through":"none",minHeight:"24px"}}
+                        rows={Math.max(1, Math.ceil((task.text?.length||0)/50))}
+                      />
+                      <button onClick={() => setGeneralTasks(prev => prev.filter(t => t.id !== task.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",flexShrink:0,marginTop:"2px",fontSize:"14px"}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* DAILY ROTATION */}
+          {tasksSubTab === 'rotation' && (
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"10px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DAILY ROTATION — SCHEDULE</span>
+                <button onClick={() => setDailyRotation([
+                  {time:'6am',activity:'-'},{time:'7am',activity:'-'},{time:'8am',activity:'-'},{time:'9am',activity:'-'},
+                  {time:'10am',activity:'-'},{time:'11am',activity:'-'},{time:'12pm',activity:'-'},{time:'1pm',activity:'-'},
+                  {time:'2pm',activity:'-'},{time:'3pm',activity:'-'},{time:'4pm',activity:'-'},{time:'5pm',activity:'-'},
+                  {time:'6pm',activity:'-'},{time:'7pm',activity:'-'},{time:'8pm',activity:'-'},{time:'9pm',activity:'-'},
+                  {time:'10pm',activity:'-'},{time:'11pm',activity:'-'},{time:'12am',activity:'-'},
+                ])} style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(251,191,36,0.2)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>RESET</button>
+              </div>
+              <div>
+                {dailyRotation.map((slot, index) => (
+                  <div key={index} style={{display:"flex",alignItems:"center",gap:"12px",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
+                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",minWidth:"40px",letterSpacing:"0.5px"}}>{slot.time}</span>
+                    <input
+                      type="text"
+                      value={slot.activity}
+                      onChange={(e) => setDailyRotation(prev => prev.map((s,i) => i===index ? {...s, activity: e.target.value} : s))}
+                      style={{flex:1,background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"13px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",paddingBottom:"2px"}}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* POMODORO */}
           {tasksSubTab === 'pomodoro' && (() => {
-            const pomodoroModes = { work: 25 * 60, shortBreak: 5 * 60, longBreak: 15 * 60 };
+            const pomodoroModes = {work:25*60, shortBreak:5*60, longBreak:15*60};
             const startPomodoro = () => { if (!pomodoroRunning) setPomodoroRunning(true); };
             const pausePomodoro = () => setPomodoroRunning(false);
-            const resetPom = (mode) => {
-              setPomodoroRunning(false);
-              const m = mode || pomodoroMode;
-              setPomodoroMode(m);
-              setPomodoroTime(pomodoroModes[m]);
-            };
-            const formatTime = (s) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+            const resetPom = (mode) => { setPomodoroRunning(false); const m=mode||pomodoroMode; setPomodoroMode(m); setPomodoroTime(pomodoroModes[m]); };
+            const formatTime = (s) => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
             return (
-              <div className="space-y-6">
-                <div className="bg-white rounded-3xl shadow-sm border p-8 text-center">
-                  <div className="flex justify-center gap-3 mb-8">
-                    {[{ id: 'work', label: 'Focus' }, { id: 'shortBreak', label: 'Short Break' }, { id: 'longBreak', label: 'Long Break' }].map(m => (
-                      <button key={m.id} onClick={() => resetPom(m.id)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${pomodoroMode === m.id ? 'text-white' : 'text-slate-500'}`}>{m.label}</button>
+              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(239,68,68,0.7)",padding:"24px",textAlign:"center",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{display:"flex",justifyContent:"center",gap:"6px",marginBottom:"24px"}}>
+                    {[{id:'work',label:'FOCUS'},{id:'shortBreak',label:'SHORT BREAK'},{id:'longBreak',label:'LONG BREAK'}].map(m => (
+                      <button key={m.id} onClick={() => resetPom(m.id)} style={{padding:"5px 12px",background:pomodoroMode===m.id?"rgba(239,68,68,0.15)":"transparent",border:`0.5px solid ${pomodoroMode===m.id?"rgba(239,68,68,0.5)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:pomodoroMode===m.id?"rgba(239,68,68,0.9)":"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>{m.label}</button>
                     ))}
                   </div>
-                  <div className="text-8xl font-bold text-gray-800 mb-8 font-mono">{formatTime(pomodoroTime)}</div>
-                  <div className="flex justify-center gap-4">
+                  <div style={{fontSize:"72px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"4px",marginBottom:"24px"}}>{formatTime(pomodoroTime)}</div>
+                  <div style={{display:"flex",justifyContent:"center",gap:"10px",marginBottom:"20px"}}>
                     {!pomodoroRunning ? (
-                      <button onClick={startPomodoro} className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-transform shadow-lg">Start</button>
+                      <button onClick={startPomodoro} style={{padding:"10px 32px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.5)",borderRadius:"3px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2px",cursor:"pointer"}}>START</button>
                     ) : (
-                      <button onClick={pausePomodoro} className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-white rounded-2xl font-bold text-lg hover:scale-105 transition-transform shadow-lg">Pause</button>
+                      <button onClick={pausePomodoro} style={{padding:"10px 32px",background:"rgba(251,191,36,0.1)",border:"0.5px solid rgba(251,191,36,0.5)",borderRadius:"3px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2px",cursor:"pointer"}}>PAUSE</button>
                     )}
-                    <button onClick={() => resetPom(pomodoroMode)} className="px-8 py-3 bg-gray-200 text-gray-700 rounded-2xl font-bold text-lg hover:bg-gray-300 transition-colors">Reset</button>
+                    <button onClick={() => resetPom(pomodoroMode)} style={{padding:"10px 32px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2px",cursor:"pointer"}}>RESET</button>
                   </div>
-                  <div className="mt-8 flex justify-center gap-2">
-                    {[...Array(4)].map((_, i) => (<div key={i} className={`w-4 h-4 rounded-full ${i < (pomodoroSessions % 4) ? 'bg-red-500' : 'bg-gray-200'}`} />))}
+                  <div style={{display:"flex",justifyContent:"center",gap:"6px",marginBottom:"8px"}}>
+                    {[...Array(4)].map((_,i) => (<div key={i} style={{width:"10px",height:"10px",borderRadius:"50%",background:i<(pomodoroSessions%4)?"rgba(239,68,68,0.8)":"rgba(255,255,255,0.1)"}} />))}
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">{pomodoroSessions} sessions completed today</p>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{pomodoroSessions} SESSIONS COMPLETED</div>
                 </div>
-                <div className="rounded-2xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                  <h3 className="font-semibold text-white mb-2">How the Pomodoro Technique works</h3>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Focus for 25 minutes → 5 min break. After 4 sessions, take a 15 min break. This helps you stay sharp and avoid burnout. 🍅</p>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"14px 16px"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HOW IT WORKS</div>
+                  <div style={{fontSize:"12px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",lineHeight:"1.6"}}>Focus 25 min → 5 min break. After 4 sessions take a 15 min break. Stays sharp, avoids burnout.</div>
                 </div>
               </div>
             );
