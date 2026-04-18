@@ -3198,196 +3198,126 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
-        <div className="pt-16 pb-6 px-6 header-scan" style={{borderBottom:"1px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden"}}>
+
+        {/* HEADER */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <div>
-                <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px",letterSpacing:"0.5px"}}>← Back</button>
-                <h1 className="text-4xl font-semibold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Reminders</h1>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>REMINDERS</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TOTAL</div>
+                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{reminders.length + birthdays.length}</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          {/* General Reminders */}
-          <button
-            onClick={addReminder}
-            className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-          >
-            + Add Reminder
-          </button>
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-            <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-white">Reminders</h2>
-              <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>General reminders and notes</p>
+          {/* REMINDERS PANEL */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>REMINDERS</span>
+              <button onClick={addReminder} style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(0,200,255,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
             </div>
-            <div className="divide-y">
-              {sortedReminders.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  No reminders added yet. Add one above!
-                </div>
-              ) : (
-                sortedReminders.map(reminder => (
-                  <div key={reminder.id} className="p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1 space-y-2 min-w-0">
-                        <textarea
-                          value={reminder.title}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => {
-                            setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, title: e.target.value } : r));
-                          }}
-                          placeholder="Reminder title"
-                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"60px"}}
-                          rows={Math.max(2, Math.ceil((reminder.title?.length || 0) / 35))}
-                        />
-                        <div className="flex flex-wrap gap-3 items-center">
-                          {/* Permanent toggle */}
-                          <button onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, permanent: !r.permanent, date: r.permanent ? r.date : '' } : r))}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
-                            style={{background: reminder.permanent ? 'rgba(0,200,255,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${reminder.permanent ? 'rgba(0,200,255,0.4)' : 'rgba(255,255,255,0.1)'}`, color: reminder.permanent ? '#00c8ff' : 'rgba(148,163,184,0.6)'}}>
-                            📌 {reminder.permanent ? 'Permanent' : 'Permanent?'}
-                          </button>
-                          {/* Date (only show if not permanent) */}
-                          {!reminder.permanent && (
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="date"
-                                value={reminder.date || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: e.target.value } : r))}
-                                className="px-3 py-2 rounded-xl text-sm focus:outline-none text-white" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
-                              />
-                              {reminder.date && (
-                                <button onClick={() => setReminders(prev => prev.map(r => r.id === reminder.id ? { ...r, date: '' } : r))} className="text-gray-400 hover:text-red-500 transition-colors">
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              )}
-                              {getReminderUpcoming(reminder.date) && (
-                                <span className={`text-sm font-medium ${getReminderUpcoming(reminder.date) === 'Overdue' ? 'text-red-600' : getReminderUpcoming(reminder.date) === 'Today' || getReminderUpcoming(reminder.date) === 'Tomorrow' ? 'text-green-600' : 'text-orange-500'}`}>
-                                  {getReminderUpcoming(reminder.date)}
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
+            {sortedReminders.length === 0 ? (
+              <div style={{padding:"28px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO REMINDERS — TAP + ADD</div>
+            ) : sortedReminders.map(reminder => {
+              const upcoming = getReminderUpcoming(reminder.date);
+              const upcomingColor = upcoming==='Overdue'?"rgba(239,68,68,0.8)":upcoming==='Today'||upcoming==='Tomorrow'?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)";
+              return (
+                <div key={reminder.id} style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)",display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                  <div style={{flex:1}}>
+                    <textarea
+                      value={reminder.title}
+                      onFocus={scrollInputIntoView}
+                      onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, title:e.target.value} : r))}
+                      placeholder="Reminder..."
+                      style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",minHeight:"24px"}}
+                      rows={Math.max(1,Math.ceil((reminder.title?.length||0)/50))}
+                    />
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginTop:"6px",flexWrap:"wrap"}}>
                       <button
-                        onClick={() => setReminders(prev => prev.filter(r => r.id !== reminder.id))}
-                        className="text-gray-400 hover:text-red-500 transition-colors mt-2"
+                        onClick={() => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, permanent:!r.permanent, date:r.permanent?r.date:''} : r))}
+                        style={{fontSize:"9px",color:reminder.permanent?"#00c8ff":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:`0.5px solid ${reminder.permanent?"rgba(0,200,255,0.4)":"rgba(255,255,255,0.08)"}`,padding:"2px 8px",cursor:"pointer",borderRadius:"3px"}}
                       >
-                        <Trash2 className="w-5 h-5" />
+                        📌 {reminder.permanent?"PINNED":"PIN?"}
                       </button>
+                      {!reminder.permanent && (
+                        <>
+                          <input
+                            type="date"
+                            value={reminder.date||''}
+                            onFocus={scrollInputIntoView}
+                            onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, date:e.target.value} : r))}
+                            style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}}
+                          />
+                          {upcoming && <span style={{fontSize:"10px",color:upcomingColor,fontFamily:"monospace",letterSpacing:"0.5px"}}>{upcoming.toUpperCase()}</span>}
+                        </>
+                      )}
                     </div>
                   </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Birthdays */}
-          <button
-            onClick={addBirthday}
-            className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-          >
-            + Add Birthday
-          </button>
-
-          <div className="bg-white rounded-3xl shadow-sm border overflow-hidden">
-            <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-white">🎂 Birthdays</h2>
-              <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Friends & Family birthdays</p>
-            </div>
-            <div className="divide-y">
-              {sortedBirthdays.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  No birthdays added yet. Add one above!
+                  <button onClick={() => setReminders(prev => prev.filter(r => r.id!==reminder.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
                 </div>
-              ) : (
-                sortedBirthdays.map(bday => (
-                  <div key={bday.id} className="p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1 space-y-2 min-w-0">
-                        <textarea
-                          ref={(el) => { if (el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; } }}
-                          value={bday.name}
-                          onFocus={handleTextareaFocus}
-                          onChange={(e) => {
-                            setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, name: e.target.value } : b));
-                            e.target.style.height = 'auto';
-                            e.target.style.height = e.target.scrollHeight + 'px';
-                          }}
-                          placeholder="Name"
-                          className="w-full px-4 py-3 rounded-xl text-base focus:outline-none resize-none text-white placeholder-slate-500" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)",minHeight:"48px",overflow:"hidden"}}
-                        />
-                        <div className="flex flex-wrap gap-3 items-center">
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="date"
-                              value={bday.date}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: e.target.value } : b))}
-                              className="px-3 py-2 rounded-xl text-sm focus:outline-none text-white" style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.15)"}}
-                            />
-                            {bday.date && (
-                              <button
-                                onClick={() => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, date: '' } : b))}
-                                className="text-gray-400 hover:text-red-500 transition-colors"
-                                title="Clear date"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            )}
-                          </div>
-                          <select
-                            value={bday.category}
-                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id === bday.id ? { ...b, category: e.target.value } : b))}
-                            className={`px-3 py-2 rounded-xl text-sm font-medium border-2 ${
-                              bday.category === 'family' ? 'bg-purple-100 text-purple-700 border-purple-200' :
-                              'bg-blue-100 text-blue-700 border-blue-200'
-                            }`}
-                          >
-                            <option value="friend">Friend</option>
-                            <option value="family">Family</option>
-                          </select>
-                          {getUpcomingText(bday.date) && (
-                            <span className={`text-sm font-medium ${getUpcomingText(bday.date).includes('Today') || getUpcomingText(bday.date).includes('Tomorrow') ? 'text-green-600' : 'text-orange-500'}`}>
-                              {getUpcomingText(bday.date)}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => setBirthdays(prev => prev.filter(b => b.id !== bday.id))}
-                        className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
-                      </button>
+              );
+            })}
+          </div>
+
+          {/* BIRTHDAYS PANEL */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(236,72,153,0.7)",backgroundImage:"radial-gradient(rgba(236,72,153,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(236,72,153,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <span style={{fontSize:"10px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>BIRTHDAYS</span>
+              <button onClick={addBirthday} style={{fontSize:"10px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(236,72,153,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
+            </div>
+            {sortedBirthdays.length === 0 ? (
+              <div style={{padding:"28px",textAlign:"center",color:"rgba(236,72,153,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO BIRTHDAYS — TAP + ADD</div>
+            ) : sortedBirthdays.map(bday => {
+              const upcoming = getUpcomingText(bday.date);
+              return (
+                <div key={bday.id} style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(236,72,153,0.06)",display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                  <div style={{flex:1}}>
+                    <input
+                      type="text"
+                      value={bday.name}
+                      onFocus={scrollInputIntoView}
+                      onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, name:e.target.value} : b))}
+                      placeholder="Name..."
+                      style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",marginBottom:"6px"}}
+                    />
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
+                      <input
+                        type="date"
+                        value={bday.date}
+                        onFocus={scrollInputIntoView}
+                        onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, date:e.target.value} : b))}
+                        style={{background:"rgba(236,72,153,0.05)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}}
+                      />
+                      <select
+                        value={bday.category}
+                        onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, category:e.target.value} : b))}
+                        style={{background:"rgba(236,72,153,0.05)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",fontSize:"9px",padding:"2px 6px",letterSpacing:"0.5px"}}
+                      >
+                        <option value="friend">FRIEND</option>
+                        <option value="family">FAMILY</option>
+                      </select>
+                      {upcoming && <span style={{fontSize:"10px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace"}}>{upcoming}</span>}
                     </div>
                   </div>
-                ))
-              )}
-            </div>
+                  <button onClick={() => setBirthdays(prev => prev.filter(b => b.id!==bday.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
+                </div>
+              );
+            })}
           </div>
+
         </div>
-        <FloatingChat 
-          isChatOpen={isChatOpen}
-          setIsChatOpen={setIsChatOpen}
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-          isTyping={isTyping}
-          setIsTyping={setIsTyping}
-          financialContext={financialContext}
-          isAiLimitReached={isAiLimitReached}
-          incrementAiUsage={incrementAiUsage}
-          getAiRemaining={getAiRemaining}
-          AI_DAILY_LIMIT={AI_DAILY_LIMIT}
-          muzzPersonality={muzzPersonality}
-        />
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
