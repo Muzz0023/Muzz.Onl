@@ -14614,182 +14614,148 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar />
           <SaveIndicator />
 
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.15)",padding:"56px 24px 16px"}}>
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{background:"rgba(249,115,22,0.1)",border:"1px solid rgba(249,115,22,0.25)"}}>🐨</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm mb-0.5" style={{color:"rgba(255,255,255,0.5)"}}>{greeting}, {eliteName || 'boss'} · {today}</div>
-                  <div className="text-2xl font-bold text-white">
-                    {overdueJobs.length > 0
-                      ? `${overdueJobs.length} job${overdueJobs.length>1?'s':''} overdue ⚠️`
-                      : activeJobs.length === 0
-                      ? "No active jobs 🤙"
-                      : `${activeJobs.length} job${activeJobs.length>1?'s':''} on the go 🔨`}
-                  </div>
-                  <div className="text-sm mt-1" style={{color:"rgba(148,163,184,0.5)"}}>
-                    {donnyTeam.length} team · {donnyClients.length} client{donnyClients.length!==1?'s':''} · {completedJobs.length} completed
-                  </div>
-                </div>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"8px"}}>🐨 DONNY — BUSINESS INTELLIGENCE SYSTEM</div>
+              <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",marginBottom:"4px"}}>
+                {overdueJobs.length > 0
+                  ? `${overdueJobs.length} JOB${overdueJobs.length>1?'S':''} OVERDUE`
+                  : activeJobs.length === 0
+                  ? "NO ACTIVE JOBS"
+                  : `${activeJobs.length} JOB${activeJobs.length>1?'S':''} ON THE GO`}
               </div>
-              {/* Worker mode indicator */}
+              <div style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>
+                {greeting}, {eliteName || 'boss'} · {today}
+              </div>
               {donnyRole === 'worker' && (
-                <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl text-xs w-fit" style={{background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',color:'rgba(34,197,94,0.8)'}}>
-                  👷 Worker mode · <button onClick={()=>{ leaveWorkspace(); }} className="underline ml-1" style={{color:'rgba(239,68,68,0.7)'}}>Leave</button>
+                <div style={{marginTop:"10px",display:"inline-flex",alignItems:"center",gap:"8px",padding:"4px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"3px",fontSize:"10px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                  👷 WORKER MODE · <button onClick={()=>{ leaveWorkspace(); }} style={{color:"rgba(239,68,68,0.7)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace",fontSize:"10px"}}>LEAVE</button>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-            <div className="grid grid-cols-3 gap-3">
+          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}}>
               {[
-                {label:'Active Jobs', value: activeJobs.length, color:'#f97316'},
-                {label:'Team', value: donnyTeam.length, color:'#f97316'},
-                {label:'Clients', value: donnyClients.length, color:'#3b82f6'},
+                {label:'ACTIVE JOBS', value:activeJobs.length, color:'#f97316'},
+                {label:'TEAM', value:donnyTeam.length, color:'#f97316'},
+                {label:'CLIENTS', value:donnyClients.length, color:'#3b82f6'},
               ].map((s,i) => (
-                <div key={i} className="rounded-2xl p-4 text-center" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
-                  <div className="text-xs text-slate-400 mb-1">{s.label}</div>
-                  <div className="text-2xl font-bold" style={{color:s.color}}>{s.value}</div>
+                <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${s.color}30`,borderRadius:"6px",borderLeft:`2px solid ${s.color}`,padding:"12px 14px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{fontSize:"9px",color:`${s.color}70`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>{s.label}</div>
+                  <div style={{fontSize:"24px",color:s.color,fontFamily:"monospace",fontWeight:500}}>{s.value}</div>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-4 gap-2">
+            {/* NAV GRID */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(80px,1fr))",gap:"6px"}}>
               {[
-                {label:"Jobs",       emoji:"🔨", view:"donny-masterview",  key:"d-jobs",    workerOk:false},
-                {label:"Scheduler",  emoji:"🗓️", view:"donny-scheduler",   key:"d-sched",   workerOk:false},
-                {label:"Daily Report",emoji:"📋", view:"donny-dailyreport", key:"d-report",  workerOk:true},
-                {label:"Recurring",  emoji:"🔁", view:"donny-recurring",   key:"d-recur",   workerOk:false},
-                {label:"Team",       emoji:"👷", view:"donny-team",         key:"d-team",    workerOk:false},
-                {label:"Subs",       emoji:"🔩", view:"donny-subs",         key:"d-subs",    workerOk:false},
-                {label:"Clients",    emoji:"🤝", view:"donny-clients",      key:"d-clients", workerOk:false},
-                {label:"Photos",     emoji:"📸", view:"donny-photos",       key:"d-photos",  workerOk:true},
-                {label:"SWMS",       emoji:"✅", view:"donny-checklists",   key:"d-swms",    workerOk:true},
-                {label:"Incidents",  emoji:"🚨", view:"donny-incidents",    key:"d-inc",     workerOk:true},
-                {label:"Reports",    emoji:"📊", view:"donny-reports",      key:"d-rep",     workerOk:false},
+                {label:"JOBS",        view:"donny-masterview",  workerOk:false, color:"rgba(249,115,22,0.6)"},
+                {label:"SCHEDULER",   view:"donny-scheduler",   workerOk:false, color:"rgba(249,115,22,0.6)"},
+                {label:"DAILY RPT",   view:"donny-dailyreport", workerOk:true,  color:"rgba(249,115,22,0.6)"},
+                {label:"RECURRING",   view:"donny-recurring",   workerOk:false, color:"rgba(249,115,22,0.6)"},
+                {label:"TEAM",        view:"donny-team",        workerOk:false, color:"rgba(249,115,22,0.6)"},
+                {label:"SUBS",        view:"donny-subs",        workerOk:false, color:"rgba(249,115,22,0.6)"},
+                {label:"CLIENTS",     view:"donny-clients",     workerOk:false, color:"rgba(59,130,246,0.6)"},
+                {label:"PHOTOS",      view:"donny-photos",      workerOk:true,  color:"rgba(249,115,22,0.6)"},
+                {label:"SWMS",        view:"donny-checklists",  workerOk:true,  color:"rgba(34,197,94,0.6)"},
+                {label:"INCIDENTS",   view:"donny-incidents",   workerOk:true,  color:"rgba(239,68,68,0.6)"},
+                {label:"REPORTS",     view:"donny-reports",     workerOk:false, color:"rgba(249,115,22,0.6)"},
               ].map(s => {
-                const workerLocked = donnyRole === 'worker' && !s.workerOk;
+                const locked = donnyRole === 'worker' && !s.workerOk;
                 return (
-                  <button key={s.key} onClick={() => { if(!workerLocked) setActiveView(s.view); }}
-                    className="rounded-xl p-3 flex flex-col items-center gap-1 relative"
-                    style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)",opacity:workerLocked?0.4:1,cursor:workerLocked?'default':'pointer'}}>
-                    <span className="text-2xl">{s.emoji}</span>
-                    <span className="text-xs text-slate-400 leading-tight text-center">{s.label}</span>
-                    {workerLocked && <span className="absolute top-1 right-1 text-xs">🔒</span>}
+                  <button key={s.view} onClick={() => { if(!locked) setActiveView(s.view); }}
+                    style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${locked?"rgba(255,255,255,0.04)":s.color.replace('0.6','0.2')}`,borderRadius:"4px",padding:"10px 6px",display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",opacity:locked?0.3:1,cursor:locked?'default':'pointer',position:"relative"}}>
+                    <span style={{fontSize:"9px",color:locked?"rgba(148,163,184,0.4)":s.color,fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",lineHeight:"1.2"}}>{s.label}</span>
+                    {locked && <span style={{position:"absolute",top:"4px",right:"4px",fontSize:"8px"}}>🔒</span>}
                   </button>
                 );
               })}
             </div>
 
-            <div className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(255,255,255,0.06)"}}>
-              <div className="flex items-center justify-between px-4 py-3" style={{borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                <div className="font-semibold text-white text-sm">Active Jobs</div>
-                <button onClick={() => setActiveView('donny-newjob')} className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{background:"rgba(249,115,22,0.15)",color:"#f97316",border:"1px solid rgba(249,115,22,0.3)"}}>+ New Job</button>
+            {/* ACTIVE JOBS FEED */}
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIVE JOBS</span>
+                <button onClick={() => setActiveView('donny-newjob')} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ NEW</button>
               </div>
               {activeJobs.length === 0 ? (
-                <div className="p-8 text-center text-sm" style={{color:"rgba(148,163,184,0.4)"}}>No active jobs — add one!</div>
+                <div style={{padding:"24px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>NO ACTIVE JOBS — ADD ONE</div>
               ) : activeJobs.map((job, i) => {
                 const isOverdue = job.dueDate && new Date(job.dueDate) < new Date();
+                const statusColor = isOverdue ? '#ef4444' : job.started ? '#f97316' : '#475569';
+                const statusLabel = isOverdue ? 'OVERDUE' : job.started ? 'IN PROGRESS' : 'TO DO';
                 return (
                   <button key={job.id} onClick={() => setActiveView('donny-masterview')}
-                    className="w-full flex items-center justify-between px-4 py-3 text-left"
-                    style={{borderBottom: i < activeJobs.length-1 ? "1px solid rgba(255,255,255,0.04)" : "none"}}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{background: isOverdue ? '#ef4444' : job.started ? '#f97316' : '#475569'}} />
+                    style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",textAlign:"left",background:"none",border:"none",cursor:"pointer",borderBottom:i<activeJobs.length-1?"0.5px solid rgba(255,255,255,0.04)":"none"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                      <div style={{width:"6px",height:"6px",borderRadius:"50%",flexShrink:0,background:statusColor}} />
                       <div>
-                        <div className="text-sm font-medium text-white">{job.title}</div>
-                        <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>
-                          {job.jobNumber ? `#${job.jobNumber} · ` : ''}{job.dueDate ? `Due ${new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : 'No due date'}
+                        <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{job.title}</div>
+                        <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px"}}>
+                          {job.jobNumber?`#${job.jobNumber} · `:''}{job.dueDate?`Due ${new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}`:'No due date'}
                         </div>
                       </div>
                     </div>
-                    {isOverdue
-                      ? <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(239,68,68,0.1)",color:"#f87171",border:"1px solid rgba(239,68,68,0.2)"}}>Overdue</span>
-                      : job.started
-                      ? <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(249,115,22,0.1)",color:"#f97316",border:"1px solid rgba(249,115,22,0.2)"}}>In progress</span>
-                      : <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(148,163,184,0.08)",color:"rgba(148,163,184,0.5)",border:"1px solid rgba(148,163,184,0.1)"}}>To do</span>
-                    }
+                    <span style={{fontSize:"9px",color:statusColor,fontFamily:"monospace",letterSpacing:"0.5px",padding:"2px 6px",background:`${statusColor}15`,border:`0.5px solid ${statusColor}30`,borderRadius:"3px",flexShrink:0}}>{statusLabel}</span>
                   </button>
                 );
               })}
             </div>
 
-            {donnyJobs.filter(j => j.problems && !j.completed).length > 0 && (
-              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(239,68,68,0.2)"}}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="font-semibold text-white text-sm">🚨 Active Problems</div>
-                  <button onClick={() => setActiveView('donny-joblog')} className="text-xs" style={{color:"rgba(249,115,22,0.5)"}}>log it →</button>
-                </div>
-                {donnyJobs.filter(j => j.problems && !j.completed).map(job => (
-                  <div key={job.id} className="flex items-start justify-between py-2" style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-                    <span className="text-sm text-white">{job.title}</span>
-                    <span className="text-xs ml-4 flex-shrink-0" style={{color:"rgba(239,68,68,0.7)"}}>{job.problems.slice(0,40)}{job.problems.length>40?'…':''}</span>
-                  </div>
-                ))}
+            {/* WORKSPACE CARD */}
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// WORKSPACE</span>
               </div>
-            )}
-
-            {/* ── WORKSPACE CARD ── */}
-            <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-              <div className="px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)',background:'rgba(249,115,22,0.05)'}}>
-                <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// WORKSPACE</div>
-              </div>
-              <div className="p-5 space-y-4">
+              <div style={{padding:"16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                 {donnyRole === 'worker' ? (
-                  <div className="flex items-center justify-between">
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                     <div>
-                      <div className="text-white font-bold">👷 Worker Mode</div>
-                      <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>You're logged into a boss's workspace</div>
+                      <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>👷 WORKER MODE</div>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"3px"}}>Logged into a boss's workspace</div>
                     </div>
-                    <button onClick={()=>{ leaveWorkspace(); }}
-                      className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',color:'rgba(239,68,68,0.8)'}}>
-                      Leave
-                    </button>
+                    <button onClick={()=>{ leaveWorkspace(); }} style={{fontSize:"10px",padding:"4px 12px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>LEAVE</button>
                   </div>
                 ) : (
                   <>
                     <div>
-                      <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>YOUR CODE — share with workers</div>
-                      <div className="py-3 px-4 rounded-xl text-center font-black tracking-widest text-2xl mb-3" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)',color:'#f97316',fontFamily:"'Orbitron',monospace"}}>
-                        {donnyWorkspaceCode || '———'}
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"8px"}}>YOUR CODE — SHARE WITH WORKERS</div>
+                      <div style={{padding:"12px",textAlign:"center",fontFamily:"monospace",fontWeight:700,letterSpacing:"6px",fontSize:"22px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"4px",color:"#f97316",marginBottom:"8px"}}>
+                        {donnyWorkspaceCode || '— — —'}
                       </div>
-                      {!donnyWorkspaceCode && (
-                        <button onClick={ensureWorkspaceCode} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                          Generate Code
-                        </button>
-                      )}
-                      {donnyWorkspaceCode && (
-                        <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode).then(()=>alert('Copied! 📋'))}
-                          className="w-full py-3 rounded-xl text-sm font-bold text-white" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                          📋 Copy {donnyWorkspaceCode} to Clipboard
-                        </button>
+                      {!donnyWorkspaceCode ? (
+                        <button onClick={ensureWorkspaceCode} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>GENERATE CODE</button>
+                      ) : (
+                        <button onClick={()=>navigator.clipboard?.writeText(donnyWorkspaceCode).then(()=>alert('Copied! 📋'))} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>📋 COPY {donnyWorkspaceCode}</button>
                       )}
                     </div>
-                    <div style={{borderTop:'1px solid rgba(255,255,255,0.05)',paddingTop:'16px'}}>
-                      <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>JOIN A WORKSPACE — enter boss's code</div>
-                      <div className="flex gap-2">
+                    <div style={{borderTop:"0.5px solid rgba(255,255,255,0.05)",paddingTop:"12px"}}>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"8px"}}>JOIN A WORKSPACE — ENTER BOSS'S CODE</div>
+                      <div style={{display:"flex",gap:"8px"}}>
                         <input
                           value={donnyJoinInput}
                           onChange={e=>setDonnyJoinInput(e.target.value.toUpperCase())}
                           placeholder="ABC-1234"
                           maxLength={8}
-                          className="flex-1 text-center font-black bg-transparent focus:outline-none py-3 rounded-xl tracking-widest text-lg"
-                          style={{color:'#f97316',fontFamily:"'Orbitron',monospace",background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.2)'}}
+                          style={{flex:1,textAlign:"center",fontFamily:"monospace",fontWeight:700,background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"4px",color:"#f97316",fontSize:"18px",letterSpacing:"4px",padding:"10px",outline:"none"}}
                         />
                         <button onClick={joinWorkspace} disabled={donnyJoinLoading||donnyJoinInput.length<7}
-                          className="px-4 py-3 rounded-xl font-bold text-white text-sm flex-shrink-0"
-                          style={{background:donnyJoinInput.length>=7?'linear-gradient(135deg,#f97316,#ea580c)':'rgba(255,255,255,0.06)',opacity:donnyJoinLoading?0.6:1}}>
-                          {donnyJoinLoading?'..':'→ Join'}
+                          style={{padding:"10px 16px",background:donnyJoinInput.length>=7?"rgba(249,115,22,0.15)":"rgba(255,255,255,0.04)",border:`0.5px solid ${donnyJoinInput.length>=7?"rgba(249,115,22,0.4)":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",color:donnyJoinInput.length>=7?"rgba(249,115,22,0.9)":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer",flexShrink:0,opacity:donnyJoinLoading?0.6:1}}>
+                          {donnyJoinLoading?'...':'→ JOIN'}
                         </button>
                       </div>
-                      {donnyJoinError && <div className="text-xs mt-2 text-center" style={{color:'rgba(239,68,68,0.8)'}}>{donnyJoinError}</div>}
+                      {donnyJoinError && <div style={{fontSize:"10px",marginTop:"6px",textAlign:"center",color:"rgba(239,68,68,0.8)",fontFamily:"monospace"}}>{donnyJoinError}</div>}
                     </div>
                   </>
                 )}
               </div>
             </div>
-
 
           </div>
         </div>
