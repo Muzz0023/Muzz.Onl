@@ -18483,8 +18483,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     style={{flex:1,fontSize:"13px",fontFamily:"monospace",color:"#e0eaff",background:"transparent",border:"none",outline:"none",letterSpacing:"0.5px"}}
                   />
                   <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                    {/* Streak */}
-                    {streak > 0 && <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.4)",padding:"2px 6px"}}>🔥 {streak}d</div>}
                     {/* Toggle today */}
                     <button
                       onClick={() => toggleHabit(habit.id, today)}
@@ -18503,10 +18501,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Stats row */}
                 <div style={{display:"flex",alignItems:"center",gap:"16px",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  <div>
-                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAK </span>
-                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{streak}d</span>
-                  </div>
                   <div>
                     <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>31-DAY RATE </span>
                     <span style={{fontSize:"11px",color:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",fontFamily:"monospace"}}>{completionRate}%</span>
