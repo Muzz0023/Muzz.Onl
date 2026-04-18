@@ -4523,94 +4523,95 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 font-medium flex items-center gap-1" style={{color:"rgba(0,200,255,0.8)",fontSize:"13px"}}>← Back</button>
-            <h1 className="text-4xl font-semibold text-white" style={{textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>Gym</h1>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>GYM</div>
+            <div style={{display:"flex",gap:"4px",marginTop:"16px"}}>
+              {[{id:'steps',label:'WEEKLY STEPS'},{id:'plan',label:'WORKOUT PLAN'}].map(tab => (
+                <button key={tab.id} onClick={() => setGymTab(tab.id)} style={{padding:"6px 14px",background:gymTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="max-w-5xl mx-auto px-6 py-6 space-y-6">
-          <div className="flex gap-2">
-            <button onClick={() => setGymTab('steps')} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${gymTab==='steps'?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>👟 Weekly Steps</button>
-            <button onClick={() => setGymTab('plan')} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${gymTab==='plan'?'cyber-tab-active':'text-slate-400 hover:text-slate-200'}`}>💪 Workout Plan</button>
-          </div>
+
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
           {gymTab === 'steps' && (
-            <div className="space-y-4">
-              <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                <h2 className="text-lg font-semibold text-white mb-2">👟 Weekly Steps & Workouts</h2>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-slate-400">Goal:</span>
-                  <input type="number" defaultValue={stepsGoal}
-                    onChange={(e) => setSleepData(prev => ({...prev, stepsGoal: parseInt(e.target.value)||10000}))}
-                    className="w-28 px-3 py-2 rounded-xl text-white focus:outline-none text-sm"
-                    style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}} />
-                  <span className="text-sm text-slate-400">steps per day</span>
-                </div>
+            <>
+              {/* Steps goal */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>DAILY GOAL</span>
+                <input type="number" defaultValue={stepsGoal}
+                  onChange={(e) => setSleepData(prev => ({...prev, stepsGoal: parseInt(e.target.value)||10000}))}
+                  style={{width:"90px",padding:"4px 8px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",outline:"none"}} />
+                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>STEPS</span>
               </div>
+
               {weekDays.map(day => {
                 const data = sleepData?.[day.date] || {};
                 const steps = data.steps || 0;
                 const pct = Math.min((steps / stepsGoal) * 100, 100);
                 return (
-                  <div key={day.date} className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:`1px solid ${day.isToday?'rgba(0,200,255,0.3)':'rgba(0,200,255,0.1)'}`}}>
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white text-sm" style={{background:day.isToday?'rgba(0,200,255,0.2)':'rgba(255,255,255,0.05)'}}>{day.dayShort}</div>
-                      <div className="flex-1">
-                        <div className="font-medium text-white">{day.dayName} {day.isToday && <span className="text-xs ml-1" style={{color:'#00c8ff'}}>• Today</span>}</div>
-                        <div className="h-2 rounded-full mt-1" style={{background:'rgba(255,255,255,0.05)'}}>
-                          <div className="h-full rounded-full transition-all" style={{width:`${pct}%`,background:'linear-gradient(90deg,#00c8ff,#0070a0)'}} />
+                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.12)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,padding:"12px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"8px"}}>
+                      <div style={{width:"36px",height:"36px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",background:day.isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",color:day.isToday?"#00c8ff":"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"11px",fontWeight:500,flexShrink:0}}>{day.dayShort.toUpperCase()}</div>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",marginBottom:"4px"}}>{day.dayName}{day.isToday&&<span style={{color:"#00c8ff",fontSize:"9px",marginLeft:"8px",letterSpacing:"1px"}}>● TODAY</span>}</div>
+                        <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                          <div style={{height:"2px",width:`${pct}%`,background:"#00c8ff",borderRadius:"1px"}} />
                         </div>
-                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{pct.toFixed(0)}%</div>
+                        <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",marginTop:"2px"}}>{pct.toFixed(0)}%</div>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
                         <input type="number" value={steps||''} placeholder="0"
                           onChange={(e) => updateGymData(day.date, 'steps', parseInt(e.target.value)||0)}
-                          className="w-20 px-2 py-2 rounded-xl text-white text-sm text-right focus:outline-none"
-                          style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}} />
-                        <span className="text-xs text-slate-500">/ {(stepsGoal/1000).toFixed(0)}K</span>
+                          style={{width:"72px",padding:"4px 8px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",outline:"none",textAlign:"right"}} />
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>/{(stepsGoal/1000).toFixed(0)}K</span>
                       </div>
                     </div>
-                    <input type="text" value={data.workoutNotes||''} placeholder="Workout notes (e.g., Chest & Triceps, 30 min cardio...)"
+                    <input type="text" value={data.workoutNotes||''} placeholder="Workout notes..."
                       onChange={(e) => updateGymData(day.date, 'workoutNotes', e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"
-                      style={{background:"rgba(0,200,255,0.04)",border:"1px solid rgba(0,200,255,0.1)"}} />
+                      style={{width:"100%",padding:"6px 10px",background:"transparent",border:"none",borderTop:"0.5px solid rgba(0,200,255,0.06)",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"12px",outline:"none"}} />
                   </div>
                 );
               })}
-            </div>
+            </>
           )}
 
           {gymTab === 'plan' && (
-            <div className="space-y-6">
+            <>
               {[1,2,3,4].map(week => (
-                <div key={week} className="rounded-2xl overflow-hidden" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                  <div className="p-4" style={{background:"rgba(139,92,246,0.12)",borderBottom:"1px solid rgba(139,92,246,0.25)"}}>
+                <div key={week} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(139,92,246,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(139,92,246,0.6)",overflow:"hidden",backgroundImage:"radial-gradient(rgba(139,92,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(139,92,246,0.15)",background:"rgba(139,92,246,0.06)"}}>
                     <input type="text" value={workoutPlan.weeks?.[week]?.name||''} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...(prev.weeks||{}), [week]:{...(prev.weeks?.[week]||{}), name:e.target.value}}}))}
-                      placeholder={`Week ${week} — Training Focus`}
-                      className="w-full bg-transparent text-white text-lg font-semibold placeholder-white/50 focus:outline-none" />
+                      placeholder={`WEEK ${week} — TRAINING FOCUS`}
+                      style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"rgba(139,92,246,0.9)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1px"}} />
                   </div>
-                  <div className="p-4 space-y-3">
+                  <div style={{padding:"10px 16px",display:"flex",flexDirection:"column",gap:"8px"}}>
                     {(workoutPlan.weeks?.[week]?.exercises||[]).map(ex => (
-                      <div key={ex.id} className="flex items-center gap-2">
+                      <div key={ex.id} style={{display:"flex",alignItems:"center",gap:"8px"}}>
                         <input type="text" value={ex.amount} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week], exercises:prev.weeks[week].exercises.map(e2 => e2.id===ex.id?{...e2,amount:e.target.value}:e2)}}}))}
-                          placeholder="x3" className="w-14 px-2 py-2 rounded-xl text-sm text-white text-center focus:outline-none"
-                          style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.15)"}} />
+                          placeholder="x3" style={{width:"44px",padding:"4px 6px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",fontSize:"11px",outline:"none",textAlign:"center"}} />
                         <input type="text" value={ex.name} onChange={(e) => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week], exercises:prev.weeks[week].exercises.map(e2 => e2.id===ex.id?{...e2,name:e.target.value}:e2)}}}))}
-                          placeholder="Exercise" className="flex-1 px-3 py-2 rounded-xl text-sm text-white focus:outline-none"
-                          style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.15)"}} />
+                          placeholder="Exercise name" style={{flex:1,padding:"4px 8px",background:"transparent",border:"none",borderBottom:"0.5px solid rgba(0,200,255,0.08)",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"12px",outline:"none"}} />
                         <button onClick={() => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week], exercises:prev.weeks[week].exercises.filter(e2 => e2.id!==ex.id)}}}))}
-                          className="text-slate-500 hover:text-red-400"><Trash2 className="w-4 h-4" /></button>
+                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
                       </div>
                     ))}
                     <button onClick={() => setWorkoutPlan(prev => ({...prev, weeks:{...prev.weeks, [week]:{...prev.weeks[week]||{}, exercises:[...(prev.weeks?.[week]?.exercises||[]), {id:Date.now(),amount:'',name:'',details:''}]}}}))}
-                      className="w-full py-2 rounded-xl text-sm transition-all" style={{border:"1px dashed rgba(0,200,255,0.2)",color:"rgba(0,200,255,0.5)"}}>
-                      + Add Exercise
+                      style={{padding:"6px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",marginTop:"4px"}}>
+                      + ADD EXERCISE
                     </button>
                   </div>
                 </div>
               ))}
-            </div>
+            </>
           )}
         </div>
       </div>
