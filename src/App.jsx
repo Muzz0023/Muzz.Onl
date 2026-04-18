@@ -4727,7 +4727,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
             {/* Tabs */}
             <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
-              {[{id:'sleep',label:'SLEEP'},{id:'mental',label:'MENTAL'},{id:'journal',label:'JOURNAL'}].map(tab => (
+              {[{id:'sleep',label:'SLEEP'},{id:'mental',label:'MENTAL'}].map(tab => (
                 <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:gymSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
                   {tab.label}
                 </button>
@@ -5168,63 +5168,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
-
-          {/* Journal Tab */}
-          {gymSubTab === 'journal' && (() => {
-            const today = new Date().toISOString().split('T')[0];
-            const entry = journalEntries[journalDate] || { text: '', mood: '', gratitude: '' };
-            const prompts = [
-              "What's one thing you're grateful for today?",
-              "What did you accomplish today that you're proud of?",
-              "What's been on your mind lately?",
-              "What's one goal you're working towards right now?",
-              "Describe your perfect day — what would it look like?",
-              "What's something you learned recently?",
-              "What's one small win from today?",
-              "If you could change one thing about today, what would it be?",
-              "What are you looking forward to this week?",
-              "How are you feeling right now, and why?",
-            ];
-            const todayPrompt = prompts[Math.floor(new Date(journalDate).getTime() / 86400000) % prompts.length];
-            const moods = ['😊', '😌', '😐', '😔', '😤', '🤩', '😴', '🥲'];
-            const updateEntry = (field, value) => {
-              setJournalEntries(prev => ({ ...prev, [journalDate]: { ...prev[journalDate], [field]: value } }));
-            };
-            const entriesCount = Object.keys(journalEntries).filter(k => journalEntries[k]?.text).length;
-            return (
-              <div className="space-y-4">
-                <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-6 text-white">
-                  <h2 className="text-2xl font-bold mb-1">📓 Daily Journal</h2>
-                  <p className="text-purple-200 text-sm">{entriesCount} {entriesCount === 1 ? 'entry' : 'entries'} written</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button onClick={() => { const d = new Date(journalDate); d.setDate(d.getDate() - 1); setJournalDate(d.toISOString().split('T')[0]); }} className="px-3 py-2 bg-white rounded-xl border shadow-sm hover:bg-gray-50">←</button>
-                  <input type="date" value={journalDate} onChange={(e) => setJournalDate(e.target.value)} className="flex-1 px-4 py-2 bg-white rounded-xl border shadow-sm text-center font-medium" />
-                  <button onClick={() => { const d = new Date(journalDate); d.setDate(d.getDate() + 1); setJournalDate(d.toISOString().split('T')[0]); }} className="px-3 py-2 bg-white rounded-xl border shadow-sm hover:bg-gray-50">→</button>
-                </div>
-                <div className="bg-white rounded-2xl p-4 border shadow-sm">
-                  <h3 className="font-semibold text-white mb-3">How are you feeling?</h3>
-                  <div className="flex gap-2 flex-wrap">
-                    {moods.map(m => (
-                      <button key={m} onClick={() => updateEntry('mood', m)} className={`text-3xl p-2 rounded-xl transition-all ${entry.mood === m ? 'bg-purple-100 scale-110 ring-2 ring-purple-400' : 'hover:bg-gray-100'}`}>{m}</button>
-                    ))}
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-4 text-white">
-                  <p className="text-sm text-purple-200 mb-1">Today's Prompt</p>
-                  <p className="font-medium">{todayPrompt}</p>
-                </div>
-                <div className="bg-white rounded-2xl p-4 border shadow-sm">
-                  <h3 className="font-semibold text-white mb-3">📝 Journal Entry</h3>
-                  <textarea value={entry.text || ''} onChange={(e) => updateEntry('text', e.target.value)} onFocus={handleTextareaFocus} placeholder="Write your thoughts..." rows={8} className="w-full p-3 border-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 resize-none transition-colors" />
-                </div>
-                <div className="bg-white rounded-2xl p-4 border shadow-sm">
-                  <h3 className="font-semibold text-white mb-3">🙏 Gratitude</h3>
-                  <textarea value={entry.gratitude || ''} onChange={(e) => updateEntry('gratitude', e.target.value)} onFocus={handleTextareaFocus} placeholder="What are you grateful for today?" rows={3} className="w-full p-3 border-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 resize-none transition-colors" />
-                </div>
-              </div>
-            );
-          })()}
         </div>
       </div>
     );
