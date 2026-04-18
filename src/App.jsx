@@ -4714,104 +4714,76 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
-                <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-                <h1 style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>Health</h1>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HEALTH</div>
               </div>
+            </div>
+            {/* Tabs */}
+            <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
+              {[{id:'sleep',label:'SLEEP'},{id:'mental',label:'MENTAL'},{id:'journal',label:'JOURNAL'}].map(tab => (
+                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:gymSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          {/* Sub-tabs */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setGymSubTab('sleep')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                gymSubTab === 'sleep'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              🌙 Sleep
-            </button>
-            <button
-              onClick={() => setGymSubTab('mental')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                gymSubTab === 'mental'
-                  ? 'text-white cyber-tab-active'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              🧠 Mental Health
-            </button>
-
-            <button
-              onClick={() => setGymSubTab('journal')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                gymSubTab === 'journal'
-                  ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white'
-                  : 'text-slate-400 hover:text-slate-200 transition-colors'
-              }`}
-            >
-              📓 Journal
-            </button>
-          </div>
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* Sleep Tracker Tab */}
           {gymSubTab === 'sleep' && (
-            <div className="space-y-4">
+            <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
               {/* Sleep Stats Header */}
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(99,102,241,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(99,102,241,0.8)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(99,102,241,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <div>
-                    <h2 className="text-2xl font-bold">🌙 Sleep Tracker</h2>
-                    <p className="text-indigo-100 mt-1">Track your sleep patterns</p>
+                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>SLEEP TRACKER</div>
                   </div>
                   <button
                     onClick={() => {
                       if (confirm('Reset all sleep data for this week?')) {
                         const newSleepData = { ...sleepData };
-                        weekDays.forEach(day => {
-                          delete newSleepData[day.date];
-                        });
+                        weekDays.forEach(day => { delete newSleepData[day.date]; });
                         setSleepData(newSleepData);
                       }
                     }}
-                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
-                  >
-                    Reset Week
-                  </button>
+                    style={{fontSize:"10px",color:"rgba(99,102,241,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(99,102,241,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
+                  >RESET WEEK</button>
                 </div>
                 {/* Weekly Summary */}
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
+                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",marginTop:"12px"}}>
+                  <div style={{background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"24px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:500}}>
                       {(() => {
                         const weekSleep = weekDays.map(d => sleepData[d.date]?.hoursSlept || 0).filter(h => h > 0);
                         return weekSleep.length > 0 ? (weekSleep.reduce((a,b) => a+b, 0) / weekSleep.length).toFixed(1) : '-';
                       })()}
                     </div>
-                    <div className="text-xs text-indigo-200">Avg Hours</div>
+                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>AVG HOURS</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
+                  <div style={{background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"24px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:500}}>
                       {weekDays.filter(d => sleepData[d.date]?.bedTime && sleepData[d.date]?.wakeTime).length}
                     </div>
-                    <div className="text-xs text-indigo-200">Days Tracked</div>
+                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>DAYS TRACKED</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
+                  <div style={{background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"24px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:500}}>
                       {(() => {
                         const dreams = weekDays.filter(d => sleepData[d.date]?.dreamType === 'dream').length;
                         const nightmares = weekDays.filter(d => sleepData[d.date]?.dreamType === 'nightmare').length;
                         return `${dreams}/${nightmares}`;
                       })()}
                     </div>
-                    <div className="text-xs text-indigo-200">Dreams/Nightmares</div>
+                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>DREAMS/NIGHTMARES</div>
                   </div>
                 </div>
               </div>
@@ -5009,54 +4981,39 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Mental Health Tab */}
           {gymSubTab === 'mental' && (
-            <div className="space-y-4">
+            <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
               {/* Mental Health Header */}
-              <div className="bg-gradient-to-r from-pink-500 to-rose-600 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold">🧠 Mental Health</h2>
-                    <p className="text-pink-100 mt-1">Track your mood & wellbeing</p>
-                  </div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(236,72,153,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(236,72,153,0.7)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(236,72,153,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <div style={{fontSize:"9px",color:"rgba(236,72,153,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>MENTAL HEALTH TRACKER</div>
                   <button
                     onClick={() => {
                       if (confirm('Reset all mental health data for this week?')) {
                         const newData = { ...mentalHealthData };
-                        weekDays.forEach(day => {
-                          delete newData[day.date];
-                        });
+                        weekDays.forEach(day => { delete newData[day.date]; });
                         setMentalHealthData(newData);
                       }
                     }}
-                    className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-all"
-                  >
-                    Reset Week
-                  </button>
+                    style={{fontSize:"10px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(236,72,153,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
+                  >RESET WEEK</button>
                 </div>
                 {/* Weekly Summary */}
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
-                      {weekDays.filter(d => mentalHealthData[d.date]?.mood).length}
-                    </div>
-                    <div className="text-xs text-pink-200">Days Logged</div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",marginTop:"12px"}}>
+                  <div style={{background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"24px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",fontWeight:500}}>{weekDays.filter(d => mentalHealthData[d.date]?.mood).length}</div>
+                    <div style={{fontSize:"9px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>DAYS LOGGED</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
-                      {(() => {
-                        const moods = weekDays.map(d => mentalHealthData[d.date]?.energy).filter(e => e);
-                        return moods.length > 0 ? (moods.reduce((a,b) => a+b, 0) / moods.length).toFixed(1) : '-';
-                      })()}
+                  <div style={{background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"24px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",fontWeight:500}}>
+                      {(() => { const moods = weekDays.map(d => mentalHealthData[d.date]?.energy).filter(e => e); return moods.length > 0 ? (moods.reduce((a,b) => a+b, 0) / moods.length).toFixed(1) : '-'; })()}
                     </div>
-                    <div className="text-xs text-pink-200">Avg Energy</div>
+                    <div style={{fontSize:"9px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>AVG ENERGY</div>
                   </div>
-                  <div className="bg-white/10 rounded-xl p-3 text-center">
-                    <div className="text-2xl font-bold">
-                      {(() => {
-                        const stress = weekDays.map(d => mentalHealthData[d.date]?.stress).filter(s => s);
-                        return stress.length > 0 ? (stress.reduce((a,b) => a+b, 0) / stress.length).toFixed(1) : '-';
-                      })()}
+                  <div style={{background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
+                    <div style={{fontSize:"24px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",fontWeight:500}}>
+                      {(() => { const stress = weekDays.map(d => mentalHealthData[d.date]?.stress).filter(s => s); return stress.length > 0 ? (stress.reduce((a,b) => a+b, 0) / stress.length).toFixed(1) : '-'; })()}
                     </div>
-                    <div className="text-xs text-pink-200">Avg Stress</div>
+                    <div style={{fontSize:"9px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>AVG STRESS</div>
                   </div>
                 </div>
               </div>
@@ -18327,99 +18284,142 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
+
+        {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>⏳ Countdowns</h1>
-            <p className="text-white/70 mt-1">Count down to the things that matter</p>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => setCountdownsSubTab('countdowns')} className="px-4 py-2 rounded-full text-sm font-medium transition-all text-white" style={{ border: countdownsSubTab === 'countdowns' ? '2px solid white' : '2px solid transparent' }}>Countdowns</button>
-              <button onClick={() => setCountdownsSubTab('bucketlist')} className="px-4 py-2 rounded-full text-sm font-medium transition-all text-white" style={{ border: countdownsSubTab === 'bucketlist' ? '2px solid white' : '2px solid transparent' }}>Bucket List</button>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
+              <div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>COUNTDOWNS</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ACTIVE</div>
+                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{countdowns.filter(c=>c.date).length}</div>
+              </div>
+            </div>
+            <div style={{display:"flex",gap:"4px"}}>
+              {[{id:'countdowns',label:'COUNTDOWNS'},{id:'bucketlist',label:'BUCKET LIST'}].map(tab => (
+                <button key={tab.id} onClick={() => setCountdownsSubTab(tab.id)} style={{padding:"6px 14px",background:countdownsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${countdownsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:countdownsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-6 py-6 space-y-4" style={{ display: countdownsSubTab === 'countdowns' ? 'block' : 'none' }}>
-          <button
-            onClick={() => setCountdowns(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '✈️', date: '', color: gradients[prev.length % gradients.length] }])}
-            className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-          >
-            + Add Countdown
-          </button>
 
-          {countdowns.length === 0 && (
-            <div className="bg-white rounded-3xl p-12 shadow-sm border text-center">
-              <div className="text-5xl mb-4">⏳</div>
-              <p className="text-gray-500">No countdowns yet. Add a trip, birthday, event — anything!</p>
-            </div>
-          )}
+        {/* COUNTDOWNS TAB */}
+        {countdownsSubTab === 'countdowns' && (
+          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+            <button
+              onClick={() => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}])}
+              style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
+            >+ ADD COUNTDOWN</button>
 
-          {countdowns.map(cd => {
-            const countdown = cd.date ? getCountdown(cd.date) : null;
-            return (
-              <div key={cd.id} className={`bg-gradient-to-r ${cd.color || 'from-blue-500 to-indigo-600'} rounded-2xl p-5 text-white shadow-lg`}>
-                <div className="flex items-start gap-3 mb-4">
-                  <input
-                    type="text"
-                    value={cd.emoji}
-                    onChange={(e) => setCountdowns(prev => prev.map(c => c.id === cd.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c))}
-                    className="w-10 h-10 text-center text-xl bg-white/20 rounded-xl focus:outline-none"
-                  />
-                  <input
-                    type="text"
-                    value={cd.name}
-                    onChange={(e) => setCountdowns(prev => prev.map(c => c.id === cd.id ? { ...c, name: e.target.value } : c))}
-                    placeholder="What are you counting down to?"
-                    className="flex-1 text-lg font-bold bg-transparent placeholder-white/50 focus:outline-none"
-                  />
-                  <button onClick={() => setCountdowns(prev => prev.filter(c => c.id !== cd.id))} className="text-white/50 hover:text-white">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-                <input
-                  type="date"
-                  value={cd.date}
-                  onChange={(e) => setCountdowns(prev => prev.map(c => c.id === cd.id ? { ...c, date: e.target.value } : c))}
-                  className="w-full px-4 py-2 bg-white/20 rounded-xl text-white focus:outline-none mb-4 text-sm"
-                />
-                {countdown && !countdown.passed && (
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="bg-white/20 rounded-xl py-3">
-                      <div className="text-3xl font-bold">{countdown.days}</div>
-                      <div className="text-xs text-white/70">days</div>
-                    </div>
-                    <div className="bg-white/20 rounded-xl py-3">
-                      <div className="text-3xl font-bold">{countdown.hours}</div>
-                      <div className="text-xs text-white/70">hours</div>
-                    </div>
-                    <div className="bg-white/20 rounded-xl py-3">
-                      <div className="text-3xl font-bold">{countdown.mins}</div>
-                      <div className="text-xs text-white/70">minutes</div>
-                    </div>
-                  </div>
-                )}
-                {countdown && countdown.passed && (
-                  <div className="bg-white/20 rounded-xl py-3 text-center">
-                    <div className="text-xl font-bold">🎉 It's here!</div>
-                  </div>
-                )}
+            {countdowns.length === 0 && (
+              <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>
+                NO COUNTDOWNS — ADD ONE ABOVE
               </div>
-            );
-          })}
-        </div>
+            )}
 
-        {/* Bucket List Sub-tab */}
+            {countdowns.map(cd => {
+              const countdown = cd.date ? getCountdown(cd.date) : null;
+              return (
+                <div key={cd.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                    <input type="text" value={cd.emoji} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, emoji:e.target.value.slice(0,2)} : c))} style={{width:"32px",textAlign:"center",fontSize:"18px",background:"transparent",border:"none",outline:"none"}} />
+                    <input type="text" value={cd.name} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, name:e.target.value} : c))} placeholder="What are you counting down to?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:500}} />
+                    <button onClick={() => setCountdowns(prev => prev.filter(c => c.id!==cd.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px"}}>×</button>
+                  </div>
+                  <div style={{padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",alignItems:"center",gap:"8px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TARGET DATE</span>
+                    <input type="date" value={cd.date} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, date:e.target.value} : c))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",padding:"3px 8px"}} />
+                  </div>
+                  {countdown && !countdown.passed && (
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1px",background:"rgba(0,200,255,0.06)"}}>
+                      {[{val:countdown.days,label:"DAYS"},{val:countdown.hours,label:"HOURS"},{val:countdown.mins,label:"MINS"}].map((item,i) => (
+                        <div key={i} style={{padding:"16px",textAlign:"center",background:"rgba(5,12,24,0.9)"}}>
+                          <div style={{fontSize:"36px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{item.val}</div>
+                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px"}}>{item.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {countdown && countdown.passed && (
+                    <div style={{padding:"20px",textAlign:"center",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px"}}>◆ EVENT REACHED</div>
+                  )}
+                  {!cd.date && (
+                    <div style={{padding:"16px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>SET A DATE TO START COUNTDOWN</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* BUCKET LIST TAB */}
         {countdownsSubTab === 'bucketlist' && (() => {
           const completedCount = bucketList.filter(b => b.completed).length;
+          const pct = bucketList.length > 0 ? Math.round((completedCount/bucketList.length)*100) : 0;
           return (
-            <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-              <button onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg">+ Add to Bucket List</button>
-              {bucketList.length === 0 && (<div className="bg-white rounded-3xl p-12 shadow-sm border text-center"><div className="text-5xl mb-4">🏆</div><p className="text-gray-500">Your bucket list is empty. Dream big!</p></div>)}
-              {bucketList.length > 0 && (<div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><div className="flex justify-between mb-2"><span className="text-sm font-medium" style={{color:"rgba(148,163,184,0.9)"}}>Progress</span><span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span></div><div className="h-3 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500 progress-glow" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} /></div></div>)}
-              {bucketList.filter(b => !b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-start gap-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))} className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors" /><div className="flex-1"><div className="flex items-center gap-2 mb-1"><input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))} className="w-8 text-center text-lg bg-transparent focus:outline-none" /><input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))} placeholder="What do you want to do?" className="flex-1 font-medium bg-transparent focus:outline-none" /></div><select value={item.category || 'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))} className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"><option value="travel">✈️ Travel</option><option value="experience">🎯 Experience</option><option value="fitness">💪 Fitness</option><option value="career">💼 Career</option><option value="financial">💰 Financial</option><option value="personal">🌟 Personal</option><option value="creative">🎨 Creative</option></select></div><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}
-              {bucketList.filter(b => b.completed).length > 0 && (<div><h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>{bucketList.filter(b => b.completed).map(item => (<div key={item.id} className="rounded-2xl p-4 flex items-center gap-3 opacity-60 mb-2" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}><button onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))} className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"><span className="text-white text-sm">✓</span></button><span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span><button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0"><Trash2 className="w-4 h-4" /></button></div>))}</div>)}
+            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <button onClick={() => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}])} style={{width:"100%",padding:"12px",background:"rgba(251,191,36,0.06)",border:"0.5px dashed rgba(251,191,36,0.3)",borderRadius:"6px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD TO BUCKET LIST</button>
+
+              {bucketList.length > 0 && (
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.7)",padding:"12px 16px"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>COMPLETION RATE</span>
+                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.8)",fontFamily:"monospace"}}>{completedCount}/{bucketList.length} — {pct}%</span>
+                  </div>
+                  <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                    <div style={{height:"2px",width:`${pct}%`,background:"rgba(251,191,36,0.7)",borderRadius:"1px"}} />
+                  </div>
+                </div>
+              )}
+
+              {bucketList.length === 0 && (
+                <div style={{padding:"40px",textAlign:"center",color:"rgba(251,191,36,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(251,191,36,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>BUCKET LIST EMPTY — ADD YOUR GOALS ABOVE</div>
+              )}
+
+              {bucketList.filter(b => !b.completed).map(item => (
+                <div key={item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.5)",padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:true} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"1px solid rgba(251,191,36,0.5)",background:"transparent",flexShrink:0,marginTop:"2px",cursor:"pointer"}} />
+                  <div style={{flex:1}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
+                      <input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, emoji:e.target.value.slice(0,2)} : b))} style={{width:"24px",textAlign:"center",fontSize:"16px",background:"transparent",border:"none",outline:"none"}} />
+                      <input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, text:e.target.value} : b))} placeholder="What do you want to do?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}} />
+                    </div>
+                    <select value={item.category||'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, category:e.target.value} : b))} style={{background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"3px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",fontSize:"9px",padding:"2px 6px",letterSpacing:"0.5px"}}>
+                      <option value="travel">TRAVEL</option>
+                      <option value="experience">EXPERIENCE</option>
+                      <option value="fitness">FITNESS</option>
+                      <option value="career">CAREER</option>
+                      <option value="financial">FINANCIAL</option>
+                      <option value="personal">PERSONAL</option>
+                      <option value="creative">CREATIVE</option>
+                    </select>
+                  </div>
+                  <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
+                </div>
+              ))}
+
+              {bucketList.filter(b => b.completed).length > 0 && (
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"8px",marginBottom:"8px"}}>// COMPLETED</div>
+                  {bucketList.filter(b => b.completed).map(item => (
+                    <div key={item.id} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px",opacity:0.6}}>
+                      <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:false} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"none",background:"rgba(34,197,94,0.8)",flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>✓</button>
+                      <span style={{flex:1,color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"12px",textDecoration:"line-through"}}>{item.emoji} {item.text||'Unnamed goal'}</span>
+                      <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })()}
+
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
