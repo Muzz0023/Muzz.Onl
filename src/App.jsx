@@ -15368,7 +15368,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="TEAM" icon="👷" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TEAM</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             {/* TEAM TABLE at top */}
             {donnyTeam.length > 0 && (() => {
@@ -15376,12 +15382,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const sorted = [...donnyTeam].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); });
               const totalRate = donnyTeam.reduce((sum,m) => sum+(parseFloat(m.hourlyRate)||0), 0);
               return (
-                <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                  <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
-                    <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// TEAM TABLE</div>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
+                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TEAM TABLE</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnyTeam.length} members</span>
-                      <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>+ Add Member</button>
+                      <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{donnyTeam.length} MEMBERS</span>
+                      <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
                     </div>
                   </div>
                   <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
@@ -15401,19 +15407,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{member.hourlyRate?`$${member.hourlyRate}/hr`:'—'}</div>
                     </div>
                   ))}
-                  <div className="flex items-center justify-between px-5 py-3" style={{borderTop:'1px solid rgba(249,115,22,0.15)',background:'rgba(249,115,22,0.05)'}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderTop:"0.5px solid rgba(249,115,22,0.15)",background:"rgba(249,115,22,0.04)"}}>
                     <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL HOURLY COST</div>
                     <div className="text-base font-black" style={{color:'#22c55e'}}>${totalRate.toFixed(2)}<span className="text-xs font-normal ml-1" style={{color:'rgba(34,197,94,0.6)'}}>/ hr</span></div>
                   </div>
                 </div>
               );
             })()}
-            <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }}
-              className="w-full py-3.5 rounded-2xl font-bold text-sm" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+            <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }} style={{width:"100%",padding:"12px",background:"rgba(249,115,22,0.06)",border:"0.5px dashed rgba(249,115,22,0.3)",borderRadius:"6px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>
               {showAddMember ? '✕ Cancel' : '+ Add Team Member'}
             </button>
             {showAddMember && (
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
                 <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.5)'}}>// NEW MEMBER</div>
                 <div>
                   <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👤 FULL NAME</div>
@@ -15481,7 +15486,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             )}
             {donnyTeam.length === 0 && !showAddMember ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.08)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.08)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                 <div className="text-4xl mb-3">👷</div>
                 <div className="text-white font-bold mb-1">No team members yet</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add your crew above</div>
@@ -15510,11 +15515,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
                             <button onClick={() => setEditingMemberId(isEditing?null:member.id)}
-                              className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(249,115,22,0.1)',color:'#f97316',border:'1px solid rgba(249,115,22,0.2)'}}>
+                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer"}}>
                               {isEditing?'✕':'✏️'}
                             </button>
                             <button onClick={() => { if(window.confirm(`Remove ${member.name}?`)) saveTeam(donnyTeam.filter(m=>m.id!==member.id)); }}
-                              className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>
+                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
                           </div>
                         </div>
                         {(member.jobAccess||[]).length > 0 && (
@@ -16118,13 +16123,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnyHeader title="PHOTOS" icon="📸" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             {donnyJobs.length===0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}><div className="text-4xl mb-3">📸</div><div className="text-white font-bold">No jobs yet</div></div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}><div className="text-4xl mb-3">📸</div><div className="text-white font-bold">No jobs yet</div></div>
             ) : (
               <>
                 {/* Master table */}
                 {Object.keys(donnyPhotos).some(id=>donnyPhotos[id]?.length>0) && (
                   <div className="rounded-2xl overflow-hidden mb-2" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
                       <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// PHOTO TABLE</div>
                       <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{Object.values(donnyPhotos).reduce((s,p)=>s+(p?.length||0),0)} photos</span>
                     </div>
@@ -16562,7 +16567,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
             <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
                 <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
@@ -16627,7 +16632,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnyHeader title="EXTRA MATERIALS" icon="📦" />
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
             {donnyJobs.filter(j=>!j.completed).length === 0 ? (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                 <div className="text-4xl mb-3">📦</div>
                 <div className="text-white font-bold mb-1">No active jobs</div>
                 <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log materials</div>
@@ -16993,7 +16998,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="REPORTS" icon="📊" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>REPORTS</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
             {/* Summary stat cards */}
@@ -17169,7 +17180,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
             <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
               {/* Editable fields */}
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
                 <div className="grid grid-cols-2 gap-4">
                   {[{k:'name',l:'👤 NAME'},{k:'company',l:'🏢 COMPANY'},{k:'trade',l:'🔧 TRADE'},{k:'phone',l:'📞 PHONE'},{k:'email',l:'📧 EMAIL'},{k:'abn',l:'ABN'},{k:'licenceNo',l:'LICENCE NO.'}].map(f=>(
                     <div key={f.k}>
@@ -17216,7 +17227,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return (
         <div className="min-h-screen bg-transparent pb-24">
           <Sidebar /><SaveIndicator />
-          <DonnyHeader title="SUBCONTRACTORS" icon="🔩" />
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-4xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUBCONTRACTORS</div>
+            </div>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
             {/* Master table */}
@@ -17251,7 +17268,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             {/* Add form */}
             {showAddSub && (
-              <div className="rounded-2xl p-5 space-y-4" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.2)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
                 <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW SUBCONTRACTOR</div>
                 <div className="grid grid-cols-2 gap-3">
                   {[{k:'name',l:'👤 NAME',p:'John Smith'},{k:'company',l:'🏢 COMPANY',p:'Smith Electrical'},{k:'trade',l:'🔧 TRADE',p:'Electrician'},{k:'phone',l:'📞 PHONE',p:'04XX XXX XXX'},{k:'email',l:'📧 EMAIL',p:'john@example.com'},{k:'abn',l:'ABN',p:'12 345 678 901'},{k:'licenceNo',l:'LICENCE NO.',p:'NSW123456'}].map(f=>(
