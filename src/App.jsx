@@ -3372,53 +3372,150 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             ))}
           </div>
 
-          {/* DAILY — Apple Notes style */}
-          {tasksSubTab === 'daily' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase()}</span>
-              </div>
-              <textarea
-                value={typeof dailyTasks === 'string' ? dailyTasks : dailyNote}
-                onChange={(e) => setDailyNote(e.target.value)}
-                onFocus={scrollInputIntoView}
-                placeholder={"Today's tasks...\n\nWork:\n\nHome:\n\nPersonal:"}
-                style={{width:"100%",minHeight:"60vh",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"15px",lineHeight:"1.8",resize:"none",padding:"16px",boxSizing:"border-box"}}
-              />
-            </div>
-          )}
+          {/* RICH NOTE EDITOR — shared for daily/weekly/general */}
+          {['daily','weekly','general'].includes(tasksSubTab) && (() => {
+            const noteKey = tasksSubTab === 'daily' ? 'dailyNote' : tasksSubTab === 'weekly' ? 'weeklyNote' : 'generalNote';
+            const noteVal = tasksSubTab === 'daily' ? dailyNote : tasksSubTab === 'weekly' ? weeklyNote : generalNote;
+            const setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
+            const accentColor = tasksSubTab === 'daily' ? '#00c8ff' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
+            const borderColor = tasksSubTab === 'daily' ? 'rgba(0,200,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
+            const headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase() : tasksSubTab === 'weekly' ? 'THIS WEEK' : 'GENERAL';
 
-          {/* WEEKLY — Apple Notes style */}
-          {tasksSubTab === 'weekly' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(99,102,241,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(99,102,241,0.1)"}}>
-                <span style={{fontSize:"10px",color:"rgba(99,102,241,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>THIS WEEK</span>
-              </div>
-              <textarea
-                value={typeof weeklyTasks === 'string' ? weeklyTasks : weeklyNote}
-                onChange={(e) => setWeeklyNote(e.target.value)}
-                onFocus={scrollInputIntoView}
-                placeholder={"This week's tasks...\n\nMonday:\n\nTuesday:\n\nWednesday:\n\nThursday:\n\nFriday:"}
-                style={{width:"100%",minHeight:"60vh",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"15px",lineHeight:"1.8",resize:"none",padding:"16px",boxSizing:"border-box"}}
-              />
-            </div>
-          )}
+            // blocks: {id, type: 'text'|'check'|'h1'|'h2'|'bullet', text, checked, bold, italic, underline}
+            let blocks = [];
+            try { blocks = JSON.parse(noteVal); if (!Array.isArray(blocks)) throw 0; } catch { blocks = [{id:Date.now(),type:'text',text:'',bold:false,italic:false,underline:false}]; }
 
-          {/* GENERAL — Apple Notes style */}
-          {tasksSubTab === 'general' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.1)"}}>
-                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>GENERAL</span>
+            const saveBlocks = (b) => setNote(JSON.stringify(b));
+
+            const addBlock = (type, afterId) => {
+              const newBlock = {id:Date.now(),type,text:'',checked:false,bold:false,italic:false,underline:false};
+              const idx = afterId ? blocks.findIndex(b=>b.id===afterId) : blocks.length-1;
+              const next = [...blocks.slice(0,idx+1), newBlock, ...blocks.slice(idx+1)];
+              saveBlocks(next);
+              setTimeout(()=>{ const el=document.getElementById(`block-${newBlock.id}`); if(el){el.focus();} },50);
+            };
+
+            const updateBlock = (id, changes) => saveBlocks(blocks.map(b=>b.id===id?{...b,...changes}:b));
+            const deleteBlock = (id) => { if(blocks.length===1){saveBlocks([{id:Date.now(),type:'text',text:'',bold:false,italic:false,underline:false}]);return;} saveBlocks(blocks.filter(b=>b.id!==id)); };
+            const toggleFmt = (id, fmt) => updateBlock(id,{[fmt]:!blocks.find(b=>b.id===id)?.[fmt]});
+
+            const handleKeyDown = (e, block) => {
+              if (e.key==='Enter') {
+                e.preventDefault();
+                // new block same type (checklist stays checklist)
+                addBlock(block.type==='check'?'check':'text', block.id);
+              }
+              if (e.key==='Backspace' && block.text==='' && blocks.length>1) {
+                e.preventDefault();
+                const idx = blocks.findIndex(b=>b.id===block.id);
+                deleteBlock(block.id);
+                setTimeout(()=>{ const prev=blocks[idx-1]||blocks[idx+1]; if(prev){const el=document.getElementById(`block-${prev.id}`);if(el){el.focus();const len=el.value?.length||0;el.setSelectionRange(len,len);}} },50);
+              }
+            };
+
+            const blockStyle = (b) => ({
+              width:'100%', background:'transparent', border:'none', outline:'none',
+              color: b.checked ? 'rgba(148,163,184,0.35)' : 'rgba(224,234,255,0.9)',
+              fontSize: b.type==='h1'?'20px':b.type==='h2'?'16px':'15px',
+              fontWeight: b.bold||b.type==='h1'||b.type==='h2' ? 700 : 400,
+              fontStyle: b.italic ? 'italic' : 'normal',
+              textDecoration: b.underline ? (b.checked?'line-through underline':'underline') : b.checked?'line-through':'none',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              lineHeight:'1.7', resize:'none', padding:0,
+              letterSpacing: b.type==='h1'?'0.5px':0,
+            });
+
+            return (
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${borderColor}`,borderRadius:"6px",borderLeft:`2px solid ${accentColor}`,backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+
+                {/* Header */}
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"10px",color:accentColor,fontFamily:"monospace",letterSpacing:"1.5px",opacity:0.6}}>{headerLabel}</span>
+                </div>
+
+                {/* Toolbar */}
+                <div style={{display:"flex",alignItems:"center",gap:"4px",padding:"8px 12px",borderBottom:`0.5px solid ${borderColor}`,flexWrap:"wrap"}}>
+                  {[
+                    {label:"☐", title:"Checklist", action:()=>addBlock('check',blocks[blocks.length-1]?.id)},
+                    {label:"•", title:"Bullet", action:()=>addBlock('bullet',blocks[blocks.length-1]?.id)},
+                    {label:"H1", title:"Heading 1", action:()=>addBlock('h1',blocks[blocks.length-1]?.id)},
+                    {label:"H2", title:"Heading 2", action:()=>addBlock('h2',blocks[blocks.length-1]?.id)},
+                    {label:"T", title:"Text", action:()=>addBlock('text',blocks[blocks.length-1]?.id)},
+                  ].map(btn=>(
+                    <button key={btn.label} onClick={btn.action} title={btn.title}
+                      style={{padding:"4px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.08)",borderRadius:"3px",color:"rgba(224,234,255,0.6)",fontSize:"12px",cursor:"pointer",fontFamily:"system-ui",fontWeight:btn.label==='H1'||btn.label==='H2'?700:400}}>
+                      {btn.label}
+                    </button>
+                  ))}
+                  <div style={{width:"0.5px",height:"18px",background:"rgba(255,255,255,0.08)",margin:"0 4px"}}/>
+                  {[
+                    {label:"B", fmt:"bold", style:{fontWeight:700}},
+                    {label:"I", fmt:"italic", style:{fontStyle:"italic"}},
+                    {label:"U", fmt:"underline", style:{textDecoration:"underline"}},
+                  ].map(btn=>(
+                    <button key={btn.fmt} onClick={()=>{ const focused=blocks.find(b=>document.getElementById(`block-${b.id}`)===document.activeElement); if(focused) toggleFmt(focused.id,btn.fmt); }}
+                      title={btn.label} style={{padding:"4px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.08)",borderRadius:"3px",color:"rgba(224,234,255,0.6)",fontSize:"13px",cursor:"pointer",...btn.style}}>
+                      {btn.label}
+                    </button>
+                  ))}
+                  <div style={{marginLeft:"auto"}}>
+                    <button onClick={()=>{ if(window.confirm('Clear all?')) saveBlocks([{id:Date.now(),type:'text',text:'',bold:false,italic:false,underline:false}]); }}
+                      style={{padding:"4px 10px",background:"transparent",border:"none",color:"rgba(239,68,68,0.3)",fontSize:"11px",cursor:"pointer",fontFamily:"monospace"}}>CLEAR</button>
+                  </div>
+                </div>
+
+                {/* Blocks */}
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"2px",minHeight:"55vh"}}>
+                  {blocks.map((block,idx)=>(
+                    <div key={block.id} style={{display:"flex",alignItems:"flex-start",gap:"8px"}}>
+
+                      {/* Left icon */}
+                      {block.type==='check' && (
+                        <button onClick={()=>updateBlock(block.id,{checked:!block.checked})}
+                          style={{width:"18px",height:"18px",borderRadius:"50%",border:`1.5px solid ${block.checked?accentColor:"rgba(148,163,184,0.3)"}`,background:block.checked?accentColor:"transparent",flexShrink:0,marginTop:"4px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"#020817",padding:0}}>
+                          {block.checked?"✓":""}
+                        </button>
+                      )}
+                      {block.type==='bullet' && (
+                        <span style={{color:accentColor,fontSize:"18px",lineHeight:"1.5",flexShrink:0,marginTop:"1px"}}>·</span>
+                      )}
+                      {block.type==='h1' && (
+                        <span style={{color:accentColor,fontSize:"10px",fontFamily:"monospace",flexShrink:0,marginTop:"6px",letterSpacing:"1px",opacity:0.5}}>H1</span>
+                      )}
+                      {block.type==='h2' && (
+                        <span style={{color:accentColor,fontSize:"10px",fontFamily:"monospace",flexShrink:0,marginTop:"4px",letterSpacing:"1px",opacity:0.4}}>H2</span>
+                      )}
+                      {block.type==='text' && <span style={{width:"0px",flexShrink:0}}/>}
+
+                      {/* Input */}
+                      <textarea
+                        id={`block-${block.id}`}
+                        value={block.text}
+                        onChange={(e)=>updateBlock(block.id,{text:e.target.value})}
+                        onKeyDown={(e)=>handleKeyDown(e,block)}
+                        onFocus={scrollInputIntoView}
+                        placeholder={idx===0&&blocks.length===1?(tasksSubTab==='daily'?"Start typing... (press Enter for new line, use toolbar above)":tasksSubTab==='weekly'?"This week...":'Notes...'):''}
+                        rows={1}
+                        style={{...blockStyle(block), flex:1, overflow:'hidden'}}
+                        onInput={(e)=>{ e.target.style.height='auto'; e.target.style.height=e.target.scrollHeight+'px'; }}
+                      />
+
+                      {/* Delete */}
+                      {blocks.length>1&&(
+                        <button onClick={()=>deleteBlock(block.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.2)",flexShrink:0,marginTop:"4px",fontSize:"14px",padding:0,lineHeight:1}}>×</button>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Add text line at bottom */}
+                  <button onClick={()=>addBlock('text',blocks[blocks.length-1]?.id)}
+                    style={{marginTop:"8px",padding:"8px 0",background:"transparent",border:"none",cursor:"pointer",color:"rgba(148,163,184,0.15)",fontSize:"13px",textAlign:"left",fontFamily:"system-ui"}}>
+                    + new line
+                  </button>
+                </div>
               </div>
-              <textarea
-                value={typeof generalTasks === 'string' ? generalTasks : generalNote}
-                onChange={(e) => setGeneralNote(e.target.value)}
-                onFocus={scrollInputIntoView}
-                placeholder={"General notes & tasks...\n\nAnything goes here."}
-                style={{width:"100%",minHeight:"60vh",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"15px",lineHeight:"1.8",resize:"none",padding:"16px",boxSizing:"border-box"}}
-              />
-            </div>
-          )}
+            );
+          })()}
 
           {/* DAILY ROTATION */}
           {tasksSubTab === 'rotation' && (
