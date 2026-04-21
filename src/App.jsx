@@ -1713,6 +1713,9 @@ function MuzzApp() {
   const [dailyTasks, setDailyTasks] = useState([]);
   const [weeklyTasks, setWeeklyTasks] = useState([]);
   const [generalTasks, setGeneralTasks] = useState([]);
+  const [dailyNote, setDailyNote] = useState('');
+  const [weeklyNote, setWeeklyNote] = useState('');
+  const [generalNote, setGeneralNote] = useState('');
   const [dailyRotation, setDailyRotation] = useState([
     { time: '1am', activity: '-' },
     { time: '2am', activity: '-' },
@@ -2048,6 +2051,9 @@ function MuzzApp() {
     if(d.dailyTasks) setDailyTasks(d.dailyTasks);
     if(d.weeklyTasks) setWeeklyTasks(d.weeklyTasks);
     if(d.generalTasks) setGeneralTasks(d.generalTasks);
+    if(d.dailyNote !== undefined) setDailyNote(d.dailyNote||'');
+    if(d.weeklyNote !== undefined) setWeeklyNote(d.weeklyNote||'');
+    if(d.generalNote !== undefined) setGeneralNote(d.generalNote||'');
     if(d.dailyRotation) setDailyRotation(d.dailyRotation);
     if(d.birthdays) setBirthdays(d.birthdays);
     if(d.reminders) setReminders(d.reminders);
@@ -2560,6 +2566,9 @@ function MuzzApp() {
           if (d.dailyTasks) setDailyTasks(d.dailyTasks);
           if (d.weeklyTasks) setWeeklyTasks(d.weeklyTasks);
           if (d.generalTasks) setGeneralTasks(d.generalTasks);
+          if (d.dailyNote !== undefined) setDailyNote(d.dailyNote||'');
+          if (d.weeklyNote !== undefined) setWeeklyNote(d.weeklyNote||'');
+          if (d.generalNote !== undefined) setGeneralNote(d.generalNote||'');
           if (d.dailyRotation) setDailyRotation(d.dailyRotation);
           if (d.birthdays) setBirthdays(d.birthdays);
           if (d.reminders) setReminders(d.reminders);
@@ -2663,6 +2672,9 @@ function MuzzApp() {
           dailyTasks,
           weeklyTasks,
           generalTasks,
+          dailyNote,
+          weeklyNote,
+          generalNote,
           dailyRotation,
           birthdays,
           reminders,
@@ -2718,7 +2730,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -3328,22 +3340,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // TASKS VIEW
   if (activeView === 'tasks') {
-    const addDailyTask = () => {
-      setDailyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, dateAdded: new Date().toISOString() }]);
-    };
-
-    const addWeeklyTask = () => {
-      setWeeklyTasks(prev => [...prev, { id: Date.now(), text: '', completed: false, startDate: '', dueDate: '', dateAdded: new Date().toISOString() }]);
-    };
-
-    const toggleDailyTask = (id) => {
-      setDailyTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-    };
-
-    const toggleWeeklyTask = (id) => {
-      setWeeklyTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-    };
-
     return (
       <div className="bg-transparent pb-24" style={{minHeight:"100vh"}}>
         <Sidebar />
@@ -3353,15 +3349,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TASKS</div>
-              </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>COMPLETED TODAY</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{dailyTasks.filter(t=>t.completed).length}/{dailyTasks.length}</div>
-              </div>
+            <div>
+              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TASKS</div>
             </div>
           </div>
         </div>
@@ -3382,110 +3372,51 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             ))}
           </div>
 
-          {/* DAILY TASKS — Apple Notes free format */}
+          {/* DAILY — Apple Notes style */}
           {tasksSubTab === 'daily' && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DAILY TASKS — {new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase()}</span>
-                <button onClick={addDailyTask} style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(0,200,255,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase()}</span>
               </div>
-              {dailyTasks.length === 0 ? (
-                <div style={{padding:"32px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO TASKS — TAP + ADD TO BEGIN</div>
-              ) : (
-                <div>
-                  {dailyTasks.map((task, idx) => (
-                    <div key={task.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)"}}>
-                      <button onClick={() => toggleDailyTask(task.id)} style={{width:"18px",height:"18px",borderRadius:"50%",border:`1px solid ${task.completed?"#00c8ff":"rgba(0,200,255,0.3)"}`,background:task.completed?"#00c8ff":"transparent",flexShrink:0,marginTop:"3px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"#0a0e1a"}}>
-                        {task.completed?"✓":""}
-                      </button>
-                      <textarea
-                        value={task.text}
-                        onFocus={scrollInputIntoView}
-                        onChange={(e) => setDailyTasks(prev => prev.map(t => t.id === task.id ? {...t, text: e.target.value} : t))}
-                        placeholder="What needs to be done today..."
-                        style={{flex:1,background:"transparent",border:"none",outline:"none",color:task.completed?"rgba(148,163,184,0.4)":"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",textDecoration:task.completed?"line-through":"none",minHeight:"24px"}}
-                        rows={Math.max(1, Math.ceil((task.text?.length||0)/50))}
-                      />
-                      <button onClick={() => setDailyTasks(prev => prev.filter(t => t.id !== task.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",flexShrink:0,marginTop:"2px",fontSize:"14px"}}>×</button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <textarea
+                value={typeof dailyTasks === 'string' ? dailyTasks : dailyNote}
+                onChange={(e) => setDailyNote(e.target.value)}
+                onFocus={scrollInputIntoView}
+                placeholder={"Today's tasks...\n\nWork:\n\nHome:\n\nPersonal:"}
+                style={{width:"100%",minHeight:"60vh",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"15px",lineHeight:"1.8",resize:"none",padding:"16px",boxSizing:"border-box"}}
+              />
             </div>
           )}
 
-          {/* WEEKLY TASKS */}
+          {/* WEEKLY — Apple Notes style */}
           {tasksSubTab === 'weekly' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(99,102,241,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"10px",color:"rgba(99,102,241,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WEEKLY TASKS</span>
-                <button onClick={addWeeklyTask} style={{fontSize:"10px",color:"rgba(99,102,241,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(99,102,241,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(99,102,241,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(99,102,241,0.1)"}}>
+                <span style={{fontSize:"10px",color:"rgba(99,102,241,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>THIS WEEK</span>
               </div>
-              {weeklyTasks.length === 0 ? (
-                <div style={{padding:"32px",textAlign:"center",color:"rgba(99,102,241,0.3)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO WEEKLY TASKS — TAP + ADD TO BEGIN</div>
-              ) : (
-                <div>
-                  {weeklyTasks.map((task) => (
-                    <div key={task.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)"}}>
-                      <button onClick={() => toggleWeeklyTask(task.id)} style={{width:"18px",height:"18px",borderRadius:"50%",border:`1px solid ${task.completed?"rgba(99,102,241,0.9)":"rgba(99,102,241,0.3)"}`,background:task.completed?"rgba(99,102,241,0.9)":"transparent",flexShrink:0,marginTop:"3px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>
-                        {task.completed?"✓":""}
-                      </button>
-                      <div style={{flex:1}}>
-                        <textarea
-                          value={task.text}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? {...t, text: e.target.value} : t))}
-                          placeholder="Weekly task..."
-                          style={{width:"100%",background:"transparent",border:"none",outline:"none",color:task.completed?"rgba(148,163,184,0.4)":"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",textDecoration:task.completed?"line-through":"none",minHeight:"24px"}}
-                          rows={Math.max(1, Math.ceil((task.text?.length||0)/50))}
-                        />
-                        <div style={{display:"flex",gap:"12px",marginTop:"4px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>START</span>
-                            <input type="date" value={task.startDate||''} onFocus={scrollInputIntoView} onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? {...t, startDate: e.target.value} : t))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}} />
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>DUE</span>
-                            <input type="date" value={task.dueDate||''} onFocus={scrollInputIntoView} onChange={(e) => setWeeklyTasks(prev => prev.map(t => t.id === task.id ? {...t, dueDate: e.target.value} : t))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}} />
-                          </div>
-                        </div>
-                      </div>
-                      <button onClick={() => setWeeklyTasks(prev => prev.filter(t => t.id !== task.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",flexShrink:0,marginTop:"2px",fontSize:"14px"}}>×</button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <textarea
+                value={typeof weeklyTasks === 'string' ? weeklyTasks : weeklyNote}
+                onChange={(e) => setWeeklyNote(e.target.value)}
+                onFocus={scrollInputIntoView}
+                placeholder={"This week's tasks...\n\nMonday:\n\nTuesday:\n\nWednesday:\n\nThursday:\n\nFriday:"}
+                style={{width:"100%",minHeight:"60vh",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"15px",lineHeight:"1.8",resize:"none",padding:"16px",boxSizing:"border-box"}}
+              />
             </div>
           )}
 
-          {/* GENERAL TASKS */}
+          {/* GENERAL — Apple Notes style */}
           {tasksSubTab === 'general' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>GENERAL TASKS</span>
-                <button onClick={() => setGeneralTasks(prev => [...prev, {id:Date.now(), text:'', completed:false, dateAdded:new Date().toISOString()}])} style={{fontSize:"10px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(34,197,94,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.1)"}}>
+                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>GENERAL</span>
               </div>
-              {generalTasks.length === 0 ? (
-                <div style={{padding:"32px",textAlign:"center",color:"rgba(34,197,94,0.3)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO GENERAL TASKS — TAP + ADD TO BEGIN</div>
-              ) : (
-                <div>
-                  {generalTasks.map((task) => (
-                    <div key={task.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)"}}>
-                      <button onClick={() => setGeneralTasks(prev => prev.map(t => t.id === task.id ? {...t, completed:!t.completed} : t))} style={{width:"18px",height:"18px",borderRadius:"3px",border:`1px solid ${task.completed?"rgba(34,197,94,0.9)":"rgba(34,197,94,0.3)"}`,background:task.completed?"rgba(34,197,94,0.9)":"transparent",flexShrink:0,marginTop:"3px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>
-                        {task.completed?"✓":""}
-                      </button>
-                      <textarea
-                        value={task.text}
-                        onChange={(e) => setGeneralTasks(prev => prev.map(t => t.id === task.id ? {...t, text: e.target.value} : t))}
-                        placeholder="General task..."
-                        style={{flex:1,background:"transparent",border:"none",outline:"none",color:task.completed?"rgba(148,163,184,0.4)":"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",textDecoration:task.completed?"line-through":"none",minHeight:"24px"}}
-                        rows={Math.max(1, Math.ceil((task.text?.length||0)/50))}
-                      />
-                      <button onClick={() => setGeneralTasks(prev => prev.filter(t => t.id !== task.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",flexShrink:0,marginTop:"2px",fontSize:"14px"}}>×</button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <textarea
+                value={typeof generalTasks === 'string' ? generalTasks : generalNote}
+                onChange={(e) => setGeneralNote(e.target.value)}
+                onFocus={scrollInputIntoView}
+                placeholder={"General notes & tasks...\n\nAnything goes here."}
+                style={{width:"100%",minHeight:"60vh",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"15px",lineHeight:"1.8",resize:"none",padding:"16px",boxSizing:"border-box"}}
+              />
             </div>
           )}
 
