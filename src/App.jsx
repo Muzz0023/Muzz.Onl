@@ -3434,27 +3434,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Toolbar */}
-                <div style={{display:"flex",alignItems:"center",gap:"4px",padding:"8px 12px",borderBottom:`0.5px solid ${borderColor}`,flexWrap:"wrap"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"4px",padding:"8px 12px",borderBottom:`0.5px solid ${borderColor}`}}>
                   {[
                     {label:"☐", title:"Checklist", action:()=>addBlock('check',blocks[blocks.length-1]?.id)},
                     {label:"•", title:"Bullet", action:()=>addBlock('bullet',blocks[blocks.length-1]?.id)},
-                    {label:"H1", title:"Heading 1", action:()=>addBlock('h1',blocks[blocks.length-1]?.id)},
-                    {label:"H2", title:"Heading 2", action:()=>addBlock('h2',blocks[blocks.length-1]?.id)},
                     {label:"T", title:"Text", action:()=>addBlock('text',blocks[blocks.length-1]?.id)},
                   ].map(btn=>(
                     <button key={btn.label} onClick={btn.action} title={btn.title}
-                      style={{padding:"4px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.08)",borderRadius:"3px",color:"rgba(224,234,255,0.6)",fontSize:"12px",cursor:"pointer",fontFamily:"system-ui",fontWeight:btn.label==='H1'||btn.label==='H2'?700:400}}>
-                      {btn.label}
-                    </button>
-                  ))}
-                  <div style={{width:"0.5px",height:"18px",background:"rgba(255,255,255,0.08)",margin:"0 4px"}}/>
-                  {[
-                    {label:"B", fmt:"bold", style:{fontWeight:700}},
-                    {label:"I", fmt:"italic", style:{fontStyle:"italic"}},
-                    {label:"U", fmt:"underline", style:{textDecoration:"underline"}},
-                  ].map(btn=>(
-                    <button key={btn.fmt} onClick={()=>{ const focused=blocks.find(b=>document.getElementById(`block-${b.id}`)===document.activeElement); if(focused) toggleFmt(focused.id,btn.fmt); }}
-                      title={btn.label} style={{padding:"4px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.08)",borderRadius:"3px",color:"rgba(224,234,255,0.6)",fontSize:"13px",cursor:"pointer",...btn.style}}>
+                      style={{padding:"4px 12px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.08)",borderRadius:"3px",color:"rgba(224,234,255,0.6)",fontSize:"14px",cursor:"pointer",fontFamily:"system-ui"}}>
                       {btn.label}
                     </button>
                   ))}
