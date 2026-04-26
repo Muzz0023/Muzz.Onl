@@ -9171,7 +9171,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <button onClick={() => { const el = document.getElementById('world-map-container'); if (el && el._leaflet_map) { el._leaflet_map.remove(); el._leaflet_map = null; el._leaflet_init = false; el._markers = {}; } setActiveView('home'); }} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
@@ -9184,7 +9184,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'knowledge',label:'GUIDE'},{id:'assetMap',label:'ASSET MAP'},{id:'worldMap',label:'WORLD MAP'}].map(tab => (
-                <button key={tab.id} onClick={() => setAssetsSubTab(tab.id)} style={{padding:"6px 14px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                <button key={tab.id} onClick={() => {
+                  // Destroy map when leaving worldMap tab
+                  if (assetsSubTab === 'worldMap' && tab.id !== 'worldMap') {
+                    const el = document.getElementById('world-map-container');
+                    if (el && el._leaflet_map) { el._leaflet_map.remove(); el._leaflet_map = null; el._leaflet_init = false; el._markers = {}; }
+                  }
+                  setAssetsSubTab(tab.id);
+                }} style={{padding:"6px 14px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
                   {tab.label}
                 </button>
               ))}
