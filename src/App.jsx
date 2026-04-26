@@ -10004,7 +10004,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
           {/* World Map */}
-          {assetsSubTab === 'worldMap' && (() => {
+          <div style={{display: assetsSubTab === 'worldMap' ? 'block' : 'none'}}>
+            {(() => {
             const pinColors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 
             const removeMapPin = (pinId) => {
@@ -10083,17 +10084,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div
                     id="world-map-container"
                     ref={(el) => {
-                      // Cleanup on unmount
-                      if (!el) {
-                        const old = document.getElementById('world-map-container');
-                        if (old && old._leaflet_map) {
-                          try { old._leaflet_map.remove(); } catch(e) {}
-                          old._leaflet_map = null;
-                          old._leaflet_init = false;
-                        }
-                        return;
-                      }
-                      if (el._leaflet_init) return;
+                      if (!el || el._leaflet_init) return;
                       el._leaflet_init = true;
                       el._markers = {};
                       
@@ -10246,6 +10237,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
           })()}
+          </div>
 
         </div>
       </div>
