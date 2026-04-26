@@ -9205,9 +9205,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <button onClick={() => setActiveView('worldmap')} style={{padding:"6px 14px",background:"transparent",border:"0.5px solid transparent",borderRadius:"3px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
                 WORLD MAP
               </button>
-                  {tab.label}
-                </button>
-              ))}
             </div>
           </div>
         </div>
