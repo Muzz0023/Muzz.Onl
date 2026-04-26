@@ -1902,6 +1902,7 @@ function MuzzApp() {
   ]);
   const [showMapControls, setShowMapControls] = useState(true);
   const [mapPins, setMapPins] = useState([]);
+  const [editingPinId, setEditingPinId] = useState(null);
   const [netWorthHistory, setNetWorthHistory] = useState([]);
   const worldMapRef = useRef(null);
   const mapPinsRef = useRef(mapPins);
@@ -10112,22 +10113,86 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {mapPins.length > 0 && (
             <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
               <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>// PINS</div>
-              {mapPins.map(pin => (
-                <div key={pin.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"10px 14px",display:"flex",alignItems:"center",gap:"10px"}}>
-                  <div style={{width:"10px",height:"10px",borderRadius:"50%",background:pin.color||'#3B82F6',flexShrink:0,boxShadow:`0 0 6px ${pin.color||'#3B82F6'}`}}/>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{pin.title}</div>
-                    {pin.notes && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{pin.notes}</div>}
-                    {pin.radius > 0 && <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{pin.radius}km radius</div>}
+              {mapPins.map(pin => {
+                const isEditing = editingPinId === pin.id;
+                const colors = ['#3B82F6','#EF4444','#10B981','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#F97316'];
+                const updateRadius = (newRadius) => {
+                  setMapPins(prev => prev.map(p => p.id===pin.id ? {...p, radius:newRadius} : p));
+                  // Update circle on map in real time
+                  const el = document.getElementById('world-map-container');
+                  if (el && el._leaflet_map && el._markers && el._markers[pin.id]) {
+                    const entry = el._markers[pin.id];
+                    const L = window.L;
+                    if (entry.circle) { el._leaflet_map.removeLayer(entry.circle); entry.circle = null; }
+                    if (newRadius > 0) {
+                      entry.circle = L.circle([pin.lat, pin.lng], { radius: newRadius*1000, color: pin.color||'#3B82F6', fillOpacity: 0.08, weight: 1 }).addTo(el._leaflet_map);
+                    }
+                  }
+                };
+                return (
+                  <div key={pin.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isEditing?"rgba(0,200,255,0.3)":"rgba(0,200,255,0.15)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                    {/* Header row */}
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px 14px"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:pin.color||'#3B82F6',flexShrink:0,boxShadow:`0 0 6px ${pin.color||'#3B82F6'}`}}/>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{pin.title}</div>
+                        {pin.notes && !isEditing && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{pin.notes}</div>}
+                        {pin.radius > 0 && !isEditing && <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{pin.radius}km radius</div>}
+                      </div>
+                      <div style={{display:"flex",gap:"6px"}}>
+                        <button onClick={()=>setEditingPinId(isEditing?null:pin.id)}
+                          style={{padding:"3px 10px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>
+                          {isEditing?'DONE':'EDIT'}
+                        </button>
+                        <button onClick={()=>removeMapPin(pin.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px",padding:0}}>×</button>
+                      </div>
+                    </div>
+                    {/* Edit panel */}
+                    {isEditing && (
+                      <div style={{padding:"0 14px 14px",display:"flex",flexDirection:"column",gap:"10px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginTop:"10px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>NAME</div>
+                            <input value={pin.title} onChange={e=>setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,title:e.target.value}:p))}
+                              style={{width:"100%",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"6px 8px",outline:"none",boxSizing:"border-box"}}/>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>RADIUS (KM)</div>
+                            <input type="number" value={pin.radius||''} placeholder="0"
+                              onChange={e=>updateRadius(parseInt(e.target.value)||0)}
+                              style={{width:"100%",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",padding:"6px 8px",outline:"none",boxSizing:"border-box"}}/>
+                          </div>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>NOTES</div>
+                          <input value={pin.notes||''} onChange={e=>setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,notes:e.target.value}:p))}
+                            placeholder="Add notes..."
+                            style={{width:"100%",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.8)",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none",boxSizing:"border-box"}}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>COLOUR</div>
+                          <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
+                            {colors.map(c => (
+                              <button key={c} onClick={()=>{
+                                setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,color:c}:p));
+                                const el = document.getElementById('world-map-container');
+                                if (el && el._markers && el._markers[pin.id]) {
+                                  const entry = el._markers[pin.id];
+                                  const L = window.L;
+                                  const icon = L.divIcon({ className:'', html:`<div style="width:14px;height:14px;border-radius:50%;background:${c};border:2px solid white;box-shadow:0 0 8px ${c}"></div>`, iconSize:[14,14], iconAnchor:[7,7] });
+                                  entry.marker.setIcon(icon);
+                                  if (entry.circle) entry.circle.setStyle({color:c});
+                                }
+                              }}
+                                style={{width:"22px",height:"22px",borderRadius:"50%",background:c,border:`2px solid ${pin.color===c?"white":"transparent"}`,cursor:"pointer",padding:0}}/>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
-                    <input type="number" placeholder="0" value={pin.radius||''} onChange={e=>setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,radius:parseInt(e.target.value)||0}:p))}
-                      style={{width:"55px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"10px",padding:"3px 6px",outline:"none"}}/>
-                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>km</span>
-                    <button onClick={()=>removeMapPin(pin.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px",padding:0}}>×</button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
           {mapPins.length === 0 && (
