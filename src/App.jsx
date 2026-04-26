@@ -10083,7 +10083,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div
                     id="world-map-container"
                     ref={(el) => {
-                      if (!el || el._leaflet_init) return;
+                      // Cleanup on unmount
+                      if (!el) {
+                        const old = document.getElementById('world-map-container');
+                        if (old && old._leaflet_map) {
+                          try { old._leaflet_map.remove(); } catch(e) {}
+                          old._leaflet_map = null;
+                          old._leaflet_init = false;
+                        }
+                        return;
+                      }
+                      if (el._leaflet_init) return;
                       el._leaflet_init = true;
                       el._markers = {};
                       
@@ -10099,6 +10109,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         if (!window.L) return;
                         const L = window.L;
                         const map = L.map(el, { zoomControl: true }).setView([-27.47, 153.02], 4);
+                        el._leaflet_map = map;
                         
                         // English-only tiles from CartoDB
                         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
