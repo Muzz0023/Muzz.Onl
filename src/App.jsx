@@ -7206,8 +7206,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   if (next < today) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
                   return { id:"b"+b.id, title:`${b.name}'s Birthday`, days:Math.ceil((new Date(next)-new Date())/86400000) };
                 }).filter(Boolean);
-                const cdEvents = (countdowns||[]).filter(c=>c.date>=today).map(c=>({
-                  id:c.id, title:c.title, days:Math.ceil((new Date(c.date)-new Date())/86400000)
+                const cdEvents = (countdowns||[]).filter(c=>c.date>=today && (c.name||c.title)).map(c=>({
+                  id:c.id, title:c.name||c.title||'Untitled', days:Math.ceil((new Date(c.date)-new Date())/86400000)
                 }));
                 const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
                 if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:"monospace",letterSpacing:"1px"}}>NO EVENTS SCHEDULED</div>;
