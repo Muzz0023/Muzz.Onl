@@ -10068,7 +10068,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const map = L.map(el, { zoomControl: true, preferCanvas: true }).setView([-27.47, 153.02], 3);
                     el._leaflet_map = map;
 
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                       attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
                     }).addTo(map);
 
