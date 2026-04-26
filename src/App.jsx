@@ -1886,6 +1886,8 @@ function MuzzApp() {
   const [mapPins, setMapPins] = useState([]);
   const [netWorthHistory, setNetWorthHistory] = useState([]);
   const worldMapRef = useRef(null);
+  const mapPinsRef = useRef(mapPins);
+  useEffect(() => { mapPinsRef.current = mapPins; }, [mapPins]);
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
@@ -10060,13 +10062,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div
                     id="world-map-container"
                     ref={(el) => {
-                      if (!el) return;
-                      // Destroy previous map instance if exists
-                      if (el._leaflet_map) {
-                        el._leaflet_map.remove();
-                        el._leaflet_map = null;
-                        el._markers = {};
-                      }
+                      if (!el || el._leaflet_init) return;
+                      el._leaflet_init = true;
                       el._markers = {};
                       
                       if (!document.getElementById('leaflet-css')) {
