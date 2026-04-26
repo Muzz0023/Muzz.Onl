@@ -3078,7 +3078,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         return (
                           <button key={item.id} onClick={() => { if(workerLocked) return; setActiveView(item.id); setSidebarOpen(false); }}
                             style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',marginBottom:'2px',background:active?`rgba(249,115,22,0.08)`:'transparent',border:`0.5px solid ${active?'rgba(249,115,22,0.4)':'rgba(255,255,255,0.04)'}`,cursor:workerLocked?'default':'pointer',borderRadius:'3px',opacity:workerLocked?0.3:1}}>
-                            <span style={{fontSize:'11px',fontFamily:'monospace',color:active?'#f97316':'rgba(224,234,255,0.7)',letterSpacing:'0.5px'}}>{item.label}</span>
+                            <span style={{fontSize:'14px',fontFamily:'monospace',color:active?'#f97316':'rgba(224,234,255,0.8)',letterSpacing:'0.5px'}}>{item.label}</span>
                             {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:'#f97316',boxShadow:'0 0 6px #f97316',flexShrink:0}} />}
                             {workerLocked && <span style={{fontSize:'9px',color:'rgba(148,163,184,0.3)'}}>🔒</span>}
                           </button>
@@ -3100,8 +3100,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       return (
                         <button key={item.id}
                           onClick={async () => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){const confirmed=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(confirmed){try{await supabase.deleteUserData(userId);}catch(e){console.error('Delete error:',e);}finally{await signOut();}}}else{setActiveView(item.id);} setSidebarOpen(false); }}
-                          style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',marginBottom:'2px',background:active?`rgba(0,200,255,0.06)`:'transparent',border:`0.5px solid ${active?'rgba(0,200,255,0.3)':'rgba(255,255,255,0.04)'}`,cursor:'pointer',borderRadius:'3px'}}>
-                          <span style={{fontSize:'11px',fontFamily:'monospace',color:active?'#00c8ff':locked?'rgba(148,163,184,0.25)':item.danger?'rgba(239,68,68,0.6)':'rgba(224,234,255,0.7)',letterSpacing:'0.5px'}}>{item.label}</span>
+                          style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 12px',marginBottom:'2px',background:active?`rgba(0,200,255,0.06)`:'transparent',border:`0.5px solid ${active?'rgba(0,200,255,0.3)':'rgba(255,255,255,0.04)'}`,cursor:'pointer',borderRadius:'3px'}}>
+                          <span style={{fontSize:'14px',fontFamily:'monospace',color:active?'#00c8ff':locked?'rgba(148,163,184,0.25)':item.danger?'rgba(239,68,68,0.6)':'rgba(224,234,255,0.8)',letterSpacing:'0.5px'}}>{item.label}</span>
                           <div style={{display:'flex',alignItems:'center',gap:'4px'}}>
                             {locked && <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>⚡</span>}
                             {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 6px #00c8ff',flexShrink:0}} />}
@@ -10060,8 +10060,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div
                     id="world-map-container"
                     ref={(el) => {
-                      if (!el || el._leaflet_init) return;
-                      el._leaflet_init = true;
+                      if (!el) return;
+                      // Destroy previous map instance if exists
+                      if (el._leaflet_map) {
+                        el._leaflet_map.remove();
+                        el._leaflet_map = null;
+                        el._markers = {};
+                      }
                       el._markers = {};
                       
                       if (!document.getElementById('leaflet-css')) {
@@ -10115,12 +10120,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             const notes = prompt('Notes (optional):') || '';
                             const color = '#3B82F6';
                             const newPin = { id: Date.now().toString(), lat, lng, title: title || 'Untitled', notes, color, radius: 0 };
-                            setMapPins(prev => [...prev, newPin]);
+                            setMapPins(prev => {
+                              const updated = [...prev, newPin];
+                              return updated;
+                            });
                             const marker = L.marker([lat, lng], { icon: createMarkerIcon(color) }).addTo(map);
                             marker.bindPopup(`<b>${newPin.title}</b><br/>${newPin.notes}`);
                             el._markers[newPin.id] = { marker, circle: null };
                           }
                         });
+
+                        // Store a reference to setMapPins on the element so pins persist
+                        el._setMapPins = setMapPins;
                       };
 
                       if (window.L) {
@@ -14226,7 +14237,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {/* Time labels column */}
                   <div style={{width:'52px',flexShrink:0}}>
                     {hours.map(h=>(
-                      <div key={h} style={{height:'40px',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',borderTop:'1px solid rgba(0,200,255,0.06)',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
+                      <div key={h} style={{height:'60px',display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:'8px',borderTop:'1px solid rgba(0,200,255,0.06)',color:'rgba(148,163,184,0.4)',fontSize:'10px',fontFamily:'monospace'}}>
                         {fmt12(h)}
                       </div>
                     ))}
@@ -14236,17 +14247,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div key={d} style={{flex:1,position:'relative',background:d===today?'rgba(0,200,255,0.01)':'transparent'}}>
                       {/* Hour cells for borders */}
                       {hours.map(h=>(
-                        <div key={h} style={{height:'40px',borderTop:'1px solid rgba(0,200,255,0.06)',borderLeft:'1px solid rgba(0,200,255,0.04)'}}/>
+                        <div key={h} style={{height:'60px',borderTop:'1px solid rgba(0,200,255,0.06)',borderLeft:'1px solid rgba(0,200,255,0.04)'}}/>
                       ))}
-                      {/* Blocks positioned absolutely */}
+                      {/* Blocks positioned absolutely using decimal hours */}
                       {timetableBlocks.filter(b=>b.day===d).map(block=>{
-                        const startIdx = hours.indexOf(block.startHour);
-                        const endIdx = hours.indexOf(block.endHour);
-                        if(startIdx === -1) return null;
-                        const actualEnd = endIdx === -1 ? hours.length : endIdx + 1;
-                        const ROW_H = 41;
-                        const top = startIdx * ROW_H + 1;
-                        const height = (actualEnd - startIdx) * ROW_H - 4;
+                        const ROW_H = 60;
+                        const top = block.startHour * ROW_H + 1;
+                        const height = Math.max((block.endHour - block.startHour) * ROW_H - 4, 20);
                         return (
                           <div key={block.id}
                             onClick={()=>{setTtEditingId(block.id);setTtTab('add');}}
@@ -14686,7 +14693,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
             {/* KPI STRIP */}
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:"8px"}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:"8px"}}>
               {[
                 {label:"ACTIVE JOBS",  value:activeJobs.length,          color:"#f97316"},
                 {label:"IN PROGRESS",  value:inProgressJobs.length,       color:"#f97316"},
@@ -14807,7 +14814,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {/* NAV GRID */}
             <div style={{...donnyPanel,padding:"12px"}}>
               <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// NAVIGATE</div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(75px,1fr))",gap:"5px"}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(90px,1fr))",gap:"6px"}}>
                 {[
                   {label:"JOBS",       view:"donny-masterview",  workerOk:false, color:"rgba(249,115,22,0.7)"},
                   {label:"SCHEDULER",  view:"donny-scheduler",   workerOk:false, color:"rgba(249,115,22,0.7)"},
@@ -14828,8 +14835,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const locked = donnyRole==='worker' && !s.workerOk;
                   return (
                     <button key={s.view} onClick={() => { if(!locked) setActiveView(s.view); }}
-                      style={{background:`${s.color.replace('0.7','0.04')}`,border:`0.5px solid ${locked?"rgba(255,255,255,0.04)":s.color.replace('0.7','0.2')}`,borderRadius:"3px",padding:"8px 4px",display:"flex",alignItems:"center",justifyContent:"center",opacity:locked?0.25:1,cursor:locked?'default':'pointer',position:"relative"}}>
-                      <span style={{fontSize:"8px",color:locked?"rgba(148,163,184,0.4)":s.color,fontFamily:"monospace",letterSpacing:"0.3px",textAlign:"center",lineHeight:"1.3"}}>{s.label}</span>
+                      style={{background:`${s.color.replace('0.7','0.04')}`,border:`0.5px solid ${locked?"rgba(255,255,255,0.04)":s.color.replace('0.7','0.2')}`,borderRadius:"3px",padding:"12px 6px",display:"flex",alignItems:"center",justifyContent:"center",opacity:locked?0.25:1,cursor:locked?'default':'pointer',position:"relative"}}>
+                      <span style={{fontSize:"11px",color:locked?"rgba(148,163,184,0.4)":s.color,fontFamily:"monospace",letterSpacing:"0.3px",textAlign:"center",lineHeight:"1.3"}}>{s.label}</span>
                       {locked && <span style={{position:"absolute",top:"3px",right:"3px",fontSize:"7px"}}>🔒</span>}
                     </button>
                   );
