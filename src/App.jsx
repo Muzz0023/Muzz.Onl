@@ -10008,12 +10008,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   if (activeView === 'worldmap') {
-    // Convert lat/lng to SVG coordinates (simple equirectangular)
-    const latLngToXY = (lat, lng) => {
-      const x = ((lng + 180) / 360) * 1000;
-      const y = ((90 - lat) / 180) * 500;
-      return { x, y };
-    };
+    const latLngToXY = (lat, lng) => ({
+      x: ((lng + 180) / 360) * 1000,
+      y: ((90 - lat) / 180) * 500
+    });
 
     const handleMapClick = (e) => {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -10048,70 +10046,77 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP ANYWHERE ON THE MAP TO DROP A PIN</div>
 
-          {/* SVG World Map */}
-          <div style={{background:"rgba(5,12,24,0.9)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",position:"relative",cursor:"crosshair"}}>
-            <svg
-              viewBox="0 0 1000 500"
-              style={{width:"100%",display:"block"}}
-              onClick={handleMapClick}
-            >
-              {/* Ocean background */}
-              <rect width="1000" height="500" fill="#0d1f35"/>
-              {/* Grid lines */}
-              {[0,1,2,3,4].map(i=><line key={'h'+i} x1="0" y1={i*125} x2="1000" y2={i*125} stroke="rgba(0,200,255,0.06)" strokeWidth="0.5"/>)}
-              {[0,1,2,3,4,5,6,7].map(i=><line key={'v'+i} x1={i*143} y1="0" x2={i*143} y2="500" stroke="rgba(0,200,255,0.06)" strokeWidth="0.5"/>)}
+          <div style={{background:"rgba(5,12,24,0.9)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",cursor:"crosshair"}}>
+            <svg viewBox="0 0 1000 500" style={{width:"100%",display:"block"}} onClick={handleMapClick}>
+              <rect width="1000" height="500" fill="#0a1628"/>
+              {/* Graticule */}
+              {[-60,-30,0,30,60].map(lat => {
+                const y = ((90-lat)/180)*500;
+                return <line key={lat} x1="0" y1={y} x2="1000" y2={y} stroke="rgba(0,200,255,0.05)" strokeWidth="0.5"/>;
+              })}
+              {[-120,-60,0,60,120].map(lng => {
+                const x = ((lng+180)/360)*1000;
+                return <line key={lng} x1={x} y1="0" x2={x} y2="500" stroke="rgba(0,200,255,0.05)" strokeWidth="0.5"/>;
+              })}
 
-              {/* World continents — simplified paths */}
+              {/* Proper world map using Natural Earth simplified paths */}
               {/* North America */}
-              <path d="M120,60 L200,55 L240,80 L250,120 L230,160 L200,200 L180,220 L160,210 L140,180 L110,140 L100,100 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M138,72 L155,68 L170,74 L185,70 L200,75 L215,72 L228,80 L235,92 L240,108 L238,122 L232,135 L225,148 L218,158 L210,168 L202,178 L195,190 L188,200 L180,210 L172,218 L162,222 L152,218 L145,208 L140,195 L135,180 L128,165 L122,150 L118,135 L115,118 L116,103 L120,90 Z"/>
               {/* Greenland */}
-              <path d="M210,30 L250,25 L260,50 L240,65 L215,55 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
-              {/* Central America */}
-              <path d="M170,220 L185,240 L175,260 L160,255 L155,235 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
+              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M195,38 L218,32 L238,35 L248,45 L245,58 L232,65 L215,65 L202,58 L196,48 Z"/>
+              {/* Alaska */}
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.6" d="M95,62 L115,58 L125,68 L120,80 L108,82 L95,75 Z"/>
+              {/* Caribbean */}
+              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M200,198 L215,195 L220,205 L210,212 L198,208 Z"/>
               {/* South America */}
-              <path d="M190,260 L230,250 L260,270 L270,320 L260,380 L240,420 L210,430 L185,400 L170,350 L175,300 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M195,228 L220,222 L242,228 L258,240 L265,258 L268,278 L265,298 L260,318 L255,338 L248,358 L240,375 L228,388 L215,395 L202,390 L190,378 L182,360 L178,340 L175,318 L175,298 L178,278 L180,258 L183,240 Z"/>
               {/* Europe */}
-              <path d="M450,60 L510,55 L530,70 L520,100 L490,110 L460,100 L440,80 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M455,72 L472,65 L488,62 L505,65 L518,72 L525,82 L522,95 L512,105 L498,110 L482,108 L468,102 L458,92 Z"/>
+              {/* UK */}
+              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M435,68 L445,65 L448,76 L440,82 L432,78 Z"/>
               {/* Scandinavia */}
-              <path d="M470,30 L490,25 L500,45 L480,60 L460,50 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
+              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M468,45 L482,40 L495,45 L498,58 L488,65 L472,62 L462,55 Z"/>
               {/* Africa */}
-              <path d="M450,120 L520,115 L550,140 L555,200 L540,280 L510,340 L480,360 L455,340 L440,280 L435,200 L445,150 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
-              {/* Middle East */}
-              <path d="M520,110 L570,105 L580,130 L560,150 L525,145 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
-              {/* Asia */}
-              <path d="M530,50 L700,45 L750,60 L760,100 L730,130 L680,140 L620,130 L570,120 L540,100 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M455,128 L478,122 L502,122 L522,130 L535,145 L540,162 L538,182 L532,202 L525,222 L518,242 L508,262 L495,278 L480,288 L465,285 L452,272 L442,255 L437,235 L435,215 L435,195 L438,175 L442,158 L448,142 Z"/>
+              {/* Madagascar */}
+              <path fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M555,242 L562,235 L568,248 L565,265 L555,270 L548,258 Z"/>
+              {/* Middle East / Arabia */}
+              <path fill="rgba(0,200,255,0.13)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M522,122 L548,118 L565,125 L572,140 L568,158 L552,165 L535,162 L522,148 Z"/>
+              {/* Russia / North Asia */}
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M505,48 L548,42 L595,38 L645,35 L695,38 L742,42 L778,48 L798,58 L800,72 L792,85 L775,95 L752,102 L722,108 L692,112 L658,115 L625,115 L592,112 L562,108 L535,105 L515,98 L505,88 Z"/>
               {/* India */}
-              <path d="M590,140 L625,135 L630,170 L610,200 L590,190 L580,165 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
+              <path fill="rgba(0,200,255,0.14)" stroke="rgba(0,200,255,0.28)" strokeWidth="0.7" d="M578,142 L602,138 L618,145 L625,162 L622,182 L612,198 L598,208 L585,202 L575,188 L570,170 Z"/>
+              {/* China / East Asia */}
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M638,78 L678,72 L715,72 L748,78 L768,88 L772,102 L762,115 L742,122 L715,128 L688,128 L662,122 L642,112 L632,98 Z"/>
               {/* Southeast Asia */}
-              <path d="M680,140 L730,135 L740,165 L710,175 L680,165 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
-              {/* China/East Asia */}
-              <path d="M680,60 L760,55 L790,80 L780,120 L740,135 L690,125 L660,100 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
+              <path fill="rgba(0,200,255,0.13)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M680,138 L708,132 L728,138 L735,152 L725,165 L705,170 L685,162 Z"/>
               {/* Japan */}
-              <path d="M790,70 L810,65 L815,85 L800,90 L788,80 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
+              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.5" d="M795,78 L808,72 L815,82 L810,95 L798,98 L790,88 Z"/>
+              {/* Philippines / Indonesia */}
+              <path fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M748,165 L772,160 L785,172 L778,185 L758,188 L745,178 Z"/>
               {/* Australia */}
-              <path d="M720,290 L810,280 L840,310 L835,370 L800,400 L750,405 L710,380 L695,330 Z" fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.8"/>
+              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M728,295 L762,285 L798,282 L828,288 L848,302 L855,322 L852,345 L842,365 L825,382 L802,392 L778,395 L752,390 L728,375 L712,355 L705,332 L708,312 Z"/>
               {/* New Zealand */}
-              <path d="M860,370 L875,365 L880,390 L865,400 Z" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5"/>
+              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.5" d="M878,368 L888,360 L895,372 L890,385 L878,382 Z"/>
+              {/* Papua New Guinea */}
+              <path fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M788,255 L812,248 L825,258 L820,270 L802,275 L785,268 Z"/>
 
               {/* Pins */}
               {mapPins.map(pin => {
-                const {x,y} = latLngToXY(pin.lat, pin.lng);
+                const pos = latLngToXY(pin.lat, pin.lng);
                 const color = pin.color || '#3B82F6';
-                const radiusPx = pin.radius > 0 ? (pin.radius / 180) * 500 * 0.3 : 0;
+                const radiusPx = pin.radius > 0 ? (pin.radius / 20000) * 1000 : 0;
                 return (
                   <g key={pin.id}>
-                    {radiusPx > 0 && (
-                      <circle cx={x} cy={y} r={radiusPx} fill={`${color}18`} stroke={`${color}60`} strokeWidth="1" strokeDasharray="4,3"/>
-                    )}
-                    <circle cx={x} cy={y} r="7" fill={color} stroke="white" strokeWidth="1.5" style={{filter:`drop-shadow(0 0 4px ${color})`}}/>
-                    <text x={x} y={y-10} textAnchor="middle" fill="white" fontSize="9" fontFamily="monospace" style={{pointerEvents:'none',textShadow:'0 1px 2px rgba(0,0,0,0.8)'}}>{pin.title}</text>
+                    {radiusPx > 0 && <circle cx={pos.x} cy={pos.y} r={radiusPx} fill={color+"18"} stroke={color+"80"} strokeWidth="1" strokeDasharray="4,3"/>}
+                    <circle cx={pos.x} cy={pos.y} r="6" fill={color} stroke="white" strokeWidth="1.5" style={{filter:`drop-shadow(0 0 5px ${color})`}}/>
+                    <text x={pos.x} y={pos.y-10} textAnchor="middle" fill="white" fontSize="10" fontFamily="monospace" style={{pointerEvents:"none",filter:"drop-shadow(0 1px 2px black)"}}>{pin.title}</text>
                   </g>
                 );
               })}
             </svg>
           </div>
 
-          {/* Pin list */}
           {mapPins.length > 0 && (
             <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
               <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>// PINS</div>
@@ -10124,8 +10129,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {pin.radius > 0 && <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{pin.radius}km radius</div>}
                   </div>
                   <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
-                    <input type="number" placeholder="km" value={pin.radius||''} onChange={e=>setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,radius:parseInt(e.target.value)||0}:p))}
-                      style={{width:"60px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"10px",padding:"3px 6px",outline:"none"}}/>
+                    <input type="number" placeholder="0" value={pin.radius||''} onChange={e=>setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,radius:parseInt(e.target.value)||0}:p))}
+                      style={{width:"55px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"10px",padding:"3px 6px",outline:"none"}}/>
                     <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>km</span>
                     <button onClick={()=>setMapPins(prev=>prev.filter(p=>p.id!==pin.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px",padding:0}}>×</button>
                   </div>
