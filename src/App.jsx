@@ -240,18 +240,22 @@ const StarryBackground = ({ children }) => {
         /* ── FUTURISTIC ANIMATIONS ── */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
 
-        /* Contain leaflet map strictly to its container */
+        /* Hard clip leaflet - prevent ANY bleed outside container */
+        #world-map-container {
+          contain: strict;
+          overflow: hidden;
+        }
         #world-map-container .leaflet-container {
-          position: absolute !important;
+          width: 100% !important;
+          height: 100% !important;
           z-index: 1 !important;
         }
         #world-map-container .leaflet-pane,
+        #world-map-container .leaflet-top,
+        #world-map-container .leaflet-bottom,
         #world-map-container .leaflet-control-container {
           z-index: 1 !important;
-        }
-        /* Hide any leaflet tiles that escape the container */
-        .leaflet-tile-pane img {
-          max-width: none !important;
+          position: absolute !important;
         }
 
         /* Noise texture */
@@ -10008,25 +10012,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   if (activeView === 'worldmap') {
-    const latLngToXY = (lat, lng) => ({
-      x: ((lng + 180) / 360) * 1000,
-      y: ((90 - lat) / 180) * 500
-    });
+    const handleMapClick = () => {}; // handled by leaflet
 
-    const handleMapClick = (e) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const px = ((e.clientX - rect.left) / rect.width) * 1000;
-      const py = ((e.clientY - rect.top) / rect.height) * 500;
-      const lng = (px / 1000) * 360 - 180;
-      const lat = 90 - (py / 500) * 180;
-      const title = prompt('Pin name:');
-      if (title !== null) {
-        const notes = prompt('Notes (optional):') || '';
-        const radius = parseInt(prompt('Radius in km (0 for none):') || '0') || 0;
-        const colors = ['#3B82F6','#EF4444','#10B981','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#F97316'];
-        const color = colors[mapPins.length % colors.length];
-        setMapPins(prev => [...prev, { id: Date.now().toString(), lat, lng, title: title||'Untitled', notes, color, radius }]);
+    const removeMapPin = (pinId) => {
+      const el = document.getElementById('world-map-container');
+      if (el && el._leaflet_map && el._markers) {
+        const m = el._markers[pinId];
+        if (m) { el._leaflet_map.removeLayer(m.marker); if (m.circle) el._leaflet_map.removeLayer(m.circle); delete el._markers[pinId]; }
       }
+      setMapPins(prev => prev.filter(p => p.id !== pinId));
     };
 
     return (
@@ -10046,75 +10040,73 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP ANYWHERE ON THE MAP TO DROP A PIN</div>
 
-          <div style={{background:"rgba(5,12,24,0.9)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",cursor:"crosshair"}}>
-            <svg viewBox="0 0 1000 500" style={{width:"100%",display:"block"}} onClick={handleMapClick}>
-              <rect width="1000" height="500" fill="#0a1628"/>
-              {/* Graticule */}
-              {[-60,-30,0,30,60].map(lat => {
-                const y = ((90-lat)/180)*500;
-                return <line key={lat} x1="0" y1={y} x2="1000" y2={y} stroke="rgba(0,200,255,0.05)" strokeWidth="0.5"/>;
-              })}
-              {[-120,-60,0,60,120].map(lng => {
-                const x = ((lng+180)/360)*1000;
-                return <line key={lng} x1={x} y1="0" x2={x} y2="500" stroke="rgba(0,200,255,0.05)" strokeWidth="0.5"/>;
-              })}
+          <div style={{borderRadius:"6px",overflow:"hidden",height:"65vh",position:"relative",isolation:"isolate"}}>
+            <div id="world-map-container" style={{width:"100%",height:"100%"}}
+              ref={(el) => {
+                if (!el || el._leaflet_init) return;
+                el._leaflet_init = true;
+                el._markers = {};
 
-              {/* Proper world map using Natural Earth simplified paths */}
-              {/* North America */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M138,72 L155,68 L170,74 L185,70 L200,75 L215,72 L228,80 L235,92 L240,108 L238,122 L232,135 L225,148 L218,158 L210,168 L202,178 L195,190 L188,200 L180,210 L172,218 L162,222 L152,218 L145,208 L140,195 L135,180 L128,165 L122,150 L118,135 L115,118 L116,103 L120,90 Z"/>
-              {/* Greenland */}
-              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M195,38 L218,32 L238,35 L248,45 L245,58 L232,65 L215,65 L202,58 L196,48 Z"/>
-              {/* Alaska */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.6" d="M95,62 L115,58 L125,68 L120,80 L108,82 L95,75 Z"/>
-              {/* Caribbean */}
-              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M200,198 L215,195 L220,205 L210,212 L198,208 Z"/>
-              {/* South America */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M195,228 L220,222 L242,228 L258,240 L265,258 L268,278 L265,298 L260,318 L255,338 L248,358 L240,375 L228,388 L215,395 L202,390 L190,378 L182,360 L178,340 L175,318 L175,298 L178,278 L180,258 L183,240 Z"/>
-              {/* Europe */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M455,72 L472,65 L488,62 L505,65 L518,72 L525,82 L522,95 L512,105 L498,110 L482,108 L468,102 L458,92 Z"/>
-              {/* UK */}
-              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M435,68 L445,65 L448,76 L440,82 L432,78 Z"/>
-              {/* Scandinavia */}
-              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M468,45 L482,40 L495,45 L498,58 L488,65 L472,62 L462,55 Z"/>
-              {/* Africa */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M455,128 L478,122 L502,122 L522,130 L535,145 L540,162 L538,182 L532,202 L525,222 L518,242 L508,262 L495,278 L480,288 L465,285 L452,272 L442,255 L437,235 L435,215 L435,195 L438,175 L442,158 L448,142 Z"/>
-              {/* Madagascar */}
-              <path fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M555,242 L562,235 L568,248 L565,265 L555,270 L548,258 Z"/>
-              {/* Middle East / Arabia */}
-              <path fill="rgba(0,200,255,0.13)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M522,122 L548,118 L565,125 L572,140 L568,158 L552,165 L535,162 L522,148 Z"/>
-              {/* Russia / North Asia */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M505,48 L548,42 L595,38 L645,35 L695,38 L742,42 L778,48 L798,58 L800,72 L792,85 L775,95 L752,102 L722,108 L692,112 L658,115 L625,115 L592,112 L562,108 L535,105 L515,98 L505,88 Z"/>
-              {/* India */}
-              <path fill="rgba(0,200,255,0.14)" stroke="rgba(0,200,255,0.28)" strokeWidth="0.7" d="M578,142 L602,138 L618,145 L625,162 L622,182 L612,198 L598,208 L585,202 L575,188 L570,170 Z"/>
-              {/* China / East Asia */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M638,78 L678,72 L715,72 L748,78 L768,88 L772,102 L762,115 L742,122 L715,128 L688,128 L662,122 L642,112 L632,98 Z"/>
-              {/* Southeast Asia */}
-              <path fill="rgba(0,200,255,0.13)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.6" d="M680,138 L708,132 L728,138 L735,152 L725,165 L705,170 L685,162 Z"/>
-              {/* Japan */}
-              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.5" d="M795,78 L808,72 L815,82 L810,95 L798,98 L790,88 Z"/>
-              {/* Philippines / Indonesia */}
-              <path fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M748,165 L772,160 L785,172 L778,185 L758,188 L745,178 Z"/>
-              {/* Australia */}
-              <path fill="rgba(0,200,255,0.15)" stroke="rgba(0,200,255,0.3)" strokeWidth="0.8" d="M728,295 L762,285 L798,282 L828,288 L848,302 L855,322 L852,345 L842,365 L825,382 L802,392 L778,395 L752,390 L728,375 L712,355 L705,332 L708,312 Z"/>
-              {/* New Zealand */}
-              <path fill="rgba(0,200,255,0.12)" stroke="rgba(0,200,255,0.25)" strokeWidth="0.5" d="M878,368 L888,360 L895,372 L890,385 L878,382 Z"/>
-              {/* Papua New Guinea */}
-              <path fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" d="M788,255 L812,248 L825,258 L820,270 L802,275 L785,268 Z"/>
+                const loadLeaflet = (cb) => {
+                  if (window.L) { cb(); return; }
+                  if (!document.getElementById('leaflet-css')) {
+                    const link = document.createElement('link');
+                    link.id = 'leaflet-css'; link.rel = 'stylesheet';
+                    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+                    document.head.appendChild(link);
+                  }
+                  const script = document.createElement('script');
+                  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+                  script.onload = cb;
+                  document.body.appendChild(script);
+                };
 
-              {/* Pins */}
-              {mapPins.map(pin => {
-                const pos = latLngToXY(pin.lat, pin.lng);
-                const color = pin.color || '#3B82F6';
-                const radiusPx = pin.radius > 0 ? (pin.radius / 20000) * 1000 : 0;
-                return (
-                  <g key={pin.id}>
-                    {radiusPx > 0 && <circle cx={pos.x} cy={pos.y} r={radiusPx} fill={color+"18"} stroke={color+"80"} strokeWidth="1" strokeDasharray="4,3"/>}
-                    <circle cx={pos.x} cy={pos.y} r="6" fill={color} stroke="white" strokeWidth="1.5" style={{filter:`drop-shadow(0 0 5px ${color})`}}/>
-                    <text x={pos.x} y={pos.y-10} textAnchor="middle" fill="white" fontSize="10" fontFamily="monospace" style={{pointerEvents:"none",filter:"drop-shadow(0 1px 2px black)"}}>{pin.title}</text>
-                  </g>
-                );
-              })}
-            </svg>
+                loadLeaflet(() => {
+                  setTimeout(() => {
+                    if (!el || !window.L) return;
+                    const L = window.L;
+                    const map = L.map(el, { zoomControl: true, preferCanvas: true }).setView([-27.47, 153.02], 3);
+                    el._leaflet_map = map;
+
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                      attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
+                    }).addTo(map);
+
+                    const createIcon = (color) => L.divIcon({
+                      className: '',
+                      html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 0 8px ${color}"></div>`,
+                      iconSize: [14,14], iconAnchor: [7,7]
+                    });
+
+                    (mapPins||[]).forEach(pin => {
+                      const marker = L.marker([pin.lat, pin.lng], { icon: createIcon(pin.color||'#3B82F6') }).addTo(map);
+                      marker.bindPopup(`<b>${pin.title}</b><br/>${pin.notes||''}`);
+                      let circle = null;
+                      if (pin.radius > 0) circle = L.circle([pin.lat, pin.lng], { radius: pin.radius * 1000, color: pin.color||'#3B82F6', fillOpacity: 0.08, weight: 1 }).addTo(map);
+                      el._markers[pin.id] = { marker, circle };
+                    });
+
+                    map.on('click', (e) => {
+                      const { lat, lng } = e.latlng;
+                      const title = prompt('Pin name:');
+                      if (title !== null) {
+                        const notes = prompt('Notes (optional):') || '';
+                        const radius = parseInt(prompt('Radius in km (0 for none):') || '0') || 0;
+                        const colors = ['#3B82F6','#EF4444','#10B981','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#F97316'];
+                        const color = colors[Object.keys(el._markers).length % colors.length];
+                        const newPin = { id: Date.now().toString(), lat, lng, title: title||'Untitled', notes, color, radius };
+                        setMapPins(prev => [...prev, newPin]);
+                        const marker = L.marker([lat, lng], { icon: createIcon(color) }).addTo(map);
+                        marker.bindPopup(`<b>${newPin.title}</b><br/>${newPin.notes}`);
+                        let circle = null;
+                        if (radius > 0) circle = L.circle([lat, lng], { radius: radius * 1000, color, fillOpacity: 0.08, weight: 1 }).addTo(map);
+                        el._markers[newPin.id] = { marker, circle };
+                      }
+                    });
+                  }, 100);
+                });
+              }}
+            />
           </div>
 
           {mapPins.length > 0 && (
@@ -10132,13 +10124,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <input type="number" placeholder="0" value={pin.radius||''} onChange={e=>setMapPins(prev=>prev.map(p=>p.id===pin.id?{...p,radius:parseInt(e.target.value)||0}:p))}
                       style={{width:"55px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"10px",padding:"3px 6px",outline:"none"}}/>
                     <span style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>km</span>
-                    <button onClick={()=>setMapPins(prev=>prev.filter(p=>p.id!==pin.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px",padding:0}}>×</button>
+                    <button onClick={()=>removeMapPin(pin.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px",padding:0}}>×</button>
                   </div>
                 </div>
               ))}
             </div>
           )}
-
           {mapPins.length === 0 && (
             <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP THE MAP ABOVE TO DROP YOUR FIRST PIN</div>
           )}
