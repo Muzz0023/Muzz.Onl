@@ -9197,15 +9197,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'knowledge',label:'GUIDE'},{id:'assetMap',label:'ASSET MAP'},{id:'worldMap',label:'WORLD MAP'}].map(tab => (
-                <button key={tab.id} onClick={() => {
-                  // Destroy map when leaving worldMap tab
-                  if (assetsSubTab === 'worldMap' && tab.id !== 'worldMap') {
-                    const el = document.getElementById('world-map-container');
-                    if (el && el._leaflet_map) { el._leaflet_map.remove(); el._leaflet_map = null; el._leaflet_init = false; el._markers = {}; }
-                  }
-                  setAssetsSubTab(tab.id);
-                }} style={{padding:"6px 14px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+              {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'knowledge',label:'GUIDE'},{id:'assetMap',label:'ASSET MAP'}].map(tab => (
+                <button key={tab.id} onClick={() => setAssetsSubTab(tab.id)} style={{padding:"6px 14px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  {tab.label}
+                </button>
+              ))}
+              <button onClick={() => setActiveView('worldmap')} style={{padding:"6px 14px",background:"transparent",border:"0.5px solid transparent",borderRadius:"3px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                WORLD MAP
+              </button>
                   {tab.label}
                 </button>
               ))}
@@ -10004,241 +10003,121 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
           {/* World Map */}
-          <div style={{display: assetsSubTab === 'worldMap' ? 'block' : 'none'}}>
-            {(() => {
-            const pinColors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 
-            const removeMapPin = (pinId) => {
-              const el = document.getElementById('world-map-container');
-              if (el && el._leaflet_map && el._markers) {
-                const markerEntry = el._markers[pinId];
-                if (markerEntry) {
-                  el._leaflet_map.removeLayer(markerEntry.marker);
-                  if (markerEntry.circle) el._leaflet_map.removeLayer(markerEntry.circle);
-                  delete el._markers[pinId];
-                }
-              }
-              setMapPins(prev => prev.filter(p => p.id !== pinId));
-            };
 
-            const updateMapPin = (pinId, field, value) => {
-              setMapPins(prev => prev.map(p => p.id === pinId ? { ...p, [field]: value } : p));
-              
-              const el = document.getElementById('world-map-container');
-              if (!el || !el._leaflet_map || !el._markers || !el._markers[pinId]) return;
-              const L = window.L;
-              const entry = el._markers[pinId];
-              const pin = mapPins.find(p => p.id === pinId);
-              if (!pin) return;
+        </div>
+      </div>
+    );
+  }
 
-              const updatedPin = { ...pin, [field]: value };
-
-              if (field === 'color') {
-                // Remove old marker, add new one with new colour
-                const latlng = entry.marker.getLatLng();
-                el._leaflet_map.removeLayer(entry.marker);
-                const newMarker = L.marker(latlng, {
-                  icon: L.divIcon({
-                    className: '',
-                    html: `<div style="width:24px;height:24px;background:${value};border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
-                  })
-                }).addTo(el._leaflet_map);
-                newMarker.bindPopup(`<b>${updatedPin.title || 'Untitled'}</b><br/>${updatedPin.notes || ''}`);
-                entry.marker = newMarker;
-                // Update circle colour too
-                if (entry.circle) {
-                  entry.circle.setStyle({ color: value, fillColor: value });
-                }
-              }
-
-              if (field === 'radius') {
-                const latlng = entry.marker.getLatLng();
-                const radiusKm = parseFloat(value) || 0;
-                // Remove old circle
-                if (entry.circle) {
-                  el._leaflet_map.removeLayer(entry.circle);
-                  entry.circle = null;
-                }
-                // Add new circle if radius > 0
-                if (radiusKm > 0) {
-                  const color = updatedPin.color || '#3B82F6';
-                  entry.circle = L.circle(latlng, { radius: radiusKm * 1000, color: color, fillColor: color, fillOpacity: 0.1, weight: 2 }).addTo(el._leaflet_map);
-                }
-              }
-
-              if (field === 'title' || field === 'notes') {
-                entry.marker.setPopupContent(`<b>${updatedPin.title || 'Untitled'}</b><br/>${updatedPin.notes || ''}`);
-              }
-            };
-
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
-                  <h2 className="text-2xl font-bold mb-1">🌍 World Map</h2>
-                  <p className="text-emerald-200 text-sm">Tap anywhere on the map to drop a pin</p>
-                </div>
-
-                <div style={{borderRadius:"6px",overflow:"hidden",position:"relative",zIndex:1,isolation:"isolate"}}>
-                  <div
-                    id="world-map-container"
-                    ref={(el) => {
-                      if (!el || el._leaflet_init) return;
-                      el._leaflet_init = true;
-                      el._markers = {};
-                      
-                      if (!document.getElementById('leaflet-css')) {
-                        const link = document.createElement('link');
-                        link.id = 'leaflet-css';
-                        link.rel = 'stylesheet';
-                        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
-                        document.head.appendChild(link);
-                      }
-
-                      const initMap = () => {
-                        if (!window.L) return;
-                        const L = window.L;
-                        const map = L.map(el, { zoomControl: true }).setView([-27.47, 153.02], 4);
-                        el._leaflet_map = map;
-                        
-                        // English-only tiles from CartoDB
-                        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                          attribution: '© OpenStreetMap © CARTO',
-                          subdomains: 'abcd',
-                          maxZoom: 19
-                        }).addTo(map);
-                        
-                        el._leaflet_map = map;
-
-                        const createMarkerIcon = (color) => {
-                          return L.divIcon({
-                            className: '',
-                            html: `<div style="width:24px;height:24px;background:${color};border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
-                            iconSize: [24, 24],
-                            iconAnchor: [12, 12]
-                          });
-                        };
-
-                        // Add existing pins
-                        mapPins.forEach(pin => {
-                          const color = pin.color || '#3B82F6';
-                          const marker = L.marker([pin.lat, pin.lng], { icon: createMarkerIcon(color) }).addTo(map);
-                          marker.bindPopup(`<b>${pin.title || 'Untitled'}</b><br/>${pin.notes || ''}`);
-                          let circle = null;
-                          if (pin.radius && pin.radius > 0) {
-                            circle = L.circle([pin.lat, pin.lng], { radius: pin.radius * 1000, color: color, fillColor: color, fillOpacity: 0.1, weight: 2 }).addTo(map);
-                          }
-                          el._markers[pin.id] = { marker, circle };
-                        });
-
-                        // Click to add pin
-                        map.on('click', (e) => {
-                          const { lat, lng } = e.latlng;
-                          const title = prompt('Pin name:');
-                          if (title !== null) {
-                            const notes = prompt('Notes (optional):') || '';
-                            const color = '#3B82F6';
-                            const newPin = { id: Date.now().toString(), lat, lng, title: title || 'Untitled', notes, color, radius: 0 };
-                            setMapPins(prev => {
-                              const updated = [...prev, newPin];
-                              return updated;
-                            });
-                            const marker = L.marker([lat, lng], { icon: createMarkerIcon(color) }).addTo(map);
-                            marker.bindPopup(`<b>${newPin.title}</b><br/>${newPin.notes}`);
-                            el._markers[newPin.id] = { marker, circle: null };
-                          }
-                        });
-
-                        // Store a reference to setMapPins on the element so pins persist
-                        el._setMapPins = setMapPins;
-                      };
-
-                      if (window.L) {
-                        setTimeout(initMap, 100);
-                      } else {
-                        const script = document.createElement('script');
-                        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-                        script.onload = () => setTimeout(initMap, 100);
-                        document.body.appendChild(script);
-                      }
-                    }}
-                    style={{ height: '500px', width: '100%', borderRadius: '16px' }}
-                  />
-                </div>
-
-                {/* Pins List */}
-                {mapPins.length > 0 && (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                    <div className="px-4 py-3 bg-emerald-50 border-b">
-                      <h3 className="font-semibold text-emerald-700">📍 Your Pins ({mapPins.length})</h3>
-                    </div>
-                    <div style={{}}>
-                      {mapPins.map(pin => (
-                        <div key={pin.id} className="px-4 py-3 space-y-2">
-                          <div className="flex items-center gap-3">
-                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: pin.color || '#3B82F6', border: '2px solid white', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', flexShrink: 0 }} />
-                            <div className="flex-1">
-                              <input
-                                type="text"
-                                value={pin.title}
-                                onChange={(e) => updateMapPin(pin.id, 'title', e.target.value)}
-                                className="font-medium text-sm bg-transparent focus:outline-none w-full"
-                              />
-                              <input
-                                type="text"
-                                value={pin.notes || ''}
-                                onChange={(e) => updateMapPin(pin.id, 'notes', e.target.value)}
-                                placeholder="Add notes..."
-                                className="text-xs text-gray-500 bg-transparent focus:outline-none w-full"
-                              />
-                            </div>
-                            <button onClick={() => removeMapPin(pin.id)} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                          {/* Colour picker + Radius */}
-                          <div className="flex items-center gap-2 pl-8">
-                            <div className="flex gap-1">
-                              {pinColors.map(c => (
-                                <button
-                                  key={c}
-                                  onClick={() => updateMapPin(pin.id, 'color', c)}
-                                  className="w-5 h-5 rounded-full transition-transform"
-                                  style={{ backgroundColor: c, border: pin.color === c ? '2px solid white' : '2px solid transparent', transform: pin.color === c ? 'scale(1.2)' : 'scale(1)' }}
-                                />
-                              ))}
-                            </div>
-                            <div className="flex items-center gap-1 ml-2">
-                              <span className="text-[10px] text-gray-400">Radius:</span>
-                              <input
-                                type="text"
-                                value={pin.radius || ''}
-                                onChange={(e) => updateMapPin(pin.id, 'radius', parseFloat(e.target.value) || 0)}
-                                placeholder="0"
-                                className="w-12 text-xs text-center bg-gray-100 rounded px-1 py-0.5 focus:outline-none"
-                              />
-                              <span className="text-[10px] text-gray-400">km</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {mapPins.length === 0 && (
-                  <div className="bg-white rounded-2xl p-8 shadow-sm border text-center">
-                    <div className="text-4xl mb-3">🌏</div>
-                    <p className="text-gray-500 text-sm">Tap anywhere on the map to drop your first pin!</p>
-                    <p className="text-gray-400 text-xs mt-1">Mark properties, travel goals, investment locations — anything</p>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+  if (activeView === 'worldmap') {
+    const pinColors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
+    const removeMapPin = (pinId) => {
+      const el = document.getElementById('world-map-container');
+      if (el && el._leaflet_map && el._markers) {
+        const markerEntry = el._markers[pinId];
+        if (markerEntry) {
+          el._leaflet_map.removeLayer(markerEntry.marker);
+          if (markerEntry.circle) el._leaflet_map.removeLayer(markerEntry.circle);
+          delete el._markers[pinId];
+        }
+      }
+      setMapPins(prev => prev.filter(p => p.id !== pinId));
+    };
+    const updateMapPin = (pinId, field, value) => {
+      setMapPins(prev => prev.map(p => p.id === pinId ? { ...p, [field]: value } : p));
+    };
+    const createMarkerIcon = (color) => {
+      if (!window.L) return null;
+      return window.L.divIcon({
+        className: '',
+        html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3)"></div>`,
+        iconSize: [14,14], iconAnchor: [7,7]
+      });
+    };
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
+          <div className="max-w-5xl mx-auto">
+            <button onClick={() => setActiveView('assets')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← ASSETS</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCE INTELLIGENCE</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>WORLD MAP</div>
           </div>
-
+        </div>
+        <div className="max-w-5xl mx-auto px-6 py-5">
+          <div style={{marginBottom:"10px",fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP ANYWHERE ON THE MAP TO DROP A PIN</div>
+          <div style={{borderRadius:"6px",overflow:"hidden",height:"60vh",position:"relative"}}>
+            <div
+              id="world-map-container"
+              ref={(el) => {
+                if (!el || el._leaflet_init) return;
+                el._leaflet_init = true;
+                el._markers = {};
+                if (!document.getElementById('leaflet-css')) {
+                  const link = document.createElement('link');
+                  link.id = 'leaflet-css';
+                  link.rel = 'stylesheet';
+                  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+                  document.head.appendChild(link);
+                }
+                const initMap = () => {
+                  if (!window.L) return;
+                  const L = window.L;
+                  const map = L.map(el, { zoomControl: true }).setView([-27.47, 153.02], 4);
+                  el._leaflet_map = map;
+                  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
+                  }).addTo(map);
+                  const createIcon = (color) => L.divIcon({
+                    className: '',
+                    html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3)"></div>`,
+                    iconSize: [14,14], iconAnchor: [7,7]
+                  });
+                  (mapPins||[]).forEach(pin => {
+                    const marker = L.marker([pin.lat, pin.lng], { icon: createIcon(pin.color||'#3B82F6') }).addTo(map);
+                    marker.bindPopup(`<b>${pin.title}</b><br/>${pin.notes||''}`);
+                    el._markers[pin.id] = { marker, circle: null };
+                  });
+                  map.on('click', (e) => {
+                    const { lat, lng } = e.latlng;
+                    const title = prompt('Pin name:');
+                    if (title !== null) {
+                      const notes = prompt('Notes (optional):') || '';
+                      const color = '#3B82F6';
+                      const newPin = { id: Date.now().toString(), lat, lng, title: title || 'Untitled', notes, color, radius: 0 };
+                      setMapPins(prev => [...prev, newPin]);
+                      const marker = L.marker([lat, lng], { icon: createIcon(color) }).addTo(map);
+                      marker.bindPopup(`<b>${newPin.title}</b><br/>${newPin.notes}`);
+                      el._markers[newPin.id] = { marker, circle: null };
+                    }
+                  });
+                };
+                if (window.L) { setTimeout(initMap, 100); }
+                else {
+                  const script = document.createElement('script');
+                  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+                  script.onload = () => setTimeout(initMap, 100);
+                  document.body.appendChild(script);
+                }
+              }}
+              style={{width:'100%',height:'60vh'}}
+            />
+          </div>
+          {mapPins.length > 0 && (
+            <div style={{marginTop:"12px",display:"flex",flexDirection:"column",gap:"8px"}}>
+              {mapPins.map(pin => (
+                <div key={pin.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"10px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"8px",flex:1}}>
+                    <div style={{width:"10px",height:"10px",borderRadius:"50%",background:pin.color||'#3B82F6',flexShrink:0}}/>
+                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace"}}>{pin.title}</span>
+                    {pin.notes && <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{pin.notes}</span>}
+                  </div>
+                  <button onClick={() => removeMapPin(pin.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px"}}>×</button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );
