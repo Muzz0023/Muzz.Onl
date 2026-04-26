@@ -3078,7 +3078,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         return (
                           <button key={item.id} onClick={() => { if(workerLocked) return; setActiveView(item.id); setSidebarOpen(false); }}
                             style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 10px',marginBottom:'2px',background:active?`rgba(249,115,22,0.08)`:'transparent',border:`0.5px solid ${active?'rgba(249,115,22,0.4)':'rgba(255,255,255,0.04)'}`,cursor:workerLocked?'default':'pointer',borderRadius:'3px',opacity:workerLocked?0.3:1}}>
-                            <span style={{fontSize:'14px',fontFamily:'monospace',color:active?'#f97316':'rgba(224,234,255,0.8)',letterSpacing:'0.5px'}}>{item.label}</span>
+                            <span style={{fontSize:'13px',fontFamily:'monospace',color:active?'#f97316':'rgba(224,234,255,0.8)',letterSpacing:'0.5px'}}>{item.label}</span>
                             {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:'#f97316',boxShadow:'0 0 6px #f97316',flexShrink:0}} />}
                             {workerLocked && <span style={{fontSize:'9px',color:'rgba(148,163,184,0.3)'}}>🔒</span>}
                           </button>
@@ -3100,8 +3100,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       return (
                         <button key={item.id}
                           onClick={async () => { if(locked){setActiveView('upgrade');}else if(item.id==='deleteaccount'){const confirmed=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(confirmed){try{await supabase.deleteUserData(userId);}catch(e){console.error('Delete error:',e);}finally{await signOut();}}}else{setActiveView(item.id);} setSidebarOpen(false); }}
-                          style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 12px',marginBottom:'2px',background:active?`rgba(0,200,255,0.06)`:'transparent',border:`0.5px solid ${active?'rgba(0,200,255,0.3)':'rgba(255,255,255,0.04)'}`,cursor:'pointer',borderRadius:'3px'}}>
-                          <span style={{fontSize:'14px',fontFamily:'monospace',color:active?'#00c8ff':locked?'rgba(148,163,184,0.25)':item.danger?'rgba(239,68,68,0.6)':'rgba(224,234,255,0.8)',letterSpacing:'0.5px'}}>{item.label}</span>
+                          style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'9px 12px',marginBottom:'2px',background:active?`rgba(0,200,255,0.06)`:'transparent',border:`0.5px solid ${active?'rgba(0,200,255,0.3)':'rgba(255,255,255,0.04)'}`,cursor:'pointer',borderRadius:'3px'}}>
+                          <span style={{fontSize:'13px',fontFamily:'monospace',color:active?'#00c8ff':locked?'rgba(148,163,184,0.25)':item.danger?'rgba(239,68,68,0.6)':'rgba(224,234,255,0.8)',letterSpacing:'0.5px'}}>{item.label}</span>
                           <div style={{display:'flex',alignItems:'center',gap:'4px'}}>
                             {locked && <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>⚡</span>}
                             {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:'#00c8ff',boxShadow:'0 0 6px #00c8ff',flexShrink:0}} />}
