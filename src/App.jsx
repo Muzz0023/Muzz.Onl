@@ -240,6 +240,20 @@ const StarryBackground = ({ children }) => {
         /* ── FUTURISTIC ANIMATIONS ── */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
 
+        /* Contain leaflet map strictly to its container */
+        #world-map-container .leaflet-container {
+          position: absolute !important;
+          z-index: 1 !important;
+        }
+        #world-map-container .leaflet-pane,
+        #world-map-container .leaflet-control-container {
+          z-index: 1 !important;
+        }
+        /* Hide any leaflet tiles that escape the container */
+        .leaflet-tile-pane img {
+          max-width: none !important;
+        }
+
         /* Noise texture */
         .noise-overlay::before {
           content: '';
@@ -10065,7 +10079,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <p className="text-emerald-200 text-sm">Tap anywhere on the map to drop a pin</p>
                 </div>
 
-                <div className="rounded-2xl shadow-sm border overflow-hidden relative" style={{ backgroundColor: 'rgba(15,23,42,0.6)', zIndex: 1 }}>
+                <div style={{borderRadius:"6px",overflow:"hidden",position:"relative",zIndex:1,isolation:"isolate"}}>
                   <div
                     id="world-map-container"
                     ref={(el) => {
