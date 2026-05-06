@@ -7822,61 +7822,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        {/* SAVED VIEWS TAB STRIP */}
-        <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:"6px 20px 0",display:"flex",alignItems:"center",gap:"4px",overflowX:"auto"}}>
-          <div style={{display:"flex",alignItems:"center",gap:"4px",flex:1,overflowX:"auto"}}>
-            {/* LIVE tab — always present */}
-            <button
-              onClick={() => { setActiveViewTab('live'); setScrubberDate(null); setInspectorEntity(null); }}
-              style={{
-                fontSize:"10px",fontFamily:"monospace",letterSpacing:"1.5px",
-                padding:"5px 10px",borderRadius:"3px 3px 0 0",cursor:"pointer",whiteSpace:"nowrap",
-                background:activeViewTab==='live'?"rgba(0,200,255,0.1)":"transparent",
-                border:`0.5px solid ${activeViewTab==='live'?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.12)"}`,
-                borderBottom:activeViewTab==='live'?"0.5px solid transparent":"0.5px solid rgba(0,200,255,0.12)",
-                color:activeViewTab==='live'?"#00c8ff":"rgba(148,163,184,0.5)",
-                display:"flex",alignItems:"center",gap:"4px"
-              }}
-            >
-              <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.85)",boxShadow:"0 0 4px rgba(34,197,94,0.6)",animation:"blink 2s infinite"}}></span>
-              LIVE
-            </button>
-            {savedViews.map(v => (
-              <div key={v.id} style={{display:"flex",alignItems:"stretch",borderRadius:"3px 3px 0 0",overflow:"hidden",border:`0.5px solid ${activeViewTab===v.id?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.12)"}`,borderBottom:activeViewTab===v.id?"0.5px solid transparent":"0.5px solid rgba(0,200,255,0.12)",background:activeViewTab===v.id?"rgba(0,200,255,0.08)":"transparent"}}>
-                <button
-                  onClick={() => {
-                    setActiveViewTab(v.id);
-                    setScrubberDate(v.scrubberDate || null);
-                    setInspectorEntity(v.inspectorEntity || null);
-                  }}
-                  style={{fontSize:"10px",fontFamily:"monospace",letterSpacing:"1px",padding:"5px 8px 5px 10px",cursor:"pointer",whiteSpace:"nowrap",background:"transparent",border:"none",color:activeViewTab===v.id?"#00c8ff":"rgba(148,163,184,0.55)"}}
-                >
-                  {v.name.toUpperCase()}
-                  {v.scrubberDate && <span style={{marginLeft:"6px",fontSize:"8px",color:"rgba(251,191,36,0.85)"}}>⌚</span>}
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setSavedViews(views => views.filter(x => x.id !== v.id)); if (activeViewTab===v.id) setActiveViewTab('live'); }}
-                  style={{fontSize:"10px",padding:"0 6px 0 2px",cursor:"pointer",background:"transparent",border:"none",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}
-                  title="Delete view"
-                >×</button>
-              </div>
-            ))}
-            {/* Save current as new view */}
-            <button
-              onClick={() => {
-                const name = (typeof window !== 'undefined' ? window.prompt("Name this view:", `View ${savedViews.length+1}`) : null) || `View ${savedViews.length+1}`;
-                const id = `v_${Date.now()}`;
-                setSavedViews(views => [...views, { id, name, createdAt: new Date().toISOString(), scrubberDate, inspectorEntity }]);
-                setActiveViewTab(id);
-              }}
-              style={{fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px",padding:"4px 9px",borderRadius:"3px",cursor:"pointer",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.3)",color:"rgba(0,200,255,0.6)",whiteSpace:"nowrap"}}
-              title="Save current view"
-            >+</button>
-          </div>
-          {savedViews.length > 0 && (
-            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{savedViews.length} SAVED</span>
-          )}
-        </div>
+        {/* SAVED VIEWS TAB STRIP — removed; Time Scrubber remains in header */}
 
         <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
 
