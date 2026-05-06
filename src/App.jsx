@@ -3696,22 +3696,37 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* COMPACT HEADER */}
           <div style={{position:'relative',zIndex:10,padding:'40px 20px 14px',borderBottom:'0.5px solid rgba(0,200,255,0.12)',flexShrink:0}}>
             {/* Title row + close on same line */}
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'14px'}}>
-              <div style={{display:'flex',alignItems:'baseline',gap:'14px'}}>
-                <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</span>
-                <span style={{fontSize:'11px',color:appMode==='muzz'?'rgba(0,200,255,0.55)':'rgba(249,115,22,0.65)',letterSpacing:'2px',fontFamily:'monospace'}}>{appMode==='muzz'?'// LIFE.SYS':'// BIZ.SYS'}</span>
+            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:'14px',gap:'12px'}}>
+              <div style={{display:'flex',flexDirection:'column',gap:'4px',minWidth:0,flex:1}}>
+                <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                  <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</span>
+                  <span style={{fontSize:'10px',color:appMode==='muzz'?'rgba(0,200,255,0.55)':'rgba(249,115,22,0.65)',letterSpacing:'2px',fontFamily:'monospace'}}>{appMode==='muzz'?'LIFE.INTEL':'BIZ.OPS'}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
+                  <span style={{fontSize:'9px',color:'rgba(0,200,255,0.4)',fontFamily:'monospace',letterSpacing:'1.5px'}}>// rev_2026.05.06</span>
+                  <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>·</span>
+                  <span style={{fontSize:'9px',color:isElite?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',border:`0.5px solid ${isElite?'rgba(0,200,255,0.4)':'rgba(148,163,184,0.25)'}`,padding:'1px 5px',borderRadius:'2px'}}>{isElite?'⚡ ELITE':'FREE.TIER'}</span>
+                  {eliteName && (
+                    <>
+                      <span style={{fontSize:'9px',color:'rgba(0,200,255,0.3)',fontFamily:'monospace'}}>·</span>
+                      <span style={{fontSize:'9px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'1.5px'}}>OP:{eliteName.toUpperCase()}</span>
+                    </>
+                  )}
+                </div>
               </div>
-              <button onClick={() => setSidebarOpen(false)} style={{width:'34px',height:'34px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px'}}>
+              <button onClick={() => setSidebarOpen(false)} style={{width:'34px',height:'34px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px',flexShrink:0}}>
                 <X style={{color:'#00c8ff',width:'15px',height:'15px'}} />
               </button>
             </div>
-            {/* Mode toggle */}
+            {/* Mode toggle — Palantir namespace style */}
             <div style={{display:'flex',gap:'6px'}}>
-              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px'}}>
-                🦘 MUZZ
+              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px',display:'flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
+                <span style={{opacity:appMode==='muzz'?1:0.4}}>{appMode==='muzz'?'›':' '}</span>
+                <span>[ MUZZ.LIFE ]</span>
               </button>
-              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px'}}>
-                🐨 DONNY
+              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px',display:'flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
+                <span style={{opacity:appMode==='donny'?1:0.4}}>{appMode==='donny'?'›':' '}</span>
+                <span>[ DONNY.OPS ]</span>
               </button>
             </div>
           </div>
@@ -15750,7 +15765,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* TOP COMMAND BAR */}
           <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(249,115,22,0.25)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
             <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden"}}>
-              <span style={{fontSize:"11px",color:"#f97316",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>🐨 DONNY</span>
+              <span style={{fontSize:"11px",color:"#f97316",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>DONNY.OPS</span>
               <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
               <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
               {eliteName && <><span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
