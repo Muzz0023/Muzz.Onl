@@ -3655,26 +3655,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         style={{
           width:'100%',
           display:'grid',
-          gridTemplateColumns:'18px 1fr auto',
-          gap:'10px',
+          gridTemplateColumns:'24px 1fr auto',
+          gap:'14px',
           alignItems:'center',
-          padding:'7px 12px',
-          marginBottom:'2px',
+          padding:'14px 16px',
+          marginBottom:'4px',
           background:active?`rgba(${accent==='#f97316'?'249,115,22':'0,200,255'},0.08)`:'transparent',
           border:'0.5px solid transparent',
-          borderLeft:active?`2px solid ${accent}`:'2px solid transparent',
+          borderLeft:active?`3px solid ${accent}`:'3px solid transparent',
           cursor:locked?'default':'pointer',
-          borderRadius:'2px',
+          borderRadius:'3px',
           opacity:locked?0.35:1,
           textAlign:'left',
         }}
       >
-        <span style={{fontSize:'13px',color:active?accent:'rgba(0,200,255,0.45)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
-        <span style={{fontSize:'13px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.75)':'rgba(224,234,255,0.82)',letterSpacing:'0.5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
-        <span style={{display:'flex',alignItems:'center',gap:'5px',fontFamily:'monospace',fontSize:'10px',lineHeight:1}}>
-          {locked && <span style={{color:'rgba(0,200,255,0.5)',fontSize:'11px'}}>⚡</span>}
+        <span style={{fontSize:'17px',color:active?accent:'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
+        <span style={{fontSize:'16px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.78)':'rgba(224,234,255,0.88)',letterSpacing:'0.5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
+        <span style={{display:'flex',alignItems:'center',gap:'6px',fontFamily:'monospace',fontSize:'11px',lineHeight:1}}>
+          {locked && <span style={{color:'rgba(0,200,255,0.5)',fontSize:'13px'}}>⚡</span>}
           {item.lockGlyph && <span style={{color:'rgba(148,163,184,0.5)'}}>{item.lockGlyph}</span>}
-          {active && <span style={{width:'5px',height:'5px',borderRadius:'50%',background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}} />}
+          {active && <span style={{width:'7px',height:'7px',borderRadius:'50%',background:accent,boxShadow:`0 0 8px ${accent}`,flexShrink:0}} />}
         </span>
       </button>
     );
@@ -3692,31 +3692,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(rgba(0,200,255,0.04) 1px,transparent 1px)',backgroundSize:'24px 24px',pointerEvents:'none'}} />
 
           {/* COMPACT HEADER */}
-          <div style={{position:'relative',zIndex:10,padding:'34px 18px 10px',borderBottom:'0.5px solid rgba(0,200,255,0.12)',flexShrink:0}}>
+          <div style={{position:'relative',zIndex:10,padding:'40px 20px 14px',borderBottom:'0.5px solid rgba(0,200,255,0.12)',flexShrink:0}}>
             {/* Title row + close on same line */}
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px'}}>
-              <div style={{display:'flex',alignItems:'baseline',gap:'12px'}}>
-                <span style={{fontSize:'20px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</span>
-                <span style={{fontSize:'10px',color:appMode==='muzz'?'rgba(0,200,255,0.55)':'rgba(249,115,22,0.65)',letterSpacing:'2px',fontFamily:'monospace'}}>{appMode==='muzz'?'// LIFE.SYS':'// BIZ.SYS'}</span>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'14px'}}>
+              <div style={{display:'flex',alignItems:'baseline',gap:'14px'}}>
+                <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</span>
+                <span style={{fontSize:'11px',color:appMode==='muzz'?'rgba(0,200,255,0.55)':'rgba(249,115,22,0.65)',letterSpacing:'2px',fontFamily:'monospace'}}>{appMode==='muzz'?'// LIFE.SYS':'// BIZ.SYS'}</span>
               </div>
-              <button onClick={() => setSidebarOpen(false)} style={{width:'30px',height:'30px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px'}}>
-                <X style={{color:'#00c8ff',width:'13px',height:'13px'}} />
+              <button onClick={() => setSidebarOpen(false)} style={{width:'34px',height:'34px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px'}}>
+                <X style={{color:'#00c8ff',width:'15px',height:'15px'}} />
               </button>
             </div>
             {/* Mode toggle */}
             <div style={{display:'flex',gap:'6px'}}>
-              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'8px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'11px',cursor:'pointer',borderRadius:'3px'}}>
+              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px'}}>
                 🦘 MUZZ
               </button>
-              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'8px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'11px',cursor:'pointer',borderRadius:'3px'}}>
+              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px'}}>
                 🐨 DONNY
               </button>
             </div>
           </div>
 
-          {/* NAV GRID — fits viewport */}
-          <div style={{position:'relative',zIndex:10,padding:'10px 14px 6px',flex:1,minHeight:0,overflowY:'auto'}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 14px'}}>
+          {/* NAV GRID — fills remaining space */}
+          <div style={{position:'relative',zIndex:10,padding:'14px 16px 8px',flex:1,minHeight:0,overflowY:'auto'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px'}}>
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyGlyphs = {
@@ -3749,8 +3749,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
                   return (
-                    <div key={sec} style={{marginBottom:'8px'}}>
-                      <div style={{fontSize:'9.5px',color,letterSpacing:'2px',fontFamily:'monospace',marginBottom:'4px',paddingLeft:'6px',borderLeft:`2px solid ${color}`,lineHeight:'1.3',padding:'1px 0 1px 6px'}}>// {sec}</div>
+                    <div key={sec} style={{marginBottom:'14px'}}>
+                      <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
                       {items.map(item => {
                         const active = activeView === item.id;
                         const workerLocked = donnyRole === 'worker' && !item.workerOk;
@@ -3773,8 +3773,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
-                  <div key={sec} style={{marginBottom:'8px'}}>
-                    <div style={{fontSize:'9.5px',color,letterSpacing:'2px',fontFamily:'monospace',marginBottom:'4px',paddingLeft:'6px',borderLeft:`2px solid ${color}`,lineHeight:'1.3',padding:'1px 0 1px 6px'}}>// {sec}</div>
+                  <div key={sec} style={{marginBottom:'14px'}}>
+                    <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
                       const locked = item.elite && !isElite;
@@ -3804,9 +3804,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <input type="file" id="import-file-nav" accept=".json" className="hidden" onChange={(e) => { doImport(e); setSidebarOpen(false); }} />
           </div>
 
-          {/* SIGN OUT — slim bottom strip */}
-          <div style={{position:'relative',zIndex:10,padding:'8px 14px 12px',borderTop:'0.5px solid rgba(0,200,255,0.08)',flexShrink:0}}>
-            <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'9px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.78)',fontFamily:'monospace',fontSize:'11.5px',letterSpacing:'2.5px',cursor:'pointer',borderRadius:'3px'}}>
+          {/* SIGN OUT */}
+          <div style={{position:'relative',zIndex:10,padding:'10px 16px 14px',borderTop:'0.5px solid rgba(0,200,255,0.08)',flexShrink:0}}>
+            <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)',fontFamily:'monospace',fontSize:'13px',letterSpacing:'2.5px',cursor:'pointer',borderRadius:'3px'}}>
               ⊗ SIGN OUT
             </button>
           </div>
