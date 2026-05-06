@@ -3451,9 +3451,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     return (
       <div style={{position:"fixed",left:0,top:"32px",bottom:0,width:"4px",zIndex:30,display:"flex",flexDirection:"column",gap:"2px",padding:"4px 0",background:"rgba(3,8,18,0.6)",borderRight:"0.5px solid rgba(0,200,255,0.08)"}}>
         {checks.map((c, i) => {
-          const color = c.level === "CRITICAL" ? "rgba(239,68,68,0.9)" : c.level === "WATCH" ? "rgba(251,191,36,0.9)" : c.level === "OFFLINE" ? "rgba(148,163,184,0.4)" : "rgba(34,197,94,0.85)";
+          // Calm palette — cyan tones only, no red, no blinking
+          const color =
+            c.level === "OFFLINE" ? "rgba(148,163,184,0.25)" :
+            c.level === "WATCH"   ? "rgba(0,200,255,0.45)"   :
+                                    "rgba(0,200,255,0.85)";   // NOMINAL & CRITICAL → calm cyan
           return (
-            <div key={i} title={c.label} style={{flex:1,background:color,boxShadow:c.level==="CRITICAL"?`0 0 6px ${color}`:"none",animation:c.level==="CRITICAL"?"blink 1.5s infinite":"none",minHeight:"12px"}} />
+            <div key={i} title={c.label} style={{flex:1,background:color,minHeight:"12px"}} />
           );
         })}
       </div>
@@ -7643,35 +7647,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { label: "REV",      level: "NOMINAL" },
     ];
 
-    // ============================================
-    // MARQUEE TICKER ITEMS — bottom scrolling strip
-    // ============================================
-    const marqueeItems = (() => {
-      const arr = [];
-      arr.push({ label: "NET_WORTH", value: `$${netWorth.toLocaleString()}`, delta: nwDelta7d });
-      arr.push({ label: "PORTFOLIO", value: `$${totalStocks.toLocaleString()}`, delta: null });
-      trackedStocks.filter(s => s.ticker).forEach(s => {
-        const t = s.ticker.toUpperCase();
-        const p = livePrices[t];
-        if (!p?.c) return;
-        const d = p.pc > 0 ? ((p.c - p.pc)/p.pc*100) : null;
-        arr.push({ label: t, value: `$${p.c.toFixed(2)}`, delta: d });
-      });
-      if (billsDueSoon.length > 0) arr.push({ label: "BILLS_DUE", value: `${billsDueSoon.length}`, delta: null });
-      if (savingsRate > 0) arr.push({ label: "SAVING_RATE", value: `${savingsRate.toFixed(0)}%`, delta: null });
-      if (assets.length > 0) arr.push({ label: "ASSETS", value: `${assets.length}`, delta: null });
-      arr.push({ label: "STATUS", value: "NOMINAL", delta: null });
-      arr.push({ label: "REV", value: todayISO.replace(/-/g,''), delta: null });
-      return arr;
-    })();
-
     return (
       <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide ? "76px" : 0, paddingRight: isWide && inspectorEntity ? "320px" : 0, transition: "padding 0.2s ease"}}>
         {/* BOOT SEQUENCE (first load only) */}
         {!bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
 
-        {/* SYSTEM HEALTH RAIL */}
-        <SystemHealthRail checks={healthChecks} />
+        {/* SYSTEM HEALTH RAIL — desktop only */}
+        {isWide && <SystemHealthRail checks={healthChecks} />}
 
         {/* LEFT RAIL — desktop only */}
         {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} />}
@@ -8594,11 +8576,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
         )}
-
-        {/* MARQUEE TICKER — fixed bottom strip */}
-        <div style={{position:"fixed",bottom:0,left:isWide?"76px":0,right:isWide && inspectorEntity?"320px":0,zIndex:40,transition:"left 0.2s ease, right 0.2s ease"}}>
-          <MarqueeStrip items={marqueeItems} />
-        </div>
 
         {/* COMMAND PALETTE (⌘K) */}
         {cmdPaletteOpen && (
