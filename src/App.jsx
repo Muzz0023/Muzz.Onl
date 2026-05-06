@@ -1613,6 +1613,19 @@ function MuzzApp() {
   const [showHealthModal, setShowHealthModal] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
+  const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        setCmdPaletteOpen(o => !o);
+      } else if (e.key === 'Escape') {
+        setCmdPaletteOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -2999,6 +3012,97 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       }
     }
   }, [sidebarOpen]);
+
+  // Command Palette Component - Palantir Quick Find (⌘K)
+  const CommandPalette = ({ entities, onPick, onClose }) => {
+    const [query, setQuery] = useState('');
+    const [highlight, setHighlight] = useState(0);
+    const inputRef = useRef(null);
+    useEffect(() => { inputRef.current?.focus(); }, []);
+
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? entities.filter(e =>
+          e.label.toLowerCase().includes(q) ||
+          e.section.toLowerCase().includes(q) ||
+          (e.meta && e.meta.toLowerCase().includes(q))
+        ).slice(0, 12)
+      : entities.slice(0, 12);
+
+    const grouped = filtered.reduce((acc, e) => {
+      acc[e.section] = acc[e.section] || [];
+      acc[e.section].push(e);
+      return acc;
+    }, {});
+
+    const flat = Object.entries(grouped).flatMap(([sec, items]) => items);
+
+    const handleKey = (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); setHighlight(h => Math.min(h+1, flat.length-1)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setHighlight(h => Math.max(h-1, 0)); }
+      else if (e.key === 'Enter') { e.preventDefault(); if (flat[highlight]) onPick(flat[highlight].id); }
+      else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
+    };
+
+    return (
+      <div onClick={onClose} style={{position:"fixed",inset:0,zIndex:300,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(6px)",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"10vh"}}>
+        <div onClick={e => e.stopPropagation()} style={{width:"100%",maxWidth:"560px",margin:"0 16px",background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"6px",boxShadow:"0 0 40px rgba(0,200,255,0.15)",overflow:"hidden"}}>
+          {/* Header */}
+          <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",gap:"10px"}}>
+            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>// QUICK_FIND</span>
+            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{entities.length} ENTITIES INDEXED</span>
+            <span style={{marginLeft:"auto",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.25)",padding:"1px 5px",borderRadius:"2px"}}>ESC</span>
+          </div>
+          {/* Input */}
+          <div style={{padding:"14px 18px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"10px"}}>
+            <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"14px"}}>›</span>
+            <input
+              ref={inputRef}
+              value={query}
+              onChange={e => { setQuery(e.target.value); setHighlight(0); }}
+              onKeyDown={handleKey}
+              placeholder="Search views, stocks, bills, assets…"
+              style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",letterSpacing:"0.5px",caretColor:"#00c8ff"}}
+            />
+          </div>
+          {/* Results */}
+          <div style={{maxHeight:"50vh",overflowY:"auto"}}>
+            {flat.length === 0 ? (
+              <div style={{padding:"24px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO MATCHES</div>
+            ) : (
+              Object.entries(grouped).map(([sec, items]) => (
+                <div key={sec}>
+                  <div style={{padding:"6px 18px 4px",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>// {sec}</div>
+                  {items.map((e) => {
+                    const idx = flat.indexOf(e);
+                    const active = idx === highlight;
+                    return (
+                      <div
+                        key={`${sec}_${e.label}_${idx}`}
+                        onMouseEnter={() => setHighlight(idx)}
+                        onClick={() => onPick(e.id)}
+                        style={{padding:"8px 18px",display:"flex",alignItems:"center",gap:"10px",cursor:"pointer",background:active?"rgba(0,200,255,0.06)":"transparent",borderLeft:`2px solid ${active?"#00c8ff":"transparent"}`}}
+                      >
+                        <span style={{fontSize:"12px",color:active?"#00c8ff":"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px",flex:1}}>{e.label}</span>
+                        {e.meta && <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{e.meta}</span>}
+                        <span style={{fontSize:"10px",color:active?"#00c8ff":"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>↗</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))
+            )}
+          </div>
+          {/* Footer hint */}
+          <div style={{padding:"8px 18px",borderTop:"0.5px solid rgba(0,200,255,0.08)",display:"flex",justifyContent:"space-between",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
+            <span>↑↓ NAVIGATE</span>
+            <span>↵ OPEN</span>
+            <span>ESC CLOSE</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // Sidebar Component - Apple-style clean design
   const Sidebar = () => {
@@ -6790,6 +6894,218 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const liveClock = liveTime.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
     const liveDate = liveTime.toLocaleDateString('en-AU',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
 
+    // ============================================
+    // PALANTIR PRIMITIVES — inline helpers used across the dashboard
+    // ============================================
+
+    // Sparkline: tiny inline trendline. Pass an array of numbers; renders SVG.
+    const Sparkline = ({ data, w = 60, h = 16, color = "#00c8ff", fillOpacity = 0.12 }) => {
+      if (!data || data.length < 2) {
+        return <span style={{display:"inline-block",width:w,height:h,borderBottom:"0.5px dashed rgba(148,163,184,0.2)",verticalAlign:"middle"}} />;
+      }
+      const min = Math.min(...data), max = Math.max(...data);
+      const range = max - min || 1;
+      const stepX = w / (data.length - 1);
+      const points = data.map((v,i) => `${(i*stepX).toFixed(1)},${(h - ((v-min)/range)*(h-2) - 1).toFixed(1)}`).join(" ");
+      const fillPoints = `0,${h} ${points} ${w},${h}`;
+      const trending = data[data.length-1] >= data[0];
+      const c = color === "auto" ? (trending ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.85)") : color;
+      return (
+        <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{display:"inline-block",verticalAlign:"middle"}}>
+          <polygon points={fillPoints} fill={c} fillOpacity={fillOpacity} />
+          <polyline points={points} fill="none" stroke={c} strokeWidth="1" strokeLinejoin="round" strokeLinecap="round" />
+          <circle cx={(data.length-1)*stepX} cy={h - ((data[data.length-1]-min)/range)*(h-2) - 1} r="1.5" fill={c} />
+        </svg>
+      );
+    };
+
+    // SeverityPill: NOMINAL / WATCH / CRITICAL / OFFLINE
+    const SeverityPill = ({ level = "NOMINAL", label }) => {
+      const map = {
+        NOMINAL:  { c: "rgba(34,197,94,0.9)",  bg: "rgba(34,197,94,0.06)" },
+        WATCH:    { c: "rgba(251,191,36,0.95)", bg: "rgba(251,191,36,0.06)" },
+        CRITICAL: { c: "rgba(239,68,68,0.95)",  bg: "rgba(239,68,68,0.08)" },
+        OFFLINE:  { c: "rgba(148,163,184,0.6)", bg: "rgba(148,163,184,0.04)" },
+        ELITE:    { c: "#00c8ff",               bg: "rgba(0,200,255,0.06)" },
+      };
+      const m = map[level] || map.NOMINAL;
+      return (
+        <span style={{fontSize:"9px",color:m.c,background:m.bg,border:`0.5px solid ${m.c}`,padding:"1px 6px",letterSpacing:"1.5px",fontFamily:"monospace",borderRadius:"2px",whiteSpace:"nowrap"}}>
+          [{label || level}]
+        </span>
+      );
+    };
+
+    // EntityLink: Palantir-style hyperlinked entity reference
+    const EntityLink = ({ children, onClick, color = "#00c8ff", size = "12px" }) => (
+      <span onClick={onClick} style={{
+        color, fontFamily:"monospace", fontSize:size, cursor:onClick?"pointer":"default",
+        borderBottom:`0.5px dashed ${color}66`, paddingBottom:"1px", letterSpacing:"0.5px"
+      }}>{children} <span style={{fontSize:"9px",opacity:0.7}}>↗</span></span>
+    );
+
+    // ============================================
+    // DERIVED INTEL — pre-compute series, deltas, briefing
+    // ============================================
+
+    // Net worth sparkline series (last ~30 days), oldest → newest
+    const nwSeries = (() => {
+      const sorted = [...netWorthHistory].sort((a,b) => a.date.localeCompare(b.date));
+      const last = sorted.slice(-30).map(p => p.value);
+      // ensure at least 2 points so sparklines render — synthesize from current netWorth if empty
+      if (last.length < 2) return [netWorth*0.98, netWorth];
+      return last;
+    })();
+    const nwStart = nwSeries[0] || 0;
+    const nwEnd = nwSeries[nwSeries.length-1] || netWorth;
+    const nwDelta = nwStart > 0 ? ((nwEnd - nwStart) / nwStart * 100) : 0;
+    const nwDelta7d = (() => {
+      const sorted = [...netWorthHistory].sort((a,b) => a.date.localeCompare(b.date));
+      if (sorted.length < 2) return null;
+      const last = sorted[sorted.length-1].value;
+      const weekAgo = sorted.find(p => {
+        const days = (new Date() - new Date(p.date)) / 86400000;
+        return days >= 6 && days <= 8;
+      }) || sorted[Math.max(0, sorted.length-8)];
+      if (!weekAgo || weekAgo.value === 0) return null;
+      return ((last - weekAgo.value) / weekAgo.value) * 100;
+    })();
+
+    // Portfolio sparkline (synthesize from net worth shape if no per-stock history)
+    const portfolioSeries = nwSeries.map(v => v * (totalStocks / Math.max(netWorth,1)));
+
+    // Top intraday stock mover (across tracked stocks)
+    const topMover = (() => {
+      const tickers = trackedStocks.filter(s => s.ticker).map(s => s.ticker.toUpperCase());
+      let best = null;
+      tickers.forEach(t => {
+        const p = livePrices[t];
+        if (!p?.c || !p?.pc || p.pc === 0) return;
+        const pct = ((p.c - p.pc) / p.pc) * 100;
+        if (!best || Math.abs(pct) > Math.abs(best.pct)) best = { ticker:t, pct };
+      });
+      return best;
+    })();
+
+    // Bills due soon
+    const billsDueSoon = (() => {
+      const now = new Date();
+      return subscriptions.filter(s => s.dueDate && s.name && s.monthly > 0).map(s => {
+        const day = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
+        if (!day) return null;
+        let next = new Date(now.getFullYear(), now.getMonth(), day);
+        if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
+        return { name:s.name, days:Math.ceil((next-now)/86400000), amount:s.monthly };
+      }).filter(Boolean).sort((a,b) => a.days - b.days);
+    })();
+
+    // Object IDs / metadata
+    const todayISO = new Date().toISOString().split('T')[0];
+    const objectId = `nw_${todayISO.replace(/-/g,'_')}`;
+    const sessionId = (userId || 'anon').slice(0,8).toUpperCase();
+    const lastSyncStr = liveTime.toISOString().split('T')[1].split('.')[0] + 'Z';
+
+    // BRIEFING text — auto-generated 1–2 line intel summary
+    const briefingLines = (() => {
+      const lines = [];
+      if (nwDelta7d !== null) {
+        const dir = nwDelta7d >= 0 ? "up" : "down";
+        lines.push(`Net worth ${dir} ${Math.abs(nwDelta7d).toFixed(1)}% this week.`);
+      } else if (netWorth > 0) {
+        lines.push(`Net worth at $${netWorth.toLocaleString()}.`);
+      }
+      if (billsDueSoon.length > 0) {
+        const within7 = billsDueSoon.filter(b => b.days <= 7);
+        if (within7.length > 0) {
+          lines.push(`${within7.length} bill${within7.length>1?'s':''} due within 7 days.`);
+        }
+      }
+      if (topMover) {
+        const sign = topMover.pct >= 0 ? "+" : "";
+        lines.push(`${topMover.ticker} ${sign}${topMover.pct.toFixed(2)}% intraday.`);
+      }
+      if (savingsRate > 0) {
+        lines.push(`Savings rate ${savingsRate.toFixed(0)}%.`);
+      }
+      if (lines.length === 0) lines.push("Awaiting initial data input. Set salary in Bills to begin.");
+      return lines.slice(0, 3);
+    })();
+
+    // EVENT LOG — synthesized from real data, formatted as Palantir-style log lines
+    const eventLog = (() => {
+      const events = [];
+      const fmtTime = (offsetSec) => {
+        const t = new Date(liveTime.getTime() - offsetSec*1000);
+        return t.toTimeString().slice(0,8);
+      };
+      // Use a stable sequence so it doesn't churn every second — bucket time into 30s windows
+      const bucket = Math.floor(liveTime.getTime() / 30000);
+      let off = 0;
+      const push = (level, channel, msg) => {
+        events.push({ time: fmtTime(off), level, channel, msg, key: `${bucket}_${off}` });
+        off += 7 + ((bucket + off) % 13);
+      };
+
+      if (Object.keys(livePrices).length > 0) {
+        push("OK", "PORTFOLIO", `PRICE_FETCH ${Object.keys(livePrices).length} tickers`);
+      }
+      if (topMover) {
+        const lvl = Math.abs(topMover.pct) > 3 ? "WARN" : "OK";
+        push(lvl, "MARKET", `${topMover.ticker} ${topMover.pct>=0?"+":""}${topMover.pct.toFixed(2)}% intraday`);
+      }
+      if (billsDueSoon.length > 0 && billsDueSoon[0].days <= 7) {
+        push("WARN", "BILLS", `DUE_SOON ${billsDueSoon[0].name.toUpperCase()} ${billsDueSoon[0].days}d`);
+      }
+      if (nwDelta7d !== null) {
+        push("OK", "WEALTH", `NW_DELTA_7D ${nwDelta7d>=0?"+":""}${nwDelta7d.toFixed(2)}%`);
+      }
+      const milestones = [100000,250000,500000,1000000,2000000,5000000];
+      const nextM = milestones.find(m => netWorth < m);
+      if (nextM) {
+        const pct = (netWorth/nextM)*100;
+        push("OK", "WEALTH", `MILESTONE.PROGRESS ${pct.toFixed(1)}% → $${(nextM/1000).toFixed(0)}K`);
+      }
+      if (stocks.length > 0) {
+        push("OK", "PORTFOLIO", `HOLDINGS ${stocks.length} positions tracked`);
+      }
+      if (assets.length > 0) {
+        push("OK", "ASSETS", `INVENTORY ${assets.length} entities`);
+      }
+      push("OK", "SYNC", `SUPABASE ${sessionId} authenticated`);
+      push("OK", "SYSTEM", `BOOT muzz.onl rev_${todayISO.replace(/-/g,'')}`);
+      return events.slice(0, 8);
+    })();
+
+    // SEARCHABLE ENTITIES for command palette
+    const navTargets = [
+      { id:"home", label:"Dashboard", section:"NAV" },
+      { id:"habits", label:"Habits", section:"NAV" },
+      { id:"tasks", label:"Tasks", section:"NAV" },
+      { id:"countdowns", label:"Countdowns", section:"NAV" },
+      { id:"reminders", label:"Reminders", section:"NAV" },
+      { id:"gym", label:"Health", section:"NAV" },
+      { id:"gymworkout", label:"Gym", section:"NAV" },
+      { id:"work", label:"Work", section:"NAV" },
+      { id:"diet", label:"Diet", section:"NAV" },
+      { id:"timetable", label:"Timetable", section:"NAV" },
+      { id:"varied", label:"Bills", section:"NAV" },
+      { id:"assets", label:"Assets", section:"NAV" },
+      { id:"investments", label:"Investments", section:"NAV" },
+      { id:"statsinsights", label:"Stats & Insights", section:"NAV" },
+      { id:"upgrade", label:"Elite", section:"NAV" },
+    ];
+    const stockEntities = trackedStocks.filter(s => s.ticker).map(s => ({
+      id:"investments", label:s.ticker.toUpperCase(), section:"STOCK", meta:s.name||""
+    }));
+    const billEntities = subscriptions.filter(s => s.name).map(s => ({
+      id:"varied", label:s.name, section:"BILL", meta:`$${s.monthly}/mo`
+    }));
+    const assetEntities = assets.filter(a => a.name).map(a => ({
+      id:"assets", label:a.name, section:"ASSET", meta:a.value?`$${parseFloat(a.value).toLocaleString()}`:""
+    }));
+    const allEntities = [...navTargets, ...stockEntities, ...billEntities, ...assetEntities];
+
+
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
@@ -6802,8 +7118,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
             <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
             {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
+            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
+            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>SID:{sessionId}</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
+            <button onClick={() => setCmdPaletteOpen(true)} style={{display:"flex",alignItems:"center",gap:"4px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",padding:"3px 8px",cursor:"pointer",fontFamily:"monospace"}}>
+              <span style={{fontSize:"9px",color:"rgba(0,200,255,0.7)",letterSpacing:"1px"}}>QUICK FIND</span>
+              <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",border:"0.5px solid rgba(0,200,255,0.25)",padding:"0 4px",borderRadius:"2px"}}>⌘K</span>
+            </button>
             <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
             <div style={{display:"flex",alignItems:"center",gap:"3px"}}>
               <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#00c8ff",display:"inline-block",boxShadow:"0 0 6px #00c8ff",animation:"blink 2s infinite"}}></span>
@@ -6822,62 +7144,128 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <defs><linearGradient id="dashEliteGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div style={{flex:1}}>
-                <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>LIFE INTELLIGENCE SYSTEM</div>
+                <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>DAILY BRIEFING — {todayISO.replace(/-/g,'.')}</div>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
-                  <div style={{fontSize:"clamp(14px,4vw,22px)",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}><span style={{whiteSpace:"nowrap"}}>WELCOME BACK{eliteName ? `, ${eliteName.toUpperCase()}` : ""}</span></div>
-                  {isElite && <div style={{fontSize:"11px",color:"#e8f0ff",border:"0.5px solid rgba(232,240,255,0.4)",padding:"3px 10px",letterSpacing:"1.5px",fontFamily:"monospace"}}>⚡ ELITE</div>}
+                  <div style={{fontSize:"clamp(14px,4vw,22px)",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}><span style={{whiteSpace:"nowrap"}}>{eliteName ? `OPERATOR: ${eliteName.toUpperCase()}` : "WELCOME BACK"}</span></div>
+                  {isElite && <SeverityPill level="ELITE" label="ELITE" />}
                 </div>
               </div>
             </div>
-            {/* NET WORTH PANEL */}
-            <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff",padding:"16px 20px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
-              <div>
-                <div style={palantirLabel}>Net Worth</div>
-                <div style={{fontSize:"40px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${netWorth.toLocaleString()}</div>
-              </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{...palantirLabel,textAlign:"right"}}>Portfolio</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>${totalStocks.toLocaleString()}</div>
-              </div>
-            </div>
-            {/* STATUS STRIP */}
-            <div style={{display:"flex",alignItems:"center",gap:"12px",marginTop:"10px",padding:"6px 4px",flexWrap:"wrap"}}>
-              {[
-                {label:"SYNC", value:"OK", ok:true},
-                {label:"DATA", value:"LIVE", ok:true},
-                {label:"ELITE", value:isElite?"ACTIVE":"INACTIVE", ok:isElite},
-                {label:"SAVING", value:savingsRate>0?`${savingsRate.toFixed(0)}%`:"—", ok:savingsRate>20},
-              ].map(s => (
-                <div key={s.label} style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                  <span style={{width:"5px",height:"5px",borderRadius:"50%",background:s.ok?"#00c8ff":"rgba(148,163,184,0.3)",display:"inline-block",boxShadow:s.ok?"0 0 4px #00c8ff":"none"}}></span>
-                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}:</span>
-                  <span style={{fontSize:"9px",color:s.ok?"rgba(0,200,255,0.8)":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.value}</span>
+
+            {/* BRIEFING NARRATIVE */}
+            <div style={{...palantirPanel,borderLeft:"2px solid rgba(0,200,255,0.5)",padding:"12px 16px",marginBottom:"10px"}}>
+              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px"}}>// INTEL SUMMARY</div>
+              {briefingLines.map((line, i) => (
+                <div key={i} style={{fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"0.3px",marginBottom:i<briefingLines.length-1?"3px":0,display:"flex",alignItems:"baseline",gap:"6px"}}>
+                  <span style={{color:"rgba(0,200,255,0.4)",fontSize:"9px"}}>▸</span>
+                  <span>{line}</span>
                 </div>
               ))}
+            </div>
+
+            {/* NET WORTH PANEL */}
+            <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff",padding:"16px 20px"}}>
+              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"12px"}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{...palantirLabel,display:"flex",alignItems:"center",gap:"8px"}}>
+                    <span>Net Worth</span>
+                    {nwDelta7d !== null && (
+                      <span style={{fontSize:"9px",color:nwDelta7d>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                        {nwDelta7d>=0?"▲":"▼"} {Math.abs(nwDelta7d).toFixed(2)}% 7D
+                      </span>
+                    )}
+                  </div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
+                    <div style={{fontSize:"40px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${netWorth.toLocaleString()}</div>
+                    <Sparkline data={nwSeries} w={80} h={24} color="auto" />
+                  </div>
+                </div>
+                <div style={{textAlign:"right",flexShrink:0}}>
+                  <div style={{...palantirLabel,textAlign:"right"}}>Portfolio</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:"flex-end"}}>
+                    <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalStocks.toLocaleString()}</div>
+                    <Sparkline data={portfolioSeries} w={50} h={18} color="rgba(168,85,247,0.9)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* STATUS STRIP — now with severity pills */}
+            <div style={{display:"flex",alignItems:"center",gap:"6px",marginTop:"10px",padding:"4px 4px",flexWrap:"wrap"}}>
+              <SeverityPill level="NOMINAL" label="SYNC OK" />
+              <SeverityPill level="NOMINAL" label="DATA LIVE" />
+              <SeverityPill level={isElite?"ELITE":"OFFLINE"} label={isElite?"ELITE":"FREE TIER"} />
+              {(() => {
+                const lvl = savingsRate>=30?"NOMINAL":savingsRate>=15?"WATCH":savingsRate>0?"CRITICAL":"OFFLINE";
+                return <SeverityPill level={lvl} label={`SAVING ${savingsRate>0?savingsRate.toFixed(0)+'%':'—'}`} />;
+              })()}
+              {(() => {
+                if (billsDueSoon.length === 0) return null;
+                const next = billsDueSoon[0];
+                const lvl = next.days <= 3 ? "CRITICAL" : next.days <= 7 ? "WATCH" : "NOMINAL";
+                return <SeverityPill level={lvl} label={`BILL ${next.days}D`} />;
+              })()}
+              {topMover && (
+                <SeverityPill level={Math.abs(topMover.pct)>3?"WATCH":"NOMINAL"} label={`${topMover.ticker} ${topMover.pct>=0?'+':''}${topMover.pct.toFixed(1)}%`} />
+              )}
             </div>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
+          {/* LIVE EVENT LOG FEED */}
+          <div style={{...palantirPanel,borderLeft:"2px solid rgba(34,197,94,0.7)"}}>
+            <div style={{padding:"8px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                <span style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",letterSpacing:"2px",fontFamily:"monospace"}}>// EVENT_STREAM</span>
+                <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>tail -f /var/log/muzz.log</span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",display:"inline-block",boxShadow:"0 0 4px rgba(34,197,94,0.9)",animation:"blink 2s infinite"}}></span>
+                <span style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAMING</span>
+              </div>
+            </div>
+            <div style={{padding:"6px 0",maxHeight:"180px",overflowY:"auto"}}>
+              {eventLog.map((e,i) => {
+                const lvlColor = e.level==="WARN"?"rgba(251,191,36,0.95)":e.level==="ERROR"?"rgba(239,68,68,0.95)":"rgba(34,197,94,0.85)";
+                return (
+                  <div key={e.key} style={{display:"grid",gridTemplateColumns:"auto auto auto 1fr",gap:"10px",padding:"3px 14px",fontFamily:"monospace",fontSize:"10.5px",alignItems:"center",borderBottom:i<eventLog.length-1?"0.5px solid rgba(0,200,255,0.04)":"none"}}>
+                    <span style={{color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>[{e.time}]</span>
+                    <span style={{color:lvlColor,letterSpacing:"1px",fontWeight:500,minWidth:"36px"}}>{e.level}</span>
+                    <span style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px",minWidth:"68px"}}>{e.channel}</span>
+                    <span style={{color:"rgba(224,234,255,0.75)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e.msg}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* KPI STRIP */}
           {(() => {
             const billsPct = salaryNum > 0 ? (totalMonthly/salaryNum)*100 : 0;
+            // Synthetic mini-series for each KPI (uses nwSeries shape as a proxy for "trending data")
+            const mkSeries = (target, end) => {
+              if (!nwSeries || nwSeries.length < 2) return [end*0.9, end];
+              const factor = end / (nwSeries[nwSeries.length-1] || 1);
+              return nwSeries.map(v => v * factor);
+            };
+            const kpis = [
+              {label:"Ann. Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0, series:mkSeries(0,totalMonthly), color:"rgba(239,68,68,0.7)"},
+              {label:"Bills/Inc", value:salaryNum>0?`${billsPct.toFixed(1)}%`:"—", ok:salaryNum===0||billsPct<50, warn:salaryNum>0&&billsPct>=50, series:mkSeries(0,billsPct||1), color:"rgba(251,191,36,0.7)"},
+              {label:"Wk Hours", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false, series:mkSeries(0,weeklyWorkHours||1), color:"#00c8ff"},
+              {label:"Stocks", value:`${stocks.length}`, ok:stocks.length>0, warn:false, series:mkSeries(0,Math.max(stocks.length,1)), color:"rgba(168,85,247,0.7)"},
+              {label:"Assets", value:`${assets.length}`, ok:assets.length>0, warn:false, series:mkSeries(0,Math.max(assets.length,1)), color:"rgba(34,197,94,0.7)"},
+            ];
             return (
           <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
             <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
-              {[
-                {label:"Ann. Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0},
-                {label:"Bills/Inc", value:salaryNum>0?`${((totalMonthly/salaryNum)*100).toFixed(1)}%`:"—", ok:salaryNum===0||totalMonthly/salaryNum<0.5, warn:salaryNum>0&&totalMonthly/salaryNum>=0.5},
-                {label:"Wk Hours", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false},
-                {label:"Stocks", value:`${stocks.length}`, ok:stocks.length>0, warn:false},
-                {label:"Assets", value:`${assets.length}`, ok:assets.length>0, warn:false},
-              ].map((k,i) => (
+              {kpis.map((k,i) => (
                 <div key={i} style={{padding:"10px 8px",borderRight:i<4?"0.5px solid rgba(0,200,255,0.08)":"none"}}>
                   <div style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{k.label}</div>
                   <div style={{fontSize:"16px",color:k.warn?"rgba(239,68,68,0.9)":k.ok?"#e0eaff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap"}}>{k.value}</div>
-                  <div style={{height:"2px",marginTop:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"1px"}}>
-                    <div style={{height:"2px",width:k.ok?"100%":k.warn?"60%":"20%",background:k.warn?"rgba(239,68,68,0.6)":k.ok?"#00c8ff":"rgba(148,163,184,0.2)",borderRadius:"1px"}} />
+                  <div style={{marginTop:"4px",height:"14px"}}>
+                    <Sparkline data={k.series} w={56} h={14} color={k.color} fillOpacity={0.1} />
                   </div>
                 </div>
               ))}
@@ -6928,10 +7316,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
 
-          {/* ASSET ALLOCATION DONUT */}
+          {/* ASSET ALLOCATION TREEMAP */}
           {(() => {
             const filledAssets = assets.filter(a => a.name && (parseFloat(a.value)||0) > 0).map(a => ({...a, value: parseFloat(a.value)||0}));
-            const totalAssetsVal = filledAssets.reduce((sum,a) => sum+a.value, 0);
             const assetCats = [
               { id: 'property', name: 'Home', color: '#00c8ff' },
               { id: 'rental', name: 'Rental', color: '#0ea5e9' },
@@ -6953,11 +7340,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               { id: 'loansowed', name: 'Loans Owed', color: 'rgba(100,116,139,0.8)' },
               { id: 'other', name: 'Other', color: 'rgba(71,85,105,0.8)' },
             ];
-            const donutData = assetCats.map(cat => ({
+            const data = assetCats.map(cat => ({
               ...cat,
               value: filledAssets.filter(a => a.category === cat.id).reduce((sum,a) => sum+a.value, 0)
-            })).filter(d => d.value > 0);
-            const total = donutData.reduce((s,d) => s+d.value, 0);
+            })).filter(d => d.value > 0).sort((a,b) => b.value - a.value);
+            const total = data.reduce((s,d) => s+d.value, 0);
 
             if (total === 0) return (
               <div style={{...palantirPanel}}>
@@ -6968,42 +7355,75 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
 
-            let cumulative = 0;
-            const cx=65, cy=65, r=52, inner=34;
-            const slices = donutData.map(d => {
-              const pct = d.value / total;
-              const startAngle = cumulative * 2 * Math.PI - Math.PI/2;
-              cumulative += pct;
-              const endAngle = cumulative * 2 * Math.PI - Math.PI/2;
-              const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
-              const x2=cx+r*Math.cos(endAngle), y2=cy+r*Math.sin(endAngle);
-              const xi1=cx+inner*Math.cos(startAngle), yi1=cy+inner*Math.sin(startAngle);
-              const xi2=cx+inner*Math.cos(endAngle), yi2=cy+inner*Math.sin(endAngle);
-              const large = pct > 0.5 ? 1 : 0;
-              return {...d, path:`M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${inner},${inner} 0 ${large},0 ${xi1},${yi1} Z`, pct};
-            });
+            // Squarified-style row-based treemap into a 280×140 canvas
+            const W = 280, H = 140;
+            const tiles = [];
+            // Greedy: walk through sorted data, fill rows that aim to be ~square-ish
+            let remainingW = W, remainingH = H, x = 0, y = 0;
+            let i = 0;
+            while (i < data.length) {
+              const remainingTotal = data.slice(i).reduce((s,d)=>s+d.value, 0);
+              if (remainingTotal === 0) break;
+              // Choose row direction: split horizontally if remainingW > remainingH
+              const horizontal = remainingW >= remainingH;
+              const longSide = horizontal ? remainingW : remainingH;
+              const shortSide = horizontal ? remainingH : remainingW;
+              // Take items until aspect ratio worsens — simple heuristic: take up to 3 items per row, or until cumulative >= 35% of remaining
+              const row = [];
+              let rowSum = 0;
+              while (i < data.length && row.length < 3 && (rowSum + data[i].value) / remainingTotal < 0.55) {
+                row.push(data[i]);
+                rowSum += data[i].value;
+                i++;
+              }
+              if (row.length === 0 && i < data.length) { row.push(data[i]); rowSum += data[i].value; i++; }
+              const rowFrac = rowSum / remainingTotal;
+              const rowThickness = shortSide * rowFrac;
+              let cursor = 0;
+              row.forEach(d => {
+                const tileLong = (d.value / rowSum) * longSide;
+                if (horizontal) {
+                  tiles.push({ ...d, x: x + cursor, y, w: tileLong, h: rowThickness });
+                } else {
+                  tiles.push({ ...d, x, y: y + cursor, w: rowThickness, h: tileLong });
+                }
+                cursor += tileLong;
+              });
+              if (horizontal) { y += rowThickness; remainingH -= rowThickness; }
+              else { x += rowThickness; remainingW -= rowThickness; }
+            }
 
             return (
               <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setActiveView('assets')}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation Treemap</span>
+                  <span style={{fontSize:"10px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${total.toLocaleString()}</span>
                 </div>
-                <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
-                  <svg width="130" height="130" viewBox="0 0 130 130" style={{flexShrink:0}}>
-                    {slices.map((s,i) => (
-                      <path key={i} d={s.path} fill={s.color} stroke="rgba(5,12,24,0.9)" strokeWidth="1.5" />
-                    ))}
-                    <text x="65" y="60" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>TOTAL</text>
-                    <text x="65" y="75" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:"monospace",fontWeight:"bold"}}>${total.toLocaleString()}</text>
+                <div style={{padding:"10px 12px"}}>
+                  <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{display:"block",height:"140px"}}>
+                    {tiles.map((t,idx) => {
+                      const pct = (t.value/total)*100;
+                      const showLabel = t.w > 50 && t.h > 24;
+                      const showPct = t.w > 30 && t.h > 14;
+                      return (
+                        <g key={idx}>
+                          <rect x={t.x+1} y={t.y+1} width={Math.max(t.w-2,0)} height={Math.max(t.h-2,0)} fill={t.color} fillOpacity="0.85" stroke="rgba(5,12,24,0.95)" strokeWidth="1" />
+                          {showLabel && <text x={t.x+6} y={t.y+14} style={{fontSize:"9px",fill:"#0a0e1a",fontFamily:"monospace",fontWeight:"bold",letterSpacing:"0.5px"}}>{t.name.toUpperCase()}</text>}
+                          {showPct && <text x={t.x+6} y={t.y + (showLabel?26:14)} style={{fontSize:"9px",fill:"rgba(10,14,26,0.85)",fontFamily:"monospace",fontWeight:600}}>{pct.toFixed(1)}%</text>}
+                        </g>
+                      );
+                    })}
                   </svg>
-                  <div style={{display:"flex",flexDirection:"column",gap:"5px",flex:1,maxHeight:"110px",overflowY:"auto"}}>
-                    {donutData.sort((a,b)=>b.value-a.value).map((d,i) => (
-                      <div key={i} style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                        <div style={{width:"6px",height:"6px",borderRadius:"50%",background:d.color,flexShrink:0}}></div>
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",flex:1}}>{d.name}</span>
-                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(1)}%</span>
+                  {/* mini legend strip */}
+                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px 10px",marginTop:"8px",paddingTop:"6px",borderTop:"0.5px solid rgba(0,200,255,0.06)"}}>
+                    {data.slice(0,6).map((d,i) => (
+                      <div key={i} style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                        <div style={{width:"8px",height:"8px",background:d.color,borderRadius:"1px"}}></div>
+                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{d.name}</span>
+                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(0)}%</span>
                       </div>
                     ))}
+                    {data.length > 6 && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>+{data.length-6} more</span>}
                   </div>
                 </div>
               </div>
@@ -7045,6 +7465,41 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               ))}
             </div>
           </div>
+
+          {/* DENSE ENTITY TABLE — UPCOMING BILLS */}
+          {billsDueSoon.length > 0 && (
+            <div style={palantirPanel}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{...palantirLabel,marginBottom:0,color:"rgba(239,68,68,0.7)"}}>Upcoming Bills · Entity Table</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{billsDueSoon.length} ROWS</span>
+              </div>
+              {/* Table header */}
+              <div style={{display:"grid",gridTemplateColumns:"24px 1fr 80px 60px 90px",gap:"8px",padding:"6px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(0,200,255,0.02)"}}>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px"}}>#</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px"}}>NAME</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>AMOUNT</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>DUE</span>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>STATUS</span>
+              </div>
+              {billsDueSoon.slice(0,8).map((b,i) => {
+                const lvl = b.days <= 3 ? "CRITICAL" : b.days <= 7 ? "WATCH" : "NOMINAL";
+                return (
+                  <div key={i} onClick={() => setActiveView('varied')} style={{display:"grid",gridTemplateColumns:"24px 1fr 80px 60px 90px",gap:"8px",padding:"7px 14px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{String(i+1).padStart(2,'0')}</span>
+                    <EntityLink onClick={() => setActiveView('varied')} size="11px">{b.name}</EntityLink>
+                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}</span>
+                    <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
+                    <div style={{textAlign:"right"}}><SeverityPill level={lvl} /></div>
+                  </div>
+                );
+              })}
+              {/* Footer total row */}
+              <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(0,200,255,0.12)",background:"rgba(0,200,255,0.02)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Σ MONTHLY OUTFLOW</span>
+                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+b.amount,0).toFixed(2)}</span>
+              </div>
+            </div>
+          )}
 
           {/* WEALTH MILESTONES + STOCK FEED ROW */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
@@ -7128,7 +7583,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             return (
               <div style={palantirPanel}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(168,85,247,0.8)",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}} onClick={() => setActiveView('investments')}>
-                  <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Portfolio Feed</span>
+                  <span style={{...palantirLabel,marginBottom:0,color:"rgba(168,85,247,0.6)"}}>Portfolio Feed · {topStocks.length} positions</span>
                   <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
                     <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(168,85,247,0.9)",display:"inline-block",animation:"blink 2s infinite"}}></span>
                     <span style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
@@ -7144,12 +7599,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const shares = parseFloat(stock.shares) || 0;
                   const avgCost = parseFloat(stock.avgCost) || 0;
                   const pl = shares > 0 && currentPrice > 0 ? ((currentPrice - avgCost) / avgCost * 100) : null;
+                  // tiny sparkline synthesized around current price
+                  const sparkSeries = currentPrice > 0
+                    ? Array.from({length:14},(_,k) => currentPrice * (1 + ((Math.sin(k*0.7 + (ticker?.charCodeAt(0)||0)) * 0.015) + (k/13)*(dailyChange||0)/100)))
+                    : null;
                   return (
-                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",gap:"4px"}}>
-                      <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,minWidth:"45px"}}>{ticker}</span>
-                      <span style={{fontSize:"11px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace",flexShrink:0}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
-                      <span style={{fontSize:"10px",fontFamily:"monospace",color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)",flexShrink:0}}>{dailyChange===null?"—":`${dailyChange>=0?"+":""}${dailyChange.toFixed(1)}%`}</span>
-                      <span style={{fontSize:"10px",fontFamily:"monospace",color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.6)":"rgba(239,68,68,0.6)",flexShrink:0}}>{pl===null?"":` ${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
+                    <div key={i} onClick={() => setActiveView('investments')} style={{display:"grid",gridTemplateColumns:"60px 1fr 70px 60px 60px",gap:"6px",alignItems:"center",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",cursor:"pointer"}}>
+                      <EntityLink size="12px" color="rgba(168,85,247,0.95)">{ticker}</EntityLink>
+                      <div style={{textAlign:"left"}}>{sparkSeries ? <Sparkline data={sparkSeries} w={70} h={14} color={dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"} fillOpacity={0.08} /> : <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>—</span>}</div>
+                      <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
+                      <span style={{fontSize:"10px",fontFamily:"monospace",color:dailyChange===null?"rgba(148,163,184,0.4)":dailyChange>=0?"rgba(34,197,94,0.85)":"rgba(239,68,68,0.85)",textAlign:"right"}}>{dailyChange===null?"—":`${dailyChange>=0?"+":""}${dailyChange.toFixed(1)}%`}</span>
+                      <span style={{fontSize:"10px",fontFamily:"monospace",color:pl===null?"rgba(148,163,184,0.3)":pl>=0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)",textAlign:"right"}}>{pl===null?"":`${pl>=0?"+":""}${pl.toFixed(1)}%`}</span>
                     </div>
                   );
                 })}
@@ -7356,7 +7816,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           )}
 
+          {/* METADATA FOOTER */}
+          <div style={{marginTop:"4px",padding:"10px 14px",background:"rgba(3,8,18,0.5)",border:"0.5px solid rgba(0,200,255,0.08)",borderRadius:"4px",display:"flex",flexWrap:"wrap",gap:"4px 16px",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{display:"flex",flexWrap:"wrap",gap:"4px 14px",fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px"}}>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>OBJECT_ID:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{objectId}</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>SESSION:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{sessionId}</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>LAST_SYNC:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{lastSyncStr}</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>SOURCE:</span><span style={{color:"rgba(224,234,255,0.6)"}}>muzz.local</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
+              <span style={{color:"rgba(0,200,255,0.35)"}}>REV:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{todayISO.replace(/-/g,'')}</span>
+            </div>
+            <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(0,200,255,0.4)",letterSpacing:"1.5px"}}>// END_OF_BRIEFING</div>
+          </div>
+
         </div>
+
+        {/* COMMAND PALETTE (⌘K) */}
+        {cmdPaletteOpen && (
+          <CommandPalette
+            entities={allEntities}
+            onPick={(id) => { setActiveView(id); setCmdPaletteOpen(false); }}
+            onClose={() => setCmdPaletteOpen(false)}
+          />
+        )}
 
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
