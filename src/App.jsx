@@ -7752,26 +7752,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               );
             })()}
-
-            {/* STATUS STRIP — now with severity pills */}
-            <div style={{display:"flex",alignItems:"center",gap:"6px",marginTop:"10px",padding:"4px 4px",flexWrap:"wrap"}}>
-              <SeverityPill level="NOMINAL" label="SYNC OK" />
-              <SeverityPill level="NOMINAL" label="DATA LIVE" />
-              <SeverityPill level={isElite?"ELITE":"OFFLINE"} label={isElite?"ELITE":"FREE TIER"} />
-              {(() => {
-                const lvl = savingsRate>=30?"NOMINAL":savingsRate>=15?"WATCH":savingsRate>0?"CRITICAL":"OFFLINE";
-                return <SeverityPill level={lvl} label={`SAVING ${savingsRate>0?savingsRate.toFixed(0)+'%':'—'}`} />;
-              })()}
-              {(() => {
-                if (billsDueSoon.length === 0) return null;
-                const next = billsDueSoon[0];
-                const lvl = next.days <= 3 ? "CRITICAL" : next.days <= 7 ? "WATCH" : "NOMINAL";
-                return <SeverityPill level={lvl} label={`BILL ${next.days}D`} />;
-              })()}
-              {topMover && (
-                <SeverityPill level={Math.abs(topMover.pct)>3?"WATCH":"NOMINAL"} label={`${topMover.ticker} ${topMover.pct>=0?'+':''}${topMover.pct.toFixed(1)}%`} />
-              )}
-            </div>
           </div>
         </div>
 
@@ -7980,7 +7960,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{billsDueSoon.length} ROWS</span>
               </div>
               {/* Table header */}
-              <div style={{display:"grid",gridTemplateColumns:"24px 1fr 80px 60px 90px",gap:"8px",padding:"6px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(0,200,255,0.02)"}}>
+              <div style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"6px 12px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(0,200,255,0.02)"}}>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px"}}>#</span>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px"}}>NAME</span>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>AMOUNT</span>
@@ -7994,13 +7974,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     key={i}
                     onClick={() => setInspectorEntity({ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" })}
                     onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" } }); }}
-                    style={{display:"grid",gridTemplateColumns:"24px 1fr 80px 60px 90px",gap:"8px",padding:"7px 14px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
+                    style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
                   >
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{String(i+1).padStart(2,'0')}</span>
-                    <EntityLink size="11px">{b.name}</EntityLink>
+                    <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
+                      <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
+                    </span>
                     <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}</span>
                     <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
-                    <div style={{textAlign:"right"}}><SeverityPill level={lvl} /></div>
+                    <div style={{display:"flex",justifyContent:"flex-end"}}><SeverityPill level={lvl} /></div>
                   </div>
                 );
               })}
