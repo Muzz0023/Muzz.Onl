@@ -3658,8 +3658,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           gridTemplateColumns:'24px 1fr auto',
           gap:'14px',
           alignItems:'center',
-          padding:'14px 16px',
-          marginBottom:'4px',
+          padding:'0 16px',
+          marginBottom:'3px',
+          minHeight:'34px',
+          flex:1,
           background:active?`rgba(${accent==='#f97316'?'249,115,22':'0,200,255'},0.08)`:'transparent',
           border:'0.5px solid transparent',
           borderLeft:active?`3px solid ${accent}`:'3px solid transparent',
@@ -3714,9 +3716,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
 
-          {/* NAV GRID — fills remaining space */}
-          <div style={{position:'relative',zIndex:10,padding:'14px 16px 8px',flex:1,minHeight:0,overflowY:'auto'}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px'}}>
+          {/* NAV GRID — auto-fills viewport, no scroll */}
+          <div style={{position:'relative',zIndex:10,padding:'14px 16px 8px',flex:1,minHeight:0,overflow:'hidden'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px',height:'100%'}}>
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyGlyphs = {
@@ -3749,7 +3751,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
                   return (
-                    <div key={sec} style={{marginBottom:'14px'}}>
+                    <div key={sec} style={{display:'flex',flexDirection:'column',marginBottom:'10px'}}>
                       <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
                       {items.map(item => {
                         const active = activeView === item.id;
@@ -3773,7 +3775,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
-                  <div key={sec} style={{marginBottom:'14px'}}>
+                  <div key={sec} style={{display:'flex',flexDirection:'column',marginBottom:'10px'}}>
                     <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
