@@ -388,6 +388,39 @@ const StarryBackground = ({ children }) => {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
+        @keyframes marqueeScroll {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes valueRoll {
+          0% { transform: translateY(-6px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes valueFlash {
+          0% { background: rgba(0,200,255,0.25); }
+          100% { background: transparent; }
+        }
+        @keyframes bootLine {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scanRail {
+          0%, 100% { box-shadow: 0 0 6px rgba(0,200,255,0.4), inset 0 0 0 0.5px rgba(0,200,255,0.3); }
+          50% { box-shadow: 0 0 12px rgba(0,200,255,0.85), inset 0 0 0 0.5px rgba(0,200,255,0.7); }
+        }
+        @keyframes railPulse {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(2000%); }
+        }
+        .value-flash {
+          animation: valueFlash 1.2s ease-out;
+        }
+        .roll-in {
+          animation: valueRoll 0.4s ease-out;
+        }
+        .boot-line {
+          animation: bootLine 0.25s ease-out backwards;
+        }
         .star-twinkle {
           animation: twinkle ease-in-out infinite;
         }
@@ -1626,6 +1659,40 @@ function MuzzApp() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
+
+  // Viewport tracking — Bridge layout activates on wide screens
+  const [isWide, setIsWide] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
+  useEffect(() => {
+    const onResize = () => setIsWide(window.innerWidth >= 1024);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Object Inspector — selected entity for right-panel deep dive
+  const [inspectorEntity, setInspectorEntity] = useState(null); // { type, id, label, ... }
+  // Right-click context menu
+  const [ctxMenu, setCtxMenu] = useState(null); // { x, y, entity }
+  useEffect(() => {
+    if (!ctxMenu) return;
+    const close = () => setCtxMenu(null);
+    window.addEventListener('click', close);
+    window.addEventListener('scroll', close, true);
+    return () => { window.removeEventListener('click', close); window.removeEventListener('scroll', close, true); };
+  }, [ctxMenu]);
+
+  // Boot sequence — terminal-style intro on first dashboard mount
+  const [bootDone, setBootDone] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return sessionStorage.getItem('muzz_boot_done') === '1';
+  });
+  useEffect(() => {
+    if (bootDone) return;
+    const t = setTimeout(() => {
+      setBootDone(true);
+      try { sessionStorage.setItem('muzz_boot_done', '1'); } catch(e) {}
+    }, 2200);
+    return () => clearTimeout(t);
+  }, [bootDone]);
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -3012,6 +3079,316 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       }
     }
   }, [sidebarOpen]);
+
+  // ============================================
+  // BootSequence — terminal-style boot intro on first dashboard load
+  // ============================================
+  const BootSequence = ({ onDone }) => {
+    const lines = [
+      "[INIT] muzz.onl bootstrap initiated",
+      "[OK]   loading user_data from supabase",
+      "[OK]   entitlements verified",
+      "[OK]   livePrices stream attached",
+      "[OK]   netWorthHistory hydrated",
+      "[OK]   eventLog channel open",
+      "[READY] handing off to operator",
+    ];
+    const [shown, setShown] = useState(0);
+    useEffect(() => {
+      if (shown >= lines.length) return;
+      const t = setTimeout(() => setShown(s => s+1), 220);
+      return () => clearTimeout(t);
+    }, [shown]);
+    return (
+      <div style={{position:"fixed",inset:0,zIndex:400,background:"#020a14",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(12px)"}}>
+        <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(0,200,255,0.05) 1px, transparent 1px)",backgroundSize:"24px 24px",pointerEvents:"none"}} />
+        <div style={{position:"relative",width:"100%",maxWidth:"540px",padding:"24px 28px",border:"0.5px solid rgba(0,200,255,0.3)",background:"rgba(5,12,24,0.92)",borderRadius:"4px",boxShadow:"0 0 60px rgba(0,200,255,0.15)"}}>
+          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"4px"}}>// MUZZ.ONL · BOOT_v2026.05.06</div>
+          <div style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"10px"}}>LIFE INTELLIGENCE SYSTEM</div>
+          {lines.slice(0, shown).map((l,i) => {
+            const isOk = l.startsWith("[OK]");
+            const isInit = l.startsWith("[INIT]");
+            const isReady = l.startsWith("[READY]");
+            const c = isReady ? "#00c8ff" : isOk ? "rgba(34,197,94,0.85)" : "rgba(0,200,255,0.7)";
+            return (
+              <div key={i} className="boot-line" style={{fontSize:"12px",color:c,fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"4px",animationDelay:`${i*20}ms`}}>
+                {l}
+              </div>
+            );
+          })}
+          {shown < lines.length && <div style={{fontSize:"12px",color:"#00c8ff",fontFamily:"monospace",animation:"blink 1s infinite",marginTop:"4px"}}>▊</div>}
+          {shown >= lines.length && (
+            <button onClick={onDone} style={{marginTop:"12px",fontSize:"10px",color:"#00c8ff",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"6px 14px",fontFamily:"monospace",letterSpacing:"2px",cursor:"pointer"}}>ENTER →</button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // RollingValue — animates when value changes (digit-roll style)
+  // ============================================
+  const RollingValue = ({ value, prefix = "", suffix = "", style = {}, fmt }) => {
+    const [display, setDisplay] = useState(value);
+    const [flash, setFlash] = useState(false);
+    const prevRef = useRef(value);
+    useEffect(() => {
+      if (prevRef.current === value) return;
+      prevRef.current = value;
+      setDisplay(value);
+      setFlash(true);
+      const t = setTimeout(() => setFlash(false), 1200);
+      return () => clearTimeout(t);
+    }, [value]);
+    const formatted = fmt ? fmt(display) : (typeof display === 'number' ? display.toLocaleString() : display);
+    return (
+      <span className={flash ? "value-flash roll-in" : ""} style={{display:"inline-block",padding:"0 2px",borderRadius:"2px",...style}}>
+        {prefix}{formatted}{suffix}
+      </span>
+    );
+  };
+
+  // ============================================
+  // MarqueeStrip — scrolling market ticker at bottom of dashboard
+  // ============================================
+  const MarqueeStrip = ({ items }) => {
+    if (!items || items.length === 0) return null;
+    const doubled = [...items, ...items, ...items]; // ensure seamless scroll
+    return (
+      <div style={{position:"relative",overflow:"hidden",borderTop:"0.5px solid rgba(0,200,255,0.15)",borderBottom:"0.5px solid rgba(0,200,255,0.15)",background:"rgba(3,8,18,0.7)",height:"26px",display:"flex",alignItems:"center"}}>
+        <div style={{position:"absolute",left:0,top:0,bottom:0,width:"60px",background:"linear-gradient(90deg,rgba(3,8,18,1),transparent)",zIndex:2,pointerEvents:"none"}} />
+        <div style={{position:"absolute",right:0,top:0,bottom:0,width:"60px",background:"linear-gradient(270deg,rgba(3,8,18,1),transparent)",zIndex:2,pointerEvents:"none"}} />
+        <div style={{display:"flex",animation:"ticker 60s linear infinite",whiteSpace:"nowrap",gap:"32px",paddingLeft:"60px"}}>
+          {doubled.map((item, i) => {
+            const c = item.delta == null ? "rgba(148,163,184,0.5)" : item.delta >= 0 ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)";
+            return (
+              <div key={i} style={{display:"inline-flex",alignItems:"center",gap:"8px",fontFamily:"monospace",fontSize:"10.5px",letterSpacing:"1px"}}>
+                <span style={{color:"rgba(0,200,255,0.6)",fontWeight:500}}>{item.label}</span>
+                <span style={{color:"#e0eaff"}}>{item.value}</span>
+                {item.delta != null && <span style={{color:c}}>{item.delta >= 0 ? "▲" : "▼"} {Math.abs(item.delta).toFixed(2)}%</span>}
+                <span style={{color:"rgba(0,200,255,0.2)"}}>·</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // ContextMenu — right-click menu for entities
+  // ============================================
+  const ContextMenu = ({ x, y, entity, actions }) => {
+    return (
+      <div style={{position:"fixed",left:Math.min(x,window.innerWidth-200),top:Math.min(y,window.innerHeight-200),zIndex:500,minWidth:"180px",background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"4px",boxShadow:"0 8px 24px rgba(0,0,0,0.6),0 0 20px rgba(0,200,255,0.1)",overflow:"hidden"}}>
+        <div style={{padding:"6px 10px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",background:"rgba(0,200,255,0.04)"}}>
+          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// {entity.type}</div>
+          <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
+        </div>
+        {actions.map((a,i) => (
+          <button key={i} onClick={(e) => { e.stopPropagation(); a.onClick(); }} style={{display:"block",width:"100%",textAlign:"left",padding:"7px 12px",background:"transparent",border:"none",borderBottom:i<actions.length-1?"0.5px solid rgba(0,200,255,0.04)":"none",fontSize:"11px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",letterSpacing:"0.5px",cursor:"pointer"}}
+            onMouseEnter={(e) => e.currentTarget.style.background="rgba(0,200,255,0.06)"}
+            onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
+            <span style={{color:"rgba(0,200,255,0.5)",fontSize:"10px",marginRight:"6px"}}>{a.icon || "›"}</span>
+            {a.label}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  // ============================================
+  // ObjectInspector — right-side context panel for selected entity
+  // ============================================
+  const ObjectInspector = ({ entity, onClose, deps }) => {
+    if (!entity) return null;
+    const { livePrices, subscriptions, assets, trackedStocks, stocks: heldStocks, setActiveView } = deps;
+
+    const sectionLabel = (txt) => (
+      <div style={{padding:"8px 14px 4px",fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"2px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>// {txt}</div>
+    );
+    const kvRow = (k, v, color) => (
+      <div style={{display:"grid",gridTemplateColumns:"110px 1fr",gap:"8px",padding:"5px 14px",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
+        <span style={{color:"rgba(0,200,255,0.5)",letterSpacing:"0.5px"}}>{k}</span>
+        <span style={{color:color||"#e0eaff",letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis"}}>{v}</span>
+      </div>
+    );
+
+    let content = null;
+    if (entity.type === "STOCK") {
+      const tracked = trackedStocks.find(s => s.ticker?.toUpperCase() === entity.id);
+      const held = heldStocks.find(s => s.ticker?.toUpperCase() === entity.id);
+      const p = livePrices[entity.id];
+      const dailyDelta = p?.c && p?.pc && p.pc > 0 ? ((p.c - p.pc)/p.pc*100) : null;
+      const shares = parseFloat(held?.shares || tracked?.shares) || 0;
+      const avgCost = parseFloat(held?.avgCost || tracked?.avgCost) || 0;
+      const positionValue = shares * (p?.c || 0);
+      const pl = shares > 0 && p?.c && avgCost > 0 ? ((p.c - avgCost) / avgCost * 100) : null;
+      content = (
+        <>
+          {sectionLabel("PRICE")}
+          {kvRow("LAST", p?.c ? `$${p.c.toFixed(2)}` : "—")}
+          {kvRow("PREV CLOSE", p?.pc ? `$${p.pc.toFixed(2)}` : "—")}
+          {kvRow("DAILY Δ", dailyDelta!=null ? `${dailyDelta>=0?"+":""}${dailyDelta.toFixed(2)}%` : "—", dailyDelta==null?null:dailyDelta>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)")}
+          {sectionLabel("POSITION")}
+          {kvRow("SHARES", shares > 0 ? shares.toString() : "—")}
+          {kvRow("AVG COST", avgCost > 0 ? `$${avgCost.toFixed(2)}` : "—")}
+          {kvRow("VALUE", positionValue > 0 ? `$${positionValue.toLocaleString(undefined,{maximumFractionDigits:2})}` : "—")}
+          {kvRow("P/L", pl!=null ? `${pl>=0?"+":""}${pl.toFixed(2)}%` : "—", pl==null?null:pl>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)")}
+          {sectionLabel("METADATA")}
+          {kvRow("NAME", tracked?.name || held?.name || "—")}
+          {kvRow("ENTITY_ID", `stock_${entity.id.toLowerCase()}`)}
+          {kvRow("TYPE", "EQUITY")}
+        </>
+      );
+    } else if (entity.type === "BILL") {
+      const bill = subscriptions.find(s => s.name === entity.id);
+      if (!bill) return null;
+      const day = parseInt(bill.dueDate?.toString().replace(/[^0-9]/g,'')) || null;
+      let daysUntil = null;
+      if (day) {
+        const now = new Date();
+        let next = new Date(now.getFullYear(), now.getMonth(), day);
+        if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
+        daysUntil = Math.ceil((next - now)/86400000);
+      }
+      const annual = (bill.monthly || 0) * 12;
+      content = (
+        <>
+          {sectionLabel("BILL")}
+          {kvRow("MONTHLY", `$${(bill.monthly||0).toFixed(2)}`)}
+          {kvRow("ANNUAL", `$${annual.toFixed(2)}`)}
+          {kvRow("DUE DAY", bill.dueDate || "—")}
+          {kvRow("DAYS UNTIL", daysUntil!=null ? `${daysUntil}d` : "—", daysUntil!=null && daysUntil<=3 ? "rgba(239,68,68,0.9)" : daysUntil<=7 ? "rgba(251,191,36,0.9)" : null)}
+          {sectionLabel("METADATA")}
+          {kvRow("ENTITY_ID", `bill_${entity.id.toLowerCase().replace(/\s/g,'_')}`)}
+          {kvRow("TYPE", "RECURRING_OUTFLOW")}
+        </>
+      );
+    } else if (entity.type === "ASSET") {
+      const asset = assets.find(a => a.name === entity.id);
+      if (!asset) return null;
+      const v = parseFloat(asset.value) || 0;
+      content = (
+        <>
+          {sectionLabel("ASSET")}
+          {kvRow("VALUE", `$${v.toLocaleString()}`)}
+          {kvRow("CATEGORY", asset.category || "—")}
+          {sectionLabel("METADATA")}
+          {kvRow("ENTITY_ID", `asset_${entity.id.toLowerCase().replace(/\s/g,'_')}`)}
+          {kvRow("TYPE", (asset.category || "ASSET").toUpperCase())}
+        </>
+      );
+    } else {
+      content = <div style={{padding:"14px",fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>NO DATA</div>;
+    }
+
+    const typeColor = entity.type === "STOCK" ? "rgba(168,85,247,0.9)" : entity.type === "BILL" ? "rgba(239,68,68,0.85)" : "rgba(34,197,94,0.85)";
+
+    return (
+      <div style={{height:"100%",display:"flex",flexDirection:"column",background:"rgba(5,12,24,0.92)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"4px",backgroundImage:"radial-gradient(rgba(0,200,255,0.025) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
+        {/* Header */}
+        <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:`2px solid ${typeColor}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{minWidth:0}}>
+            <div style={{fontSize:"9px",color:typeColor,fontFamily:"monospace",letterSpacing:"2px"}}>// OBJECT_INSPECTOR · {entity.type}</div>
+            <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entity.label}</div>
+          </div>
+          <button onClick={onClose} style={{background:"none",border:"0.5px solid rgba(0,200,255,0.3)",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"3px 8px",cursor:"pointer",borderRadius:"2px",letterSpacing:"1px",flexShrink:0}}>✕</button>
+        </div>
+        {/* Body */}
+        <div style={{flex:1,overflowY:"auto"}}>
+          {content}
+          {sectionLabel("RELATIONSHIPS")}
+          <div style={{padding:"8px 14px"}}>
+            {entity.type === "STOCK" && (
+              <button onClick={() => { setActiveView('investments'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Investments</button>
+            )}
+            {entity.type === "BILL" && (
+              <button onClick={() => { setActiveView('varied'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Bills</button>
+            )}
+            {entity.type === "ASSET" && (
+              <button onClick={() => { setActiveView('assets'); onClose(); }} style={{display:"block",width:"100%",textAlign:"left",fontSize:"11px",color:"#00c8ff",fontFamily:"monospace",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",padding:"6px 10px",marginBottom:"4px",cursor:"pointer",letterSpacing:"0.5px"}}>↗ Open in Assets</button>
+            )}
+          </div>
+        </div>
+        {/* Footer */}
+        <div style={{padding:"6px 14px",borderTop:"0.5px solid rgba(0,200,255,0.08)",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
+          ↗ ENTITY · INSPECTED
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // SystemHealthRail — left-edge pulsing rail with health blocks
+  // ============================================
+  const SystemHealthRail = ({ checks }) => {
+    return (
+      <div style={{position:"fixed",left:0,top:"32px",bottom:0,width:"4px",zIndex:30,display:"flex",flexDirection:"column",gap:"2px",padding:"4px 0",background:"rgba(3,8,18,0.6)",borderRight:"0.5px solid rgba(0,200,255,0.08)"}}>
+        {checks.map((c, i) => {
+          const color = c.level === "CRITICAL" ? "rgba(239,68,68,0.9)" : c.level === "WATCH" ? "rgba(251,191,36,0.9)" : c.level === "OFFLINE" ? "rgba(148,163,184,0.4)" : "rgba(34,197,94,0.85)";
+          return (
+            <div key={i} title={c.label} style={{flex:1,background:color,boxShadow:c.level==="CRITICAL"?`0 0 6px ${color}`:"none",animation:c.level==="CRITICAL"?"blink 1.5s infinite":"none",minHeight:"12px"}} />
+          );
+        })}
+      </div>
+    );
+  };
+
+  // ============================================
+  // LeftRail — Bridge-style workspace nav (desktop only)
+  // ============================================
+  const LeftRail = ({ activeView, setActiveView, isElite }) => {
+    const sections = [
+      { id:"home", label:"DASH", icon:"◈" },
+      { id:"varied", label:"BILLS", icon:"$", elite:true },
+      { id:"assets", label:"ASSET", icon:"▣", elite:true },
+      { id:"investments", label:"INVST", icon:"⌗", elite:true },
+      { id:"work", label:"WORK", icon:"⊢", elite:true },
+      { id:"diet", label:"DIET", icon:"◊", elite:true },
+      { id:"gymworkout", label:"GYM", icon:"⊕", elite:true },
+      { id:"tasks", label:"TASK", icon:"☰" },
+      { id:"habits", label:"HBIT", icon:"◍" },
+      { id:"timetable", label:"TMTB", icon:"⊞", elite:true },
+      { id:"reminders", label:"RMDR", icon:"◐" },
+      { id:"countdowns", label:"CNTD", icon:"◓" },
+      { id:"statsinsights", label:"STAT", icon:"⌬" },
+    ];
+    return (
+      <div style={{position:"fixed",left:"4px",top:"32px",bottom:"26px",width:"68px",zIndex:25,background:"rgba(3,8,18,0.95)",borderRight:"0.5px solid rgba(0,200,255,0.12)",borderLeft:"0.5px solid rgba(0,200,255,0.06)",display:"flex",flexDirection:"column",backdropFilter:"blur(8px)"}}>
+        {/* Header */}
+        <div style={{padding:"10px 6px 6px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
+          <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WORK</div>
+          <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>SPACES</div>
+        </div>
+        {/* Nav */}
+        <div style={{flex:1,overflowY:"auto",padding:"6px 0"}}>
+          {sections.map(s => {
+            const active = activeView === s.id;
+            const locked = s.elite && !isElite;
+            return (
+              <button key={s.id} onClick={() => !locked && setActiveView(s.id)} style={{
+                display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"3px",
+                width:"100%",padding:"8px 4px",
+                background:active?"rgba(0,200,255,0.1)":"transparent",
+                border:"none",borderLeft:active?"2px solid #00c8ff":"2px solid transparent",
+                cursor:locked?"not-allowed":"pointer",
+                opacity:locked?0.3:1
+              }}>
+                <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>{s.icon}</span>
+                <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}</span>
+                {locked && <span style={{fontSize:"7px",color:"rgba(0,200,255,0.3)"}}>⚡</span>}
+              </button>
+            );
+          })}
+        </div>
+        {/* Footer */}
+        <div style={{padding:"6px",borderTop:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
+          <div style={{fontSize:"7.5px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>v2026.05</div>
+        </div>
+      </div>
+    );
+  };
 
   // Command Palette Component - Palantir Quick Find (⌘K)
   const CommandPalette = ({ entities, onPick, onClose }) => {
@@ -7106,8 +7483,68 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const allEntities = [...navTargets, ...stockEntities, ...billEntities, ...assetEntities];
 
 
+    // ============================================
+    // SYSTEM HEALTH RAIL — left-edge pulse blocks
+    // ============================================
+    const healthChecks = [
+      { label: "SYNC",     level: "NOMINAL" },
+      { label: "AUTH",     level: userId ? "NOMINAL" : "OFFLINE" },
+      { label: "DATA",     level: dataLoaded ? "NOMINAL" : "WATCH" },
+      { label: "PRICES",   level: Object.keys(livePrices).length > 0 ? "NOMINAL" : "OFFLINE" },
+      { label: "ELITE",    level: isElite ? "NOMINAL" : "OFFLINE" },
+      { label: "BILLS",    level: billsDueSoon[0]?.days <= 3 ? "CRITICAL" : billsDueSoon[0]?.days <= 7 ? "WATCH" : "NOMINAL" },
+      { label: "SAVING",   level: savingsRate >= 30 ? "NOMINAL" : savingsRate >= 15 ? "WATCH" : savingsRate > 0 ? "CRITICAL" : "OFFLINE" },
+      { label: "DEBT",     level: debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0) === 0 ? "NOMINAL" : salaryNum>0 && debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0) > salaryNum*12 ? "CRITICAL" : "WATCH" },
+      { label: "STREAM",   level: "NOMINAL" },
+      { label: "REV",      level: "NOMINAL" },
+    ];
+
+    // ============================================
+    // MARQUEE TICKER ITEMS — bottom scrolling strip
+    // ============================================
+    const marqueeItems = (() => {
+      const arr = [];
+      arr.push({ label: "NET_WORTH", value: `$${netWorth.toLocaleString()}`, delta: nwDelta7d });
+      arr.push({ label: "PORTFOLIO", value: `$${totalStocks.toLocaleString()}`, delta: null });
+      trackedStocks.filter(s => s.ticker).forEach(s => {
+        const t = s.ticker.toUpperCase();
+        const p = livePrices[t];
+        if (!p?.c) return;
+        const d = p.pc > 0 ? ((p.c - p.pc)/p.pc*100) : null;
+        arr.push({ label: t, value: `$${p.c.toFixed(2)}`, delta: d });
+      });
+      if (billsDueSoon.length > 0) arr.push({ label: "BILLS_DUE", value: `${billsDueSoon.length}`, delta: null });
+      if (savingsRate > 0) arr.push({ label: "SAVING_RATE", value: `${savingsRate.toFixed(0)}%`, delta: null });
+      if (assets.length > 0) arr.push({ label: "ASSETS", value: `${assets.length}`, delta: null });
+      arr.push({ label: "STATUS", value: "NOMINAL", delta: null });
+      arr.push({ label: "REV", value: todayISO.replace(/-/g,''), delta: null });
+      return arr;
+    })();
+
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide ? "76px" : 0, paddingRight: isWide && inspectorEntity ? "320px" : 0, transition: "padding 0.2s ease"}}>
+        {/* BOOT SEQUENCE (first load only) */}
+        {!bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
+
+        {/* SYSTEM HEALTH RAIL */}
+        <SystemHealthRail checks={healthChecks} />
+
+        {/* LEFT RAIL — desktop only */}
+        {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} />}
+
+        {/* CONTEXT MENU */}
+        {ctxMenu && (
+          <ContextMenu
+            x={ctxMenu.x} y={ctxMenu.y} entity={ctxMenu.entity}
+            actions={[
+              { icon: "◉", label: "Inspect entity", onClick: () => { setInspectorEntity(ctxMenu.entity); setCtxMenu(null); } },
+              { icon: "↗", label: `Open in ${ctxMenu.entity.viewName||'view'}`, onClick: () => { setActiveView(ctxMenu.entity.view); setCtxMenu(null); } },
+              { icon: "⌕", label: "Find related", onClick: () => { setCmdPaletteOpen(true); setCtxMenu(null); } },
+              { icon: "✕", label: "Cancel", onClick: () => setCtxMenu(null) },
+            ]}
+          />
+        )}
+
         <Sidebar />
         <SaveIndicator />
 
@@ -7135,8 +7572,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         {/* HEADER */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:"60px 28px 20px"}}>
-          <div className="max-w-4xl mx-auto">
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"60px 28px 20px"}}>
+          <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"}>
             <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
               <svg width="44" height="54" viewBox="0 0 24 32" fill="none">
                 <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#dashEliteGrad)" />
@@ -7176,14 +7613,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
-                    <div style={{fontSize:"40px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${netWorth.toLocaleString()}</div>
+                    <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"40px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
                     <Sparkline data={nwSeries} w={80} h={24} color="auto" />
                   </div>
                 </div>
                 <div style={{textAlign:"right",flexShrink:0}}>
                   <div style={{...palantirLabel,textAlign:"right"}}>Portfolio</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:"flex-end"}}>
-                    <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalStocks.toLocaleString()}</div>
+                    <RollingValue value={totalStocks} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
                     <Sparkline data={portfolioSeries} w={50} h={18} color="rgba(168,85,247,0.9)" />
                   </div>
                 </div>
@@ -7212,7 +7649,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+        <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
 
           {/* LIVE EVENT LOG FEED */}
           <div style={{...palantirPanel,borderLeft:"2px solid rgba(34,197,94,0.7)"}}>
@@ -7484,9 +7921,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {billsDueSoon.slice(0,8).map((b,i) => {
                 const lvl = b.days <= 3 ? "CRITICAL" : b.days <= 7 ? "WATCH" : "NOMINAL";
                 return (
-                  <div key={i} onClick={() => setActiveView('varied')} style={{display:"grid",gridTemplateColumns:"24px 1fr 80px 60px 90px",gap:"8px",padding:"7px 14px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}>
+                  <div
+                    key={i}
+                    onClick={() => setInspectorEntity({ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" })}
+                    onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" } }); }}
+                    style={{display:"grid",gridTemplateColumns:"24px 1fr 80px 60px 90px",gap:"8px",padding:"7px 14px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
+                  >
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{String(i+1).padStart(2,'0')}</span>
-                    <EntityLink onClick={() => setActiveView('varied')} size="11px">{b.name}</EntityLink>
+                    <EntityLink size="11px">{b.name}</EntityLink>
                     <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}</span>
                     <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
                     <div style={{textAlign:"right"}}><SeverityPill level={lvl} /></div>
@@ -7604,7 +8046,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ? Array.from({length:14},(_,k) => currentPrice * (1 + ((Math.sin(k*0.7 + (ticker?.charCodeAt(0)||0)) * 0.015) + (k/13)*(dailyChange||0)/100)))
                     : null;
                   return (
-                    <div key={i} onClick={() => setActiveView('investments')} style={{display:"grid",gridTemplateColumns:"60px 1fr 70px 60px 60px",gap:"6px",alignItems:"center",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",cursor:"pointer"}}>
+                    <div
+                      key={i}
+                      onClick={() => setInspectorEntity({ type:"STOCK", id:ticker, label:ticker, view:"investments", viewName:"Investments" })}
+                      onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"STOCK", id:ticker, label:ticker, view:"investments", viewName:"Investments" } }); }}
+                      style={{display:"grid",gridTemplateColumns:"60px 1fr 70px 60px 60px",gap:"6px",alignItems:"center",padding:"9px 12px",borderBottom:i<topStocks.length-1?"0.5px solid rgba(168,85,247,0.06)":"none",cursor:"pointer"}}
+                    >
                       <EntityLink size="12px" color="rgba(168,85,247,0.95)">{ticker}</EntityLink>
                       <div style={{textAlign:"left"}}>{sparkSeries ? <Sparkline data={sparkSeries} w={70} h={14} color={dailyChange>=0?"rgba(34,197,94,0.8)":"rgba(239,68,68,0.8)"} fillOpacity={0.08} /> : <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>—</span>}</div>
                       <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>{currentPrice>0?`$${currentPrice.toFixed(2)}`:"—"}</span>
@@ -7832,6 +8279,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(0,200,255,0.4)",letterSpacing:"1.5px"}}>// END_OF_BRIEFING</div>
           </div>
 
+        </div>
+
+        {/* OBJECT INSPECTOR — right side panel on wide, bottom sheet on mobile */}
+        {inspectorEntity && isWide && (
+          <div style={{position:"fixed",top:"32px",right:"4px",bottom:"26px",width:"312px",zIndex:60}}>
+            <ObjectInspector
+              entity={inspectorEntity}
+              onClose={() => setInspectorEntity(null)}
+              deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView }}
+            />
+          </div>
+        )}
+        {inspectorEntity && !isWide && (
+          <div onClick={() => setInspectorEntity(null)} style={{position:"fixed",inset:0,zIndex:200,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(4px)",display:"flex",alignItems:"flex-end"}}>
+            <div onClick={e => e.stopPropagation()} style={{width:"100%",height:"75vh",animation:"valueRoll 0.25s ease-out"}}>
+              <ObjectInspector
+                entity={inspectorEntity}
+                onClose={() => setInspectorEntity(null)}
+                deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* MARQUEE TICKER — fixed bottom strip */}
+        <div style={{position:"fixed",bottom:0,left:isWide?"76px":0,right:isWide && inspectorEntity?"320px":0,zIndex:40,transition:"left 0.2s ease, right 0.2s ease"}}>
+          <MarqueeStrip items={marqueeItems} />
         </div>
 
         {/* COMMAND PALETTE (⌘K) */}
