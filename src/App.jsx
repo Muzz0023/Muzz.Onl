@@ -7551,33 +7551,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const sessionId = (userId || 'anon').slice(0,8).toUpperCase();
     const lastSyncStr = liveTime.toISOString().split('T')[1].split('.')[0] + 'Z';
 
-    // BRIEFING text — auto-generated 1–2 line intel summary
-    const briefingLines = (() => {
-      const lines = [];
-      if (nwDelta7d !== null) {
-        const dir = nwDelta7d >= 0 ? "up" : "down";
-        lines.push(`Net worth ${dir} ${Math.abs(nwDelta7d).toFixed(1)}% this week.`);
-      } else if (netWorth > 0) {
-        lines.push(`Net worth at $${netWorth.toLocaleString()}.`);
-      }
-      if (billsDueSoon.length > 0) {
-        const within7 = billsDueSoon.filter(b => b.days <= 7);
-        if (within7.length > 0) {
-          lines.push(`${within7.length} bill${within7.length>1?'s':''} due within 7 days.`);
-        }
-      }
-      if (topMover) {
-        const sign = topMover.pct >= 0 ? "+" : "";
-        lines.push(`${topMover.ticker} ${sign}${topMover.pct.toFixed(2)}% intraday.`);
-      }
-      if (savingsRate > 0) {
-        lines.push(`Savings rate ${savingsRate.toFixed(0)}%.`);
-      }
-      if (lines.length === 0) lines.push("Awaiting initial data input. Set salary in Bills to begin.");
-      return lines.slice(0, 3);
-    })();
-
-
     // ============================================
     // SYSTEM HEALTH RAIL — left-edge pulse blocks
     // ============================================
@@ -7655,17 +7628,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {isElite && <SeverityPill level="ELITE" label="ELITE" />}
                 </div>
               </div>
-            </div>
-
-            {/* BRIEFING NARRATIVE */}
-            <div style={{...palantirPanel,borderLeft:"2px solid rgba(0,200,255,0.5)",padding:"12px 16px",marginBottom:"10px"}}>
-              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px"}}>// INTEL SUMMARY</div>
-              {briefingLines.map((line, i) => (
-                <div key={i} style={{fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"0.3px",marginBottom:i<briefingLines.length-1?"3px":0,display:"flex",alignItems:"baseline",gap:"6px"}}>
-                  <span style={{color:"rgba(0,200,255,0.4)",fontSize:"9px"}}>▸</span>
-                  <span>{line}</span>
-                </div>
-              ))}
             </div>
 
             {/* NET WORTH PANEL */}
