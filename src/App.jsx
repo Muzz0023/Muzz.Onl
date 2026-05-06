@@ -1646,19 +1646,6 @@ function MuzzApp() {
   const [showHealthModal, setShowHealthModal] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
-  const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
-  useEffect(() => {
-    const handler = (e) => {
-      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
-        e.preventDefault();
-        setCmdPaletteOpen(o => !o);
-      } else if (e.key === 'Escape') {
-        setCmdPaletteOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
 
   // Viewport tracking — Bridge layout activates on wide screens
   const [isWide, setIsWide] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
@@ -1667,6 +1654,15 @@ function MuzzApp() {
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  // Left rail collapse state (desktop only) — persisted across sessions
+  const [leftRailHidden, setLeftRailHidden] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('muzz_left_rail_hidden') === '1';
+  });
+  useEffect(() => {
+    try { localStorage.setItem('muzz_left_rail_hidden', leftRailHidden ? '1' : '0'); } catch(e) {}
+  }, [leftRailHidden]);
 
   // Object Inspector — selected entity for right-panel deep dive
   const [inspectorEntity, setInspectorEntity] = useState(null); // { type, id, label, ... }
@@ -3467,7 +3463,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ============================================
   // LeftRail — Bridge-style workspace nav (desktop only)
   // ============================================
-  const LeftRail = ({ activeView, setActiveView, isElite }) => {
+  const LeftRail = ({ activeView, setActiveView, isElite, hidden, onToggle }) => {
     const sections = [
       { id:"home", label:"DASH", icon:"◈" },
       { id:"varied", label:"BILLS", icon:"$", elite:true },
@@ -3484,129 +3480,78 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { id:"statsinsights", label:"STAT", icon:"⌬" },
     ];
     return (
-      <div style={{position:"fixed",left:"4px",top:"32px",bottom:"26px",width:"68px",zIndex:25,background:"rgba(3,8,18,0.95)",borderRight:"0.5px solid rgba(0,200,255,0.12)",borderLeft:"0.5px solid rgba(0,200,255,0.06)",display:"flex",flexDirection:"column",backdropFilter:"blur(8px)"}}>
-        {/* Header */}
-        <div style={{padding:"10px 6px 6px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
-          <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WORK</div>
-          <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>SPACES</div>
-        </div>
-        {/* Nav */}
-        <div style={{flex:1,overflowY:"auto",padding:"6px 0"}}>
-          {sections.map(s => {
-            const active = activeView === s.id;
-            const locked = s.elite && !isElite;
-            return (
-              <button key={s.id} onClick={() => !locked && setActiveView(s.id)} style={{
-                display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"3px",
-                width:"100%",padding:"8px 4px",
-                background:active?"rgba(0,200,255,0.1)":"transparent",
-                border:"none",borderLeft:active?"2px solid #00c8ff":"2px solid transparent",
-                cursor:locked?"not-allowed":"pointer",
-                opacity:locked?0.3:1
-              }}>
-                <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>{s.icon}</span>
-                <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}</span>
-                {locked && <span style={{fontSize:"7px",color:"rgba(0,200,255,0.3)"}}>⚡</span>}
-              </button>
-            );
-          })}
-        </div>
-        {/* Footer */}
-        <div style={{padding:"6px",borderTop:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
-          <div style={{fontSize:"7.5px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>v2026.05</div>
-        </div>
-      </div>
-    );
-  };
-
-  // Command Palette Component - Palantir Quick Find (⌘K)
-  const CommandPalette = ({ entities, onPick, onClose }) => {
-    const [query, setQuery] = useState('');
-    const [highlight, setHighlight] = useState(0);
-    const inputRef = useRef(null);
-    useEffect(() => { inputRef.current?.focus(); }, []);
-
-    const q = query.trim().toLowerCase();
-    const filtered = q
-      ? entities.filter(e =>
-          e.label.toLowerCase().includes(q) ||
-          e.section.toLowerCase().includes(q) ||
-          (e.meta && e.meta.toLowerCase().includes(q))
-        ).slice(0, 12)
-      : entities.slice(0, 12);
-
-    const grouped = filtered.reduce((acc, e) => {
-      acc[e.section] = acc[e.section] || [];
-      acc[e.section].push(e);
-      return acc;
-    }, {});
-
-    const flat = Object.entries(grouped).flatMap(([sec, items]) => items);
-
-    const handleKey = (e) => {
-      if (e.key === 'ArrowDown') { e.preventDefault(); setHighlight(h => Math.min(h+1, flat.length-1)); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); setHighlight(h => Math.max(h-1, 0)); }
-      else if (e.key === 'Enter') { e.preventDefault(); if (flat[highlight]) onPick(flat[highlight].id); }
-      else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
-    };
-
-    return (
-      <div onClick={onClose} style={{position:"fixed",inset:0,zIndex:300,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(6px)",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"10vh"}}>
-        <div onClick={e => e.stopPropagation()} style={{width:"100%",maxWidth:"560px",margin:"0 16px",background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"6px",boxShadow:"0 0 40px rgba(0,200,255,0.15)",overflow:"hidden"}}>
+      <>
+        {/* Rail body — slides off-screen when hidden */}
+        <div style={{
+          position:"fixed",
+          left: hidden ? "-72px" : "4px",
+          top:"32px",bottom:"26px",width:"68px",zIndex:25,
+          background:"rgba(3,8,18,0.95)",
+          borderRight:"0.5px solid rgba(0,200,255,0.12)",
+          borderLeft:"0.5px solid rgba(0,200,255,0.06)",
+          display:"flex",flexDirection:"column",
+          backdropFilter:"blur(8px)",
+          transition:"left 0.22s ease"
+        }}>
           {/* Header */}
-          <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",gap:"10px"}}>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>// QUICK_FIND</span>
-            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{entities.length} ENTITIES INDEXED</span>
-            <span style={{marginLeft:"auto",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.25)",padding:"1px 5px",borderRadius:"2px"}}>ESC</span>
+          <div style={{padding:"10px 6px 6px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
+            <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WORK</div>
+            <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>SPACES</div>
           </div>
-          {/* Input */}
-          <div style={{padding:"14px 18px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"10px"}}>
-            <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"14px"}}>›</span>
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={e => { setQuery(e.target.value); setHighlight(0); }}
-              onKeyDown={handleKey}
-              placeholder="Search views, stocks, bills, assets…"
-              style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",letterSpacing:"0.5px",caretColor:"#00c8ff"}}
-            />
+          {/* Nav */}
+          <div style={{flex:1,overflowY:"auto",padding:"6px 0"}}>
+            {sections.map(s => {
+              const active = activeView === s.id;
+              const locked = s.elite && !isElite;
+              return (
+                <button key={s.id} onClick={() => !locked && setActiveView(s.id)} style={{
+                  display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"3px",
+                  width:"100%",padding:"8px 4px",
+                  background:active?"rgba(0,200,255,0.1)":"transparent",
+                  border:"none",borderLeft:active?"2px solid #00c8ff":"2px solid transparent",
+                  cursor:locked?"not-allowed":"pointer",
+                  opacity:locked?0.3:1
+                }}>
+                  <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>{s.icon}</span>
+                  <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}</span>
+                  {locked && <span style={{fontSize:"7px",color:"rgba(0,200,255,0.3)"}}>⚡</span>}
+                </button>
+              );
+            })}
           </div>
-          {/* Results */}
-          <div style={{maxHeight:"50vh",overflowY:"auto"}}>
-            {flat.length === 0 ? (
-              <div style={{padding:"24px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO MATCHES</div>
-            ) : (
-              Object.entries(grouped).map(([sec, items]) => (
-                <div key={sec}>
-                  <div style={{padding:"6px 18px 4px",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>// {sec}</div>
-                  {items.map((e) => {
-                    const idx = flat.indexOf(e);
-                    const active = idx === highlight;
-                    return (
-                      <div
-                        key={`${sec}_${e.label}_${idx}`}
-                        onMouseEnter={() => setHighlight(idx)}
-                        onClick={() => onPick(e.id)}
-                        style={{padding:"8px 18px",display:"flex",alignItems:"center",gap:"10px",cursor:"pointer",background:active?"rgba(0,200,255,0.06)":"transparent",borderLeft:`2px solid ${active?"#00c8ff":"transparent"}`}}
-                      >
-                        <span style={{fontSize:"12px",color:active?"#00c8ff":"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px",flex:1}}>{e.label}</span>
-                        {e.meta && <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{e.meta}</span>}
-                        <span style={{fontSize:"10px",color:active?"#00c8ff":"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>↗</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))
-            )}
-          </div>
-          {/* Footer hint */}
-          <div style={{padding:"8px 18px",borderTop:"0.5px solid rgba(0,200,255,0.08)",display:"flex",justifyContent:"space-between",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
-            <span>↑↓ NAVIGATE</span>
-            <span>↵ OPEN</span>
-            <span>ESC CLOSE</span>
+          {/* Footer */}
+          <div style={{padding:"6px",borderTop:"0.5px solid rgba(0,200,255,0.08)",textAlign:"center"}}>
+            <div style={{fontSize:"7.5px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px"}}>v2026.05</div>
           </div>
         </div>
-      </div>
+
+        {/* Toggle tab — sticks out from rail edge, always visible */}
+        <button
+          onClick={onToggle}
+          title={hidden ? "Show workspaces (›)" : "Hide workspaces (‹)"}
+          style={{
+            position:"fixed",
+            top:"50%",
+            left: hidden ? "0px" : "72px",
+            transform:"translateY(-50%)",
+            zIndex:26,
+            width:"18px",height:"54px",
+            background:"rgba(3,8,18,0.95)",
+            border:"0.5px solid rgba(0,200,255,0.25)",
+            borderLeft: hidden ? "0.5px solid rgba(0,200,255,0.25)" : "none",
+            borderRadius: hidden ? "0 4px 4px 0" : "0 4px 4px 0",
+            color:"rgba(0,200,255,0.7)",
+            fontFamily:"monospace",fontSize:"12px",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            cursor:"pointer",
+            backdropFilter:"blur(8px)",
+            transition:"left 0.22s ease",
+            padding:0,
+          }}
+        >
+          {hidden ? "›" : "‹"}
+        </button>
+      </>
     );
   };
 
@@ -7631,35 +7576,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return lines.slice(0, 3);
     })();
 
-    // SEARCHABLE ENTITIES for command palette
-    const navTargets = [
-      { id:"home", label:"Dashboard", section:"NAV" },
-      { id:"habits", label:"Habits", section:"NAV" },
-      { id:"tasks", label:"Tasks", section:"NAV" },
-      { id:"countdowns", label:"Countdowns", section:"NAV" },
-      { id:"reminders", label:"Reminders", section:"NAV" },
-      { id:"gym", label:"Health", section:"NAV" },
-      { id:"gymworkout", label:"Gym", section:"NAV" },
-      { id:"work", label:"Work", section:"NAV" },
-      { id:"diet", label:"Diet", section:"NAV" },
-      { id:"timetable", label:"Timetable", section:"NAV" },
-      { id:"varied", label:"Bills", section:"NAV" },
-      { id:"assets", label:"Assets", section:"NAV" },
-      { id:"investments", label:"Investments", section:"NAV" },
-      { id:"statsinsights", label:"Stats & Insights", section:"NAV" },
-      { id:"upgrade", label:"Elite", section:"NAV" },
-    ];
-    const stockEntities = trackedStocks.filter(s => s.ticker).map(s => ({
-      id:"investments", label:s.ticker.toUpperCase(), section:"STOCK", meta:s.name||""
-    }));
-    const billEntities = subscriptions.filter(s => s.name).map(s => ({
-      id:"varied", label:s.name, section:"BILL", meta:`$${s.monthly}/mo`
-    }));
-    const assetEntities = assets.filter(a => a.name).map(a => ({
-      id:"assets", label:a.name, section:"ASSET", meta:a.value?`$${parseFloat(a.value).toLocaleString()}`:""
-    }));
-    const allEntities = [...navTargets, ...stockEntities, ...billEntities, ...assetEntities];
-
 
     // ============================================
     // SYSTEM HEALTH RAIL — left-edge pulse blocks
@@ -7678,7 +7594,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     ];
 
     return (
-      <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide ? "76px" : 0, paddingRight: isWide && inspectorEntity ? "320px" : 0, transition: "padding 0.2s ease"}}>
+      <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, paddingRight: isWide && inspectorEntity ? "320px" : 0, transition: "padding 0.22s ease"}}>
         {/* BOOT SEQUENCE (first load only) */}
         {!bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
 
@@ -7686,7 +7602,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {isWide && <SystemHealthRail checks={healthChecks} />}
 
         {/* LEFT RAIL — desktop only */}
-        {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} />}
+        {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
 
         {/* CONTEXT MENU */}
         {ctxMenu && (
@@ -7695,7 +7611,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             actions={[
               { icon: "◉", label: "Inspect entity", onClick: () => { setInspectorEntity(ctxMenu.entity); setCtxMenu(null); } },
               { icon: "↗", label: `Open in ${ctxMenu.entity.viewName||'view'}`, onClick: () => { setActiveView(ctxMenu.entity.view); setCtxMenu(null); } },
-              { icon: "⌕", label: "Find related", onClick: () => { setCmdPaletteOpen(true); setCtxMenu(null); } },
               { icon: "✕", label: "Cancel", onClick: () => setCtxMenu(null) },
             ]}
           />
@@ -7715,10 +7630,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>SID:{sessionId}</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
-            <button onClick={() => setCmdPaletteOpen(true)} style={{display:"flex",alignItems:"center",gap:"4px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",padding:"3px 8px",cursor:"pointer",fontFamily:"monospace"}}>
-              <span style={{fontSize:"9px",color:"rgba(0,200,255,0.7)",letterSpacing:"1px"}}>QUICK FIND</span>
-              <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",border:"0.5px solid rgba(0,200,255,0.25)",padding:"0 4px",borderRadius:"2px"}}>⌘K</span>
-            </button>
             <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
             <div style={{display:"flex",alignItems:"center",gap:"3px"}}>
               <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#00c8ff",display:"inline-block",boxShadow:"0 0 6px #00c8ff",animation:"blink 2s infinite"}}></span>
@@ -8492,15 +8403,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               />
             </div>
           </div>
-        )}
-
-        {/* COMMAND PALETTE (⌘K) */}
-        {cmdPaletteOpen && (
-          <CommandPalette
-            entities={allEntities}
-            onPick={(id) => { setActiveView(id); setCmdPaletteOpen(false); }}
-            onClose={() => setCmdPaletteOpen(false)}
-          />
         )}
 
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
