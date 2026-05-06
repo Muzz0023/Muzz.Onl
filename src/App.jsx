@@ -7901,7 +7901,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             );
           })()}
 
-          {/* ASSET ALLOCATION TREEMAP */}
+          {/* ASSET ALLOCATION DONUT */}
           {(() => {
             const filledAssets = assets.filter(a => a.name && (parseFloat(a.value)||0) > 0).map(a => ({...a, value: parseFloat(a.value)||0}));
             const assetCats = [
@@ -7925,11 +7925,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               { id: 'loansowed', name: 'Loans Owed', color: 'rgba(100,116,139,0.8)' },
               { id: 'other', name: 'Other', color: 'rgba(71,85,105,0.8)' },
             ];
-            const data = assetCats.map(cat => ({
+            const donutData = assetCats.map(cat => ({
               ...cat,
               value: filledAssets.filter(a => a.category === cat.id).reduce((sum,a) => sum+a.value, 0)
-            })).filter(d => d.value > 0).sort((a,b) => b.value - a.value);
-            const total = data.reduce((s,d) => s+d.value, 0);
+            })).filter(d => d.value > 0);
+            const total = donutData.reduce((s,d) => s+d.value, 0);
 
             if (total === 0) return (
               <div style={{...palantirPanel}}>
@@ -7940,75 +7940,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             );
 
-            // Squarified-style row-based treemap into a 280×140 canvas
-            const W = 280, H = 140;
-            const tiles = [];
-            // Greedy: walk through sorted data, fill rows that aim to be ~square-ish
-            let remainingW = W, remainingH = H, x = 0, y = 0;
-            let i = 0;
-            while (i < data.length) {
-              const remainingTotal = data.slice(i).reduce((s,d)=>s+d.value, 0);
-              if (remainingTotal === 0) break;
-              // Choose row direction: split horizontally if remainingW > remainingH
-              const horizontal = remainingW >= remainingH;
-              const longSide = horizontal ? remainingW : remainingH;
-              const shortSide = horizontal ? remainingH : remainingW;
-              // Take items until aspect ratio worsens — simple heuristic: take up to 3 items per row, or until cumulative >= 35% of remaining
-              const row = [];
-              let rowSum = 0;
-              while (i < data.length && row.length < 3 && (rowSum + data[i].value) / remainingTotal < 0.55) {
-                row.push(data[i]);
-                rowSum += data[i].value;
-                i++;
-              }
-              if (row.length === 0 && i < data.length) { row.push(data[i]); rowSum += data[i].value; i++; }
-              const rowFrac = rowSum / remainingTotal;
-              const rowThickness = shortSide * rowFrac;
-              let cursor = 0;
-              row.forEach(d => {
-                const tileLong = (d.value / rowSum) * longSide;
-                if (horizontal) {
-                  tiles.push({ ...d, x: x + cursor, y, w: tileLong, h: rowThickness });
-                } else {
-                  tiles.push({ ...d, x, y: y + cursor, w: rowThickness, h: tileLong });
-                }
-                cursor += tileLong;
-              });
-              if (horizontal) { y += rowThickness; remainingH -= rowThickness; }
-              else { x += rowThickness; remainingW -= rowThickness; }
-            }
+            let cumulative = 0;
+            const cx=65, cy=65, r=52, inner=34;
+            const slices = donutData.map(d => {
+              const pct = d.value / total;
+              const startAngle = cumulative * 2 * Math.PI - Math.PI/2;
+              cumulative += pct;
+              const endAngle = cumulative * 2 * Math.PI - Math.PI/2;
+              const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
+              const x2=cx+r*Math.cos(endAngle), y2=cy+r*Math.sin(endAngle);
+              const xi1=cx+inner*Math.cos(startAngle), yi1=cy+inner*Math.sin(startAngle);
+              const xi2=cx+inner*Math.cos(endAngle), yi2=cy+inner*Math.sin(endAngle);
+              const large = pct > 0.5 ? 1 : 0;
+              return {...d, path:`M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${inner},${inner} 0 ${large},0 ${xi1},${yi1} Z`, pct};
+            });
 
             return (
               <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setActiveView('assets')}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation Treemap</span>
+                  <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
                   <span style={{fontSize:"10px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${total.toLocaleString()}</span>
                 </div>
-                <div style={{padding:"10px 12px"}}>
-                  <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{display:"block",height:"140px"}}>
-                    {tiles.map((t,idx) => {
-                      const pct = (t.value/total)*100;
-                      const showLabel = t.w > 50 && t.h > 24;
-                      const showPct = t.w > 30 && t.h > 14;
-                      return (
-                        <g key={idx}>
-                          <rect x={t.x+1} y={t.y+1} width={Math.max(t.w-2,0)} height={Math.max(t.h-2,0)} fill={t.color} fillOpacity="0.85" stroke="rgba(5,12,24,0.95)" strokeWidth="1" />
-                          {showLabel && <text x={t.x+6} y={t.y+14} style={{fontSize:"9px",fill:"#0a0e1a",fontFamily:"monospace",fontWeight:"bold",letterSpacing:"0.5px"}}>{t.name.toUpperCase()}</text>}
-                          {showPct && <text x={t.x+6} y={t.y + (showLabel?26:14)} style={{fontSize:"9px",fill:"rgba(10,14,26,0.85)",fontFamily:"monospace",fontWeight:600}}>{pct.toFixed(1)}%</text>}
-                        </g>
-                      );
-                    })}
+                <div style={{padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px"}}>
+                  <svg width="130" height="130" viewBox="0 0 130 130" style={{flexShrink:0}}>
+                    {slices.map((s,i) => (
+                      <path key={i} d={s.path} fill={s.color} stroke="rgba(5,12,24,0.9)" strokeWidth="1.5" />
+                    ))}
+                    <text x="65" y="60" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>TOTAL</text>
+                    <text x="65" y="75" textAnchor="middle" style={{fontSize:"11px",fill:"#e0eaff",fontFamily:"monospace",fontWeight:"bold"}}>${total.toLocaleString()}</text>
                   </svg>
-                  {/* mini legend strip */}
-                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px 10px",marginTop:"8px",paddingTop:"6px",borderTop:"0.5px solid rgba(0,200,255,0.06)"}}>
-                    {data.slice(0,6).map((d,i) => (
-                      <div key={i} style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                        <div style={{width:"8px",height:"8px",background:d.color,borderRadius:"1px"}}></div>
-                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{d.name}</span>
-                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(0)}%</span>
+                  <div style={{display:"flex",flexDirection:"column",gap:"5px",flex:1,maxHeight:"110px",overflowY:"auto"}}>
+                    {donutData.sort((a,b)=>b.value-a.value).map((d,i) => (
+                      <div key={i} style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                        <div style={{width:"6px",height:"6px",borderRadius:"50%",background:d.color,flexShrink:0}}></div>
+                        <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",flex:1}}>{d.name}</span>
+                        <span style={{fontSize:"9px",color:"#e0eaff",fontFamily:"monospace"}}>{((d.value/total)*100).toFixed(1)}%</span>
                       </div>
                     ))}
-                    {data.length > 6 && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>+{data.length-6} more</span>}
                   </div>
                 </div>
               </div>
