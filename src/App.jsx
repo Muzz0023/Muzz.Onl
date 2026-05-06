@@ -7556,51 +7556,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       return lines.slice(0, 3);
     })();
 
-    // EVENT LOG — synthesized from real data, formatted as Palantir-style log lines
-    const eventLog = (() => {
-      const events = [];
-      const fmtTime = (offsetSec) => {
-        const t = new Date(liveTime.getTime() - offsetSec*1000);
-        return t.toTimeString().slice(0,8);
-      };
-      // Use a stable sequence so it doesn't churn every second — bucket time into 30s windows
-      const bucket = Math.floor(liveTime.getTime() / 30000);
-      let off = 0;
-      const push = (level, channel, msg) => {
-        events.push({ time: fmtTime(off), level, channel, msg, key: `${bucket}_${off}` });
-        off += 7 + ((bucket + off) % 13);
-      };
-
-      if (Object.keys(livePrices).length > 0) {
-        push("OK", "PORTFOLIO", `PRICE_FETCH ${Object.keys(livePrices).length} tickers`);
-      }
-      if (topMover) {
-        const lvl = Math.abs(topMover.pct) > 3 ? "WARN" : "OK";
-        push(lvl, "MARKET", `${topMover.ticker} ${topMover.pct>=0?"+":""}${topMover.pct.toFixed(2)}% intraday`);
-      }
-      if (billsDueSoon.length > 0 && billsDueSoon[0].days <= 7) {
-        push("WARN", "BILLS", `DUE_SOON ${billsDueSoon[0].name.toUpperCase()} ${billsDueSoon[0].days}d`);
-      }
-      if (nwDelta7d !== null) {
-        push("OK", "WEALTH", `NW_DELTA_7D ${nwDelta7d>=0?"+":""}${nwDelta7d.toFixed(2)}%`);
-      }
-      const milestones = [100000,250000,500000,1000000,2000000,5000000];
-      const nextM = milestones.find(m => netWorth < m);
-      if (nextM) {
-        const pct = (netWorth/nextM)*100;
-        push("OK", "WEALTH", `MILESTONE.PROGRESS ${pct.toFixed(1)}% → $${(nextM/1000).toFixed(0)}K`);
-      }
-      if (stocks.length > 0) {
-        push("OK", "PORTFOLIO", `HOLDINGS ${stocks.length} positions tracked`);
-      }
-      if (assets.length > 0) {
-        push("OK", "ASSETS", `INVENTORY ${assets.length} entities`);
-      }
-      push("OK", "SYNC", `SUPABASE ${sessionId} authenticated`);
-      push("OK", "SYSTEM", `BOOT muzz.onl rev_${todayISO.replace(/-/g,'')}`);
-      return events.slice(0, 8);
-    })();
-
     // SEARCHABLE ENTITIES for command palette
     const navTargets = [
       { id:"home", label:"Dashboard", section:"NAV" },
@@ -7924,33 +7879,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
-
-          {/* LIVE EVENT LOG FEED */}
-          <div style={{...palantirPanel,borderLeft:"2px solid rgba(34,197,94,0.7)"}}>
-            <div style={{padding:"8px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                <span style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",letterSpacing:"2px",fontFamily:"monospace"}}>// EVENT_STREAM</span>
-                <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>tail -f /var/log/muzz.log</span>
-              </div>
-              <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",display:"inline-block",boxShadow:"0 0 4px rgba(34,197,94,0.9)",animation:"blink 2s infinite"}}></span>
-                <span style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAMING</span>
-              </div>
-            </div>
-            <div style={{padding:"6px 0",maxHeight:"180px",overflowY:"auto"}}>
-              {eventLog.map((e,i) => {
-                const lvlColor = e.level==="WARN"?"rgba(251,191,36,0.95)":e.level==="ERROR"?"rgba(239,68,68,0.95)":"rgba(34,197,94,0.85)";
-                return (
-                  <div key={e.key} style={{display:"grid",gridTemplateColumns:"auto auto auto 1fr",gap:"10px",padding:"3px 14px",fontFamily:"monospace",fontSize:"10.5px",alignItems:"center",borderBottom:i<eventLog.length-1?"0.5px solid rgba(0,200,255,0.04)":"none"}}>
-                    <span style={{color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>[{e.time}]</span>
-                    <span style={{color:lvlColor,letterSpacing:"1px",fontWeight:500,minWidth:"36px"}}>{e.level}</span>
-                    <span style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px",minWidth:"68px"}}>{e.channel}</span>
-                    <span style={{color:"rgba(224,234,255,0.75)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e.msg}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
 
           {/* KPI STRIP */}
           {(() => {
