@@ -3601,12 +3601,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         style={{
           width:'100%',
           display:'grid',
-          gridTemplateColumns:'24px 1fr auto',
-          gap:'14px',
+          gridTemplateColumns:'18px 1fr auto',
+          gap:'10px',
           alignItems:'center',
-          padding:'0 16px',
+          padding:'0 12px',
           marginBottom:'3px',
-          minHeight:'34px',
+          minHeight:'30px',
           flex:1,
           background:active?`rgba(${accent==='#f97316'?'249,115,22':'0,200,255'},0.08)`:'transparent',
           border:'0.5px solid transparent',
@@ -3617,12 +3617,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           textAlign:'left',
         }}
       >
-        <span style={{fontSize:'17px',color:active?accent:'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
-        <span style={{fontSize:'16px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.78)':'rgba(224,234,255,0.88)',letterSpacing:'0.5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
-        <span style={{display:'flex',alignItems:'center',gap:'6px',fontFamily:'monospace',fontSize:'11px',lineHeight:1}}>
-          {locked && <span style={{color:'rgba(0,200,255,0.5)',fontSize:'13px'}}>⚡</span>}
+        <span style={{fontSize:'14px',color:active?accent:'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
+        <span style={{fontSize:'13px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.78)':'rgba(224,234,255,0.88)',letterSpacing:'0.3px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
+        <span style={{display:'flex',alignItems:'center',gap:'5px',fontFamily:'monospace',fontSize:'10px',lineHeight:1}}>
+          {locked && <span style={{color:'rgba(0,200,255,0.5)',fontSize:'12px'}}>⚡</span>}
           {item.lockGlyph && <span style={{color:'rgba(148,163,184,0.5)'}}>{item.lockGlyph}</span>}
-          {active && <span style={{width:'7px',height:'7px',borderRadius:'50%',background:accent,boxShadow:`0 0 8px ${accent}`,flexShrink:0}} />}
+          {active && <span style={{width:'6px',height:'6px',borderRadius:'50%',background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}} />}
         </span>
       </button>
     );
@@ -7594,14 +7594,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <SaveIndicator />
 
         {/* TOP COMMAND BAR */}
-        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(0,200,255,0.2)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden"}}>
+        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(0,200,255,0.2)",padding:"6px 12px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)",gap:"8px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden",minWidth:0}}>
             <span style={{fontSize:"11px",color:"#00c8ff",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>MUZZ.ONL</span>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
-            {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
-            <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>SID:{sessionId}</span>
+            {isWide && <>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
+            </>}
+            {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{eliteName.toUpperCase()}</span></>}
+            {isWide && <>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>SID:{sessionId}</span>
+            </>}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
             <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
@@ -7632,7 +7636,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             {/* NET WORTH PANEL */}
             <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff",padding:"16px 20px"}}>
-              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"12px"}}>
+              <div style={{display:"flex",flexDirection:isWide?"row":"column",alignItems:isWide?"flex-start":"stretch",justifyContent:"space-between",gap:isWide?"12px":"14px"}}>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{...palantirLabel,display:"flex",alignItems:"center",gap:"8px"}}>
                     <span>Net Worth</span>
@@ -7643,14 +7647,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
-                    <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"40px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
+                    <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"40px":"32px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
                     <Sparkline data={nwSeries} w={80} h={24} color="auto" />
                     {scrubLabel && <span style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"1.5px",border:"0.5px solid rgba(251,191,36,0.5)",padding:"2px 6px",borderRadius:"2px",background:"rgba(251,191,36,0.06)"}}>{scrubLabel}</span>}
                   </div>
                 </div>
-                <div style={{textAlign:"right",flexShrink:0}}>
-                  <div style={{...palantirLabel,textAlign:"right"}}>Portfolio</div>
-                  <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:"flex-end"}}>
+                <div style={{textAlign:isWide?"right":"left",flexShrink:0,paddingTop:isWide?0:"10px",borderTop:isWide?"none":"0.5px solid rgba(0,200,255,0.1)"}}>
+                  <div style={{...palantirLabel,textAlign:isWide?"right":"left"}}>Portfolio</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:isWide?"flex-end":"flex-start"}}>
                     <RollingValue value={totalStocks} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
                     <Sparkline data={portfolioSeries} w={50} h={18} color="rgba(168,85,247,0.9)" />
                   </div>
@@ -8327,22 +8331,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>Muzz proudly supports Endometriosis Australia & Mark Hughes Foundation</span>
             </div>
           )}
-
-          {/* METADATA FOOTER */}
-          <div style={{marginTop:"4px",padding:"10px 14px",background:"rgba(3,8,18,0.5)",border:"0.5px solid rgba(0,200,255,0.08)",borderRadius:"4px",display:"flex",flexWrap:"wrap",gap:"4px 16px",alignItems:"center",justifyContent:"space-between"}}>
-            <div style={{display:"flex",flexWrap:"wrap",gap:"4px 14px",fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px"}}>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>OBJECT_ID:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{objectId}</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>SESSION:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{sessionId}</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>LAST_SYNC:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{lastSyncStr}</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>SOURCE:</span><span style={{color:"rgba(224,234,255,0.6)"}}>muzz.local</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>|</span>
-              <span style={{color:"rgba(0,200,255,0.35)"}}>REV:</span><span style={{color:"rgba(224,234,255,0.6)"}}>{todayISO.replace(/-/g,'')}</span>
-            </div>
-            <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(0,200,255,0.4)",letterSpacing:"1.5px"}}>// END_OF_BRIEFING</div>
-          </div>
 
         </div>
 
