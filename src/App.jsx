@@ -3498,23 +3498,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>WORK</div>
             <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>SPACES</div>
           </div>
-          {/* Nav */}
-          <div style={{flex:1,overflowY:"auto",padding:"6px 0"}}>
+          {/* Nav — flex-stretch, no scroll */}
+          <div style={{flex:1,minHeight:0,padding:"4px 0",display:"flex",flexDirection:"column",overflow:"hidden"}}>
             {sections.map(s => {
               const active = activeView === s.id;
               const locked = s.elite && !isElite;
               return (
                 <button key={s.id} onClick={() => !locked && setActiveView(s.id)} style={{
-                  display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"3px",
-                  width:"100%",padding:"8px 4px",
+                  flex:1,minHeight:"32px",
+                  display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"2px",
+                  width:"100%",padding:"2px 4px",
                   background:active?"rgba(0,200,255,0.1)":"transparent",
                   border:"none",borderLeft:active?"2px solid #00c8ff":"2px solid transparent",
                   cursor:locked?"not-allowed":"pointer",
                   opacity:locked?0.3:1
                 }}>
-                  <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>{s.icon}</span>
-                  <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{s.label}</span>
-                  {locked && <span style={{fontSize:"7px",color:"rgba(0,200,255,0.3)"}}>⚡</span>}
+                  <span style={{fontSize:"15px",color:active?"#00c8ff":"rgba(0,200,255,0.5)",fontFamily:"monospace",lineHeight:1}}>{s.icon}</span>
+                  <span style={{fontSize:"8.5px",color:active?"#00c8ff":"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",lineHeight:1}}>{s.label}</span>
+                  {locked && <span style={{fontSize:"7px",color:"rgba(0,200,255,0.3)",lineHeight:1}}>⚡</span>}
                 </button>
               );
             })}
