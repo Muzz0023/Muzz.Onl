@@ -3622,28 +3622,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       export:'↓', import:'↑', deleteaccount:'⊘',
     };
     const menuItems = [
-      { section: 'LIFE',     id:'home',          label:'Dashboard',       shortcut:'D' },
-      { section: 'LIFE',     id:'habits',        label:'Habits',          shortcut:'H' },
-      { section: 'LIFE',     id:'tasks',         label:'Tasks',           shortcut:'T' },
-      { section: 'LIFE',     id:'countdowns',    label:'Countdowns'                    },
-      { section: 'LIFE',     id:'reminders',     label:'Reminders',       shortcut:'R' },
-      { section: 'HEALTH',   id:'gym',           label:'Health',          elite:true   },
-      { section: 'HEALTH',   id:'gymworkout',    label:'Gym',             elite:true   },
-      { section: 'HEALTH',   id:'work',          label:'Work',            elite:true   },
-      { section: 'HEALTH',   id:'diet',          label:'Diet',            elite:true   },
-      { section: 'HEALTH',   id:'timetable',     label:'Timetable',       elite:true   },
-      { section: 'FINANCE',  id:'varied',        label:'Bills',           elite:true, shortcut:'B' },
-      { section: 'FINANCE',  id:'assets',        label:'Assets',          elite:true, shortcut:'A' },
-      { section: 'FINANCE',  id:'investments',   label:'Investments',     elite:true, shortcut:'I' },
+      { section: 'LIFE',     id:'home',          label:'Dashboard'                    },
+      { section: 'LIFE',     id:'habits',        label:'Habits'                       },
+      { section: 'LIFE',     id:'tasks',         label:'Tasks'                        },
+      { section: 'LIFE',     id:'countdowns',    label:'Countdowns'                   },
+      { section: 'LIFE',     id:'reminders',     label:'Reminders'                    },
+      { section: 'HEALTH',   id:'gym',           label:'Health',          elite:true  },
+      { section: 'HEALTH',   id:'gymworkout',    label:'Gym',             elite:true  },
+      { section: 'HEALTH',   id:'work',          label:'Work',            elite:true  },
+      { section: 'HEALTH',   id:'diet',          label:'Diet',            elite:true  },
+      { section: 'HEALTH',   id:'timetable',     label:'Timetable',       elite:true  },
+      { section: 'FINANCE',  id:'varied',        label:'Bills',           elite:true  },
+      { section: 'FINANCE',  id:'assets',        label:'Assets',          elite:true  },
+      { section: 'FINANCE',  id:'investments',   label:'Investments',     elite:true  },
       { section: 'CUSTOM',   id:'custom1',       label: customCategories?.[0]?.name || 'Custom 1' },
       { section: 'CUSTOM',   id:'custom2',       label: customCategories?.[1]?.name || 'Custom 2', elite:true },
       { section: 'CUSTOM',   id:'custom3',       label: customCategories?.[2]?.name || 'Custom 3', elite:true },
-      { section: 'ACCOUNT',  id:'upgrade',       label: isElite ? 'Elite' : 'Upgrade'  },
-      { section: 'ACCOUNT',  id:'statsinsights', label:'Stats'                         },
-      { section: 'ACCOUNT',  id:'feedback',      label:'Feedback'                      },
-      { section: 'SETTINGS', id:'export',        label:'Export'                        },
-      { section: 'SETTINGS', id:'import',        label:'Import'                        },
-      { section: 'SETTINGS', id:'deleteaccount', label:'Delete',          danger:true  },
+      { section: 'ACCOUNT',  id:'upgrade',       label: isElite ? 'Elite Status' : 'Upgrade' },
+      { section: 'ACCOUNT',  id:'statsinsights', label:'Stats & Insights'             },
+      { section: 'ACCOUNT',  id:'feedback',      label:'Feedback'                     },
+      { section: 'SETTINGS', id:'export',        label:'Export Data'                  },
+      { section: 'SETTINGS', id:'import',        label:'Import Data'                  },
+      { section: 'SETTINGS', id:'deleteaccount', label:'Delete Account',  danger:true },
     ];
     const sections = ['LIFE','HEALTH','FINANCE','CUSTOM','ACCOUNT','SETTINGS'];
     const sectionColors = { LIFE:'#00c8ff', HEALTH:'rgba(251,146,60,0.9)', FINANCE:'rgba(34,197,94,0.9)', CUSTOM:'rgba(168,85,247,0.9)', ACCOUNT:'rgba(0,200,255,0.7)', SETTINGS:'rgba(100,116,139,0.85)' };
@@ -3655,27 +3655,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         style={{
           width:'100%',
           display:'grid',
-          gridTemplateColumns:'14px 1fr auto',
-          gap:'8px',
+          gridTemplateColumns:'22px 1fr auto',
+          gap:'12px',
           alignItems:'center',
-          padding:'4px 8px',
-          marginBottom:'1px',
+          padding:'12px 14px',
+          marginBottom:'3px',
           background:active?`rgba(${accent==='#f97316'?'249,115,22':'0,200,255'},0.08)`:'transparent',
           border:'0.5px solid transparent',
-          borderLeft:active?`2px solid ${accent}`:'2px solid transparent',
+          borderLeft:active?`3px solid ${accent}`:'3px solid transparent',
           cursor:locked?'default':'pointer',
-          borderRadius:'2px',
+          borderRadius:'3px',
           opacity:locked?0.35:1,
           textAlign:'left',
         }}
       >
-        <span style={{fontSize:'11px',color:active?accent:'rgba(0,200,255,0.4)',fontFamily:'monospace',lineHeight:1}}>{item.glyph || '◇'}</span>
-        <span style={{fontSize:'11.5px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.7)':'rgba(224,234,255,0.78)',letterSpacing:'0.5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
-        <span style={{display:'flex',alignItems:'center',gap:'4px',fontFamily:'monospace',fontSize:'9px',lineHeight:1}}>
-          {item.shortcut && !active && <span style={{color:'rgba(148,163,184,0.3)',border:'0.5px solid rgba(148,163,184,0.15)',padding:'0 3px',borderRadius:'2px'}}>⌘{item.shortcut}</span>}
-          {locked && <span style={{color:'rgba(0,200,255,0.4)'}}>⚡</span>}
-          {item.lockGlyph && <span style={{color:'rgba(148,163,184,0.4)'}}>{item.lockGlyph}</span>}
-          {active && <span style={{width:'4px',height:'4px',borderRadius:'50%',background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}} />}
+        <span style={{fontSize:'16px',color:active?accent:'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
+        <span style={{fontSize:'15px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.75)':'rgba(224,234,255,0.85)',letterSpacing:'0.5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
+        <span style={{display:'flex',alignItems:'center',gap:'6px',fontFamily:'monospace',fontSize:'11px',lineHeight:1}}>
+          {locked && <span style={{color:'rgba(0,200,255,0.5)',fontSize:'12px'}}>⚡</span>}
+          {item.lockGlyph && <span style={{color:'rgba(148,163,184,0.5)'}}>{item.lockGlyph}</span>}
+          {active && <span style={{width:'6px',height:'6px',borderRadius:'50%',background:accent,boxShadow:`0 0 8px ${accent}`,flexShrink:0}} />}
         </span>
       </button>
     );
@@ -3693,31 +3692,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(rgba(0,200,255,0.04) 1px,transparent 1px)',backgroundSize:'24px 24px',pointerEvents:'none'}} />
 
           {/* COMPACT HEADER */}
-          <div style={{position:'relative',zIndex:10,padding:'34px 14px 8px',borderBottom:'0.5px solid rgba(0,200,255,0.12)',flexShrink:0}}>
+          <div style={{position:'relative',zIndex:10,padding:'42px 20px 14px',borderBottom:'0.5px solid rgba(0,200,255,0.12)',flexShrink:0}}>
             {/* Title row + close on same line */}
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'8px'}}>
-              <div style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
-                <span style={{fontSize:'16px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'3px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</span>
-                <span style={{fontSize:'8.5px',color:appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(249,115,22,0.6)',letterSpacing:'1.5px',fontFamily:'monospace'}}>{appMode==='muzz'?'// LIFE.SYS':'// BIZ.SYS'}</span>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'14px'}}>
+              <div style={{display:'flex',alignItems:'baseline',gap:'14px'}}>
+                <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:500,letterSpacing:'4px'}}>{appMode==='muzz'?'MUZZ':'DONNY'}</span>
+                <span style={{fontSize:'11px',color:appMode==='muzz'?'rgba(0,200,255,0.55)':'rgba(249,115,22,0.65)',letterSpacing:'2px',fontFamily:'monospace'}}>{appMode==='muzz'?'// LIFE.SYS':'// BIZ.SYS'}</span>
               </div>
-              <button onClick={() => setSidebarOpen(false)} style={{width:'24px',height:'24px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'2px'}}>
-                <X style={{color:'#00c8ff',width:'11px',height:'11px'}} />
+              <button onClick={() => setSidebarOpen(false)} style={{width:'34px',height:'34px',display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'0.5px solid rgba(0,200,255,0.3)',cursor:'pointer',borderRadius:'3px'}}>
+                <X style={{color:'#00c8ff',width:'15px',height:'15px'}} />
               </button>
             </div>
-            {/* Mode toggle — slim */}
-            <div style={{display:'flex',gap:'4px'}}>
-              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'5px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'1.5px',fontSize:'10px',cursor:'pointer',borderRadius:'2px'}}>
+            {/* Mode toggle */}
+            <div style={{display:'flex',gap:'6px'}}>
+              <button onClick={() => { setAppMode('muzz'); setActiveView('home'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='muzz'?'rgba(0,200,255,0.1)':'transparent',border:`0.5px solid ${appMode==='muzz'?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='muzz'?'#00c8ff':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px'}}>
                 🦘 MUZZ
               </button>
-              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'5px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'1.5px',fontSize:'10px',cursor:'pointer',borderRadius:'2px'}}>
+              <button onClick={() => { setAppMode('donny'); setActiveView('donny'); setSidebarOpen(false); }} style={{flex:1,padding:'10px',background:appMode==='donny'?'rgba(249,115,22,0.1)':'transparent',border:`0.5px solid ${appMode==='donny'?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:appMode==='donny'?'#f97316':'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontSize:'12px',cursor:'pointer',borderRadius:'3px'}}>
                 🐨 DONNY
               </button>
             </div>
           </div>
 
-          {/* NAV GRID — 2 columns, no scroll */}
-          <div style={{position:'relative',zIndex:10,padding:'8px 10px 6px',flex:1,minHeight:0}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 10px',height:'100%'}}>
+          {/* NAV GRID — 2 columns, scrolls if needed but should fit */}
+          <div style={{position:'relative',zIndex:10,padding:'14px 16px 8px',flex:1,minHeight:0,overflowY:'auto'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px'}}>
               {appMode === 'donny' ? (() => {
                 const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
                 const donnyGlyphs = {
@@ -3739,9 +3738,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   { section:'SITE', id:'donny-photos', label:'Photos', workerOk:true },
                   { section:'SITE', id:'donny-checklists', label:'SWMS', workerOk:true },
                   { section:'SITE', id:'donny-incidents', label:'Incidents', workerOk:true },
-                  { section:'SITE', id:'donny-safety', label:'Risk Reg.', workerOk:true },
+                  { section:'SITE', id:'donny-safety', label:'Risk Register', workerOk:true },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', workerOk:true },
-                  { section:'COSTS', id:'donny-materialslog', label:'Extra Mat.', workerOk:true },
+                  { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', workerOk:true },
                   { section:'COSTS', id:'donny-suppliers', label:'Price Book', workerOk:false },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
                 ];
@@ -3750,8 +3749,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
                   return (
-                    <div key={sec} style={{marginBottom:'4px'}}>
-                      <div style={{fontSize:'8.5px',color,letterSpacing:'2px',fontFamily:'monospace',marginBottom:'2px',paddingLeft:'4px',borderLeft:`2px solid ${color}`,lineHeight:'1.2',padding:'1px 0 1px 4px'}}>// {sec}</div>
+                    <div key={sec} style={{marginBottom:'18px'}}>
+                      <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
                       {items.map(item => {
                         const active = activeView === item.id;
                         const workerLocked = donnyRole === 'worker' && !item.workerOk;
@@ -3774,8 +3773,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const items = menuItems.filter(i => i.section === sec);
                 const color = sectionColors[sec];
                 return (
-                  <div key={sec} style={{marginBottom:'4px'}}>
-                    <div style={{fontSize:'8.5px',color,letterSpacing:'2px',fontFamily:'monospace',marginBottom:'2px',paddingLeft:'4px',borderLeft:`2px solid ${color}`,lineHeight:'1.2',padding:'1px 0 1px 4px'}}>// {sec}</div>
+                  <div key={sec} style={{marginBottom:'18px'}}>
+                    <div style={{fontSize:'11px',color,letterSpacing:'2.5px',fontFamily:'monospace',marginBottom:'8px',paddingLeft:'8px',borderLeft:`2px solid ${color}`,lineHeight:'1.4',padding:'2px 0 2px 8px'}}>// {sec}</div>
                     {items.map(item => {
                       const active = activeView === item.id;
                       const locked = item.elite && !isElite;
@@ -3806,8 +3805,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           {/* SIGN OUT — slim bottom strip */}
-          <div style={{position:'relative',zIndex:10,padding:'6px 10px 10px',borderTop:'0.5px solid rgba(0,200,255,0.08)',flexShrink:0}}>
-            <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'6px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.75)',fontFamily:'monospace',fontSize:'10px',letterSpacing:'2px',cursor:'pointer',borderRadius:'2px'}}>
+          <div style={{position:'relative',zIndex:10,padding:'10px 16px 14px',borderTop:'0.5px solid rgba(0,200,255,0.08)',flexShrink:0}}>
+            <button onClick={() => { signOut(); setSidebarOpen(false); }} style={{width:'100%',padding:'12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.25)',color:'rgba(239,68,68,0.8)',fontFamily:'monospace',fontSize:'13px',letterSpacing:'2.5px',cursor:'pointer',borderRadius:'3px'}}>
               ⊗ SIGN OUT
             </button>
           </div>
