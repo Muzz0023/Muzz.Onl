@@ -1693,6 +1693,17 @@ function MuzzApp() {
     }, 2200);
     return () => clearTimeout(t);
   }, [bootDone]);
+
+  // Time Scrubber — null means "live", otherwise an ISO date string
+  const [scrubberDate, setScrubberDate] = useState(null);
+
+  // Saved Views — tab strip; first entry is implicit "LIVE"
+  const [savedViews, setSavedViews] = useState([]);
+  const [activeViewTab, setActiveViewTab] = useState('live'); // 'live' | <view.id>
+
+  // Audit Log — entity change history. Shape: { entity_id: [{ ts, field, from, to }, ...] }
+  const [auditLog, setAuditLog] = useState({});
+  // (audit log watchers added after subscriptions+assets are declared)
   const sidebarScrollRef = useRef(null);
   const [homeInput, setHomeInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -1764,6 +1775,65 @@ function MuzzApp() {
   // Assets state
   const [assets, setAssets] = useState([]);
   const [stocks, setStocks] = useState([]);
+
+  // ============================================
+  // AUDIT LOG WATCHERS — record value changes for entities
+  // ============================================
+  const prevSubsRef = useRef(null);
+  useEffect(() => {
+    if (!Array.isArray(subscriptions)) return;
+    const prev = prevSubsRef.current;
+    if (prev) {
+      const changes = [];
+      subscriptions.forEach(s => {
+        if (!s?.name) return;
+        const before = prev.find(p => p?.name === s.name);
+        if (before && before.monthly !== s.monthly && s.monthly > 0 && before.monthly > 0) {
+          changes.push({ entityId: `bill_${s.name.toLowerCase().replace(/\s/g,'_')}`, field: 'monthly', from: before.monthly, to: s.monthly });
+        }
+      });
+      if (changes.length > 0) {
+        setAuditLog(log => {
+          const next = { ...log };
+          const ts = new Date().toISOString();
+          changes.forEach(c => {
+            next[c.entityId] = [...(next[c.entityId] || []), { ts, field: c.field, from: c.from, to: c.to }].slice(-30);
+          });
+          return next;
+        });
+      }
+    }
+    prevSubsRef.current = subscriptions.map(s => s ? {name:s.name, monthly:s.monthly} : null);
+  }, [subscriptions]);
+  const prevAssetsRef = useRef(null);
+  useEffect(() => {
+    if (!Array.isArray(assets)) return;
+    const prev = prevAssetsRef.current;
+    if (prev) {
+      const changes = [];
+      assets.forEach(a => {
+        if (!a?.name) return;
+        const before = prev.find(p => p?.name === a.name);
+        const aVal = parseFloat(a.value) || 0;
+        const bVal = before ? (parseFloat(before.value) || 0) : null;
+        if (before && bVal !== aVal && aVal > 0 && bVal > 0) {
+          changes.push({ entityId: `asset_${a.name.toLowerCase().replace(/\s/g,'_')}`, field: 'value', from: bVal, to: aVal });
+        }
+      });
+      if (changes.length > 0) {
+        setAuditLog(log => {
+          const next = { ...log };
+          const ts = new Date().toISOString();
+          changes.forEach(c => {
+            next[c.entityId] = [...(next[c.entityId] || []), { ts, field: c.field, from: c.from, to: c.to }].slice(-30);
+          });
+          return next;
+        });
+      }
+    }
+    prevAssetsRef.current = assets.map(a => a ? {name:a.name, value:a.value} : null);
+  }, [assets]);
+
   const [futureStocks, setFutureStocks] = useState([]); // Future portfolio
   const [futureResearch, setFutureResearch] = useState([]); // Future research
   const [futureResearchColumns, setFutureResearchColumns] = useState([]);
@@ -1990,7 +2060,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
   // Generate a workspace code for the boss
   const generateWorkspaceCode = () => {
@@ -2178,6 +2248,8 @@ function MuzzApp() {
     if(d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
     if(d.mapPins) setMapPins(d.mapPins);
     if(d.netWorthHistory) setNetWorthHistory(d.netWorthHistory);
+    if(d.savedViews) setSavedViews(d.savedViews);
+    if(d.auditLog) setAuditLog(d.auditLog);
     if(d.donnyJobs) setDonnyJobs(d.donnyJobs);
     if(d.donnyTeam) setDonnyTeam(d.donnyTeam);
     if(d.donnyNotes) setDonnyNotes(d.donnyNotes);
@@ -2255,6 +2327,8 @@ function MuzzApp() {
       assetMapNodes: d.assetMapNodes||[{id:'root',name:'My Assets',emoji:'🏠',parentId:null}],
       mapPins: d.mapPins||[],
       netWorthHistory: d.netWorthHistory||[],
+      savedViews: d.savedViews||[],
+      auditLog: d.auditLog||{},
       donnyJobs: d.donnyJobs||[],
       donnyTeam: d.donnyTeam||[],
       donnyNotes: d.donnyNotes||{},
@@ -2799,6 +2873,8 @@ function MuzzApp() {
           assetMapNodes,
           mapPins,
           netWorthHistory,
+          savedViews,
+          auditLog,
           donnyJobs,
           donnyTeam,
           donnyNotes,
@@ -3298,6 +3374,55 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* Body */}
         <div style={{flex:1,overflowY:"auto"}}>
           {content}
+
+          {/* HISTORY / AUDIT TRAIL */}
+          {(() => {
+            const eid = entity.type === "STOCK" ? `stock_${entity.id.toLowerCase()}` :
+                       entity.type === "BILL" ? `bill_${entity.id.toLowerCase().replace(/\s/g,'_')}` :
+                       entity.type === "ASSET" ? `asset_${entity.id.toLowerCase().replace(/\s/g,'_')}` : null;
+            const log = eid ? (deps.auditLog?.[eid] || []) : [];
+            // For stocks, also synthesize an intraday line from livePrices
+            let stockHistory = null;
+            if (entity.type === "STOCK") {
+              const p = deps.livePrices[entity.id];
+              if (p?.c && p?.pc && p.pc > 0 && p.c !== p.pc) {
+                stockHistory = [
+                  { ts: new Date().toISOString(), field: "price", from: p.pc, to: p.c, label: "Intraday (vs prev close)" },
+                ];
+              }
+            }
+            const combined = [...(stockHistory||[]), ...log].slice().reverse();
+            return (
+              <>
+                <div style={{padding:"8px 14px 4px",fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"2px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <span>// HISTORY</span>
+                  <span style={{color:"rgba(148,163,184,0.4)",fontSize:"9px"}}>{combined.length} {combined.length===1?"event":"events"}</span>
+                </div>
+                {combined.length === 0 ? (
+                  <div style={{padding:"10px 14px",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>NO RECORDED CHANGES YET — edits will be tracked from now on.</div>
+                ) : (
+                  combined.slice(0, 12).map((e,i) => {
+                    const dir = e.to >= e.from ? "▲" : "▼";
+                    const color = e.to >= e.from ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)";
+                    const pct = e.from > 0 ? Math.abs((e.to - e.from)/e.from * 100) : 0;
+                    const t = new Date(e.ts);
+                    const dateStr = t.toLocaleDateString('en-AU',{day:'2-digit',month:'short'});
+                    const timeStr = t.toTimeString().slice(0,5);
+                    return (
+                      <div key={i} style={{display:"grid",gridTemplateColumns:"56px 1fr auto",gap:"6px",padding:"5px 14px",fontFamily:"monospace",fontSize:"10.5px",borderBottom:"0.5px solid rgba(0,200,255,0.04)",alignItems:"center"}}>
+                        <span style={{color:"rgba(148,163,184,0.55)",letterSpacing:"0.3px"}}>{dateStr}</span>
+                        <span style={{color:"rgba(224,234,255,0.7)",letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                          <span style={{color:"rgba(0,200,255,0.4)"}}>{e.field || "value"}:</span> ${typeof e.from === "number" ? e.from.toFixed(2) : e.from} → ${typeof e.to === "number" ? e.to.toFixed(2) : e.to}
+                        </span>
+                        <span style={{color,letterSpacing:"0.3px",fontSize:"10px"}}>{dir} {pct.toFixed(2)}%</span>
+                      </div>
+                    );
+                  })
+                )}
+              </>
+            );
+          })()}
+
           {sectionLabel("RELATIONSHIPS")}
           <div style={{padding:"8px 14px"}}>
             {entity.type === "STOCK" && (
@@ -7325,12 +7450,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // DERIVED INTEL — pre-compute series, deltas, briefing
     // ============================================
 
-    // Net worth sparkline series (last ~30 days), oldest → newest
+    // Time scrubber: when scrubberDate is set, anchor displayed values to that date
+    const sortedNwHistory = [...netWorthHistory].sort((a,b) => a.date.localeCompare(b.date));
+    const scrubbedNetWorth = (() => {
+      if (!scrubberDate) return netWorth;
+      // find the netWorthHistory entry on or before scrubberDate
+      const at = [...sortedNwHistory].reverse().find(p => p.date <= scrubberDate);
+      return at ? at.value : netWorth;
+    })();
+    const displayNetWorth = scrubberDate ? scrubbedNetWorth : netWorth;
+    const scrubLabel = scrubberDate ? (() => {
+      const days = Math.round((new Date() - new Date(scrubberDate)) / 86400000);
+      if (days === 0) return "TODAY";
+      if (days === 1) return "T-1d";
+      if (days < 30) return `T-${days}d`;
+      if (days < 365) return `T-${Math.round(days/30)}mo`;
+      return `T-${Math.round(days/365)}y`;
+    })() : null;
+
+    // Net worth sparkline series (last ~30 days from current OR scrubber anchor), oldest → newest
     const nwSeries = (() => {
-      const sorted = [...netWorthHistory].sort((a,b) => a.date.localeCompare(b.date));
-      const last = sorted.slice(-30).map(p => p.value);
+      const cutoffDate = scrubberDate || new Date().toISOString().split('T')[0];
+      const filtered = sortedNwHistory.filter(p => p.date <= cutoffDate);
+      const last = filtered.slice(-30).map(p => p.value);
       // ensure at least 2 points so sparklines render — synthesize from current netWorth if empty
-      if (last.length < 2) return [netWorth*0.98, netWorth];
+      if (last.length < 2) return [displayNetWorth*0.98, displayNetWorth];
       return last;
     })();
     const nwStart = nwSeries[0] || 0;
@@ -7613,8 +7757,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
                   </div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
-                    <RollingValue value={netWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"40px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
+                    <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:"40px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
                     <Sparkline data={nwSeries} w={80} h={24} color="auto" />
+                    {scrubLabel && <span style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"1.5px",border:"0.5px solid rgba(251,191,36,0.5)",padding:"2px 6px",borderRadius:"2px",background:"rgba(251,191,36,0.06)"}}>{scrubLabel}</span>}
                   </div>
                 </div>
                 <div style={{textAlign:"right",flexShrink:0}}>
@@ -7626,6 +7771,97 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               </div>
             </div>
+
+            {/* TIME SCRUBBER */}
+            {(() => {
+              const series = sortedNwHistory;
+              if (series.length < 2) return null;
+              const startDate = series[0].date;
+              const endDate = series[series.length-1].date;
+              const startMs = new Date(startDate).getTime();
+              const endMs = new Date(endDate).getTime();
+              const totalMs = endMs - startMs || 1;
+              const currentMs = scrubberDate ? new Date(scrubberDate).getTime() : endMs;
+              const pct = ((currentMs - startMs) / totalMs) * 100;
+
+              const handleScrub = (e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = ((e.clientX ?? e.touches?.[0]?.clientX) - rect.left) / rect.width;
+                const clamped = Math.max(0, Math.min(1, x));
+                const ms = startMs + clamped * totalMs;
+                const date = new Date(ms).toISOString().split('T')[0];
+                if (date >= endDate) setScrubberDate(null);
+                else setScrubberDate(date);
+              };
+
+              return (
+                <div style={{...palantirPanel,borderLeft:`2px solid ${scrubberDate?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.4)"}`,padding:"10px 14px",marginTop:"10px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>// TIMELINE</span>
+                      <span style={{fontSize:"10px",color:scrubberDate?"rgba(251,191,36,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                        {scrubberDate ? `ANCHORED · ${scrubberDate}` : `LIVE · ${endDate}`}
+                      </span>
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                      {[
+                        {label:"30D", days:30},
+                        {label:"90D", days:90},
+                        {label:"1Y", days:365},
+                      ].map(p => {
+                        const target = new Date(endMs - p.days*86400000).toISOString().split('T')[0];
+                        const valid = target >= startDate;
+                        return (
+                          <button key={p.label} onClick={() => valid && setScrubberDate(target)} disabled={!valid} style={{fontSize:"9px",color:valid?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.3)",background:"transparent",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"2px",padding:"2px 6px",fontFamily:"monospace",letterSpacing:"1px",cursor:valid?"pointer":"not-allowed"}}>{p.label}</button>
+                        );
+                      })}
+                      {scrubberDate && (
+                        <button onClick={() => setScrubberDate(null)} style={{fontSize:"9px",color:"rgba(34,197,94,0.85)",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"2px",padding:"2px 8px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>← LIVE</button>
+                      )}
+                    </div>
+                  </div>
+                  {/* Track */}
+                  <div onClick={handleScrub} onMouseDown={(e) => {
+                    handleScrub(e);
+                    const move = (mv) => handleScrub(mv);
+                    const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+                    window.addEventListener('mousemove', move);
+                    window.addEventListener('mouseup', up);
+                  }} onTouchStart={handleScrub} onTouchMove={handleScrub} style={{position:"relative",height:"28px",cursor:"pointer",userSelect:"none"}}>
+                    {/* Mini sparkline behind */}
+                    <svg width="100%" height="28" preserveAspectRatio="none" viewBox={`0 0 100 28`} style={{position:"absolute",inset:0}}>
+                      {(() => {
+                        const vals = series.map(p => p.value);
+                        const min = Math.min(...vals), max = Math.max(...vals), range = max-min||1;
+                        const points = series.map((p,i) => `${(i/(series.length-1)*100).toFixed(2)},${(28 - ((p.value-min)/range)*22 - 3).toFixed(2)}`).join(" ");
+                        return (
+                          <>
+                            <polyline points={points} fill="none" stroke="rgba(0,200,255,0.3)" strokeWidth="0.6" />
+                            <polygon points={`0,28 ${points} 100,28`} fill="rgba(0,200,255,0.05)" />
+                          </>
+                        );
+                      })()}
+                    </svg>
+                    {/* Track line */}
+                    <div style={{position:"absolute",left:0,right:0,top:"50%",height:"1px",background:"rgba(0,200,255,0.15)"}} />
+                    {/* Tick marks at 0/25/50/75/100% */}
+                    {[0,25,50,75,100].map(t => (
+                      <div key={t} style={{position:"absolute",left:`${t}%`,top:"50%",transform:"translate(-50%, -50%)",width:"1px",height:"6px",background:"rgba(0,200,255,0.25)"}} />
+                    ))}
+                    {/* Playhead */}
+                    <div style={{position:"absolute",left:`${pct}%`,top:0,bottom:0,transform:"translateX(-50%)",pointerEvents:"none"}}>
+                      <div style={{width:"1px",height:"100%",background:scrubberDate?"rgba(251,191,36,0.95)":"#00c8ff",boxShadow:`0 0 6px ${scrubberDate?"rgba(251,191,36,0.7)":"#00c8ff"}`}} />
+                      <div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%, -50%)",width:"10px",height:"10px",borderRadius:"50%",background:scrubberDate?"rgba(251,191,36,0.95)":"#00c8ff",boxShadow:`0 0 8px ${scrubberDate?"rgba(251,191,36,0.7)":"#00c8ff"}`,border:"1.5px solid rgba(5,12,24,0.95)"}} />
+                    </div>
+                  </div>
+                  {/* Date labels */}
+                  <div style={{display:"flex",justifyContent:"space-between",marginTop:"4px",fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                    <span>{startDate}</span>
+                    <span>{endDate}</span>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* STATUS STRIP — now with severity pills */}
             <div style={{display:"flex",alignItems:"center",gap:"6px",marginTop:"10px",padding:"4px 4px",flexWrap:"wrap"}}>
@@ -7647,6 +7883,62 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
             </div>
           </div>
+        </div>
+
+        {/* SAVED VIEWS TAB STRIP */}
+        <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:"6px 20px 0",display:"flex",alignItems:"center",gap:"4px",overflowX:"auto"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"4px",flex:1,overflowX:"auto"}}>
+            {/* LIVE tab — always present */}
+            <button
+              onClick={() => { setActiveViewTab('live'); setScrubberDate(null); setInspectorEntity(null); }}
+              style={{
+                fontSize:"10px",fontFamily:"monospace",letterSpacing:"1.5px",
+                padding:"5px 10px",borderRadius:"3px 3px 0 0",cursor:"pointer",whiteSpace:"nowrap",
+                background:activeViewTab==='live'?"rgba(0,200,255,0.1)":"transparent",
+                border:`0.5px solid ${activeViewTab==='live'?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.12)"}`,
+                borderBottom:activeViewTab==='live'?"0.5px solid transparent":"0.5px solid rgba(0,200,255,0.12)",
+                color:activeViewTab==='live'?"#00c8ff":"rgba(148,163,184,0.5)",
+                display:"flex",alignItems:"center",gap:"4px"
+              }}
+            >
+              <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.85)",boxShadow:"0 0 4px rgba(34,197,94,0.6)",animation:"blink 2s infinite"}}></span>
+              LIVE
+            </button>
+            {savedViews.map(v => (
+              <div key={v.id} style={{display:"flex",alignItems:"stretch",borderRadius:"3px 3px 0 0",overflow:"hidden",border:`0.5px solid ${activeViewTab===v.id?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.12)"}`,borderBottom:activeViewTab===v.id?"0.5px solid transparent":"0.5px solid rgba(0,200,255,0.12)",background:activeViewTab===v.id?"rgba(0,200,255,0.08)":"transparent"}}>
+                <button
+                  onClick={() => {
+                    setActiveViewTab(v.id);
+                    setScrubberDate(v.scrubberDate || null);
+                    setInspectorEntity(v.inspectorEntity || null);
+                  }}
+                  style={{fontSize:"10px",fontFamily:"monospace",letterSpacing:"1px",padding:"5px 8px 5px 10px",cursor:"pointer",whiteSpace:"nowrap",background:"transparent",border:"none",color:activeViewTab===v.id?"#00c8ff":"rgba(148,163,184,0.55)"}}
+                >
+                  {v.name.toUpperCase()}
+                  {v.scrubberDate && <span style={{marginLeft:"6px",fontSize:"8px",color:"rgba(251,191,36,0.85)"}}>⌚</span>}
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setSavedViews(views => views.filter(x => x.id !== v.id)); if (activeViewTab===v.id) setActiveViewTab('live'); }}
+                  style={{fontSize:"10px",padding:"0 6px 0 2px",cursor:"pointer",background:"transparent",border:"none",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}
+                  title="Delete view"
+                >×</button>
+              </div>
+            ))}
+            {/* Save current as new view */}
+            <button
+              onClick={() => {
+                const name = (typeof window !== 'undefined' ? window.prompt("Name this view:", `View ${savedViews.length+1}`) : null) || `View ${savedViews.length+1}`;
+                const id = `v_${Date.now()}`;
+                setSavedViews(views => [...views, { id, name, createdAt: new Date().toISOString(), scrubberDate, inspectorEntity }]);
+                setActiveViewTab(id);
+              }}
+              style={{fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px",padding:"4px 9px",borderRadius:"3px",cursor:"pointer",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.3)",color:"rgba(0,200,255,0.6)",whiteSpace:"nowrap"}}
+              title="Save current view"
+            >+</button>
+          </div>
+          {savedViews.length > 0 && (
+            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{savedViews.length} SAVED</span>
+          )}
         </div>
 
         <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
@@ -8287,7 +8579,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <ObjectInspector
               entity={inspectorEntity}
               onClose={() => setInspectorEntity(null)}
-              deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView }}
+              deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView, auditLog }}
             />
           </div>
         )}
@@ -8297,7 +8589,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <ObjectInspector
                 entity={inspectorEntity}
                 onClose={() => setInspectorEntity(null)}
-                deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView }}
+                deps={{ livePrices, subscriptions, assets, trackedStocks, stocks, setActiveView, auditLog }}
               />
             </div>
           </div>
