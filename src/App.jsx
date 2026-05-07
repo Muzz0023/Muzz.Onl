@@ -3897,7 +3897,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {label:"PINNED",value:pinnedCount,sub:"REMINDERS",color:"#00c8ff"},
               {label:"OVERDUE",value:overdueCount,sub:"REMINDERS",color:overdueCount>0?"rgba(239,68,68,0.9)":"rgba(34,197,94,0.7)"},
               {label:"THIS WEEK",value:thisWeekCount,sub:"DUE",color:"rgba(251,191,36,0.8)"},
-              {label:"BIRTHDAYS",value:upcomingBdays,sub:"IN 30 DAYS",color:"rgba(236,72,153,0.8)"},
+              {label:"BIRTHDAYS",value:upcomingBdays,sub:"UPCOMING",color:"rgba(236,72,153,0.8)"},
             ].map((kpi,i) => (
               <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
                 <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
