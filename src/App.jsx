@@ -2038,6 +2038,7 @@ function MuzzApp() {
   // Travel Countdown
   const [countdowns, setCountdowns] = useState([]);
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
+  const [blFilter, setBlFilter] = useState('all');
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -19303,7 +19304,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const blCompleted = bucketList.filter(b => b.completed).length;
     const blTotal = bucketList.length;
     const blPct = blTotal > 0 ? Math.round((blCompleted/blTotal)*100) : 0;
-    const [blFilter, setBlFilter] = React.useState('all');
 
     const getUrgencyColor = (days) => {
       if (days <= 7) return {color:'rgba(239,68,68,0.9)', border:'rgba(239,68,68,0.4)', glow:'rgba(239,68,68,0.08)'};
