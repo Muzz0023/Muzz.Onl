@@ -19093,7 +19093,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
             {[
               {label:"TODAY",value:`${completedTodayCount}/${habits.length}`,sub:"COMPLETED",color:"#00c8ff"},
-              {label:"TODAY RATE",value:`${todayRate}%`,sub:"COMPLETION",color:todayRate>=70?"#00c8ff":todayRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
+              {label:"COMPLETION RATE",value:`${todayRate}%`,sub:"COMPLETION",color:todayRate>=70?"#00c8ff":todayRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
               {label:"TOP STREAK",value:bestStreakOverall,sub:"DAYS",color:"rgba(255,165,0,0.9)"},
               {label:"31-DAY AVG",value:`${overall31Rate}%`,sub:"CONSISTENCY",color:overall31Rate>=70?"#00c8ff":overall31Rate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
             ].map((kpi,i) => (
@@ -19105,6 +19105,34 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             ))}
           </div>
         </div>
+
+        {/* 7-DAY BAR CHART */}
+        {habits.length > 0 && (
+          <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.08)",background:"rgba(5,12,24,0.4)"}}>
+            <div className="max-w-4xl mx-auto" style={{padding:"12px 24px"}}>
+              <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px"}}>7-DAY COMPLETION INTEL</div>
+              <div style={{display:"flex",gap:"6px",alignItems:"flex-end",height:"40px"}}>
+                {last7.map((date, i) => {
+                  const count = habits.filter(h => !!habitLog[`${h.id}:${date}`]).length;
+                  const pct = habits.length > 0 ? count / habits.length : 0;
+                  const isToday = date === today;
+                  const dow = new Date(date).getDay();
+                  const label = ['S','M','T','W','T','F','S'][dow];
+                  const barColor = pct >= 0.7 ? "#00c8ff" : pct >= 0.4 ? "rgba(251,191,36,0.9)" : pct > 0 ? "rgba(239,68,68,0.6)" : "rgba(255,255,255,0.05)";
+                  return (
+                    <div key={date} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px"}}>
+                      <div style={{fontSize:"8px",color:isToday?"#00c8ff":"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{count}/{habits.length}</div>
+                      <div style={{width:"100%",height:"24px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",display:"flex",alignItems:"flex-end",overflow:"hidden",border:isToday?"0.5px solid rgba(0,200,255,0.3)":"none"}}>
+                        <div style={{width:"100%",height:`${Math.max(pct*100,4)}%`,background:barColor,transition:"height 0.3s",boxShadow:pct>0?`0 0 6px ${barColor}`:"none"}} />
+                      </div>
+                      <div style={{fontSize:"7px",color:isToday?"#00c8ff":"rgba(0,200,255,0.25)",fontFamily:"monospace"}}>{label}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
           <button
@@ -19126,11 +19154,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const completionRate = Math.round((totalDone / 31) * 100);
             const streak = getStreak(habit.id);
             const bestStreak = getBestStreak(habit.id);
+            const streakAtRisk = streak > 0 && !completedToday;
+            const cardBorderColor = completedToday ? "rgba(0,200,255,0.4)" : streakAtRisk ? "rgba(251,191,36,0.4)" : "rgba(0,200,255,0.15)";
+            const cardAccentColor = completedToday ? "#00c8ff" : streakAtRisk ? "rgba(251,191,36,0.8)" : "rgba(0,200,255,0.3)";
 
             return (
-              <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${completedToday?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.15)"}`,borderRadius:"6px",borderLeft:`2px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${cardBorderColor}`,borderRadius:"6px",borderLeft:`2px solid ${cardAccentColor}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",boxShadow:completedToday?"0 0 12px rgba(0,200,255,0.08)":streakAtRisk?"0 0 12px rgba(251,191,36,0.06)":"none"}}>
 
-                {/* Header row */}
+                {/* Streak at risk warning */}
+                {streakAtRisk && (
+                  <div style={{padding:"5px 16px",background:"rgba(251,191,36,0.06)",borderBottom:"0.5px solid rgba(251,191,36,0.2)",display:"flex",alignItems:"center",gap:"6px"}}>
+                    <span style={{fontSize:"10px"}}>⚠️</span>
+                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAK AT RISK — {streak} DAY STREAK</span>
+                  </div>
+                )}
                 <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"10px"}}>
                   <input
                     type="text"
