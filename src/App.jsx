@@ -19208,7 +19208,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          title={`${new Date(date).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})}${done?' ✓':''}`}
                           style={{aspectRatio:"1",borderRadius:"2px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"0.5px solid rgba(0,200,255,0.4)":"none",boxShadow:done?"0 0 4px rgba(0,200,255,0.5)":"none"}}
                         />
                       );
