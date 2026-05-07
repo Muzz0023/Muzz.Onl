@@ -19092,7 +19092,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
           <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
             {[
-              {label:"TODAY",value:`${completedTodayCount}`,sub:"COMPLETED",color:"#00c8ff"},
+              {label:"COMPLETED",value:`${completedTodayCount}`,sub:"TODAY",color:"#00c8ff"},
               {label:"COMPLETION RATE",value:`${todayRate}%`,sub:"COMPLETION",color:todayRate>=70?"#00c8ff":todayRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
               {label:"TOP STREAK",value:bestStreakOverall,sub:"DAYS",color:"rgba(255,165,0,0.9)"},
               {label:"31-DAY AVG",value:`${overall31Rate}%`,sub:"CONSISTENCY",color:overall31Rate>=70?"#00c8ff":overall31Rate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
