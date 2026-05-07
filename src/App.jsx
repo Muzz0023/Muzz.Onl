@@ -19281,9 +19281,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
-  // ============================================
-  // COUNTDOWNS VIEW
-  // ============================================
   if (activeView === 'countdowns') {
     const today = new Date();
     const getCountdown = (dateStr) => {
@@ -19295,11 +19292,34 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       return { days, hours, mins, passed: false };
     };
-    const gradients = [
-      'from-blue-500 to-indigo-600', 'from-purple-500 to-pink-600', 'from-orange-500 to-red-600',
-      'from-green-500 to-teal-600', 'from-rose-500 to-pink-600', 'from-cyan-500 to-blue-600',
-      'from-amber-500 to-orange-600', 'from-violet-500 to-purple-600'
-    ];
+
+    // KPI calculations
+    const activeCountdowns = countdowns.filter(c => c.date && !getCountdown(c.date).passed);
+    const passedCountdowns = countdowns.filter(c => c.date && getCountdown(c.date).passed);
+    const nextCountdown = activeCountdowns.sort((a,b) => new Date(a.date) - new Date(b.date))[0];
+    const nextDays = nextCountdown ? getCountdown(nextCountdown.date).days : null;
+
+    // Bucket list KPIs
+    const blCompleted = bucketList.filter(b => b.completed).length;
+    const blTotal = bucketList.length;
+    const blPct = blTotal > 0 ? Math.round((blCompleted/blTotal)*100) : 0;
+    const [blFilter, setBlFilter] = React.useState('all');
+
+    const getUrgencyColor = (days) => {
+      if (days <= 7) return {color:'rgba(239,68,68,0.9)', border:'rgba(239,68,68,0.4)', glow:'rgba(239,68,68,0.08)'};
+      if (days <= 30) return {color:'rgba(251,191,36,0.9)', border:'rgba(251,191,36,0.4)', glow:'rgba(251,191,36,0.06)'};
+      return {color:'#00c8ff', border:'rgba(0,200,255,0.3)', glow:'rgba(0,200,255,0.04)'};
+    };
+
+    const categoryConfig = {
+      travel: {label:'TRAVEL', color:'rgba(0,200,255,0.8)', bg:'rgba(0,200,255,0.08)'},
+      experience: {label:'EXPERIENCE', color:'rgba(251,191,36,0.8)', bg:'rgba(251,191,36,0.08)'},
+      fitness: {label:'FITNESS', color:'rgba(34,197,94,0.8)', bg:'rgba(34,197,94,0.08)'},
+      career: {label:'CAREER', color:'rgba(99,102,241,0.8)', bg:'rgba(99,102,241,0.08)'},
+      financial: {label:'FINANCIAL', color:'rgba(255,165,0,0.8)', bg:'rgba(255,165,0,0.08)'},
+      personal: {label:'PERSONAL', color:'rgba(236,72,153,0.8)', bg:'rgba(236,72,153,0.08)'},
+      creative: {label:'CREATIVE', color:'rgba(168,85,247,0.8)', bg:'rgba(168,85,247,0.08)'},
+    };
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
@@ -19313,11 +19333,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>COUNTDOWNS</div>
-              </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ACTIVE</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{countdowns.filter(c=>c.date).length}</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>{countdownsSubTab === 'countdowns' ? 'COUNTDOWNS' : 'BUCKET LIST'}</div>
               </div>
             </div>
             <div style={{display:"flex",gap:"4px"}}>
@@ -19332,112 +19348,163 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         {/* COUNTDOWNS TAB */}
         {countdownsSubTab === 'countdowns' && (
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-            <button
-              onClick={() => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}])}
-              style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
-            >+ ADD COUNTDOWN</button>
-
-            {countdowns.length === 0 && (
-              <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>
-                NO COUNTDOWNS — ADD ONE ABOVE
+          <>
+            {/* KPI STRIP */}
+            <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+              <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)"}}>
+                {[
+                  {label:"ACTIVE",value:activeCountdowns.length,sub:"COUNTDOWNS",color:"#00c8ff"},
+                  {label:"NEXT EVENT",value:nextCountdown ? `${nextDays}d` : '—',sub:nextCountdown ? (nextCountdown.name||'Unnamed').toUpperCase().slice(0,12) : 'NONE SET',color:nextDays !== null ? getUrgencyColor(nextDays).color : "rgba(148,163,184,0.3)"},
+                  {label:"PASSED",value:passedCountdowns.length,sub:"EVENTS",color:"rgba(34,197,94,0.7)"},
+                ].map((kpi,i) => (
+                  <div key={i} style={{padding:"12px 16px",borderRight:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
 
-            {countdowns.map(cd => {
-              const countdown = cd.date ? getCountdown(cd.date) : null;
-              return (
-                <div key={cd.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                    <input type="text" value={cd.emoji} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, emoji:e.target.value.slice(0,2)} : c))} style={{width:"32px",textAlign:"center",fontSize:"18px",background:"transparent",border:"none",outline:"none"}} />
-                    <input type="text" value={cd.name} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, name:e.target.value} : c))} placeholder="What are you counting down to?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:500}} />
-                    <button onClick={() => setCountdowns(prev => prev.filter(c => c.id!==cd.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px"}}>×</button>
-                  </div>
-                  <div style={{padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",alignItems:"center",gap:"8px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TARGET DATE</span>
-                    <input type="date" value={cd.date} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, date:e.target.value} : c))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",padding:"3px 8px"}} />
-                  </div>
-                  {countdown && !countdown.passed && (
-                    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1px",background:"rgba(0,200,255,0.06)"}}>
-                      {[{val:countdown.days,label:"DAYS"},{val:countdown.hours,label:"HOURS"},{val:countdown.mins,label:"MINS"}].map((item,i) => (
-                        <div key={i} style={{padding:"16px",textAlign:"center",background:"rgba(5,12,24,0.9)"}}>
-                          <div style={{fontSize:"36px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{item.val}</div>
-                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px"}}>{item.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {countdown && countdown.passed && (
-                    <div style={{padding:"20px",textAlign:"center",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px"}}>◆ EVENT REACHED</div>
-                  )}
-                  {!cd.date && (
-                    <div style={{padding:"16px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>SET A DATE TO START COUNTDOWN</div>
-                  )}
+            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <button
+                onClick={() => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}])}
+                style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
+              >+ ADD COUNTDOWN</button>
+
+              {countdowns.length === 0 && (
+                <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>
+                  NO COUNTDOWNS — ADD ONE ABOVE
                 </div>
-              );
-            })}
-          </div>
+              )}
+
+              {countdowns.map(cd => {
+                const countdown = cd.date ? getCountdown(cd.date) : null;
+                const urgency = countdown && !countdown.passed ? getUrgencyColor(countdown.days) : {color:'rgba(34,197,94,0.8)', border:'rgba(34,197,94,0.3)', glow:'rgba(34,197,94,0.04)'};
+                return (
+                  <div key={cd.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${urgency.border}`,borderRadius:"6px",borderLeft:`2px solid ${urgency.color}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",boxShadow:`0 0 16px ${urgency.glow}`}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                      <input type="text" value={cd.emoji} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, emoji:e.target.value.slice(0,2)} : c))} style={{width:"32px",textAlign:"center",fontSize:"18px",background:"transparent",border:"none",outline:"none"}} />
+                      <input type="text" value={cd.name} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, name:e.target.value} : c))} placeholder="What are you counting down to?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:500}} />
+                      {countdown && !countdown.passed && countdown.days <= 7 && (
+                        <span style={{fontSize:"8px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"2px 6px",borderRadius:"2px",flexShrink:0}}>SOON</span>
+                      )}
+                      <button onClick={() => setCountdowns(prev => prev.filter(c => c.id!==cd.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px"}}>×</button>
+                    </div>
+                    <div style={{padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",alignItems:"center",gap:"8px"}}>
+                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TARGET DATE</span>
+                      <input type="date" value={cd.date} onChange={(e) => setCountdowns(prev => prev.map(c => c.id===cd.id ? {...c, date:e.target.value} : c))} style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",padding:"3px 8px"}} />
+                    </div>
+                    {countdown && !countdown.passed && (
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1px",background:"rgba(0,200,255,0.06)"}}>
+                        {[{val:countdown.days,label:"DAYS"},{val:countdown.hours,label:"HOURS"},{val:countdown.mins,label:"MINS"}].map((item,i) => (
+                          <div key={i} style={{padding:"16px",textAlign:"center",background:"rgba(5,12,24,0.9)"}}>
+                            <div style={{fontSize:"36px",color:urgency.color,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{item.val}</div>
+                            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px"}}>{item.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {countdown && countdown.passed && (
+                      <div style={{padding:"20px",textAlign:"center",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px"}}>◆ EVENT REACHED</div>
+                    )}
+                    {!cd.date && (
+                      <div style={{padding:"16px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>SET A DATE TO START COUNTDOWN</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* BUCKET LIST TAB */}
         {countdownsSubTab === 'bucketlist' && (() => {
-          const completedCount = bucketList.filter(b => b.completed).length;
-          const pct = bucketList.length > 0 ? Math.round((completedCount/bucketList.length)*100) : 0;
+          const filteredList = blFilter === 'all' ? bucketList : bucketList.filter(b => b.category === blFilter);
           return (
-            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <button onClick={() => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}])} style={{width:"100%",padding:"12px",background:"rgba(251,191,36,0.06)",border:"0.5px dashed rgba(251,191,36,0.3)",borderRadius:"6px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD TO BUCKET LIST</button>
-
-              {bucketList.length > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.7)",padding:"12px 16px"}}>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(251,191,36,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>COMPLETION RATE</span>
-                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.8)",fontFamily:"monospace"}}>{completedCount}/{bucketList.length} — {pct}%</span>
-                  </div>
-                  <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                    <div style={{height:"2px",width:`${pct}%`,background:"rgba(251,191,36,0.7)",borderRadius:"1px"}} />
-                  </div>
-                </div>
-              )}
-
-              {bucketList.length === 0 && (
-                <div style={{padding:"40px",textAlign:"center",color:"rgba(251,191,36,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(251,191,36,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>BUCKET LIST EMPTY — ADD YOUR GOALS ABOVE</div>
-              )}
-
-              {bucketList.filter(b => !b.completed).map(item => (
-                <div key={item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.5)",padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:true} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"1px solid rgba(251,191,36,0.5)",background:"transparent",flexShrink:0,marginTop:"2px",cursor:"pointer"}} />
-                  <div style={{flex:1}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
-                      <input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, emoji:e.target.value.slice(0,2)} : b))} style={{width:"24px",textAlign:"center",fontSize:"16px",background:"transparent",border:"none",outline:"none"}} />
-                      <input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, text:e.target.value} : b))} placeholder="What do you want to do?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}} />
-                    </div>
-                    <select value={item.category||'experience'} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, category:e.target.value} : b))} style={{background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"3px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",fontSize:"9px",padding:"2px 6px",letterSpacing:"0.5px"}}>
-                      <option value="travel">TRAVEL</option>
-                      <option value="experience">EXPERIENCE</option>
-                      <option value="fitness">FITNESS</option>
-                      <option value="career">CAREER</option>
-                      <option value="financial">FINANCIAL</option>
-                      <option value="personal">PERSONAL</option>
-                      <option value="creative">CREATIVE</option>
-                    </select>
-                  </div>
-                  <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
-                </div>
-              ))}
-
-              {bucketList.filter(b => b.completed).length > 0 && (
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"8px",marginBottom:"8px"}}>// COMPLETED</div>
-                  {bucketList.filter(b => b.completed).map(item => (
-                    <div key={item.id} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px",opacity:0.6}}>
-                      <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:false} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"none",background:"rgba(34,197,94,0.8)",flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>✓</button>
-                      <span style={{flex:1,color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"12px",textDecoration:"line-through"}}>{item.emoji} {item.text||'Unnamed goal'}</span>
-                      <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
+            <>
+              {/* KPI STRIP */}
+              <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+                <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+                  {[
+                    {label:"TOTAL",value:blTotal,sub:"GOALS",color:"rgba(251,191,36,0.9)"},
+                    {label:"COMPLETED",value:blCompleted,sub:"ACHIEVED",color:"rgba(34,197,94,0.9)"},
+                    {label:"REMAINING",value:blTotal-blCompleted,sub:"TO GO",color:"rgba(0,200,255,0.8)"},
+                    {label:"COMPLETION",value:`${blPct}%`,sub:"RATE",color:blPct>=70?"rgba(34,197,94,0.9)":blPct>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
+                  ].map((kpi,i) => (
+                    <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                      <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                      <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+
+              {/* Category filter */}
+              <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.08)",background:"rgba(5,12,24,0.4)"}}>
+                <div className="max-w-4xl mx-auto" style={{padding:"8px 24px",display:"flex",gap:"4px",overflowX:"auto"}}>
+                  {['all','travel','experience','fitness','career','financial','personal','creative'].map(cat => {
+                    const cfg = cat === 'all' ? {label:'ALL', color:'rgba(0,200,255,0.8)', bg:'rgba(0,200,255,0.08)'} : categoryConfig[cat];
+                    return (
+                      <button key={cat} onClick={() => setBlFilter(cat)} style={{padding:"4px 10px",background:blFilter===cat?cfg.bg:"transparent",border:`0.5px solid ${blFilter===cat?cfg.color:"rgba(255,255,255,0.08)"}`,borderRadius:"2px",color:blFilter===cat?cfg.color:"rgba(148,163,184,0.3)",fontFamily:"monospace",fontSize:"8px",letterSpacing:"1px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                        {cfg.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                <button onClick={() => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}])} style={{width:"100%",padding:"12px",background:"rgba(251,191,36,0.06)",border:"0.5px dashed rgba(251,191,36,0.3)",borderRadius:"6px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD TO BUCKET LIST</button>
+
+                {filteredList.length === 0 && (
+                  <div style={{padding:"40px",textAlign:"center",color:"rgba(251,191,36,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(251,191,36,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>BUCKET LIST EMPTY — ADD YOUR GOALS ABOVE</div>
+                )}
+
+                {filteredList.filter(b => !b.completed).map(item => {
+                  const cfg = categoryConfig[item.category] || categoryConfig.experience;
+                  return (
+                    <div key={item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.5)",padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                      <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:true} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"1px solid rgba(251,191,36,0.5)",background:"transparent",flexShrink:0,marginTop:"2px",cursor:"pointer"}} />
+                      <div style={{flex:1}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
+                          <input type="text" value={item.emoji} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, emoji:e.target.value.slice(0,2)} : b))} style={{width:"24px",textAlign:"center",fontSize:"16px",background:"transparent",border:"none",outline:"none"}} />
+                          <input type="text" value={item.text} onChange={(e) => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, text:e.target.value} : b))} placeholder="What do you want to do?" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}} />
+                        </div>
+                        <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+                          {Object.entries(categoryConfig).map(([key, c]) => (
+                            <button key={key} onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, category:key} : b))}
+                              style={{fontSize:"7px",fontFamily:"monospace",letterSpacing:"0.5px",padding:"2px 6px",borderRadius:"2px",border:`0.5px solid ${item.category===key?c.color:"rgba(255,255,255,0.06)"}`,background:item.category===key?c.bg:"transparent",color:item.category===key?c.color:"rgba(148,163,184,0.2)",cursor:"pointer"}}>
+                              {c.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
+                    </div>
+                  );
+                })}
+
+                {filteredList.filter(b => b.completed).length > 0 && (
+                  <div>
+                    <button
+                      onClick={() => { const el = document.getElementById('bl-completed'); if(el) el.style.display = el.style.display==='none'?'block':'none'; }}
+                      style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginTop:"8px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0}}
+                    >▾ COMPLETED · {filteredList.filter(b => b.completed).length}</button>
+                    <div id="bl-completed">
+                      {filteredList.filter(b => b.completed).map(item => (
+                        <div key={item.id} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px",opacity:0.6}}>
+                          <button onClick={() => setBucketList(prev => prev.map(b => b.id===item.id ? {...b, completed:false} : b))} style={{width:"20px",height:"20px",borderRadius:"50%",border:"none",background:"rgba(34,197,94,0.8)",flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"white"}}>✓</button>
+                          <span style={{flex:1,color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"12px",textDecoration:"line-through"}}>{item.emoji} {item.text||'Unnamed goal'}</span>
+                          <button onClick={() => setBucketList(prev => prev.filter(b => b.id!==item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
           );
         })()}
 
@@ -19447,119 +19514,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   }
 
   // ============================================
-  // BUCKET LIST VIEW
-  // ============================================
-  if (activeView === 'bucketlist') {
-    const completedCount = bucketList.filter(b => b.completed).length;
-
-    return (
-      <div className="min-h-screen bg-transparent pb-24">
-        <Sidebar />
-        <SaveIndicator />
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
-          <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 text-sm transition-colors flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)",letterSpacing:"0.5px"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white" style={{letterSpacing:"1px",textShadow:"0 0 20px rgba(0,200,255,0.3)"}}>🏆 Bucket List</h1>
-            <p className="text-white/70 mt-1">{completedCount}/{bucketList.length} completed</p>
-          </div>
-        </div>
-        <div className="max-w-4xl mx-auto px-6 py-6 space-y-4">
-          <button
-            onClick={() => setBucketList(prev => [...prev, { id: Date.now().toString(), text: '', emoji: '⭐', category: 'experience', completed: false }])}
-            className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl font-medium hover:scale-[1.02] transition-transform shadow-lg"
-          >
-            + Add to Bucket List
-          </button>
-
-          {bucketList.length === 0 && (
-            <div className="bg-white rounded-3xl p-12 shadow-sm border text-center">
-              <div className="text-5xl mb-4">🏆</div>
-              <p className="text-gray-500">Your bucket list is empty. Dream big and add your goals!</p>
-            </div>
-          )}
-
-          {/* Progress */}
-          {bucketList.length > 0 && (
-            <div className="rounded-2xl p-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium" style={{color:"rgba(148,163,184,0.9)"}}>Progress</span>
-                <span className="text-sm font-bold text-amber-600">{completedCount}/{bucketList.length}</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500 progress-glow" style={{ width: `${bucketList.length > 0 ? (completedCount / bucketList.length) * 100 : 0}%` }} />
-              </div>
-            </div>
-          )}
-
-          {/* Incomplete */}
-          {bucketList.filter(b => !b.completed).map(item => (
-            <div key={item.id} className="rounded-2xl p-4 flex items-start gap-3" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-              <button
-                onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: true } : b))}
-                className="w-8 h-8 rounded-full border-2 border-amber-400 flex-shrink-0 mt-1 hover:bg-amber-50 transition-colors"
-              />
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <input
-                    type="text"
-                    value={item.emoji}
-                    onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, emoji: e.target.value.slice(0, 2) } : b))}
-                    className="w-8 text-center text-lg bg-transparent focus:outline-none"
-                  />
-                  <input
-                    type="text"
-                    value={item.text}
-                    onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, text: e.target.value } : b))}
-                    placeholder="What do you want to do?"
-                    className="flex-1 font-medium bg-transparent focus:outline-none"
-                  />
-                </div>
-                <select
-                  value={item.category || 'experience'}
-                  onChange={(e) => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, category: e.target.value } : b))}
-                  className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 focus:outline-none"
-                >
-                  <option value="travel">✈️ Travel</option>
-                  <option value="experience">🎯 Experience</option>
-                  <option value="fitness">💪 Fitness</option>
-                  <option value="career">💼 Career</option>
-                  <option value="financial">💰 Financial</option>
-                  <option value="personal">🌟 Personal</option>
-                  <option value="creative">🎨 Creative</option>
-                </select>
-              </div>
-              <button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-
-          {/* Completed */}
-          {bucketList.filter(b => b.completed).length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-gray-500 mb-2 mt-6">✅ Completed</h3>
-              {bucketList.filter(b => b.completed).map(item => (
-                <div key={item.id} className="rounded-2xl p-4 flex items-center gap-3 opacity-60 mb-2" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}>
-                  <button
-                    onClick={() => setBucketList(prev => prev.map(b => b.id === item.id ? { ...b, completed: false } : b))}
-                    className="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center"
-                  >
-                    <span className="text-white text-sm">✓</span>
-                  </button>
-                  <span className="flex-1 line-through text-gray-500">{item.emoji} {item.text || 'Unnamed goal'}</span>
-                  <button onClick={() => setBucketList(prev => prev.filter(b => b.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
-      </div>
-    );
-  }
-
   // EXPORT VIEW
   if (activeView === 'export') {
     return (
