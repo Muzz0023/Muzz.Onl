@@ -3992,6 +3992,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // TASKS VIEW
   if (activeView === 'tasks') {
+
+    // KPI calculations across all task lists
+    const parseItems = (noteVal) => { try { const i = JSON.parse(noteVal); return Array.isArray(i) ? i : []; } catch { return []; } };
+    const dailyItems = parseItems(dailyNote);
+    const weeklyItems = parseItems(weeklyNote);
+    const generalItems = parseItems(generalNote);
+    const allItems = [...dailyItems, ...weeklyItems, ...generalItems];
+    const totalTasks = allItems.length;
+    const totalCompleted = allItems.filter(i => i.checked).length;
+    const totalRemaining = totalTasks - totalCompleted;
+    const overallRate = totalTasks > 0 ? Math.round((totalCompleted / totalTasks) * 100) : 0;
+
     return (
       <div className="bg-transparent pb-24" style={{minHeight:"100vh"}}>
         <Sidebar />
@@ -4008,23 +4020,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-5">
-          {/* Tab bar */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
+        {/* KPI STRIP */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+          <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
             {[
-              {id:'daily', label:'DAILY'},
-              {id:'weekly', label:'WEEKLY'},
-              {id:'general', label:'GENERAL'},
-              {id:'rotation', label:'ROTATION'},
-              {id:'pomodoro', label:'POMODORO'},
-            ].map(tab => (
-              <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"6px 14px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
-                {tab.label}
-              </button>
+              {label:"TOTAL",value:totalTasks,sub:"TASKS",color:"#00c8ff"},
+              {label:"COMPLETED",value:totalCompleted,sub:"DONE",color:"rgba(34,197,94,0.9)"},
+              {label:"REMAINING",value:totalRemaining,sub:"LEFT",color:totalRemaining>0?"rgba(251,191,36,0.9)":"rgba(34,197,94,0.9)"},
+              {label:"COMPLETION",value:`${overallRate}%`,sub:"RATE",color:overallRate>=70?"#00c8ff":overallRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
+            ].map((kpi,i) => (
+              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+              </div>
             ))}
           </div>
+        </div>
 
-          {/* CHECKLIST EDITOR — shared for daily/weekly/general */}
+        <div className="max-w-5xl mx-auto px-6 py-5">
+          {/* Tab bar with progress */}
+          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
+            {[
+              {id:'daily', label:'DAILY', items: dailyItems, color:'#00c8ff'},
+              {id:'weekly', label:'WEEKLY', items: weeklyItems, color:'rgba(99,102,241,0.9)'},
+              {id:'general', label:'GENERAL', items: generalItems, color:'rgba(34,197,94,0.9)'},
+              {id:'rotation', label:'ROTATION', items: [], color:'rgba(251,191,36,0.8)'},
+              {id:'pomodoro', label:'POMODORO', items: [], color:'rgba(239,68,68,0.7)'},
+            ].map(tab => {
+              const done = tab.items.filter(i => i.checked).length;
+              const total = tab.items.length;
+              return (
+                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"6px 14px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative"}}>
+                  {tab.label}
+                  {total > 0 && <span style={{marginLeft:"6px",fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)",fontFamily:"monospace"}}>{done}/{total}</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* CHECKLIST EDITOR */}
           {['daily','weekly','general'].includes(tasksSubTab) && (() => {
             const noteVal = tasksSubTab === 'daily' ? dailyNote : tasksSubTab === 'weekly' ? weeklyNote : generalNote;
             const setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
@@ -4037,17 +4072,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             const save = (i) => setNote(JSON.stringify(i));
             const addItem = () => {
-              const newItem = {id: Date.now(), text: '', checked: false};
+              const newItem = {id: Date.now(), text: '', checked: false, priority: null};
               save([...items, newItem]);
               setTimeout(() => { const el = document.getElementById(`item-${newItem.id}`); if(el) el.focus(); }, 50);
             };
             const updateItem = (id, changes) => save(items.map(i => i.id===id ? {...i,...changes} : i));
             const deleteItem = (id) => { if(items.length===1){ save([]); return; } save(items.filter(i=>i.id!==id)); };
+            const clearCompleted = () => save(items.filter(i => !i.checked));
 
             const handleKeyDown = (e, item) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
-                const newItem = {id: Date.now(), text: '', checked: false};
+                const newItem = {id: Date.now(), text: '', checked: false, priority: null};
                 const idx = items.findIndex(i => i.id === item.id);
                 const next = [...items.slice(0, idx+1), newItem, ...items.slice(idx+1)];
                 save(next);
@@ -4062,16 +4098,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               }
             };
 
+            const priorityConfig = {
+              high: {label:'HIGH', color:'rgba(239,68,68,0.8)', bg:'rgba(239,68,68,0.1)'},
+              med: {label:'MED', color:'rgba(251,191,36,0.8)', bg:'rgba(251,191,36,0.08)'},
+              low: {label:'LOW', color:'rgba(34,197,94,0.7)', bg:'rgba(34,197,94,0.08)'},
+            };
+
             const unchecked = items.filter(i => !i.checked);
             const checked = items.filter(i => i.checked);
+            const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
 
             return (
               <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${borderColor}`,borderRadius:"6px",borderLeft:`2px solid ${accentColor}`,backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
 
                 {/* Header */}
-                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${borderColor}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                   <span style={{fontSize:"10px",color:accentColor,fontFamily:"monospace",letterSpacing:"1.5px",opacity:0.6}}>{headerLabel}</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>{unchecked.length} left</span>
+                  <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                    <div style={{height:"2px",width:`${completionPct}%`,background:accentColor,borderRadius:"1px",transition:"width 0.3s"}} />
+                  </div>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace",flexShrink:0}}>{unchecked.length} left</span>
+                  {checked.length > 0 && (
+                    <button onClick={clearCompleted} style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(239,68,68,0.2)",padding:"2px 8px",borderRadius:"2px",cursor:"pointer",flexShrink:0}}>CLEAR DONE</button>
+                  )}
                 </div>
 
                 {/* Items */}
@@ -4095,6 +4144,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         placeholder="Task..."
                         style={{flex:1,background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontSize:"15px",fontFamily:"system-ui",lineHeight:"1.6"}}
                       />
+                      {/* Priority tag */}
+                      <div style={{display:"flex",gap:"3px",flexShrink:0}}>
+                        {['high','med','low'].map(p => (
+                          <button key={p} onClick={() => updateItem(item.id, {priority: item.priority === p ? null : p})}
+                            style={{fontSize:"7px",fontFamily:"monospace",letterSpacing:"0.5px",padding:"2px 5px",borderRadius:"2px",border:`0.5px solid ${item.priority===p?priorityConfig[p].color:"rgba(255,255,255,0.08)"}`,background:item.priority===p?priorityConfig[p].bg:"transparent",color:item.priority===p?priorityConfig[p].color:"rgba(148,163,184,0.2)",cursor:"pointer"}}>
+                            {priorityConfig[p].label}
+                          </button>
+                        ))}
+                      </div>
                       <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.2)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
                     </div>
                   ))}
@@ -4107,20 +4165,30 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{color:"rgba(148,163,184,0.25)",fontSize:"15px",fontFamily:"system-ui"}}>New item</span>
                   </button>
 
-                  {/* Completed section */}
+                  {/* Completed section — collapsible */}
                   {checked.length > 0 && (
                     <div style={{marginTop:"16px",borderTop:`0.5px solid rgba(255,255,255,0.05)`,paddingTop:"12px"}}>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px"}}>COMPLETED · {checked.length}</div>
-                      {checked.map(item => (
-                        <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
-                          <button onClick={() => updateItem(item.id, {checked: false})}
-                            style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
-                            ✓
-                          </button>
-                          <span style={{flex:1,color:"rgba(148,163,184,0.3)",fontSize:"15px",fontFamily:"system-ui",textDecoration:"line-through"}}>{item.text}</span>
-                          <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.15)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
-                        </div>
-                      ))}
+                      <button
+                        onClick={() => {
+                          const el = document.getElementById(`completed-${tasksSubTab}`);
+                          if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                        }}
+                        style={{fontSize:"9px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:"6px"}}
+                      >
+                        <span>▾ COMPLETED · {checked.length}</span>
+                      </button>
+                      <div id={`completed-${tasksSubTab}`}>
+                        {checked.map(item => (
+                          <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
+                            <button onClick={() => updateItem(item.id, {checked: false})}
+                              style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${accentColor}`,background:accentColor,flexShrink:0,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#020817",padding:0}}>
+                              ✓
+                            </button>
+                            <span style={{flex:1,color:"rgba(148,163,184,0.3)",fontSize:"15px",fontFamily:"system-ui",textDecoration:"line-through"}}>{item.text}</span>
+                            <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.15)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
