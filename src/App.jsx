@@ -19002,6 +19002,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ============================================
   if (activeView === 'habits') {
     const today = new Date().toISOString().split('T')[0];
+
     const toggleHabit = (habitId, date) => {
       const key = `${habitId}:${date}`;
       setHabitLog(prev => {
@@ -19011,6 +19012,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         return updated;
       });
     };
+
     const getStreak = (habitId) => {
       let streak = 0;
       let d = new Date();
@@ -19021,6 +19023,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       }
       return streak;
     };
+
+    const getBestStreak = (habitId) => {
+      let best = 0, current = 0;
+      const d = new Date();
+      for (let i = 365; i >= 0; i--) {
+        const dd = new Date(d); dd.setDate(d.getDate() - i);
+        const dateStr = dd.toISOString().split('T')[0];
+        if (habitLog[`${habitId}:${dateStr}`]) { current++; best = Math.max(best, current); }
+        else current = 0;
+      }
+      return best;
+    };
+
     const getLast31Days = () => {
       const days = [];
       for (let i = 30; i >= 0; i--) {
@@ -19029,7 +19044,27 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       }
       return days;
     };
+
+    const getLast7Days = () => {
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        days.push(d.toISOString().split('T')[0]);
+      }
+      return days;
+    };
+
     const last31 = getLast31Days();
+    const last7 = getLast7Days();
+    const dayLabels = ['M','T','W','T','F','S','S'];
+
+    // KPI calculations
+    const completedTodayCount = habits.filter(h => !!habitLog[`${h.id}:${today}`]).length;
+    const todayRate = habits.length > 0 ? Math.round((completedTodayCount / habits.length) * 100) : 0;
+    const bestStreakOverall = habits.length > 0 ? Math.max(...habits.map(h => getStreak(h.id))) : 0;
+    const overall31Rate = habits.length > 0 ? Math.round(
+      habits.reduce((sum, h) => sum + last31.filter(d => habitLog[`${h.id}:${d}`]).length, 0) / (habits.length * 31) * 100
+    ) : 0;
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
@@ -19053,6 +19088,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
+        {/* KPI STRIP */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+          <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+            {[
+              {label:"TODAY",value:`${completedTodayCount}/${habits.length}`,sub:"COMPLETED",color:"#00c8ff"},
+              {label:"TODAY RATE",value:`${todayRate}%`,sub:"COMPLETION",color:todayRate>=70?"#00c8ff":todayRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
+              {label:"TOP STREAK",value:bestStreakOverall,sub:"DAYS",color:"rgba(255,165,0,0.9)"},
+              {label:"31-DAY AVG",value:`${overall31Rate}%`,sub:"CONSISTENCY",color:overall31Rate>=70?"#00c8ff":overall31Rate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
+            ].map((kpi,i) => (
+              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
           <button
             onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '✅', createdAt: today }])}
@@ -19071,8 +19124,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const completedToday = !!habitLog[`${habit.id}:${today}`];
             const totalDone = last31.filter(d => habitLog[`${habit.id}:${d}`]).length;
             const completionRate = Math.round((totalDone / 31) * 100);
+            const streak = getStreak(habit.id);
+            const bestStreak = getBestStreak(habit.id);
+
             return (
               <div key={habit.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${completedToday?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.15)"}`,borderRadius:"6px",borderLeft:`2px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+
                 {/* Header row */}
                 <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"10px"}}>
                   <input
@@ -19100,13 +19157,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   >×</button>
                 </div>
 
+                {/* Stats row */}
+                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                  {[
+                    {label:"STREAK",value:`${streak}🔥`,color:"rgba(255,165,0,0.9)"},
+                    {label:"BEST",value:`${bestStreak} days`,color:"rgba(0,200,255,0.6)"},
+                    {label:"31-DAY",value:`${completionRate}%`,color:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
+                  ].map((stat,i) => (
+                    <div key={i} style={{padding:"8px 12px",textAlign:"center",borderRight:i<2?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
+                      <div style={{fontSize:"7px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"2px"}}>{stat.label}</div>
+                      <div style={{fontSize:"14px",color:stat.color,fontFamily:"monospace",fontWeight:600}}>{stat.value}</div>
+                    </div>
+                  ))}
+                </div>
+
                 {/* Completion rate bar */}
-                <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>31-DAY RATE</span>
-                  <span style={{fontSize:"11px",color:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",fontFamily:"monospace"}}>{completionRate}%</span>
-                  <div style={{flex:1,height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                    <div style={{height:"2px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"1px"}} />
+                <div style={{padding:"6px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                  <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                    <div style={{height:"2px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"1px",transition:"width 0.3s"}} />
                   </div>
+                </div>
+
+                {/* Weekly row */}
+                <div style={{padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",gap:"4px",alignItems:"center"}}>
+                  <span style={{fontSize:"8px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px",marginRight:"6px",flexShrink:0}}>THIS WEEK</span>
+                  {last7.map((date, i) => {
+                    const done = !!habitLog[`${habit.id}:${date}`];
+                    const isToday = date === today;
+                    const dow = new Date(date).getDay();
+                    const label = ['S','M','T','W','T','F','S'][dow];
+                    return (
+                      <div key={date} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",flex:1}}>
+                        <div style={{fontSize:"7px",color:isToday?"#00c8ff":"rgba(0,200,255,0.25)",fontFamily:"monospace"}}>{label}</div>
+                        <div
+                          onClick={() => toggleHabit(habit.id, date)}
+                          style={{width:"20px",height:"20px",borderRadius:"3px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.12)":"rgba(255,255,255,0.04)",border:isToday&&!done?"0.5px solid rgba(0,200,255,0.4)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:done?"#0a0e1a":"transparent"}}
+                        >{done?"✓":""}</div>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Heatmap */}
