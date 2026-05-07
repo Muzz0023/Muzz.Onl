@@ -2039,6 +2039,7 @@ function MuzzApp() {
   const [countdowns, setCountdowns] = useState([]);
   const [countdownsSubTab, setCountdownsSubTab] = useState('countdowns');
   const [blFilter, setBlFilter] = useState('all');
+  const [remindersSubTab, setRemindersSubTab] = useState('reminders');
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -3806,64 +3807,63 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
   // REMINDERS VIEW
   if (activeView === 'reminders') {
-    const addBirthday = () => {
-      setBirthdays(prev => [...prev, { id: Date.now(), name: '', date: '', category: 'friend' }]);
-    };
+    const addBirthday = () => setBirthdays(prev => [...prev, { id: Date.now(), name: '', date: '', category: 'friend' }]);
+    const addReminder = () => setReminders(prev => [...prev, { id: Date.now(), title: '', date: '', notes: '' }]);
 
-    const addReminder = () => {
-      setReminders(prev => [...prev, { id: Date.now(), title: '', date: '', notes: '' }]);
-    };
+    const today = new Date();
+    today.setHours(0,0,0,0);
 
-    // Sort birthdays by upcoming date
     const sortedBirthdays = [...birthdays].sort((a, b) => {
       if (!a.date || !b.date) return 0;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const aDate = new Date(a.date);
-      const bDate = new Date(b.date);
-      aDate.setHours(0, 0, 0, 0);
-      bDate.setHours(0, 0, 0, 0);
-      aDate.setFullYear(today.getFullYear());
-      bDate.setFullYear(today.getFullYear());
-      if (aDate < today) aDate.setFullYear(today.getFullYear() + 1);
-      if (bDate < today) bDate.setFullYear(today.getFullYear() + 1);
+      const aDate = new Date(a.date); aDate.setFullYear(today.getFullYear()); if (aDate < today) aDate.setFullYear(today.getFullYear()+1);
+      const bDate = new Date(b.date); bDate.setFullYear(today.getFullYear()); if (bDate < today) bDate.setFullYear(today.getFullYear()+1);
       return aDate - bDate;
     });
 
-    // Sort reminders by date
-    const sortedReminders = [...reminders].sort((a, b) => {
+    const sortedReminders = [...reminders].sort((a,b) => {
+      if (a.permanent && !b.permanent) return -1;
+      if (!a.permanent && b.permanent) return 1;
       if (!a.date || !b.date) return 0;
       return new Date(a.date) - new Date(b.date);
     });
 
-    const getUpcomingText = (dateStr) => {
-      if (!dateStr) return '';
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const bday = new Date(dateStr);
-      bday.setHours(0, 0, 0, 0);
-      bday.setFullYear(today.getFullYear());
-      if (bday < today) bday.setFullYear(today.getFullYear() + 1);
-      const diff = Math.round((bday - today) / (1000 * 60 * 60 * 24));
-      if (diff === 0) return '🎉 Today!';
-      if (diff === 1) return '🎉 Tomorrow!';
-      if (diff <= 7) return `🎂 In ${diff} days`;
-      if (diff <= 30) return `In ${diff} days`;
-      return '';
+    const getReminderDiff = (dateStr) => {
+      if (!dateStr) return null;
+      const d = new Date(dateStr); d.setHours(0,0,0,0);
+      return Math.ceil((d - today) / (1000*60*60*24));
     };
 
-    const getReminderUpcoming = (dateStr) => {
-      if (!dateStr) return '';
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const reminderDate = new Date(dateStr);
-      const diff = Math.ceil((reminderDate - today) / (1000 * 60 * 60 * 24));
-      if (diff < 0) return 'Overdue';
-      if (diff === 0) return 'Today';
-      if (diff === 1) return 'Tomorrow';
-      if (diff <= 7) return `In ${diff} days`;
-      return '';
+    const getBdayDiff = (dateStr) => {
+      if (!dateStr) return null;
+      const d = new Date(dateStr); d.setHours(0,0,0,0);
+      d.setFullYear(today.getFullYear());
+      if (d < today) d.setFullYear(today.getFullYear()+1);
+      return Math.round((d - today) / (1000*60*60*24));
     };
+
+    const getReminderLabel = (diff) => {
+      if (diff === null) return null;
+      if (diff < 0) return {text:'OVERDUE', color:'rgba(239,68,68,0.9)', bg:'rgba(239,68,68,0.1)'};
+      if (diff === 0) return {text:'TODAY', color:'rgba(34,197,94,0.9)', bg:'rgba(34,197,94,0.1)'};
+      if (diff === 1) return {text:'TOMORROW', color:'rgba(34,197,94,0.8)', bg:'rgba(34,197,94,0.08)'};
+      if (diff <= 7) return {text:`${diff}D`, color:'rgba(251,191,36,0.8)', bg:'rgba(251,191,36,0.08)'};
+      return null;
+    };
+
+    const getBdayLabel = (diff) => {
+      if (diff === null) return null;
+      if (diff === 0) return {text:'🎉 TODAY!', color:'rgba(236,72,153,0.9)'};
+      if (diff === 1) return {text:'🎂 TOMORROW', color:'rgba(236,72,153,0.8)'};
+      if (diff <= 7) return {text:`🎂 IN ${diff} DAYS`, color:'rgba(236,72,153,0.7)'};
+      if (diff <= 30) return {text:`IN ${diff} DAYS`, color:'rgba(148,163,184,0.4)'};
+      return {text:`${diff} DAYS`, color:'rgba(148,163,184,0.3)'};
+    };
+
+    // KPI calculations
+    const overdueCount = reminders.filter(r => !r.permanent && getReminderDiff(r.date) !== null && getReminderDiff(r.date) < 0).length;
+    const thisWeekCount = reminders.filter(r => !r.permanent && getReminderDiff(r.date) !== null && getReminderDiff(r.date) >= 0 && getReminderDiff(r.date) <= 7).length;
+    const upcomingBdays = birthdays.filter(b => { const d = getBdayDiff(b.date); return d !== null && d <= 30; }).length;
+    const pinnedCount = reminders.filter(r => r.permanent).length;
 
     return (
       <div className="min-h-screen bg-transparent pb-24">
@@ -3874,116 +3874,153 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
               <div>
                 <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>REMINDERS</div>
               </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TOTAL</div>
-                <div style={{fontSize:"24px",color:"#00c8ff",fontFamily:"monospace",fontWeight:500}}>{reminders.length + birthdays.length}</div>
-              </div>
+            </div>
+            <div style={{display:"flex",gap:"4px"}}>
+              {[{id:'reminders',label:'REMINDERS'},{id:'birthdays',label:'BIRTHDAYS'}].map(tab => (
+                <button key={tab.id} onClick={() => setRemindersSubTab(tab.id)} style={{padding:"6px 14px",background:remindersSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${remindersSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:remindersSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+        {/* KPI STRIP */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+          <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+            {[
+              {label:"PINNED",value:pinnedCount,sub:"REMINDERS",color:"#00c8ff"},
+              {label:"OVERDUE",value:overdueCount,sub:"REMINDERS",color:overdueCount>0?"rgba(239,68,68,0.9)":"rgba(34,197,94,0.7)"},
+              {label:"THIS WEEK",value:thisWeekCount,sub:"DUE",color:"rgba(251,191,36,0.8)"},
+              {label:"BIRTHDAYS",value:upcomingBdays,sub:"IN 30 DAYS",color:"rgba(236,72,153,0.8)"},
+            ].map((kpi,i) => (
+              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          {/* REMINDERS PANEL */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>REMINDERS</span>
-              <button onClick={addReminder} style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(0,200,255,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
-            </div>
-            {sortedReminders.length === 0 ? (
-              <div style={{padding:"28px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO REMINDERS — TAP + ADD</div>
-            ) : sortedReminders.map(reminder => {
-              const upcoming = getReminderUpcoming(reminder.date);
-              const upcomingColor = upcoming==='Overdue'?"rgba(239,68,68,0.8)":upcoming==='Today'||upcoming==='Tomorrow'?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)";
-              return (
-                <div key={reminder.id} style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.05)",display:"flex",alignItems:"flex-start",gap:"10px"}}>
-                  <div style={{flex:1}}>
-                    <textarea
-                      value={reminder.title}
-                      onFocus={scrollInputIntoView}
-                      onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, title:e.target.value} : r))}
-                      placeholder="Reminder..."
-                      style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",minHeight:"24px"}}
-                      rows={Math.max(1,Math.ceil((reminder.title?.length||0)/50))}
-                    />
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginTop:"6px",flexWrap:"wrap"}}>
-                      <button
-                        onClick={() => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, permanent:!r.permanent, date:r.permanent?r.date:''} : r))}
-                        style={{fontSize:"9px",color:reminder.permanent?"#00c8ff":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:`0.5px solid ${reminder.permanent?"rgba(0,200,255,0.4)":"rgba(255,255,255,0.08)"}`,padding:"2px 8px",cursor:"pointer",borderRadius:"3px"}}
-                      >
-                        📌 {reminder.permanent?"PINNED":"PIN?"}
-                      </button>
-                      {!reminder.permanent && (
-                        <>
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+
+          {/* REMINDERS TAB */}
+          {remindersSubTab === 'reminders' && (
+            <>
+              <button onClick={addReminder} style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD REMINDER</button>
+
+              {sortedReminders.length === 0 && (
+                <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>NO REMINDERS — ADD ONE ABOVE</div>
+              )}
+
+              {sortedReminders.map(reminder => {
+                const diff = getReminderDiff(reminder.date);
+                const label = reminder.permanent ? null : getReminderLabel(diff);
+                const isOverdue = !reminder.permanent && diff !== null && diff < 0;
+                const borderColor = reminder.permanent ? "rgba(0,200,255,0.4)" : isOverdue ? "rgba(239,68,68,0.4)" : "rgba(0,200,255,0.15)";
+                const accentColor = reminder.permanent ? "#00c8ff" : isOverdue ? "rgba(239,68,68,0.8)" : "rgba(0,200,255,0.3)";
+
+                return (
+                  <div key={reminder.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${borderColor}`,borderRadius:"6px",borderLeft:`2px solid ${accentColor}`,backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",boxShadow:isOverdue?"0 0 12px rgba(239,68,68,0.06)":reminder.permanent?"0 0 12px rgba(0,200,255,0.06)":"none"}}>
+                    {reminder.permanent && (
+                      <div style={{padding:"4px 16px",background:"rgba(0,200,255,0.06)",borderBottom:"0.5px solid rgba(0,200,255,0.15)",fontSize:"8px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1.5px"}}>📌 PINNED</div>
+                    )}
+                    <div style={{padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                      <div style={{flex:1}}>
+                        <textarea
+                          value={reminder.title}
+                          onFocus={scrollInputIntoView}
+                          onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, title:e.target.value} : r))}
+                          placeholder="Reminder..."
+                          style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",resize:"none",lineHeight:"1.6",minHeight:"24px"}}
+                          rows={Math.max(1,Math.ceil((reminder.title?.length||0)/50))}
+                        />
+                        <div style={{display:"flex",alignItems:"center",gap:"8px",marginTop:"6px",flexWrap:"wrap"}}>
+                          <button
+                            onClick={() => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, permanent:!r.permanent} : r))}
+                            style={{fontSize:"9px",color:reminder.permanent?"#00c8ff":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:`0.5px solid ${reminder.permanent?"rgba(0,200,255,0.4)":"rgba(255,255,255,0.08)"}`,padding:"2px 8px",cursor:"pointer",borderRadius:"3px"}}
+                          >📌 {reminder.permanent?"PINNED":"PIN"}</button>
+                          {!reminder.permanent && (
+                            <input
+                              type="date"
+                              value={reminder.date||''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, date:e.target.value} : r))}
+                              style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}}
+                            />
+                          )}
+                          {label && (
+                            <span style={{fontSize:"9px",color:label.color,fontFamily:"monospace",letterSpacing:"1px",background:label.bg,border:`0.5px solid ${label.color}`,padding:"2px 6px",borderRadius:"2px"}}>{label.text}</span>
+                          )}
+                        </div>
+                      </div>
+                      <button onClick={() => setReminders(prev => prev.filter(r => r.id!==reminder.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+
+          {/* BIRTHDAYS TAB */}
+          {remindersSubTab === 'birthdays' && (
+            <>
+              <button onClick={addBirthday} style={{width:"100%",padding:"12px",background:"rgba(236,72,153,0.06)",border:"0.5px dashed rgba(236,72,153,0.3)",borderRadius:"6px",color:"rgba(236,72,153,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD BIRTHDAY</button>
+
+              {sortedBirthdays.length === 0 && (
+                <div style={{padding:"40px",textAlign:"center",color:"rgba(236,72,153,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(236,72,153,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>NO BIRTHDAYS — ADD ONE ABOVE</div>
+              )}
+
+              {sortedBirthdays.map(bday => {
+                const diff = getBdayDiff(bday.date);
+                const label = getBdayLabel(diff);
+                const isToday = diff === 0;
+                const isSoon = diff !== null && diff <= 7;
+
+                return (
+                  <div key={bday.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isToday?"rgba(236,72,153,0.5)":isSoon?"rgba(236,72,153,0.3)":"rgba(236,72,153,0.15)"}`,borderRadius:"6px",borderLeft:`2px solid ${isToday?"rgba(236,72,153,0.9)":isSoon?"rgba(236,72,153,0.6)":"rgba(236,72,153,0.3)"}`,backgroundImage:"radial-gradient(rgba(236,72,153,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px",boxShadow:isToday?"0 0 16px rgba(236,72,153,0.1)":"none"}}>
+                    <div style={{padding:"12px 16px",display:"flex",alignItems:"flex-start",gap:"10px"}}>
+                      <div style={{flex:1}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
+                          <input
+                            type="text"
+                            value={bday.name}
+                            onFocus={scrollInputIntoView}
+                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, name:e.target.value} : b))}
+                            placeholder="Name..."
+                            style={{background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",flex:1}}
+                          />
+                          {label && <span style={{fontSize:"10px",color:label.color,fontFamily:"monospace",letterSpacing:"0.5px",flexShrink:0}}>{label.text}</span>}
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                           <input
                             type="date"
-                            value={reminder.date||''}
+                            value={bday.date}
                             onFocus={scrollInputIntoView}
-                            onChange={(e) => setReminders(prev => prev.map(r => r.id===reminder.id ? {...r, date:e.target.value} : r))}
-                            style={{background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}}
+                            onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, date:e.target.value} : b))}
+                            style={{background:"rgba(236,72,153,0.05)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}}
                           />
-                          {upcoming && <span style={{fontSize:"10px",color:upcomingColor,fontFamily:"monospace",letterSpacing:"0.5px"}}>{upcoming.toUpperCase()}</span>}
-                        </>
-                      )}
+                          {['friend','family'].map(cat => (
+                            <button key={cat} onClick={() => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, category:cat} : b))}
+                              style={{fontSize:"8px",fontFamily:"monospace",letterSpacing:"0.5px",padding:"2px 8px",borderRadius:"2px",border:`0.5px solid ${bday.category===cat?"rgba(236,72,153,0.5)":"rgba(255,255,255,0.06)"}`,background:bday.category===cat?"rgba(236,72,153,0.1)":"transparent",color:bday.category===cat?"rgba(236,72,153,0.8)":"rgba(148,163,184,0.3)",cursor:"pointer"}}>
+                              {cat.toUpperCase()}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <button onClick={() => setBirthdays(prev => prev.filter(b => b.id!==bday.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
                     </div>
                   </div>
-                  <button onClick={() => setReminders(prev => prev.filter(r => r.id!==reminder.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* BIRTHDAYS PANEL */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(236,72,153,0.7)",backgroundImage:"radial-gradient(rgba(236,72,153,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(236,72,153,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{fontSize:"10px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>BIRTHDAYS</span>
-              <button onClick={addBirthday} style={{fontSize:"10px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(236,72,153,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
-            </div>
-            {sortedBirthdays.length === 0 ? (
-              <div style={{padding:"28px",textAlign:"center",color:"rgba(236,72,153,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px"}}>NO BIRTHDAYS — TAP + ADD</div>
-            ) : sortedBirthdays.map(bday => {
-              const upcoming = getUpcomingText(bday.date);
-              return (
-                <div key={bday.id} style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(236,72,153,0.06)",display:"flex",alignItems:"flex-start",gap:"10px"}}>
-                  <div style={{flex:1}}>
-                    <input
-                      type="text"
-                      value={bday.name}
-                      onFocus={scrollInputIntoView}
-                      onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, name:e.target.value} : b))}
-                      placeholder="Name..."
-                      style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontFamily:"monospace",fontSize:"13px",marginBottom:"6px"}}
-                    />
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-                      <input
-                        type="date"
-                        value={bday.date}
-                        onFocus={scrollInputIntoView}
-                        onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, date:e.target.value} : b))}
-                        style={{background:"rgba(236,72,153,0.05)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",fontSize:"10px",padding:"2px 6px"}}
-                      />
-                      <select
-                        value={bday.category}
-                        onChange={(e) => setBirthdays(prev => prev.map(b => b.id===bday.id ? {...b, category:e.target.value} : b))}
-                        style={{background:"rgba(236,72,153,0.05)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",fontSize:"9px",padding:"2px 6px",letterSpacing:"0.5px"}}
-                      >
-                        <option value="friend">FRIEND</option>
-                        <option value="family">FAMILY</option>
-                      </select>
-                      {upcoming && <span style={{fontSize:"10px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace"}}>{upcoming}</span>}
-                    </div>
-                  </div>
-                  <button onClick={() => setBirthdays(prev => prev.filter(b => b.id!==bday.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px",flexShrink:0}}>×</button>
-                </div>
-              );
-            })}
-          </div>
-
+                );
+              })}
+            </>
+          )}
         </div>
         <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
