@@ -19178,26 +19178,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </div>
 
-                {/* Weekly row */}
-                <div style={{padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",gap:"4px",alignItems:"center"}}>
-                  <span style={{fontSize:"8px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px",marginRight:"6px",flexShrink:0}}>THIS WEEK</span>
-                  {last7.map((date, i) => {
-                    const done = !!habitLog[`${habit.id}:${date}`];
-                    const isToday = date === today;
-                    const dow = new Date(date).getDay();
-                    const label = ['S','M','T','W','T','F','S'][dow];
-                    return (
-                      <div key={date} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",flex:1}}>
-                        <div style={{fontSize:"7px",color:isToday?"#00c8ff":"rgba(0,200,255,0.25)",fontFamily:"monospace"}}>{label}</div>
-                        <div
-                          onClick={() => toggleHabit(habit.id, date)}
-                          style={{width:"20px",height:"20px",borderRadius:"3px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.12)":"rgba(255,255,255,0.04)",border:isToday&&!done?"0.5px solid rgba(0,200,255,0.4)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:done?"#0a0e1a":"transparent"}}
-                        >{done?"✓":""}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-
                 {/* Heatmap */}
                 <div style={{padding:"10px 16px"}}>
                   <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(22px, 1fr))",gap:"3px"}}>
