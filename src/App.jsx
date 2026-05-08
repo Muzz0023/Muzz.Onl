@@ -10959,21 +10959,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const children = getChildren(node.id);
 
               return (
-                <div key={node.id} className="flex flex-col items-center" style={{ minWidth: '140px' }}>
+                <div key={node.id} style={{display:"flex",flexDirection:"column",alignItems:"center",minWidth:"140px"}}>
                   {/* The node box */}
-                  <div className="relative mb-1">
-                    <div className="border border-gray-500 rounded-lg px-4 py-2.5 text-center whitespace-nowrap" style={{ backgroundColor: 'rgba(30,41,59,0.9)' }}>
+                  <div style={{position:"relative",marginBottom:"4px"}}>
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.3)",borderLeft:"2px solid rgba(0,200,255,0.6)",borderRadius:"3px",padding:"8px 14px",textAlign:"center",whiteSpace:"nowrap"}}>
                       <input
                         type="text"
                         value={node.name || ''}
                         onChange={(e) => updateNode(node.id, 'name', e.target.value)}
                         placeholder="Name..."
-                        className="bg-transparent text-center font-medium text-sm focus:outline-none"
-                        style={{ color: '#e2e8f0', width: `${Math.max((node.name || '').length, 6) * 8 + 20}px`, maxWidth: '250px' }}
+                        style={{ background:"transparent", textAlign:"center", fontFamily:"monospace", fontSize:"12px", fontWeight:500, outline:"none", border:"none", color: '#e0eaff', width: `${Math.max((node.name || '').length, 6) * 8 + 20}px`, maxWidth: '250px' }}
                       />
                     </div>
                     {showMapControls && (
-                      <div className="flex justify-center gap-0.5 mt-1">
+                      <div style={{display:"flex",justifyContent:"center",gap:"2px",marginTop:"4px"}}>
                         <button onClick={() => addSiblingLeft(node.id)} style={{width:"16px",height:"16px",background:"rgba(34,197,94,0.15)",border:"0.5px solid rgba(34,197,94,0.5)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>←</button>
                         <button onClick={() => addChild(node.id)} style={{width:"16px",height:"16px",background:"rgba(59,130,246,0.15)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>↓</button>
                         <button onClick={() => addSibling(node.id)} style={{width:"16px",height:"16px",background:"rgba(34,197,94,0.15)",border:"0.5px solid rgba(34,197,94,0.5)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>→</button>
@@ -10985,16 +10984,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {/* Children */}
                   {children.length > 0 && (
                     <>
-                      <div style={{width:"1px",background:"rgba(0,200,255,0.3)"}} style={{ height: '30px' }} />
+                      <div style={{width:"1px",background:"rgba(0,200,255,0.3)",height:"30px"}} />
                       {children.length > 1 && (
-                        <div className="relative w-full flex justify-center">
-                          <div style={{background:"rgba(0,200,255,0.3)"}} style={{ height: '1px', width: '100%' }} />
+                        <div style={{position:"relative",width:"100%",display:"flex",justifyContent:"center"}}>
+                          <div style={{background:"rgba(0,200,255,0.3)",height:"1px",width:"100%"}} />
                         </div>
                       )}
-                      <div className="flex justify-center" style={{ gap: '24px' }}>
+                      <div style={{display:"flex",justifyContent:"center",gap:"24px"}}>
                         {children.map(child => (
-                          <div key={child.id} className="flex flex-col items-center">
-                            <div style={{width:"1px",background:"rgba(0,200,255,0.3)"}} style={{ height: '30px' }} />
+                          <div key={child.id} style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+                            <div style={{width:"1px",background:"rgba(0,200,255,0.3)",height:"30px"}} />
                             {renderTree(child)}
                           </div>
                         ))}
@@ -11011,14 +11010,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"14px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div>
-                    <h2 className="text-2xl font-bold mb-1">🗺️ Asset Map</h2>
-                    <p className="text-blue-200 text-sm">Map out your financial structure</p>
+                    <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"4px"}}>ASSET MAP</h2>
+                    <p style={{fontSize:"11px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Map out your financial structure</p>
                   </div>
                   <button
                     onClick={() => setShowMapControls(!showMapControls)}
                     style={showMapControls ? {padding:"6px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"} : {padding:"6px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}
                   >
-                    {showMapControls ? '👁 Hide Controls' : '✏️ Edit'}
+                    {showMapControls ? 'HIDE CONTROLS' : 'EDIT'}
                   </button>
                 </div>
 
@@ -11026,12 +11025,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <button
                     onClick={() => setAssetMapNodes([{ id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }])}
                     style={{width:"100%",padding:"12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
-                  >+ Create Asset Map</button>
+                  >+ CREATE ASSET MAP</button>
                 )}
 
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"14px 16px",overflowX:"auto",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}} style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
-                  <div className="flex justify-center min-w-fit">
-                    <div className="flex gap-8">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"14px 16px",overflowX:"auto",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{display:"flex",justifyContent:"center",minWidth:"fit-content"}}>
+                    <div style={{display:"flex",gap:"32px"}}>
                       {rootNodes.map(root => renderTree(root))}
                     </div>
                   </div>
@@ -11042,7 +11041,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     onClick={() => setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '🏠', parentId: null }])}
                     style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
-                    + Add Root Node
+                    + ADD ROOT NODE
                   </button>
                 )}
               </div>
