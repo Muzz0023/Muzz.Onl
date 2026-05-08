@@ -2369,6 +2369,8 @@ function MuzzApp() {
   const [donnyTeam, setDonnyTeam] = useState([]);
   const [donnyMistakes, setDonnyMistakes] = useState([]);
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
+  const [selectedDonnyWorker, setSelectedDonnyWorker] = useState(null);
+  const [selectedDonnyClient, setSelectedDonnyClient] = useState(null);
   const [editingJobId, setEditingJobId] = useState(null);
   const [donnyNotes, setDonnyNotes] = useState({});
   const [newNoteText, setNewNoteText] = useState('');
@@ -16023,7 +16025,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {anomalies.slice(0,5).map((a,i) => {
                     const c = a.severity==='red'?'239,68,68':a.severity==='amber'?'245,158,11':'34,197,94';
                     return (
-                      <button key={i} onClick={() => { if(a.jobId){ const j=donnyJobs.find(x=>x.id===a.jobId); if(j){setSelectedDonnyJob(j); setActiveView('donny-jobdetail');} } else if(a.workerId){ setActiveView('donny-team'); } }}
+                      <button key={i} onClick={() => { if(a.jobId){ const j=donnyJobs.find(x=>x.id===a.jobId); if(j){setSelectedDonnyJob(j); setActiveView('donny-jobdetail');} } else if(a.workerId){ const w=donnyTeam.find(x=>x.id===a.workerId); if(w){setSelectedDonnyWorker(w); setActiveView('donny-workerdetail');} } }}
                         style={{width:"100%",display:"flex",alignItems:"center",gap:"10px",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(anomalies.length,5)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
                         <span style={{fontSize:"14px",color:`rgba(${c},0.9)`,fontFamily:"monospace",width:"18px",textAlign:"center",flexShrink:0}}>{a.icon}</span>
                         <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`rgba(${c},0.1)`,color:`rgba(${c},0.95)`,border:`0.5px solid rgba(${c},0.3)`,borderRadius:"2px",letterSpacing:"0.5px",flexShrink:0}}>{a.severity.toUpperCase()}</span>
@@ -16167,7 +16169,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const utilPct = (m._weekHrs / m._capacity) * 100;
                       const utilColor = utilPct > 100 ? '239,68,68' : utilPct > 80 ? '245,158,11' : utilPct > 0 ? '34,197,94' : '148,163,184';
                       return (
-                        <div key={m.id} style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                        <button key={m.id} onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",padding:0,textAlign:"left"}}>
                           <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{m.name.charAt(0).toUpperCase()}</div>
                           <div style={{flex:1,minWidth:0}}>
                             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"3px"}}>
@@ -16178,7 +16181,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{height:"100%",width:`${Math.min(utilPct,100)}%`,background:`rgba(${utilColor},0.7)`,transition:"width 0.3s"}}/>
                             </div>
                           </div>
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
@@ -16259,7 +16262,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 ) : donnyTeam.slice(0,5).map((m,i) => {
                   const memberHrs = donnyTimesheets.filter(e=>String(e.memberId)===String(m.id)).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                   return (
-                    <div key={m.id} style={{display:"flex",alignItems:"center",gap:"8px",padding:"7px 14px",borderBottom:i<Math.min(donnyTeam.length,5)-1?"0.5px solid rgba(249,115,22,0.05)":"none"}}>
+                    <button key={m.id} onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"8px",padding:"7px 14px",borderBottom:i<Math.min(donnyTeam.length,5)-1?"0.5px solid rgba(249,115,22,0.05)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{m.name.charAt(0).toUpperCase()}</div>
                       <div style={{flex:1,overflow:"hidden"}}>
                         <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
@@ -16269,7 +16273,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>{memberHrs.toFixed(1)}h</div>
                         {m.hourlyRate&&<div style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>${m.hourlyRate}/hr</div>}
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -16622,7 +16626,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <input value={job.title||''} onChange={e => updateJob({title:e.target.value})}
                     style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"22px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"4px 0"}} placeholder="Job title..."/>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {client ? <button onClick={() => setActiveView('donny-clients')} style={{background:"none",border:"none",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0}}>↳ {client.name}</button> : 'No client linked'}
+                    {client ? <button onClick={() => { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }} style={{background:"none",border:"none",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0}}>↳ {client.name}</button> : 'No client linked'}
                     {' · '}created {formatDate(job.createdAt)}
                   </div>
                 </div>
@@ -16778,7 +16782,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 ) : (
                   <div>
                     {workerHours.map((w,i) => (
-                      <button key={w.id} onClick={() => setActiveView('donny-team')} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<workerHours.length-1?"0.5px solid rgba(249,115,22,0.06)":"none",textAlign:"left"}}>
+                      <button key={w.id} onClick={() => { setSelectedDonnyWorker(w); setActiveView('donny-workerdetail'); }} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<workerHours.length-1?"0.5px solid rgba(249,115,22,0.06)":"none",textAlign:"left"}}>
                         <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                           <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"9px",fontWeight:600,color:"rgba(249,115,22,0.85)"}}>{(w.name||'?').slice(0,2).toUpperCase()}</div>
                           <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{w.name}</span>
@@ -16859,6 +16863,559 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <button onClick={() => { if(window.confirm('Delete this job?')) { saveDonnyJobs(donnyJobs.filter(j=>j.id!==job.id)); setSelectedDonnyJob(null); setActiveView('donny-masterview'); } }}
               style={{padding:"10px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"6px"}}>
               DELETE JOB
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // WORKER DETAIL — entity page for a team member
+    // ─────────────────────────────────────────────────────────────────
+    if (activeView === 'donny-workerdetail') {
+      const worker = donnyTeam.find(m => m.id === selectedDonnyWorker?.id) || selectedDonnyWorker;
+      if (!worker) {
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <div style={{padding:"80px 24px",textAlign:"center"}}>
+              <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO WORKER SELECTED</div>
+              <button onClick={() => setActiveView('donny-team')} style={{padding:"8px 18px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO TEAM</button>
+            </div>
+          </div>
+        );
+      }
+
+      const updateWorker = (patch) => {
+        const updated = donnyTeam.map(m => m.id === worker.id ? {...m, ...patch} : m);
+        setDonnyTeam(updated);
+        setSelectedDonnyWorker(prev => prev ? {...prev, ...patch} : prev);
+      };
+
+      // ─── DERIVED DATA ───────────────────────────────────────────────
+      const now = new Date();
+      const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay()); startOfWeek.setHours(0,0,0,0);
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      const workerTs = donnyTimesheets.filter(e => String(e.memberId) === String(worker.id));
+      const totalHours = workerTs.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const weekHours = workerTs.filter(e => new Date(e.date||e.createdAt||0) >= startOfWeek).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const monthHours = workerTs.filter(e => new Date(e.date||e.createdAt||0) >= startOfMonth).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const rate = parseFloat(worker.hourlyRate) || 0;
+      const totalEarned = totalHours * rate;
+      const weekEarned = weekHours * rate;
+      const monthEarned = monthHours * rate;
+
+      // Jobs they're on
+      const jobIds = [...new Set(workerTs.map(e => e.jobId))];
+      const workerJobs = jobIds.map(id => {
+        const job = donnyJobs.find(j => j.id === id);
+        if (!job) return null;
+        const hrs = workerTs.filter(e => e.jobId === id).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+        return { ...job, _hrs: hrs };
+      }).filter(Boolean).sort((a,b) => b._hrs - a._hrs);
+      const activeWorkerJobs = workerJobs.filter(j => !j.completed);
+
+      // Mistakes by this worker
+      const workerMistakes = (donnyMistakes || []).filter(m => String(m.memberId) === String(worker.id) || String(m.workerId) === String(worker.id));
+      const workerIncidents = (donnyIncidents || []).filter(i => String(i.memberId) === String(worker.id) || String(i.workerId) === String(worker.id));
+
+      // 4-week labour history
+      const weeks4 = Array.from({length:4}, (_,i) => {
+        const wstart = new Date(); wstart.setDate(wstart.getDate() - (3-i)*7 - wstart.getDay()); wstart.setHours(0,0,0,0);
+        const wend = new Date(wstart); wend.setDate(wstart.getDate()+7);
+        return { wstart, wend, label: i===3?'THIS WK':`${3-i}WK AGO` };
+      });
+      const weeklyHrs = weeks4.map(({wstart,wend}) => workerTs.filter(e => { const t=new Date(e.date||e.createdAt||0); return t>=wstart && t<wend; }).reduce((s,e)=>s+(parseFloat(e.hours)||0), 0));
+      const maxWeekHrs = Math.max(...weeklyHrs, 1);
+      const capacity = 38; // weekly capacity
+      const utilPct = (weekHours / capacity) * 100;
+      const utilColor = utilPct > 100 ? '239,68,68' : utilPct > 80 ? '245,158,11' : utilPct > 0 ? '34,197,94' : '148,163,184';
+
+      // Cost-to-revenue ratio: their wages vs revenue from jobs they worked on
+      const revenueFromJobs = workerJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+      const wagesToRev = revenueFromJobs > 0 ? (totalEarned / revenueFromJobs) * 100 : 0;
+
+      // Activity timeline (their attribution feed)
+      const timeline = [
+        ...workerTs.map(e => ({...e, _type:'hours', _at:new Date(e.date||e.createdAt||0), _label:`Hours logged`, _job: donnyJobs.find(j=>j.id===e.jobId)?.title})),
+        ...workerMistakes.map(m => ({...m, _type:'mistake', _at:new Date(m.createdAt||0), _label:`Mistake logged`, _job: donnyJobs.find(j=>j.id===m.jobId)?.title})),
+        ...workerIncidents.map(i => ({...i, _type:'incident', _at:new Date(i.createdAt||0), _label:`Incident reported`, _job: donnyJobs.find(j=>j.id===i.jobId)?.title})),
+      ].sort((a,b) => b._at - a._at);
+
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
+      const relTime = (d) => {
+        if (!d) return '';
+        const ms = new Date() - new Date(d);
+        const s = ms/1000, m = s/60, h = m/60, days = h/24;
+        if (s < 60) return 'just now';
+        if (m < 60) return `${Math.floor(m)}m ago`;
+        if (h < 24) return `${Math.floor(h)}h ago`;
+        if (days < 7) return `${Math.floor(days)}d ago`;
+        return new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+      };
+
+      const initial = (worker.name || '?').charAt(0).toUpperCase();
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
+                <button onClick={() => setActiveView('donny-team')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← TEAM</button>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace"}}>·</span>
+                <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
+              </div>
+              <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
+                {/* Avatar */}
+                <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",fontWeight:600,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{initial}</div>
+                <div style={{flex:1,minWidth:"260px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>WORKER INTEL</div>
+                    <div style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",letterSpacing:"1px"}}>{(worker.position || (worker.roles||[])[0] || 'WORKER').toUpperCase()}</div>
+                  </div>
+                  <input value={worker.name||''} onChange={e => updateWorker({name:e.target.value})}
+                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"24px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"4px 0"}} placeholder="Worker name..."/>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {rate > 0 ? `$${rate}/hr` : 'no rate set'}
+                    {' · '}{(worker.roles || []).join(', ') || 'no roles'}
+                    {' · '}{activeWorkerJobs.length} active job{activeWorkerJobs.length!==1?'s':''}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* METRICS — THIS WEEK / MONTH / ALL TIME */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// PERFORMANCE</span>
+                {capacity > 0 && (
+                  <span style={{fontSize:"9px",fontFamily:"monospace",color:`rgba(${utilColor},0.85)`}}>
+                    {utilPct.toFixed(0)}% UTIL · {weekHours.toFixed(1)}/{capacity}H
+                  </span>
+                )}
+              </div>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>THIS WEEK</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{weekHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
+                  <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",margin:"6px 0"}}>
+                    <div style={{height:"100%",width:`${Math.min(utilPct,100)}%`,background:`rgba(${utilColor},0.7)`,transition:"width 0.3s"}}/>
+                  </div>
+                  <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>${weekEarned.toFixed(0)}</div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>THIS MONTH</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{monthHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
+                  <div style={{height:"3px",background:"transparent",margin:"6px 0"}}/>
+                  <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>${monthEarned.toFixed(0)}</div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>ALL TIME</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
+                  <div style={{height:"3px",background:"transparent",margin:"6px 0"}}/>
+                  <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>${totalEarned.toFixed(0)}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4-WEEK SPARKLINE */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// HOURS · 4 WEEKS</span>
+              </div>
+              <div style={{padding:"14px 16px"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
+                  {weeklyHrs.map((h,i) => {
+                    const isLatest = i === 3;
+                    const heightPct = (h/maxWeekHrs)*100;
+                    return (
+                      <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
+                        <div style={{flex:1,width:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end",position:"relative"}}>
+                          {h > 0 && <div style={{position:"absolute",top:`${100-heightPct-14}%`,left:"50%",transform:"translateX(-50%)",fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",whiteSpace:"nowrap"}}>{h.toFixed(0)}h</div>}
+                          <div style={{width:"100%",height:`${heightPct}%`,background:isLatest?"linear-gradient(180deg, rgba(249,115,22,0.85), rgba(249,115,22,0.4))":"linear-gradient(180deg, rgba(249,115,22,0.4), rgba(249,115,22,0.1))",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px 2px 0 0",minHeight:h>0?"2px":"0"}}/>
+                        </div>
+                        <div style={{fontSize:"8px",color:isLatest?"#f97316":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{weeks4[i].label}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* JOBS + LINKED RECORDS */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+              {/* JOBS WORKED */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS WORKED</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{workerJobs.length}</span>
+                </div>
+                {workerJobs.length === 0 ? (
+                  <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO JOBS YET</div>
+                ) : (
+                  <div>
+                    {workerJobs.slice(0,8).map((j,i) => {
+                      const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
+                      return (
+                        <button key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(workerJobs.length,8)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                            <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
+                            <div style={{minWidth:0,flex:1}}>
+                              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.completed?'DONE':j.started?'ACTIVE':'TO DO'}</div>
+                            </div>
+                          </div>
+                          <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",flexShrink:0}}>{j._hrs.toFixed(1)}h</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* LINKED RECORDS */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
+                </div>
+                <div style={{padding:"10px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+                  {[
+                    {label:"TIMESHEETS", count:workerTs.length, view:'donny-dailyreport', color:"#f97316"},
+                    {label:"ACTIVE JOBS", count:activeWorkerJobs.length, view:'donny-masterview', color:"#22c55e"},
+                    {label:"MISTAKES", count:workerMistakes.length, view:'donny-mistakes', color:workerMistakes.length>0?"#f59e0b":"#94a3b8"},
+                    {label:"INCIDENTS", count:workerIncidents.length, view:'donny-incidents', color:workerIncidents.length>0?"#ef4444":"#94a3b8"},
+                  ].map(t => (
+                    <button key={t.label} onClick={() => setActiveView(t.view)} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"8px",color:`${t.color}99`,letterSpacing:"1.5px",marginBottom:"3px"}}>{t.label}</div>
+                      <div style={{fontSize:"16px",color:t.color,fontWeight:500}}>{t.count}</div>
+                    </button>
+                  ))}
+                </div>
+                {wagesToRev > 0 && (
+                  <div style={{padding:"10px 14px",borderTop:"0.5px solid rgba(249,115,22,0.05)"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>WAGES / REVENUE</div>
+                    <div style={{display:"flex",alignItems:"baseline",gap:"6px"}}>
+                      <span style={{fontSize:"16px",color:wagesToRev<=40?"rgba(34,197,94,0.9)":wagesToRev<=60?"#f59e0b":"#ef4444",fontFamily:"monospace",fontWeight:500}}>{wagesToRev.toFixed(0)}%</span>
+                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>${totalEarned.toFixed(0)} / ${revenueFromJobs.toFixed(0)}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* PROFILE EDIT */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// PROFILE</span>
+              </div>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
+                  <input value={worker.position||''} onChange={e => updateWorker({position:e.target.value})}
+                    placeholder="e.g. Apprentice, JM, Foreman"
+                    style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE</div>
+                  <input type="number" value={worker.hourlyRate||''} onChange={e => updateWorker({hourlyRate:e.target.value})}
+                    placeholder="0"
+                    style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                </div>
+              </div>
+            </div>
+
+            {/* TIMELINE */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ATTRIBUTION TIMELINE</span>
+                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{timeline.length} EVENTS</span>
+              </div>
+              {timeline.length === 0 ? (
+                <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO ACTIVITY YET</div>
+              ) : (
+                <div style={{padding:"6px 0",maxHeight:"380px",overflowY:"auto"}}>
+                  {timeline.slice(0,30).map((evt,i) => {
+                    const colorMap = {hours:"#f97316",mistake:"#f59e0b",incident:"#ef4444"};
+                    const c = colorMap[evt._type] || "#94a3b8";
+                    let detail = '';
+                    if (evt._type==='hours') detail = `${evt.hours}h${evt.note?' · '+evt.note:''}`;
+                    else if (evt._type==='mistake') detail = evt.description || evt.text || '';
+                    else if (evt._type==='incident') detail = evt.description || evt.text || '';
+                    return (
+                      <div key={i} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"8px 16px",borderBottom:i<Math.min(timeline.length,30)-1?"0.5px solid rgba(249,115,22,0.04)":"none"}}>
+                        <div style={{width:"5px",height:"5px",borderRadius:"50%",background:c,marginTop:"6px",flexShrink:0,boxShadow:`0 0 4px ${c}80`}}/>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"2px"}}>
+                            <span style={{fontSize:"10px",fontFamily:"monospace",color:c,letterSpacing:"1px",fontWeight:600}}>{evt._label.toUpperCase()}</span>
+                            <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.4)",flexShrink:0}}>{relTime(evt._at)}</span>
+                          </div>
+                          <div style={{fontSize:"11px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{detail}</div>
+                          {evt._job && <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",marginTop:"2px"}}>↳ {evt._job}</div>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* DELETE */}
+            <button onClick={() => { if(window.confirm(`Delete ${worker.name}? This will not delete their hours or attributions.`)) { setDonnyTeam(donnyTeam.filter(m=>m.id!==worker.id)); setSelectedDonnyWorker(null); setActiveView('donny-team'); } }}
+              style={{padding:"10px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"6px"}}>
+              REMOVE WORKER
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // CLIENT DETAIL — entity page for a client
+    // ─────────────────────────────────────────────────────────────────
+    if (activeView === 'donny-clientdetail') {
+      const client = donnyClients.find(c => c.id === selectedDonnyClient?.id) || selectedDonnyClient;
+      if (!client) {
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <div style={{padding:"80px 24px",textAlign:"center"}}>
+              <div style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO CLIENT SELECTED</div>
+              <button onClick={() => setActiveView('donny-clients')} style={{padding:"8px 18px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO CLIENTS</button>
+            </div>
+          </div>
+        );
+      }
+
+      const updateClient = (patch) => {
+        const updated = donnyClients.map(c => c.id === client.id ? {...c, ...patch} : c);
+        setDonnyClients(updated);
+        setSelectedDonnyClient(prev => prev ? {...prev, ...patch} : prev);
+      };
+
+      // ─── DERIVED DATA ──────────────────────────────────────────────
+      const clientJobs = donnyJobs.filter(j => j.clientId === client.id);
+      const activeClientJobs = clientJobs.filter(j => !j.completed);
+      const completedClientJobs = clientJobs.filter(j => j.completed);
+
+      // Revenue & cost analysis
+      const totalRevenue = clientJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+      const completedRevenue = completedClientJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+      const activeRevenue = activeClientJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+
+      // Per-job profitability
+      const jobsWithMargin = clientJobs.map(j => {
+        const ts = donnyTimesheets.filter(e => e.jobId === j.id);
+        const lab = ts.reduce((s,e) => { const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
+        const mats = (donnyMaterialsLog||[]).filter(m=>m.jobId===j.id).reduce((s,m)=>s+(parseFloat(m.cost)||0), 0);
+        const totalCost = lab + mats;
+        const quoted = parseFloat(j.quotedCost)||0;
+        const profit = quoted - totalCost;
+        const margin = quoted > 0 ? (profit/quoted)*100 : 0;
+        return { ...j, _cost:totalCost, _profit:profit, _margin:margin, _hasQuote: quoted > 0 };
+      });
+      const avgMargin = jobsWithMargin.filter(j => j._hasQuote && j.completed).length > 0
+        ? jobsWithMargin.filter(j => j._hasQuote && j.completed).reduce((s,j) => s + j._margin, 0) / jobsWithMargin.filter(j => j._hasQuote && j.completed).length
+        : 0;
+      const totalProfit = jobsWithMargin.reduce((s,j) => s + j._profit, 0);
+
+      // Photos & materials linked to client's jobs
+      const clientJobIds = clientJobs.map(j => j.id);
+      const clientPhotosCount = clientJobIds.reduce((s,id) => s + ((donnyPhotos&&donnyPhotos[id])||[]).length, 0);
+      const clientMaterials = (donnyMaterialsLog||[]).filter(m => clientJobIds.includes(m.jobId));
+      const clientMistakes = (donnyMistakes||[]).filter(m => clientJobIds.includes(m.jobId));
+
+      // First & last job dates
+      const sortedByDate = clientJobs.map(j => new Date(j.createdAt||0)).sort((a,b)=>a-b);
+      const firstJobDate = sortedByDate[0];
+      const lastJobDate = sortedByDate[sortedByDate.length-1];
+
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
+      const initial = (client.name || '?').charAt(0).toUpperCase();
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(59,130,246,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
+                <button onClick={() => setActiveView('donny-clients')} style={{fontSize:"11px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← CLIENTS</button>
+                <span style={{fontSize:"10px",color:"rgba(59,130,246,0.3)",fontFamily:"monospace"}}>·</span>
+                <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
+              </div>
+              <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
+                <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(59,130,246,0.12)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",fontWeight:600,color:"#3b82f6",fontFamily:"monospace",flexShrink:0}}>{initial}</div>
+                <div style={{flex:1,minWidth:"260px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>CLIENT INTEL</div>
+                    <div style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(59,130,246,0.1)",color:"rgba(59,130,246,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"3px",letterSpacing:"1px"}}>{clientJobs.length} JOB{clientJobs.length!==1?'S':''}</div>
+                  </div>
+                  <input value={client.name||''} onChange={e => updateClient({name:e.target.value})}
+                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"24px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(59,130,246,0.15)",outline:"none",padding:"4px 0"}} placeholder="Client name..."/>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {firstJobDate ? `since ${firstJobDate.toLocaleDateString('en-AU',{month:'short',year:'2-digit'})}` : 'no jobs yet'}
+                    {' · '}{activeClientJobs.length} active
+                    {' · '}{completedClientJobs.length} done
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* REVENUE METRICS */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// FINANCIAL OVERVIEW</span>
+                {avgMargin !== 0 && (
+                  <span style={{fontSize:"9px",fontFamily:"monospace",color:avgMargin>=20?"rgba(34,197,94,0.85)":avgMargin>=10?"#f59e0b":"#ef4444"}}>
+                    AVG MARGIN: {avgMargin.toFixed(0)}%
+                  </span>
+                )}
+              </div>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"14px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TOTAL QUOTED</div>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalRevenue.toFixed(0)}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>across {clientJobs.length} job{clientJobs.length!==1?'s':''}</div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>EARNED</div>
+                  <div style={{fontSize:"20px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${completedRevenue.toFixed(0)}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{completedClientJobs.length} completed</div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>IN PROGRESS</div>
+                  <div style={{fontSize:"20px",color:"#f97316",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${activeRevenue.toFixed(0)}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{activeClientJobs.length} active</div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>PROFIT</div>
+                  <div style={{fontSize:"20px",color:totalProfit>=0?"rgba(34,197,94,0.95)":"#ef4444",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalProfit>=0?'+':''}${totalProfit.toFixed(0)}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>after costs</div>
+                </div>
+              </div>
+            </div>
+
+            {/* JOBS TABLE */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS</span>
+                <button onClick={() => setActiveView('donny-newjob')} style={{fontSize:"9px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",background:"none",border:"0.5px solid rgba(59,130,246,0.3)",padding:"2px 8px",cursor:"pointer",borderRadius:"2px"}}>+ NEW JOB</button>
+              </div>
+              {clientJobs.length === 0 ? (
+                <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(59,130,246,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO JOBS LINKED</div>
+              ) : (
+                <div>
+                  {/* Table header */}
+                  <div style={{display:"grid",gridTemplateColumns:"60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"6px 16px",fontSize:"8px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div>JOB #</div><div>NAME</div><div>QUOTED</div><div>COST</div><div>MARGIN</div><div>STATUS</div>
+                  </div>
+                  {jobsWithMargin.sort((a,b) => (b._hasQuote?1:0) - (a._hasQuote?1:0)).map((j,i) => {
+                    const status = j.completed?'DONE':j.started?'ACTIVE':'TO DO';
+                    const sc = j.completed?'#22c55e':j.started?'#f97316':'#94a3b8';
+                    const marginColor = j._margin>=20?'#22c55e':j._margin>=0?'#f59e0b':'#ef4444';
+                    return (
+                      <div key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                        style={{display:"grid",gridTemplateColumns:"60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobsWithMargin.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(59,130,246,0.7)"}}>{j.jobNumber?`#${j.jobNumber}`:'—'}</div>
+                        <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"8px"}}>{j.title}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.6)"}}>{j._hasQuote?`$${parseFloat(j.quotedCost).toFixed(0)}`:'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>${j._cost.toFixed(0)}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:j._hasQuote?marginColor:"rgba(148,163,184,0.3)"}}>{j._hasQuote?`${j._margin.toFixed(0)}%`:'—'}</div>
+                        <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,padding:"2px 6px",letterSpacing:"0.5px",background:`${sc}15`,color:sc,border:`0.5px solid ${sc}30`,borderRadius:"3px"}}>{status}</span></div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* CONTACT + LINKED RECORDS */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+              {/* CONTACT INFO */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CONTACT</span>
+                </div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>EMAIL</div>
+                    <input value={client.email||''} onChange={e => updateClient({email:e.target.value})}
+                      placeholder="—"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PHONE</div>
+                    <input value={client.phone||''} onChange={e => updateClient({phone:e.target.value})}
+                      placeholder="—"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ADDRESS</div>
+                    <input value={client.address||''} onChange={e => updateClient({address:e.target.value})}
+                      placeholder="—"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
+                    <textarea value={client.notes||''} onChange={e => updateClient({notes:e.target.value})}
+                      placeholder="..."
+                      rows={3}
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                  </div>
+                </div>
+              </div>
+
+              {/* LINKED RECORDS */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
+                </div>
+                <div style={{padding:"10px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+                  {[
+                    {label:"TOTAL JOBS", count:clientJobs.length, view:'donny-masterview', color:"#3b82f6"},
+                    {label:"PHOTOS", count:clientPhotosCount, view:'donny-photos', color:"#a855f7"},
+                    {label:"MATERIALS", count:clientMaterials.length, view:'donny-materialslog', color:"#3b82f6"},
+                    {label:"MISTAKES", count:clientMistakes.length, view:'donny-mistakes', color:clientMistakes.length>0?"#f59e0b":"#94a3b8"},
+                  ].map(t => (
+                    <button key={t.label} onClick={() => setActiveView(t.view)} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"8px",color:`${t.color}99`,letterSpacing:"1.5px",marginBottom:"3px"}}>{t.label}</div>
+                      <div style={{fontSize:"16px",color:t.color,fontWeight:500}}>{t.count}</div>
+                    </button>
+                  ))}
+                </div>
+                {lastJobDate && (
+                  <div style={{padding:"10px 14px",borderTop:"0.5px solid rgba(59,130,246,0.05)"}}>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>LAST JOB</div>
+                    <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{lastJobDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* DELETE */}
+            <button onClick={() => { if(window.confirm(`Delete client ${client.name}? Jobs linked to them will be unlinked.`)) { setDonnyClients(donnyClients.filter(c=>c.id!==client.id)); setSelectedDonnyClient(null); setActiveView('donny-clients'); } }}
+              style={{padding:"10px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"6px"}}>
+              DELETE CLIENT
             </button>
           </div>
         </div>
@@ -17429,11 +17986,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div key={member.id} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
                       <div className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0"
-                            style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
+                          <button onClick={() => { setSelectedDonnyWorker(member); setActiveView('donny-workerdetail'); }}
+                            className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0"
+                            style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316',cursor:'pointer'}}>
                             {member.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="flex-1 min-w-0">
+                          </button>
+                          <button onClick={() => { setSelectedDonnyWorker(member); setActiveView('donny-workerdetail'); }}
+                            className="flex-1 min-w-0 text-left" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-white font-bold">{member.name}</span>
                               {member.position && <span className="text-xs px-2 py-0.5 rounded-full font-mono" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.8)',border:'1px solid rgba(249,115,22,0.2)'}}>{member.position}</span>}
@@ -17442,11 +18001,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {(member.roles||[member.role]).filter(Boolean).length > 0 && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')}</span>}
                               {member.hourlyRate && <span className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>💰 ${member.hourlyRate}/hr</span>}
                             </div>
-                          </div>
+                          </button>
                           <div className="flex gap-2 flex-shrink-0">
+                            <button onClick={() => { setSelectedDonnyWorker(member); setActiveView('donny-workerdetail'); }}
+                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer",letterSpacing:"0.5px",fontFamily:"monospace"}}>
+                              OPEN →
+                            </button>
                             <button onClick={() => setEditingMemberId(isEditing?null:member.id)}
-                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer"}}>
-                              {isEditing?'✕':'✏️'}
+                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(148,163,184,0.06)",color:"rgba(148,163,184,0.6)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace"}}>
+                              {isEditing?'✕':'⋯'}
                             </button>
                             <button onClick={() => { if(window.confirm(`Remove ${member.name}?`)) saveTeam(donnyTeam.filter(m=>m.id!==member.id)); }}
                               style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
@@ -19712,8 +20275,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {donnyClients.map((client, i) => {
                       const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
                       return (
-                        <div key={client.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
-                          style={{gridTemplateColumns:'1fr 1fr 130px 120px',borderBottom:i<donnyClients.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
+                        <div key={client.id} onClick={() => { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }}
+                          className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
+                          style={{gridTemplateColumns:'1fr 1fr 130px 120px',borderBottom:i<donnyClients.length-1?'1px solid rgba(255,255,255,0.03)':'none',cursor:'pointer'}}>
                           <div className="flex items-center gap-2">
                             <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(59,130,246,0.15)',color:'#3b82f6'}}>{client.name.charAt(0).toUpperCase()}</div>
                             <span className="text-white font-medium text-sm truncate">{client.name}</span>
@@ -19754,7 +20318,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={()=>setEditingClientId(isEditing?null:client.id)} className="text-xs px-2 py-1 rounded-lg" style={{background:'rgba(59,130,246,0.1)',color:'#3b82f6',border:'1px solid rgba(59,130,246,0.2)'}}>{isEditing?'✕':'✏️'}</button>
+                            <button onClick={() => { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }}
+                              style={{fontSize:'10px',padding:'2px 8px',background:'rgba(59,130,246,0.1)',color:'rgba(59,130,246,0.85)',border:'0.5px solid rgba(59,130,246,0.3)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace',letterSpacing:'0.5px'}}>OPEN →</button>
+                            <button onClick={()=>setEditingClientId(isEditing?null:client.id)} style={{fontSize:'10px',padding:'2px 8px',background:'rgba(148,163,184,0.06)',color:'rgba(148,163,184,0.6)',border:'0.5px solid rgba(148,163,184,0.2)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace'}}>{isEditing?'✕':'⋯'}</button>
                             <button onClick={()=>{if(window.confirm(`Remove ${client.name}?`)) saveClients(donnyClients.filter(c=>c.id!==client.id));}} style={{fontSize:'10px',padding:'2px 8px',background:'rgba(239,68,68,0.06)',color:'rgba(239,68,68,0.5)',border:'0.5px solid rgba(239,68,68,0.2)',borderRadius:'3px',cursor:'pointer'}}>×</button>
                           </div>
                         </div>
