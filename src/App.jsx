@@ -5220,6 +5220,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const updateGymData = (date, field, value) => { setSleepData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}})); };
     const stepsGoal = sleepData?.stepsGoal || 10000;
 
+    // KPI calculations
+    const weekSteps = weekDays.map(d => sleepData?.[d.date]?.steps || 0);
+    const totalWeekSteps = weekSteps.reduce((a,b)=>a+b,0);
+    const activeDays = weekSteps.filter(s => s > 0).length;
+    const bestDay = Math.max(...weekSteps);
+    const todaySteps = sleepData?.[today]?.steps || 0;
+    const todayPct = Math.min(Math.round((todaySteps/stepsGoal)*100),100);
+
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
@@ -5229,8 +5237,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>GYM</div>
-            <div style={{display:"flex",gap:"4px",marginTop:"16px"}}>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",marginBottom:"16px"}}>GYM</div>
+            <div style={{display:"flex",gap:"4px"}}>
               {[{id:'steps',label:'WEEKLY STEPS'},{id:'plan',label:'WORKOUT PLAN'}].map(tab => (
                 <button key={tab.id} onClick={() => setGymTab(tab.id)} style={{padding:"6px 14px",background:gymTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
                   {tab.label}
@@ -5239,6 +5247,51 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
         </div>
+
+        {/* KPI STRIP */}
+        {gymTab === 'steps' && (
+          <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+            <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+              {[
+                {label:"TODAY",value:todaySteps.toLocaleString(),sub:`${todayPct}% OF GOAL`,color:todayPct>=100?"rgba(34,197,94,0.9)":todayPct>=50?"rgba(251,191,36,0.8)":"#00c8ff"},
+                {label:"WEEK TOTAL",value:(totalWeekSteps/1000).toFixed(1)+'K',sub:"STEPS",color:"#00c8ff"},
+                {label:"ACTIVE DAYS",value:activeDays,sub:"THIS WEEK",color:"rgba(34,197,94,0.8)"},
+                {label:"BEST DAY",value:bestDay>0?(bestDay/1000).toFixed(1)+'K':'—',sub:"STEPS",color:"rgba(255,165,0,0.8)"},
+              ].map((kpi,i) => (
+                <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                  <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                  <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                  <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* STEPS BAR CHART */}
+        {gymTab === 'steps' && activeDays > 0 && (
+          <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.08)",background:"rgba(5,12,24,0.4)"}}>
+            <div className="max-w-5xl mx-auto" style={{padding:"12px 24px"}}>
+              <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px"}}>7-DAY STEPS INTEL</div>
+              <div style={{display:"flex",gap:"6px",alignItems:"flex-end",height:"48px"}}>
+                {weekDays.map(day => {
+                  const steps = sleepData?.[day.date]?.steps || 0;
+                  const pct = Math.min(steps/stepsGoal, 1);
+                  const barColor = pct >= 1 ? "rgba(34,197,94,0.9)" : pct >= 0.5 ? "#00c8ff" : pct > 0 ? "rgba(251,191,36,0.7)" : "rgba(255,255,255,0.04)";
+                  return (
+                    <div key={day.date} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px"}}>
+                      <div style={{fontSize:"8px",color:day.isToday?"#00c8ff":"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{steps>0?(steps/1000).toFixed(1)+'K':''}</div>
+                      <div style={{width:"100%",height:"32px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",display:"flex",alignItems:"flex-end",overflow:"hidden",border:day.isToday?"0.5px solid rgba(0,200,255,0.3)":"none"}}>
+                        <div style={{width:"100%",height:`${Math.max(pct*100,4)}%`,background:barColor,boxShadow:pct>0?`0 0 6px ${barColor}`:"none"}} />
+                      </div>
+                      <div style={{fontSize:"7px",color:day.isToday?"#00c8ff":"rgba(0,200,255,0.25)",fontFamily:"monospace"}}>{day.dayShort.toUpperCase().slice(0,1)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
@@ -5257,6 +5310,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const data = sleepData?.[day.date] || {};
                 const steps = data.steps || 0;
                 const pct = Math.min((steps / stepsGoal) * 100, 100);
+                const barColor = pct >= 100 ? "rgba(34,197,94,0.9)" : pct >= 50 ? "#00c8ff" : "rgba(251,191,36,0.7)";
                 return (
                   <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(0,200,255,0.4)":"rgba(0,200,255,0.12)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,padding:"12px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"8px"}}>
@@ -5264,9 +5318,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div style={{flex:1}}>
                         <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",marginBottom:"4px"}}>{day.dayName}{day.isToday&&<span style={{color:"#00c8ff",fontSize:"9px",marginLeft:"8px",letterSpacing:"1px"}}>● TODAY</span>}</div>
                         <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                          <div style={{height:"2px",width:`${pct}%`,background:"#00c8ff",borderRadius:"1px"}} />
+                          <div style={{height:"2px",width:`${pct}%`,background:barColor,borderRadius:"1px",transition:"width 0.3s"}} />
                         </div>
-                        <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",marginTop:"2px"}}>{pct.toFixed(0)}%</div>
+                        <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",marginTop:"2px"}}>{pct.toFixed(0)}% OF GOAL</div>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
                         <input type="number" value={steps||''} placeholder="0"
@@ -5322,13 +5376,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
     const today = new Date().toISOString().split('T')[0];
 
-    // Get all days of the current week (Monday to Sunday)
     const getWeekDays = () => {
       const now = new Date();
       const dayOfWeek = now.getDay();
       const monday = new Date(now);
       monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-      
       const days = [];
       for (let i = 0; i < 7; i++) {
         const day = new Date(monday);
@@ -5338,7 +5390,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           dayName: day.toLocaleDateString('en-AU', { weekday: 'long' }),
           dayShort: day.toLocaleDateString('en-AU', { weekday: 'short' }),
           dateNum: day.getDate(),
-          month: day.toLocaleDateString('en-AU', { month: 'short' }),
           isToday: day.toISOString().split('T')[0] === today
         });
       }
@@ -5347,72 +5398,54 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     const weekDays = getWeekDays();
 
-    const updateGymData = (date, field, value) => {
-      setDailySteps(prev => ({
-        ...prev,
-        [date]: {
-          ...(prev[date] || { steps: 0, notes: '' }),
-          [field]: value
-        }
-      }));
+    const calculateHours = (bed, wake) => {
+      if (!bed || !wake) return 0;
+      const [bedH, bedM] = bed.split(':').map(Number);
+      const [wakeH, wakeM] = wake.split(':').map(Number);
+      let bedMins = bedH * 60 + bedM;
+      let wakeMins = wakeH * 60 + wakeM;
+      if (wakeMins < bedMins) wakeMins += 24 * 60;
+      return ((wakeMins - bedMins) / 60).toFixed(1);
     };
 
-    const addWeekExercise = (week) => {
-      setWorkoutPlan(prev => ({
-        ...prev,
-        weeks: {
-          ...prev.weeks,
-          [week]: {
-            ...prev.weeks[week],
-            exercises: [...(prev.weeks[week]?.exercises || []), { id: Date.now(), amount: 'x1', name: '', details: '' }]
-          }
-        }
-      }));
+    const getSleepColor = (hours) => {
+      if (!hours || hours <= 0) return {color:'rgba(148,163,184,0.3)', border:'rgba(148,163,184,0.15)'};
+      if (hours >= 7) return {color:'rgba(34,197,94,0.9)', border:'rgba(34,197,94,0.4)'};
+      if (hours >= 6) return {color:'rgba(251,191,36,0.9)', border:'rgba(251,191,36,0.4)'};
+      return {color:'rgba(239,68,68,0.9)', border:'rgba(239,68,68,0.4)'};
     };
 
-    const updateWeekExercise = (week, id, field, value) => {
-      setWorkoutPlan(prev => ({
-        ...prev,
-        weeks: {
-          ...prev.weeks,
-          [week]: {
-            ...prev.weeks[week],
-            exercises: (prev.weeks[week]?.exercises || []).map(ex => 
-              ex.id === id ? { ...ex, [field]: value } : ex
-            )
-          }
-        }
-      }));
-    };
+    const getMoodConfig = (mood) => ({
+      great: {emoji:'😊', color:'rgba(34,197,94,0.9)', bg:'rgba(34,197,94,0.1)', border:'rgba(34,197,94,0.4)'},
+      good:  {emoji:'😌', color:'rgba(0,200,255,0.9)', bg:'rgba(0,200,255,0.08)', border:'rgba(0,200,255,0.4)'},
+      okay:  {emoji:'😐', color:'rgba(251,191,36,0.8)', bg:'rgba(251,191,36,0.08)', border:'rgba(251,191,36,0.4)'},
+      low:   {emoji:'😔', color:'rgba(251,146,60,0.8)', bg:'rgba(251,146,60,0.08)', border:'rgba(251,146,60,0.4)'},
+      sad:   {emoji:'😢', color:'rgba(239,68,68,0.8)', bg:'rgba(239,68,68,0.08)', border:'rgba(239,68,68,0.4)'},
+      angry: {emoji:'😡', color:'rgba(239,68,68,0.9)', bg:'rgba(239,68,68,0.1)', border:'rgba(239,68,68,0.5)'},
+    }[mood] || {emoji:'—', color:'rgba(148,163,184,0.3)', bg:'transparent', border:'rgba(255,255,255,0.06)'});
 
-    const deleteWeekExercise = (week, id) => {
-      setWorkoutPlan(prev => ({
-        ...prev,
-        weeks: {
-          ...prev.weeks,
-          [week]: {
-            ...prev.weeks[week],
-            exercises: (prev.weeks[week]?.exercises || []).filter(ex => ex.id !== id)
-          }
-        }
-      }));
-    };
+    // Sleep KPIs
+    const weekSleepHours = weekDays.map(d => parseFloat(sleepData[d.date]?.hoursSlept || 0)).filter(h => h > 0);
+    const avgSleep = weekSleepHours.length > 0 ? (weekSleepHours.reduce((a,b)=>a+b,0)/weekSleepHours.length).toFixed(1) : '-';
+    const sleepDaysTracked = weekDays.filter(d => sleepData[d.date]?.bedTime && sleepData[d.date]?.wakeTime).length;
+    const goodSleepNights = weekSleepHours.filter(h => h >= 7).length;
 
-    const updateWeekInfo = (week, field, value) => {
-      setWorkoutPlan(prev => ({
-        ...prev,
-        weeks: {
-          ...prev.weeks,
-          [week]: {
-            ...prev.weeks[week],
-            [field]: value
-          }
-        }
-      }));
-    };
+    // Mental KPIs
+    const mentalDaysLogged = weekDays.filter(d => mentalHealthData[d.date]?.mood).length;
+    const avgEnergy = (() => { const e = weekDays.map(d => mentalHealthData[d.date]?.energy).filter(Boolean); return e.length > 0 ? (e.reduce((a,b)=>a+b,0)/e.length).toFixed(1) : '-'; })();
+    const avgStress = (() => { const s = weekDays.map(d => mentalHealthData[d.date]?.stress).filter(Boolean); return s.length > 0 ? (s.reduce((a,b)=>a+b,0)/s.length).toFixed(1) : '-'; })();
+
+    const moods = [
+      { emoji: '😊', label: 'GREAT', value: 'great' },
+      { emoji: '😌', label: 'GOOD', value: 'good' },
+      { emoji: '😐', label: 'OKAY', value: 'okay' },
+      { emoji: '😔', label: 'LOW', value: 'low' },
+      { emoji: '😢', label: 'SAD', value: 'sad' },
+      { emoji: '😡', label: 'ANGRY', value: 'angry' }
+    ];
 
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen bg-transparent pb-24">
         <Sidebar />
         <SaveIndicator />
 
@@ -5420,13 +5453,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
-              <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HEALTH</div>
-              </div>
+            <div style={{marginBottom:"16px"}}>
+              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HEALTH</div>
             </div>
-            {/* Tabs */}
             <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
               {[{id:'sleep',label:'SLEEP'},{id:'mental',label:'MENTAL'}].map(tab => (
                 <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:gymSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
@@ -5437,439 +5467,189 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+        {/* KPI STRIP */}
+        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
+          <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+            {gymSubTab === 'sleep' ? [
+              {label:"AVG SLEEP",value:avgSleep,sub:"HOURS / NIGHT",color:parseFloat(avgSleep)>=7?"rgba(34,197,94,0.9)":parseFloat(avgSleep)>=6?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.8)"},
+              {label:"TRACKED",value:sleepDaysTracked,sub:"DAYS THIS WEEK",color:"#00c8ff"},
+              {label:"GOOD NIGHTS",value:goodSleepNights,sub:"7H+ SLEEP",color:"rgba(34,197,94,0.9)"},
+              {label:"TARGET",value:"8H",sub:"IDEAL SLEEP",color:"rgba(148,163,184,0.4)"},
+            ] : [
+              {label:"DAYS LOGGED",value:mentalDaysLogged,sub:"THIS WEEK",color:"rgba(236,72,153,0.9)"},
+              {label:"AVG ENERGY",value:avgEnergy,sub:"OUT OF 5",color:"rgba(251,191,36,0.8)"},
+              {label:"AVG STRESS",value:avgStress,sub:"OUT OF 5",color:parseFloat(avgStress)<=2?"rgba(34,197,94,0.8)":parseFloat(avgStress)<=3?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.8)"},
+              {label:"MOOD RING",value:weekDays.map(d => getMoodConfig(mentalHealthData[d.date]?.mood).emoji).filter(e=>e!=='—').join(''),sub:"THIS WEEK",color:"rgba(236,72,153,0.8)"},
+            ].map((kpi,i) => (
+              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                <div style={{fontSize:i===3&&gymSubTab==='mental'?"16px":"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          {/* Sleep Tracker Tab */}
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+
+          {/* SLEEP TAB */}
           {gymSubTab === 'sleep' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              {/* Sleep Stats Header */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(99,102,241,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(99,102,241,0.8)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(99,102,241,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>SLEEP TRACKER</div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (confirm('Reset all sleep data for this week?')) {
-                        const newSleepData = { ...sleepData };
-                        weekDays.forEach(day => { delete newSleepData[day.date]; });
-                        setSleepData(newSleepData);
-                      }
-                    }}
-                    style={{fontSize:"10px",color:"rgba(99,102,241,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(99,102,241,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
-                  >RESET WEEK</button>
-                </div>
-                {/* Weekly Summary */}
-                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",marginTop:"12px"}}>
-                  <div style={{background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"24px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:500}}>
-                      {(() => {
-                        const weekSleep = weekDays.map(d => sleepData[d.date]?.hoursSlept || 0).filter(h => h > 0);
-                        return weekSleep.length > 0 ? (weekSleep.reduce((a,b) => a+b, 0) / weekSleep.length).toFixed(1) : '-';
-                      })()}
-                    </div>
-                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>AVG HOURS</div>
-                  </div>
-                  <div style={{background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"24px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:500}}>
-                      {weekDays.filter(d => sleepData[d.date]?.bedTime && sleepData[d.date]?.wakeTime).length}
-                    </div>
-                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>DAYS TRACKED</div>
-                  </div>
-                  <div style={{background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"24px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:500}}>
-                      {(() => {
-                        const dreams = weekDays.filter(d => sleepData[d.date]?.dreamType === 'dream').length;
-                        const nightmares = weekDays.filter(d => sleepData[d.date]?.dreamType === 'nightmare').length;
-                        return `${dreams}/${nightmares}`;
-                      })()}
-                    </div>
-                    <div style={{fontSize:"9px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>DREAMS/NIGHTMARES</div>
-                  </div>
-                </div>
+            <>
+              <div style={{display:"flex",justifyContent:"flex-end"}}>
+                <button onClick={() => { if(confirm('Reset all sleep data for this week?')){ const n={...sleepData}; weekDays.forEach(d=>delete n[d.date]); setSleepData(n); }}} style={{fontSize:"10px",color:"rgba(99,102,241,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(99,102,241,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}>RESET WEEK</button>
               </div>
 
-              {/* Daily Sleep Cards */}
               {weekDays.map(day => {
                 const dayData = sleepData[day.date] || {};
-                
-                // Calculate hours slept
-                const calculateHours = (bed, wake) => {
-                  if (!bed || !wake) return 0;
-                  const [bedH, bedM] = bed.split(':').map(Number);
-                  const [wakeH, wakeM] = wake.split(':').map(Number);
-                  let bedMins = bedH * 60 + bedM;
-                  let wakeMins = wakeH * 60 + wakeM;
-                  if (wakeMins < bedMins) wakeMins += 24 * 60; // crossed midnight
-                  return ((wakeMins - bedMins) / 60).toFixed(1);
-                };
-                
-                const hoursSlept = calculateHours(dayData.bedTime, dayData.wakeTime);
-                
-                return (
-                  <div 
-                    key={day.date} 
-                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
-                      day.isToday ? 'border-indigo-400 ring-2 ring-indigo-100' : 'border-gray-100'
-                    }`}
-                  >
-                    {/* Day Header */}
-                    <div className={`px-4 py-3 flex items-center justify-between ${
-                      day.isToday ? 'bg-indigo-50' : 'bg-gray-50'
-                    }`}>
-                      <div className="flex items-center gap-3">
-                        <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
-                        {day.isToday && (
-                          <span className="px-2 py-0.5 bg-indigo-500 text-white text-xs rounded-full">Today</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {hoursSlept > 0 && (
-                          <div className={`px-3 py-1 rounded-full text-sm font-bold ${
-                            hoursSlept >= 7 ? 'bg-green-100 text-green-700' :
-                            hoursSlept >= 5 ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
-                            {hoursSlept}h
-                          </div>
-                        )}
-                        <button
-                          onClick={() => {
-                            const newSleepData = { ...sleepData };
-                            delete newSleepData[day.date];
-                            setSleepData(newSleepData);
-                          }}
-                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                          title="Clear day"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* Sleep Details */}
-                    <div className="p-4 space-y-4">
-                      {/* Time Row */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-xs text-gray-500 font-medium mb-1 block">🛏️ Bedtime</label>
-                          <input
-                            type="time"
-                            value={dayData.bedTime || ''}
-                            onChange={(e) => {
-                              const newHours = calculateHours(e.target.value, dayData.wakeTime);
-                              setSleepData(prev => ({
-                                ...prev,
-                                [day.date]: { ...prev[day.date], bedTime: e.target.value, hoursSlept: parseFloat(newHours) }
-                              }));
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-indigo-400"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 font-medium mb-1 block">☀️ Wake Time</label>
-                          <input
-                            type="time"
-                            value={dayData.wakeTime || ''}
-                            onChange={(e) => {
-                              const newHours = calculateHours(dayData.bedTime, e.target.value);
-                              setSleepData(prev => ({
-                                ...prev,
-                                [day.date]: { ...prev[day.date], wakeTime: e.target.value, hoursSlept: parseFloat(newHours) }
-                              }));
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-center font-medium focus:outline-none focus:border-indigo-400"
-                          />
-                        </div>
-                      </div>
-                      
-                      {/* Night Wakings & Quality Row */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-xs text-gray-500 font-medium mb-1 block">😴 Night Wakings</label>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => setSleepData(prev => ({
-                                ...prev,
-                                [day.date]: { ...prev[day.date], nightWakings: Math.max(0, (prev[day.date]?.nightWakings || 0) - 1) }
-                              }))}
-                              className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 font-bold text-lg"
-                            >
-                              -
-                            </button>
-                            <div className="flex-1 text-center font-bold text-xl">
-                              {dayData.nightWakings || 0}
-                            </div>
-                            <button
-                              onClick={() => setSleepData(prev => ({
-                                ...prev,
-                                [day.date]: { ...prev[day.date], nightWakings: (prev[day.date]?.nightWakings || 0) + 1 }
-                              }))}
-                              className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 font-bold text-lg"
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Dream Type Row */}
-                      <div>
-                        <label className="text-xs text-gray-500 font-medium mb-2 block">💭 Dreams</label>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => setSleepData(prev => ({
-                              ...prev,
-                              [day.date]: { ...prev[day.date], dreamType: prev[day.date]?.dreamType === 'nothing' ? '' : 'nothing' }
-                            }))}
-                            className={`flex-1 py-2 rounded-xl font-medium transition-all ${
-                              dayData.dreamType === 'nothing'
-                                ? 'bg-gray-200 text-gray-700 border-2 border-gray-400'
-                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
-                            }`}
-                          >
-                            😶 Nothing
-                          </button>
-                          <button
-                            onClick={() => setSleepData(prev => ({
-                              ...prev,
-                              [day.date]: { ...prev[day.date], dreamType: prev[day.date]?.dreamType === 'dream' ? '' : 'dream' }
-                            }))}
-                            className={`flex-1 py-2 rounded-xl font-medium transition-all ${
-                              dayData.dreamType === 'dream'
-                                ? 'bg-purple-100 text-purple-700 border-2 border-purple-400'
-                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
-                            }`}
-                          >
-                            ✨ Dream
-                          </button>
-                          <button
-                            onClick={() => setSleepData(prev => ({
-                              ...prev,
-                              [day.date]: { ...prev[day.date], dreamType: prev[day.date]?.dreamType === 'nightmare' ? '' : 'nightmare' }
-                            }))}
-                            className={`flex-1 py-2 rounded-xl font-medium transition-all ${
-                              dayData.dreamType === 'nightmare'
-                                ? 'bg-red-100 text-red-700 border-2 border-red-400'
-                                : 'bg-gray-100 text-gray-500 border-2 border-transparent'
-                            }`}
-                          >
-                            👻 Nightmare
-                          </button>
-                        </div>
-                      </div>
-                      
-                      {/* Notes */}
-                      <div>
-                        <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Notes</label>
-                        <input
-                          type="text"
-                          value={dayData.notes || ''}
-                          onChange={(e) => setSleepData(prev => ({
-                            ...prev,
-                            [day.date]: { ...prev[day.date], notes: e.target.value }
-                          }))}
-                          placeholder="How did you sleep? Any thoughts..."
-                          className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-indigo-400"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                const hoursSlept = parseFloat(calculateHours(dayData.bedTime, dayData.wakeTime));
+                const sleepColor = getSleepColor(hoursSlept);
 
-          {/* Mental Health Tab */}
-          {gymSubTab === 'mental' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              {/* Mental Health Header */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(236,72,153,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(236,72,153,0.7)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(236,72,153,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <div style={{fontSize:"9px",color:"rgba(236,72,153,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>MENTAL HEALTH TRACKER</div>
-                  <button
-                    onClick={() => {
-                      if (confirm('Reset all mental health data for this week?')) {
-                        const newData = { ...mentalHealthData };
-                        weekDays.forEach(day => { delete newData[day.date]; });
-                        setMentalHealthData(newData);
-                      }
-                    }}
-                    style={{fontSize:"10px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(236,72,153,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
-                  >RESET WEEK</button>
-                </div>
-                {/* Weekly Summary */}
-                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",marginTop:"12px"}}>
-                  <div style={{background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"24px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",fontWeight:500}}>{weekDays.filter(d => mentalHealthData[d.date]?.mood).length}</div>
-                    <div style={{fontSize:"9px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>DAYS LOGGED</div>
-                  </div>
-                  <div style={{background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"24px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",fontWeight:500}}>
-                      {(() => { const moods = weekDays.map(d => mentalHealthData[d.date]?.energy).filter(e => e); return moods.length > 0 ? (moods.reduce((a,b) => a+b, 0) / moods.length).toFixed(1) : '-'; })()}
-                    </div>
-                    <div style={{fontSize:"9px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>AVG ENERGY</div>
-                  </div>
-                  <div style={{background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"24px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",fontWeight:500}}>
-                      {(() => { const stress = weekDays.map(d => mentalHealthData[d.date]?.stress).filter(s => s); return stress.length > 0 ? (stress.reduce((a,b) => a+b, 0) / stress.length).toFixed(1) : '-'; })()}
-                    </div>
-                    <div style={{fontSize:"9px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>AVG STRESS</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Daily Mental Health Cards */}
-              {weekDays.map(day => {
-                const dayData = mentalHealthData[day.date] || {};
-                const moods = [
-                  { emoji: '😊', label: 'Great', value: 'great' },
-                  { emoji: '😌', label: 'Good', value: 'good' },
-                  { emoji: '😐', label: 'Okay', value: 'okay' },
-                  { emoji: '😔', label: 'Low', value: 'low' },
-                  { emoji: '😢', label: 'Sad', value: 'sad' },
-                  { emoji: '😡', label: 'Angry', value: 'angry' }
-                ];
-                
                 return (
-                  <div 
-                    key={day.date} 
-                    className={`bg-white rounded-2xl shadow-sm border-2 overflow-hidden ${
-                      day.isToday ? 'border-pink-400 ring-2 ring-pink-100' : 'border-gray-100'
-                    }`}
-                  >
-                    {/* Day Header */}
-                    <div className={`px-4 py-3 flex items-center justify-between ${
-                      day.isToday ? 'bg-pink-50' : 'bg-gray-50'
-                    }`}>
-                      <div className="flex items-center gap-3">
-                        <div className="font-semibold text-gray-800 text-lg">{day.dayName}</div>
-                        {day.isToday && (
-                          <span className="px-2 py-0.5 bg-pink-500 text-white text-xs rounded-full">Today</span>
-                        )}
+                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(99,102,241,0.4)":"rgba(99,102,241,0.15)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(99,102,241,0.9)":"rgba(99,102,241,0.3)"}`,backgroundImage:"radial-gradient(rgba(99,102,241,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+
+                    {/* Day header */}
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(99,102,241,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                        <span style={{fontSize:"13px",color:day.isToday?"rgba(99,102,241,0.9)":"rgba(148,163,184,0.7)",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{day.dayShort.toUpperCase()} {day.dateNum}</span>
+                        {day.isToday && <span style={{fontSize:"8px",color:"rgba(99,102,241,0.8)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(99,102,241,0.1)",border:"0.5px solid rgba(99,102,241,0.4)",padding:"2px 6px",borderRadius:"2px"}}>TODAY</span>}
+                        {hoursSlept > 0 && <span style={{fontSize:"12px",color:sleepColor.color,fontFamily:"monospace",fontWeight:600}}>{hoursSlept}H</span>}
                       </div>
-                      <div className="flex items-center gap-2">
-                        {dayData.mood && (
-                          <span className="text-2xl">{moods.find(m => m.value === dayData.mood)?.emoji}</span>
-                        )}
-                        <button
-                          onClick={() => {
-                            const newData = { ...mentalHealthData };
-                            delete newData[day.date];
-                            setMentalHealthData(newData);
-                          }}
-                          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                          title="Clear day"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                      <button onClick={() => { const n={...sleepData}; delete n[day.date]; setSleepData(n); }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px"}}>×</button>
                     </div>
-                    
-                    {/* Mental Health Details */}
-                    <div className="p-4 space-y-4">
-                      {/* Mood Selection */}
+
+                    {/* Sleep quality bar */}
+                    {hoursSlept > 0 && (
+                      <div style={{padding:"6px 16px",borderBottom:"0.5px solid rgba(99,102,241,0.06)"}}>
+                        <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
+                          <div style={{height:"2px",width:`${Math.min((hoursSlept/10)*100,100)}%`,background:sleepColor.color,borderRadius:"1px",transition:"width 0.3s"}} />
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      {/* Times */}
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                        {[{label:"🛏️ BEDTIME",field:"bedTime"},{label:"☀️ WAKE TIME",field:"wakeTime"}].map(({label,field}) => (
+                          <div key={field}>
+                            <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>{label}</div>
+                            <input type="time" value={dayData[field]||''} onChange={(e) => {
+                              const newHours = field==='bedTime' ? calculateHours(e.target.value, dayData.wakeTime) : calculateHours(dayData.bedTime, e.target.value);
+                              setSleepData(prev => ({...prev, [day.date]: {...prev[day.date], [field]: e.target.value, hoursSlept: parseFloat(newHours)}}));
+                            }} style={{width:"100%",background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.2)",borderRadius:"4px",color:"rgba(99,102,241,0.8)",fontFamily:"monospace",fontSize:"13px",padding:"6px 10px",textAlign:"center"}} />
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Night wakings */}
+                      <div style={{display:"flex",alignItems:"center",gap:"12px"}}>
+                        <span style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>😴 NIGHT WAKINGS</span>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                          <button onClick={() => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], nightWakings:Math.max(0,(prev[day.date]?.nightWakings||0)-1)}}))} style={{width:"28px",height:"28px",borderRadius:"3px",background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",color:"rgba(99,102,241,0.7)",fontFamily:"monospace",fontSize:"16px",cursor:"pointer"}}>-</button>
+                          <span style={{fontSize:"18px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:600,minWidth:"24px",textAlign:"center"}}>{dayData.nightWakings||0}</span>
+                          <button onClick={() => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], nightWakings:(prev[day.date]?.nightWakings||0)+1}}))} style={{width:"28px",height:"28px",borderRadius:"3px",background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",color:"rgba(99,102,241,0.7)",fontFamily:"monospace",fontSize:"16px",cursor:"pointer"}}>+</button>
+                        </div>
+                      </div>
+
+                      {/* Dreams */}
                       <div>
-                        <label className="text-xs text-gray-500 font-medium mb-2 block">How are you feeling?</label>
-                        <div className="flex gap-2 flex-wrap">
-                          {moods.map(mood => (
-                            <button
-                              key={mood.value}
-                              onClick={() => setMentalHealthData(prev => ({
-                                ...prev,
-                                [day.date]: { ...prev[day.date], mood: prev[day.date]?.mood === mood.value ? '' : mood.value }
-                              }))}
-                              className={`flex flex-col items-center p-2 rounded-xl transition-all ${
-                                dayData.mood === mood.value
-                                  ? 'bg-pink-100 border-2 border-pink-400 scale-105'
-                                  : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                              }`}
-                            >
-                              <span className="text-2xl">{mood.emoji}</span>
-                              <span className="text-xs text-gray-600 mt-1">{mood.label}</span>
+                        <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>💭 DREAMS</div>
+                        <div style={{display:"flex",gap:"6px"}}>
+                          {[{val:'nothing',label:'NOTHING'},{val:'dream',label:'DREAM'},{val:'nightmare',label:'NIGHTMARE'}].map(d => (
+                            <button key={d.val} onClick={() => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], dreamType: prev[day.date]?.dreamType===d.val?'':d.val}}))}
+                              style={{flex:1,padding:"6px",background:dayData.dreamType===d.val?"rgba(99,102,241,0.15)":"transparent",border:`0.5px solid ${dayData.dreamType===d.val?"rgba(99,102,241,0.5)":"rgba(255,255,255,0.06)"}`,borderRadius:"3px",color:dayData.dreamType===d.val?"rgba(99,102,241,0.9)":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"0.5px",cursor:"pointer"}}>
+                              {d.label}
                             </button>
                           ))}
                         </div>
                       </div>
-                      
-                      {/* Energy & Stress Row */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-xs text-gray-500 font-medium mb-2 block">⚡ Energy Level</label>
-                          <div className="flex gap-1">
-                            {[1, 2, 3, 4, 5].map(level => (
-                              <button
-                                key={level}
-                                onClick={() => setMentalHealthData(prev => ({
-                                  ...prev,
-                                  [day.date]: { ...prev[day.date], energy: prev[day.date]?.energy === level ? 0 : level }
-                                }))}
-                                className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
-                                  dayData.energy >= level
-                                    ? 'bg-yellow-400 text-yellow-900'
-                                    : 'bg-gray-100 text-gray-400'
-                                }`}
-                              >
-                                {level}
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex justify-between text-xs text-gray-400 mt-1">
-                            <span>Low</span>
-                            <span>High</span>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 font-medium mb-2 block">😰 Stress Level</label>
-                          <div className="flex gap-1">
-                            {[1, 2, 3, 4, 5].map(level => (
-                              <button
-                                key={level}
-                                onClick={() => setMentalHealthData(prev => ({
-                                  ...prev,
-                                  [day.date]: { ...prev[day.date], stress: prev[day.date]?.stress === level ? 0 : level }
-                                }))}
-                                className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
-                                  dayData.stress >= level
-                                    ? level <= 2 ? 'bg-green-400 text-green-900' :
-                                      level <= 3 ? 'bg-yellow-400 text-yellow-900' :
-                                      'bg-red-400 text-red-900'
-                                    : 'bg-gray-100 text-gray-400'
-                                }`}
-                              >
-                                {level}
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex justify-between text-xs text-gray-400 mt-1">
-                            <span>Calm</span>
-                            <span>Stressed</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Journal Entry */}
+
+                      {/* Notes */}
                       <div>
-                        <label className="text-xs text-gray-500 font-medium mb-1 block">📝 Journal / Thoughts</label>
-                        <textarea
-                          value={dayData.journal || ''}
-                          onChange={(e) => setMentalHealthData(prev => ({
-                            ...prev,
-                            [day.date]: { ...prev[day.date], journal: e.target.value }
-                          }))}
-                          placeholder="How was your day? What's on your mind..."
-                          className="w-full px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-pink-400 resize-none"
-                          rows={3}
-                        />
+                        <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>📝 NOTES</div>
+                        <input type="text" value={dayData.notes||''} onChange={(e) => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], notes:e.target.value}}))} placeholder="How did you sleep?" onFocus={scrollInputIntoView} style={{width:"100%",background:"transparent",border:"none",borderBottom:"0.5px solid rgba(99,102,241,0.15)",outline:"none",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",fontSize:"12px",padding:"4px 0"}} />
                       </div>
                     </div>
                   </div>
                 );
               })}
-            </div>
+            </>
           )}
 
+          {/* MENTAL HEALTH TAB */}
+          {gymSubTab === 'mental' && (
+            <>
+              <div style={{display:"flex",justifyContent:"flex-end"}}>
+                <button onClick={() => { if(confirm('Reset all mental health data for this week?')){ const n={...mentalHealthData}; weekDays.forEach(d=>delete n[d.date]); setMentalHealthData(n); }}} style={{fontSize:"10px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(236,72,153,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}>RESET WEEK</button>
+              </div>
+
+              {weekDays.map(day => {
+                const dayData = mentalHealthData[day.date] || {};
+                const moodCfg = getMoodConfig(dayData.mood);
+
+                return (
+                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(236,72,153,0.4)":dayData.mood?moodCfg.border:"rgba(236,72,153,0.15)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(236,72,153,0.9)":dayData.mood?moodCfg.color:"rgba(236,72,153,0.3)"}`,backgroundImage:"radial-gradient(rgba(236,72,153,0.02) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+
+                    {/* Day header */}
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(236,72,153,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                        <span style={{fontSize:"13px",color:day.isToday?"rgba(236,72,153,0.9)":"rgba(148,163,184,0.7)",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{day.dayShort.toUpperCase()} {day.dateNum}</span>
+                        {day.isToday && <span style={{fontSize:"8px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(236,72,153,0.1)",border:"0.5px solid rgba(236,72,153,0.4)",padding:"2px 6px",borderRadius:"2px"}}>TODAY</span>}
+                        {dayData.mood && <span style={{fontSize:"16px"}}>{moodCfg.emoji}</span>}
+                      </div>
+                      <button onClick={() => { const n={...mentalHealthData}; delete n[day.date]; setMentalHealthData(n); }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px"}}>×</button>
+                    </div>
+
+                    <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                      {/* Mood selection */}
+                      <div>
+                        <div style={{fontSize:"8px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"8px"}}>HOW ARE YOU FEELING?</div>
+                        <div style={{display:"flex",gap:"5px"}}>
+                          {moods.map(mood => {
+                            const cfg = getMoodConfig(mood.value);
+                            return (
+                              <button key={mood.value} onClick={() => setMentalHealthData(prev => ({...prev, [day.date]:{...prev[day.date], mood: prev[day.date]?.mood===mood.value?'':mood.value}}))}
+                                style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"8px 4px",background:dayData.mood===mood.value?cfg.bg:"transparent",border:`0.5px solid ${dayData.mood===mood.value?cfg.border:"rgba(255,255,255,0.06)"}`,borderRadius:"4px",cursor:"pointer",transition:"all 0.15s"}}>
+                                <span style={{fontSize:"18px"}}>{mood.emoji}</span>
+                                <span style={{fontSize:"7px",color:dayData.mood===mood.value?cfg.color:"rgba(148,163,184,0.3)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{mood.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Energy & Stress */}
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                        {[
+                          {label:"⚡ ENERGY",field:"energy",colors:['rgba(251,191,36,0.6)','rgba(251,191,36,0.7)','rgba(251,191,36,0.8)','rgba(251,191,36,0.9)','rgba(251,191,36,1)']},
+                          {label:"😰 STRESS",field:"stress",colors:['rgba(34,197,94,0.8)','rgba(34,197,94,0.8)','rgba(251,191,36,0.8)','rgba(239,68,68,0.7)','rgba(239,68,68,0.9)']},
+                        ].map(({label,field,colors}) => (
+                          <div key={field}>
+                            <div style={{fontSize:"8px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>{label}</div>
+                            <div style={{display:"flex",gap:"3px"}}>
+                              {[1,2,3,4,5].map(level => (
+                                <button key={level} onClick={() => setMentalHealthData(prev => ({...prev, [day.date]:{...prev[day.date], [field]: prev[day.date]?.[field]===level?0:level}}))}
+                                  style={{flex:1,height:"28px",borderRadius:"3px",background:dayData[field]>=level?colors[level-1]:"rgba(255,255,255,0.04)",border:"none",cursor:"pointer",fontSize:"9px",color:dayData[field]>=level?"#0a0e1a":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:600}}>
+                                  {level}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Journal */}
+                      <div>
+                        <div style={{fontSize:"8px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>📝 JOURNAL / THOUGHTS</div>
+                        <textarea value={dayData.journal||''} onChange={(e) => setMentalHealthData(prev => ({...prev, [day.date]:{...prev[day.date], journal:e.target.value}}))} placeholder="How was your day? What's on your mind..." onFocus={scrollInputIntoView} rows={3} style={{width:"100%",background:"transparent",border:"0.5px solid rgba(236,72,153,0.1)",borderRadius:"4px",outline:"none",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",fontSize:"12px",padding:"8px",resize:"none",lineHeight:"1.6"}} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
         </div>
+        <FloatingChat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} isTyping={isTyping} setIsTyping={setIsTyping} financialContext={financialContext} isAiLimitReached={isAiLimitReached} incrementAiUsage={incrementAiUsage} getAiRemaining={getAiRemaining} AI_DAILY_LIMIT={AI_DAILY_LIMIT} muzzPersonality={muzzPersonality} />
       </div>
     );
   }
