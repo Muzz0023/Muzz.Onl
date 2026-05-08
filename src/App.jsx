@@ -5551,7 +5551,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                       {/* Times */}
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-                        {[{label:"🛏️ BEDTIME",field:"bedTime"},{label:"☀️ WAKE TIME",field:"wakeTime"}].map(({label,field}) => (
+                        {[{label:"BEDTIME",field:"bedTime"},{label:"WAKE TIME",field:"wakeTime"}].map(({label,field}) => (
                           <div key={field}>
                             <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>{label}</div>
                             <input type="time" value={dayData[field]||''} onChange={(e) => {
@@ -5564,7 +5564,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       {/* Night wakings */}
                       <div style={{display:"flex",alignItems:"center",gap:"12px"}}>
-                        <span style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>😴 NIGHT WAKINGS</span>
+                        <span style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NIGHT WAKINGS</span>
                         <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                           <button onClick={() => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], nightWakings:Math.max(0,(prev[day.date]?.nightWakings||0)-1)}}))} style={{width:"28px",height:"28px",borderRadius:"3px",background:"rgba(99,102,241,0.08)",border:"0.5px solid rgba(99,102,241,0.2)",color:"rgba(99,102,241,0.7)",fontFamily:"monospace",fontSize:"16px",cursor:"pointer"}}>-</button>
                           <span style={{fontSize:"18px",color:"rgba(99,102,241,0.9)",fontFamily:"monospace",fontWeight:600,minWidth:"24px",textAlign:"center"}}>{dayData.nightWakings||0}</span>
@@ -5574,7 +5574,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       {/* Dreams */}
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>💭 DREAMS</div>
+                        <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>DREAMS</div>
                         <div style={{display:"flex",gap:"6px"}}>
                           {[{val:'nothing',label:'NOTHING'},{val:'dream',label:'DREAM'},{val:'nightmare',label:'NIGHTMARE'}].map(d => (
                             <button key={d.val} onClick={() => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], dreamType: prev[day.date]?.dreamType===d.val?'':d.val}}))}
@@ -5587,7 +5587,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       {/* Notes */}
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>📝 NOTES</div>
+                        <div style={{fontSize:"8px",color:"rgba(99,102,241,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>NOTES</div>
                         <input type="text" value={dayData.notes||''} onChange={(e) => setSleepData(prev => ({...prev, [day.date]:{...prev[day.date], notes:e.target.value}}))} placeholder="How did you sleep?" onFocus={scrollInputIntoView} style={{width:"100%",background:"transparent",border:"none",borderBottom:"0.5px solid rgba(99,102,241,0.15)",outline:"none",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",fontSize:"12px",padding:"4px 0"}} />
                       </div>
                     </div>
@@ -5662,7 +5662,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       {/* Journal */}
                       <div>
-                        <div style={{fontSize:"8px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>📝 JOURNAL / THOUGHTS</div>
+                        <div style={{fontSize:"8px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>JOURNAL / THOUGHTS</div>
                         <textarea value={dayData.journal||''} onChange={(e) => setMentalHealthData(prev => ({...prev, [day.date]:{...prev[day.date], journal:e.target.value}}))} placeholder="How was your day? What's on your mind..." onFocus={scrollInputIntoView} rows={3} style={{width:"100%",background:"transparent",border:"0.5px solid rgba(236,72,153,0.1)",borderRadius:"4px",outline:"none",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",fontSize:"12px",padding:"8px",resize:"none",lineHeight:"1.6"}} />
                       </div>
                     </div>
