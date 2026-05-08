@@ -7076,8 +7076,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     
     // Add new job
     const addJob = () => {
-      if (donnyJobs.length >= 5) return alert('Maximum 5 jobs allowed');
-      const newId = Math.max(...donnyJobs.map(j => j.id)) + 1;
+      if (jobs.length >= 5) return alert('Maximum 5 jobs allowed');
+      const newId = jobs.length > 0 ? Math.max(...jobs.map(j => j.id)) + 1 : 1;
       setTimesheetData(prev => ({
         ...prev,
         jobs: [...(prev.jobs || jobs), { id: newId, name: `Job ${newId}`, hourlyRate: 0, hourlyRateStr: '', shifts: {} }],
@@ -7271,7 +7271,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
                       style={{background:"transparent",border:"none",borderBottom:"0.5px solid rgba(59,130,246,0.4)",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:500,letterSpacing:"1px"}}
                     />
-                    {donnyJobs.length > 1 && (
+                    {jobs.length > 1 && (
                       <button onClick={() => deleteJob(activeJobId)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px"}}>×</button>
                     )}
                   </div>
