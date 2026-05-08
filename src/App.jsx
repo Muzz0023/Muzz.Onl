@@ -5798,10 +5798,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     
     // Section types
     const sectionTypes = [
-      { type: 'notes', label: '📝 Notes', color: 'from-amber-500 to-orange-500' },
-      { type: 'tasks', label: '📋 Tasks', color: 'from-violet-500 to-purple-500' },
-      { type: 'calendar', label: '📅 Calendar', color: 'from-pink-500 to-rose-500' },
-      { type: 'cards', label: '🃏 Cards', color: 'from-purple-500 to-indigo-500' },
+      { type: 'notes', label: 'NOTES', color: 'from-amber-500 to-orange-500' },
+      { type: 'tasks', label: 'TASKS', color: 'from-violet-500 to-purple-500' },
+      { type: 'calendar', label: 'CALENDAR', color: 'from-pink-500 to-rose-500' },
+      { type: 'cards', label: 'CARDS', color: 'from-purple-500 to-indigo-500' },
     ];
     
     const getSectionGradient = (type) => sectionTypes.find(s => s.type === type)?.color || 'from-gray-500 to-gray-600';
@@ -5890,8 +5890,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"32px",textAlign:"center"}}>
               <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>CUSTOM CATEGORY — USE FOR ANYTHING</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:"6px",justifyContent:"center",marginBottom:"12px"}}>
-                {['📚 Books & Learning','💼 Work','📊 Sales','📋 Projects','✈️ Travel','🏠 Home Inventory','📓 Journal','🎄 Christmas List','🛒 Shopping List','🎁 Wish List','🔧 Warranty Tracker','🐾 Pet Management','🚗 Vehicle Log','🏥 Medical','📚 Studying'].map(s => (
-                  <span key={s} style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"3px 8px"}}>{s}</span>
+                {['BOOKS & LEARNING','WORK','SALES','PROJECTS','TRAVEL','HOME INVENTORY','JOURNAL','CHRISTMAS LIST','SHOPPING LIST','WISH LIST','WARRANTY TRACKER','PET MANAGEMENT','VEHICLE LOG','MEDICAL','STUDYING'].map(s => (
+                  <span key={s} style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"3px 8px"}}>{s}</span>
                 ))}
               </div>
               <div style={{fontSize:"10px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP + ADD SECTION TO GET STARTED</div>
@@ -5989,7 +5989,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             {block.type === 'table' && (
                               <div className="border-2 rounded-xl overflow-hidden">
                                 <div className="bg-gray-50 px-2 py-1 flex items-center justify-between border-b">
-                                  <span className="text-xs text-gray-500 font-medium">📊 Table</span>
+                                  <span className="text-xs text-gray-500 font-medium">TABLE</span>
                                   <div className="flex gap-1">
                                     <button onClick={() => {
                                       const blocks = section.content?.blocks || [];
@@ -6156,7 +6156,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             {block.type === 'goals' && (
                               <div className="border-2 rounded-xl overflow-hidden">
                                 <div className="bg-gray-50 px-2 py-1 flex items-center justify-between border-b">
-                                  <span className="text-xs text-gray-500 font-medium">🎯 Goals</span>
+                                  <span className="text-xs text-gray-500 font-medium">GOALS</span>
                                   <button onClick={() => {
                                     const blocks = section.content?.blocks?.filter(b => b.id !== block.id) || [];
                                     updateSection(section.id, { content: { blocks } });
@@ -6579,9 +6579,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newText] } });
                               }}
-                              className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"3px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              📝 Notes
+                              + NOTES
                             </button>
                             <button
                               onClick={() => {
@@ -6594,9 +6594,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newTable] } });
                               }}
-                              className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"3px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              📊 Table
+                              + TABLE
                             </button>
                             <button
                               onClick={() => {
@@ -6608,9 +6608,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newTimeline] } });
                               }}
-                              className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderRadius:"3px",color:"rgba(99,102,241,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              ⏱️ Timeline
+                              + TIMELINE
                             </button>
                             <button
                               onClick={() => {
@@ -6622,9 +6622,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newGoals] } });
                               }}
-                              className="px-2.5 py-1 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderRadius:"3px",color:"rgba(168,85,247,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              🎯 Goals
+                              + GOALS
                             </button>
                             <button
                               onClick={() => {
@@ -6636,9 +6636,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newLinks] } });
                               }}
-                              className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(244,63,94,0.06)",border:"0.5px solid rgba(244,63,94,0.3)",borderRadius:"3px",color:"rgba(244,63,94,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              🔗 Links
+                              + LINKS
                             </button>
                             <button
                               onClick={() => {
@@ -6651,9 +6651,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newChart] } });
                               }}
-                              className="px-2.5 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              📈 Chart
+                              + CHART
                             </button>
                             <button
                               onClick={() => {
@@ -6661,9 +6661,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newChecklist] } });
                               }}
-                              className="px-2.5 py-1 bg-green-50 hover:bg-green-100 text-green-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              📌 Checklist
+                              + CHECKLIST
                             </button>
                             <button
                               onClick={() => {
@@ -6671,9 +6671,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newQuote] } });
                               }}
-                              className="px-2.5 py-1 bg-violet-50 hover:bg-violet-100 text-violet-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(139,92,246,0.06)",border:"0.5px solid rgba(139,92,246,0.3)",borderRadius:"3px",color:"rgba(139,92,246,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              💬 Quote
+                              + QUOTE
                             </button>
                             <button
                               onClick={() => {
@@ -6681,9 +6681,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newDivider] } });
                               }}
-                              className="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(148,163,184,0.06)",border:"0.5px solid rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              ➗ Divider
+                              + DIVIDER
                             </button>
                             <button
                               onClick={() => {
@@ -6691,9 +6691,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newEmbed] } });
                               }}
-                              className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              🔲 Embed
+                              + EMBED
                             </button>
                             <button
                               onClick={() => {
@@ -6701,9 +6701,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newContact] } });
                               }}
-                              className="px-2.5 py-1 bg-fuchsia-50 hover:bg-fuchsia-100 text-fuchsia-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(217,70,239,0.06)",border:"0.5px solid rgba(217,70,239,0.3)",borderRadius:"3px",color:"rgba(217,70,239,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              👤 Contact
+                              + CONTACT
                             </button>
                             <button
                               onClick={() => {
@@ -6711,9 +6711,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newLocation] } });
                               }}
-                              className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderRadius:"3px",color:"rgba(251,146,60,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              📍 Location
+                              + LOCATION
                             </button>
                             <button
                               onClick={() => {
@@ -6721,9 +6721,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 const blocks = section.content?.blocks || [{ id: Date.now() - 1, type: 'text', text: section.content || '' }];
                                 updateSection(section.id, { content: { blocks: [...blocks, newReminder] } });
                               }}
-                              className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-xs font-medium transition-colors"
+                              style={{padding:"4px 10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"3px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
                             >
-                              🔔 Reminder
+                              + REMINDER
                             </button>
                           </div>
                         )}
