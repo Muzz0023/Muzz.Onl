@@ -237,6 +237,11 @@ const StarryBackground = ({ children }) => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
 
+        /* Hide number input arrows globally */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
         /* ── FUTURISTIC ANIMATIONS ── */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
 
@@ -5325,7 +5330,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
                         <input type="number" value={steps||''} placeholder="0"
                           onChange={(e) => updateGymData(day.date, 'steps', parseInt(e.target.value)||0)}
-                          style={{width:"72px",padding:"4px 8px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",outline:"none",textAlign:"right"}} />
+                          style={{width:"72px",padding:"4px 8px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",outline:"none",textAlign:"right",MozAppearance:"textfield",WebkitAppearance:"none"}} />
                         <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>/{(stepsGoal/1000).toFixed(0)}K</span>
                       </div>
                     </div>
@@ -5475,7 +5480,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {label:"TRACKED",value:sleepDaysTracked,sub:"DAYS THIS WEEK",color:"#00c8ff"},
               {label:"GOOD NIGHTS",value:goodSleepNights,sub:"7H+ SLEEP",color:"rgba(34,197,94,0.9)"},
               {label:"TARGET",value:"8H",sub:"IDEAL SLEEP",color:"rgba(148,163,184,0.4)"},
-            ] : [
+            ].map((kpi,i) => (
+              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+              </div>
+            )) : [
               {label:"DAYS LOGGED",value:mentalDaysLogged,sub:"THIS WEEK",color:"rgba(236,72,153,0.9)"},
               {label:"AVG ENERGY",value:avgEnergy,sub:"OUT OF 5",color:"rgba(251,191,36,0.8)"},
               {label:"AVG STRESS",value:avgStress,sub:"OUT OF 5",color:parseFloat(avgStress)<=2?"rgba(34,197,94,0.8)":parseFloat(avgStress)<=3?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.8)"},
@@ -5483,7 +5494,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             ].map((kpi,i) => (
               <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
                 <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                <div style={{fontSize:i===3&&gymSubTab==='mental'?"16px":"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                <div style={{fontSize:i===3?"16px":"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
                 <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
               </div>
             ))}
