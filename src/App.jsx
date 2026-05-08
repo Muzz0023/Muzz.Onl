@@ -16011,75 +16011,85 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {col.jobs.length === 0 && (
                           <div style={{padding:"16px",textAlign:"center",fontSize:"10px",fontFamily:"monospace",background:"rgba(255,255,255,0.02)",border:`0.5px dashed ${col.color}30`,borderRadius:"6px",color:"rgba(148,163,184,0.3)"}}>NO JOBS</div>
                         )}
-                        {col.jobs.map(job => (
-                          <div key={job.id} style={{background:"rgba(5,12,24,0.9)",border:`0.5px solid ${editingJobId===job.id ? col.color+'80' : col.color+'30'}`,borderRadius:"6px",borderLeft:`2px solid ${col.color}50`,padding:"12px 14px"}}>
-                            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:"8px"}}>
-                              {job.jobNumber ? (
-                                <div style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 6px",background:`${col.color}15`,color:col.color,border:`0.5px solid ${col.color}30`,borderRadius:"3px"}}>#{job.jobNumber}</div>
-                              ) : <div/>}
-                              <div style={{display:"flex",gap:"4px"}}>
-                                <button onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }}
-                                  style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer",letterSpacing:"0.5px",fontFamily:"monospace"}}>
-                                  OPEN →
-                                </button>
-                                <button onClick={() => setEditingJobId(editingJobId===job.id ? null : job.id)}
-                                  style={{fontSize:"10px",padding:"2px 8px",background:"rgba(148,163,184,0.06)",color:"rgba(148,163,184,0.6)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace"}}>
-                                  {editingJobId===job.id ? '✕' : '⋯'}
-                                </button>
-                                <button onClick={() => { if(window.confirm('Delete this job?')) saveDonnyJobs(donnyJobs.filter(j => j.id !== job.id)); }}
-                                  style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
+                        {col.jobs.map(job => {
+                          const cardHrs = donnyTimesheets.filter(e => e.jobId === job.id).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+                          const cardWorkers = new Set(donnyTimesheets.filter(e => e.jobId === job.id).map(e => e.memberId)).size;
+                          const cardOverdue = job.dueDate && new Date(job.dueDate) < new Date() && !job.completed;
+                          const cardQH = parseFloat(job.quotedHours) || 0;
+                          const cardQC = parseFloat(job.quotedCost) || 0;
+                          const cardLabour = donnyTimesheets.filter(e => e.jobId === job.id).reduce((s,e) => {
+                            const m = donnyTeam.find(x => x.id === e.memberId);
+                            return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+                          }, 0);
+                          // Compute single risk indicator
+                          let riskDot = null;
+                          if (cardOverdue) riskDot = '#ef4444';
+                          else if (cardQH > 0 && (cardHrs/cardQH) > 1) riskDot = '#ef4444';
+                          else if (cardQC > 0 && cardLabour > cardQC) riskDot = '#ef4444';
+                          else if (cardQH > 0 && (cardHrs/cardQH) > 0.8) riskDot = '#f59e0b';
+
+                          return (
+                          <div key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }}
+                            style={{background:"rgba(5,12,24,0.9)",border:`0.5px solid ${col.color}25`,borderRadius:"6px",borderLeft:`2px solid ${col.color}50`,padding:"10px 12px",cursor:"pointer",position:"relative",transition:"border-color 0.15s"}}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = col.color+'60'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = col.color+'25'}>
+
+                            {/* TOP META ROW: # + risk dot + delete */}
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px",gap:"8px"}}>
+                              <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0,flex:1}}>
+                                {job.jobNumber ? (
+                                  <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${col.color}15`,color:col.color,border:`0.5px solid ${col.color}30`,borderRadius:"2px",letterSpacing:"0.5px",flexShrink:0}}>#{job.jobNumber}</span>
+                                ) : (
+                                  <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.3)",letterSpacing:"0.5px",flexShrink:0}}>—</span>
+                                )}
+                                {riskDot && <span style={{width:"5px",height:"5px",borderRadius:"50%",background:riskDot,boxShadow:`0 0 4px ${riskDot}80`,flexShrink:0}}/>}
                               </div>
+                              <button onClick={(e) => { e.stopPropagation(); if(window.confirm('Delete this job?')) saveDonnyJobs(donnyJobs.filter(j => j.id !== job.id)); }}
+                                style={{fontSize:"12px",padding:"0 4px",background:"none",color:"rgba(148,163,184,0.3)",border:"none",cursor:"pointer",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>×</button>
                             </div>
 
-                            {editingJobId === job.id ? (
-                              <div style={{display:"flex",flexDirection:"column",gap:"8px",marginTop:"4px"}}>
-                                <div>
-                                  <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(249,115,22,0.5)",letterSpacing:"1px",marginBottom:"4px"}}>JOB TITLE</div>
-                                  <input value={job.title} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,title:e.target.value}:j))}
-                                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:500,border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.3)",outline:"none",paddingBottom:"2px"}}/>
-                                </div>
-                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
-                                  {[{label:"JOB #",field:"jobNumber",type:"text",ph:"042"},{label:"START",field:"startDate",type:"date",ph:""},{label:"DUE",field:"dueDate",type:"date",ph:""}].map(({label,field,type,ph}) => (
-                                    <div key={field}>
-                                      <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(249,115,22,0.4)",letterSpacing:"1px",marginBottom:"3px"}}>{label}</div>
-                                      <input type={type} value={job[field]||''} placeholder={ph} onChange={e => saveDonnyJobs(donnyJobs.map(j=>j.id===job.id?{...j,[field]:e.target.value}:j))}
-                                        style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(255,255,255,0.1)",outline:"none",colorScheme:"dark"}}/>
-                                    </div>
-                                  ))}
-                                </div>
-                                <button onClick={() => setEditingJobId(null)} style={{padding:"6px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>
-                                  DONE ✓
-                                </button>
+                            {/* TITLE */}
+                            <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:500,marginBottom:"8px",lineHeight:1.3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",textOverflow:"ellipsis"}}>
+                              {job.title || <span style={{color:"rgba(148,163,184,0.3)",fontStyle:"italic"}}>untitled</span>}
+                            </div>
+
+                            {/* META LINE: due · workers · hours */}
+                            <div style={{display:"flex",alignItems:"center",gap:"10px",fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px",marginBottom:cardQH>0?"6px":"0"}}>
+                              {job.dueDate && (
+                                <span style={{color:cardOverdue?"#ef4444":"rgba(148,163,184,0.6)"}}>
+                                  {cardOverdue?'OVERDUE':'DUE'} {new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}
+                                </span>
+                              )}
+                              {cardWorkers > 0 && <span>{cardWorkers}P</span>}
+                              {cardHrs > 0 && <span>{cardHrs.toFixed(1)}H</span>}
+                              {!job.dueDate && cardWorkers===0 && cardHrs===0 && <span style={{color:"rgba(148,163,184,0.3)"}}>—</span>}
+                            </div>
+
+                            {/* PROGRESS BAR (only if quoted hours set) */}
+                            {cardQH > 0 && (
+                              <div style={{height:"2px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
+                                <div style={{height:"100%",width:`${Math.min((cardHrs/cardQH)*100,100)}%`,background:(cardHrs/cardQH)>1?"rgba(239,68,68,0.7)":(cardHrs/cardQH)>0.8?"rgba(245,158,11,0.7)":col.color+'aa',transition:"width 0.3s"}}/>
                               </div>
-                            ) : (
-                              <>
-                                <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:500,marginBottom:"8px"}}>{job.title}</div>
-                                <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"10px"}}>
-                                  {[{label:"START",val:formatDate(job.startDate),overdue:false},{label:"DUE",val:formatDate(job.dueDate),overdue:isOverdue(job.dueDate)&&!job.completed}].map(({label,val,overdue}) => (
-                                    <div key={label} style={{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:"10px"}}>
-                                      <span style={{color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{label}</span>
-                                      <span style={{color:overdue?"#ef4444":"rgba(224,234,255,0.7)",fontFamily:"monospace"}}>{val}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                                <div style={{display:"flex",gap:"6px",paddingTop:"8px",borderTop:`0.5px solid ${col.color}15`}}>
-                                  {!job.started && !job.completed && (
-                                    <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,started:true}:j))}
-                                      style={{flex:1,padding:"5px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.8)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>START →</button>
-                                  )}
-                                  {job.started && !job.completed && (
-                                    <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:true}:j))}
-                                      style={{flex:1,padding:"5px",background:"rgba(34,197,94,0.1)",color:"rgba(34,197,94,0.8)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>COMPLETE ✓</button>
-                                  )}
-                                  {job.completed && (
-                                    <button onClick={() => saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j))}
-                                      style={{flex:1,padding:"5px",background:"rgba(148,163,184,0.06)",color:"rgba(148,163,184,0.5)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}>REOPEN</button>
-                                  )}
-                                </div>
-                              </>
                             )}
+
+                            {/* STATUS TRANSITION BAR (subtle) */}
+                            <div style={{marginTop:"8px",paddingTop:"6px",borderTop:`0.5px solid ${col.color}10`}}>
+                              {!job.started && !job.completed && (
+                                <button onClick={(e) => { e.stopPropagation(); saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,started:true}:j)); }}
+                                  style={{width:"100%",padding:"3px",background:"transparent",color:`${col.color}99`,border:"none",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",cursor:"pointer"}}>▸ START</button>
+                              )}
+                              {job.started && !job.completed && (
+                                <button onClick={(e) => { e.stopPropagation(); saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:true}:j)); }}
+                                  style={{width:"100%",padding:"3px",background:"transparent",color:"rgba(34,197,94,0.7)",border:"none",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",cursor:"pointer"}}>▸ COMPLETE</button>
+                              )}
+                              {job.completed && (
+                                <button onClick={(e) => { e.stopPropagation(); saveDonnyJobs(donnyJobs.map(j => j.id===job.id?{...j,completed:false,started:false}:j)); }}
+                                  style={{width:"100%",padding:"3px",background:"transparent",color:"rgba(148,163,184,0.4)",border:"none",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",cursor:"pointer"}}>↺ REOPEN</button>
+                              )}
+                            </div>
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -16265,49 +16275,56 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </span>
                 )}
               </div>
-              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:"12px"}}>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px 20px"}}>
                 {/* HOURS */}
                 <div>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>HOURS</span>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>HOURS</span>
                     <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{totalHours.toFixed(1)} / {quotedHours||'—'}</span>
                   </div>
-                  <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden",marginBottom:"4px"}}>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
+                  <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
                     <div style={{height:"100%",width:`${Math.min(hoursPct,100)}%`,background:hoursPct>100?"rgba(239,68,68,0.7)":hoursPct>80?"rgba(245,158,11,0.7)":"rgba(249,115,22,0.7)",transition:"width 0.3s"}}/>
                   </div>
-                  <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="Set quoted hours"
-                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.1)",outline:"none",padding:"3px 0"}}/>
+                  <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="quoted hrs"
+                    style={{width:"100%",background:"transparent",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"3px 0"}}/>
                 </div>
+
                 {/* LABOUR $ */}
                 <div>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LABOUR COST</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>${totalLabour.toFixed(0)}</span>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>LABOUR</span>
+                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{workersOnJob.length} worker{workersOnJob.length!==1?'s':''}</span>
                   </div>
-                  <div style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>${totalLabour.toFixed(0)}</div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{workersOnJob.length} worker{workersOnJob.length!==1?'s':''}</div>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>${totalLabour.toFixed(0)}</div>
+                  <div style={{height:"3px",background:"transparent",marginBottom:"6px"}}/>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",padding:"3px 0",borderBottom:"0.5px solid transparent"}}>auto-calculated</div>
                 </div>
+
                 {/* MATERIALS */}
                 <div>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>MATERIALS</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>${totalMaterialsCost.toFixed(0)} / {quotedMaterials?'$'+quotedMaterials:'—'}</span>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>MATERIALS</span>
+                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{quotedMaterials?'/ $'+quotedMaterials:''}</span>
                   </div>
-                  <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden",marginBottom:"4px"}}>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>${totalMaterialsCost.toFixed(0)}</div>
+                  <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
                     <div style={{height:"100%",width:`${Math.min(materialsPct,100)}%`,background:materialsPct>100?"rgba(239,68,68,0.7)":"rgba(59,130,246,0.7)",transition:"width 0.3s"}}/>
                   </div>
-                  <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="Set materials budget"
-                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.1)",outline:"none",padding:"3px 0"}}/>
+                  <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="materials $"
+                    style={{width:"100%",background:"transparent",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(59,130,246,0.15)",outline:"none",padding:"3px 0"}}/>
                 </div>
+
                 {/* TOTAL QUOTE */}
                 <div>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>QUOTE</span>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>QUOTE</span>
                     <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>actual ${totalActualCost.toFixed(0)}</span>
                   </div>
-                  <div style={{fontSize:"18px",color:quotedCost>0?"#f97316":"rgba(148,163,184,0.4)",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>${quotedCost||'—'}</div>
-                  <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="Set total quote"
-                    style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.1)",outline:"none",padding:"3px 0"}}/>
+                  <div style={{fontSize:"20px",color:quotedCost>0?(margin>=0?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)"):"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>${quotedCost||'—'}</div>
+                  <div style={{height:"3px",background:"transparent",marginBottom:"6px"}}/>
+                  <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="total quote"
+                    style={{width:"100%",background:"transparent",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(34,197,94,0.15)",outline:"none",padding:"3px 0"}}/>
                 </div>
               </div>
             </div>
@@ -16317,17 +16334,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={panel}>
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SCHEDULE</span>
+                  {job.dueDate && !job.completed && (
+                    <span style={{fontSize:"9px",fontFamily:"monospace",color:new Date(job.dueDate)<new Date()?"#ef4444":"rgba(148,163,184,0.5)"}}>
+                      {(() => { const days = Math.ceil((new Date(job.dueDate)-new Date())/(1000*60*60*24)); return days<0?`${Math.abs(days)}d OVERDUE`:days===0?'DUE TODAY':`${days}d LEFT`; })()}
+                    </span>
+                  )}
                 </div>
-                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>START DATE</div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>START</span>
                     <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
-                      style={{background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"3px 0",colorScheme:"dark"}}/>
+                      style={{background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"4px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
                   </div>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>DUE DATE</div>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DUE</span>
                     <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
-                      style={{background:"transparent",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?"#ef4444":"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"3px 0",colorScheme:"dark"}}/>
+                      style={{background:"rgba(0,0,0,0.3)",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?"#ef4444":"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"4px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
                   </div>
                 </div>
               </div>
@@ -16335,9 +16357,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENT</span>
                 </div>
-                <div style={{padding:"12px 16px"}}>
+                <div style={{padding:"14px 16px"}}>
                   {donnyClients.length === 0 ? (
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>No clients yet · <button onClick={() => setActiveView('donny-clients')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0,textDecoration:"underline"}}>add one</button></div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>No clients · <button onClick={() => setActiveView('donny-clients')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0,textDecoration:"underline"}}>add one</button></div>
                   ) : (
                     <select value={job.clientId||''} onChange={e => updateJob({clientId:e.target.value})}
                       style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}>
