@@ -8500,10 +8500,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Salary Input */}
           <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-              <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
+              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
             </div>
-            <div className="p-4">
-              <div className="flex items-center gap-2">
+            <div style={{padding:"12px"}}>
+              <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                 <span className="text-xl text-gray-400">$</span>
                 <input
                   type="text"
@@ -8513,7 +8513,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   placeholder="0"
                   className="text-xl font-semibold w-32 px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-500"
                 />
-                <span className="text-gray-400">/month</span>
+                <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>/month</span>
               </div>
             </div>
           </div>
@@ -8522,10 +8522,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {salaryNum > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th className="text-left py-3 px-4 font-semibold">Period</th>
@@ -8538,14 +8538,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className={`font-semibold ${billsType === 'personal' ? 'bg-green-50 text-green-800' : 'bg-purple-50 text-purple-800'}`}>
-                      <td className="py-3 px-4">{billsType === 'personal' ? 'Income' : 'Revenue'}</td>
-                      <td className="py-3 px-4 text-right">${calcCost(salaryNum, 'daily')}</td>
-                      <td className="py-3 px-4 text-right">${calcCost(salaryNum, 'weekly')}</td>
-                      <td className="py-3 px-4 text-right">${calcCost(salaryNum, 'monthly')}</td>
-                      <td className="py-3 px-4 text-right">${calcCost(salaryNum, 'quarterly')}</td>
-                      <td className="py-3 px-4 text-right">${calcCost(salaryNum, 'halfyear')}</td>
-                      <td className="py-3 px-4 text-right">${calcCost(salaryNum, 'annually')}</td>
+                    <tr style={billsType === 'personal' ? {background:"rgba(34,197,94,0.06)",borderTop:"0.5px solid rgba(34,197,94,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(34,197,94,0.95)"} : {background:"rgba(168,85,247,0.06)",borderTop:"0.5px solid rgba(168,85,247,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(168,85,247,0.95)"}}>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{billsType === 'personal' ? 'Income' : 'Revenue'}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'daily')}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'weekly')}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'monthly')}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'quarterly')}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'halfyear')}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'annually')}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -8555,12 +8555,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Bills List - Personal or Business */}
           <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div className={`p-6 border-b ${billsType === 'business' ? 'bg-purple-50' : ''}`}>
-              <h2 className="text-xl font-semibold text-white">{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
+            <div style={billsType === 'business' ? {padding:"12px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",background:"rgba(168,85,247,0.04)"} : {padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
             </div>
-            <div className="p-4">
+            <div style={{padding:"12px"}}>
               <div style={{overflowX:'auto'}}>
-              <div className="space-y-2" style={{minWidth:'420px'}}>
+              <div style={{display:"flex",flexDirection:"column",gap:"6px",minWidth:"420px"}}>
                 {(billsType === 'personal' ? subscriptions : businessSubscriptions).map((sub, index) => (
                   <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
                     <span className="w-8 text-right text-gray-400 text-sm">{index + 1}.</span>
@@ -8623,8 +8623,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       } else {
                         setBusinessSubscriptions(prev => prev.filter((_, i) => i !== index));
                       }
-                    }} className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                    }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                     </button>
                   </div>
                 ))}
@@ -8653,7 +8653,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledSubs.length > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 className="text-xl font-semibold text-white">Cost Breakdown</h2>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Cost Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
@@ -8737,15 +8737,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {sortedSubs.map((sub, idx) => (
                             <div key={idx} className="flex items-center gap-2 text-sm">
                               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx % colors.length] }} />
-                              <span className="text-gray-700">{sub.name}</span>
-                              <span className="text-gray-500">({((sub.monthly / salaryNum) * 100).toFixed(1)}%)</span>
+                              <span style={{color:"rgba(148,163,184,0.75)",fontFamily:"monospace",fontSize:"11px",lineHeight:"1.6"}}>{sub.name}</span>
+                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px"}}>({((sub.monthly / salaryNum) * 100).toFixed(1)}%)</span>
                             </div>
                           ))}
                           {remaining > 0 && (
                             <div className="flex items-center gap-2 text-sm">
-                              <div className="w-3 h-3 rounded-full bg-gray-200" />
-                              <span className="text-gray-700">Remaining</span>
-                              <span className="text-gray-500">({((remaining / salaryNum) * 100).toFixed(1)}%)</span>
+                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"rgba(0,200,255,0.2)"}} />
+                              <span style={{color:"rgba(148,163,184,0.75)",fontFamily:"monospace",fontSize:"11px",lineHeight:"1.6"}}>Remaining</span>
+                              <span style={{color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px"}}>({((remaining / salaryNum) * 100).toFixed(1)}%)</span>
                             </div>
                           )}
                         </>
@@ -8764,13 +8764,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       ${totalMonthly.toLocaleString()} / ${salaryNum.toLocaleString()} ({((totalMonthly / salaryNum) * 100).toFixed(1)}%)
                     </span>
                   </div>
-                  <div className="h-6 bg-gray-200 rounded-full overflow-hidden">
+                  <div style={{height:"12px",background:"rgba(255,255,255,0.04)",borderRadius:"3px",overflow:"hidden"}}>
                     <div 
-                      className={`h-full rounded-full transition-all ${
-                        (totalMonthly / salaryNum) > 0.8 ? 'bg-red-500' : 
-                        (totalMonthly / salaryNum) > 0.5 ? 'bg-yellow-500' : 'bg-green-500'
-                      }`}
-                      style={{ width: `${Math.min((totalMonthly / salaryNum) * 100, 100)}%` }}
+                      style={{ 
+                        height:"100%",
+                        borderRadius:"3px",
+                        transition:"all 0.3s",
+                        background: (totalMonthly / salaryNum) > 0.8 ? "rgba(239,68,68,0.7)" : (totalMonthly / salaryNum) > 0.5 ? "rgba(234,179,8,0.7)" : "rgba(34,197,94,0.7)",
+                        width: `${Math.min((totalMonthly / salaryNum) * 100, 100)}%`
+                      }}
                     />
                   </div>
                   <div className="flex justify-between mt-1">
@@ -8780,12 +8782,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               )}
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th 
-                        className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'name') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('name'); setBillsSortDir('asc'); }
@@ -8794,7 +8796,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         Subscription {billsSortBy === 'name' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        className="text-center py-3 px-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        style={{textAlign:"center",padding:"10px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'due') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('due'); setBillsSortDir('asc'); }
@@ -8805,7 +8807,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <th className="text-right py-3 px-3 font-semibold">Daily</th>
                       <th className="text-right py-3 px-3 font-semibold">Weekly</th>
                       <th 
-                        className="text-right py-3 px-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        style={{textAlign:"right",padding:"10px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'monthly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('monthly'); setBillsSortDir('asc'); }
@@ -8841,8 +8843,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       }
                       return billsSortDir === 'asc' ? comparison : -comparison;
                     }).map((sub, idx) => (
-                      <tr key={idx} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium">
+                      <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                        <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>
                           {sub.name}
                         </td>
                         <td className="py-3 px-3 text-center text-gray-500">
@@ -8858,8 +8860,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-indigo-50 font-bold text-indigo-900">
-                      <td className="py-3 px-4">Total Bills</td>
+                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total Bills</td>
                       <td className="py-3 px-3"></td>
                       <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'daily')}</td>
                       <td className="py-3 px-3 text-right">${calcCost(totalMonthly, 'weekly')}</td>
@@ -8876,28 +8878,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Muzz Advice Categories Info - Personal Only */}
           {billsType === 'personal' && filledSubs.length === 0 && (
-            <div className="rounded-3xl overflow-hidden" style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.15)"}}>
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl">🦘</div>
-                  <div className="flex-1">
-                    <h2 className="text-lg font-semibold text-white mb-2">Muzz Can Help You Save On...</h2>
-                    <p className="text-sm mb-4" style={{color:"rgba(148,163,184,0.7)"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                      {[
-                        {icon:'📺', label:'Streaming Services'},
-                        {icon:'🥕', label:'Groceries & Food'},
-                        {icon:'💪', label:'Gym Memberships'},
-                        {icon:'📱', label:'Phone & Internet'},
-                        {icon:'🛡️', label:'Insurance'},
-                        {icon:'🧠', label:'Subscription Audits'},
-                      ].map((item,i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg" style={{background:"rgba(0,200,255,0.08)",border:"1px solid rgba(0,200,255,0.15)",color:"rgba(255,255,255,0.8)"}}>
-                          {item.icon} {item.label}
-                        </div>
-                      ))}
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"14px 16px"}}>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"8px"}}>// MUZZ CAN HELP YOU SAVE ON</div>
+                <p style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",lineHeight:1.6,marginBottom:"12px"}}>Add your bills above and I'll give you personalised money-saving tips for:</p>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",gap:"6px"}}>
+                  {[
+                    'STREAMING SERVICES',
+                    'GROCERIES & FOOD',
+                    'GYM MEMBERSHIPS',
+                    'PHONE & INTERNET',
+                    'INSURANCE',
+                    'SUBSCRIPTION AUDITS',
+                  ].map((label,i) => (
+                    <div key={i} style={{padding:"6px 10px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px"}}>
+                      {label}
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -8968,36 +8965,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const tipIndex = currentTipIndex % tips.length;
             
             return (
-              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl shadow-sm border overflow-hidden text-white">
-                <div className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl">🦘</div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-xl font-semibold text-white">Muzz's Money Tips</h2>
-                        {tips.length > 1 && (
-                          <span className="text-xs text-blue-200">{tipIndex + 1} / {tips.length}</span>
-                        )}
-                      </div>
-                      <div className="min-h-[60px] flex items-center">
-                        <p key={tipIndex} className="flex items-start gap-2 text-blue-100">
-                          <span className="text-yellow-300">💡</span>
-                          <span>{tips[tipIndex]}</span>
-                        </p>
-                      </div>
-                      {tips.length > 1 && (
-                        <div className="flex gap-1 mt-4">
-                          {tips.map((_, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => setCurrentTipIndex(idx)}
-                              className={`w-2 h-2 rounded-full transition-all ${idx === tipIndex ? 'bg-white w-4' : 'bg-blue-300'}`}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"14px 16px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>// MUZZ'S MONEY TIPS</div>
+                    {tips.length > 1 && (
+                      <span style={{fontSize:"9px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>{tipIndex + 1} / {tips.length}</span>
+                    )}
                   </div>
+                  <div style={{minHeight:"60px",display:"flex",alignItems:"center"}}>
+                    <p key={tipIndex} style={{display:"flex",alignItems:"flex-start",gap:"8px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>
+                      <span style={{color:"rgba(234,179,8,0.95)"}}>▸</span>
+                      <span>{tips[tipIndex]}</span>
+                    </p>
+                  </div>
+                  {tips.length > 1 && (
+                    <div style={{display:"flex",gap:"4px",marginTop:"12px"}}>
+                      {tips.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentTipIndex(idx)}
+                          style={idx === tipIndex ? {width:"16px",height:"6px",borderRadius:"3px",background:"#00c8ff",transition:"all 0.3s",border:"none",cursor:"pointer"} : {width:"6px",height:"6px",borderRadius:"50%",background:"rgba(0,200,255,0.3)",transition:"all 0.3s",border:"none",cursor:"pointer"}}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -9007,10 +8999,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledSubs.length > 0 && salaryNum > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 className="text-xl font-semibold text-white">Bills vs Income</h2>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Bills vs Income</h2>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th className="text-left py-3 px-4 font-semibold">Category</th>
@@ -9041,7 +9033,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'halfyear')}</td>
                       <td className="py-3 px-3 text-right text-red-600">${calcCost(totalMonthly, 'annually')}</td>
                     </tr>
-                    <tr className="border-b bg-green-50">
+                    <tr style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)",background:"rgba(34,197,94,0.06)"}}>
                       <td className="py-3 px-4 font-semibold text-green-800">Left Over</td>
                       <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'daily')}</td>
                       <td className="py-3 px-3 text-right text-green-800 font-semibold">${calcCost(salaryNum - totalMonthly, 'weekly')}</td>
@@ -9055,23 +9047,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Percentage Breakdown */}
-              <div className="p-6 border-t bg-gray-50">
+              <div style={{padding:"14px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)",background:"rgba(0,200,255,0.03)"}}>
                 <h3 className="font-semibold mb-4">% of Income</h3>
                 <div className="flex flex-col md:flex-row gap-6 items-center">
                   <div className="flex gap-8">
-                    <div className="text-center">
+                    <div style={{textAlign:"center"}}>
                       <p className="text-3xl font-bold text-red-600">{calcPercentage(totalMonthly, salaryNum)}%</p>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Bills</p>
                     </div>
-                    <div className="text-center">
+                    <div style={{textAlign:"center"}}>
                       <p className="text-3xl font-bold text-green-600">{(100 - parseFloat(calcPercentage(totalMonthly, salaryNum))).toFixed(1)}%</p>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Savings</p>
                     </div>
                   </div>
                   <div className="flex-1 w-full md:w-auto">
-                    <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"3px",overflow:"hidden"}}>
                       <div 
-                        className="h-full bg-red-500 rounded-full transition-all duration-300"
+                        style={{height:"100%",background:"rgba(239,68,68,0.7)",borderRadius:"3px",transition:"width 0.3s"}}
                         style={{ width: `${Math.min(parseFloat(calcPercentage(totalMonthly, salaryNum)), 100)}%` }}
                       ></div>
                     </div>
@@ -9095,13 +9087,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h2 className="text-xl font-semibold text-white">Bills Calendar</h2>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Bills Calendar</h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track when bills are due</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                       <button
                         onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1))}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-lg"
+                        style={{padding:"6px 10px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.85)",fontFamily:"monospace",fontSize:"12px",cursor:"pointer"}}
                       >
                         ←
                       </button>
@@ -9110,7 +9102,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </span>
                       <button
                         onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1))}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-lg"
+                        style={{padding:"6px 10px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.85)",fontFamily:"monospace",fontSize:"12px",cursor:"pointer"}}
                       >
                         →
                       </button>
@@ -9156,9 +9148,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           key={day}
                           onClick={() => setSelectedCalendarDate(dateKey)}
                           className={`h-12 rounded-lg flex flex-col items-center justify-center ${
-                            isToday ? 'bg-orange-100 border-2 border-orange-400' : 
-                            totalForDay > 0 ? 'bg-red-50 border border-red-200' : 
-                            'bg-gray-50 border border-gray-200'
+                            ''
                           } hover:border-orange-400 transition-all`}
                         >
                           <span className={`text-sm font-semibold ${isToday ? 'text-orange-600' : 'text-gray-700'}`}>{day}</span>
@@ -9184,11 +9174,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </h2>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Add or manage bills</p>
                     </div>
-                    <button onClick={() => setSelectedCalendarDate(null)} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+                    <button onClick={() => setSelectedCalendarDate(null)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(148,163,184,0.6)",fontSize:"16px",fontFamily:"monospace"}}>×</button>
                   </div>
-                  <div className="p-4 space-y-3">
+                  <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                     {/* Add new bill form */}
-                    <div className="space-y-2 p-3 bg-gray-50 rounded-xl">
+                    <div style={{display:"flex",flexDirection:"column",gap:"6px",padding:"10px 12px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px"}}>
                       <input
                         type="text"
                         placeholder="Bill name (e.g. Netflix)"
@@ -9196,7 +9186,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         id="newBillName"
                         onFocus={scrollInputIntoView}
                       />
-                      <div className="flex items-center border-2 rounded-xl bg-white overflow-hidden focus-within:border-orange-400">
+                      <div style={{display:"flex",alignItems:"center",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",overflow:"hidden"}}>
                         <span className="pl-3 text-gray-400">$</span>
                         <input
                           type="number"
@@ -9220,7 +9210,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             document.getElementById('newBillAmount').value = '';
                           }
                         }}
-                        className="w-full py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-medium"
+                        style={{width:"100%",padding:"8px 12px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",borderRadius:"3px",color:"rgba(251,146,60,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
                       >
                         + Add Bill
                       </button>
@@ -9243,14 +9233,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     ))}
                     {(calendarBills[selectedCalendarDate] || []).length > 0 && (
-                      <div className="space-y-2">
+                      <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <h3 className="text-sm font-semibold text-gray-600">Bills on this day:</h3>
                         {(calendarBills[selectedCalendarDate] || []).map((bill, idx) => (
-                          <div key={idx} className="flex items-center justify-between p-3 bg-white border-2 rounded-xl">
+                          <div key={idx} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px"}}>
                             <div className="flex-1 min-w-0">
                               <div className="font-medium truncate">{bill.name}</div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                               <span className="font-bold text-red-600">${parseFloat(bill.amount || 0).toFixed(2)}</span>
                               <button
                                 onClick={() => {
@@ -9261,8 +9251,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     return updated;
                                   });
                                 }}
-                                className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                                style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                               </button>
                             </div>
                           </div>
@@ -9296,7 +9286,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     .sort(([a], [b]) => new Date(a) - new Date(b))
                     .map(([date, bills]) => (
                       bills.map((bill, idx) => (
-                        <div key={`${date}-${idx}`} className="flex items-center justify-between p-3 hover:bg-gray-50">
+                        <div key={`${date}-${idx}`} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px"}}>
                           <div className="flex items-center gap-3 min-w-0 flex-1">
                             <div className="text-xs text-gray-500 w-14 flex-shrink-0">
                               {new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
@@ -9314,8 +9304,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   return updated;
                                 });
                               }}
-                              className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                              style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                             </button>
                           </div>
                         </div>
@@ -9339,7 +9329,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Small Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Small Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
@@ -9348,8 +9338,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-xl space-y-3">
-                        <div className="flex items-center gap-3">
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
                             type="text"
@@ -9362,18 +9352,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               });
                             }}
                             placeholder="Emergency fund"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setBillSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -9386,12 +9376,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -9404,7 +9394,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -9415,9 +9405,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {target > 0 && (
                           <div className="pl-6">
-                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                               <div 
-                                className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-green-500' : 'bg-blue-500'}`}
+                                style={{height:"100%",borderRadius:"2px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -9428,7 +9418,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -9438,7 +9428,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Big Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Big Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
                 </div>
                 <div className="p-4 space-y-4">
@@ -9447,8 +9437,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-xl space-y-3">
-                        <div className="flex items-center gap-3">
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
                             type="text"
@@ -9461,18 +9451,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               });
                             }}
                             placeholder="House deposit"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setBillBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -9485,12 +9475,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -9503,7 +9493,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -9514,9 +9504,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {target > 0 && (
                           <div className="pl-6">
-                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                               <div 
-                                className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-green-500' : 'bg-blue-500'}`}
+                                style={{height:"100%",borderRadius:"2px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -9527,7 +9517,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -9577,23 +9567,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               const pct = total > 0 ? Math.min((paid / total) * 100, 100) : 0;
 
               return (
-                <div key={debt.id} className="p-5 bg-gray-50 rounded-2xl space-y-4">
+                <div key={debt.id} style={{padding:"14px 16px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(239,68,68,0.5)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   {/* Row 1: Name + Delete */}
-                  <div className="flex items-center gap-3">
+                  <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                     <input
                       type="text"
                       value={debt.name}
                       onChange={(e) => updateDebt(debt.id, { name: e.target.value })}
                       placeholder="e.g. Car Loan, Credit Card, HECS..."
-                      className="flex-1 px-3 py-2 border-2 rounded-xl text-sm font-medium focus:outline-none focus:border-red-500 bg-white"
+                      style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",fontWeight:500,padding:"7px 10px",outline:"none"}}
                     />
-                    <button onClick={() => deleteDebt(debt.id)} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-5 h-5" /></button>
+                    <button onClick={() => deleteDebt(debt.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}><Trash2 style={{width:"16px",height:"16px"}} /></button>
                   </div>
 
                   {/* Row 2: Total + Paid */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Total Owed</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Total Owed</label>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-400 text-sm">$</span>
                         <input
@@ -9602,12 +9592,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           value={debt.totalStr || ''}
                           onChange={(e) => updateDebt(debt.id, { total: parseFloat(e.target.value) || 0, totalStr: e.target.value })}
                           placeholder="25000"
-                          className="flex-1 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Amount Paid</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Amount Paid</label>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-400 text-sm">$</span>
                         <input
@@ -9616,7 +9606,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           value={debt.paidStr || ''}
                           onChange={(e) => updateDebt(debt.id, { paid: parseFloat(e.target.value) || 0, paidStr: e.target.value })}
                           placeholder="5000"
-                          className="flex-1 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
@@ -9628,18 +9618,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{Math.round(pct)}% paid off</span>
                       <span className="text-xs font-semibold text-red-500">${remaining.toLocaleString()} remaining</span>
                     </div>
-                    <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"3px",overflow:"hidden"}}>
                       <div
-                        className={`h-full rounded-full transition-all duration-500 ${pct >= 100 ? 'bg-gradient-to-r from-green-400 to-green-600' : pct >= 50 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'bg-gradient-to-r from-red-400 to-red-600'}`}
+                        style={{height:"100%",borderRadius:"3px",transition:"width 0.5s",background:pct >= 100 ? "rgba(34,197,94,0.7)" : pct >= 50 ? "rgba(234,179,8,0.7)" : "rgba(239,68,68,0.7)"}}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
                   </div>
 
                   {/* Row 4: Min Payment + Interval */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Min. Payment</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Min. Payment</label>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-400 text-sm">$</span>
                         <input
@@ -9648,16 +9638,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           value={debt.minPayment || ''}
                           onChange={(e) => updateDebt(debt.id, { minPayment: e.target.value })}
                           placeholder="500"
-                          className="flex-1 px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Per</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Per</label>
                       <select
                         value={debt.minInterval || 'month'}
                         onChange={(e) => updateDebt(debt.id, { minInterval: e.target.value })}
-                        className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       >
                         <option value="week">Week</option>
                         <option value="fortnight">Fortnight</option>
@@ -9669,36 +9659,36 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Row 5: Start Date + Due Date */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Start Date</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Start Date</label>
                       <input
                         type="date"
                         value={debt.startDate || ''}
                         onChange={(e) => updateDebt(debt.id, { startDate: e.target.value })}
-                        className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       />
                     </div>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Due Date</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Due Date</label>
                       <input
                         type="date"
                         value={debt.dueDate || ''}
                         onChange={(e) => updateDebt(debt.id, { dueDate: e.target.value })}
-                        className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       />
                     </div>
                   </div>
 
                   {/* Row 6: Notes */}
                   <div>
-                    <label className="text-xs text-gray-500 mb-1 block">Notes</label>
+                    <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Notes</label>
                     <input
                       type="text"
                       value={debt.notes || ''}
                       onChange={(e) => updateDebt(debt.id, { notes: e.target.value })}
                       placeholder="Extra info..."
-                      className="w-full px-2 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
+                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                     />
                   </div>
                 </div>
@@ -9709,19 +9699,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Overview Card */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div className="p-6">
+                  <div style={{padding:"14px 16px"}}>
                     <h2 className="text-xl font-semibold mb-1">Debt Overview</h2>
                     <p className="text-sm text-gray-500 mb-4">Track and crush your debts</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div className="text-center p-3 bg-red-50 rounded-xl">
+                      <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"3px"}}>
                         <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Total Debt</p>
                         <p className="text-lg font-bold text-red-600">${totalDebt.toLocaleString()}</p>
                       </div>
-                      <div className="text-center p-3 bg-green-50 rounded-xl">
+                      <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"3px"}}>
                         <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Total Paid</p>
                         <p className="text-lg font-bold text-green-600">${totalPaid.toLocaleString()}</p>
                       </div>
-                      <div className="text-center p-3 bg-orange-50 rounded-xl">
+                      <div style={{textAlign:"center",padding:"10px",background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"3px"}}>
                         <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Remaining</p>
                         <p className="text-lg font-bold text-orange-600">${totalOwed.toLocaleString()}</p>
                       </div>
@@ -9732,9 +9722,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Overall Progress</span>
                           <span className="text-xs font-semibold">{Math.round(overallPct)}%</span>
                         </div>
-                        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                        <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                           <div
-                            className={`h-full rounded-full transition-all duration-500 ${overallPct >= 100 ? 'bg-gradient-to-r from-green-400 to-green-600' : 'bg-gradient-to-r from-blue-400 to-indigo-600'}`}
+                            style={{height:"100%",borderRadius:"3px",transition:"width 0.5s",background:overallPct >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
                             style={{ width: `${overallPct}%` }}
                           />
                         </div>
@@ -9745,10 +9735,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Personal Debts */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div className="p-6 border-b bg-green-50">
+                  <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.04)"}}>
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-xl font-semibold text-white">Personal Debts</h2>
+                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Personal Debts</h2>
                         <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{personalDebts.length} debt{personalDebts.length !== 1 ? 's' : ''} — ${personalDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
@@ -9757,7 +9747,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {personalDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('personal')}
-                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-red-500 hover:text-red-500 transition-colors text-sm font-medium"
+                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                     >
                       + Add Personal Debt
                     </button>
@@ -9766,10 +9756,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 {/* Business Debts */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div className="p-6 border-b bg-purple-50">
+                  <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",background:"rgba(168,85,247,0.04)"}}>
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-xl font-semibold text-white">Business Debts</h2>
+                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Business Debts</h2>
                         <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{businessDebts.length} debt{businessDebts.length !== 1 ? 's' : ''} — ${businessDebts.reduce((s, d) => s + Math.max((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0), 0), 0).toLocaleString()} remaining</p>
                       </div>
                     </div>
@@ -9778,7 +9768,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {businessDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('business')}
-                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-purple-500 hover:text-purple-500 transition-colors text-sm font-medium"
+                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                     >
                       + Add Business Debt
                     </button>
@@ -9800,33 +9790,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const totalMinPayments = sortedDebts.reduce((sum, d) => sum + (parseFloat(d.minPayment) || 0), 0);
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">💳 Debt Payoff Calculator</h2>
-                  <div className="flex gap-3 mb-6">
-                    <button onClick={() => setDebtCalcMethod('snowball')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'snowball' ? 'text-white cyber-tab-active' : 'bg-gray-100 text-gray-600'}`}>❄️ Snowball (Smallest First)</button>
-                    <button onClick={() => setDebtCalcMethod('avalanche')} className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${debtCalcMethod === 'avalanche' ? 'text-white cyber-tab-active' : 'bg-gray-100 text-gray-600'}`}>🏔️ Avalanche (Highest Rate First)</button>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"12px"}}>// DEBT PAYOFF CALCULATOR</h2>
+                  <div style={{display:"flex",gap:"8px",marginBottom:"12px"}}>
+                    <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>SNOWBALL (SMALLEST FIRST)</button>
+                    <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>AVALANCHE (HIGHEST RATE)</button>
                   </div>
-                  <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                    <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{debtCalcMethod === 'snowball' ? '❄️ Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : '🏔️ Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
+                  <div style={{background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"12px 14px",marginBottom:"12px"}}>
+                    <p style={{fontSize:"11px",color:"rgba(148,163,184,0.85)",fontFamily:"monospace",lineHeight:1.6}}>{debtCalcMethod === 'snowball' ? 'Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : 'Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
                   </div>
                   {sortedDebts.length === 0 && (
                     <div className="text-center py-8">
-                      <p className="text-gray-400">No active debts found. Add debts in the Debts tab and they'll appear here!</p>
-                      <button onClick={() => setBillsSubTab('debts')} className="mt-4 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl text-sm font-medium">Go to Debts</button>
+                      <p style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>No active debts found. Add debts in the Debts tab and they'll appear here!</p>
+                      <button onClick={() => setBillsSubTab('debts')} style={{marginTop:"12px",padding:"6px 12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}>Go to Debts</button>
                     </div>
                   )}
                   {sortedDebts.length > 0 && (
-                    <div className="space-y-3">
+                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                       <div className="grid grid-cols-3 gap-4 mb-4">
-                        <div className="bg-red-50 rounded-xl p-3 text-center">
+                        <div style={{textAlign:"center",padding:"10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"3px"}}>
                           <div className="text-2xl font-bold text-red-600">${totalDebtCalc.toLocaleString()}</div>
                           <div className="text-xs text-red-500">Total Remaining</div>
                         </div>
-                        <div className="bg-blue-50 rounded-xl p-3 text-center">
+                        <div style={{textAlign:"center",padding:"10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"3px"}}>
                           <div className="text-2xl font-bold text-blue-600">{sortedDebts.length}</div>
                           <div className="text-xs text-blue-500">Active Debts</div>
                         </div>
-                        <div className="bg-green-50 rounded-xl p-3 text-center">
+                        <div style={{textAlign:"center",padding:"10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"3px"}}>
                           <div className="text-2xl font-bold text-green-600">${totalMinPayments.toLocaleString()}</div>
                           <div className="text-xs text-green-500">Min Payments/mo</div>
                         </div>
@@ -9835,8 +9825,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {sortedDebts.map((debt, i) => {
                         const remaining = Math.max((parseFloat(debt.total) || 0) - (parseFloat(debt.paid) || 0), 0);
                         return (
-                          <div key={debt.id || i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">{i + 1}</div>
+                          <div key={debt.id || i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px"}}>
+                            <div style={{width:"28px",height:"28px",background:"rgba(59,130,246,0.15)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontWeight:600,fontSize:"11px"}}>{i + 1}</div>
                             <div className="flex-1">
                               <div className="font-medium text-white">{debt.name}</div>
                               <div className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{debt.rate || 0}% APR • ${debt.minPayment || 0}/mo min</div>
