@@ -1669,26 +1669,6 @@ function MuzzApp() {
     try { localStorage.setItem('muzz_left_rail_hidden', leftRailHidden ? '1' : '0'); } catch(e) {}
   }, [leftRailHidden]);
 
-  // Donny search — Cmd+K / Ctrl+K to open, ESC to close
-  useEffect(() => {
-    const handler = (e) => {
-      // Open search: Cmd+K or Ctrl+K (only in Donny mode)
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setDonnySearchOpen(o => !o);
-        setDonnySearchQuery('');
-        setDonnySearchIdx(0);
-      }
-      // Close on ESC
-      if (e.key === 'Escape' && donnySearchOpen) {
-        setDonnySearchOpen(false);
-        setDonnySearchQuery('');
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [donnySearchOpen]);
-
   // Object Inspector — selected entity for right-panel deep dive
   const [inspectorEntity, setInspectorEntity] = useState(null); // { type, id, label, ... }
   // Right-click context menu
@@ -2395,6 +2375,25 @@ function MuzzApp() {
   const [donnySearchOpen, setDonnySearchOpen] = useState(false);
   const [donnySearchQuery, setDonnySearchQuery] = useState('');
   const [donnySearchIdx, setDonnySearchIdx] = useState(0);
+
+  // Donny search — Cmd+K / Ctrl+K to open, ESC to close
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setDonnySearchOpen(o => !o);
+        setDonnySearchQuery('');
+        setDonnySearchIdx(0);
+      }
+      if (e.key === 'Escape' && donnySearchOpen) {
+        setDonnySearchOpen(false);
+        setDonnySearchQuery('');
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [donnySearchOpen]);
+
   const [editingJobId, setEditingJobId] = useState(null);
   const [donnyNotes, setDonnyNotes] = useState({});
   const [newNoteText, setNewNoteText] = useState('');
