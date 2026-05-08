@@ -10265,20 +10265,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {assetsSubTab === 'assets' && (
             <>
               {/* Total Assets Summary */}
-              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl p-6 text-white">
-                <p className="text-sm opacity-75 mb-1">Total Assets</p>
-                <p className="text-5xl font-bold">${totalAssets.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TOTAL ASSETS</div>
+                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${totalAssets.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
               </div>
 
               {/* Muzz Asset Comments */}
               {totalAssets > 0 && (
-                <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl shadow-sm border overflow-hidden text-white">
-                  <div className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="text-4xl">🦘</div>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"14px 16px"}}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"14px"}}>
                       <div className="flex-1">
-                        <h2 className="text-xl font-semibold mb-2">Muzz's Thoughts</h2>
-                        <p className="text-amber-100">
+                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>Muzz's Thoughts</h2>
+                        <p style={{color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"11px"}}>
                           {totalAssets >= 1000000000000 ? "okay you can stop adding zero's now 💀" :
                            totalAssets >= 100000000000 ? "Nah this is actually Elon 😭😭" :
                            totalAssets >= 10000000000 ? "Yo if you just give me 1% I'll be happy 🙏" :
@@ -10305,40 +10304,40 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Assets Input */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Assets</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Property, super, cash, vehicles, etc.</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Assets</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Property, super, cash, vehicles, etc.</p>
                 </div>
 
             {/* Assets Cards */}
-            <div className="p-4 space-y-3">
+            <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
               {assets.map((asset, index) => (
-                <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                   {/* Row 1: Name + Delete */}
-                  <div className="flex items-start gap-3 mb-3">
-                    <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                  <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                    <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                     <input
                       type="text"
                       value={asset?.name || ''}
                       onFocus={scrollInputIntoView}
                       onChange={(e) => updateAsset(index, 'name', e.target.value)}
                       placeholder="Asset name (e.g. House)"
-                      className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-blue-500"
+                      style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"7px 10px",outline:"none"}}
                     />
                     <button
                       onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
-                      className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                      style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                     </button>
                   </div>
                   
                   {/* Row 2: Type */}
-                  <div className="mb-3">
-                    <label className="text-xs text-gray-500 mb-1 block">Type</label>
+                  <div style={{marginBottom:"10px"}}>
+                    <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Type</label>
                     <select
                       value={asset?.category || ''}
                       onFocus={scrollInputIntoView}
                       onChange={(e) => updateAsset(index, 'category', e.target.value)}
-                      className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                     >
                       {assetCategories.map(cat => (
                         <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>
@@ -10347,11 +10346,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   
                   {/* Row 3: Value + Owned For */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Value</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Value</label>
                       <div className="flex items-center">
-                        <span className="text-gray-400 mr-1">$</span>
+                        <span style={{color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"11px",marginRight:"4px"}}>$</span>
                         <input
                           type="text"
                           inputMode="decimal"
@@ -10359,29 +10358,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           onFocus={scrollInputIntoView}
                           onChange={(e) => updateAsset(index, 'value', e.target.value)}
                           placeholder="0"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">Owned For</label>
+                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Owned For</label>
                       <input
                         type="text"
                         value={asset?.ownedFor || ''}
                         onFocus={scrollInputIntoView}
                         onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
                         placeholder="e.g. 1y 5m"
-                        className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
+                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                       />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="p-4 border-t">
+            <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
               <button
                 onClick={() => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }])}
-                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
               >
                 + Add Asset
               </button>
@@ -10392,15 +10391,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledAssets.length > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 className="text-xl font-semibold text-white">Breakdown by Type</h2>
-                <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Breakdown by Type</h2>
+                <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                       <th 
-                        className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
@@ -10409,7 +10408,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
@@ -10418,7 +10417,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
@@ -10451,18 +10450,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         return assetsSortDir === 'asc' ? comparison : -comparison;
                       })
                       .map((cat, idx) => (
-                        <tr key={idx} className="border-b hover:bg-gray-50">
-                          <td className="py-3 px-4 font-medium">{cat.emoji} {cat.name}</td>
-                          <td className="py-3 px-4 text-right">${cat.total.toLocaleString()}</td>
-                          <td className="py-3 px-4 text-right text-gray-600">{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                          <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${cat.total.toLocaleString()}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-indigo-50 font-bold text-indigo-900">
-                      <td className="py-3 px-4">Total</td>
-                      <td className="py-3 px-4 text-right">${totalAssets.toLocaleString()}</td>
-                      <td className="py-3 px-4 text-right">100%</td>
+                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>100%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -10474,11 +10473,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {filledAssets.length > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 className="text-xl font-semibold text-white">Assets Breakdown</h2>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Assets Breakdown</h2>
               </div>
               
               {/* Pie Chart */}
-              <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8 border-b">
+              <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"24px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                 <div className="relative">
                   <svg width="220" height="220" viewBox="0 0 220 220">
                     {(() => {
@@ -10512,10 +10511,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             );
                           })}
                           <circle cx="110" cy="110" r="50" fill="white" />
-                          <text x="110" y="105" textAnchor="middle" className="text-lg font-bold fill-gray-700">
+                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"14px",fontWeight:600,fill:"rgba(224,234,255,0.9)",fontFamily:"monospace"}}>
                             {filledAssets.length}
                           </text>
-                          <text x="110" y="125" textAnchor="middle" className="text-xs fill-gray-500">
+                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>
                             assets
                           </text>
                         </>
@@ -10523,51 +10522,51 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     })()}
                   </svg>
                 </div>
-                <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                <div style={{display:"flex",flexDirection:"column",gap:"6px",maxHeight:"192px",overflowY:"auto"}}>
                   {(() => {
                     const sortedAssets = [...filledAssets].sort((a, b) => b.value - a.value);
                     const colors = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16', '#06B6D4', '#A855F7', '#F43F5E', '#22C55E', '#EAB308'];
                     
                     return sortedAssets.map((asset, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx % colors.length] }} />
-                        <span className="text-gray-700">{asset.name}</span>
-                        <span className="text-gray-500">({((asset.value / totalAssets) * 100).toFixed(1)}%)</span>
+                      <div key={idx} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",fontFamily:"monospace",color:"rgba(224,234,255,0.85)"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%"}} style={{ backgroundColor: colors[idx % colors.length] }} />
+                        <span style={{color:"rgba(148,163,184,0.75)",fontFamily:"monospace",fontSize:"11px",lineHeight:"1.6"}}>{asset.name}</span>
+                        <span style={{color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px"}}>({((asset.value / totalAssets) * 100).toFixed(1)}%)</span>
                       </div>
                     ));
                   })()}
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                      <th className="text-left py-3 px-4 font-semibold">Asset</th>
-                      <th className="text-left py-3 px-4 font-semibold">Type</th>
-                      <th className="text-right py-3 px-4 font-semibold">Value</th>
-                      <th className="text-right py-3 px-4 font-semibold">% of Total</th>
+                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Asset</th>
+                      <th style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Type</th>
+                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Value</th>
+                      <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>% of Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[...filledAssets].sort((a, b) => a.value - b.value).map((asset, idx) => {
                       const cat = assetCategories.find(c => c.id === asset.category) || { emoji: '', name: 'Select Type' };
                       return (
-                        <tr key={idx} className="border-b hover:bg-gray-50">
-                          <td className="py-3 px-4 font-medium">{asset.name}</td>
-                          <td className="py-3 px-4 text-gray-600">{cat.emoji} {cat.name}</td>
-                          <td className="py-3 px-4 text-right">${asset.value.toLocaleString()}</td>
-                          <td className="py-3 px-4 text-right text-gray-600">{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                          <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>{asset.name}</td>
+                          <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${asset.value.toLocaleString()}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{((asset.value / totalAssets) * 100).toFixed(1)}%</td>
                         </tr>
                       );
                     })}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-indigo-50 font-bold text-indigo-900">
-                      <td className="py-3 px-4">Total</td>
-                      <td className="py-3 px-4"></td>
-                      <td className="py-3 px-4 text-right">${totalAssets.toLocaleString()}</td>
-                      <td className="py-3 px-4 text-right">100%</td>
+                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total</td>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}></td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>100%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -10582,8 +10581,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Small Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Small Goals</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {smallGoals.map((goal, index) => {
@@ -10591,7 +10590,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-xl space-y-3">
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div className="flex items-center gap-3">
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -10605,18 +10604,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               });
                             }}
                             placeholder="Holiday fund"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -10629,12 +10628,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -10647,7 +10646,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -10658,9 +10657,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {target > 0 && (
                           <div className="pl-6">
-                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                               <div 
-                                className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-green-500' : 'bg-blue-500'}`}
+                                style={{height:"100%",borderRadius:"2px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -10671,7 +10670,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -10681,8 +10680,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Big Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term wealth targets</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Big Goals</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Long-term wealth targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {bigGoals.map((goal, index) => {
@@ -10690,7 +10689,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-xl space-y-3">
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div className="flex items-center gap-3">
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -10704,18 +10703,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               });
                             }}
                             placeholder="House deposit"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -10728,12 +10727,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-28 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"112px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
-                            <span className="text-gray-400">$</span>
+                            <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
                               type="text"
                               inputMode="decimal"
@@ -10746,7 +10745,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-28 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white"
+                              style={{width:"112px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -10757,9 +10756,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {target > 0 && (
                           <div className="pl-6">
-                            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                            <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                               <div 
-                                className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-green-500' : 'bg-gradient-to-r from-blue-500 to-indigo-600'}`}
+                                style={{height:"100%",borderRadius:"2px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(59,130,246,0.7)"}}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -10770,7 +10769,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -10782,12 +10781,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {assetsSubTab === 'knowledge' && (
             <>
               {/* Muzz's Knowledge Header */}
-              <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-6 text-white">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">🦘</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
                     <h2 className="text-2xl font-bold">Muzz's Knowledge Corner</h2>
-                    <p className="text-amber-100">Wisdom from the legends to help you build wealth</p>
+                    <p style={{color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"11px"}}>Wisdom from the legends to help you build wealth</p>
                   </div>
                 </div>
               </div>
@@ -10795,58 +10793,58 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* The 3 Asset Categories */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📚 The 3 Asset Categories (Buffett's Framework)</h2>
-                  <p className="text-sm text-gray-500 mt-1">Warren Buffett explains that all investments fall into one of three buckets</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>📚 The 3 Asset Categories (Buffett's Framework)</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Warren Buffett explains that all investments fall into one of three buckets</p>
                 </div>
                 <div className="p-6 space-y-6">
                   
                   {/* Category 1 */}
-                  <div className="bg-red-50 rounded-2xl p-5 border border-red-200">
-                    <div className="flex items-center gap-3 mb-3">
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                       <span className="text-2xl">💵</span>
                       <h3 className="text-lg font-bold text-red-800">Category 1: Currency-Based Investments</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Cash, bonds, money-market funds, T-bills, mortgages, bank deposits</p>
-                    <div className="bg-white rounded-xl p-4 border border-red-100">
-                      <p className="text-red-700 font-semibold mb-2">⚠️ Buffett's View: "These are the most dangerous long-term assets"</p>
+                    <div style={{background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.25)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"3px",padding:"12px 14px"}}>
+                      <p className="text-red-700 font-semibold mb-2">️ Buffett's View: "These are the most dangerous long-term assets"</p>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Even though they feel "safe," they silently destroy purchasing power</li>
                         <li>• Governments control currency → inflation is inevitable</li>
                         <li>• Interest payments rarely keep up after taxes</li>
                         <li>• Since 1965: The USD has lost 86% of its value</li>
                       </ul>
-                      <div className="mt-3 p-3 bg-red-50 rounded-lg">
+                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px"}}>
                         <p className="text-sm italic text-red-800">"The implicit inflation tax was more than triple the explicit income tax." — Buffett</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Category 2 */}
-                  <div className="bg-yellow-50 rounded-2xl p-5 border border-yellow-200">
-                    <div className="flex items-center gap-3 mb-3">
+                  <div style={{background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.3)",borderLeft:"2px solid rgba(234,179,8,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                       <span className="text-2xl">🪙</span>
                       <h3 className="text-lg font-bold text-yellow-800">Category 2: Non-Productive Assets</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Gold, crypto, collectibles, tulips, etc.</p>
-                    <div className="bg-white rounded-xl p-4 border border-yellow-100">
-                      <p className="text-yellow-700 font-semibold mb-2">⚠️ Buffett's View: "These assets will never produce anything"</p>
+                    <div style={{background:"rgba(234,179,8,0.04)",border:"0.5px solid rgba(234,179,8,0.25)",borderLeft:"2px solid rgba(234,179,8,0.6)",borderRadius:"3px",padding:"12px 14px"}}>
+                      <p className="text-yellow-700 font-semibold mb-2">️ Buffett's View: "These assets will never produce anything"</p>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Their value is based solely on someone else paying more later</li>
                         <li>• Driven by fear, bandwagon psychology, and hope</li>
                         <li>• Require an expanding pool of buyers</li>
                       </ul>
-                      <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
+                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.2)",borderRadius:"3px"}}>
                         <p className="text-sm font-semibold text-yellow-800 mb-2">Buffett's "Pile A vs Pile B" comparison:</p>
                         <div className="grid md:grid-cols-2 gap-3 text-sm">
-                          <div className="bg-yellow-100 p-3 rounded-lg">
+                          <div style={{padding:"8px 10px",background:"rgba(234,179,8,0.08)",border:"0.5px solid rgba(234,179,8,0.3)",borderRadius:"3px"}}>
                             <p className="font-bold">PILE A: All the gold in the world</p>
-                            <p className="text-gray-600">170,000 metric tons worth $9.6T</p>
-                            <p className="text-gray-600">Produces NOTHING forever</p>
+                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"11px"}}>170,000 metric tons worth $9.6T</p>
+                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"11px"}}>Produces NOTHING forever</p>
                           </div>
-                          <div className="bg-green-100 p-3 rounded-lg">
+                          <div style={{padding:"8px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px"}}>
                             <p className="font-bold">PILE B: What $9.6T could buy</p>
-                            <p className="text-gray-600">All U.S. farmland + 16 Exxon Mobils + $1T cash</p>
-                            <p className="text-gray-600">Produces trillions in value</p>
+                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"11px"}}>All U.S. farmland + 16 Exxon Mobils + $1T cash</p>
+                            <p style={{color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"11px"}}>Produces trillions in value</p>
                           </div>
                         </div>
                         <p className="text-sm italic text-yellow-800 mt-2">"Can you imagine an investor choosing pile A over pile B?" — Buffett</p>
@@ -10855,14 +10853,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Category 3 */}
-                  <div className="bg-green-50 rounded-2xl p-5 border border-green-200">
-                    <div className="flex items-center gap-3 mb-3">
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                       <span className="text-2xl">🏭</span>
                       <h3 className="text-lg font-bold text-green-800">Category 3: Productive Assets ⭐ BUFFETT'S PICK</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Businesses, farms, real estate</p>
-                    <div className="bg-white rounded-xl p-4 border border-green-100">
-                      <p className="text-green-700 font-semibold mb-2">✅ Buffett's Strong Preference: "The ONLY category Berkshire overwhelmingly prefers"</p>
+                    <div style={{background:"rgba(34,197,94,0.04)",border:"0.5px solid rgba(34,197,94,0.25)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"3px",padding:"12px 14px"}}>
+                      <p className="text-green-700 font-semibold mb-2">Buffett's Strong Preference: "The ONLY category Berkshire overwhelmingly prefers"</p>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Generate cash & produce goods</li>
                         <li>• Increase output over time</li>
@@ -10870,21 +10868,21 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <li>• Require minimal new capital (the best businesses)</li>
                         <li>• Compound earnings for owners</li>
                       </ul>
-                      <div className="mt-3 p-3 bg-green-50 rounded-lg">
-                        <p className="text-sm font-semibold text-green-800 mb-2">🐄 Buffett's "Cows and Milk" Metaphor:</p>
+                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"3px"}}>
+                        <p className="text-sm font-semibold text-green-800 mb-2">Buffett's "Cows and Milk" Metaphor:</p>
                         <p className="text-sm italic text-green-800">"Businesses are like cows. They will live for centuries and give ever-increasing quantities of milk. Your job is to own more cows, let them produce more milk, and let the milk compound."</p>
                       </div>
-                      <div className="mt-3 p-3 bg-green-100 rounded-lg">
+                      <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px"}}>
                         <p className="text-sm text-green-800"><span className="font-bold">Examples:</span> Coca-Cola, See's Candy, farms, real estate, Berkshire's businesses</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Summary Table */}
-                  <div className="bg-gray-50 rounded-2xl p-5 border">
+                  <div style={{background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"4px",padding:"14px 16px"}}>
                     <h3 className="text-lg font-bold text-gray-800 mb-4">📊 Buffett's Final Verdict</h3>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                    <div style={{overflowX:"auto"}}>
+                      <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                         <thead>
                           <tr className="border-b">
                             <th className="text-left py-2 px-3 font-semibold">Category</th>
@@ -10893,17 +10891,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </tr>
                         </thead>
                         <tbody>
-                          <tr className="border-b bg-red-50">
+                          <tr style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)",background:"rgba(239,68,68,0.06)"}}>
                             <td className="py-2 px-3 font-medium">1. Currency-based</td>
                             <td className="py-2 px-3 text-gray-600">Cash, bonds, bills</td>
                             <td className="py-2 px-3 text-red-700">Safest-feeling, but long-term wealth destroyers</td>
                           </tr>
-                          <tr className="border-b bg-yellow-50">
+                          <tr style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)",background:"rgba(234,179,8,0.06)"}}>
                             <td className="py-2 px-3 font-medium">2. Non-productive</td>
                             <td className="py-2 px-3 text-gray-600">Gold, crypto, collectibles</td>
                             <td className="py-2 px-3 text-yellow-700">Speculative, require new buyers, produce nothing</td>
                           </tr>
-                          <tr className="bg-green-50">
+                          <tr style={{background:"rgba(34,197,94,0.06)"}}>
                             <td className="py-2 px-3 font-medium">3. Productive assets</td>
                             <td className="py-2 px-3 text-gray-600">Businesses, farms, real estate</td>
                             <td className="py-2 px-3 text-green-700 font-semibold">Only REAL wealth creators — by far the safest ✅</td>
@@ -10911,7 +10909,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </tbody>
                       </table>
                     </div>
-                    <div className="mt-4 p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl">
+                    <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"3px"}}>
                       <p className="text-green-800 font-semibold italic">"Over any extended period of time, this category will be the runaway winner. More important, it will be by far the safest." — Warren Buffett</p>
                     </div>
                   </div>
@@ -10976,10 +10974,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     {showMapControls && (
                       <div className="flex justify-center gap-0.5 mt-1">
-                        <button onClick={() => addSiblingLeft(node.id)} className="w-4 h-4 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px]">←</button>
-                        <button onClick={() => addChild(node.id)} className="w-4 h-4 bg-blue-600 text-white rounded-full flex items-center justify-center text-[8px]">↓</button>
-                        <button onClick={() => addSibling(node.id)} className="w-4 h-4 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px]">→</button>
-                        <button onClick={() => deleteNode(node.id)} className="w-4 h-4 bg-red-600 text-white rounded-full flex items-center justify-center text-[8px]">×</button>
+                        <button onClick={() => addSiblingLeft(node.id)} style={{width:"16px",height:"16px",background:"rgba(34,197,94,0.15)",border:"0.5px solid rgba(34,197,94,0.5)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>←</button>
+                        <button onClick={() => addChild(node.id)} style={{width:"16px",height:"16px",background:"rgba(59,130,246,0.15)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>↓</button>
+                        <button onClick={() => addSibling(node.id)} style={{width:"16px",height:"16px",background:"rgba(34,197,94,0.15)",border:"0.5px solid rgba(34,197,94,0.5)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>→</button>
+                        <button onClick={() => deleteNode(node.id)} style={{width:"16px",height:"16px",background:"rgba(239,68,68,0.15)",border:"0.5px solid rgba(239,68,68,0.5)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"8px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>×</button>
                       </div>
                     )}
                   </div>
@@ -10987,16 +10985,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {/* Children */}
                   {children.length > 0 && (
                     <>
-                      <div className="w-px bg-gray-500" style={{ height: '30px' }} />
+                      <div style={{width:"1px",background:"rgba(0,200,255,0.3)"}} style={{ height: '30px' }} />
                       {children.length > 1 && (
                         <div className="relative w-full flex justify-center">
-                          <div className="bg-gray-500" style={{ height: '1px', width: '100%' }} />
+                          <div style={{background:"rgba(0,200,255,0.3)"}} style={{ height: '1px', width: '100%' }} />
                         </div>
                       )}
                       <div className="flex justify-center" style={{ gap: '24px' }}>
                         {children.map(child => (
                           <div key={child.id} className="flex flex-col items-center">
-                            <div className="w-px bg-gray-500" style={{ height: '30px' }} />
+                            <div style={{width:"1px",background:"rgba(0,200,255,0.3)"}} style={{ height: '30px' }} />
                             {renderTree(child)}
                           </div>
                         ))}
@@ -11011,14 +11009,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white flex items-center justify-between">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"14px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div>
                     <h2 className="text-2xl font-bold mb-1">🗺️ Asset Map</h2>
                     <p className="text-blue-200 text-sm">Map out your financial structure</p>
                   </div>
                   <button
                     onClick={() => setShowMapControls(!showMapControls)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${showMapControls ? 'bg-white/20 text-white' : 'bg-white text-blue-600'}`}
+                    style={showMapControls ? {padding:"6px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"} : {padding:"6px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}
                   >
                     {showMapControls ? '👁 Hide Controls' : '✏️ Edit'}
                   </button>
@@ -11027,11 +11025,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {rootNodes.length === 0 && (
                   <button
                     onClick={() => setAssetMapNodes([{ id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }])}
-                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-medium"
+                    style={{width:"100%",padding:"12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
                   >+ Create Asset Map</button>
                 )}
 
-                <div className="rounded-2xl shadow-sm border p-6 overflow-x-auto" style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"14px 16px",overflowX:"auto",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}} style={{ backgroundColor: 'rgba(15,23,42,0.6)' }}>
                   <div className="flex justify-center min-w-fit">
                     <div className="flex gap-8">
                       {rootNodes.map(root => renderTree(root))}
@@ -11042,7 +11040,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {showMapControls && (
                   <button
                     onClick={() => setAssetMapNodes(prev => [...prev, { id: Date.now().toString(), name: '', emoji: '🏠', parentId: null }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Root Node
                   </button>
