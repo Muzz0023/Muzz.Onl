@@ -6995,6 +6995,65 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }, { hours: 0, pay: 0 });
     
     const activeJobTotals = calcJobTotals(activeJob);
+
+    // Per-day totals across all jobs
+    const dayTotals = weekDays.map(day => {
+      let normal=0, timeHalf=0, double=0, doubleHalf=0;
+      jobs.forEach(j => {
+        const s = j.shifts?.[day.date] || {};
+        const r = j.hourlyRate || 0;
+        normal += (parseFloat(s.normalHours)||0) * r;
+        timeHalf += (parseFloat(s.timeHalfHours)||0) * r * 1.5;
+        double += (parseFloat(s.doubleHours)||0) * r * 2;
+        doubleHalf += (parseFloat(s.doubleHalfHours)||0) * r * 2.5;
+      });
+      const totalH = jobs.reduce((sum,j) => {
+        const s = j.shifts?.[day.date] || {};
+        return sum + (parseFloat(s.normalHours)||0) + (parseFloat(s.timeHalfHours)||0) + (parseFloat(s.doubleHours)||0) + (parseFloat(s.doubleHalfHours)||0);
+      }, 0);
+      return { ...day, normal, timeHalf, double, doubleHalf, totalPay: normal+timeHalf+double+doubleHalf, totalHours: totalH };
+    });
+
+    // Rate type breakdown across all jobs
+    const rateBreakdown = jobs.reduce((acc, j) => {
+      const r = j.hourlyRate || 0;
+      weekDays.forEach(day => {
+        const s = j.shifts?.[day.date] || {};
+        acc.normal.h += parseFloat(s.normalHours)||0;
+        acc.normal.p += (parseFloat(s.normalHours)||0) * r;
+        acc.timeHalf.h += parseFloat(s.timeHalfHours)||0;
+        acc.timeHalf.p += (parseFloat(s.timeHalfHours)||0) * r * 1.5;
+        acc.double.h += parseFloat(s.doubleHours)||0;
+        acc.double.p += (parseFloat(s.doubleHours)||0) * r * 2;
+        acc.doubleHalf.h += parseFloat(s.doubleHalfHours)||0;
+        acc.doubleHalf.p += (parseFloat(s.doubleHalfHours)||0) * r * 2.5;
+      });
+      return acc;
+    }, { normal:{h:0,p:0}, timeHalf:{h:0,p:0}, double:{h:0,p:0}, doubleHalf:{h:0,p:0} });
+
+    const daysWorked = dayTotals.filter(d => d.totalHours > 0).length;
+    const avgPerDay = daysWorked > 0 ? grandTotals.hours / daysWorked : 0;
+    const bestDay = dayTotals.reduce((max, d) => d.totalPay > (max?.totalPay || 0) ? d : max, null);
+    const maxDayPay = Math.max(...dayTotals.map(d => d.totalPay), 1);
+
+    // Active job rate breakdown (for timesheet tab)
+    const activeJobRates = (() => {
+      const r = activeJob.hourlyRate || 0;
+      let n=0, th=0, d=0, dh=0;
+      weekDays.forEach(day => {
+        const s = activeJob.shifts?.[day.date] || {};
+        n += parseFloat(s.normalHours)||0;
+        th += parseFloat(s.timeHalfHours)||0;
+        d += parseFloat(s.doubleHours)||0;
+        dh += parseFloat(s.doubleHalfHours)||0;
+      });
+      return { normal:{h:n,p:n*r}, timeHalf:{h:th,p:th*r*1.5}, double:{h:d,p:d*r*2}, doubleHalf:{h:dh,p:dh*r*2.5} };
+    })();
+    const activeDaysWorked = weekDays.filter(d => {
+      const s = activeJob.shifts?.[d.date] || {};
+      return (parseFloat(s.normalHours)||0)+(parseFloat(s.timeHalfHours)||0)+(parseFloat(s.doubleHours)||0)+(parseFloat(s.doubleHalfHours)||0) > 0;
+    }).length;
+    const activeAvgShift = activeDaysWorked > 0 ? activeJobTotals.hours / activeDaysWorked : 0;
     
     // Update job data
     const updateJob = (jobId, field, value) => {
@@ -7081,19 +7140,85 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Total Summary Tab */}
           {workSubTab === 'summary' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {/* Grand Total */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.7)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>ALL JOBS — WEEKLY TOTAL</div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                  <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"12px",textAlign:"center"}}>
-                    <div style={{fontSize:"32px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>{grandTotals.hours.toFixed(1)}</div>
-                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>TOTAL HOURS</div>
+
+              {/* KPI Strip */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                {[
+                  {label:"TOTAL HOURS",value:grandTotals.hours.toFixed(1),sub:"THIS WEEK",color:"rgba(34,197,94,0.9)"},
+                  {label:"TOTAL PAY",value:`$${grandTotals.pay.toFixed(0)}`,sub:"PRE-TAX",color:"rgba(34,197,94,0.9)"},
+                  {label:"AVG / DAY",value:avgPerDay > 0 ? avgPerDay.toFixed(1)+'h' : '—',sub:`${daysWorked} DAYS WORKED`,color:"rgba(0,200,255,0.9)"},
+                  {label:"BEST DAY",value:bestDay && bestDay.totalPay > 0 ? `$${bestDay.totalPay.toFixed(0)}` : '—',sub:bestDay && bestDay.totalPay > 0 ? bestDay.dayShort.toUpperCase() : '—',color:"rgba(251,191,36,0.9)"},
+                ].map((kpi,i) => (
+                  <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
                   </div>
-                  <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"12px",textAlign:"center"}}>
-                    <div style={{fontSize:"32px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500}}>${grandTotals.pay.toFixed(0)}</div>
-                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>TOTAL PAY (PRE-TAX)</div>
-                  </div>
+                ))}
+              </div>
+
+              {/* 7-Day Chart */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>7-DAY EARNINGS — STACKED BY RATE</div>
+                <div style={{display:"flex",alignItems:"flex-end",gap:"6px",height:"100px",padding:"0 4px"}}>
+                  {dayTotals.map((d, i) => {
+                    const totalH = d.totalPay;
+                    const pct = totalH > 0 ? (totalH / maxDayPay) * 100 : 0;
+                    const segs = [
+                      {h:d.normal, color:"rgba(59,130,246,0.7)"},
+                      {h:d.timeHalf, color:"rgba(251,191,36,0.7)"},
+                      {h:d.double, color:"rgba(251,146,60,0.7)"},
+                      {h:d.doubleHalf, color:"rgba(239,68,68,0.7)"},
+                    ];
+                    return (
+                      <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px"}}>
+                        <div style={{fontSize:"8px",color:totalH>0?"rgba(34,197,94,0.7)":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:600}}>{totalH > 0 ? `$${Math.round(totalH)}` : ''}</div>
+                        <div style={{width:"100%",height:`${pct}%`,minHeight:totalH>0?"4px":"0",display:"flex",flexDirection:"column-reverse",borderRadius:"2px",overflow:"hidden",border:totalH>0?"0.5px solid rgba(0,200,255,0.2)":"none"}}>
+                          {segs.map((s, si) => totalH > 0 && s.h > 0 && <div key={si} style={{flex:s.h, background:s.color}}/>)}
+                        </div>
+                        <div style={{fontSize:"8px",color:d.isToday?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",fontWeight:d.isToday?600:400}}>{d.dayShort.toUpperCase().slice(0,3)}</div>
+                      </div>
+                    );
+                  })}
                 </div>
+                {/* Legend */}
+                <div style={{display:"flex",gap:"12px",marginTop:"10px",paddingTop:"10px",borderTop:"0.5px solid rgba(0,200,255,0.06)",flexWrap:"wrap",justifyContent:"center"}}>
+                  {[{l:"1x",c:"rgba(59,130,246,0.7)"},{l:"1.5x",c:"rgba(251,191,36,0.7)"},{l:"2x",c:"rgba(251,146,60,0.7)"},{l:"2.5x",c:"rgba(239,68,68,0.7)"}].map((leg,li) => (
+                    <div key={li} style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                      <div style={{width:"8px",height:"8px",borderRadius:"1px",background:leg.c}}/>
+                      <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{leg.l}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rate Type Breakdown */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
+                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>BREAKDOWN BY RATE</span>
+                </div>
+                {[
+                  {label:"1x NORMAL",mult:"1.0x",data:rateBreakdown.normal,color:"rgba(59,130,246,0.9)",bg:"rgba(59,130,246,0.08)"},
+                  {label:"1.5x TIME & HALF",mult:"1.5x",data:rateBreakdown.timeHalf,color:"rgba(251,191,36,0.9)",bg:"rgba(251,191,36,0.08)"},
+                  {label:"2x DOUBLE",mult:"2.0x",data:rateBreakdown.double,color:"rgba(251,146,60,0.9)",bg:"rgba(251,146,60,0.08)"},
+                  {label:"2.5x DOUBLE & HALF",mult:"2.5x",data:rateBreakdown.doubleHalf,color:"rgba(239,68,68,0.9)",bg:"rgba(239,68,68,0.08)"},
+                ].map((row,i) => {
+                  const pct = grandTotals.hours > 0 ? (row.data.h / grandTotals.hours) * 100 : 0;
+                  return (
+                    <div key={i} style={{padding:"10px 16px",borderBottom:i<3?"0.5px solid rgba(0,200,255,0.06)":"none",borderLeft:`2px solid ${row.data.h>0?row.color:'transparent'}`}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
+                        <span style={{fontSize:"10px",color:row.data.h>0?row.color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500}}>{row.label}</span>
+                        <div style={{display:"flex",gap:"14px",alignItems:"center"}}>
+                          <span style={{fontSize:"11px",color:row.data.h>0?"#e0eaff":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:500}}>{row.data.h.toFixed(1)}h</span>
+                          <span style={{fontSize:"11px",color:row.data.h>0?"rgba(34,197,94,0.9)":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:500,minWidth:"60px",textAlign:"right"}}>${row.data.p.toFixed(0)}</span>
+                        </div>
+                      </div>
+                      <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
+                        <div style={{width:`${pct}%`,height:"100%",background:row.color,transition:"width 0.3s"}}/>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Per-Job Breakdown */}
@@ -7104,7 +7229,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {jobs.map((job, i) => {
                   const { hours, pay } = calcJobTotals(job);
                   return (
-                    <div key={job.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",borderBottom:i<jobs.length-1?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
+                    <div key={job.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",borderBottom:i<jobs.length-1?"0.5px solid rgba(0,200,255,0.06)":"none",borderLeft:`2px solid ${hours>0?"rgba(34,197,94,0.6)":"transparent"}`}}>
                       <div>
                         <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{job.name}</div>
                         <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>${job.hourlyRate||0}/hr</div>
@@ -7181,16 +7306,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
 
                 {/* Weekly Stats */}
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                  <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"28px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500}}>{activeJobTotals.hours.toFixed(1)}</div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>HOURS THIS WEEK</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"6px"}}>
+                  <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                    <div style={{fontSize:"22px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeJobTotals.hours.toFixed(1)}</div>
+                    <div style={{fontSize:"8px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>HOURS</div>
                   </div>
-                  <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px",textAlign:"center"}}>
-                    <div style={{fontSize:"28px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500}}>${activeJobTotals.pay.toFixed(0)}</div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>EST. PAY (PRE-TAX)</div>
+                  <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                    <div style={{fontSize:"22px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${activeJobTotals.pay.toFixed(0)}</div>
+                    <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>PRE-TAX</div>
+                  </div>
+                  <div style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                    <div style={{fontSize:"22px",color:"rgba(0,200,255,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeDaysWorked}</div>
+                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>DAYS</div>
+                  </div>
+                  <div style={{background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                    <div style={{fontSize:"22px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeAvgShift > 0 ? activeAvgShift.toFixed(1) : '—'}</div>
+                    <div style={{fontSize:"8px",color:"rgba(251,191,36,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>AVG SHIFT</div>
                   </div>
                 </div>
+
+                {/* Rate Distribution Bar */}
+                {activeJobTotals.hours > 0 && (
+                  <div style={{marginTop:"12px"}}>
+                    <div style={{fontSize:"8px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>RATE DISTRIBUTION</div>
+                    <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"3px",overflow:"hidden",display:"flex"}}>
+                      {[
+                        {h:activeJobRates.normal.h,color:"rgba(59,130,246,0.8)"},
+                        {h:activeJobRates.timeHalf.h,color:"rgba(251,191,36,0.8)"},
+                        {h:activeJobRates.double.h,color:"rgba(251,146,60,0.8)"},
+                        {h:activeJobRates.doubleHalf.h,color:"rgba(239,68,68,0.8)"},
+                      ].map((s,si) => s.h > 0 && <div key={si} style={{flex:s.h, background:s.color}}/>)}
+                    </div>
+                    <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",fontSize:"8px",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                      {[
+                        {l:"1x",h:activeJobRates.normal.h,c:"rgba(59,130,246,0.8)"},
+                        {l:"1.5x",h:activeJobRates.timeHalf.h,c:"rgba(251,191,36,0.8)"},
+                        {l:"2x",h:activeJobRates.double.h,c:"rgba(251,146,60,0.8)"},
+                        {l:"2.5x",h:activeJobRates.doubleHalf.h,c:"rgba(239,68,68,0.8)"},
+                      ].map((leg,li) => (
+                        <span key={li} style={{color:leg.h>0?leg.c:"rgba(148,163,184,0.3)"}}>{leg.l} <span style={{color:leg.h>0?"#e0eaff":"rgba(148,163,184,0.3)"}}>{leg.h.toFixed(1)}h</span></span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Daily Shift Cards */}
@@ -7204,7 +7362,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const hourlyRate = activeJob.hourlyRate || 0;
                 const dayPay = (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
                 return (
-                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(59,130,246,0.4)":"rgba(0,200,255,0.12)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(59,130,246,0.8)":"rgba(0,200,255,0.2)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(59,130,246,0.4)":totalHours>0?"rgba(34,197,94,0.25)":"rgba(0,200,255,0.12)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(59,130,246,0.8)":totalHours>0?"rgba(34,197,94,0.6)":"rgba(0,200,255,0.2)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                       <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                         <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{day.dayName}</span>
