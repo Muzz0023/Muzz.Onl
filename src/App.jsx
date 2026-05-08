@@ -12123,7 +12123,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Future Portfolio Header */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"16px 20px",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>FUTURE PORTFOLIO</h2>
-                <p className="text-blue-100">Plan your future investments with full research details</p>
+                <p style={{fontSize:"11px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Plan your future investments with full research details</p>
               </div>
 
               {/* Future Holdings Research - Same format as Current */}
@@ -14358,7 +14358,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
                     <h2 style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Muzz's Accounting Guide</h2>
-                    <p className="text-emerald-100">Key ratios and metrics to analyze</p>
+                    <p style={{fontSize:"11px",color:"rgba(16,185,129,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Key ratios and metrics to analyze</p>
                   </div>
                 </div>
               </div>
@@ -14755,7 +14755,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
                     <h2 style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>S&P 500 & Buffett's Investing Wisdom</h2>
-                    <p className="text-blue-200">Lessons from Berkshire Hathaway's annual letters</p>
+                    <p style={{fontSize:"11px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Lessons from Berkshire Hathaway's annual letters</p>
                   </div>
                 </div>
               </div>
@@ -15115,51 +15115,51 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"12px"}}>📈 Compound Interest Calculator</h2>
-                  <div className="grid grid-cols-2 gap-4 mb-6">
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"12px"}}>// COMPOUND INTEREST CALCULATOR</h2>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"14px"}}>
                     <div>
-                      <label className="text-sm font-medium text-gray-600 mb-1 block">Starting Amount ($)</label>
-                      <input type="text" value={compoundCalc.principal} onChange={(e) => setCompoundCalc(prev => ({ ...prev, principal: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="10,000" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-green-500" />
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>STARTING AMOUNT ($)</div>
+                      <input type="text" value={compoundCalc.principal} onChange={(e) => setCompoundCalc(prev => ({ ...prev, principal: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="10,000" style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}} />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600 mb-1 block">Monthly Contribution ($)</label>
-                      <input type="text" value={compoundCalc.monthlyAdd} onChange={(e) => setCompoundCalc(prev => ({ ...prev, monthlyAdd: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="500" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-green-500" />
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>MONTHLY CONTRIBUTION ($)</div>
+                      <input type="text" value={compoundCalc.monthlyAdd} onChange={(e) => setCompoundCalc(prev => ({ ...prev, monthlyAdd: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="500" style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}} />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600 mb-1 block">Annual Return (%)</label>
-                      <input type="text" value={compoundCalc.rate} onChange={(e) => setCompoundCalc(prev => ({ ...prev, rate: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="7" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-green-500" />
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>ANNUAL RETURN (%)</div>
+                      <input type="text" value={compoundCalc.rate} onChange={(e) => setCompoundCalc(prev => ({ ...prev, rate: e.target.value.replace(/[^0-9.]/g, '') }))} placeholder="7" style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}} />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-600 mb-1 block">Time Period (years)</label>
-                      <input type="text" value={compoundCalc.years} onChange={(e) => setCompoundCalc(prev => ({ ...prev, years: e.target.value.replace(/[^0-9]/g, '') }))} placeholder="10" className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-green-500" />
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>TIME PERIOD (YEARS)</div>
+                      <input type="text" value={compoundCalc.years} onChange={(e) => setCompoundCalc(prev => ({ ...prev, years: e.target.value.replace(/[^0-9]/g, '') }))} placeholder="10" style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",marginBottom:"14px"}}>
                     <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.4)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
-                      <div className="text-xl sm:text-2xl font-bold">${compResult.finalBalance.toLocaleString()}</div>
-                      <div className="text-xs text-green-100">Final Balance</div>
+                      <div style={{fontSize:"22px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${compResult.finalBalance.toLocaleString()}</div>
+                      <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"6px"}}>FINAL BALANCE</div>
                     </div>
                     <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.4)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
-                      <div className="text-xl sm:text-2xl font-bold">${compResult.totalContributed.toLocaleString()}</div>
-                      <div className="text-xs text-blue-100">You Contributed</div>
+                      <div style={{fontSize:"22px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${compResult.totalContributed.toLocaleString()}</div>
+                      <div style={{fontSize:"8px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"6px"}}>YOU CONTRIBUTED</div>
                     </div>
                     <div style={{background:"rgba(168,85,247,0.08)",border:"0.5px solid rgba(168,85,247,0.4)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
-                      <div className="text-xl sm:text-2xl font-bold">${compResult.totalInterest.toLocaleString()}</div>
-                      <div className="text-xs text-purple-100">Interest Earned</div>
+                      <div style={{fontSize:"22px",color:"rgba(168,85,247,0.95)",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${compResult.totalInterest.toLocaleString()}</div>
+                      <div style={{fontSize:"8px",color:"rgba(168,85,247,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"6px"}}>INTEREST EARNED</div>
                     </div>
                   </div>
                   {compResult.yearData.length > 0 && (
                     <div>
-                      <h3 className="font-semibold text-white mb-3">Growth Over Time</h3>
+                      <div style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"8px"}}>GROWTH OVER TIME</div>
                       <div style={{display:"flex",alignItems:"flex-end",gap:"4px",height:"160px",background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px",padding:"10px"}}>
                         {compResult.yearData.map((d, i) => {
                           const maxVal = compResult.yearData[compResult.yearData.length - 1].balance || 1;
                           const height = (d.balance / maxVal) * 100;
                           return (
-                            <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group relative">
-                              <div className="absolute bottom-full mb-1 hidden group-hover:block text-xs px-2 py-1 rounded whitespace-nowrap z-10" style={{ backgroundColor: '#1e293b', color: '#ffffff' }}>Year {d.year}: ${d.balance.toLocaleString()}</div>
-                              <div style={{width:"100%",background:"linear-gradient(to top, rgba(34,197,94,0.7), rgba(16,185,129,0.5))",borderRadius:"2px 2px 0 0",transition:"height 0.3s"}} style={{ height: `${Math.max(height, 2)}%` }} />
-                              {(i === 0 || i === compResult.yearData.length - 1 || (i + 1) % 5 === 0) && (<span className="text-[9px] text-gray-400 mt-1">{d.year}y</span>)}
+                            <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-end",height:"100%",position:"relative"}} className="group">
+                              <div className="hidden group-hover:block" style={{position:"absolute",bottom:"100%",marginBottom:"4px",fontSize:"9px",padding:"4px 8px",borderRadius:"3px",whiteSpace:"nowrap",zIndex:10,background:"rgba(5,12,24,0.95)",border:"0.5px solid rgba(0,200,255,0.3)",color:"#e0eaff",fontFamily:"monospace"}}>Y{d.year}: ${d.balance.toLocaleString()}</div>
+                              <div style={{width:"100%",background:"linear-gradient(to top, rgba(34,197,94,0.7), rgba(16,185,129,0.5))",borderRadius:"2px 2px 0 0",transition:"height 0.3s",height: `${Math.max(height, 2)}%`}} />
+                              {(i === 0 || i === compResult.yearData.length - 1 || (i + 1) % 5 === 0) && (<span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px"}}>{d.year}Y</span>)}
                             </div>
                           );
                         })}
@@ -15167,7 +15167,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   )}
                   <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"3px"}}>
-                    <p className="text-sm text-amber-800 font-medium">Muzz's Note: This calculator is for education only — not financial advice. Past returns don't guarantee future results. But compound interest is powerful, mate!</p>
+                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"4px"}}>// MUZZ'S NOTE</div>
+                    <p style={{fontSize:"11px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1.6}}>This calculator is for education only — not financial advice. Past returns don't guarantee future results. But compound interest is powerful, mate!</p>
                   </div>
                 </div>
               </div>
