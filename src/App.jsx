@@ -2457,6 +2457,18 @@ function MuzzApp() {
   const [donnySearchIdx, setDonnySearchIdx] = useState(0);
   // Lineage popup — { title, value, formula, breakdown: [{label, value, ...meta}], onItemClick? }
   const [donnyLineage, setDonnyLineage] = useState(null);
+  // Donny alert thresholds — configurable rules
+  const [donnyAlertConfig, setDonnyAlertConfig] = useState(() => {
+    if (typeof window === 'undefined') return { hoursPct: 90, costPct: 90, dueDays: 3, idleDays: 7 };
+    try {
+      const stored = localStorage.getItem('donny_alert_config');
+      return stored ? JSON.parse(stored) : { hoursPct: 90, costPct: 90, dueDays: 3, idleDays: 7 };
+    } catch { return { hoursPct: 90, costPct: 90, dueDays: 3, idleDays: 7 }; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem('donny_alert_config', JSON.stringify(donnyAlertConfig)); } catch(e) {}
+  }, [donnyAlertConfig]);
+  const [donnyAlertConfigOpen, setDonnyAlertConfigOpen] = useState(false);
 
   // Donny search — Cmd+K / Ctrl+K to open, ESC to close
   useEffect(() => {
@@ -2468,7 +2480,8 @@ function MuzzApp() {
         setDonnySearchIdx(0);
       }
       if (e.key === 'Escape') {
-        if (donnyLineage) setDonnyLineage(null);
+        if (donnyAlertConfigOpen) setDonnyAlertConfigOpen(false);
+        else if (donnyLineage) setDonnyLineage(null);
         else if (donnySearchOpen) {
           setDonnySearchOpen(false);
           setDonnySearchQuery('');
@@ -2477,7 +2490,7 @@ function MuzzApp() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [donnySearchOpen, donnyLineage]);
+  }, [donnySearchOpen, donnyLineage, donnyAlertConfigOpen]);
 
   const [editingJobId, setEditingJobId] = useState(null);
   const [donnyNotes, setDonnyNotes] = useState({});
@@ -4120,6 +4133,204 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {lin.note && (
             <div style={{padding:"8px 18px",borderTop:`0.5px solid ${accent}1a`,fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{lin.note}</div>
           )}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // DonnySystemHealth — Apollo-style operational pulse
+  // ============================================
+  const DonnySystemHealth = () => {
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+
+    // SIGNAL 1 — workers active today
+    const todayTs = donnyTimesheets.filter(e => (e.date === today) || (new Date(e.createdAt||0) >= todayStart));
+    const workersActiveToday = [...new Set(todayTs.map(e => e.memberId).filter(Boolean))].length;
+    const totalWorkers = donnyTeam.filter(m => !m.archived).length;
+
+    // SIGNAL 2 — jobs touched today (any timesheet, material, or status change)
+    const jobsTouchedToday = new Set();
+    todayTs.forEach(e => e.jobId && jobsTouchedToday.add(e.jobId));
+    (donnyMaterialsLog||[]).forEach(m => {
+      if (new Date(m.createdAt||0) >= todayStart) m.jobId && jobsTouchedToday.add(m.jobId);
+    });
+
+    // SIGNAL 3 — overdue jobs
+    const overdueCount = donnyJobs.filter(j =>
+      !j.completed && !j.archived && j.dueDate && new Date(j.dueDate) < now
+    ).length;
+
+    // SIGNAL 4 — due soon (within configured days)
+    const dueSoonCount = donnyJobs.filter(j => {
+      if (j.completed || j.archived || !j.dueDate) return false;
+      const due = new Date(j.dueDate);
+      const days = (due - now) / (1000 * 60 * 60 * 24);
+      return days >= 0 && days <= donnyAlertConfig.dueDays;
+    }).length;
+
+    // SIGNAL 5 — jobs at hours/cost threshold
+    const overThresholdJobs = donnyJobs.filter(j => {
+      if (j.completed || j.archived) return false;
+      const ts = donnyTimesheets.filter(e => e.jobId === j.id);
+      const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const labour = ts.reduce((s,e) => {
+        const m = donnyTeam.find(x => x.id === e.memberId);
+        return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+      }, 0);
+      const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
+      const totalCost = labour + mats;
+      const qHrs = parseFloat(j.quotedHours) || 0;
+      const qCost = parseFloat(j.quotedCost) || 0;
+      const hrsPct = qHrs > 0 ? (hrs / qHrs) * 100 : 0;
+      const costPct = qCost > 0 ? (totalCost / qCost) * 100 : 0;
+      return hrsPct >= donnyAlertConfig.hoursPct || costPct >= donnyAlertConfig.costPct;
+    }).length;
+
+    // SIGNAL 6 — idle jobs (started but no activity in N days)
+    const idleJobs = donnyJobs.filter(j => {
+      if (j.completed || j.archived || !j.started) return false;
+      const allTs = donnyTimesheets.filter(e => e.jobId === j.id);
+      if (allTs.length === 0) return false; // never had activity, not "idle"
+      const lastTs = Math.max(...allTs.map(e => new Date(e.createdAt||e.date||0).getTime()));
+      const daysSince = (now.getTime() - lastTs) / (1000 * 60 * 60 * 24);
+      return daysSince > donnyAlertConfig.idleDays;
+    }).length;
+
+    // Compose signals — green/amber/red severity
+    const signals = [
+      {
+        label: 'CREW',
+        value: totalWorkers > 0 ? `${workersActiveToday}/${totalWorkers}` : '—',
+        sub: 'active today',
+        level: workersActiveToday === 0 && totalWorkers > 0 ? 'amber' : 'green',
+        onClick: () => setActiveView('donny-team'),
+      },
+      {
+        label: 'JOBS · TOUCHED',
+        value: String(jobsTouchedToday.size),
+        sub: 'today',
+        level: jobsTouchedToday.size === 0 ? 'amber' : 'green',
+        onClick: () => setActiveView('donny-masterview'),
+      },
+      {
+        label: 'OVERDUE',
+        value: String(overdueCount),
+        sub: overdueCount === 0 ? 'all on time' : 'past due',
+        level: overdueCount > 2 ? 'red' : overdueCount > 0 ? 'amber' : 'green',
+        onClick: () => setActiveView('donny-masterview'),
+      },
+      {
+        label: 'DUE SOON',
+        value: String(dueSoonCount),
+        sub: `≤${donnyAlertConfig.dueDays}d`,
+        level: dueSoonCount > 3 ? 'amber' : 'green',
+        onClick: () => setActiveView('donny-masterview'),
+      },
+      {
+        label: 'AT THRESHOLD',
+        value: String(overThresholdJobs),
+        sub: `≥${donnyAlertConfig.hoursPct}% used`,
+        level: overThresholdJobs > 0 ? 'amber' : 'green',
+        onClick: () => setActiveView('donny-masterview'),
+      },
+      {
+        label: 'IDLE',
+        value: String(idleJobs),
+        sub: `>${donnyAlertConfig.idleDays}d quiet`,
+        level: idleJobs > 0 ? 'amber' : 'green',
+        onClick: () => setActiveView('donny-masterview'),
+      },
+    ];
+
+    const colorMap = {
+      green:  { bg: 'rgba(34,197,94,0.05)', border: 'rgba(34,197,94,0.25)', text: 'rgba(34,197,94,0.95)', dot: '#22c55e' },
+      amber:  { bg: 'rgba(245,158,11,0.05)', border: 'rgba(245,158,11,0.3)', text: 'rgba(245,158,11,0.95)', dot: '#f59e0b' },
+      red:    { bg: 'rgba(239,68,68,0.06)', border: 'rgba(239,68,68,0.35)', text: 'rgba(239,68,68,0.95)', dot: '#ef4444' },
+    };
+
+    const overallLevel = signals.some(s => s.level === 'red') ? 'red' : signals.some(s => s.level === 'amber') ? 'amber' : 'green';
+    const overallColor = colorMap[overallLevel];
+
+    return (
+      <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${overallColor.border}`,borderRadius:"6px",borderLeft:`2px solid ${overallColor.dot}`,backgroundImage:`radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)`,backgroundSize:"20px 20px",overflow:"hidden",marginBottom:"6px"}}>
+        {/* Header */}
+        <div style={{padding:"6px 12px",borderBottom:"0.5px solid rgba(255,255,255,0.04)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+            <span style={{width:"6px",height:"6px",borderRadius:"50%",background:overallColor.dot,boxShadow:`0 0 6px ${overallColor.dot}`,animation:"blink 2s infinite"}}/>
+            <span style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>// SYSTEM PULSE</span>
+            <span style={{fontSize:"8px",color:overallColor.text,fontFamily:"monospace",letterSpacing:"1.5px",padding:"1px 5px",background:overallColor.bg,border:`0.5px solid ${overallColor.border}`,borderRadius:"2px"}}>{overallLevel === 'red' ? 'CRITICAL' : overallLevel === 'amber' ? 'WATCH' : 'NOMINAL'}</span>
+          </div>
+          <button onClick={() => setDonnyAlertConfigOpen(true)} style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"2px",padding:"2px 6px",cursor:"pointer"}}>⚙ THRESHOLDS</button>
+        </div>
+        {/* Signal cells */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)"}}>
+          {signals.map((s,i) => {
+            const c = colorMap[s.level];
+            return (
+              <button key={i} onClick={s.onClick}
+                style={{padding:"8px 10px",background:s.level !== 'green' ? c.bg : 'transparent',border:"none",borderRight:i<5?"0.5px solid rgba(255,255,255,0.04)":"none",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"5px",marginBottom:"3px"}}>
+                  <span style={{width:"4px",height:"4px",borderRadius:"50%",background:c.dot,flexShrink:0}}/>
+                  <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.label}</span>
+                </div>
+                <div style={{fontSize:"14px",color:s.level === 'green' ? "#e0eaff" : c.text,fontWeight:500,lineHeight:1,whiteSpace:"nowrap"}}>{s.value}</div>
+                <div style={{fontSize:"8px",color:"rgba(148,163,184,0.4)",marginTop:"2px",letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.sub}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // DonnyAlertConfig — modal to edit alert thresholds
+  // ============================================
+  const DonnyAlertConfig = () => {
+    if (!donnyAlertConfigOpen) return null;
+    const close = () => setDonnyAlertConfigOpen(false);
+    const update = (key, val) => setDonnyAlertConfig(c => ({...c, [key]: val}));
+    return (
+      <div onClick={close}
+        style={{position:"fixed",inset:0,zIndex:210,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"15vh"}}>
+        <div onClick={e => e.stopPropagation()}
+          style={{width:"min(520px, 92vw)",background:"rgba(5,12,24,0.97)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",borderRadius:"6px",overflow:"hidden",boxShadow:"0 30px 100px rgba(0,0,0,0.6)",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{padding:"14px 18px",borderBottom:"0.5px solid rgba(249,115,22,0.15)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px"}}>// ALERT THRESHOLDS</div>
+              <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.5px"}}>Configure System Pulse</div>
+            </div>
+            <button onClick={close} style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",padding:"2px 6px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"3px",cursor:"pointer"}}>ESC</button>
+          </div>
+          <div style={{padding:"16px 18px",display:"flex",flexDirection:"column",gap:"14px"}}>
+            {[
+              {key:'hoursPct', label:'Hours threshold', sub:'Alert when hours used reaches this % of quote', unit:'%', min:50, max:120, step:5},
+              {key:'costPct', label:'Cost threshold', sub:'Alert when total cost reaches this % of quoted', unit:'%', min:50, max:120, step:5},
+              {key:'dueDays', label:'Due soon window', sub:'Flag jobs with due date within this many days', unit:' days', min:1, max:14, step:1},
+              {key:'idleDays', label:'Idle threshold', sub:'Flag started jobs with no activity for this long', unit:' days', min:2, max:30, step:1},
+            ].map(rule => (
+              <div key={rule.key} style={{padding:"10px 12px",background:"rgba(0,0,0,0.2)",border:"0.5px solid rgba(249,115,22,0.15)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"3px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
+                  <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.5px"}}>{rule.label}</span>
+                  <span style={{fontSize:"14px",color:"#f97316",fontFamily:"monospace",fontWeight:500}}>{donnyAlertConfig[rule.key]}{rule.unit}</span>
+                </div>
+                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginBottom:"8px",letterSpacing:"0.3px"}}>{rule.sub}</div>
+                <input type="range" min={rule.min} max={rule.max} step={rule.step} value={donnyAlertConfig[rule.key]}
+                  onChange={e => update(rule.key, parseInt(e.target.value))}
+                  style={{width:"100%",accentColor:"#f97316",cursor:"pointer"}}/>
+                <div style={{display:"flex",justifyContent:"space-between",fontSize:"8px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"0.5px"}}>
+                  <span>{rule.min}{rule.unit}</span>
+                  <span>{rule.max}{rule.unit}</span>
+                </div>
+              </div>
+            ))}
+            <button onClick={close} style={{padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"4px"}}>
+              ✓ DONE
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -16408,6 +16619,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
 
           {/* TOP COMMAND BAR */}
@@ -16454,6 +16666,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           </div>
 
           <div className={isWide?"max-w-6xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
+
+            {/* SYSTEM PULSE — Apollo-style operational health */}
+            <DonnySystemHealth />
 
             {/* KPI STRIP — single panel with sparklines */}
             <div style={{...donnyPanel,borderLeft:"2px solid #f97316"}}>
@@ -16819,6 +17034,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17114,6 +17330,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17541,6 +17758,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO WORKER SELECTED</div>
@@ -17641,6 +17859,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17950,6 +18169,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO CLIENT SELECTED</div>
@@ -18027,6 +18247,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -18319,6 +18540,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO MATERIAL SELECTED</div>
@@ -18395,6 +18617,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
           <LineagePopup />
+          <DonnyAlertConfig />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
