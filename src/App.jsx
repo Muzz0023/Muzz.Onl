@@ -3636,10 +3636,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     return (
       <>
-        <button onClick={() => setSidebarOpen(true)} className="fixed z-40 w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:"40px",left:"16px",background:"rgba(3,8,18,0.95)",border:"0.5px solid rgba(0,200,255,0.25)",backdropFilter:"blur(10px)"}}>
-          <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
-          <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
-          <div className="w-5 h-0.5 rounded-full" style={{background:"#00c8ff"}}></div>
+        <button onClick={() => setSidebarOpen(true)} className="fixed w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:appMode==='donny'?"36px":"40px",left:"16px",zIndex:60,background:"rgba(3,8,18,0.95)",border:`0.5px solid ${appMode==='donny'?"rgba(249,115,22,0.35)":"rgba(0,200,255,0.25)"}`,backdropFilter:"blur(10px)"}}>
+          <div className="w-5 h-0.5 rounded-full" style={{background:appMode==='donny'?"#f97316":"#00c8ff"}}></div>
+          <div className="w-5 h-0.5 rounded-full" style={{background:appMode==='donny'?"#f97316":"#00c8ff"}}></div>
+          <div className="w-5 h-0.5 rounded-full" style={{background:appMode==='donny'?"#f97316":"#00c8ff"}}></div>
         </button>
 
         {sidebarOpen && <div className="fixed inset-0 z-50" style={{background:"rgba(2,6,16,0.99)",backdropFilter:"blur(20px)",display:'flex',flexDirection:'column'}}>
