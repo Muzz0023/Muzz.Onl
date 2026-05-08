@@ -1669,6 +1669,26 @@ function MuzzApp() {
     try { localStorage.setItem('muzz_left_rail_hidden', leftRailHidden ? '1' : '0'); } catch(e) {}
   }, [leftRailHidden]);
 
+  // Donny search — Cmd+K / Ctrl+K to open, ESC to close
+  useEffect(() => {
+    const handler = (e) => {
+      // Open search: Cmd+K or Ctrl+K (only in Donny mode)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setDonnySearchOpen(o => !o);
+        setDonnySearchQuery('');
+        setDonnySearchIdx(0);
+      }
+      // Close on ESC
+      if (e.key === 'Escape' && donnySearchOpen) {
+        setDonnySearchOpen(false);
+        setDonnySearchQuery('');
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [donnySearchOpen]);
+
   // Object Inspector — selected entity for right-panel deep dive
   const [inspectorEntity, setInspectorEntity] = useState(null); // { type, id, label, ... }
   // Right-click context menu
@@ -2371,6 +2391,10 @@ function MuzzApp() {
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [selectedDonnyWorker, setSelectedDonnyWorker] = useState(null);
   const [selectedDonnyClient, setSelectedDonnyClient] = useState(null);
+  const [selectedDonnyMaterial, setSelectedDonnyMaterial] = useState(null);
+  const [donnySearchOpen, setDonnySearchOpen] = useState(false);
+  const [donnySearchQuery, setDonnySearchQuery] = useState('');
+  const [donnySearchIdx, setDonnySearchIdx] = useState(0);
   const [editingJobId, setEditingJobId] = useState(null);
   const [donnyNotes, setDonnyNotes] = useState({});
   const [newNoteText, setNewNoteText] = useState('');
@@ -3658,7 +3682,121 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   };
 
-  // Sidebar Component - Palantir-style dense terminal nav
+  // ============================================
+  // DonnySearch — Cmd+K universal search
+  // ============================================
+  const DonnySearch = () => {
+    if (!donnySearchOpen) return null;
+
+    const q = donnySearchQuery.trim().toLowerCase();
+
+    // Build searchable index of all entities
+    const results = [];
+    if (q.length === 0) {
+      // Empty query: show top entities by recency/use
+      donnyJobs.slice(0,5).forEach(j => results.push({ type:'job', id:j.id, ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber}`:`Job`, color:'#f97316', icon:'⊞' }));
+      donnyTeam.slice(0,3).forEach(w => results.push({ type:'worker', id:w.id, ref:w, label:w.name, sub:w.position||(w.roles||[])[0]||'Worker', color:'#f97316', icon:'⊢' }));
+      donnyClients.slice(0,3).forEach(c => results.push({ type:'client', id:c.id, ref:c, label:c.name, sub:c.company||'Client', color:'#3b82f6', icon:'◇' }));
+    } else {
+      // Search across all entities
+      const matches = (text) => text && text.toLowerCase().includes(q);
+      donnyJobs.forEach(j => {
+        if (matches(j.title) || matches(j.jobNumber)) {
+          results.push({ type:'job', id:j.id, ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber} · ${j.completed?'DONE':j.started?'ACTIVE':'TO DO'}`:`Job · ${j.completed?'DONE':j.started?'ACTIVE':'TO DO'}`, color:'#f97316', icon:'⊞' });
+        }
+      });
+      donnyTeam.forEach(w => {
+        if (matches(w.name) || matches(w.position) || (w.roles||[]).some(r => matches(r))) {
+          results.push({ type:'worker', id:w.id, ref:w, label:w.name, sub:`${w.position||'Worker'}${w.hourlyRate?' · $'+w.hourlyRate+'/hr':''}`, color:'#f97316', icon:'⊢' });
+        }
+      });
+      donnyClients.forEach(c => {
+        if (matches(c.name) || matches(c.company) || matches(c.email) || matches(c.phone)) {
+          results.push({ type:'client', id:c.id, ref:c, label:c.name, sub:c.company||c.email||'Client', color:'#3b82f6', icon:'◇' });
+        }
+      });
+      // Materials: aggregate by name first
+      const matMap = {};
+      (donnyMaterialsLog||[]).forEach(e => {
+        const key = (e.item||'').trim();
+        if (!key || !matches(key)) return;
+        if (!matMap[key]) matMap[key] = { name:key, count:0 };
+        matMap[key].count += 1;
+      });
+      Object.values(matMap).forEach(m => results.push({ type:'material', id:m.name, ref:{name:m.name}, label:m.name, sub:`${m.count} entries`, color:'#22c55e', icon:'◍' }));
+    }
+
+    const totalResults = Math.min(results.length, 20);
+    const handleSelect = (r) => {
+      if (r.type === 'job') { setSelectedDonnyJob(r.ref); setActiveView('donny-jobdetail'); }
+      else if (r.type === 'worker') { setSelectedDonnyWorker(r.ref); setActiveView('donny-workerdetail'); }
+      else if (r.type === 'client') { setSelectedDonnyClient(r.ref); setActiveView('donny-clientdetail'); }
+      else if (r.type === 'material') { setSelectedDonnyMaterial(r.ref); setActiveView('donny-materialdetail'); }
+      setDonnySearchOpen(false);
+      setDonnySearchQuery('');
+    };
+
+    return (
+      <div onClick={() => setDonnySearchOpen(false)}
+        style={{position:"fixed",inset:0,zIndex:200,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"15vh"}}>
+        <div onClick={e => e.stopPropagation()}
+          style={{width:"min(640px, 92vw)",maxHeight:"70vh",background:"rgba(5,12,24,0.97)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",borderRadius:"6px",overflow:"hidden",boxShadow:"0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(249,115,22,0.05)",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column"}}>
+          <div style={{padding:"14px 18px",borderBottom:"0.5px solid rgba(249,115,22,0.15)",display:"flex",alignItems:"center",gap:"12px"}}>
+            <span style={{fontSize:"14px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",lineHeight:1}}>⌕</span>
+            <input autoFocus value={donnySearchQuery}
+              onChange={e => { setDonnySearchQuery(e.target.value); setDonnySearchIdx(0); }}
+              onKeyDown={e => {
+                if (e.key === 'ArrowDown') { e.preventDefault(); setDonnySearchIdx(i => Math.min(i+1, totalResults-1)); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); setDonnySearchIdx(i => Math.max(i-1, 0)); }
+                else if (e.key === 'Enter' && results[donnySearchIdx]) { e.preventDefault(); handleSelect(results[donnySearchIdx]); }
+              }}
+              placeholder="Search jobs, workers, clients, materials..."
+              style={{flex:1,background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"15px",letterSpacing:"0.5px",border:"none",outline:"none",padding:"2px 0"}}/>
+            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",padding:"2px 6px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"3px",flexShrink:0}}>ESC</span>
+          </div>
+
+          <div style={{flex:1,overflowY:"auto",minHeight:0}}>
+            {results.length === 0 ? (
+              <div style={{padding:"30px",textAlign:"center"}}>
+                <div style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",letterSpacing:"2px"}}>NO RESULTS</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"6px"}}>try a job number, worker name, or material</div>
+              </div>
+            ) : (
+              <>
+                {q.length === 0 && (
+                  <div style={{padding:"6px 18px 4px",fontSize:"8px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>// RECENT</div>
+                )}
+                {results.slice(0,20).map((r,i) => {
+                  const active = i === donnySearchIdx;
+                  return (
+                    <button key={r.type+'-'+r.id} onClick={() => handleSelect(r)} onMouseEnter={() => setDonnySearchIdx(i)}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"10px 18px",background:active?`${r.color}15`:"transparent",border:"none",borderLeft:active?`2px solid ${r.color}`:"2px solid transparent",cursor:"pointer",textAlign:"left",transition:"background 0.1s"}}>
+                      <span style={{fontSize:"15px",color:r.color,fontFamily:"monospace",lineHeight:1,width:"20px",textAlign:"center",flexShrink:0}}>{r.icon}</span>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.label}</div>
+                        <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.sub}</div>
+                      </div>
+                      <span style={{fontSize:"8px",fontFamily:"monospace",letterSpacing:"1.5px",color:`${r.color}99`,padding:"2px 6px",background:`${r.color}10`,border:`0.5px solid ${r.color}30`,borderRadius:"2px",flexShrink:0}}>{r.type.toUpperCase()}</span>
+                      {active && <span style={{fontSize:"9px",color:`${r.color}99`,fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>↵</span>}
+                    </button>
+                  );
+                })}
+              </>
+            )}
+          </div>
+
+          <div style={{padding:"8px 18px",borderTop:"0.5px solid rgba(249,115,22,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>
+            <span>{results.length} RESULT{results.length!==1?'S':''}</span>
+            <span style={{display:"flex",gap:"10px"}}>
+              <span>↑↓ NAV</span>
+              <span>↵ OPEN</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const Sidebar = () => {
     // Glyph map for muzz items
     const muzzGlyphs = {
@@ -15921,6 +16059,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* DONNY LEFT RAIL — desktop only */}
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
 
           {/* TOP COMMAND BAR */}
           <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(249,115,22,0.25)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
@@ -15931,6 +16070,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {eliteName && <><span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
             </div>
             <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
+              <button onClick={() => { setDonnySearchOpen(true); setDonnySearchQuery(''); setDonnySearchIdx(0); }}
+                style={{display:"flex",alignItems:"center",gap:"6px",padding:"3px 8px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace"}}>
+                <span style={{fontSize:"11px",color:"rgba(249,115,22,0.7)",lineHeight:1}}>⌕</span>
+                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",letterSpacing:"1px"}}>SEARCH</span>
+                <span style={{fontSize:"8px",color:"rgba(148,163,184,0.4)",letterSpacing:"0.5px",padding:"1px 4px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"2px"}}>⌘K</span>
+              </button>
               <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
               <div style={{display:"flex",alignItems:"center",gap:"3px"}}>
                 <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#f97316",display:"inline-block",boxShadow:"0 0 6px #f97316",animation:"blink 2s infinite"}}></span>
@@ -16340,6 +16485,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
@@ -16607,6 +16753,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -16835,7 +16982,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const c = colorMap[evt._type] || "#94a3b8";
                     let detail = '';
                     if (evt._type==='hours') detail = `${evt.hours}h${evt.note?' · '+evt.note:''}`;
-                    else if (evt._type==='material') detail = `${evt.name||'item'}${evt.cost?' · $'+evt.cost:''}`;
+                    else if (evt._type==='material') detail = `${evt.item||evt.name||'item'}${evt.qty?' · '+evt.qty+(evt.unit?' '+evt.unit:'')+'':''}${evt.cost?' · $'+evt.cost:''}`;
                     else if (evt._type==='mistake') detail = evt.description||evt.text||'';
                     else if (evt._type==='incident') detail = evt.description||evt.text||'';
                     else if (evt._type==='note') detail = evt.text||'';
@@ -16879,6 +17026,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO WORKER SELECTED</div>
               <button onClick={() => setActiveView('donny-team')} style={{padding:"8px 18px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO TEAM</button>
@@ -16964,6 +17112,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -17191,6 +17340,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO CLIENT SELECTED</div>
               <button onClick={() => setActiveView('donny-clients')} style={{padding:"8px 18px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO CLIENTS</button>
@@ -17251,6 +17401,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(59,130,246,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -17417,6 +17568,278 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               style={{padding:"10px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"6px"}}>
               DELETE CLIENT
             </button>
+          </div>
+        </div>
+      );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // MATERIAL DETAIL — entity page for a material item (keyed by name)
+    // ─────────────────────────────────────────────────────────────────
+    if (activeView === 'donny-materialdetail') {
+      const matName = selectedDonnyMaterial?.name;
+      if (!matName) {
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+            <div style={{padding:"80px 24px",textAlign:"center"}}>
+              <div style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO MATERIAL SELECTED</div>
+              <button onClick={() => setActiveView('donny-materialslog')} style={{padding:"8px 18px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO MATERIALS</button>
+            </div>
+          </div>
+        );
+      }
+
+      // ─── DERIVED DATA ───────────────────────────────────────────────
+      const matNameLower = matName.toLowerCase().trim();
+      const allEntries = (donnyMaterialsLog || []).filter(e => (e.item || '').toLowerCase().trim() === matNameLower);
+
+      const totalQty = allEntries.reduce((s,e) => s + (parseFloat(e.qty)||0), 0);
+      const totalCost = allEntries.reduce((s,e) => s + (parseFloat(e.cost)||0), 0);
+      const avgCostPerUnit = totalQty > 0 ? totalCost / totalQty : 0;
+      const unit = allEntries.find(e => e.unit)?.unit || '';
+
+      // Group by job
+      const jobGroups = {};
+      allEntries.forEach(e => {
+        if (!jobGroups[e.jobId]) jobGroups[e.jobId] = { entries: [], qty: 0, cost: 0 };
+        jobGroups[e.jobId].entries.push(e);
+        jobGroups[e.jobId].qty += parseFloat(e.qty) || 0;
+        jobGroups[e.jobId].cost += parseFloat(e.cost) || 0;
+      });
+      const jobsWithMaterial = Object.entries(jobGroups).map(([jid,g]) => {
+        const job = donnyJobs.find(j => String(j.id) === String(jid));
+        return job ? { ...job, _qty:g.qty, _cost:g.cost, _entries:g.entries.length } : null;
+      }).filter(Boolean).sort((a,b) => b._cost - a._cost);
+
+      // First and last used
+      const sortedDates = allEntries.map(e => new Date(e.createdAt||0)).sort((a,b)=>a-b);
+      const firstUsed = sortedDates[0];
+      const lastUsed = sortedDates[sortedDates.length-1];
+
+      // 4-week usage trend
+      const now = new Date();
+      const weeks4 = Array.from({length:4}, (_,i) => {
+        const wstart = new Date(); wstart.setDate(wstart.getDate() - (3-i)*7 - wstart.getDay()); wstart.setHours(0,0,0,0);
+        const wend = new Date(wstart); wend.setDate(wstart.getDate()+7);
+        return { wstart, wend, label: i===3?'THIS WK':`${3-i}WK AGO` };
+      });
+      const weeklyUsage = weeks4.map(({wstart,wend}) => allEntries.filter(e => { const t=new Date(e.createdAt||0); return t>=wstart && t<wend; }).reduce((s,e)=>s+(parseFloat(e.qty)||0), 0));
+      const maxWeekUsage = Math.max(...weeklyUsage, 1);
+
+      // Find linked supplier (if any entry references one)
+      const linkedSupplier = (donnySuppliers||[]).find(s =>
+        (s.products||[]).some(p => (p.name||'').toLowerCase().trim() === matNameLower)
+      );
+
+      // Timeline of entries
+      const timeline = [...allEntries].sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
+      const relTime = (d) => {
+        if (!d) return '';
+        const ms = new Date() - new Date(d);
+        const s = ms/1000, m = s/60, h = m/60, days = h/24;
+        if (s < 60) return 'just now';
+        if (m < 60) return `${Math.floor(m)}m ago`;
+        if (h < 24) return `${Math.floor(h)}h ago`;
+        if (days < 7) return `${Math.floor(days)}d ago`;
+        return new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+      };
+
+      const initial = '◍';
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(34,197,94,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
+                <button onClick={() => setActiveView('donny-materialslog')} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← MATERIALS</button>
+                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.3)",fontFamily:"monospace"}}>·</span>
+                <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
+              </div>
+              <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
+                <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",fontWeight:600,color:"#22c55e",fontFamily:"monospace",flexShrink:0}}>{initial}</div>
+                <div style={{flex:1,minWidth:"260px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>MATERIAL INTEL</div>
+                    <div style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(34,197,94,0.1)",color:"rgba(34,197,94,0.85)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px",letterSpacing:"1px"}}>{allEntries.length} ENTR{allEntries.length!==1?'IES':'Y'}</div>
+                  </div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",padding:"4px 0",borderBottom:"0.5px solid rgba(34,197,94,0.15)"}}>{matName}</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {totalQty.toFixed(1)}{unit?` ${unit}`:''} total
+                    {' · '}{jobsWithMaterial.length} job{jobsWithMaterial.length!==1?'s':''}
+                    {firstUsed && (' · since '+firstUsed.toLocaleDateString('en-AU',{month:'short',year:'2-digit'}))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* USAGE METRICS */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// USAGE</span>
+                {lastUsed && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>last used {relTime(lastUsed)}</span>}
+              </div>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TOTAL QTY</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalQty.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>{unit||'units'}</span></div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TOTAL COST</div>
+                  <div style={{fontSize:"22px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalCost.toFixed(0)}</div>
+                </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>AVG ${unit?'/'+unit:'/UNIT'}</div>
+                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${avgCostPerUnit.toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4-WEEK SPARKLINE */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// USAGE · 4 WEEKS</span>
+              </div>
+              <div style={{padding:"14px 16px"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
+                  {weeklyUsage.map((q,i) => {
+                    const isLatest = i === 3;
+                    const heightPct = (q/maxWeekUsage)*100;
+                    return (
+                      <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
+                        <div style={{flex:1,width:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end",position:"relative"}}>
+                          {q > 0 && <div style={{position:"absolute",top:`${100-heightPct-14}%`,left:"50%",transform:"translateX(-50%)",fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",whiteSpace:"nowrap"}}>{q.toFixed(0)}{unit?unit.charAt(0):''}</div>}
+                          <div style={{width:"100%",height:`${heightPct}%`,background:isLatest?"linear-gradient(180deg, rgba(34,197,94,0.85), rgba(34,197,94,0.4))":"linear-gradient(180deg, rgba(34,197,94,0.4), rgba(34,197,94,0.1))",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"2px 2px 0 0",minHeight:q>0?"2px":"0"}}/>
+                        </div>
+                        <div style={{fontSize:"8px",color:isLatest?"#22c55e":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{weeks4[i].label}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* JOBS USING + SUPPLIER */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+              {/* JOBS USING THIS MATERIAL */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// USED ON JOBS</span>
+                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{jobsWithMaterial.length}</span>
+                </div>
+                {jobsWithMaterial.length === 0 ? (
+                  <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(34,197,94,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO JOBS</div>
+                ) : (
+                  <div>
+                    {jobsWithMaterial.slice(0,8).map((j,i) => {
+                      const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
+                      return (
+                        <button key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(jobsWithMaterial.length,8)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                            <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
+                            <div style={{minWidth:0,flex:1}}>
+                              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{j.jobNumber?`#${j.jobNumber} · `:''}{j._entries} entr{j._entries!==1?'ies':'y'}</div>
+                            </div>
+                          </div>
+                          <div style={{textAlign:"right",flexShrink:0}}>
+                            <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>{j._qty.toFixed(1)}{unit?unit.charAt(0):''}</div>
+                            {j._cost>0 && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>${j._cost.toFixed(0)}</div>}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* SUPPLIER + LINKED RECORDS */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUPPLIER</span>
+                </div>
+                <div style={{padding:"14px 16px"}}>
+                  {linkedSupplier ? (
+                    <button onClick={() => setActiveView('donny-suppliers')}
+                      style={{width:"100%",padding:"10px 12px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderLeft:"2px solid rgba(249,115,22,0.6)",borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"8px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",marginBottom:"4px"}}>SUPPLIED BY</div>
+                      <div style={{fontSize:"13px",color:"#f97316",fontWeight:500}}>{linkedSupplier.name}</div>
+                      {linkedSupplier.contact && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",marginTop:"3px"}}>{linkedSupplier.contact}</div>}
+                    </button>
+                  ) : (
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                      Not linked to a supplier · <button onClick={() => setActiveView('donny-suppliers')} style={{background:"none",border:"none",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0,textDecoration:"underline"}}>add supplier</button>
+                    </div>
+                  )}
+                </div>
+                <div style={{padding:"0 14px 14px"}}>
+                  <div style={{fontSize:"8px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>QUICK STATS</div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+                    {firstUsed && (
+                      <div style={{padding:"8px 10px",background:"rgba(34,197,94,0.04)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"3px"}}>
+                        <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>FIRST USED</div>
+                        <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{firstUsed.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+                      </div>
+                    )}
+                    {lastUsed && (
+                      <div style={{padding:"8px 10px",background:"rgba(34,197,94,0.04)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"3px"}}>
+                        <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>LAST USED</div>
+                        <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{lastUsed.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* TIMELINE */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG ENTRIES</span>
+                <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{timeline.length} ENTR{timeline.length!==1?'IES':'Y'}</span>
+              </div>
+              {timeline.length === 0 ? (
+                <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(34,197,94,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO ENTRIES</div>
+              ) : (
+                <div style={{padding:"6px 0",maxHeight:"380px",overflowY:"auto"}}>
+                  {timeline.slice(0,30).map((e,i) => {
+                    const job = donnyJobs.find(j => String(j.id) === String(e.jobId));
+                    return (
+                      <div key={i} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"8px 16px",borderBottom:i<Math.min(timeline.length,30)-1?"0.5px solid rgba(34,197,94,0.04)":"none"}}>
+                        <div style={{width:"5px",height:"5px",borderRadius:"50%",background:"#22c55e",marginTop:"6px",flexShrink:0,boxShadow:"0 0 4px rgba(34,197,94,0.5)"}}/>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"2px"}}>
+                            <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)",letterSpacing:"1px",fontWeight:600}}>
+                              {(parseFloat(e.qty)||0).toFixed(1)}{e.unit?' '+e.unit:''}
+                              {e.cost && parseFloat(e.cost)>0 && <span style={{color:"rgba(148,163,184,0.6)",marginLeft:"6px"}}>· ${parseFloat(e.cost).toFixed(0)}</span>}
+                            </span>
+                            <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.4)",flexShrink:0}}>{relTime(e.createdAt)}</span>
+                          </div>
+                          {e.note && <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e.note}</div>}
+                          {job && <button onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }} style={{background:"none",border:"none",fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",marginTop:"2px",cursor:"pointer",padding:0}}>↳ {job.title}</button>}
+                          {e.addedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>by {e.addedBy}</div>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       );
@@ -19148,6 +19571,47 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
           <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
+            {/* MATERIALS CATALOG — aggregated rollup */}
+            {(() => {
+              const matMap = {};
+              (donnyMaterialsLog||[]).forEach(e => {
+                const key = (e.item||'').trim();
+                if (!key) return;
+                if (!matMap[key]) matMap[key] = { name: key, qty: 0, cost: 0, count: 0, unit: e.unit||'' };
+                matMap[key].qty += parseFloat(e.qty)||0;
+                matMap[key].cost += parseFloat(e.cost)||0;
+                matMap[key].count += 1;
+                if (!matMap[key].unit && e.unit) matMap[key].unit = e.unit;
+              });
+              const catalog = Object.values(matMap).sort((a,b) => b.count - a.count);
+              if (catalog.length === 0) return null;
+              return (
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.6)",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MATERIALS CATALOG</span>
+                    <span style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>{catalog.length} ITEM{catalog.length!==1?'S':''}</span>
+                  </div>
+                  <div style={{maxHeight:"260px",overflowY:"auto"}}>
+                    {catalog.slice(0,12).map((m,i) => (
+                      <button key={m.name} onClick={() => { setSelectedDonnyMaterial({name:m.name}); setActiveView('donny-materialdetail'); }}
+                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
+                          <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
+                          <div style={{minWidth:0,flex:1}}>
+                            <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{m.count} entr{m.count!==1?'ies':'y'}{m.cost>0?' · $'+m.cost.toFixed(0):''}</div>
+                          </div>
+                        </div>
+                        <div style={{textAlign:"right",flexShrink:0,display:"flex",alignItems:"center",gap:"8px"}}>
+                          <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace"}}>{m.qty.toFixed(1)}{m.unit?' '+m.unit:''}</span>
+                          <span style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
             {donnyJobs.filter(j=>!j.completed).length === 0 ? (
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                 <div className="text-4xl mb-3">📦</div>
