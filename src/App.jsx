@@ -4384,11 +4384,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
-            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",marginBottom:"16px"}}>DIET</div>
-            <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+            <div style={{marginBottom:"16px"}}>
+              <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>DIET</div>
+            </div>
+            <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
               {[{id:'groceries',label:'GROCERIES'},{id:'meals',label:'MEALS'},{id:'water',label:'WATER'},{id:'plans',label:'DIET PLANS'},{id:'custom',label:'MY DIETS'}].map(tab => (
-                <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"6px 14px",background:dietSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${dietSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:dietSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"6px 14px",background:dietSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${dietSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:dietSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
                   {tab.label}
                 </button>
               ))}
@@ -4399,15 +4401,30 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div className="max-w-6xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
           {/* Groceries Tab */}
-          {dietSubTab === 'groceries' && (
+          {dietSubTab === 'groceries' && (() => {
+            const totalLists = shoppingLists.length;
+            const totalItems = groceries.length;
+            const totalToBuy = groceries.filter(g => !g.checked).length;
+            const totalInBag = groceries.filter(g => g.checked).length;
+            return (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               {/* Shopping Lists - Overview or Detail */}
               {!activeShoppingList ? (
                 <>
-                  {/* Header */}
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(168,85,247,0.7)",padding:"16px 20px"}}>
-                    <h2 className="text-2xl font-bold mb-1">🛒 Shopping Lists</h2>
-                    <p className="text-purple-200 text-sm">{shoppingLists.length} {shoppingLists.length === 1 ? 'list' : 'lists'} • {groceries.filter(g => !g.checked).length} items to buy</p>
+                  {/* KPI Strip */}
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    {[
+                      {label:"LISTS",value:totalLists,sub:"ACTIVE",color:"rgba(0,200,255,0.9)"},
+                      {label:"TO BUY",value:totalToBuy,sub:"PENDING",color:"rgba(251,191,36,0.9)"},
+                      {label:"IN BAG",value:totalInBag,sub:"COLLECTED",color:"rgba(34,197,94,0.9)"},
+                      {label:"TOTAL ITEMS",value:totalItems,sub:"ACROSS LISTS",color:"rgba(0,200,255,0.7)"},
+                    ].map((kpi,i) => (
+                      <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                        <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                        <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                        <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Create New List */}
@@ -4415,12 +4432,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     onClick={() => {
                       const name = prompt('List name (e.g. Groceries, Kmart, Bunnings)');
                       if (name?.trim()) {
-                        setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: name.trim(), emoji: '🛍️' }]);
+                        setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: name.trim() }]);
                       }
                     }}
-                    style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
-                    + Create New List
+                    + CREATE NEW LIST
                   </button>
 
                   {/* List Cards */}
@@ -4428,54 +4445,53 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const listItems = groceries.filter(g => (g.listId || 'default') === list.id);
                     const toBuy = listItems.filter(g => !g.checked).length;
                     const inBag = listItems.filter(g => g.checked).length;
+                    const total = listItems.length;
+                    const pct = total > 0 ? (inBag / total) * 100 : 0;
                     return (
                       <div
                         key={list.id}
                         onClick={() => setActiveShoppingList(list.id)}
-                        className="rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all active:scale-[0.98]" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)"}}
+                        style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:`2px solid ${total === 0 ? "rgba(0,200,255,0.3)" : pct === 100 ? "rgba(34,197,94,0.7)" : "rgba(0,200,255,0.6)"}`,borderRadius:"6px",padding:"12px 16px",cursor:"pointer",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}
                       >
-                        <input
-                          type="text"
-                          value={list.emoji}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, emoji: e.target.value.slice(0, 2) } : l))}
-                          className="w-12 h-12 text-center text-2xl bg-purple-50 rounded-xl focus:outline-none"
-                        />
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={list.name}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
-                            className="font-semibold text-gray-800 bg-transparent focus:outline-none w-full"
-                          />
-                          <p className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>{toBuy} to buy • {inBag} in bag</p>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:total>0?"8px":"0"}}>
+                          <div style={{flex:1}}>
+                            <input
+                              type="text"
+                              value={list.name}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
+                              style={{background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:500,letterSpacing:"1px",width:"100%"}}
+                            />
+                            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{toBuy} TO BUY · {inBag} IN BAG</div>
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                            {list.id !== 'default' && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (confirm('Delete this list and all its items?')) {
+                                    setShoppingLists(prev => prev.filter(l => l.id !== list.id));
+                                    setGroceries(prev => prev.filter(g => (g.listId || 'default') !== list.id));
+                                  }
+                                }}
+                                style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px"}}
+                              >×</button>
+                            )}
+                            <span style={{fontSize:"14px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>›</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          {list.id !== 'default' && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (confirm('Delete this list and all its items?')) {
-                                  setShoppingLists(prev => prev.filter(l => l.id !== list.id));
-                                  setGroceries(prev => prev.filter(g => (g.listId || 'default') !== list.id));
-                                }
-                              }}
-                              className="text-gray-300 hover:text-red-500"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                          <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90" />
-                        </div>
+                        {total > 0 && (
+                          <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
+                            <div style={{width:`${pct}%`,height:"100%",background:pct === 100 ? "rgba(34,197,94,0.7)" : "rgba(0,200,255,0.7)",transition:"width 0.3s"}}/>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
 
                   {shoppingLists.length === 0 && (
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                      <div className="text-5xl mb-4">🛒</div>
-                      <p className="text-gray-500">No shopping lists yet. Create one above!</p>
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px 24px",textAlign:"center"}}>
+                      <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>NO LISTS — CREATE ONE TO START</div>
                     </div>
                   )}
                 </>
@@ -4490,27 +4506,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                     {/* Back + Header */}
-                    <button onClick={() => setActiveShoppingList(null)} className="text-purple-600 font-medium text-sm">← All Lists</button>
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(168,85,247,0.7)",padding:"16px 20px"}}>
-                      <h2 className="text-2xl font-bold mb-1">{list.emoji} {list.name}</h2>
-                      <p className="text-purple-200 text-sm">{toBuyItems.length} to buy • {bagItems.length} in bag</p>
+                    <button onClick={() => setActiveShoppingList(null)} style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",textAlign:"left",padding:0}}>← ALL LISTS</button>
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(0,200,255,0.7)",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                      <input
+                        type="text"
+                        value={list.name}
+                        onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, name: e.target.value } : l))}
+                        style={{background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:500,letterSpacing:"1px",width:"100%"}}
+                      />
+                      <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>{toBuyItems.length} TO BUY · {bagItems.length} IN BAG</div>
                     </div>
 
-                    {/* Sub-categories + Add */}
-                    <div className="flex items-center gap-2 flex-wrap">
+                    {/* Sub-categories */}
+                    <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}>
                       <button
                         onClick={() => {
                           const name = prompt('Category name (e.g. Fridge, Freezer, Pantry)');
                           if (name?.trim()) {
-                            setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: [...(l.subCategories || []), { id: Date.now().toString(), name: name.trim(), emoji: '📦' }] } : l));
+                            setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: [...(l.subCategories || []), { id: Date.now().toString(), name: name.trim() }] } : l));
                           }
                         }}
-                        className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium hover:bg-purple-200 transition-colors"
-                      >+ Add Category</button>
+                        style={{padding:"4px 10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
+                      >+ CATEGORY</button>
                       {(list.subCategories || []).map(cat => (
-                        <span key={cat.id} className="px-3 py-1.5 bg-gray-100 rounded-full text-xs font-medium text-gray-600 flex items-center gap-1">
-                          {cat.emoji} {cat.name}
-                          <button onClick={() => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).filter(c => c.id !== cat.id) } : l))} className="text-gray-400 hover:text-red-500 ml-1">×</button>
+                        <span key={cat.id} style={{padding:"4px 10px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",color:"rgba(0,200,255,0.7)",display:"inline-flex",alignItems:"center",gap:"6px"}}>
+                          {cat.name.toUpperCase()}
+                          <button onClick={() => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).filter(c => c.id !== cat.id) } : l))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"12px",padding:0,lineHeight:1}}>×</button>
                         </span>
                       ))}
                     </div>
@@ -4524,33 +4545,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           ...cat,
                           items: toBuyItems.filter(g => g.subCategory === cat.id)
                         })),
-                        ...(uncategorised.length > 0 ? [{ id: '_none', name: cats.length > 0 ? 'Uncategorised' : 'Need to Buy', emoji: '🛍️', items: uncategorised }] : [])
+                        ...(uncategorised.length > 0 ? [{ id: '_none', name: cats.length > 0 ? 'UNCATEGORISED' : 'TO BUY', items: uncategorised }] : [])
                       ];
 
                       return allGroups.map(group => (
-                        <div key={group.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                          <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.1)",borderLeft:"2px solid rgba(168,85,247,0.5)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                            <h3 className="font-semibold text-purple-700 flex items-center gap-2">
-                              {group.id !== '_none' && (
-                                <input type="text" value={group.emoji} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, emoji: e.target.value.slice(0, 2) } : c) } : l))} className="w-6 text-center bg-transparent focus:outline-none" />
+                        <div key={group.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                          <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:"8px",flex:1}}>
+                              {group.id === '_none' ? (
+                                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>{group.name}</span>
+                              ) : (
+                                <input type="text" value={group.name} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, name: e.target.value } : c) } : l))} style={{background:"transparent",border:"none",outline:"none",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:500,textTransform:"uppercase"}} />
                               )}
-                              {group.id === '_none' ? group.name : (
-                                <input type="text" value={group.name} onChange={(e) => setShoppingLists(prev => prev.map(l => l.id === list.id ? { ...l, subCategories: (l.subCategories || []).map(c => c.id === group.id ? { ...c, name: e.target.value } : c) } : l))} className="bg-transparent focus:outline-none font-semibold text-purple-700" />
-                              )}
-                              {group.items.length > 0 && <span className="text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full">{group.items.length}</span>}
-                            </h3>
+                              {group.items.length > 0 && <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.2)",padding:"1px 5px",borderRadius:"2px"}}>{group.items.length}</span>}
+                            </div>
                             <button
                               onClick={() => setGroceries(prev => [...prev, { id: Date.now(), item: '', quantity: '1', listId: list.id, subCategory: group.id === '_none' ? '' : group.id, checked: false }])}
-                              className="w-7 h-7 bg-purple-500 text-white rounded-lg flex items-center justify-center text-sm hover:bg-purple-600 transition-colors"
+                              style={{width:"22px",height:"22px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",fontSize:"12px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
                             >+</button>
                           </div>
                           {group.items.length > 0 && (
-                            <div className="divide-y">
-                              {group.items.map(item => (
-                                <div key={item.id} className="px-4 py-3 flex items-center gap-3">
+                            <div>
+                              {group.items.map((item,idx) => (
+                                <div key={item.id} style={{padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",borderBottom:idx<group.items.length-1?"0.5px solid rgba(0,200,255,0.04)":"none"}}>
                                   <button
                                     onClick={() => updateGrocery(item.id, 'checked', true)}
-                                    className="w-6 h-6 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex-shrink-0 transition-colors"
+                                    style={{width:"16px",height:"16px",borderRadius:"3px",border:"0.5px solid rgba(148,163,184,0.4)",background:"transparent",cursor:"pointer",flexShrink:0}}
                                   />
                                   <input
                                     type="text"
@@ -4558,7 +4578,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     onFocus={scrollInputIntoView}
                                     onChange={(e) => updateGrocery(item.id, 'item', e.target.value)}
                                     placeholder="Item name"
-                                    className="flex-1 text-sm font-medium bg-transparent focus:outline-none"
+                                    style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}
                                   />
                                   <input
                                     type="text"
@@ -4566,11 +4586,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     onFocus={scrollInputIntoView}
                                     onChange={(e) => updateGrocery(item.id, 'quantity', e.target.value)}
                                     placeholder="Qty"
-                                    className="w-14 text-sm text-center bg-gray-100 rounded-lg px-2 py-1 focus:outline-none focus:bg-purple-50"
+                                    style={{width:"50px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"3px 6px",outline:"none",textAlign:"center"}}
                                   />
-                                  <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
+                                  <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px",padding:0}}>×</button>
                                 </div>
                               ))}
                             </div>
@@ -4581,24 +4599,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                     {/* Shopping Bag */}
                     {bagItems.length > 0 && (
-                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                        <div className="px-4 py-3 bg-green-50 border-b flex items-center justify-between">
-                          <h3 className="font-semibold text-green-700 flex items-center gap-2">✅ In Bag <span className="text-xs bg-green-200 text-green-700 px-2 py-0.5 rounded-full">{bagItems.length}</span></h3>
-                          <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked || (g.listId || 'default') !== list.id))} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear</button>
+                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                        <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                            <span style={{fontSize:"10px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>IN BAG</span>
+                            <span style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",border:"0.5px solid rgba(34,197,94,0.2)",padding:"1px 5px",borderRadius:"2px"}}>{bagItems.length}</span>
+                          </div>
+                          <button onClick={() => setGroceries(prev => prev.filter(g => !g.checked || (g.listId || 'default') !== list.id))} style={{fontSize:"9px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(239,68,68,0.3)",padding:"3px 8px",borderRadius:"3px",cursor:"pointer"}}>CLEAR</button>
                         </div>
-                        <div className="divide-y">
-                          {bagItems.map(item => (
-                            <div key={item.id} className="px-4 py-3 flex items-center gap-3 opacity-60">
+                        <div>
+                          {bagItems.map((item,idx) => (
+                            <div key={item.id} style={{padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",borderBottom:idx<bagItems.length-1?"0.5px solid rgba(34,197,94,0.06)":"none",opacity:0.6}}>
                               <button
                                 onClick={() => updateGrocery(item.id, 'checked', false)}
-                                className="w-6 h-6 rounded-lg bg-green-500 flex-shrink-0 flex items-center justify-center"
-                              >
-                                <span className="text-white text-xs">✓</span>
-                              </button>
-                              <span className="flex-1 text-sm line-through text-gray-500">{item.item || 'Unnamed'}</span>
-                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
+                                style={{width:"16px",height:"16px",borderRadius:"3px",background:"rgba(34,197,94,0.7)",border:"none",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",color:"#0a0e1a",fontSize:"10px",fontWeight:600}}
+                              >✓</button>
+                              <span style={{flex:1,fontSize:"12px",fontFamily:"monospace",color:"rgba(148,163,184,0.6)",textDecoration:"line-through"}}>{item.item || 'Unnamed'}</span>
+                              <button onClick={() => setGroceries(prev => prev.filter(g => g.id !== item.id))} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px",padding:0}}>×</button>
                             </div>
                           ))}
                         </div>
@@ -4606,82 +4623,96 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     )}
 
                     {listItems.length === 0 && (
-                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                        <div className="text-5xl mb-4">{list.emoji}</div>
-                        <p className="text-gray-500">This list is empty. Add items above!</p>
+                      <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px 24px",textAlign:"center"}}>
+                        <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>EMPTY — ADD ITEMS ABOVE</div>
                       </div>
                     )}
                   </div>
                 );
               })()}
             </div>
-          )}
+            );
+          })()}
 
           {/* Weekly Meals Tab */}
-          {dietSubTab === 'meals' && (
+          {dietSubTab === 'meals' && (() => {
+            const todayKey = today;
+            const todayMealsCount = (dailyMeals[todayKey] || []).length;
+            const weekMealsTotal = weekDays.reduce((sum, d) => sum + (dailyMeals[d.date] || []).length, 0);
+            const daysLogged = weekDays.filter(d => (dailyMeals[d.date] || []).length > 0).length;
+            const avgPerDay = daysLogged > 0 ? (weekMealsTotal / daysLogged).toFixed(1) : '—';
+            return (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div className="flex justify-end">
+              {/* KPI Strip */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                {[
+                  {label:"TODAY",value:todayMealsCount,sub:"MEALS LOGGED",color:"rgba(251,146,60,0.9)"},
+                  {label:"WEEK TOTAL",value:weekMealsTotal,sub:"ALL MEALS",color:"rgba(0,200,255,0.9)"},
+                  {label:"DAYS LOGGED",value:daysLogged,sub:"OUT OF 7",color:"rgba(34,197,94,0.9)"},
+                  {label:"AVG / DAY",value:avgPerDay,sub:"WHEN LOGGED",color:"rgba(251,191,36,0.9)"},
+                ].map((kpi,i) => (
+                  <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Reset Week */}
+              <div style={{display:"flex",justifyContent:"flex-end"}}>
                 <button
                   onClick={() => {
-                    const resetMeals = {};
-                    weekDays.forEach(d => { resetMeals[d.date] = []; });
-                    setDailyMeals(prev => ({ ...prev, ...resetMeals }));
+                    if (confirm('Reset all meals for this week?')) {
+                      const resetMeals = {};
+                      weekDays.forEach(d => { resetMeals[d.date] = []; });
+                      setDailyMeals(prev => ({ ...prev, ...resetMeals }));
+                    }
                   }}
-                  className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
-                >
-                  Reset Week
-                </button>
+                  style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(239,68,68,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
+                >RESET WEEK</button>
               </div>
+
               {weekDays.map(day => {
                 const dayMeals = dailyMeals[day.date] || [];
+                const hasMeals = dayMeals.length > 0;
                 return (
-                  <div key={day.date} className={`bg-white rounded-3xl shadow-sm border overflow-hidden ${day.isToday ? 'ring-2 ring-orange-500' : ''}`}>
-                    <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${day.isToday ? 'text-white cyber-tab-active' : 'bg-gray-200 text-gray-600'}`}>
-                          <span className="text-sm font-bold">{day.dayShort}</span>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-800">{day.dayName}</h3>
-                          {day.isToday && <p className="text-xs text-orange-500 font-medium">Today</p>}
-                        </div>
+                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(251,146,60,0.4)":hasMeals?"rgba(0,200,255,0.2)":"rgba(0,200,255,0.1)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(251,146,60,0.8)":hasMeals?"rgba(0,200,255,0.5)":"rgba(0,200,255,0.15)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                        <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{day.dayName.toUpperCase()} {day.dateNum}</span>
+                        {day.isToday && <span style={{fontSize:"8px",color:"rgba(251,146,60,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(251,146,60,0.1)",border:"0.5px solid rgba(251,146,60,0.4)",padding:"2px 6px",borderRadius:"2px"}}>TODAY</span>}
+                        {hasMeals && <span style={{fontSize:"9px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",border:"0.5px solid rgba(0,200,255,0.2)",padding:"1px 5px",borderRadius:"2px"}}>{dayMeals.length}</span>}
                       </div>
                       <button
                         onClick={() => addMealToDay(day.date)}
-                        className="px-3 py-1 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-lg text-sm font-medium hover:scale-105 transition-transform"
-                      >
-                        + Add
-                      </button>
+                        style={{padding:"4px 10px",background:"rgba(251,146,60,0.08)",border:"0.5px solid rgba(251,146,60,0.3)",borderRadius:"3px",color:"rgba(251,146,60,0.8)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
+                      >+ MEAL</button>
                     </div>
-                    <div className="divide-y">
+                    <div>
                       {dayMeals.length === 0 ? (
-                        <div className="p-4 text-center text-gray-400 text-sm">
-                          No meals logged
-                        </div>
+                        <div style={{padding:"16px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO MEALS LOGGED</div>
                       ) : (
-                        dayMeals.map(meal => (
-                          <div key={meal.id} className="p-3 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="text"
-                                value={meal.time}
-                                onChange={(e) => updateMealForDay(day.date, meal.id, 'time', e.target.value)}
-                                placeholder="00:00"
-                                className="w-16 px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-orange-500 text-center"
-                              />
-                              <input
-                                type="text"
-                                value={meal.meal}
-                                onChange={(e) => updateMealForDay(day.date, meal.id, 'meal', e.target.value)}
-                                placeholder="What did you eat?"
-                                className="flex-1 px-2 py-1 border-2 rounded-lg text-sm focus:outline-none focus:border-orange-500"
-                              />
-                              <button
-                                onClick={() => deleteMealFromDay(day.date, meal.id)}
-                                className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
-                              </button>
-                            </div>
+                        dayMeals.map((meal,idx) => (
+                          <div key={meal.id} style={{padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",borderBottom:idx<dayMeals.length-1?"0.5px solid rgba(0,200,255,0.04)":"none"}}>
+                            <input
+                              type="text"
+                              value={meal.time}
+                              onChange={(e) => updateMealForDay(day.date, meal.id, 'time', e.target.value)}
+                              placeholder="00:00"
+                              style={{width:"55px",background:"rgba(251,146,60,0.04)",border:"0.5px solid rgba(251,146,60,0.2)",borderRadius:"3px",color:"rgba(251,146,60,0.9)",fontFamily:"monospace",fontSize:"11px",padding:"4px 6px",outline:"none",textAlign:"center"}}
+                            />
+                            <input
+                              type="text"
+                              value={meal.meal}
+                              onChange={(e) => updateMealForDay(day.date, meal.id, 'meal', e.target.value)}
+                              placeholder="What did you eat?"
+                              style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}
+                            />
+                            <button
+                              onClick={() => deleteMealFromDay(day.date, meal.id)}
+                              style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px",padding:0}}
+                            >×</button>
                           </div>
                         ))
                       )}
@@ -4690,7 +4721,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 );
               })}
             </div>
-          )}
+            );
+          })()}
 
           {/* Water Intake Tab */}
           {dietSubTab === 'water' && (() => {
@@ -4715,18 +4747,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const todayPercent = Math.min((todayAmount / goalAmount) * 100, 100);
             const weekTotal = waterDays.reduce((sum, d) => sum + (parseFloat(waterIntake.days?.[d.date]) || 0), 0);
             const weekAvg = weekTotal / 7;
+            const daysHitGoal = waterDays.filter(d => (parseFloat(waterIntake.days?.[d.date]) || 0) >= goalAmount).length;
 
             return (
-              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                {/* Water Bottle + Today's Progress */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                  <div className="p-6 border-b flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold text-white">Water Intake</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Stay hydrated, legend</p>
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                {/* KPI Strip */}
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  {[
+                    {label:"TODAY",value:`${todayAmount.toFixed(1)}L`,sub:`${Math.round(todayPercent)}% OF GOAL`,color:todayPercent>=100?"rgba(34,197,94,0.9)":todayPercent>=50?"rgba(0,200,255,0.9)":"rgba(251,191,36,0.9)"},
+                    {label:"WEEK TOTAL",value:`${weekTotal.toFixed(1)}L`,sub:"7 DAYS",color:"rgba(0,200,255,0.9)"},
+                    {label:"WEEK AVG",value:`${weekAvg.toFixed(1)}L`,sub:"PER DAY",color:weekAvg>=goalAmount?"rgba(34,197,94,0.9)":"rgba(251,191,36,0.9)"},
+                    {label:"GOAL HITS",value:`${daysHitGoal}/7`,sub:"DAYS",color:daysHitGoal>=5?"rgba(34,197,94,0.9)":daysHitGoal>=3?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.8)"},
+                  ].map((kpi,i) => (
+                    <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                      <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                      <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Daily Goal:</span>
+                  ))}
+                </div>
+
+                {/* Today's Bottle + Input */}
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid rgba(0,200,255,0.6)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>HYDRATION CONSOLE</span>
+                    <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>DAILY GOAL</span>
                       <input
                         type="text"
                         inputMode="decimal"
@@ -4736,144 +4782,124 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           const num = parseFloat(val) || 0;
                           setWaterIntake(prev => ({ ...prev, goal: num, goalStr: val }));
                         }}
-                        className="w-16 px-2 py-1 border-2 rounded-lg text-sm text-center focus:outline-none focus:border-blue-500"
+                        style={{width:"50px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"3px 6px",outline:"none",textAlign:"center"}}
                       />
-                      <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>L</span>
+                      <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>L</span>
                     </div>
                   </div>
-                  <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
-                    {/* Water Bottle SVG */}
-                    <div className="relative">
-                      <svg width="120" height="220" viewBox="0 0 120 220">
-                        {/* Bottle cap */}
-                        <rect x="40" y="0" width="40" height="20" rx="5" fill="#60A5FA" />
-                        {/* Bottle neck */}
-                        <rect x="35" y="20" width="50" height="15" rx="3" fill="#93C5FD" stroke="#60A5FA" strokeWidth="2" />
-                        {/* Bottle body outline */}
-                        <rect x="15" y="35" width="90" height="175" rx="15" fill="#EFF6FF" stroke="#60A5FA" strokeWidth="2" />
-                        {/* Water fill */}
-                        <clipPath id="bottleClip">
-                          <rect x="15" y="35" width="90" height="175" rx="15" />
-                        </clipPath>
-                        <rect
-                          x="15"
-                          y={35 + 175 * (1 - todayPercent / 100)}
-                          width="90"
-                          height={175 * (todayPercent / 100)}
-                          fill="url(#waterGrad)"
-                          clipPath="url(#bottleClip)"
-                        />
-                        {/* Water gradient */}
-                        <defs>
-                          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#60A5FA" />
-                            <stop offset="100%" stopColor="#3B82F6" />
-                          </linearGradient>
-                        </defs>
-                        {/* Percentage text */}
-                        <text x="60" y="130" textAnchor="middle" fill={todayPercent > 50 ? '#FFFFFF' : '#3B82F6'} fontSize="24" fontWeight="bold">
-                          {Math.round(todayPercent)}%
-                        </text>
-                        {/* Amount text */}
-                        <text x="60" y="155" textAnchor="middle" fill={todayPercent > 60 ? '#DBEAFE' : '#93C5FD'} fontSize="14">
-                          {todayAmount.toFixed(1)}L / {goalAmount}L
-                        </text>
-                      </svg>
+                  <div style={{padding:"24px 16px",display:"flex",flexDirection:"column",alignItems:"center",gap:"20px"}}>
+                    {/* Bottle SVG */}
+                    <svg width="100" height="180" viewBox="0 0 120 220">
+                      {/* Bottle cap */}
+                      <rect x="40" y="0" width="40" height="20" rx="3" fill="rgba(0,200,255,0.6)" />
+                      {/* Bottle neck */}
+                      <rect x="35" y="20" width="50" height="15" rx="2" fill="none" stroke="rgba(0,200,255,0.4)" strokeWidth="1" />
+                      {/* Bottle body outline */}
+                      <rect x="15" y="35" width="90" height="175" rx="10" fill="rgba(5,12,24,0.5)" stroke="rgba(0,200,255,0.4)" strokeWidth="1" />
+                      <clipPath id="bottleClip">
+                        <rect x="15" y="35" width="90" height="175" rx="10" />
+                      </clipPath>
+                      <rect
+                        x="15"
+                        y={35 + 175 * (1 - todayPercent / 100)}
+                        width="90"
+                        height={175 * (todayPercent / 100)}
+                        fill="url(#waterGradPalantir)"
+                        clipPath="url(#bottleClip)"
+                      />
+                      <defs>
+                        <linearGradient id="waterGradPalantir" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="rgba(0,200,255,0.6)" />
+                          <stop offset="100%" stopColor="rgba(0,200,255,0.3)" />
+                        </linearGradient>
+                      </defs>
+                      <text x="60" y="125" textAnchor="middle" fill="#e0eaff" fontSize="22" fontFamily="monospace" fontWeight="600">
+                        {Math.round(todayPercent)}%
+                      </text>
+                      <text x="60" y="148" textAnchor="middle" fill="rgba(0,200,255,0.7)" fontSize="11" fontFamily="monospace">
+                        {todayAmount.toFixed(1)}L / {goalAmount}L
+                      </text>
+                    </svg>
+
+                    {/* Input row */}
+                    <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                      <button
+                        onClick={() => {
+                          const current = parseFloat(waterIntake.days?.[todayKey]) || 0;
+                          const newVal = Math.max(0, current - 0.25);
+                          setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: newVal } }));
+                        }}
+                        style={{width:"40px",height:"40px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",fontSize:"20px",fontWeight:500,cursor:"pointer"}}
+                      >−</button>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={waterIntake.days?.[todayKey] ?? '0'}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const num = parseFloat(val) || 0;
+                          setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: num } }));
+                        }}
+                        style={{width:"80px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,padding:"8px",outline:"none",textAlign:"center"}}
+                      />
+                      <span style={{fontSize:"12px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace"}}>L</span>
+                      <button
+                        onClick={() => {
+                          const current = parseFloat(waterIntake.days?.[todayKey]) || 0;
+                          const newVal = current + 0.25;
+                          setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: newVal } }));
+                        }}
+                        style={{width:"40px",height:"40px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",fontSize:"20px",fontWeight:500,cursor:"pointer"}}
+                      >+</button>
                     </div>
-                    {/* Today's Input */}
-                    <div className="flex flex-col items-center gap-4">
-                      <h3 className="text-lg font-semibold text-white">Today</h3>
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => {
-                            const current = parseFloat(waterIntake.days?.[todayKey]) || 0;
-                            const newVal = Math.max(0, current - 0.25);
-                            setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: newVal } }));
-                          }}
-                          className="w-12 h-12 bg-red-100 text-red-500 rounded-full text-2xl font-bold hover:bg-red-200 transition-colors"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={waterIntake.days?.[todayKey] ?? '0'}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            const num = parseFloat(val) || 0;
-                            setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: num } }));
-                          }}
-                          className="w-20 px-3 py-3 border-2 rounded-xl text-xl text-center font-bold focus:outline-none focus:border-blue-500"
-                        />
-                        <span className="text-lg text-gray-500">L</span>
-                        <button
-                          onClick={() => {
-                            const current = parseFloat(waterIntake.days?.[todayKey]) || 0;
-                            const newVal = current + 0.25;
-                            setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [todayKey]: newVal } }));
-                          }}
-                          className="w-12 h-12 bg-blue-100 text-blue-500 rounded-full text-2xl font-bold hover:bg-blue-200 transition-colors"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <p className="text-sm text-gray-400">Tap +/- for 0.25L or type manually</p>
-                    </div>
+                    <div style={{fontSize:"8px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>+/− = 0.25L · OR TYPE MANUALLY</div>
                   </div>
                 </div>
 
                 {/* Weekly View */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                  <div className="p-6 border-b flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold text-white">This Week</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
-                        Weekly avg: {weekAvg.toFixed(1)}L / day • Total: {weekTotal.toFixed(1)}L
-                      </p>
-                    </div>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>THIS WEEK</span>
                     <button
                       onClick={() => {
-                        const resetDays = {};
-                        waterDays.forEach(d => { resetDays[d.date] = 0; });
-                        setWaterIntake(prev => ({ ...prev, days: { ...prev.days, ...resetDays } }));
+                        if (confirm('Reset all water for this week?')) {
+                          const resetDays = {};
+                          waterDays.forEach(d => { resetDays[d.date] = 0; });
+                          setWaterIntake(prev => ({ ...prev, days: { ...prev.days, ...resetDays } }));
+                        }
                       }}
-                      className="px-4 py-2 bg-red-100 text-red-500 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors"
-                    >
-                      Reset Week
-                    </button>
+                      style={{fontSize:"9px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(239,68,68,0.3)",padding:"3px 8px",borderRadius:"3px",cursor:"pointer"}}
+                    >RESET</button>
                   </div>
-                  <div className="p-6">
-                    <div className="grid grid-cols-7 gap-3">
-                      {waterDays.map(day => {
-                        const amount = parseFloat(waterIntake.days?.[day.date]) || 0;
-                        const pct = Math.min((amount / goalAmount) * 100, 100);
-                        return (
-                          <div key={day.date} className={`flex flex-col items-center gap-2 p-3 rounded-2xl ${day.isToday ? 'bg-blue-50 ring-2 ring-blue-400' : 'bg-gray-50'}`}>
-                            <span className={`text-xs font-bold ${day.isToday ? 'text-blue-600' : 'text-gray-500'}`}>{day.dayName}</span>
-                            {/* Mini water bottle */}
-                            <div className="relative w-8 h-16 bg-gray-200 rounded-lg overflow-hidden">
-                              <div
-                                className="absolute bottom-0 w-full bg-gradient-to-t from-blue-500 to-blue-400 transition-all duration-300"
-                                style={{ height: `${pct}%` }}
-                              />
-                            </div>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={waterIntake.days?.[day.date] ?? ''}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                const num = parseFloat(val) || 0;
-                                setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [day.date]: num } }));
-                              }}
-                              placeholder="0"
-                              className="w-12 px-1 py-1 border rounded-lg text-xs text-center focus:outline-none focus:border-blue-500"
+                  <div style={{padding:"14px 12px",display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:"6px"}}>
+                    {waterDays.map(day => {
+                      const amount = parseFloat(waterIntake.days?.[day.date]) || 0;
+                      const pct = Math.min((amount / goalAmount) * 100, 100);
+                      const hitGoal = pct >= 100;
+                      return (
+                        <div key={day.date} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"6px",padding:"8px 4px",background:day.isToday?"rgba(0,200,255,0.06)":"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?"rgba(0,200,255,0.4)":hitGoal?"rgba(34,197,94,0.3)":"rgba(255,255,255,0.06)"}`,borderRadius:"3px"}}>
+                          <span style={{fontSize:"9px",color:day.isToday?"#00c8ff":"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:day.isToday?600:400}}>{day.dayName.toUpperCase()}</span>
+                          <div style={{position:"relative",width:"22px",height:"56px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"2px",overflow:"hidden"}}>
+                            <div
+                              style={{position:"absolute",bottom:0,width:"100%",height:`${pct}%`,background:hitGoal?"linear-gradient(to top, rgba(34,197,94,0.6), rgba(34,197,94,0.3))":"linear-gradient(to top, rgba(0,200,255,0.6), rgba(0,200,255,0.3))",transition:"height 0.3s"}}
                             />
-                            <span className="text-xs text-gray-400">{Math.round(pct)}%</span>
                           </div>
-                        );
-                      })}
-                    </div>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={waterIntake.days?.[day.date] ?? ''}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const num = parseFloat(val) || 0;
+                              setWaterIntake(prev => ({ ...prev, days: { ...prev.days, [day.date]: num } }));
+                            }}
+                            placeholder="0"
+                            style={{width:"36px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"2px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",padding:"2px 4px",outline:"none",textAlign:"center"}}
+                          />
+                          <span style={{fontSize:"8px",color:hitGoal?"rgba(34,197,94,0.7)":"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{Math.round(pct)}%</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -4881,337 +4907,305 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           })()}
 
           {/* Diet Plans Tab */}
-          {dietSubTab === 'plans' && (
+          {dietSubTab === 'plans' && (() => {
+            const plans = [
+              {id:'bulk',name:'BULK MODE',goal:'Build Muscle & Gain Size',calories:'2,800–3,200 cal/day',accentColor:'rgba(239,68,68,0.7)',accentBg:'rgba(239,68,68,0.08)',
+                meals:[
+                  { time: 'BREAKFAST · 7AM', meal: '4 eggs scrambled, 2 toast w/ avocado, banana smoothie w/ protein powder & oats', cal: '~750 cal' },
+                  { time: 'SNACK · 10AM', meal: 'Greek yoghurt w/ granola & mixed berries, handful of almonds', cal: '~350 cal' },
+                  { time: 'LUNCH · 12:30PM', meal: '200g chicken breast, 1.5 cups brown rice, broccoli & sweet potato', cal: '~700 cal' },
+                  { time: 'SNACK · 3PM', meal: 'Protein shake, peanut butter on rice cakes, banana', cal: '~400 cal' },
+                  { time: 'DINNER · 6:30PM', meal: '250g steak or salmon, large potato, mixed salad w/ olive oil dressing', cal: '~750 cal' },
+                  { time: 'BEFORE BED', meal: 'Cottage cheese or casein shake, small handful walnuts', cal: '~250 cal' }
+                ]},
+              {id:'cut',name:'CUT MODE',goal:'Lose Fat & Get Lean',calories:'1,600–1,900 cal/day',accentColor:'rgba(0,200,255,0.7)',accentBg:'rgba(0,200,255,0.08)',
+                meals:[
+                  { time: 'BREAKFAST · 7AM', meal: '3 egg whites + 1 whole egg omelette w/ spinach & tomato, 1 slice wholegrain toast', cal: '~300 cal' },
+                  { time: 'SNACK · 10AM', meal: 'Apple with 1 tbsp almond butter', cal: '~200 cal' },
+                  { time: 'LUNCH · 12:30PM', meal: '150g grilled chicken, large mixed salad, half cup quinoa, lemon vinaigrette', cal: '~450 cal' },
+                  { time: 'SNACK · 3PM', meal: 'Protein shake with water, small handful of berries', cal: '~200 cal' },
+                  { time: 'DINNER · 6:30PM', meal: '180g white fish or turkey mince, steamed veggies, small sweet potato', cal: '~450 cal' },
+                  { time: 'EVENING', meal: 'Herbal tea, sugar-free jelly', cal: '~20 cal' }
+                ]},
+              {id:'maintain',name:'MAINTAIN MODE',goal:'Stay Balanced & Healthy',calories:'2,200–2,500 cal/day',accentColor:'rgba(34,197,94,0.7)',accentBg:'rgba(34,197,94,0.08)',
+                meals:[
+                  { time: 'BREAKFAST · 7AM', meal: 'Overnight oats w/ protein powder, chia seeds, banana & honey', cal: '~500 cal' },
+                  { time: 'SNACK · 10AM', meal: 'Trail mix (nuts, dried fruit, dark choc chips), small coffee', cal: '~250 cal' },
+                  { time: 'LUNCH · 12:30PM', meal: '180g chicken or tuna wrap w/ salad, hummus, and cheese', cal: '~550 cal' },
+                  { time: 'SNACK · 3PM', meal: 'Greek yoghurt w/ honey, handful of almonds', cal: '~250 cal' },
+                  { time: 'DINNER · 6:30PM', meal: '200g lean protein (chicken/fish/beef), 1 cup rice or pasta, roasted veggies', cal: '~650 cal' },
+                  { time: 'EVENING', meal: 'Piece of fruit or small protein bar', cal: '~150 cal' }
+                ]},
+              {id:'vegan',name:'PLANT-BASED',goal:'Vegan / Vegetarian Friendly',calories:'2,000–2,400 cal/day',accentColor:'rgba(132,204,22,0.7)',accentBg:'rgba(132,204,22,0.08)',
+                meals:[
+                  { time: 'BREAKFAST · 7AM', meal: 'Smoothie bowl: frozen acai, banana, spinach, plant protein, granola, coconut flakes', cal: '~500 cal' },
+                  { time: 'SNACK · 10AM', meal: 'Hummus w/ carrot & celery sticks, rice cakes', cal: '~250 cal' },
+                  { time: 'LUNCH · 12:30PM', meal: 'Buddha bowl: chickpeas, quinoa, roasted sweet potato, avocado, tahini dressing', cal: '~600 cal' },
+                  { time: 'SNACK · 3PM', meal: 'Peanut butter banana toast on sourdough, plant milk latte', cal: '~300 cal' },
+                  { time: 'DINNER · 6:30PM', meal: 'Tofu stir-fry w/ mixed veggies, brown rice, soy & sesame sauce', cal: '~550 cal' },
+                  { time: 'EVENING', meal: 'Dark chocolate squares, handful of mixed nuts', cal: '~200 cal' }
+                ]},
+              {id:'highprotein',name:'HIGH PROTEIN',goal:'Max Protein Intake',calories:'2,400–2,800 cal/day',accentColor:'rgba(251,191,36,0.7)',accentBg:'rgba(251,191,36,0.08)',
+                meals:[
+                  { time: 'BREAKFAST · 7AM', meal: '4 eggs (any style), 100g smoked salmon, 1 slice toast, avocado', cal: '~600 cal' },
+                  { time: 'SNACK · 10AM', meal: 'Protein shake (40g whey), beef jerky (50g)', cal: '~350 cal' },
+                  { time: 'LUNCH · 12:30PM', meal: '250g grilled chicken breast, 1 cup rice, steamed broccoli & green beans', cal: '~650 cal' },
+                  { time: 'SNACK · 3PM', meal: '200g cottage cheese, tuna & crackers', cal: '~300 cal' },
+                  { time: 'DINNER · 6:30PM', meal: '250g lean beef mince bolognese w/ wholemeal pasta, side salad', cal: '~700 cal' },
+                  { time: 'BEFORE BED', meal: 'Casein protein shake or 200g Greek yoghurt', cal: '~200 cal' }
+                ]},
+              {id:'budget',name:'BUDGET FRIENDLY',goal:'Eat Well on a Budget',calories:'2,000–2,400 cal/day',accentColor:'rgba(20,184,166,0.7)',accentBg:'rgba(20,184,166,0.08)',
+                meals:[
+                  { time: 'BREAKFAST · 7AM', meal: 'Oats w/ banana, peanut butter & honey. 2 boiled eggs', cal: '~500 cal' },
+                  { time: 'SNACK · 10AM', meal: 'Toast w/ vegemite, piece of fruit', cal: '~200 cal' },
+                  { time: 'LUNCH · 12:30PM', meal: 'Tuna & rice bowl, frozen mixed veggies, soy sauce', cal: '~500 cal' },
+                  { time: 'SNACK · 3PM', meal: 'Peanut butter sandwich on wholemeal, glass of milk', cal: '~350 cal' },
+                  { time: 'DINNER · 6:30PM', meal: 'Chicken thigh bake w/ potato, onion, frozen veggies & gravy', cal: '~600 cal' },
+                  { time: 'EVENING', meal: 'Bowl of cereal w/ milk', cal: '~200 cal' }
+                ]}
+            ];
+            return (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                <div className="p-6 border-b">
-                  <h2 className="text-xl font-semibold text-white">Prebuilt Diet Plans</h2>
-                  <p className="text-sm text-gray-500 mt-1">Tap a plan to see the full daily meal breakdown</p>
+              {/* KPI Strip */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"1fr 1fr",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                {[
+                  {label:"PREBUILT PLANS",value:plans.length,sub:"AVAILABLE",color:"rgba(0,200,255,0.9)"},
+                  {label:"VIEWING",value:expandedDietPlan ? '1' : '—',sub:expandedDietPlan ? 'EXPANDED' : 'TAP TO EXPAND',color:"rgba(251,191,36,0.9)"},
+                ].map((kpi,i) => (
+                  <div key={i} style={{padding:"12px 16px",borderRight:i<1?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {plans.map((plan) => {
+                const isOpen = expandedDietPlan === plan.id;
+                return (
+                  <div key={plan.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isOpen?plan.accentColor.replace('0.7','0.4'):"rgba(0,200,255,0.15)"}`,borderLeft:`2px solid ${plan.accentColor}`,borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",transition:"all 0.2s"}}>
+                    <button
+                      onClick={() => setExpandedDietPlan(isOpen ? null : plan.id)}
+                      style={{width:"100%",padding:"12px 16px",background:"transparent",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",textAlign:"left"}}
+                    >
+                      <div>
+                        <div style={{fontSize:"12px",color:plan.accentColor,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600,marginBottom:"3px"}}>{plan.name}</div>
+                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>{plan.goal.toUpperCase()} · {plan.calories.toUpperCase()}</div>
+                      </div>
+                      <span style={{fontSize:"14px",color:plan.accentColor,fontFamily:"monospace",transition:"transform 0.2s",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}>▼</span>
+                    </button>
+                    {isOpen && (
+                      <div style={{borderTop:`0.5px solid ${plan.accentColor.replace('0.7','0.15')}`,padding:"12px 16px",display:"flex",flexDirection:"column",gap:"6px"}}>
+                        {plan.meals.map((meal, idx) => (
+                          <div key={idx} style={{padding:"10px 12px",background:plan.accentBg,border:`0.5px solid ${plan.accentColor.replace('0.7','0.15')}`,borderRadius:"3px"}}>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
+                              <span style={{fontSize:"9px",color:plan.accentColor,fontFamily:"monospace",letterSpacing:"1px",fontWeight:500}}>{meal.time}</span>
+                              <span style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",fontWeight:500}}>{meal.cal}</span>
+                            </div>
+                            <p style={{fontSize:"11px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",lineHeight:1.5,margin:0}}>{meal.meal}</p>
+                          </div>
+                        ))}
+                        <div style={{marginTop:"6px",padding:"8px 12px",background:plan.accentBg,border:`0.5px solid ${plan.accentColor.replace('0.7','0.3')}`,borderRadius:"3px",textAlign:"center"}}>
+                          <span style={{fontSize:"9px",color:plan.accentColor,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>DAILY TOTAL · {plan.calories.toUpperCase()}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            );
+          })()}
+
+          {/* My Diets Tab */}
+          {dietSubTab === 'custom' && (() => {
+            const totalMeals = customDiets.reduce((sum, d) => sum + d.meals.length, 0);
+            const totalCalories = customDiets.reduce((sum, d) => sum + d.meals.reduce((s, m) => s + (parseInt(m.calories)||0), 0), 0);
+            return (
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              {/* KPI Strip */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(3,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                {[
+                  {label:"CUSTOM DIETS",value:customDiets.length,sub:"BUILT",color:"rgba(0,200,255,0.9)"},
+                  {label:"TOTAL MEALS",value:totalMeals,sub:"ACROSS PLANS",color:"rgba(251,146,60,0.9)"},
+                  {label:"TOTAL KCAL",value:totalCalories.toLocaleString(),sub:"ALL DIETS",color:"rgba(34,197,94,0.9)"},
+                ].map((kpi,i) => (
+                  <div key={i} style={{padding:"12px 16px",borderRight:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
+                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* New Diet Button */}
+              <button
+                onClick={() => {
+                  const newDiet = {
+                    id: Date.now(),
+                    name: '',
+                    goal: '',
+                    meals: [{ id: Date.now()+1, time: 'Breakfast', meal: '', calories: '' }]
+                  };
+                  setCustomDiets(prev => [...prev, newDiet]);
+                  setExpandedCustomDiet(newDiet.id);
+                }}
+                style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+              >+ NEW DIET</button>
+
+              {customDiets.length === 0 && (
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px 24px",textAlign:"center"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>NO CUSTOM DIETS</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP "+ NEW DIET" TO BUILD YOUR FIRST PLAN</div>
                 </div>
-                <div className="p-6 space-y-4">
-                  {[
-                    {
-                      id: 'bulk', name: 'Bulk Mode 💪', goal: 'Build Muscle & Gain Size', calories: '~2,800–3,200 cal/day',
-                      color: 'from-red-500 to-orange-500', bgColor: 'bg-red-50',
-                      meals: [
-                        { time: 'Breakfast (7am)', meal: '4 eggs scrambled, 2 toast w/ avocado, banana smoothie w/ protein powder & oats', cal: '~750 cal' },
-                        { time: 'Snack (10am)', meal: 'Greek yoghurt w/ granola & mixed berries, handful of almonds', cal: '~350 cal' },
-                        { time: 'Lunch (12:30pm)', meal: '200g chicken breast, 1.5 cups brown rice, broccoli & sweet potato', cal: '~700 cal' },
-                        { time: 'Snack (3pm)', meal: 'Protein shake, peanut butter on rice cakes, banana', cal: '~400 cal' },
-                        { time: 'Dinner (6:30pm)', meal: '250g steak or salmon, large potato, mixed salad w/ olive oil dressing', cal: '~750 cal' },
-                        { time: 'Before Bed', meal: 'Cottage cheese or casein shake, small handful walnuts', cal: '~250 cal' }
-                      ]
-                    },
-                    {
-                      id: 'cut', name: 'Cut Mode 🔪', goal: 'Lose Fat & Get Lean', calories: '~1,600–1,900 cal/day',
-                      color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50',
-                      meals: [
-                        { time: 'Breakfast (7am)', meal: '3 egg whites + 1 whole egg omelette w/ spinach & tomato, 1 slice wholegrain toast', cal: '~300 cal' },
-                        { time: 'Snack (10am)', meal: 'Apple with 1 tbsp almond butter', cal: '~200 cal' },
-                        { time: 'Lunch (12:30pm)', meal: '150g grilled chicken, large mixed salad, half cup quinoa, lemon vinaigrette', cal: '~450 cal' },
-                        { time: 'Snack (3pm)', meal: 'Protein shake with water, small handful of berries', cal: '~200 cal' },
-                        { time: 'Dinner (6:30pm)', meal: '180g white fish or turkey mince, steamed veggies, small sweet potato', cal: '~450 cal' },
-                        { time: 'Evening (optional)', meal: 'Herbal tea, sugar-free jelly', cal: '~20 cal' }
-                      ]
-                    },
-                    {
-                      id: 'maintain', name: 'Maintain Mode ⚖️', goal: 'Stay Balanced & Healthy', calories: '~2,200–2,500 cal/day',
-                      color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-50',
-                      meals: [
-                        { time: 'Breakfast (7am)', meal: 'Overnight oats w/ protein powder, chia seeds, banana & honey', cal: '~500 cal' },
-                        { time: 'Snack (10am)', meal: 'Trail mix (nuts, dried fruit, dark choc chips), small coffee', cal: '~250 cal' },
-                        { time: 'Lunch (12:30pm)', meal: '180g chicken or tuna wrap w/ salad, hummus, and cheese', cal: '~550 cal' },
-                        { time: 'Snack (3pm)', meal: 'Greek yoghurt w/ honey, handful of almonds', cal: '~250 cal' },
-                        { time: 'Dinner (6:30pm)', meal: '200g lean protein (chicken/fish/beef), 1 cup rice or pasta, roasted veggies', cal: '~650 cal' },
-                        { time: 'Evening', meal: 'Piece of fruit or small protein bar', cal: '~150 cal' }
-                      ]
-                    },
-                    {
-                      id: 'vegan', name: 'Plant-Based 🌱', goal: 'Vegan / Vegetarian Friendly', calories: '~2,000–2,400 cal/day',
-                      color: 'from-lime-500 to-green-600', bgColor: 'bg-lime-50',
-                      meals: [
-                        { time: 'Breakfast (7am)', meal: 'Smoothie bowl: frozen acai, banana, spinach, plant protein, granola, coconut flakes', cal: '~500 cal' },
-                        { time: 'Snack (10am)', meal: 'Hummus w/ carrot & celery sticks, rice cakes', cal: '~250 cal' },
-                        { time: 'Lunch (12:30pm)', meal: 'Buddha bowl: chickpeas, quinoa, roasted sweet potato, avocado, tahini dressing', cal: '~600 cal' },
-                        { time: 'Snack (3pm)', meal: 'Peanut butter banana toast on sourdough, plant milk latte', cal: '~300 cal' },
-                        { time: 'Dinner (6:30pm)', meal: 'Tofu stir-fry w/ mixed veggies, brown rice, soy & sesame sauce', cal: '~550 cal' },
-                        { time: 'Evening', meal: 'Dark chocolate squares, handful of mixed nuts', cal: '~200 cal' }
-                      ]
-                    },
-                    {
-                      id: 'highprotein', name: 'High Protein 🥩', goal: 'Max Protein Intake', calories: '~2,400–2,800 cal/day',
-                      color: 'from-amber-500 to-yellow-600', bgColor: 'bg-amber-50',
-                      meals: [
-                        { time: 'Breakfast (7am)', meal: '4 eggs (any style), 100g smoked salmon, 1 slice toast, avocado', cal: '~600 cal' },
-                        { time: 'Snack (10am)', meal: 'Protein shake (40g whey), beef jerky (50g)', cal: '~350 cal' },
-                        { time: 'Lunch (12:30pm)', meal: '250g grilled chicken breast, 1 cup rice, steamed broccoli & green beans', cal: '~650 cal' },
-                        { time: 'Snack (3pm)', meal: '200g cottage cheese, tuna & crackers', cal: '~300 cal' },
-                        { time: 'Dinner (6:30pm)', meal: '250g lean beef mince bolognese w/ wholemeal pasta, side salad', cal: '~700 cal' },
-                        { time: 'Before Bed', meal: 'Casein protein shake or 200g Greek yoghurt', cal: '~200 cal' }
-                      ]
-                    },
-                    {
-                      id: 'budget', name: 'Budget Friendly 💰', goal: 'Eat Well on a Budget', calories: '~2,000–2,400 cal/day',
-                      color: 'from-teal-500 to-cyan-600', bgColor: 'bg-teal-50',
-                      meals: [
-                        { time: 'Breakfast (7am)', meal: 'Oats w/ banana, peanut butter & honey. 2 boiled eggs', cal: '~500 cal' },
-                        { time: 'Snack (10am)', meal: 'Toast w/ vegemite, piece of fruit', cal: '~200 cal' },
-                        { time: 'Lunch (12:30pm)', meal: 'Tuna & rice bowl, frozen mixed veggies, soy sauce', cal: '~500 cal' },
-                        { time: 'Snack (3pm)', meal: 'Peanut butter sandwich on wholemeal, glass of milk', cal: '~350 cal' },
-                        { time: 'Dinner (6:30pm)', meal: 'Chicken thigh bake w/ potato, onion, frozen veggies & gravy', cal: '~600 cal' },
-                        { time: 'Evening', meal: 'Bowl of cereal w/ milk', cal: '~200 cal' }
-                      ]
-                    }
-                  ].map((plan) => (
-                    <div key={plan.id} className={`rounded-2xl border overflow-hidden transition-all ${expandedDietPlan === plan.id ? 'shadow-md' : ''}`}>
-                      <button
-                        onClick={() => setExpandedDietPlan(expandedDietPlan === plan.id ? null : plan.id)}
-                        className={`w-full p-4 flex items-center justify-between ${plan.bgColor} hover:brightness-95 transition-all`}
-                      >
-                        <div className="text-left">
-                          <div className="font-semibold text-gray-800 text-lg">{plan.name}</div>
-                          <div className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{plan.goal} — {plan.calories}</div>
+              )}
+
+              {customDiets.map((diet) => {
+                const isOpen = expandedCustomDiet === diet.id;
+                const dietCal = diet.meals.reduce((s,m) => s + (parseInt(m.calories)||0), 0);
+                const dietProtein = diet.meals.reduce((s,m) => s + (parseInt(m.protein)||0), 0);
+                const dietCarbs = diet.meals.reduce((s,m) => s + (parseInt(m.carbs)||0), 0);
+                const dietFats = diet.meals.reduce((s,m) => s + (parseInt(m.fats)||0), 0);
+                const hasMacros = dietCal || dietProtein || dietCarbs || dietFats;
+                return (
+                  <div key={diet.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isOpen?"rgba(236,72,153,0.4)":"rgba(0,200,255,0.15)"}`,borderLeft:`2px solid ${isOpen?"rgba(236,72,153,0.7)":"rgba(0,200,255,0.5)"}`,borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <button
+                      onClick={() => setExpandedCustomDiet(isOpen ? null : diet.id)}
+                      style={{width:"100%",padding:"12px 16px",background:"transparent",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",textAlign:"left"}}
+                    >
+                      <div>
+                        <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500,marginBottom:"3px"}}>{diet.name || 'UNTITLED DIET'}</div>
+                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(diet.goal || 'NO GOAL SET').toUpperCase()} · {diet.meals.length} MEAL{diet.meals.length !== 1 ? 'S' : ''}</div>
+                      </div>
+                      <span style={{fontSize:"14px",color:isOpen?"rgba(236,72,153,0.7)":"rgba(0,200,255,0.5)",fontFamily:"monospace",transition:"transform 0.2s",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}>▼</span>
+                    </button>
+                    {isOpen && (
+                      <div style={{borderTop:"0.5px solid rgba(236,72,153,0.15)",padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                        {/* Diet Name & Goal */}
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+                          <div>
+                            <div style={{fontSize:"8px",color:"rgba(236,72,153,0.5)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>DIET NAME</div>
+                            <input
+                              type="text"
+                              value={diet.name}
+                              onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, name: e.target.value } : d))}
+                              placeholder="e.g. My Bulk Plan"
+                              style={{width:"100%",background:"rgba(236,72,153,0.04)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                            />
+                          </div>
+                          <div>
+                            <div style={{fontSize:"8px",color:"rgba(236,72,153,0.5)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>GOAL</div>
+                            <input
+                              type="text"
+                              value={diet.goal}
+                              onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, goal: e.target.value } : d))}
+                              placeholder="e.g. Gain muscle"
+                              style={{width:"100%",background:"rgba(236,72,153,0.04)",border:"0.5px solid rgba(236,72,153,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                            />
+                          </div>
                         </div>
-                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${plan.color} flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedDietPlan === plan.id ? 'rotate-180' : ''}`}>
-                          ▼
-                        </div>
-                      </button>
-                      {expandedDietPlan === plan.id && (
-                        <div className="bg-white p-4 space-y-3 border-t">
-                          {plan.meals.map((meal, idx) => (
-                            <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase">{meal.time}</span>
-                                  <span className="text-xs font-medium text-orange-500">{meal.cal}</span>
-                                </div>
-                                <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>{meal.meal}</p>
+
+                        {/* Meals */}
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                            <span style={{fontSize:"9px",color:"rgba(236,72,153,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>MEALS</span>
+                            <button
+                              onClick={() => {
+                                const newMeal = { id: Date.now(), time: '', meal: '', calories: '' };
+                                setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: [...d.meals, newMeal] } : d));
+                              }}
+                              style={{padding:"3px 8px",background:"rgba(236,72,153,0.08)",border:"0.5px solid rgba(236,72,153,0.3)",borderRadius:"3px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
+                            >+ ADD MEAL</button>
+                          </div>
+                          {diet.meals.map((meal, mIdx) => (
+                            <div key={meal.id} style={{padding:"10px 12px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(236,72,153,0.15)",borderRadius:"3px"}}>
+                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
+                                <span style={{fontSize:"9px",color:"rgba(236,72,153,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>MEAL {mIdx + 1}</span>
+                                {diet.meals.length > 1 && (
+                                  <button
+                                    onClick={() => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.filter(m => m.id !== meal.id) } : d))}
+                                    style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px",padding:0}}
+                                  >×</button>
+                                )}
+                              </div>
+                              <div style={{display:"grid",gridTemplateColumns:"1fr 2fr",gap:"6px",marginBottom:"6px"}}>
+                                <input
+                                  type="text"
+                                  value={meal.time}
+                                  onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, time: e.target.value } : m) } : d))}
+                                  placeholder="Time (e.g. 7am)"
+                                  style={{background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",padding:"4px 6px",outline:"none"}}
+                                />
+                                <input
+                                  type="text"
+                                  value={meal.meal}
+                                  onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, meal: e.target.value } : m) } : d))}
+                                  placeholder="What to eat..."
+                                  style={{background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",padding:"4px 6px",outline:"none"}}
+                                />
+                              </div>
+                              <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"4px"}}>
+                                {[
+                                  {label:"KCAL",field:"calories",color:"rgba(34,197,94,0.7)"},
+                                  {label:"PROTEIN",field:"protein",color:"rgba(59,130,246,0.7)"},
+                                  {label:"CARBS",field:"carbs",color:"rgba(251,191,36,0.7)"},
+                                  {label:"FATS",field:"fats",color:"rgba(251,146,60,0.7)"},
+                                ].map(({label,field,color}) => (
+                                  <div key={field}>
+                                    <div style={{fontSize:"7px",color,fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"2px"}}>{label}</div>
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      value={meal[field] || ''}
+                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, [field]: e.target.value } : m) } : d))}
+                                      placeholder="0"
+                                      style={{width:"100%",background:`${color.replace('0.7','0.04')}`,border:`0.5px solid ${color.replace('0.7','0.2')}`,borderRadius:"2px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",padding:"3px 4px",outline:"none",textAlign:"center"}}
+                                    />
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           ))}
-                          <div className={`mt-3 p-3 rounded-xl bg-gradient-to-r ${plan.color} text-white text-center text-sm font-medium`}>
-                            Total: {plan.calories}
-                          </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
 
-          {/* My Diets Tab */}
-          {dietSubTab === 'custom' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                <div className="p-6 border-b flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-white">My Custom Diets</h2>
-                    <p className="text-sm text-gray-500 mt-1">Build your own meal plans</p>
+                        {/* Total Macros */}
+                        {hasMacros && (
+                          <div style={{padding:"10px 12px",background:"rgba(236,72,153,0.06)",border:"0.5px solid rgba(236,72,153,0.3)",borderRadius:"3px"}}>
+                            <div style={{fontSize:"9px",color:"rgba(236,72,153,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"8px",textAlign:"center"}}>DAILY TOTALS</div>
+                            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"6px",textAlign:"center"}}>
+                              {[
+                                {label:"KCAL",value:dietCal.toLocaleString(),color:"rgba(34,197,94,0.9)"},
+                                {label:"PROTEIN",value:`${dietProtein}g`,color:"rgba(59,130,246,0.9)"},
+                                {label:"CARBS",value:`${dietCarbs}g`,color:"rgba(251,191,36,0.9)"},
+                                {label:"FATS",value:`${dietFats}g`,color:"rgba(251,146,60,0.9)"},
+                              ].map((stat,si) => (
+                                <div key={si}>
+                                  <div style={{fontSize:"14px",color:stat.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{stat.value}</div>
+                                  <div style={{fontSize:"7px",color:stat.color.replace('0.9','0.5'),fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{stat.label}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Delete Diet */}
+                        <button
+                          onClick={() => {
+                            if (confirm('Delete this diet plan?')) {
+                              setCustomDiets(prev => prev.filter(d => d.id !== diet.id));
+                              setExpandedCustomDiet(null);
+                            }
+                          }}
+                          style={{width:"100%",padding:"6px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",cursor:"pointer"}}
+                        >DELETE DIET</button>
+                      </div>
+                    )}
                   </div>
-                  <button
-                    onClick={() => {
-                      const newDiet = {
-                        id: Date.now(),
-                        name: '',
-                        goal: '',
-                        meals: [{ id: Date.now(), time: 'Breakfast', meal: '', calories: '' }]
-                      };
-                      setCustomDiets(prev => [...prev, newDiet]);
-                      setExpandedCustomDiet(newDiet.id);
-                    }}
-                    className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all"
-                  >
-                    + New Diet
-                  </button>
-                </div>
-                <div className="p-6 space-y-4">
-                  {customDiets.length === 0 && (
-                    <div className="text-center py-12 text-gray-400">
-                      <div className="text-4xl mb-3">🍽️</div>
-                      <p className="font-medium">No custom diets yet</p>
-                      <p className="text-sm mt-1">Tap "+ New Diet" to create your first meal plan</p>
-                    </div>
-                  )}
-                  {customDiets.map((diet) => (
-                    <div key={diet.id} className={`rounded-2xl border overflow-hidden transition-all ${expandedCustomDiet === diet.id ? 'shadow-md ring-2 ring-pink-200' : ''}`}>
-                      <button
-                        onClick={() => setExpandedCustomDiet(expandedCustomDiet === diet.id ? null : diet.id)}
-                        className="w-full p-4 flex items-center justify-between bg-pink-50 hover:brightness-95 transition-all"
-                      >
-                        <div className="text-left">
-                          <div className="font-semibold text-gray-800 text-lg">{diet.name || 'Untitled Diet'}</div>
-                          <div className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{diet.goal || 'No goal set'} — {diet.meals.length} meal{diet.meals.length !== 1 ? 's' : ''}</div>
-                        </div>
-                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white text-sm font-bold transition-transform ${expandedCustomDiet === diet.id ? 'rotate-180' : ''}`}>
-                          ▼
-                        </div>
-                      </button>
-                      {expandedCustomDiet === diet.id && (
-                        <div className="bg-white p-4 space-y-4 border-t">
-                          {/* Diet Name & Goal */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                              <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Diet Name</label>
-                              <input
-                                type="text"
-                                value={diet.name}
-                                onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, name: e.target.value } : d))}
-                                placeholder="e.g. My Bulk Plan"
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-pink-500"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Goal</label>
-                              <input
-                                type="text"
-                                value={diet.goal}
-                                onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, goal: e.target.value } : d))}
-                                placeholder="e.g. Gain muscle, lose fat"
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-pink-500"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Meals */}
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                              <label className="text-xs font-semibold text-gray-500 uppercase">Meals</label>
-                              <button
-                                onClick={() => {
-                                  const newMeal = { id: Date.now(), time: '', meal: '', calories: '' };
-                                  setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: [...d.meals, newMeal] } : d));
-                                }}
-                                className="text-xs font-medium text-pink-500 hover:text-pink-700"
-                              >
-                                + Add Meal
-                              </button>
-                            </div>
-                            {diet.meals.map((meal, mIdx) => (
-                              <div key={meal.id} className="p-3 bg-gray-50 rounded-xl space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-gray-400 font-medium">Meal {mIdx + 1}</span>
-                                  {diet.meals.length > 1 && (
-                                    <button
-                                      onClick={() => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.filter(m => m.id !== meal.id) } : d))}
-                                      className="text-xs text-red-400 hover:text-red-600"
-                                    >
-                                      Remove
-                                    </button>
-                                  )}
-                                </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <input
-                                    type="text"
-                                    value={meal.time}
-                                    onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, time: e.target.value } : m) } : d))}
-                                    placeholder="Time (e.g. 7am)"
-                                    className="px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
-                                  />
-                                  <input
-                                    type="text"
-                                    value={meal.meal}
-                                    onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, meal: e.target.value } : m) } : d))}
-                                    placeholder="What to eat..."
-                                    className="px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
-                                  />
-                                </div>
-                                <div className="grid grid-cols-4 gap-2 mt-2">
-                                  <div>
-                                    <label className="text-[10px] text-gray-400 font-medium">Calories</label>
-                                    <input
-                                      type="text"
-                                      inputMode="numeric"
-                                      value={meal.calories}
-                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, calories: e.target.value } : m) } : d))}
-                                      placeholder="kcal"
-                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-pink-500"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="text-[10px] text-blue-400 font-medium">Protein</label>
-                                    <input
-                                      type="text"
-                                      inputMode="numeric"
-                                      value={meal.protein || ''}
-                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, protein: e.target.value } : m) } : d))}
-                                      placeholder="g"
-                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-blue-500"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="text-[10px] text-amber-500 font-medium">Carbs</label>
-                                    <input
-                                      type="text"
-                                      inputMode="numeric"
-                                      value={meal.carbs || ''}
-                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, carbs: e.target.value } : m) } : d))}
-                                      placeholder="g"
-                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-amber-500"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="text-[10px] text-green-500 font-medium">Fats</label>
-                                    <input
-                                      type="text"
-                                      inputMode="numeric"
-                                      value={meal.fats || ''}
-                                      onChange={(e) => setCustomDiets(prev => prev.map(d => d.id === diet.id ? { ...d, meals: d.meals.map(m => m.id === meal.id ? { ...m, fats: e.target.value } : m) } : d))}
-                                      placeholder="g"
-                                      className="w-full px-2 py-1.5 border rounded-lg text-xs focus:outline-none focus:border-green-500"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* Total Macros */}
-                          {diet.meals.some(m => m.calories || m.protein || m.carbs || m.fats) && (
-                            <div className="p-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white">
-                              <div className="text-center text-sm font-semibold mb-2">Daily Totals</div>
-                              <div className="grid grid-cols-4 gap-2 text-center">
-                                <div>
-                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.calories) || 0), 0).toLocaleString()}</div>
-                                  <div className="text-[10px] text-white/70">Calories</div>
-                                </div>
-                                <div>
-                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.protein) || 0), 0)}g</div>
-                                  <div className="text-[10px] text-white/70">Protein</div>
-                                </div>
-                                <div>
-                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.carbs) || 0), 0)}g</div>
-                                  <div className="text-[10px] text-white/70">Carbs</div>
-                                </div>
-                                <div>
-                                  <div className="text-lg font-bold">{diet.meals.reduce((sum, m) => sum + (parseInt(m.fats) || 0), 0)}g</div>
-                                  <div className="text-[10px] text-white/70">Fats</div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Delete Diet */}
-                          <button
-                            onClick={() => {
-                              if (confirm('Delete this diet plan?')) {
-                                setCustomDiets(prev => prev.filter(d => d.id !== diet.id));
-                                setExpandedCustomDiet(null);
-                              }
-                            }}
-                            className="w-full py-2 text-sm text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-                          >
-                            Delete this diet
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+                );
+              })}
             </div>
-          )}
+            );
+          })()}
         </div>
       </div>
     );
