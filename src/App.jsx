@@ -9883,24 +9883,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </a>
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px"}}>
               {[
-                {emoji:'💡',label:'FEEDBACK',subject:'Muzz App Feedback'},
-                {emoji:'🐛',label:'BUG REPORT',subject:'Muzz Bug Report'},
-                {emoji:'🆘',label:'SUPPORT',subject:'Muzz Support Request'},
+                {label:'FEEDBACK',subject:'Muzz App Feedback'},
+                {label:'BUG REPORT',subject:'Muzz Bug Report'},
+                {label:'SUPPORT',subject:'Muzz Support Request'},
               ].map((t,i) => (
-                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"6px",padding:"10px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"4px",textDecoration:"none"}}>
-                  <span style={{fontSize:"20px"}}>{t.emoji}</span>
-                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{t.label}</span>
+                <a key={i} href={`mailto:Muzz.onl@outlook.com?subject=${encodeURIComponent(t.subject)}`} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 8px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",textDecoration:"none"}}>
+                  <span style={{fontSize:"9px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>{t.label}</span>
                 </a>
               ))}
             </div>
           </div>
           {/* Instagram */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(225,48,108,0.6)",padding:"16px 20px"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(225,48,108,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(225,48,108,0.6)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(225,48,108,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div style={{fontSize:"9px",color:"rgba(225,48,108,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>STAY UPDATED</div>
             <a href="https://www.instagram.com/muzz.onl" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(225,48,108,0.06)",border:"0.5px solid rgba(225,48,108,0.3)",borderRadius:"4px",textDecoration:"none"}}>
-              <span style={{fontSize:"20px",flexShrink:0}}>📷</span>
+              <div style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(225,48,108,0.9)",boxShadow:"0 0 6px rgba(225,48,108,0.9)",flexShrink:0}}/>
               <div>
-                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>FOLLOW @MUZZ.ONL</div>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>INSTAGRAM @MUZZ.ONL</div>
                 <div style={{fontSize:"10px",color:"rgba(225,48,108,0.7)",fontFamily:"monospace"}}>instagram.com/muzz.onl</div>
               </div>
             </a>
@@ -9911,8 +9910,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FAQ</span>
             </div>
             {[
-              {q:"What plans are available?",a:"🦘 Muzz Elite at $4.99/month. 🦘🐨 Muzz & Donny at $7.99/month adds the full Donny trade business system."},
-              {q:"What is Donny?",a:"Donny 🐨 is a trade business management system with job tracking, scheduler, team management, SWMS, incident logs, price book, reports and multi-user workspace."},
+              {q:"What plans are available?",a:"Muzz Elite at $4.99/month. Muzz & Donny at $7.99/month adds the full Donny trade business system."},
+              {q:"What is Donny?",a:"Donny is a trade business management system with job tracking, scheduler, team management, SWMS, incident logs, price book, reports and multi-user workspace."},
               {q:"How does the Donny workspace work?",a:"As a boss, generate a join code and share it with workers. Workers enter the code to access your workspace in real time."},
               {q:"Is my data safe?",a:"Stored securely in the cloud via Supabase. Only you can access it. Export a backup anytime from Settings."},
               {q:"How do I cancel?",a:"Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period."},
@@ -9947,9 +9946,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <defs><linearGradient id="eliteGradBig" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#e8f0ff"/><stop offset="0.5" stopColor="#ffffff"/><stop offset="1" stopColor="#a0b4d0"/></linearGradient></defs>
               </svg>
               <div>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>MUZZ.ONL</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>{isDonnyElite?'MUZZ & DONNY ELITE':isElite?'MUZZ ELITE':'CHOOSE YOUR PLAN'}</div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px"}}>{isDonnyElite?"Full access to Muzz + Donny.":isElite?"Full Muzz access. Upgrade to add Donny 🐨":"Unlock everything Muzz has to offer"}</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"0.5px"}}>{isDonnyElite?"FULL ACCESS — MUZZ + DONNY":isElite?"FULL MUZZ ACCESS — UPGRADE TO ADD DONNY":"UNLOCK EVERYTHING MUZZ HAS TO OFFER"}</div>
               </div>
             </div>
           </div>
@@ -9959,54 +9958,62 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Pricing Cards */}
           {!isDonnyElite && (
-            <div className="grid grid-cols-1 gap-4" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'}}>
+            <div style={{display:"grid",gap:"12px",gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))'}}>
 
               {/* Muzz Elite Card */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"6px",padding:"20px",position:"relative",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}} style={{background: isElite && !isDonnyElite ? "rgba(245,158,11,0.08)" : "rgba(5,15,30,0.8)", border: isElite && !isDonnyElite ? "1px solid rgba(245,158,11,0.4)" : "1px solid rgba(0,200,255,0.15)"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isElite ? "rgba(245,158,11,0.4)" : "rgba(245,158,11,0.2)"}`,borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",padding:"16px 18px",position:"relative",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"14px"}}>
                 {isElite && !isDonnyElite && (
-                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"2px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px"}}>CURRENT PLAN</div>
+                  <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(245,158,11,0.1)",color:"rgba(245,158,11,0.9)",border:"0.5px solid rgba(245,158,11,0.4)",fontFamily:"monospace",fontSize:"8px",letterSpacing:"1.5px",borderRadius:"2px",fontWeight:600}}>CURRENT</div>
                 )}
                 <div>
-                  <div className="text-3xl mb-2">🦘</div>
-                  <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>Muzz Elite</h2>
-                  <p className="text-3xl font-bold text-white mt-2">$4.99 <span className="text-base font-normal text-gray-400">/month</span></p>
-                  <p className="text-sm text-gray-400 mt-1">Personal finance & life management</p>
+                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIER 01</div>
+                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>MUZZ ELITE</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
+                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>$4.99</span>
+                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>/MONTH</span>
+                  </div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
                   {['Health & Sleep Tracker','Work & Timesheet','Bills & Debt Tracker','Assets Management','Investment Portfolio','Unlimited Custom Categories','AI Chat (30 msgs/day)','Elite Badge & Name'].map((f,i) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"12px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",marginBottom:"4px"}}><span style={{color:"#f59e0b"}}>✓</span>{f}</div>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
+                      <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
+                    </div>
                   ))}
                 </div>
                 {!isElite && (
                   <button onClick={handleUpgrade}
-                    className="w-full py-3 rounded-2xl font-bold text-white transition-all hover:scale-105"
-                    style={{background:"linear-gradient(135deg,#f59e0b,#f97316)",boxShadow:"0 0 20px rgba(245,158,11,0.3)"}}>
-                    {isNative ? 'Subscribe — $4.99/month' : 'Subscribe — $4.99/month'}
+                    style={{width:"100%",padding:"12px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
+                    SUBSCRIBE — $4.99/MONTH
                   </button>
                 )}
                 {isElite && !isDonnyElite && (
-                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"4px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"11px",textAlign:"center",letterSpacing:"1px",marginTop:"8px"}}>⚡ Active Plan</div>
+                  <div style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"3px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"10px",textAlign:"center",letterSpacing:"1.5px",fontWeight:600}}>● ACTIVE PLAN</div>
                 )}
               </div>
 
               {/* Muzz & Donny Card */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderRadius:"6px",padding:"20px",position:"relative",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}} style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(249,115,22,0.3)"}}>
-                <div style={{position:"absolute",top:"12px",right:"12px",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.9)",border:"0.5px solid rgba(249,115,22,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px"}}>BEST VALUE</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",borderRadius:"6px",padding:"16px 18px",position:"relative",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"14px"}}>
+                <div style={{position:"absolute",top:"12px",right:"12px",padding:"3px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.9)",border:"0.5px solid rgba(249,115,22,0.4)",fontFamily:"monospace",fontSize:"8px",letterSpacing:"1.5px",borderRadius:"2px",fontWeight:600}}>BEST VALUE</div>
                 <div>
-                  <div className="text-3xl mb-2">🦘🐨</div>
-                  <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>Muzz & Donny</h2>
-                  <p className="text-3xl font-bold text-white mt-2">$7.99 <span className="text-base font-normal text-gray-400">/month</span></p>
-                  <p className="text-sm text-gray-400 mt-1">Everything in Muzz + full Donny trade system</p>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIER 02</div>
+                  <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>MUZZ & DONNY</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
+                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>$7.99</span>
+                    <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>/MONTH</span>
+                  </div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>EVERYTHING IN MUZZ + DONNY TRADE SYS</div>
                 </div>
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(249,115,22,0.15)",paddingTop:"12px"}}>
                   {['Everything in Muzz Elite','Job Tracking & Scheduler','Team & Subcontractor Management','Client Management','SWMS & Incident Logs','Price Book','Reports','Multi-user Workspace'].map((f,i) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"12px",color:"rgba(224,234,255,0.8)",fontFamily:"monospace",marginBottom:"4px"}}><span style={{color:"#f97316"}}>✓</span>{f}</div>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
+                      <span style={{color:"rgba(249,115,22,0.8)",fontWeight:600}}>+</span>{f}
+                    </div>
                   ))}
                 </div>
                 <button onClick={handleUpgradeDonny}
-                  className="w-full py-3 rounded-2xl font-bold text-white transition-all hover:scale-105"
-                  style={{background:"linear-gradient(135deg,#f97316,#ea580c)",boxShadow:"0 0 20px rgba(249,115,22,0.3)"}}>
-                  {isNative ? 'Subscribe — $7.99/month' : 'Subscribe — $7.99/month'}
+                  style={{width:"100%",padding:"12px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.5)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
+                  SUBSCRIBE — $7.99/MONTH
                 </button>
               </div>
 
@@ -10015,32 +10022,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* Legal text for iOS */}
           {!isElite && isNative && (
-            <div className="text-xs text-gray-400 space-y-1 text-center">
-              <p>Auto-renewable subscription • Payment charged to Apple ID at confirmation</p>
-              <p>Subscription renews unless cancelled at least 24 hours before end of current period.</p>
+            <div style={{textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",lineHeight:1.6}}>
+              <p>AUTO-RENEWABLE SUBSCRIPTION · CHARGED TO APPLE ID AT CONFIRMATION</p>
+              <p>RENEWS UNLESS CANCELLED 24H BEFORE PERIOD ENDS</p>
             </div>
           )}
 
           {/* Restore Purchases - iOS only */}
           {isNative && !isDonnyElite && (
-            <div className="text-center">
-              <button onClick={handleRestorePurchases} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",textDecoration:"none"}}>
-                Restore Previous Purchase
+            <div style={{textAlign:"center"}}>
+              <button onClick={handleRestorePurchases} style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"6px 14px",borderRadius:"3px",cursor:"pointer"}}>
+                RESTORE PREVIOUS PURCHASE
               </button>
             </div>
           )}
 
           {/* Feature Comparison */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-            <div className="p-6" style={{borderBottom:"1px solid rgba(0,200,255,0.1)"}}>
-              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}} style={{fontFamily:"'Share Tech Mono',monospace",letterSpacing:"2px"}}>// WHAT YOU GET</h2>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>// FEATURE MATRIX</span>
             </div>
             <div>
-              <div className="flex items-center px-6 py-2" style={{background:"rgba(0,200,255,0.08)",borderBottom:"1px solid rgba(0,200,255,0.15)"}}>
-                <span className="flex-1 text-xs font-mono" style={{color:"rgba(0,200,255,0.6)",letterSpacing:"1px"}}>FEATURE</span>
-                <span className="w-14 text-center text-xs font-mono" style={{color:"rgba(148,163,184,0.6)"}}>FREE</span>
-                <span className="w-14 text-center text-xs font-mono" style={{color:"#f59e0b"}}>🦘</span>
-                <span className="w-14 text-center text-xs font-mono" style={{color:"#f97316"}}>🦘🐨</span>
+              <div style={{display:"flex",alignItems:"center",padding:"8px 16px",background:"rgba(0,200,255,0.04)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
+                <span style={{flex:1,fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FEATURE</span>
+                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>FREE</span>
+                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(245,158,11,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>MUZZ</span>
+                <span style={{width:"56px",textAlign:"center",fontSize:"9px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>DONNY</span>
               </div>
               {[
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, donny: true },
@@ -10060,37 +10067,42 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Donny Team Management', free: false, elite: false, donny: true },
                 { feature: 'Donny SWMS & Safety Docs', free: false, elite: false, donny: true },
                 { feature: 'Donny Multi-user Workspace', free: false, elite: false, donny: true },
-              ].map((row, i) => (
-                <div key={i} className="flex items-center px-6 py-3" style={{borderBottom:"1px solid rgba(0,200,255,0.06)"}}>
-                  <span className="flex-1 text-sm text-white">{row.feature}</span>
-                  <span className="w-14 text-center">{row.free ? '✅' : <span style={{color:"rgba(239,68,68,0.7)"}}>✕</span>}</span>
-                  <span className="w-14 text-center">{row.elite ? '✅' : '—'}</span>
-                  <span className="w-14 text-center">{row.donny ? '✅' : '—'}</span>
-                </div>
-              ))}
+              ].map((row, i, arr) => {
+                const renderCell = (val, color) => val
+                  ? <span style={{color:color,fontWeight:600}}>●</span>
+                  : <span style={{color:"rgba(148,163,184,0.2)"}}>—</span>;
+                return (
+                  <div key={i} style={{display:"flex",alignItems:"center",padding:"9px 16px",borderBottom:i<arr.length-1?"0.5px solid rgba(0,200,255,0.05)":"none"}}>
+                    <span style={{flex:1,fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace"}}>{row.feature}</span>
+                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:"monospace"}}>{renderCell(row.free, "rgba(148,163,184,0.7)")}</span>
+                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:"monospace"}}>{renderCell(row.elite, "rgba(245,158,11,0.9)")}</span>
+                    <span style={{width:"56px",textAlign:"center",fontSize:"12px",fontFamily:"monospace"}}>{renderCell(row.donny, "rgba(249,115,22,0.9)")}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           {/* Subscription Management for paying Elite members */}
           {isElite && !isVIP && subscriptionInfo && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"16px 20px"}}>
-              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Subscription</h2>
-              <div className="flex items-center justify-between">
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"10px"}}>// SUBSCRIPTION</div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
                 <div>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active</span></p>
+                  <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE</span></div>
                   {subscriptionInfo.currentPeriodEnd && (
-                    <p className="text-xs text-gray-400">
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",marginTop:"4px"}}>
                       {subscriptionInfo.cancelAtPeriodEnd
-                        ? `Cancels on ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU')}`
-                        : `Renews on ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU')}`
+                        ? `CANCELS ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU').toUpperCase()}`
+                        : `RENEWS ${new Date(subscriptionInfo.currentPeriodEnd * 1000).toLocaleDateString('en-AU').toUpperCase()}`
                       }
-                    </p>
+                    </div>
                   )}
                 </div>
                 {subscriptionInfo.cancelAtPeriodEnd ? (
-                  <button onClick={handleReactivateSubscription} className="px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-medium hover:bg-green-600 transition-colors">Reactivate</button>
+                  <button onClick={handleReactivateSubscription} style={{padding:"8px 14px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}>REACTIVATE</button>
                 ) : (
-                  <button onClick={handleCancelSubscription} className="px-4 py-2 bg-gray-100 text-gray-500 rounded-xl text-sm font-medium hover:bg-red-100 hover:text-red-500 transition-colors">Cancel Subscription</button>
+                  <button onClick={handleCancelSubscription} style={{padding:"8px 14px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>CANCEL</button>
                 )}
               </div>
             </div>
@@ -10098,67 +10110,61 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* iOS Subscription Management */}
           {isElite && !isVIP && !subscriptionInfo && isNative && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"16px 20px"}}>
-              <h2 style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Subscription</h2>
-              <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Status: <span className="font-semibold text-green-600">Active (Apple)</span></p>
-              <p className="text-xs text-gray-400">To manage or cancel, go to iPhone Settings → Apple ID → Subscriptions.</p>
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>// SUBSCRIPTION</div>
+              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"0.5px"}}>STATUS — <span style={{color:"rgba(34,197,94,0.9)",fontWeight:600}}>● ACTIVE (APPLE)</span></div>
+              <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6}}>To manage or cancel: iPhone Settings → Apple ID → Subscriptions</div>
               <button onClick={() => window.open('https://apps.apple.com/account/subscriptions', '_blank')}
-                className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors">
-                Manage Apple Subscription
+                style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.85)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
+                MANAGE APPLE SUBSCRIPTION
               </button>
             </div>
           )}
 
-          {/* Display Name - available to all users */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"16px 20px"}}>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">✏️</span>
-              <h2 className="text-white font-bold text-lg">Your Display Name</h2>
-            </div>
-            <p className="text-sm" style={{color:"rgba(148,163,184,0.6)"}}>Shows on your dashboard greeting and in Donny logs — e.g. "G'day, <span style={{color:"#00c8ff"}}>Muzz</span>"</p>
-            <div className="flex gap-3">
-              <input
-                value={eliteName}
-                onChange={e => setEliteName(e.target.value)}
-                placeholder="Enter your name..."
-                className="flex-1 px-4 py-3 rounded-2xl text-white font-medium focus:outline-none text-lg"
-                style={{background:"rgba(0,200,255,0.05)",border:"1px solid rgba(0,200,255,0.2)"}}
-              />
-            </div>
-            {eliteName && <div className="text-sm" style={{color:"rgba(0,200,255,0.6)"}}>✓ Saved — G'day, {eliteName}!</div>}
+          {/* Display Name */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+            <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>// DISPLAY NAME</div>
+            <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",lineHeight:1.6}}>Shows on dashboard greeting and Donny logs — e.g. <span style={{color:"#00c8ff"}}>"G'day, Muzz"</span></div>
+            <input
+              value={eliteName}
+              onChange={e => setEliteName(e.target.value)}
+              placeholder="Enter your name..."
+              style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"9px 12px",outline:"none",letterSpacing:"0.5px"}}
+            />
+            {eliteName && <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>● SAVED — G'DAY, {eliteName.toUpperCase()}</div>}
           </div>
 
           {/* Giving Back */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,200,0,0.2)",borderRadius:"6px",overflow:"hidden"}}>
-            <div className="p-6 text-center" style={{background:"linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,120,0,0.05))",borderBottom:"1px solid rgba(255,200,0,0.15)"}}>
-              <div className="text-3xl mb-2">💛</div>
-              <h2 className="text-xl font-bold text-white mb-1" style={{letterSpacing:"1px"}}>Giving Back</h2>
-              <p className="text-sm" style={{color:"rgba(255,200,100,0.7)"}}>$2 from every Elite subscription goes directly to charity</p>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,200,0,0.25)",borderLeft:"2px solid rgba(255,200,0,0.6)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(255,200,0,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"12px 18px",borderBottom:"0.5px solid rgba(255,200,0,0.15)"}}>
+              <div style={{fontSize:"10px",color:"rgba(255,200,0,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"6px"}}>// GIVING BACK</div>
+              <div style={{fontSize:"11px",color:"rgba(255,200,100,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>$2 of every Elite subscription goes to charity</div>
             </div>
-            <div style={{borderTop:"1px solid rgba(255,200,0,0.08)"}}>
+            <div>
               {[
-                {emoji:"🎗️",name:"Endometriosis Australia",url:"https://www.endometriosisaustralia.org",color:"rgba(255,180,0,0.1)"},
-                {emoji:"🏉",name:"Mark Hughes Foundation",url:"https://www.markhughesfoundation.com.au",color:"rgba(0,150,255,0.1)"},
-              ].map((c,i) => (
-                <div key={i} className="p-5 flex items-center gap-4" style={{borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{background:c.color,border:"1px solid rgba(255,255,255,0.1)"}}>{c.emoji}</div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-sm text-white">{c.name}</div>
-                    <div className="text-xs" style={{color:"rgba(148,163,184,0.7)"}}>$1 per subscription</div>
+                {name:"ENDOMETRIOSIS AUSTRALIA",url:"https://www.endometriosisaustralia.org",color:"rgba(255,180,0,0.9)"},
+                {name:"MARK HUGHES FOUNDATION",url:"https://www.markhughesfoundation.com.au",color:"rgba(0,150,255,0.9)"},
+              ].map((c,i,arr) => (
+                <div key={i} style={{padding:"12px 18px",display:"flex",alignItems:"center",gap:"12px",borderBottom:i<arr.length-1?"0.5px solid rgba(255,255,255,0.04)":"none"}}>
+                  <div style={{width:"6px",height:"6px",borderRadius:"50%",background:c.color,boxShadow:`0 0 6px ${c.color}`,flexShrink:0}}/>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500}}>{c.name}</div>
+                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"2px"}}>$1 PER SUBSCRIPTION</div>
                   </div>
-                  <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium" style={{color:"rgba(255,180,0,0.8)"}}>Visit</a>
+                  <a href={c.url} target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(255,200,0,0.8)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600,textDecoration:"none",border:"0.5px solid rgba(255,200,0,0.3)",padding:"4px 10px",borderRadius:"3px"}}>VISIT →</a>
                 </div>
               ))}
             </div>
-            <div className="p-4 text-center" style={{borderTop:"1px solid rgba(255,200,0,0.08)"}}>
-              <p className="text-xs" style={{color:"rgba(148,163,184,0.5)"}}>Every Elite member helps fund research into endometriosis and brain cancer. Thank you.</p>
+            <div style={{padding:"10px 18px",borderTop:"0.5px solid rgba(255,200,0,0.1)",textAlign:"center"}}>
+              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",lineHeight:1.6}}>Every Elite member helps fund research into endometriosis and brain cancer.</div>
             </div>
           </div>
 
-          {/* Legal Links - always visible */}
-          <div className="flex justify-center gap-4 pt-4">
-            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Privacy Policy</a>
-            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-orange-500 underline">Terms of Use</a>
+          {/* Legal Links */}
+          <div style={{display:"flex",justifyContent:"center",gap:"16px",paddingTop:"4px"}}>
+            <a href="https://muzz.onl/privacy.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px",textDecoration:"none"}}>PRIVACY POLICY</a>
+            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace"}}>·</span>
+            <a href="https://muzz.onl/terms.html" target="_blank" rel="noopener noreferrer" style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px",textDecoration:"none"}}>TERMS OF USE</a>
           </div>
         </div>
         <FloatingChat 
@@ -19065,18 +19071,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const moodEmojis = { 1:'😔', 2:'😕', 3:'😐', 4:'🙂', 5:'😄' };
     const savingsRateNum = salaryNum > 0 ? ((salaryNum - totalMonthly) / salaryNum * 100).toFixed(0) : 0;
     const statCards = [
-      { label:'NET WORTH', value:`$${netWorth.toLocaleString()}`, sub:'total assets', color:'#00c8ff', icon:'💰' },
-      { label:'SAVINGS RATE', value:`${savingsRateNum}%`, sub:'of monthly income', color:'#22c55e', icon:'📈' },
-      { label:'PORTFOLIO', value:`$${totalStocks.toLocaleString()}`, sub:`${stocks.length} holdings`, color:'#8b5cf6', icon:'💹' },
-      { label:'MONTHLY BILLS', value:`$${totalMonthly.toFixed(0)}`, sub:'per month', color:'#ef4444', icon:'💸' },
-      { label:'HABIT CHECK-INS', value:totalHabitDays, sub:'all time', color:'#f97316', icon:'🔥' },
-      { label:'THIS MONTH', value:thisMonthHabits, sub:'habit completions', color:'#f59e0b', icon:'📅' },
-      { label:'TASKS TODAY', value:`${completedTasks}/${totalTasks}`, sub:'completed', color:'#3b82f6', icon:'✅' },
-      { label:'AVG SLEEP', value:`${avgSleep}h`, sub:`${sleepEntries.length} nights tracked`, color:'#6366f1', icon:'🌙' },
-      { label:'AVG MOOD', value:avgMood !== '—' ? `${avgMood} ${moodEmojis[Math.round(parseFloat(avgMood))]||''}` : '—', sub:`${moodEntries.length} days tracked`, color:'#ec4899', icon:'🧠' },
-      { label:'ASSETS', value:assets.length, sub:'tracked assets', color:'#14b8a6', icon:'🏠' },
-      { label:'HABITS', value:habits.length, sub:'active habits', color:'#a855f7', icon:'⚡' },
-      { label:'COUNTDOWNS', value:countdowns.length, sub:'upcoming events', color:'#f43f5e', icon:'⏳' },
+      { label:'NET WORTH', value:`$${netWorth.toLocaleString()}`, sub:'TOTAL ASSETS', color:'#00c8ff' },
+      { label:'SAVINGS RATE', value:`${savingsRateNum}%`, sub:'OF MONTHLY INCOME', color:'#22c55e' },
+      { label:'PORTFOLIO', value:`$${totalStocks.toLocaleString()}`, sub:`${stocks.length} HOLDINGS`, color:'#8b5cf6' },
+      { label:'MONTHLY BILLS', value:`$${totalMonthly.toFixed(0)}`, sub:'PER MONTH', color:'#ef4444' },
+      { label:'HABIT CHECK-INS', value:totalHabitDays, sub:'ALL TIME', color:'#f97316' },
+      { label:'THIS MONTH', value:thisMonthHabits, sub:'HABIT COMPLETIONS', color:'#f59e0b' },
+      { label:'TASKS TODAY', value:`${completedTasks}/${totalTasks}`, sub:'COMPLETED', color:'#3b82f6' },
+      { label:'AVG SLEEP', value:`${avgSleep}h`, sub:`${sleepEntries.length} NIGHTS TRACKED`, color:'#6366f1' },
+      { label:'AVG MOOD', value:avgMood, sub:`${moodEntries.length} DAYS TRACKED`, color:'#ec4899' },
+      { label:'ASSETS', value:assets.length, sub:'TRACKED ASSETS', color:'#14b8a6' },
+      { label:'HABITS', value:habits.length, sub:'ACTIVE HABITS', color:'#a855f7' },
+      { label:'COUNTDOWNS', value:countdowns.length, sub:'UPCOMING EVENTS', color:'#f43f5e' },
     ];
     return (
       <div className="min-h-screen bg-transparent pb-24">
