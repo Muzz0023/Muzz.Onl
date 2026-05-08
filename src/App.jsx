@@ -16275,45 +16275,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
-            {/* ════════════════════════════════════════════════════════════ */}
-            {/* ROW 8 — SPARKLINES (4-week trends) */}
-            {/* ════════════════════════════════════════════════════════════ */}
-            <div style={{...donnyPanel,padding:"14px 18px"}}>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// 4-WEEK TRENDS</div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:"14px"}}>
-                {[
-                  {label:"NEW JOBS",  data:weeklyJobs,     color:"249,115,22", view:'donny-masterview'},
-                  {label:"HOURS",     data:weeklyHours,    color:"168,85,247", view:'donny-dailyreport'},
-                  {label:"MISTAKES",  data:weeklyMistakes, color:"239,68,68",  view:'donny-mistakes'},
-                  {label:"REVENUE",   data:weeklyRevenue,  color:"34,197,94",  view:'donny-reports'},
-                ].map((s,i) => {
-                  const max = Math.max(...s.data, 1);
-                  const last = s.data[s.data.length-1];
-                  const prev = s.data[s.data.length-2] || 0;
-                  const delta = prev > 0 ? ((last-prev)/prev*100) : (last > 0 ? 100 : 0);
-                  const w = 100, h = 30;
-                  const points = s.data.map((v,idx) => `${(idx/(s.data.length-1))*w},${h - (v/max)*h}`).join(' ');
-                  return (
-                    <button key={i} onClick={() => setActiveView(s.view)} style={{background:"none",border:"none",cursor:"pointer",textAlign:"left",padding:0}}>
-                      <div style={{fontSize:"8px",color:`rgba(${s.color},0.6)`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{s.label}</div>
-                      <div style={{display:"flex",alignItems:"baseline",gap:"6px",marginBottom:"4px"}}>
-                        <span style={{fontSize:"18px",color:`rgba(${s.color},0.95)`,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{s.label==='REVENUE'?'$':''}{s.label==='REVENUE'?last.toFixed(0):last}</span>
-                        {delta !== 0 && (
-                          <span style={{fontSize:"9px",fontFamily:"monospace",color:delta>0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)"}}>
-                            {delta>0?'▲':'▼'}{Math.abs(delta).toFixed(0)}%
-                          </span>
-                        )}
-                      </div>
-                      <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{display:"block"}}>
-                        <polyline points={points} fill="none" stroke={`rgba(${s.color},0.7)`} strokeWidth="1.5"/>
-                        <polyline points={`${points} ${w},${h} 0,${h}`} fill={`rgba(${s.color},0.1)`}/>
-                      </svg>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* WORKSPACE CARD */}
             <div style={{...donnyPanel,overflow:"hidden"}}>
               <div style={donnyAccent}>
