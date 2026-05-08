@@ -5490,11 +5490,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {label:"DAYS LOGGED",value:mentalDaysLogged,sub:"THIS WEEK",color:"rgba(236,72,153,0.9)"},
               {label:"AVG ENERGY",value:avgEnergy,sub:"OUT OF 5",color:"rgba(251,191,36,0.8)"},
               {label:"AVG STRESS",value:avgStress,sub:"OUT OF 5",color:parseFloat(avgStress)<=2?"rgba(34,197,94,0.8)":parseFloat(avgStress)<=3?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.8)"},
-              {label:"MOOD RING",value:weekDays.map(d => getMoodConfig(mentalHealthData[d.date]?.mood).emoji).filter(e=>e!=='—').join(''),sub:"THIS WEEK",color:"rgba(236,72,153,0.8)"},
+              {label:"MOOD TREND",value:'__MOOD_TREND__',sub:"THIS WEEK",color:"rgba(236,72,153,0.8)"},
             ].map((kpi,i) => (
               <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
                 <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                <div style={{fontSize:i===3?"16px":"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                {kpi.value === '__MOOD_TREND__' ? (
+                  <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"3px",height:"20px"}}>
+                    {weekDays.map((d,di) => {
+                      const m = mentalHealthData[d.date]?.mood;
+                      const cfg = getMoodConfig(m);
+                      const letter = m ? m.charAt(0).toUpperCase() : '·';
+                      return <div key={di} style={{width:"14px",height:"14px",borderRadius:"2px",background:m?cfg.bg:"rgba(255,255,255,0.04)",border:`0.5px solid ${m?cfg.border:"rgba(255,255,255,0.06)"}`,fontSize:"8px",color:m?cfg.color:"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center"}}>{letter}</div>;
+                    })}
+                  </div>
+                ) : (
+                  <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
+                )}
                 <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
               </div>
             ))}
@@ -5605,7 +5616,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                         <span style={{fontSize:"13px",color:day.isToday?"rgba(236,72,153,0.9)":"rgba(148,163,184,0.7)",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{day.dayShort.toUpperCase()} {day.dateNum}</span>
                         {day.isToday && <span style={{fontSize:"8px",color:"rgba(236,72,153,0.8)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(236,72,153,0.1)",border:"0.5px solid rgba(236,72,153,0.4)",padding:"2px 6px",borderRadius:"2px"}}>TODAY</span>}
-                        {dayData.mood && <span style={{fontSize:"16px"}}>{moodCfg.emoji}</span>}
+                        {dayData.mood && <span style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"9px",color:moodCfg.color,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}><span style={{width:"6px",height:"6px",borderRadius:"50%",background:moodCfg.color,boxShadow:`0 0 6px ${moodCfg.color}`}}/>{dayData.mood.toUpperCase()}</span>}
                       </div>
                       <button onClick={() => { const n={...mentalHealthData}; delete n[day.date]; setMentalHealthData(n); }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"16px"}}>×</button>
                     </div>
@@ -5617,11 +5628,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div style={{display:"flex",gap:"5px"}}>
                           {moods.map(mood => {
                             const cfg = getMoodConfig(mood.value);
+                            const selected = dayData.mood===mood.value;
                             return (
                               <button key={mood.value} onClick={() => setMentalHealthData(prev => ({...prev, [day.date]:{...prev[day.date], mood: prev[day.date]?.mood===mood.value?'':mood.value}}))}
-                                style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"8px 4px",background:dayData.mood===mood.value?cfg.bg:"transparent",border:`0.5px solid ${dayData.mood===mood.value?cfg.border:"rgba(255,255,255,0.06)"}`,borderRadius:"4px",cursor:"pointer",transition:"all 0.15s"}}>
-                                <span style={{fontSize:"18px"}}>{mood.emoji}</span>
-                                <span style={{fontSize:"7px",color:dayData.mood===mood.value?cfg.color:"rgba(148,163,184,0.3)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{mood.label}</span>
+                                style={{flex:1,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"4px",padding:"12px 4px",background:selected?cfg.bg:"rgba(255,255,255,0.02)",border:`0.5px solid ${selected?cfg.border:"rgba(255,255,255,0.06)"}`,borderLeft:`2px solid ${selected?cfg.color:"rgba(255,255,255,0.06)"}`,borderRadius:"3px",cursor:"pointer",transition:"all 0.15s",overflow:"hidden"}}>
+                                <span style={{width:"6px",height:"6px",borderRadius:"50%",background:cfg.color,boxShadow:selected?`0 0 8px ${cfg.color}`:"none",opacity:selected?1:0.4}}/>
+                                <span style={{fontSize:"9px",color:selected?cfg.color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>{mood.label}</span>
                               </button>
                             );
                           })}
@@ -5631,8 +5643,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {/* Energy & Stress */}
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                         {[
-                          {label:"⚡ ENERGY",field:"energy",colors:['rgba(251,191,36,0.6)','rgba(251,191,36,0.7)','rgba(251,191,36,0.8)','rgba(251,191,36,0.9)','rgba(251,191,36,1)']},
-                          {label:"😰 STRESS",field:"stress",colors:['rgba(34,197,94,0.8)','rgba(34,197,94,0.8)','rgba(251,191,36,0.8)','rgba(239,68,68,0.7)','rgba(239,68,68,0.9)']},
+                          {label:"ENERGY",field:"energy",colors:['rgba(251,191,36,0.6)','rgba(251,191,36,0.7)','rgba(251,191,36,0.8)','rgba(251,191,36,0.9)','rgba(251,191,36,1)']},
+                          {label:"STRESS",field:"stress",colors:['rgba(34,197,94,0.8)','rgba(34,197,94,0.8)','rgba(251,191,36,0.8)','rgba(239,68,68,0.7)','rgba(239,68,68,0.9)']},
                         ].map(({label,field,colors}) => (
                           <div key={field}>
                             <div style={{fontSize:"8px",color:"rgba(236,72,153,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>{label}</div>
