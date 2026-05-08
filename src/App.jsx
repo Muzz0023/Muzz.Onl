@@ -11507,25 +11507,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 const quoteIndex = daysDiff % quotes.length;
                 const todayQuote = quotes[quoteIndex];
                 return (
-                  <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-5 text-white">
-                    <div className="flex items-start gap-4">
-                      <div className="text-3xl opacity-50">"</div>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(148,163,184,0.2)",borderLeft:"2px solid rgba(148,163,184,0.4)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(148,163,184,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"14px"}}>
+                      <div style={{fontSize:"22px",opacity:0.4,color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>"</div>
                       <div className="flex-1">
-                        <p className="text-lg italic mb-2">{todayQuote.quote}</p>
-                        <p className="text-sm text-slate-400">— {todayQuote.author}</p>
+                        <p style={{fontSize:"13px",fontStyle:"italic",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,marginBottom:"8px"}}>{todayQuote.quote}</p>
+                        <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>— {todayQuote.author}</p>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-500 mt-3 text-right">Quote of the Day • Day {(quoteIndex + 1)} of {quotes.length}</p>
+                    <p style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"10px",textAlign:"right"}}>Quote of the Day • Day {(quoteIndex + 1)} of {quotes.length}</p>
                   </div>
                 );
               })()}
 
               {/* Portfolio Summary */}
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-6 text-white">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <p className="text-sm opacity-75 mb-1">Portfolio Value</p>
-                <p className="text-5xl font-bold">${totalStocksValue.toLocaleString('en-AU', { minimumFractionDigits: 2 })}</p>
+                <p style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalStocksValue.toLocaleString('en-AU', { minimumFractionDigits: 2 })}</p>
                 {totalStocksInvested > 0 && (
-                  <div className="mt-2">
+                  <div style={{marginTop:"8px"}}>
                     <span className={`text-lg font-semibold ${totalGainLoss >= 0 ? 'text-green-200' : 'text-red-200'}`}>
                       {totalGainLoss >= 0 ? '+' : ''}${totalGainLoss.toLocaleString()} ({totalGainLossPercent.toFixed(1)}%)
                     </span>
@@ -11536,43 +11536,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Stocks Input */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Stocks & ETFs</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Individual stocks, ETFs, index funds</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>STOCKS & ETFS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
                 </div>
 
                 {/* Stocks Cards */}
-                <div className="p-4 space-y-3">
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {stocks.map((stock, index) => {
                     const gainLoss = (stock?.currentValue || 0) - (stock?.invested || 0);
                     const gainLossPercent = stock?.invested > 0 ? ((gainLoss / stock.invested) * 100) : 0;
                     return (
-                      <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                      <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                         {/* Row 1: Name + Delete */}
-                        <div className="flex items-start gap-3 mb-3">
-                          <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                        <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                          <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                           <input
                             type="text"
                             value={stock?.name || ''}
                             onFocus={scrollInputIntoView}
                             onChange={(e) => updateStock(index, 'name', e.target.value)}
                             placeholder="Stock/ETF name (e.g. VAS)"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-medium focus:outline-none focus:border-green-500"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"7px 10px",outline:"none"}}
                           />
                           <button
                             onClick={() => setStocks(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         
                         {/* Row 2: Industry */}
-                        <div className="mb-3">
-                          <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                        <div style={{marginBottom:"10px"}}>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
                           <select
                             value={stock?.industry || ''}
                             onFocus={scrollInputIntoView}
                             onChange={(e) => updateStock(index, 'industry', e.target.value)}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           >
                             {industries.map(ind => (
                               <option key={ind.id} value={ind.id}>{ind.name}</option>
@@ -11581,11 +11581,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         
                         {/* Row 3: Invested + Current Value */}
-                        <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                           <div>
-                            <label className="text-xs text-gray-500 mb-1 block">Invested</label>
+                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Invested</label>
                             <div className="flex items-center">
-                              <span className="text-gray-400 mr-1">$</span>
+                              <span style={{color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"11px",marginRight:"4px"}}>$</span>
                               <input
                                 type="text"
                                 inputMode="decimal"
@@ -11593,14 +11593,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onFocus={scrollInputIntoView}
                                 onChange={(e) => updateStock(index, 'invested', e.target.value)}
                                 placeholder="0"
-                                className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                               />
                             </div>
                           </div>
                           <div>
-                            <label className="text-xs text-gray-500 mb-1 block">Current Value</label>
+                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Current Value</label>
                             <div className="flex items-center">
-                              <span className="text-gray-400 mr-1">$</span>
+                              <span style={{color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"11px",marginRight:"4px"}}>$</span>
                               <input
                                 type="text"
                                 inputMode="decimal"
@@ -11608,28 +11608,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onFocus={scrollInputIntoView}
                                 onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
                                 placeholder="0"
-                                className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                               />
                             </div>
                           </div>
                         </div>
                         
                         {/* Row 4: Gain/Loss + Held For */}
-                        <div className="grid grid-cols-2 gap-3">
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                           <div>
-                            <label className="text-xs text-gray-500 mb-1 block">Gain/Loss</label>
-                            <div className={`px-3 py-2 rounded-xl text-sm font-medium ${gainLoss >= 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Gain/Loss</label>
+                            <div style={{padding:"6px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"11px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                               {stock?.invested > 0 ? `${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : '—'}
                             </div>
                           </div>
                           <div>
-                            <label className="text-xs text-gray-500 mb-1 block">Held For</label>
+                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Held For</label>
                             <input
                               type="text"
                               value={stock?.heldFor || ''}
                               onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
                               placeholder="e.g. 2y 3m"
-                              className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                              style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                         </div>
@@ -11637,10 +11637,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
-                <div className="p-4 border-t">
+                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
                     onClick={() => setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Stock
                   </button>
@@ -11649,15 +11649,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Live Stock Prices */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-4 sm:p-6 border-b">
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
-                      <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2">📊 Live Stock Prices</h2>
-                      <p className="text-sm text-gray-500 mt-1">Track US stocks with real-time prices & profit/loss</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"8px"}}>// Live Stock Prices</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track US stocks with real-time prices & profit/loss</p>
                     </div>
                     <div className="flex items-center gap-3">
                       {pricesLastUpdated && (
-                        <span className="text-xs text-gray-400">Updated: {pricesLastUpdated}</span>
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>Updated: {pricesLastUpdated}</span>
                       )}
                     <button
                       onClick={async () => {
@@ -11673,22 +11673,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         setPricesLoading(false);
                       }}
                       disabled={pricesLoading || trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').length === 0}
-                      className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                      style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
                     >
-                      {pricesLoading ? '⏳ Loading...' : '🔄 Refresh Prices'}
+                      {pricesLoading ? 'LOADING...' : 'REFRESH PRICES'}
                     </button>
                   </div>
                 </div>
                 </div>
-                <div className="p-6">
+                <div style={{padding:"14px 16px"}}>
                   {trackedStocks.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
-                      <div className="text-3xl mb-2">📈</div>
-                      <p className="font-medium">No stocks tracked yet</p>
-                      <p className="text-sm mt-1">Add a US stock below, then hit Refresh Prices</p>
-                    </div>
+                    <div style={{padding:"32px 16px",textAlign:"center"}}><div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>NO STOCKS TRACKED YET</div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ADD A US STOCK BELOW, THEN HIT REFRESH PRICES</div></div>
                   ) : (
-                    <div className="space-y-3">
+                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                       {/* Summary Banner */}
                       {Object.keys(livePrices).length > 0 && (() => {
                         let totalInvested = 0;
@@ -11706,19 +11702,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const totalPL = totalCurrent - totalInvested;
                         const totalPLPct = totalInvested > 0 ? ((totalPL / totalInvested) * 100) : 0;
                         return totalInvested > 0 ? (
-                          <div className={`p-4 rounded-2xl border-2 mb-4 ${totalPL >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                          <div style={{padding:"12px 16px",borderRadius:"4px",border:`0.5px solid ${totalPL >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,borderLeft:`2px solid ${totalPL >= 0 ? "rgba(34,197,94,0.7)" : "rgba(239,68,68,0.7)"}`,marginBottom:"10px",background:"rgba(5,12,24,0.6)"}}>
+                            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",textAlign:"center"}}>
                               <div>
-                                <div className="text-[10px] text-gray-500 uppercase font-medium">Total Cost</div>
-                                <div className="text-base sm:text-lg font-bold text-gray-800">${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total Cost</div>
+                                <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                               </div>
                               <div>
-                                <div className="text-[10px] text-gray-500 uppercase font-medium">Market Value</div>
-                                <div className="text-base sm:text-lg font-bold text-gray-800">${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Market Value</div>
+                                <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                               </div>
                               <div>
-                                <div className="text-[10px] text-gray-500 uppercase font-medium">Total P/L</div>
-                                <div className={`text-base sm:text-lg font-bold ${totalPL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total P/L</div>
+                                <div style={{fontSize:"16px",fontFamily:"monospace",fontWeight:600,color:totalPL >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                                   {totalPL >= 0 ? '+' : ''}${totalPL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                   <span className="text-xs sm:text-sm ml-1">({totalPL >= 0 ? '+' : ''}{totalPLPct.toFixed(2)}%)</span>
                                 </div>
@@ -11742,68 +11738,68 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const dailyChange = (priceData && priceData.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
 
                         return (
-                          <div key={stock.id} className="border-2 rounded-2xl p-4 bg-white">
+                          <div key={stock.id} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                             {/* Row 1: Ticker + Delete */}
-                            <div className="flex items-start gap-3 mb-3">
+                            <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
                               <input
                                 type="text"
                                 value={stock.ticker}
                                 onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, ticker: e.target.value.toUpperCase() } : s))}
                                 placeholder="AAPL"
-                                className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold uppercase focus:outline-none focus:border-green-500"
+                                style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,letterSpacing:"1px",padding:"7px 10px",outline:"none",textTransform:"uppercase"}}
                               />
                               <button
                                 onClick={() => setTrackedStocks(prev => prev.filter(s => s.id !== stock.id))}
-                                className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                                style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                               </button>
                             </div>
                             
                             {/* Row 2: Shares + Avg Cost */}
-                            <div className="grid grid-cols-2 gap-3 mb-3">
+                            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                               <div>
-                                <label className="text-xs text-gray-500 mb-1 block">Shares</label>
+                                <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Shares</label>
                                 <input
                                   type="text"
                                   inputMode="decimal"
                                   value={stock.shares}
                                   onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
                                   placeholder="0"
-                                  className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                  style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                                 />
                               </div>
                               <div>
-                                <label className="text-xs text-gray-500 mb-1 block">Avg Cost</label>
+                                <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Avg Cost</label>
                                 <input
                                   type="text"
                                   inputMode="decimal"
                                   value={stock.avgCost}
                                   onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
                                   placeholder="$0.00"
-                                  className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                  style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                                 />
                               </div>
                             </div>
                             
                             {/* Row 3: Live Price + Profit/Loss */}
-                            <div className="grid grid-cols-2 gap-3">
+                            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                               <div>
-                                <label className="text-xs text-gray-500 mb-1 block">Live Price</label>
+                                <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Live Price</label>
                                 {currentPrice > 0 ? (
-                                  <div className="px-3 py-2 rounded-xl bg-gray-50">
+                                  <div style={{padding:"6px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff"}}>
                                     <div className="text-sm font-bold">${currentPrice.toFixed(2)}</div>
                                     <div className={`text-xs font-medium ${dailyChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
                                       {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className="px-3 py-2 rounded-xl bg-gray-50 text-gray-400 text-sm">—</div>
+                                  <div style={{padding:"6px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.5)"}}>—</div>
                                 )}
                               </div>
                               <div>
-                                <label className="text-xs text-gray-500 mb-1 block">Profit/Loss</label>
+                                <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Profit/Loss</label>
                                 {currentPrice > 0 && costBasis > 0 ? (
-                                  <div className={`px-3 py-2 rounded-xl ${pl >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
+                                  <div style={{padding:"6px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"11px",fontWeight:600,background:pl >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${pl >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:pl >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
                                     <div className={`text-sm font-bold ${pl >= 0 ? 'text-green-600' : 'text-red-500'}`}>
                                       {pl >= 0 ? '+' : ''}${pl.toFixed(2)}
                                     </div>
@@ -11812,7 +11808,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className="px-3 py-2 rounded-xl bg-gray-50 text-gray-400 text-sm">—</div>
+                                  <div style={{padding:"6px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.5)"}}>—</div>
                                 )}
                               </div>
                             </div>
@@ -11823,10 +11819,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   )}
 
                   {/* Add Tracked Stock Button */}
-                  <div className="mt-4">
+                  <div style={{marginTop:"12px"}}>
                     <button
                       onClick={() => setTrackedStocks(prev => [...prev, { id: Date.now(), ticker: '', shares: '', avgCost: '' }])}
-                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                     >
                       + Add Tracked Stock
                     </button>
@@ -11857,7 +11853,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               setTrackedStocks(prev => [...prev, { id: Date.now() + i, ticker: s.ticker, shares: '', avgCost: '' }]);
                             }
                           }}
-                          className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border text-xs transition-all"
+                          style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"0.5px",cursor:"pointer"}}
                         >
                           <span className="font-bold text-green-600">{s.ticker}</span>
                           <span className="text-gray-400">{s.name}</span>
@@ -11874,7 +11870,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {filledStocks.length > 0 && (
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 className="text-xl font-semibold text-white">Portfolio by Name</h2>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PORTFOLIO BY NAME</h2>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
@@ -11955,7 +11951,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {stocksByIndustry.length > 0 && (
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 className="text-xl font-semibold text-white">Portfolio by Industry</h2>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PORTFOLIO BY INDUSTRY</h2>
                   </div>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
@@ -12034,15 +12030,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {stocksByIndustry.length > 0 && (
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 className="text-xl font-semibold text-white">Portfolio by Industry</h2>
-                    <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort</p>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PORTFOLIO BY INDUSTRY</h2>
+                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
                   </div>
-                  <div className="overflow-x-auto">
+                  <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
                       <thead>
                         <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                           <th 
-                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'industry') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('industry'); setCurrentSortDir('asc'); }
@@ -12051,7 +12047,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Industry {currentSortBy === 'industry' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-center py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'holdings') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('holdings'); setCurrentSortDir('asc'); }
@@ -12060,7 +12056,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Holdings {currentSortBy === 'holdings' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'value') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('value'); setCurrentSortDir('asc'); }
@@ -12069,7 +12065,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Value {currentSortBy === 'value' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'percent') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('percent'); setCurrentSortDir('asc'); }
@@ -12098,7 +12094,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           }
                           return currentSortDir === 'asc' ? comparison : -comparison;
                         }).map(ind => (
-                          <tr key={ind.name} className="border-b hover:bg-gray-50">
+                          <tr key={ind.name} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                             <td className="py-3 px-4 font-medium">{ind.name}</td>
                             <td className="py-3 px-4 text-center text-gray-600">{ind.stocks.length}</td>
                             <td className="py-3 px-4 text-right">${ind.total.toLocaleString()}</td>
@@ -12107,7 +12103,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         ))}
                       </tbody>
                       <tfoot>
-                        <tr className="bg-indigo-50 font-bold text-indigo-900">
+                        <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
                           <td className="py-3 px-4">Total</td>
                           <td className="py-3 px-4 text-center">{filledStocks.length}</td>
                           <td className="py-3 px-4 text-right">${totalStocksValue.toLocaleString()}</td>
@@ -12125,23 +12121,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'futurePortfolio' && (
             <>
               {/* Future Portfolio Header */}
-              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white mb-6">
-                <h2 className="text-2xl font-bold mb-2">🔮 Future Portfolio</h2>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"16px 20px",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <h2 style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>FUTURE PORTFOLIO</h2>
                 <p className="text-blue-100">Plan your future investments with full research details</p>
               </div>
 
               {/* Future Holdings Research - Same format as Current */}
-              <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Future Holdings Research</h2>
-                  <p className="text-sm text-gray-500 mt-1">Research stocks you're considering for your portfolio</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>FUTURE HOLDINGS RESEARCH</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Research stocks you're considering for your portfolio</p>
                 </div>
-                <div className="p-4 space-y-3">
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {futureResearch.map((holding, index) => (
-                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
-                      <div className="flex items-start gap-3 mb-3">
-                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                         <input
                           type="text"
                           value={holding?.ticker || ''}
@@ -12157,16 +12153,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setFutureResearch(prev => prev.filter((_, i) => i !== index))}
-                          className="text-gray-400 hover:text-red-500 transition-colors"
+                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 style={{width:"16px",height:"16px"}} />
                         </button>
                       </div>
                       
                       {/* Row 2: Toll Booth + Planned Amount */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Toll Booth Economics?</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Toll Booth Economics?</label>
                           <select
                             value={holding?.tollBooth || ''}
                             onChange={(e) => {
@@ -12180,12 +12176,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
                           >
                             <option value="">Select</option>
-                            <option value="Yes">✅ Yes</option>
-                            <option value="No">❌ No</option>
+                            <option value="Yes">YES</option>
+                            <option value="No">NO</option>
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Planned Investment $</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Planned Investment $</label>
                           <input
                             type="text"
                             value={holding?.plannedAmountStr || ''}
@@ -12205,9 +12201,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
 
                       {/* Row 3: Capital Intensity + Growth */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Capital Intensity</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Capital Intensity</label>
                           <select
                             value={holding?.capitalIntensity || ''}
                             onChange={(e) => {
@@ -12227,7 +12223,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Growth Prospects</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Growth Prospects</label>
                           <select
                             value={holding?.growthProspects || ''}
                             onChange={(e) => {
@@ -12250,9 +12246,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
 
                       {/* Row 4: Industry + Status */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
                           <select
                             value={holding?.industry || ''}
                             onChange={(e) => {
@@ -12271,7 +12267,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Status</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Status</label>
                           <select
                             value={holding?.status || ''}
                             onChange={(e) => {
@@ -12294,7 +12290,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       {/* Row 5: Notes */}
                       <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Research Notes</label>
+                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Research Notes</label>
                         <textarea
                           value={holding?.notes || ''}
                           onChange={(e) => {
@@ -12312,7 +12308,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div className="p-4 border-t">
+                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
                     onClick={() => setFutureResearch(prev => [...prev, { ticker: '' }])}
                     className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
@@ -12362,17 +12358,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 });
                 
                 return (
-                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                      <h2 className="text-xl font-semibold text-white">📋 Future Portfolio Summary</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort • Your planned investments at a glance</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>FUTURE PORTFOLIO SUMMARY</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • Your planned investments at a glance</p>
                     </div>
-                    <div className="overflow-x-auto">
+                    <div style={{overflowX:"auto"}}>
                       <table className="w-full text-sm">
                         <thead>
                           <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                             <th 
-                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'ticker') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('ticker'); setFutureSortDir('asc'); }
@@ -12381,7 +12377,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Ticker {futureSortBy === 'ticker' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'industry') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('industry'); setFutureSortDir('asc'); }
@@ -12390,7 +12386,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Industry {futureSortBy === 'industry' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              className="text-center py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'tollBooth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('tollBooth'); setFutureSortDir('asc'); }
@@ -12399,7 +12395,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Toll Booth? {futureSortBy === 'tollBooth' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'growth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('growth'); setFutureSortDir('asc'); }
@@ -12408,7 +12404,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Growth {futureSortBy === 'growth' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              className="text-right py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'planned') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('planned'); setFutureSortDir('asc'); }
@@ -12416,9 +12412,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             >
                               Planned $ {futureSortBy === 'planned' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
-                            <th className="text-right py-3 px-4 font-semibold">Weight %</th>
+                            <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Weight %</th>
                             <th 
-                              className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'status') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('status'); setFutureSortDir('asc'); }
@@ -12432,11 +12428,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {sortedFuture.map((holding, idx) => {
                             const weight = totalPlanned > 0 ? ((holding.plannedAmount || 0) / totalPlanned * 100) : 0;
                             return (
-                              <tr key={idx} className="border-b hover:bg-gray-50">
+                              <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                                 <td className="py-3 px-4 font-bold">{holding.ticker}</td>
                                 <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
                                 <td className="py-3 px-4 text-center">
-                                  {holding.tollBooth === 'Yes' ? '✅' : holding.tollBooth === 'No' ? '❌' : '-'}
+                                  {holding.tollBooth === 'Yes' ? <span style={{color:'rgba(34,197,94,0.9)'}}>●</span> : holding.tollBooth === 'No' ? <span style={{color:'rgba(239,68,68,0.7)'}}>○</span> : '-'}
                                 </td>
                                 <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
                                 <td className="py-3 px-4 text-right">${(holding.plannedAmount || 0).toLocaleString()}</td>
@@ -12447,7 +12443,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           })}
                         </tbody>
                         <tfoot>
-                          <tr className="bg-blue-50 font-bold text-blue-900">
+                          <tr style={{background:"rgba(59,130,246,0.06)",borderTop:"0.5px solid rgba(59,130,246,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(59,130,246,0.95)"}}>
                             <td className="py-3 px-4">Total</td>
                             <td className="py-3 px-4" colSpan={3}>{filledFuture.length} stocks planned</td>
                             <td className="py-3 px-4 text-right">${totalPlanned.toLocaleString()}</td>
@@ -12472,10 +12468,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 let currentAngle = 0;
                 
                 return (
-                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                      <h2 className="text-xl font-semibold text-white">⚖️ Portfolio Company Weighting</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Weight of each company in your future portfolio</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>️ PORTFOLIO COMPANY WEIGHTING</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Weight of each company in your future portfolio</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       <svg width="200" height="200" viewBox="0 0 200 200">
@@ -12507,7 +12503,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1 font-medium">{stock.ticker}</span>
-                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>${stock.plannedAmount.toLocaleString()}</span>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>${stock.plannedAmount.toLocaleString()}</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
@@ -12543,8 +12539,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 return (
                   <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                      <h2 className="text-xl font-semibold text-white">📊 Industry Allocation</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Breakdown of your future portfolio by industry</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>INDUSTRY ALLOCATION</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Breakdown of your future portfolio by industry</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       <svg width="200" height="200" viewBox="0 0 200 200">
@@ -12576,7 +12572,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{ind.count} {ind.count === 1 ? 'stock' : 'stocks'}</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
@@ -12661,10 +12657,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 let currentAngle = 0;
                 
                 return (
-                  <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                      <h2 className="text-xl font-semibold text-white">📊 Research by Industry</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Your research picks broken down by sector</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>RESEARCH BY INDUSTRY</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your research picks broken down by sector</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       {/* Pie Chart */}
@@ -12698,7 +12694,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
                               <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>{ind.count} picks</span>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{ind.count} picks</span>
                               <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
                             </div>
                           );
@@ -12711,17 +12707,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Master Research Table */}
               {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-6">
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 className="text-xl font-semibold text-white">📋 Master Research Summary</h2>
-                    <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Click column headers to sort • All your research picks at a glance</p>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>MASTER RESEARCH SUMMARY</h2>
+                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • All your research picks at a glance</p>
                   </div>
-                  <div className="overflow-x-auto">
+                  <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
                       <thead>
                         <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                           <th 
-                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'ticker') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('ticker'); setResearchSortDir('asc'); }
@@ -12730,7 +12726,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Ticker {researchSortBy === 'ticker' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'industry') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('industry'); setResearchSortDir('asc'); }
@@ -12739,7 +12735,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Industry {researchSortBy === 'industry' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-center py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'tollBooth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('tollBooth'); setResearchSortDir('asc'); }
@@ -12748,7 +12744,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Toll Booth? {researchSortBy === 'tollBooth' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'growth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('growth'); setResearchSortDir('asc'); }
@@ -12757,7 +12753,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Growth {researchSortBy === 'growth' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            className="text-left py-3 px-4 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'status') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('status'); setResearchSortDir('asc'); }
@@ -12766,14 +12762,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Status {researchSortBy === 'status' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           {researchColumns.map(col => (
-                            <th key={col.id} className="text-left py-3 px-4 font-semibold">
+                            <th key={col.id} style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>
                               <div className="flex items-center gap-2">
                                 {col.name}
                                 <button
                                   onClick={() => setResearchColumns(prev => prev.filter(c => c.id !== col.id))}
-                                  className="text-gray-400 hover:text-red-500 transition-colors"
+                                  style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  <Trash2 style={{width:"14px",height:"14px"}} />
                                 </button>
                               </div>
                             </th>
@@ -12813,11 +12809,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               return researchSortDir === 'asc' ? comparison : -comparison;
                             })
                             .map((holding, idx) => (
-                              <tr key={idx} className="border-b hover:bg-gray-50">
+                              <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                                 <td className="py-3 px-4 font-bold">{holding.ticker}</td>
                                 <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
                                 <td className="py-3 px-4 text-center">
-                                  {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? '✅' : '❌'}
+                                  {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? <span style={{color:'rgba(34,197,94,0.9)'}}>●</span> : <span style={{color:'rgba(239,68,68,0.7)'}}>○</span>}
                                 </td>
                                 <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
                                 <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
@@ -12829,7 +12825,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         })()}
                       </tbody>
                       <tfoot>
-                        <tr className="bg-purple-50 font-bold text-purple-900">
+                        <tr style={{background:"rgba(168,85,247,0.06)",borderTop:"0.5px solid rgba(168,85,247,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(168,85,247,0.95)"}}>
                           <td className="py-3 px-4">Total</td>
                           <td className="py-3 px-4" colSpan={4 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
                         </tr>
@@ -12843,7 +12839,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold text-white">Holdings Research</h2>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>HOLDINGS RESEARCH</h2>
                   </div>
                   <div className="flex items-center gap-2">
                     {showResearchColInput ? (
@@ -12865,7 +12861,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               setShowResearchColInput(false);
                             }
                           }}
-                          className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600"
+                          style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}
                         >
                           Add
                         </button>
@@ -12879,7 +12875,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ) : (
                       <button
                         onClick={() => setShowResearchColInput(true)}
-                        className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                        style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}
                       >
                         + Add Column
                       </button>
@@ -12887,12 +12883,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </div>
 
-                <div className="p-4 space-y-3">
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {holdingsResearch.map((holding, index) => (
-                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
-                      <div className="flex items-start gap-3 mb-3">
-                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                         <input
                           type="text"
                           value={holding?.ticker || ''}
@@ -12908,14 +12904,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
-                          className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                         </button>
                       </div>
                       
                       {/* Row 2: Toll Booth */}
-                      <div className="mb-3">
-                        <label className="text-xs text-gray-500 mb-1 block">Toll Booth Economics?</label>
+                      <div style={{marginBottom:"10px"}}>
+                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Toll Booth Economics?</label>
                         <select
                           value={holding?.tollBooth || ''}
                           onChange={(e) => {
@@ -12926,18 +12922,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               return updated;
                             });
                           }}
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         >
                           <option value="">Select</option>
-                          <option value="Yes">✅ Yes</option>
-                          <option value="No">❌ No</option>
+                          <option value="Yes">YES</option>
+                          <option value="No">NO</option>
                         </select>
                       </div>
                       
                       {/* Row 3: Capital + Growth */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Capital Intensity</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Capital Intensity</label>
                           <select
                             value={holding?.capitalIntensity || ''}
                             onChange={(e) => {
@@ -12948,7 +12944,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 return updated;
                               });
                             }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           >
                             <option value="">Select</option>
                             <option value="Toll-Like Capital Intensity">Toll-Like</option>
@@ -12957,7 +12953,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Growth Prospects</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Growth Prospects</label>
                           <select
                             value={holding?.growthProspects || ''}
                             onChange={(e) => {
@@ -12968,7 +12964,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 return updated;
                               });
                             }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           >
                             <option value="">Select</option>
                             <option value="Very Low Growth">Very Low</option>
@@ -12980,9 +12976,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                       
                       {/* Row 4: Industry + Status */}
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
                           <select
                             value={holding?.industry || ''}
                             onChange={(e) => {
@@ -12993,7 +12989,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 return updated;
                               });
                             }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           >
                             {industries.map(ind => (
                               <option key={ind.id} value={ind.id}>{ind.name}</option>
@@ -13001,7 +12997,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </select>
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 mb-1 block">Holding Status</label>
+                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Holding Status</label>
                           <select
                             value={holding?.status || ''}
                             onChange={(e) => {
@@ -13012,7 +13008,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 return updated;
                               });
                             }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           >
                             <option value="">Select</option>
                             <option value="New">New</option>
@@ -13027,7 +13023,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="space-y-3 pt-3 border-t">
                           {researchColumns.map(col => (
                             <div key={col.id}>
-                              <label className="text-xs text-gray-500 mb-1 block">{col.name}</label>
+                              <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>{col.name}</label>
                               <input
                                 type="text"
                                 value={holding?.[col.id] || ''}
@@ -13040,7 +13036,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   });
                                 }}
                                 placeholder="-"
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                               />
                             </div>
                           ))}
@@ -13049,10 +13045,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div className="p-4 border-t">
+                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
                     onClick={() => setHoldingsResearch(prev => [...prev, {}])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Research Entry
                   </button>
@@ -13067,7 +13063,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold text-white">Company Economics</h2>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>COMPANY ECONOMICS</h2>
                   </div>
                   <div className="flex items-center gap-2">
                     {showEconomicsColInput ? (
@@ -13089,7 +13085,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               setShowEconomicsColInput(false);
                             }
                           }}
-                          className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600"
+                          style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}
                         >
                           Add
                         </button>
@@ -13103,19 +13099,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ) : (
                       <button
                         onClick={() => setShowEconomicsColInput(true)}
-                        className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                        style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}
                       >
                         + Add Column
                       </button>
                     )}
                   </div>
                 </div>
-                <div className="p-4 space-y-3">
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {companyEconomics.map((company, index) => (
-                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
-                      <div className="flex items-start gap-3 mb-3">
-                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                         <input
                           type="text"
                           value={company?.ticker || ''}
@@ -13131,14 +13127,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setCompanyEconomics(prev => prev.filter((_, i) => i !== index))}
-                          className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                         </button>
                       </div>
                       
                       {/* Row 2: Future Predictability */}
-                      <div className="mb-3">
-                        <label className="text-xs text-gray-500 mb-1 block">Future Predictability</label>
+                      <div style={{marginBottom:"10px"}}>
+                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Future Predictability</label>
                         <textarea
                           value={company?.economics || ''}
                           onChange={(e) => {
@@ -13161,7 +13157,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="space-y-3 pt-3 border-t">
                           {economicsColumns.map(col => (
                             <div key={col.id}>
-                              <label className="text-xs text-gray-500 mb-1 block">{col.name}</label>
+                              <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>{col.name}</label>
                               <input
                                 type="text"
                                 value={company?.[col.id] || ''}
@@ -13173,7 +13169,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   });
                                 }}
                                 placeholder="-"
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                               />
                             </div>
                           ))}
@@ -13182,10 +13178,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div className="p-4 border-t">
+                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
                     onClick={() => setCompanyEconomics(prev => [...prev, {}])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Company
                   </button>
@@ -13200,7 +13196,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="p-6 border-b flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold text-white">Biggest Risks</h2>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BIGGEST RISKS</h2>
                   </div>
                   <div className="flex items-center gap-2">
                     {showRisksColInput ? (
@@ -13222,7 +13218,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               setShowRisksColInput(false);
                             }
                           }}
-                          className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600"
+                          style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}
                         >
                           Add
                         </button>
@@ -13236,19 +13232,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ) : (
                       <button
                         onClick={() => setShowRisksColInput(true)}
-                        className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                        style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",fontWeight:600,cursor:"pointer"}}
                       >
                         + Add Column
                       </button>
                     )}
                   </div>
                 </div>
-                <div className="p-4 space-y-3">
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {biggestRisks.map((risk, index) => (
-                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
-                      <div className="flex items-start gap-3 mb-3">
-                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                         <input
                           type="text"
                           value={risk?.ticker || ''}
@@ -13264,14 +13260,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         />
                         <button
                           onClick={() => setBiggestRisks(prev => prev.filter((_, i) => i !== index))}
-                          className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                         </button>
                       </div>
                       
                       {/* Row 2: Biggest Risk */}
-                      <div className="mb-3">
-                        <label className="text-xs text-gray-500 mb-1 block">Biggest Risk</label>
+                      <div style={{marginBottom:"10px"}}>
+                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Biggest Risk</label>
                         <textarea
                           value={risk?.biggestRisk || ''}
                           onChange={(e) => {
@@ -13294,7 +13290,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div className="space-y-3 pt-3 border-t">
                           {risksColumns.map(col => (
                             <div key={col.id}>
-                              <label className="text-xs text-gray-500 mb-1 block">{col.name}</label>
+                              <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>{col.name}</label>
                               <input
                                 type="text"
                                 value={risk?.[col.id] || ''}
@@ -13306,7 +13302,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   });
                                 }}
                                 placeholder="-"
-                                className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                                style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                               />
                             </div>
                           ))}
@@ -13315,10 +13311,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div className="p-4 border-t">
+                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
                     onClick={() => setBiggestRisks(prev => [...prev, {}])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Company
                   </button>
@@ -13332,8 +13328,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Small Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Small Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term investment targets</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>SMALL GOALS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Short-term investment targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {investmentSmallGoals.map((goal, index) => {
@@ -13341,7 +13337,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-xl space-y-3">
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div className="flex items-center gap-3">
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -13355,12 +13351,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               });
                             }}
                             placeholder="S&P 500"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 bg-white"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setInvestmentSmallGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -13379,7 +13375,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           <div className="flex items-center gap-2">
@@ -13397,7 +13393,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-24 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 bg-white"
+                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -13408,9 +13404,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {target > 0 && (
                           <div className="pl-6">
-                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div style={{height:"4px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                               <div 
-                                className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-green-500' : 'bg-emerald-500'}`}
+                                style={{height:"100%",borderRadius:"2px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(16,185,129,0.7)"}}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -13421,7 +13417,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setInvestmentSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -13431,8 +13427,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Big Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Big Goals</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term investment targets</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BIG GOALS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Long-term investment targets</p>
                 </div>
                 <div className="p-4 space-y-4">
                   {investmentBigGoals.map((goal, index) => {
@@ -13440,7 +13436,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const current = goal?.current || 0;
                     const progress = target > 0 ? Math.min((current / target) * 100, 100) : 0;
                     return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-xl space-y-3">
+                      <div key={index} style={{padding:"12px 14px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"4px",display:"flex",flexDirection:"column",gap:"10px"}}>
                         <div className="flex items-center gap-3">
                           <span className="text-gray-400 text-sm font-medium">{index + 1}.</span>
                           <input
@@ -13454,12 +13450,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               });
                             }}
                             placeholder="S&P 500"
-                            className="flex-1 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 bg-white"
+                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                           />
                           <button
                             onClick={() => setInvestmentBigGoals(prev => prev.filter((_, i) => i !== index))}
-                            className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
                         <div className="flex items-center gap-4 pl-6">
@@ -13478,7 +13474,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-28 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 bg-white"
+                              style={{width:"112px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           <div className="flex items-center gap-2">
@@ -13496,7 +13492,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 });
                               }}
                               placeholder="0"
-                              className="w-28 px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500 bg-white"
+                              style={{width:"112px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
@@ -13507,9 +13503,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         {target > 0 && (
                           <div className="pl-6">
-                            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                            <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden"}}>
                               <div 
-                                className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-green-500' : 'bg-gradient-to-r from-green-500 to-emerald-600'}`}
+                                style={{height:"100%",borderRadius:"2px",transition:"width 0.3s",background:progress >= 100 ? "rgba(34,197,94,0.7)" : "rgba(16,185,129,0.7)"}}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -13520,7 +13516,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setInvestmentBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -13533,7 +13529,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
               {/* Render each note section */}
               {(Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }]).map((note, noteIndex) => (
-                <div key={note.id} className="bg-white rounded-3xl shadow-sm border overflow-hidden mb-4">
+                <div key={note.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"10px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-6 border-b flex items-center justify-between">
                     <div className="flex-1">
                       <input
@@ -13545,7 +13541,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         placeholder="Note title..."
                         className="text-xl font-semibold w-full focus:outline-none"
                       />
-                      <p className="text-sm text-gray-500 mt-1">Write down your thoughts, strategies, and reminders</p>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Write down your thoughts, strategies, and reminders</p>
                     </div>
                     {(Array.isArray(investmentNotes) ? investmentNotes : []).length > 1 && (
                       <button
@@ -13556,11 +13552,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         }}
                         className="text-red-400 hover:text-red-600 ml-3 text-sm"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 style={{width:"14px",height:"14px"}} />
                       </button>
                     )}
                   </div>
-                  <div className="p-6">
+                  <div style={{padding:"14px 16px"}}>
                     <textarea
                       value={note.text || ''}
                       onChange={(e) => {
@@ -13600,7 +13596,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const notes = Array.isArray(investmentNotes) ? investmentNotes : [{ id: 1, title: 'Investment Notes', text: typeof investmentNotes === 'string' ? investmentNotes : '' }];
                   setInvestmentNotes([...notes, { id: Date.now(), title: '', text: '' }]);
                 }}
-                className="w-full py-4 border-2 border-dashed border-gray-300 rounded-3xl text-gray-400 hover:text-green-600 hover:border-green-400 transition-colors flex items-center justify-center gap-2"
+                style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}
               >
                 <Plus className="w-5 h-5" /> Add Another Note Section
               </button>
@@ -13611,16 +13607,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">Declined Companies</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track companies you've passed on and why</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>DECLINED COMPANIES</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Track companies you've passed on and why</p>
                 </div>
 
-                <div className="p-4 space-y-3">
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {declinedCompanies.map((company, index) => (
-                    <div key={index} className="border-2 rounded-2xl p-4 bg-white">
+                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
-                      <div className="flex items-start gap-3 mb-3">
-                        <span className="text-gray-400 text-sm mt-2">{index + 1}.</span>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
+                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
                         <input
                           type="text"
                           value={company?.ticker || ''}
@@ -13638,14 +13634,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           onClick={() => {
                             setDeclinedCompanies(prev => prev.filter((_, i) => i !== index));
                           }}
-                          className="text-gray-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="w-5 h-5" />
+                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                        <Trash2 style={{width:"16px",height:"16px"}} />
                         </button>
                       </div>
                       
                       {/* Row 2: Industry */}
-                      <div className="mb-3">
-                        <label className="text-xs text-gray-500 mb-1 block">Industry</label>
+                      <div style={{marginBottom:"10px"}}>
+                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
                         <select
                           value={company?.industry || ''}
                           onChange={(e) => {
@@ -13655,7 +13651,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               return updated;
                             });
                           }}
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-green-500"
+                          style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                         >
                           {industries.map(ind => (
                             <option key={ind.id} value={ind.id}>{ind.name}</option>
@@ -13665,7 +13661,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       
                       {/* Row 3: Reason */}
                       <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Reason for Decline</label>
+                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Reason for Decline</label>
                         <textarea
                           value={company?.reason || ''}
                           onChange={(e) => {
@@ -13685,10 +13681,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div className="p-4 border-t">
+                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
                     onClick={() => setDeclinedCompanies(prev => [...prev, { ticker: '', industry: '', reason: '' }])}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-500 transition-colors text-sm font-medium"
+                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Company
                   </button>
@@ -13715,7 +13711,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <>
                     <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                       <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                        <h2 className="text-xl font-semibold text-white">Declined by Industry</h2>
+                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>DECLINED BY INDUSTRY</h2>
                       </div>
                       <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                         {/* Pie Chart */}
@@ -13792,20 +13788,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {/* Breakdown Table */}
                     <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                       <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                        <h2 className="text-xl font-semibold text-white">Declined Companies Breakdown</h2>
+                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>DECLINED COMPANIES BREAKDOWN</h2>
                       </div>
-                      <div className="overflow-x-auto">
+                      <div style={{overflowX:"auto"}}>
                         <table className="w-full text-sm">
                           <thead>
                             <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                              <th className="text-left py-3 px-4 font-semibold">Industry</th>
+                              <th style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Industry</th>
                               <th className="text-center py-3 px-4 font-semibold">Companies</th>
-                              <th className="text-right py-3 px-4 font-semibold">% of Declined</th>
+                              <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>% of Declined</th>
                             </tr>
                           </thead>
                           <tbody>
                             {declinedByIndustry.map(ind => (
-                              <tr key={ind.name} className="border-b hover:bg-gray-50">
+                              <tr key={ind.name} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                                 <td className="py-3 px-4 font-medium">{ind.name}</td>
                                 <td className="py-3 px-4 text-center text-gray-600">{ind.count}</td>
                                 <td className="py-3 px-4 text-right text-gray-600">{((ind.count / totalDeclined) * 100).toFixed(1)}%</td>
@@ -13813,7 +13809,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             ))}
                           </tbody>
                           <tfoot>
-                            <tr className="bg-red-50 font-bold text-red-900">
+                            <tr style={{background:"rgba(239,68,68,0.06)",borderTop:"0.5px solid rgba(239,68,68,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(239,68,68,0.95)"}}>
                               <td className="py-3 px-4">Total Declined</td>
                               <td className="py-3 px-4 text-center">{totalDeclined}</td>
                               <td className="py-3 px-4 text-right">100%</td>
@@ -13831,26 +13827,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {(investmentsSubTab === 'knowledge' || investmentsSubTab === 'books') && (
             <>
               {/* Inner tabs for Knowledge Guide sub-sections */}
-              <div className="flex gap-2 mb-6 flex-wrap">
+              <div style={{display:"flex",gap:"6px",marginBottom:"12px",flexWrap:"wrap"}}>
                 <button
                   onClick={() => setInvestmentsSubTab('knowledge')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    investmentsSubTab === 'knowledge'
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-                      : 'text-slate-400 hover:text-slate-200 transition-colors'
-                  }`}
+                  style={investmentsSubTab === 'knowledge' ? {padding:"6px 14px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {padding:"6px 14px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}
                 >
-                  Knowledge
+                  KNOWLEDGE
                 </button>
                 <button
                   onClick={() => setInvestmentsSubTab('books')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    investmentsSubTab === 'books'
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
-                      : 'text-slate-400 hover:text-slate-200 transition-colors'
-                  }`}
+                  style={investmentsSubTab === 'books' ? {padding:"6px 14px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {padding:"6px 14px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}
                 >
-                  Book Recommendations
+                  BOOK RECOMMENDATIONS
                 </button>
               </div>
             </>
@@ -13859,28 +13847,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'knowledge' && (
             <>
               {/* Muzz's Knowledge Header */}
-              <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-6 text-white">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">🦘</div>
-                  <div>
-                    <h2 className="text-2xl font-bold">Muzz's Knowledge Corner</h2>
-                    <p className="text-amber-100">Your guide to breaking down equity investments</p>
-                  </div>
-                </div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// KNOWLEDGE BASE</div>
+                <h2 style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"4px"}}>EQUITY INVESTMENT GUIDE</h2>
+                <p style={{fontSize:"11px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your guide to breaking down equity investments</p>
               </div>
 
               {/* Equity Investment Breakdown Guide */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📈 Equity Investment Breakdown Guide</h2>
-                  <p className="text-sm text-gray-500 mt-1">Key questions to ask when analyzing a stock</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>EQUITY INVESTMENT BREAKDOWN GUIDE</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Key questions to ask when analyzing a stock</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
                   {/* Dividends & Buybacks */}
-                  <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
-                    <h3 className="text-md font-bold text-purple-800 flex items-center gap-2 mb-3">💰 Dividends / Buybacks / Stock Splits</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(168,85,247,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>DIVIDENDS / BUYBACKS / STOCK SPLITS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• What's their dividend record?</li>
                       <li>• Has there been growth in dividends?</li>
                       <li>• Have they done buybacks before?</li>
@@ -13889,9 +13873,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Capital Expenditure */}
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                    <h3 className="text-md font-bold text-blue-800 flex items-center gap-2 mb-3">🏗️ Capital Expenditure</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>️ CAPITAL EXPENDITURE</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Is the company sitting on lots of cash?</li>
                       <li>• Is the business capital intensive?</li>
                       <li>• Do the products require little capital to grow?</li>
@@ -13899,9 +13883,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Acquisitions */}
-                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
-                    <h3 className="text-md font-bold text-indigo-800 flex items-center gap-2 mb-3">🤝 Acquisitions</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderLeft:"2px solid rgba(99,102,241,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(99,102,241,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>ACQUISITIONS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• What's been their most recent acquisitions? Have they been successful?</li>
                       <li>• Has there been unsuccessful acquisitions?</li>
                       <li>• How have acquisitions been paid for? (Equity, debt, or cash)</li>
@@ -13909,9 +13893,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Financial Points */}
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 flex items-center gap-2 mb-3">📊 Financial Points</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>FINANCIAL POINTS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• What products bring most revenue?</li>
                       <li>• What products are most profitable?</li>
                       <li>• Sales / Products Growth or Decline?</li>
@@ -13924,9 +13908,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Remuneration */}
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
-                    <h3 className="text-md font-bold text-amber-800 flex items-center gap-2 mb-3">💼 Remuneration</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(245,158,11,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>REMUNERATION</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Are they utilising compensation properly?</li>
                       <li>• Do employees get compensation benefits?</li>
                       <li>• Does compensation justify company performance?</li>
@@ -13934,9 +13918,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Brand */}
-                  <div className="bg-pink-50 rounded-2xl p-4 border border-pink-200">
-                    <h3 className="text-md font-bold text-pink-800 flex items-center gap-2 mb-3">🏷️ Brand</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(236,72,153,0.06)",border:"0.5px solid rgba(236,72,153,0.3)",borderLeft:"2px solid rgba(236,72,153,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(236,72,153,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>️ BRAND</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Does the brand create an image for people? (e.g., Coke & Christmas, Cadbury & Easter)</li>
                       <li>• Social standpoint - is it a liked or disliked brand?</li>
                       <li>• Is it a popular brand?</li>
@@ -13944,9 +13928,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Operating Costs */}
-                  <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
-                    <h3 className="text-md font-bold text-orange-800 flex items-center gap-2 mb-3">⚙️ Operating Costs</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(251,146,60,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>️ OPERATING COSTS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Revenue and Profit Per Employee?</li>
                       <li>• Do you know the big costs of the company?</li>
                       <li>• Do you know the company's vulnerabilities?</li>
@@ -13959,8 +13943,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Management */}
-                  <div className="bg-teal-50 rounded-2xl p-4 border border-teal-200">
-                    <h3 className="text-md font-bold text-teal-800 flex items-center gap-2 mb-3">👔 Management</h3>
+                  <div style={{background:"rgba(20,184,166,0.06)",border:"0.5px solid rgba(20,184,166,0.3)",borderLeft:"2px solid rgba(20,184,166,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(20,184,166,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>MANAGEMENT</h3>
                     <ul className="text-sm text-gray-700 space-y-2">
                       <li>• Is Management rational & cost conscious?</li>
                       <li>• Does board of directors think like owners?</li>
@@ -13976,9 +13960,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Ownership */}
-                  <div className="bg-cyan-50 rounded-2xl p-4 border border-cyan-200">
-                    <h3 className="text-md font-bold text-cyan-800 flex items-center gap-2 mb-3">🏠 Ownership / Partnerships</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(6,182,212,0.06)",border:"0.5px solid rgba(6,182,212,0.3)",borderLeft:"2px solid rgba(6,182,212,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>OWNERSHIP / PARTNERSHIPS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Is it a 'Family Owned' Business?</li>
                       <li>• Who are the top shareholders?</li>
                       <li>• What are their partnerships?</li>
@@ -13987,9 +13971,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Valuation */}
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 flex items-center gap-2 mb-3">💵 Valuation</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>VALUATION</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Are you purchasing at a fair price or a big premium to intrinsic value?</li>
                       <li>• Do you have a good idea of the company's P/E ratio history?</li>
                       <li>• Do you have a good idea of the company's P/B ratio history?</li>
@@ -13997,9 +13981,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* General */}
-                  <div className="bg-gray-100 rounded-2xl p-4 border border-gray-300">
-                    <h3 className="text-md font-bold text-gray-800 flex items-center gap-2 mb-3">🎯 General Points</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(148,163,184,0.06)",border:"0.5px solid rgba(148,163,184,0.3)",borderLeft:"2px solid rgba(148,163,184,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>GENERAL POINTS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Future Plans / Goals?</li>
                       <li>• Is it 'Inflation Protected'?</li>
                       <li>• Is it an Idiot Proof Company?</li>
@@ -14020,14 +14004,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Yourself vs Consensus & Yourself */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">🧠 Self-Assessment Questions</h2>
-                  <p className="text-sm text-gray-500 mt-1">Check yourself before you wreck yourself</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>SELF-ASSESSMENT QUESTIONS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Check yourself before you wreck yourself</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-violet-50 rounded-2xl p-4 border border-violet-200">
-                    <h3 className="text-md font-bold text-violet-800 flex items-center gap-2 mb-3">⚔️ Yourself vs Consensus</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(139,92,246,0.06)",border:"0.5px solid rgba(139,92,246,0.3)",borderLeft:"2px solid rgba(139,92,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>️ YOURSELF VS CONSENSUS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• What's the probability you're right?</li>
                       <li>• What does the consensus think?</li>
                       <li>• How does your expectation differ from the consensus?</li>
@@ -14036,9 +14020,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ul>
                   </div>
 
-                  <div className="bg-rose-50 rounded-2xl p-4 border border-rose-200">
-                    <h3 className="text-md font-bold text-rose-800 flex items-center gap-2 mb-3">🪞 Yourself vs Yourself</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(244,63,94,0.06)",border:"0.5px solid rgba(244,63,94,0.3)",borderLeft:"2px solid rgba(244,63,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>YOURSELF VS YOURSELF</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Are you being overconfident?</li>
                       <li>• What is the range of likely future outcomes?</li>
                       <li>• Are you falling into the trap of overreaction bias?</li>
@@ -14055,13 +14039,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* 10 Don'ts & 15 Do's */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📖 Philip Fisher's Rules</h2>
-                  <p className="text-sm text-gray-500 mt-1">From "Common Stocks and Uncommon Profits"</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PHILIP FISHER'S RULES</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>From "Common Stocks and Uncommon Profits"</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 flex items-center gap-2 mb-3">🚫 10 Don'ts For Investors</h3>
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>10 DON'TS FOR INVESTORS</h3>
                     <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
                       <li>Don't buy into promotional companies</li>
                       <li>Don't ignore a good stock just because it's traded "over the counter"</li>
@@ -14076,8 +14060,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ol>
                   </div>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 flex items-center gap-2 mb-3">✅ 15 Do's For Investors (Stock Checklist)</h3>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>15 DO'S FOR INVESTORS (STOCK CHECKLIST)</h3>
                     <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
                       <li>Does the company have sufficient market potential for sizable sales increase?</li>
                       <li>Does management have determination to develop new products/processes?</li>
@@ -14095,9 +14079,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <li>Does management talk freely when things are good but "clam up" during troubles?</li>
                       <li>Does the company have management of unquestionable integrity?</li>
                     </ol>
-                    <div className="mt-3 p-3 bg-green-100 rounded-lg">
+                    <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px"}}>
                       <p className="text-sm font-semibold text-green-800">Extra Must-Haves:</p>
-                      <p className="text-sm text-green-700">Low-Cost Production • Strong Marketing • Outstanding R&D • Financial Skill</p>
+                      <p style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:"1.6"}}>Low-Cost Production • Strong Marketing • Outstanding R&D • Financial Skill</p>
                     </div>
                   </div>
 
@@ -14107,36 +14091,36 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Durable Competitive Advantages */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">🏰 Types of Durable Competitive Advantages</h2>
-                  <p className="text-sm text-gray-500 mt-1">Buffett classifies great businesses into three categories</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>TYPES OF DURABLE COMPETITIVE ADVANTAGES</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Buffett classifies great businesses into three categories</p>
                 </div>
-                <div className="p-6">
+                <div style={{padding:"14px 16px"}}>
                   <div className="grid md:grid-cols-3 gap-4">
                     
-                    <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                      <div className="text-3xl mb-2">🎁</div>
-                      <h3 className="text-md font-bold text-blue-800 mb-2">1. Unique Products</h3>
-                      <p className="text-sm text-gray-600 mb-2">Embedded into consumer habits through consistency, marketing, and experience.</p>
+                    <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>1. UNIQUE PRODUCTS</h3>
+                      <p style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,marginBottom:"6px"}}>Embedded into consumer habits through consistency, marketing, and experience.</p>
                       <p className="text-xs font-medium" style={{color:"rgba(96,165,250,0.9)"}}>Examples: Coca-Cola, Hershey, Wrigley, P&G</p>
                     </div>
 
-                    <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
+                    <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                       <div className="text-3xl mb-2">🛎️</div>
-                      <h3 className="text-md font-bold text-purple-800 mb-2">2. Unique Services</h3>
-                      <p className="text-sm text-gray-600 mb-2">Trusted, recurring services tied to the brand—not individuals.</p>
-                      <p className="text-xs font-medium" style={{color:"rgba(192,132,252,0.9)"}}>Examples: Moody's, H&R Block, AmEx</p>
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(168,85,247,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>2. UNIQUE SERVICES</h3>
+                      <p style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,marginBottom:"6px"}}>Trusted, recurring services tied to the brand—not individuals.</p>
+                      <p style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px",color:"rgba(192,132,252,0.9)"}}>Examples: Moody's, H&R Block, AmEx</p>
                     </div>
 
-                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                      <div className="text-3xl mb-2">📦</div>
-                      <h3 className="text-md font-bold text-green-800 mb-2">3. Low-Cost Buyer & Seller</h3>
-                      <p className="text-sm text-gray-600 mb-2">High volume, low-margin models. Scale gives pricing power and defensible moats.</p>
-                      <p className="text-xs text-green-600 font-medium">Examples: Costco, Walmart, BNSF</p>
+                    <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>3. LOW-COST BUYER & SELLER</h3>
+                      <p style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,marginBottom:"6px"}}>High volume, low-margin models. Scale gives pricing power and defensible moats.</p>
+                      <p style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px",color:"rgba(34,197,94,0.9)"}}>Examples: Costco, Walmart, BNSF</p>
                     </div>
 
                   </div>
-                  <div className="mt-4 p-4 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl">
-                    <p className="text-amber-800 font-semibold">💡 Bottom Line: If a business fits one of these categories, it likely has the pricing power and durability to earn high returns long-term.</p>
+                  <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"3px"}}>
+                    <p style={{color:"rgba(245,158,11,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>Bottom Line: If a business fits one of these categories, it likely has the pricing power and durability to earn high returns long-term.</p>
                   </div>
                 </div>
               </div>
@@ -14144,25 +14128,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Beer & Foam Analogy */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">🍺 The Beer & Foam Analogy</h2>
-                  <p className="text-sm text-gray-500 mt-1">Understanding hype vs real value in markets</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>THE BEER & FOAM ANALOGY</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Understanding hype vs real value in markets</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   
-                  <div className="bg-amber-50 rounded-2xl p-5 border border-amber-200">
-                    <div className="flex items-start gap-4">
-                      <div className="text-4xl">🍺</div>
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"14px"}}>
                       <div>
-                        <h3 className="text-lg font-bold text-amber-800 mb-2">The Analogy</h3>
-                        <p className="text-gray-700">Think of a stock's price like a glass of beer. The <strong>beer</strong> represents the real, intrinsic value of the company — its earnings, assets, cash flow, and competitive advantages. The <strong>foam</strong> represents the hype, speculation, and market excitement that sits on top.</p>
+                        <h3 style={{fontSize:"12px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontWeight:600,letterSpacing:"1.5px",marginBottom:"8px",textTransform:"uppercase"}}>The Analogy</h3>
+                        <p style={{color:"rgba(148,163,184,0.75)",fontFamily:"monospace",fontSize:"11px",lineHeight:"1.6"}}>Think of a stock's price like a glass of beer. The <strong>beer</strong> represents the real, intrinsic value of the company — its earnings, assets, cash flow, and competitive advantages. The <strong>foam</strong> represents the hype, speculation, and market excitement that sits on top.</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-300">
-                      <h4 className="font-bold text-yellow-800 mb-2">🍻 The Beer (Real Value)</h4>
-                      <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))",gap:"10px"}}>
+                    <div style={{background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.4)",borderLeft:"2px solid rgba(234,179,8,0.7)",borderRadius:"4px",padding:"12px 14px"}}>
+                      <h4 style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"8px",textTransform:"uppercase"}}>THE BEER (REAL VALUE)</h4>
+                      <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                         <li>• Actual earnings & revenue</li>
                         <li>• Tangible assets</li>
                         <li>• Cash flow generation</li>
@@ -14171,9 +14154,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <li>• Business fundamentals</li>
                       </ul>
                     </div>
-                    <div className="bg-white rounded-2xl p-4 border-2 border-dashed border-gray-300">
-                      <h4 className="font-bold text-gray-600 mb-2">🫧 The Foam (Hype)</h4>
-                      <ul className="text-sm text-gray-700 space-y-1">
+                    <div style={{background:"rgba(0,200,255,0.04)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",padding:"12px 14px"}}>
+                      <h4 style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"8px",textTransform:"uppercase"}}>THE FOAM (HYPE)</h4>
+                      <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                         <li>• Market excitement & FOMO</li>
                         <li>• Media buzz & headlines</li>
                         <li>• Speculation & momentum</li>
@@ -14184,13 +14167,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
 
-                  <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
-                    <h4 className="font-bold text-orange-800 mb-2">⚠️ The Problem</h4>
+                  <div style={{background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h4 style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"8px",textTransform:"uppercase"}}>️ THE PROBLEM</h4>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>When you pour a beer, sometimes you get mostly foam. Markets work the same way — during bull runs and hype cycles, prices can be 90% foam and 10% beer. When the foam settles (and it always does), you're left holding a glass that's mostly empty.</p>
                   </div>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h4 className="font-bold text-green-800 mb-2">✅ Your Job as an Investor</h4>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h4 style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"8px",textTransform:"uppercase"}}>YOUR JOB AS AN INVESTOR</h4>
                     <ul className="text-sm text-gray-700 space-y-2">
                       <li>• <strong>Determine the beer level:</strong> Through your own research, figure out what the company is actually worth based on fundamentals</li>
                       <li>• <strong>Identify the foam:</strong> How much of the current price is hype vs substance?</li>
@@ -14199,8 +14182,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ul>
                   </div>
 
-                  <div className="bg-gradient-to-r from-amber-100 to-yellow-100 rounded-xl p-4 border border-amber-300">
-                    <p className="text-amber-900 font-semibold">🦘 Muzz's Take: "Mate, everyone loves a good frothy beer, but you wouldn't pay $10 for a glass of foam, would ya? Same goes for stocks. Do your research, find the real value underneath all the hype, and make sure you're buying beer — not just paying for bubbles that'll pop."</p>
+                  <div style={{padding:"12px 14px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.4)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"3px"}}>
+                    <p style={{color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>Muzz's Take: "Mate, everyone loves a good frothy beer, but you wouldn't pay $10 for a glass of foam, would ya? Same goes for stocks. Do your research, find the real value underneath all the hype, and make sure you're buying beer — not just paying for bubbles that'll pop."</p>
                   </div>
 
                 </div>
@@ -14212,12 +14195,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'books' && (
             <>
               {/* Muzz's Books Header */}
-              <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-6 text-white">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">🦘</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
-                    <h2 className="text-2xl font-bold">Muzz's Book Recommendations</h2>
-                    <p className="text-amber-100">Essential reads for your investing journey</p>
+                    <h2 style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Muzz's Book Recommendations</h2>
+                    <p style={{color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"11px"}}>Essential reads for your investing journey</p>
                   </div>
                 </div>
               </div>
@@ -14225,14 +14207,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Book Recommendations */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📚 Recommended Reading List</h2>
-                  <p className="text-sm text-gray-500 mt-1">Books to level up your investing game</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>RECOMMENDED READING LIST</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Books to level up your investing game</p>
                 </div>
                 <div className="p-6 space-y-6">
 
                   {/* Beginner Books */}
-                  <div className="bg-green-50 rounded-2xl p-5 border border-green-200">
-                    <h3 className="text-lg font-bold text-green-800 mb-4">🌱 5 Great Investing Books (Beginner)</h3>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"12px",textTransform:"uppercase"}}>5 GREAT INVESTING BOOKS (BEGINNER)</h3>
                     <ol className="text-sm text-gray-700 space-y-2">
                       <li className="flex gap-2"><span className="font-bold text-green-600">1.</span><span><strong>The Little Book of Common Sense Investing</strong> by John C. Bogle</span></li>
                       <li className="flex gap-2"><span className="font-bold text-green-600">2.</span><span><strong>University of Berkshire Hathaway</strong> by Daniel Pecaut</span></li>
@@ -14243,8 +14225,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Intermediate Books */}
-                  <div className="bg-blue-50 rounded-2xl p-5 border border-blue-200">
-                    <h3 className="text-lg font-bold text-blue-800 mb-4">📈 10 More Great Books (Intermediate)</h3>
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"12px",textTransform:"uppercase"}}>10 MORE GREAT BOOKS (INTERMEDIATE)</h3>
                     <ol className="text-sm text-gray-700 space-y-2">
                       <li className="flex gap-2"><span className="font-bold text-blue-600">1.</span><span><strong>One Up on Wall Street</strong> by Peter Lynch</span></li>
                       <li className="flex gap-2"><span className="font-bold text-blue-600">2.</span><span><strong>Beating the Street</strong> by Peter Lynch</span></li>
@@ -14260,8 +14242,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
 
                   {/* Advanced Books */}
-                  <div className="bg-purple-50 rounded-2xl p-5 border border-purple-200">
-                    <h3 className="text-lg font-bold text-purple-800 mb-4">🎓 10 More Great Books (Advanced)</h3>
+                  <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"14px 16px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(168,85,247,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"12px",textTransform:"uppercase"}}>10 MORE GREAT BOOKS (ADVANCED)</h3>
                     <ol className="text-sm text-gray-700 space-y-2">
                       <li className="flex gap-2"><span className="font-bold text-purple-600">1.</span><span><strong>The Interpretation of Financial Statements</strong> by Benjamin Graham and Spencer B. Meredith</span></li>
                       <li className="flex gap-2"><span className="font-bold text-purple-600">2.</span><span><strong>Warren Buffett and the Interpretation of Financial Statements</strong> by Mary Buffett and David Clark</span></li>
@@ -14276,8 +14258,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ol>
                   </div>
 
-                  <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl p-4 border border-amber-300">
-                    <p className="text-amber-900 font-semibold">🦘 Muzz's Note: "There's plenty more educational books out there, but I wanted to provide some guidance to great books that can help you get your investing journey going. Happy reading, mate!"</p>
+                  <div style={{padding:"12px 14px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.4)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"3px"}}>
+                    <p style={{color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>Muzz's Note: "There's plenty more educational books out there, but I wanted to provide some guidance to great books that can help you get your investing journey going. Happy reading, mate!"</p>
                   </div>
 
                 </div>
@@ -14288,7 +14270,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {investmentsSubTab === 'performance' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div className="rounded-2xl p-5 space-y-3" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.15)'}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div className="text-xs font-mono" style={{color:'rgba(0,200,255,0.6)'}}>// COMPANY PERFORMANCE</div>
                 <div className="flex gap-3">
                   <input
@@ -14309,16 +14291,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
               {perfData && (
                 <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                  <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(0,200,255,0.2)'}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="text-2xl font-black tracking-widest" style={{color:'#00c8ff'}}>{perfData.ticker}</div>
                       <div className="text-3xl font-black text-white">${perfData.currentPrice?.toFixed(2) || '—'}</div>
                     </div>
                     <div className="text-xs" style={{color:'rgba(148,163,184,0.5)'}}>Current Price (USD)</div>
                   </div>
-                  <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(0,200,255,0.1)'}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div className="grid text-xs font-mono px-5 py-3" style={{gridTemplateColumns:'1fr 1fr 1fr',background:'rgba(0,200,255,0.05)',borderBottom:'1px solid rgba(0,200,255,0.1)',color:'rgba(0,200,255,0.5)'}}>
-                      <div>PERIOD</div><div className="text-center">CHANGE</div><div className="text-right">RETURN</div>
+                      <div>PERIOD</div><div style={{textAlign:"center"}}>CHANGE</div><div className="text-right">RETURN</div>
                     </div>
                     {[
                       {key:'1d', label:'1 Day'},
@@ -14336,7 +14318,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       return (
                         <div key={key} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 1fr 1fr',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
                           <div className="text-white text-sm font-medium">{label}</div>
-                          <div className="text-center">
+                          <div style={{textAlign:"center"}}>
                             <span className="text-sm font-bold" style={{color}}>
                               {change != null ? `${isPos?'+':''}${change.toFixed(2)}%` : '—'}
                             </span>
@@ -14353,14 +14335,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     })}
                   </div>
-                  <div className="rounded-2xl p-4 text-sm text-center" style={{background:'rgba(0,200,255,0.05)',border:'1px solid rgba(0,200,255,0.1)',color:'rgba(148,163,184,0.6)'}}>
+                  <div style={{padding:"12px 14px",background:"rgba(0,200,255,0.05)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px",fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",textAlign:"center"}}>
                     💡 Yahoo Finance data · USD · Not financial advice
                   </div>
                 </div>
               )}
               {!perfData && !perfLoading && (
-                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.6)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                  <div className="text-4xl mb-3">📈</div>
+                <div style={{padding:"32px 16px",background:"rgba(5,12,24,0.5)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",textAlign:"center"}}>
+                  
                   <div className="text-white font-bold mb-1">Search any stock</div>
                   <div className="text-sm" style={{color:'rgba(148,163,184,0.5)'}}>Enter a ticker above to see performance across all time periods</div>
                 </div>
@@ -14372,11 +14354,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'accounting' && (
             <>
               {/* Muzz's Accounting Header */}
-              <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">🦘</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(16,185,129,0.3)",borderLeft:"2px solid rgba(16,185,129,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(16,185,129,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
-                    <h2 className="text-2xl font-bold">Muzz's Accounting Guide</h2>
+                    <h2 style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Muzz's Accounting Guide</h2>
                     <p className="text-emerald-100">Key ratios and metrics to analyze</p>
                   </div>
                 </div>
@@ -14385,13 +14366,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Core Ratios */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📊 Core Ratios & Metrics</h2>
-                  <p className="text-sm text-gray-500 mt-1">The fundamental numbers you need to track</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>CORE RATIOS & METRICS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>The fundamental numbers you need to track</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                    <h3 className="text-md font-bold text-blue-800 mb-3">📈 Core "Return" Ratios</h3>
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>CORE "RETURN" RATIOS</h3>
                     <div className="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
                       <div>• ROA (Return on Assets)</div>
                       <div>• ROTA (Return on Tangible Assets)</div>
@@ -14403,17 +14384,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
 
-                  <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
-                    <h3 className="text-md font-bold text-purple-800 mb-3">⚡ Company Efficiency</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(168,85,247,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>COMPANY EFFICIENCY</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• DSO (Days Sales Outstanding)</li>
                       <li>• DPO (Days Payables Outstanding)</li>
                       <li>• CCC (Cash Conversion Cycle)</li>
                     </ul>
                   </div>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 mb-3">📈 Core Growth Metrics (Calculate CAGR for)</h3>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>CORE GROWTH METRICS (CALCULATE CAGR FOR)</h3>
                     <div className="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
                       <div>• Revenue</div>
                       <div>• Net Income</div>
@@ -14422,17 +14403,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
 
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
-                    <h3 className="text-md font-bold text-amber-800 mb-3">💵 Valuation Ratios</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(245,158,11,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>VALUATION RATIOS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• P/E Ratio</li>
                       <li>• P/B Ratio</li>
                     </ul>
                   </div>
 
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 mb-3">🏦 Liquidity & Solvency Ratios</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>LIQUIDITY & SOLVENCY RATIOS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Long-Term Debt to Equity</li>
                       <li>• Total Debt to Equity</li>
                       <li>• Long-Term Debt to Net Income</li>
@@ -14446,13 +14427,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Trend Checks */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📉 Breakdown Metrics – Trend Checks</h2>
-                  <p className="text-sm text-gray-500 mt-1">Track these over 10-15 years to spot red flags or strengths</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BREAKDOWN METRICS – TREND CHECKS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track these over 10-15 years to spot red flags or strengths</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
-                    <h3 className="text-md font-bold text-indigo-800 mb-3">📄 Income Statement</h3>
+                  <div style={{background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderLeft:"2px solid rgba(99,102,241,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(99,102,241,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>INCOME STATEMENT</h3>
                     <div className="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
                       <div>• Segment Revenue</div>
                       <div>• Total Revenue</div>
@@ -14473,8 +14454,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
 
-                  <div className="bg-teal-50 rounded-2xl p-4 border border-teal-200">
-                    <h3 className="text-md font-bold text-teal-800 mb-3">📋 Balance Sheet</h3>
+                  <div style={{background:"rgba(20,184,166,0.06)",border:"0.5px solid rgba(20,184,166,0.3)",borderLeft:"2px solid rgba(20,184,166,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(20,184,166,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>BALANCE SHEET</h3>
                     <div className="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
                       <div>• Cash & Cash Equivalents</div>
                       <div>• Accounts Receivable</div>
@@ -14500,8 +14481,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
 
-                  <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
-                    <h3 className="text-md font-bold text-orange-800 mb-3">💸 Cash Flow Statement</h3>
+                  <div style={{background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(251,146,60,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>CASH FLOW STATEMENT</h3>
                     <div className="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
                       <div>• Net Income</div>
                       <div>• Non Cash Charges</div>
@@ -14518,22 +14499,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Income Statement Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📄 What to Look for in the Income Statement</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHAT TO LOOK FOR IN THE INCOME STATEMENT</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 mb-2">COGS & Gross Profit Margin</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>COGS & GROSS PROFIT MARGIN</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• High and consistent gross profit margins = pricing power & durable competitive advantage</li>
                       <li>• Track 10-year gross margin stability</li>
                       <li>• Watch for rising operating expenses (R&D, SG&A, interest) that erode COGS strength</li>
                     </ul>
                   </div>
 
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                    <h3 className="text-md font-bold text-blue-800 mb-2">SG&A (Selling, General & Admin)</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>SG&A (SELLING, GENERAL & ADMIN)</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• <span className="text-green-600 font-semibold">&lt;30% of gross profit = Excellent</span></li>
                       <li>• 30–80% = Still acceptable if consistent</li>
                       <li>• <span className="text-red-600 font-semibold">100% = Warning sign</span> (especially in competitive industries)</li>
@@ -14541,35 +14522,35 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ul>
                   </div>
 
-                  <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-200">
-                    <h3 className="text-md font-bold text-yellow-800 mb-2">R&D Expenses</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.3)",borderLeft:"2px solid rgba(234,179,8,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(0,200,255,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>R&D EXPENSES</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Buffett avoids companies with heavy R&D dependence (pharma, tech) — moats are fragile</li>
                       <li>• Moody's has no R&D; Coca-Cola only advertises</li>
                       <li>• <span className="font-semibold">Rule:</span> If future success relies on inventing the next big thing, Buffett isn't interested</li>
                     </ul>
                   </div>
 
-                  <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
-                    <h3 className="text-md font-bold text-purple-800 mb-2">Depreciation</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(168,85,247,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>DEPRECIATION</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Durable moat companies have low depreciation as % of gross profit:</li>
                       <li className="ml-4">Coca-Cola ~6% | Wrigley ~7% | P&G ~8%</li>
                       <li>• Compare to capital-intensive: GM 22–57%</li>
                     </ul>
                   </div>
 
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 mb-2">Interest Expense</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>INTEREST EXPENSE</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• For non-financial firms: <span className="text-green-600 font-semibold">Interest &lt;15% of operating income = strong</span></li>
                       <li>• Financial institutions vary — compare within peer group</li>
                     </ul>
                   </div>
 
-                  <div className="bg-gray-100 rounded-2xl p-4 border border-gray-300">
-                    <h3 className="text-md font-bold text-gray-800 mb-2">Income Taxes Paid</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(148,163,184,0.06)",border:"0.5px solid rgba(148,163,184,0.3)",borderLeft:"2px solid rgba(148,163,184,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>INCOME TAXES PAID</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Cross-check actual tax paid with reported pre-tax income × 35%</li>
                       <li>• Large mismatch may indicate manipulation</li>
                       <li>• Honest companies don't cheat the IRS or their shareholders</li>
@@ -14582,15 +14563,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* EPS Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📈 EPS (Earnings Per Share) Analysis</h2>
-                  <p className="text-sm text-gray-500 mt-1">EPS = Net Income / Shares Outstanding</p>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>EPS (EARNINGS PER SHARE) ANALYSIS</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>EPS = Net Income / Shares Outstanding</p>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 mb-2">✅ What GOOD EPS Looks Like</h3>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>WHAT GOOD EPS LOOKS LIKE</h3>
                     <p className="text-sm text-gray-700 mb-3">Consistent earnings with a long-term upward trend:</p>
-                    <div className="bg-white rounded-lg p-3 font-mono text-sm">
+                    <div style={{background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"8px 10px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff"}}>
                       <div className="grid grid-cols-2 gap-1">
                         <span>2008: $2.95</span><span>2003: $1.95</span>
                         <span>2007: $2.68</span><span>2002: $1.65</span>
@@ -14602,10 +14583,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <p className="text-sm text-green-700 mt-3">This shows the company has some kind of long-term competitive advantage working in its favor. Consistent earnings = product doesn't need expensive changes.</p>
                   </div>
 
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 mb-2">❌ What BAD EPS Looks Like</h3>
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>WHAT BAD EPS LOOKS LIKE</h3>
                     <p className="text-sm text-gray-700 mb-3">Erratic earnings with losses:</p>
-                    <div className="bg-white rounded-lg p-3 font-mono text-sm">
+                    <div style={{background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"8px 10px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff"}}>
                       <div className="grid grid-cols-2 gap-1">
                         <span>2008: $2.50</span><span>2003: $5.03</span>
                         <span>2007: <span className="text-red-600">($0.45)</span></span><span>2002: $3.35</span>
@@ -14623,33 +14604,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Balance Sheet Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">📋 What to Look for in the Balance Sheet</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHAT TO LOOK FOR IN THE BALANCE SHEET</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 mb-2">💵 Cash & Cash Equivalents</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>CASH & CASH EQUIVALENTS</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Growing cash with consistent earnings (no share sales/debt) = good sign</li>
                       <li>• Large cash from asset sales or debt = less meaningful</li>
                       <li>• Strong businesses generate cash from operations, not one-offs</li>
                     </ul>
-                    <div className="mt-2 p-2 bg-green-100 rounded-lg">
+                    <div style={{marginTop:"8px",padding:"6px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px"}}>
                       <p className="text-sm text-green-800 font-semibold">Rule: Lots of cash + little debt = will sail through troubled times. Hurting for cash + mountain of debt = sinking ship.</p>
                     </div>
                   </div>
 
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
-                    <h3 className="text-md font-bold text-amber-800 mb-2">📦 Inventory</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(245,158,11,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>INVENTORY</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Watch for changes in inventory trends vs sales</li>
                       <li>• Spike in inventory without sales growth = demand issues or overproduction</li>
                     </ul>
                   </div>
 
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                    <h3 className="text-md font-bold text-blue-800 mb-2">📊 Total Assets & ROA</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>TOTAL ASSETS & ROA</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• ROA = Net Income / Total Assets</li>
                       <li>• High ROA = good asset efficiency</li>
                       <li>• <span className="font-semibold">But:</span> Extremely high ROA can signal low barriers to entry</li>
@@ -14657,37 +14638,37 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </ul>
                   </div>
 
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 mb-2">⚠️ Short-Term Debt Risks</h3>
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>️ SHORT-TERM DEBT RISKS</h3>
                     <p className="text-sm text-gray-700 mb-2">Why it's dangerous:</p>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>1. If interest rates spike, refinancing becomes costly</li>
                       <li>2. If credit dries up, company can't roll over debt and may default</li>
                     </ul>
                     <p className="text-sm text-red-700 mt-2 font-semibold">Case in point: Bear Stearns collapsed when short-term funding disappeared. Stability = durability.</p>
                   </div>
 
-                  <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
-                    <h3 className="text-md font-bold text-purple-800 mb-2">🏦 Long-Term Debt</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(168,85,247,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>LONG-TERM DEBT</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Great companies often carry little to no long-term debt</li>
                       <li>• They're so profitable they don't need it for expansion/acquisitions</li>
                       <li>• Watch out: Leveraged buyouts can add huge debt even to good businesses</li>
                     </ul>
-                    <div className="mt-2 p-2 bg-purple-100 rounded-lg">
+                    <div style={{marginTop:"8px",padding:"6px 10px",background:"rgba(168,85,247,0.08)",border:"0.5px solid rgba(168,85,247,0.3)",borderRadius:"3px"}}>
                       <p className="text-sm text-purple-800 font-semibold">Rule: Low or no long-term debt = long-term winner</p>
                     </div>
                   </div>
 
-                  <div className="bg-teal-50 rounded-2xl p-4 border border-teal-200">
-                    <h3 className="text-md font-bold text-teal-800 mb-2">📈 Return on Shareholders' Equity (ROE)</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                  <div style={{background:"rgba(20,184,166,0.06)",border:"0.5px solid rgba(20,184,166,0.3)",borderLeft:"2px solid rgba(20,184,166,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(20,184,166,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>RETURN ON SHAREHOLDERS' EQUITY (ROE)</h3>
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Measures how well management uses investors' money to generate profits</li>
                       <li>• High ROE = effective use of capital, strong business model</li>
                       <li>• Low ROE industries: Airlines typically 0–15% (highly competitive, low-margin)</li>
                     </ul>
-                    <div className="mt-2 p-2 bg-yellow-100 rounded-lg">
-                      <p className="text-sm text-yellow-800">⚠️ Note: Some high-ROE companies may show negative equity due to massive buybacks or payout of all retained earnings. Distinguish between strong businesses and insolvent ones.</p>
+                    <div style={{marginTop:"8px",padding:"6px 10px",background:"rgba(234,179,8,0.08)",border:"0.5px solid rgba(234,179,8,0.3)",borderRadius:"3px"}}>
+                      <p className="text-sm text-yellow-800">️ Note: Some high-ROE companies may show negative equity due to massive buybacks or payout of all retained earnings. Distinguish between strong businesses and insolvent ones.</p>
                     </div>
                   </div>
 
@@ -14697,31 +14678,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Cash Flow Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">💸 Cash Flow Statement Insights</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>CASH FLOW STATEMENT INSIGHTS</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
 
-                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
-                    <h3 className="text-md font-bold text-indigo-800 mb-2">🏭 Capital Expenditures (CapEx)</h3>
+                  <div style={{background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderLeft:"2px solid rgba(99,102,241,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(99,102,241,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>CAPITAL EXPENDITURES (CAPEX)</h3>
                     <p className="text-sm text-gray-700 mb-2">Money spent on long-term assets (property, equipment, patents)</p>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Companies with durable advantages require less CapEx to maintain operations</li>
                       <li>• High CapEx = more debt or reduced earnings, weakening long-term economics</li>
                     </ul>
-                    <div className="mt-3 p-3 bg-white rounded-lg">
+                    <div style={{marginTop:"10px",padding:"8px 10px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px"}}>
                       <p className="text-sm font-semibold text-indigo-800 mb-2">Buffett's Insight:</p>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Great businesses: Coca-Cola uses 19% of earnings on CapEx, Moody's only 5%</p>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Weak businesses: GM or Goodyear often use &gt;100% of earnings for CapEx (funded by debt)</p>
                     </div>
-                    <div className="mt-3 p-2 bg-green-100 rounded-lg">
+                    <div style={{marginTop:"10px",padding:"6px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px"}}>
                       <p className="text-sm text-green-800"><span className="font-semibold">Rule of Thumb:</span> &lt;50% of earnings on CapEx = worth considering. &lt;25% = likely has strong competitive advantage.</p>
                     </div>
                   </div>
 
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                    <h3 className="text-md font-bold text-green-800 mb-2">🔄 Stock Buybacks</h3>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>STOCK BUYBACKS</h3>
                     <p className="text-sm text-gray-700 mb-2">Companies use excess cash to buy back their own shares</p>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                    <ul style={{fontSize:"11px",color:"rgba(148,163,184,0.75)",fontFamily:"monospace",lineHeight:1.6,display:"flex",flexDirection:"column",gap:"4px"}}>
                       <li>• Reduces share count → increases EPS</li>
                       <li>• Increases shareholders' value without creating a taxable event</li>
                     </ul>
@@ -14733,32 +14714,32 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* When to Sell */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-xl font-semibold text-white">🚪 When You May Consider Selling</h2>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHEN YOU MAY CONSIDER SELLING</h2>
                 </div>
-                <div className="p-6">
+                <div style={{padding:"14px 16px"}}>
                   <div className="grid md:grid-cols-3 gap-4">
                     
-                    <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-                      <div className="text-2xl mb-2">🎯</div>
-                      <h3 className="text-md font-bold text-blue-800 mb-2">1. Better Opportunity</h3>
+                    <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(59,130,246,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>1. BETTER OPPORTUNITY</h3>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Sell only if you find a better company at a better price.</p>
                     </div>
 
-                    <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
-                      <div className="text-2xl mb-2">📉</div>
-                      <h3 className="text-md font-bold text-orange-800 mb-2">2. Competitive Advantage Fades</h3>
+                    <div style={{background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(251,146,60,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>2. COMPETITIVE ADVANTAGE FADES</h3>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>Sell if the company is losing its edge (e.g., newspapers vs internet).</p>
                     </div>
 
-                    <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                      <div className="text-2xl mb-2">🎈</div>
-                      <h3 className="text-md font-bold text-red-800 mb-2">3. Market Euphoria</h3>
+                    <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>3. MARKET EUPHORIA</h3>
                       <p className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>If price goes way above intrinsic value (e.g., P/E &gt; 40), consider selling.</p>
                     </div>
 
                   </div>
-                  <div className="mt-4 p-4 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-xl">
-                    <p className="text-teal-800 font-semibold">💡 Smart Move: If you sell in a bull market, hold cash or bonds and wait for the next bear market to reinvest.</p>
+                  <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(16,185,129,0.06)",border:"0.5px solid rgba(16,185,129,0.4)",borderLeft:"2px solid rgba(16,185,129,0.7)",borderRadius:"3px"}}>
+                    <p style={{color:"rgba(20,184,166,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>Smart Move: If you sell in a bull market, hold cash or bonds and wait for the next bear market to reinvest.</p>
                   </div>
                 </div>
               </div>
@@ -14770,11 +14751,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'sp500' && (
             <>
               {/* Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-6 text-white">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">📈</div>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <div>
-                    <h2 className="text-2xl font-bold">S&P 500 & Buffett's Investing Wisdom</h2>
+                    <h2 style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>S&P 500 & Buffett's Investing Wisdom</h2>
                     <p className="text-blue-200">Lessons from Berkshire Hathaway's annual letters</p>
                   </div>
                 </div>
@@ -14782,15 +14762,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Buffett's Definition of Investing */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <h2 className="text-xl font-semibold text-white">🧠 Buffett's Definition of Investing (2011)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",background:"rgba(59,130,246,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BUFFETT'S DEFINITION OF INVESTING (2011)</h2>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 italic font-medium">"Investing is giving up purchasing power today, with a reasoned expectation of receiving MORE purchasing power — after taxes — in the future."</p>
                   </div>
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                    <h3 className="text-md font-bold text-red-800 mb-2">Buffett's REAL Definition of Risk</h3>
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                    <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>BUFFETT'S REAL DEFINITION OF RISK</h3>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Not volatility. Not beta.</p>
                     <p className="text-sm text-gray-700 font-semibold mt-1">Risk = The chance your investment won't protect (or grow) your purchasing power over time.</p>
                   </div>
@@ -14799,17 +14779,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Buffett's Will Instructions */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                  <h2 className="text-xl font-semibold text-white">📜 Buffett's Personal Will Instructions (2013)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BUFFETT'S PERSONAL WILL INSTRUCTIONS (2013)</h2>
                 </div>
-                <div className="p-6">
+                <div style={{padding:"14px 16px"}}>
                   <p className="text-sm text-gray-600 mb-4">For his wife's trust, Buffett instructed:</p>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200 text-center">
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
                       <div className="text-3xl font-bold text-blue-600">10%</div>
                       <div className="text-sm text-gray-600 mt-1">Short-term government bonds</div>
                     </div>
-                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200 text-center">
+                    <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
                       <div className="text-3xl font-bold text-green-600">90%</div>
                       <div className="text-sm text-gray-600 mt-1">Very low-cost S&P 500 index fund (Vanguard)</div>
                     </div>
@@ -14820,24 +14800,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* S&P 500 Performance 1964-2014 */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
-                  <h2 className="text-xl font-semibold text-white">📊 The Tailwind: S&P 500 vs the Dollar (1964–2014)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(245,158,11,0.2)",background:"rgba(245,158,11,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>THE TAILWIND: S&P 500 VS THE DOLLAR (1964–2014)</h2>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                      <h3 className="text-md font-bold text-green-800 mb-2">S&P 500 Performance</h3>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>S&P 500 PERFORMANCE</h3>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Rose from <strong>84 → 2,059</strong></p>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Including reinvested dividends:</p>
                       <p className="text-2xl font-bold text-green-600 mt-1">11,196% total return</p>
                     </div>
-                    <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                      <h3 className="text-md font-bold text-red-800 mb-2">Dollar Purchasing Power</h3>
+                    <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>DOLLAR PURCHASING POWER</h3>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Fell <strong>87%</strong> over same period</p>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>What cost $0.13 in 1965 costs $1.00 in 2014</p>
                     </div>
                   </div>
-                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
+                  <div style={{background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderLeft:"2px solid rgba(99,102,241,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 font-medium">Over the long run, it has been far safer to own a diversified collection of American businesses than to hold currency-based assets like Treasuries or cash. This was true through the Great Depression, two world wars, and Buffett expects it for the next century.</p>
                   </div>
                 </div>
@@ -14845,17 +14825,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Voting Machine vs Weighing Machine */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-purple-50 to-violet-50">
-                  <h2 className="text-xl font-semibold text-white">⚖️ Voting Machine vs Weighing Machine (2017)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",background:"rgba(168,85,247,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>️ VOTING MACHINE VS WEIGHING MACHINE (2017)</h2>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
-                      <h3 className="text-md font-bold text-red-800 mb-2">Short Term</h3>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(239,68,68,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>SHORT TERM</h3>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Market is a <strong>voting machine</strong> (popularity contest). Stock prices surge and swoon seemingly unconnected to underlying value.</p>
                     </div>
-                    <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-                      <h3 className="text-md font-bold text-green-800 mb-2">Long Term</h3>
+                    <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
+                      <h3 style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:600,letterSpacing:"1.5px",marginBottom:"10px",textTransform:"uppercase"}}>LONG TERM</h3>
                       <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Market is a <strong>weighing machine</strong> (business reality). Retained earnings + ROE + moat + management shows up in price.</p>
                     </div>
                   </div>
@@ -14864,11 +14844,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Berkshire Drawdowns */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
-                  <h2 className="text-xl font-semibold text-white">📉 Berkshire's Major Drawdowns — Price Crashes Are Normal</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(239,68,68,0.2)",background:"rgba(239,68,68,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BERKSHIRE'S MAJOR DRAWDOWNS — PRICE CRASHES ARE NORMAL</h2>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="overflow-x-auto">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
                       <thead><tr className="border-b-2">
                         <th className="text-left py-2 px-3">Period</th>
@@ -14893,7 +14873,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </tbody>
                     </table>
                   </div>
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 font-medium">Even Berkshire, with 50+ years of compounding and great businesses, has had multiple 40–60% price crashes. Big drawdowns are normal — intrinsic value compounded steadily underneath.</p>
                   </div>
                 </div>
@@ -14901,19 +14881,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Never Use Debt */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-red-50 to-pink-50">
-                  <h2 className="text-xl font-semibold text-white">🚫 The Strongest Argument Against Using Debt in Stocks</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(239,68,68,0.2)",background:"rgba(239,68,68,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>THE STRONGEST ARGUMENT AGAINST USING DEBT IN STOCKS</h2>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 italic font-medium">"This table offers the strongest argument I can muster against ever using borrowed money to own stocks."</p>
                   </div>
-                  <div className="space-y-2">
+                  <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• You can't predict how far or how fast stocks can fall short-term</p>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Even small borrowings can wreck your decision-making — headlines + crashing values = fear = panic selling</p>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• An unsettled mind makes bad decisions at the worst possible time</p>
                   </div>
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 italic">"The light can at any time go from green to red without pausing at yellow."</p>
                     <p className="text-sm text-gray-700 font-semibold mt-2">Rule: No margin. No leverage. Keep yourself structurally calm and unforced.</p>
                   </div>
@@ -14922,12 +14902,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Crashes as Opportunities */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                  <h2 className="text-xl font-semibold text-white">💎 Crashes as Opportunities (If You're Not in Debt)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>CRASHES AS OPPORTUNITIES (IF YOU'RE NOT IN DEBT)</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>For the unleveraged investor, big drops are "extraordinary opportunities" — a chance to buy great businesses at bargain prices.</p>
-                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
+                  <div style={{background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderLeft:"2px solid rgba(99,102,241,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 font-medium mb-2">The mindset you need (from Kipling's "If"):</p>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Keep your head while others lose theirs</p>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Be patient and not worn out by waiting</p>
@@ -14939,14 +14919,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* The Bet */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-yellow-50">
-                  <h2 className="text-xl font-semibold text-white">🏆 The Bet: S&P 500 vs Hedge Funds (2007–2017)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(245,158,11,0.2)",background:"rgba(245,158,11,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>THE BET: S&P 500 VS HEDGE FUNDS (2007–2017)</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Buffett bet that a zero-fee S&P 500 index fund would beat five fund-of-funds (each holding 200+ hedge funds) over 10 years.</p>
-                  <div className="overflow-x-auto">
+                  <div style={{overflowX:"auto"}}>
                     <table className="w-full text-xs">
-                      <thead><tr className="border-b-2 bg-gray-50">
+                      <thead><tr style={{borderBottom:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,200,255,0.04)"}}>
                         <th className="text-left py-2 px-2">Investment</th>
                         <th className="text-right py-2 px-2">10-Year Return</th>
                         <th className="text-right py-2 px-2">Avg/Year</th>
@@ -14960,7 +14940,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           { name: 'Fund E', ret: '27.0%', avg: '2.4%' },
                           { name: 'S&P 500 Index', ret: '125.8%', avg: '8.5%' }
                         ].map((row, i) => (
-                          <tr key={i} className={`border-b ${row.name === 'S&P 500 Index' ? 'bg-green-50 font-bold' : ''}`}>
+                          <tr key={i} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)",background:row.name === 'S&P 500 Index' ? "rgba(34,197,94,0.06)" : "transparent",fontWeight:row.name === 'S&P 500 Index' ? 600 : 400,color:row.name === 'S&P 500 Index' ? "rgba(34,197,94,0.95)" : "rgba(224,234,255,0.85)"}}>
                             <td className="py-2 px-2">{row.name}</td>
                             <td className={`py-2 px-2 text-right ${row.name === 'S&P 500 Index' ? 'text-green-600' : 'text-gray-600'}`}>{row.ret}</td>
                             <td className={`py-2 px-2 text-right ${row.name === 'S&P 500 Index' ? 'text-green-600' : 'text-gray-600'}`}>{row.avg}</td>
@@ -14969,7 +14949,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </tbody>
                     </table>
                   </div>
-                  <div className="bg-red-50 rounded-2xl p-4 border border-red-200">
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 italic font-medium">"Performance comes, performance goes. Fees never falter."</p>
                     <p className="text-sm text-gray-700 mt-2">~60% of gross gains from the hedge fund basket were consumed in two layers of fees. Investors lost. Managers got rich.</p>
                   </div>
@@ -14978,23 +14958,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Why Hedge Funds Fail */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-red-50 to-orange-50">
-                  <h2 className="text-xl font-semibold text-white">❌ Why Almost All Hedge Funds Fail Long-Term</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(239,68,68,0.2)",background:"rgba(239,68,68,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHY ALMOST ALL HEDGE FUNDS FAIL LONG-TERM</h2>
                 </div>
                 <div className="p-6 space-y-3">
-                  <div className="bg-red-50 rounded-xl p-3 border border-red-200">
+                  <div style={{background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"3px",padding:"10px 12px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>1. Size:</strong> Good performance attracts money, size explodes — big money is harder to compound.</p>
                   </div>
-                  <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"3px",padding:"10px 12px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>2. Luck mistaken for skill:</strong> A manager could be lucky for 3, 5, even 10 years.</p>
                   </div>
-                  <div className="bg-orange-50 rounded-xl p-3 border border-orange-200">
+                  <div style={{background:"rgba(251,146,60,0.06)",border:"0.5px solid rgba(251,146,60,0.3)",borderLeft:"2px solid rgba(251,146,60,0.6)",borderRadius:"3px",padding:"10px 12px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>3. Fee incentive:</strong> More AUM = more fees, so managers keep growing, lowering future returns.</p>
                   </div>
-                  <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200 mt-2">
+                  <div style={{background:"rgba(99,102,241,0.06)",border:"0.5px solid rgba(99,102,241,0.3)",borderLeft:"2px solid rgba(99,102,241,0.6)",borderRadius:"4px",padding:"12px 14px",marginTop:"8px"}}>
                     <p className="text-sm text-gray-700 italic font-medium">"What is easy with millions becomes impossible with billions."</p>
                   </div>
-                  <div className="bg-purple-50 rounded-2xl p-4 border border-purple-200">
+                  <div style={{background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}><strong>Why active investors lose:</strong> Active investors, in aggregate, ARE the market. Passive investors match the market. Active investors have far higher costs. Therefore passive investors MUST win. It's simple arithmetic, not theory.</p>
                   </div>
                 </div>
@@ -15002,14 +14982,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* The American Tailwind */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <h2 className="text-xl font-semibold text-white">🇺🇸 The American Tailwind (2018)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",background:"rgba(59,130,246,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>🇺🇸 THE AMERICAN TAILWIND (2018)</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>Buffett made his first investment on March 11, 1942 at age 11 — $114.75 for 3 shares of Cities Service. He traces what happened across 77 years.</p>
-                  <div className="overflow-x-auto">
+                  <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
-                      <thead><tr className="border-b-2 bg-gray-50">
+                      <thead><tr style={{borderBottom:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,200,255,0.04)"}}>
                         <th className="text-left py-2 px-3">Scenario (starting 1942)</th>
                         <th className="text-right py-2 px-3">Result by 2019</th>
                       </tr></thead>
@@ -15020,7 +15000,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           { scenario: 'Same $1M but paying 1% yearly fees', result: '$2.65 Billion', highlight: false },
                           { scenario: 'Buy 3.25 oz of gold', result: '$4,200', highlight: false }
                         ].map((row, i) => (
-                          <tr key={i} className={`border-b ${row.highlight ? 'bg-green-50' : ''}`}>
+                          <tr key={i} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)",background:row.highlight ? "rgba(34,197,94,0.06)" : "transparent",fontWeight:row.highlight ? 600 : 400}}>
                             <td className="py-2 px-3 text-gray-700">{row.scenario}</td>
                             <td className={`py-2 px-3 text-right font-bold ${row.highlight ? 'text-green-600' : 'text-gray-600'}`}>{row.result}</td>
                           </tr>
@@ -15028,11 +15008,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </tbody>
                     </table>
                   </div>
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                  <div style={{background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 italic font-medium">"The magical metal was no match for the American mettle."</p>
                     <p className="text-sm text-gray-700 mt-2">Gold gained less than 1% of what American business produced over the same period.</p>
                   </div>
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>America prospered under 7 Republican and 7 Democratic presidents from 1942–2019. Despite high inflation, 21% prime rates, wars, housing collapse, financial panic, and presidential resignation — U.S. household wealth reached $108 trillion.</p>
                   </div>
                 </div>
@@ -15040,20 +15020,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Buffett's Recommendation */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                  <h2 className="text-xl font-semibold text-white">✅ Buffett's Recommendation (60 Years Straight)</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",background:"rgba(34,197,94,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BUFFETT'S RECOMMENDATION (60 YEARS STRAIGHT)</h2>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="bg-green-50 rounded-2xl p-5 border-2 border-green-300 text-center">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{background:"rgba(34,197,94,0.06)",border:"0.5px solid rgba(34,197,94,0.4)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"4px",padding:"14px 16px",textAlign:"center"}}>
                     <p className="text-lg font-bold text-green-700">"Buy a low-cost S&P 500 index fund."</p>
                   </div>
-                  <div className="space-y-2">
+                  <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Middle-class people follow the advice</p>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Rich people almost NEVER follow it</p>
                     <p className="text-sm" style={{color:"rgba(203,213,225,0.85)"}}>• Institutions never follow it</p>
                     <p className="text-sm text-gray-500 mt-2">Because they want special treatment, complex solutions, fancy "styles," and Wall Street relationships — even though an index fund is almost always the best answer.</p>
                   </div>
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
+                  <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.6)",borderRadius:"4px",padding:"12px 14px"}}>
                     <p className="text-sm text-gray-700 font-medium">On Jack Bogle (creator of index funds):</p>
                     <p className="text-sm text-gray-700 italic">"If a statue is ever erected to honor the person who has done the most for investors, it should be Jack Bogle."</p>
                   </div>
@@ -15062,22 +15042,22 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Ultimate Lessons */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-amber-50 to-orange-50">
-                  <h2 className="text-xl font-semibold text-white">⭐ Ultimate Lessons</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(245,158,11,0.2)",background:"rgba(245,158,11,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>⭐ ULTIMATE LESSONS</h2>
                 </div>
-                <div className="p-6">
+                <div style={{padding:"14px 16px"}}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {[
-                      { emoji: '📉', text: 'Low-cost index funds beat most professionals' },
-                      { emoji: '💸', text: 'Fees are the biggest enemy of investment returns' },
-                      { emoji: '🧘', text: 'Simple > Complex' },
-                      { emoji: '📈', text: 'Long-term stocks > Long-term bonds' },
-                      { emoji: '⚡', text: 'Volatility ≠ Risk — failing to protect purchasing power = risk' },
-                      { emoji: '🪑', text: 'Activity kills returns — inactivity builds wealth' },
-                      { emoji: '🎯', text: 'Big, obvious decisions outperform constant tinkering' },
+                      { text: 'Low-cost index funds beat most professionals' },
+                      { text: 'Fees are the biggest enemy of investment returns' },
+                      { text: 'Simple > Complex' },
+                      { text: 'Long-term stocks > Long-term bonds' },
+                      { text: 'Volatility ≠ Risk — failing to protect purchasing power = risk' },
+                      { text: 'Activity kills returns — inactivity builds wealth' },
+                      { text: 'Big, obvious decisions outperform constant tinkering' },
                       { emoji: '🇺🇸', text: 'Bet on America — compounding over decades is unstoppable' }
                     ].map((lesson, i) => (
-                      <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                      <div key={i} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 12px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px"}}>
                         <span className="text-xl">{lesson.emoji}</span>
                         <p className="text-sm text-gray-700 font-medium">{lesson.text}</p>
                       </div>
@@ -15088,8 +15068,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Classic Quotes */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div className="p-6 border-b bg-gradient-to-r from-slate-50 to-gray-100">
-                  <h2 className="text-xl font-semibold text-white">💬 Classic Buffett Lines</h2>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(148,163,184,0.2)",background:"rgba(148,163,184,0.04)"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>CLASSIC BUFFETT LINES</h2>
                 </div>
                 <div className="p-6 space-y-3">
                   {[
@@ -15099,7 +15079,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     "It is beyond arrogance for businesses or individuals to boast that they have done it alone.",
                     "Big, easy decisions > thousands of tiny ones. After that kindergarten-like analysis, we made the switch and relaxed."
                   ].map((quote, i) => (
-                    <div key={i} className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <div key={i} style={{padding:"10px 12px",background:"rgba(148,163,184,0.06)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px"}}>
                       <p className="text-sm text-gray-700 italic">"{quote}"</p>
                       <p className="text-xs text-gray-400 mt-1">— Warren Buffett</p>
                     </div>
@@ -15108,8 +15088,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               {/* Muzz Note */}
-              <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-3xl p-6 border border-amber-200">
-                <p className="text-amber-900 font-semibold">🦘 Muzz's Note: "This info is pulled from Berkshire Hathaway's actual annual letters. It's not financial advice — it's education from one of the greatest investors of all time. Do your own research, but use this as a solid foundation for understanding long-term investing. You've got this, legend!"</p>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <p style={{color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>Muzz's Note: "This info is pulled from Berkshire Hathaway's actual annual letters. It's not financial advice — it's education from one of the greatest investors of all time. Do your own research, but use this as a solid foundation for understanding long-term investing. You've got this, legend!"</p>
               </div>
             </>
           )}
@@ -15134,8 +15114,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const compResult = calcCompound();
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div className="rounded-3xl p-6" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.12)",backdropFilter:"blur(10px)"}}>
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">📈 Compound Interest Calculator</h2>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"12px"}}>📈 Compound Interest Calculator</h2>
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
                       <label className="text-sm font-medium text-gray-600 mb-1 block">Starting Amount ($)</label>
@@ -15155,15 +15135,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                    <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-4 text-white text-center">
+                    <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.4)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
                       <div className="text-xl sm:text-2xl font-bold">${compResult.finalBalance.toLocaleString()}</div>
                       <div className="text-xs text-green-100">Final Balance</div>
                     </div>
-                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-4 text-white text-center">
+                    <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.4)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
                       <div className="text-xl sm:text-2xl font-bold">${compResult.totalContributed.toLocaleString()}</div>
                       <div className="text-xs text-blue-100">You Contributed</div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-4 text-white text-center">
+                    <div style={{background:"rgba(168,85,247,0.08)",border:"0.5px solid rgba(168,85,247,0.4)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"4px",padding:"12px 14px",textAlign:"center"}}>
                       <div className="text-xl sm:text-2xl font-bold">${compResult.totalInterest.toLocaleString()}</div>
                       <div className="text-xs text-purple-100">Interest Earned</div>
                     </div>
@@ -15171,14 +15151,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {compResult.yearData.length > 0 && (
                     <div>
                       <h3 className="font-semibold text-white mb-3">Growth Over Time</h3>
-                      <div className="flex items-end gap-1 h-40 bg-gray-50 rounded-xl p-3">
+                      <div style={{display:"flex",alignItems:"flex-end",gap:"4px",height:"160px",background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px",padding:"10px"}}>
                         {compResult.yearData.map((d, i) => {
                           const maxVal = compResult.yearData[compResult.yearData.length - 1].balance || 1;
                           const height = (d.balance / maxVal) * 100;
                           return (
                             <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group relative">
                               <div className="absolute bottom-full mb-1 hidden group-hover:block text-xs px-2 py-1 rounded whitespace-nowrap z-10" style={{ backgroundColor: '#1e293b', color: '#ffffff' }}>Year {d.year}: ${d.balance.toLocaleString()}</div>
-                              <div className="w-full bg-gradient-to-t from-green-500 to-emerald-400 rounded-t transition-all duration-300" style={{ height: `${Math.max(height, 2)}%` }} />
+                              <div style={{width:"100%",background:"linear-gradient(to top, rgba(34,197,94,0.7), rgba(16,185,129,0.5))",borderRadius:"2px 2px 0 0",transition:"height 0.3s"}} style={{ height: `${Math.max(height, 2)}%` }} />
                               {(i === 0 || i === compResult.yearData.length - 1 || (i + 1) % 5 === 0) && (<span className="text-[9px] text-gray-400 mt-1">{d.year}y</span>)}
                             </div>
                           );
@@ -15186,8 +15166,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     </div>
                   )}
-                  <div className="mt-4 bg-amber-50 rounded-xl p-4 border border-amber-200">
-                    <p className="text-sm text-amber-800 font-medium">🦘 Muzz's Note: This calculator is for education only — not financial advice. Past returns don't guarantee future results. But compound interest is powerful, mate!</p>
+                  <div style={{marginTop:"12px",padding:"12px 14px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.6)",borderRadius:"3px"}}>
+                    <p className="text-sm text-amber-800 font-medium">Muzz's Note: This calculator is for education only — not financial advice. Past returns don't guarantee future results. But compound interest is powerful, mate!</p>
                   </div>
                 </div>
               </div>
