@@ -15850,39 +15850,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
-            {/* NAV GRID */}
-            <div style={{...donnyPanel,padding:"12px"}}>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// NAVIGATE</div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(90px,1fr))",gap:"6px"}}>
-                {[
-                  {label:"JOBS",       view:"donny-masterview",  workerOk:false, color:"rgba(249,115,22,0.7)"},
-                  {label:"SCHEDULER",  view:"donny-scheduler",   workerOk:false, color:"rgba(249,115,22,0.7)"},
-                  {label:"DAILY RPT",  view:"donny-dailyreport", workerOk:true,  color:"rgba(249,115,22,0.7)"},
-                  {label:"RECURRING",  view:"donny-recurring",   workerOk:false, color:"rgba(249,115,22,0.7)"},
-                  {label:"TEAM",       view:"donny-team",        workerOk:false, color:"rgba(249,115,22,0.7)"},
-                  {label:"SUBS",       view:"donny-subs",        workerOk:false, color:"rgba(249,115,22,0.7)"},
-                  {label:"CLIENTS",    view:"donny-clients",     workerOk:false, color:"rgba(59,130,246,0.7)"},
-                  {label:"PHOTOS",     view:"donny-photos",      workerOk:true,  color:"rgba(249,115,22,0.7)"},
-                  {label:"SWMS",       view:"donny-checklists",  workerOk:true,  color:"rgba(34,197,94,0.7)"},
-                  {label:"INCIDENTS",  view:"donny-incidents",   workerOk:true,  color:"rgba(239,68,68,0.7)"},
-                  {label:"MISTAKES",   view:"donny-mistakes",    workerOk:true,  color:"rgba(239,68,68,0.7)"},
-                  {label:"RISK REG",   view:"donny-safety",      workerOk:true,  color:"rgba(251,191,36,0.7)"},
-                  {label:"MATERIALS",  view:"donny-materialslog",workerOk:true,  color:"rgba(34,197,94,0.7)"},
-                  {label:"PRICE BK",   view:"donny-suppliers",   workerOk:false, color:"rgba(249,115,22,0.7)"},
-                  {label:"REPORTS",    view:"donny-reports",     workerOk:false, color:"rgba(249,115,22,0.7)"},
-                ].map(s => {
-                  const locked = donnyRole==='worker' && !s.workerOk;
-                  return (
-                    <button key={s.view} onClick={() => { if(!locked) setActiveView(s.view); }}
-                      style={{background:`${s.color.replace('0.7','0.04')}`,border:`0.5px solid ${locked?"rgba(255,255,255,0.04)":s.color.replace('0.7','0.2')}`,borderRadius:"3px",padding:"12px 6px",display:"flex",alignItems:"center",justifyContent:"center",opacity:locked?0.25:1,cursor:locked?'default':'pointer',position:"relative"}}>
-                      <span style={{fontSize:"11px",color:locked?"rgba(148,163,184,0.4)":s.color,fontFamily:"monospace",letterSpacing:"0.3px",textAlign:"center",lineHeight:"1.3"}}>{s.label}</span>
-                      {locked && <span style={{position:"absolute",top:"3px",right:"3px",fontSize:"7px"}}>🔒</span>}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* WORKSPACE CARD */}
             <div style={{...donnyPanel,overflow:"hidden"}}>
               <div style={donnyAccent}>
