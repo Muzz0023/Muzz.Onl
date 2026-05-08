@@ -16105,42 +16105,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.15)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className={isWide?"max-w-6xl mx-auto":"max-w-4xl mx-auto"}>
-              <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"16px"}}>
+              <div style={{display:"flex",alignItems:"center",gap:"16px",marginBottom:"4px"}}>
                 <svg width="44" height="54" viewBox="0 0 24 32" fill="none">
-                  <path d="M2 4 L22 4 L22 24 L18 28 L6 28 L2 24 Z" fill="url(#donnyDashGrad)" stroke="rgba(249,115,22,0.6)" strokeWidth="0.5"/>
-                  <path d="M8 10 L16 10 M8 14 L14 14 M8 18 L16 18" stroke="#0a0e1a" strokeWidth="1.2" strokeLinecap="round"/>
-                  <defs><linearGradient id="donnyDashGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#fde4c8"/><stop offset="0.5" stopColor="#fb923c"/><stop offset="1" stopColor="#c2410c"/></linearGradient></defs>
+                  <path d="M12 0L22 8L20 16L24 16L12 32L0 16L4 16L2 8L12 0Z" fill="url(#donnyBadgeGrad)" />
+                  <path d="M12 6L16 10L14 14L17 14L12 22L7 14L10 14L8 10L12 6Z" fill="#0a0e1a" fillOpacity="0.85" />
+                  <defs><linearGradient id="donnyBadgeGrad" x1="12" y1="0" x2="12" y2="32"><stop stopColor="#fde4c8"/><stop offset="0.5" stopColor="#fb923c"/><stop offset="1" stopColor="#c2410c"/></linearGradient></defs>
                 </svg>
                 <div style={{flex:1}}>
                   <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",letterSpacing:"2px",fontFamily:"monospace"}}>DAILY BRIEFING — {liveDate}</div>
                   <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap",marginTop:"4px"}}>
                     <div style={{fontSize:"clamp(14px,4vw,22px)",color:"#e0eaff",fontWeight:500,fontFamily:"monospace",letterSpacing:"1px"}}><span style={{whiteSpace:"nowrap"}}>{eliteName ? `OPERATOR: ${eliteName.toUpperCase()}` : "OPERATIONS"}</span></div>
                     <span style={{fontSize:"9px",color:donnyRole==='worker'?"rgba(34,197,94,0.95)":"#f97316",background:donnyRole==='worker'?"rgba(34,197,94,0.06)":"rgba(249,115,22,0.06)",border:`0.5px solid ${donnyRole==='worker'?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.5)"}`,padding:"1px 6px",letterSpacing:"1.5px",fontFamily:"monospace",borderRadius:"2px",whiteSpace:"nowrap"}}>[{donnyRole==='worker'?'WORKER':'BOSS'}]</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* HERO PANEL — Active Jobs + Total Labour */}
-              <div style={{...donnyPanel,borderLeft:"2px solid #f97316",padding:"16px 20px"}}>
-                <div style={{display:"flex",flexDirection:isWide?"row":"column",alignItems:isWide?"flex-start":"stretch",justifyContent:"space-between",gap:isWide?"12px":"14px"}}>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace",display:"flex",alignItems:"center",gap:"8px"}}>
-                      <span>Active Jobs</span>
-                      {overdueJobs.length>0 && <span style={{fontSize:"9px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",letterSpacing:"1px"}}>▲ {overdueJobs.length} OVERDUE</span>}
-                      {atRiskJobs.length>overdueJobs.length && <span style={{fontSize:"9px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",letterSpacing:"1px"}}>● {atRiskJobs.length-overdueJobs.length} AT RISK</span>}
-                    </div>
-                    <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
-                      <RollingValue value={activeJobs.length} fmt={(v) => String(v)} style={{fontSize:isWide?"40px":"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
-                      <DonnySparkline data={labourByDay.map(d=>d.hrs)} w={80} h={24} color={overdueJobs.length>0?"rgba(239,68,68,0.85)":"#f97316"} />
-                      {labourByDay[6].hrs > 0 && <span style={{fontSize:"10px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",letterSpacing:"1px"}}>{labourByDay[6].hrs.toFixed(1)}H TODAY</span>}
-                    </div>
-                  </div>
-                  <div style={{textAlign:isWide?"right":"left",flexShrink:0,paddingTop:isWide?0:"10px",borderTop:isWide?"none":"0.5px solid rgba(249,115,22,0.1)"}}>
-                    <div style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace",textAlign:isWide?"right":"left"}}>Total Labour</div>
-                    <div style={{display:"flex",alignItems:"baseline",gap:"6px",justifyContent:isWide?"flex-end":"flex-start"}}>
-                      <RollingValue value={totalLabourCost} prefix="$" fmt={(v) => v.toLocaleString(undefined,{maximumFractionDigits:0})} style={{fontSize:"24px",color:"#f97316",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
-                      <DonnySparkline data={labourByDay.map(d=>d.cost)} w={50} h={18} color="rgba(34,197,94,0.85)" />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -16216,19 +16191,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const amberCount = atRiskJobs.filter(j=>j._health==='amber').length;
                     const redCount = atRiskJobs.filter(j=>j._health==='red').length;
                     const total = Math.max(greenCount + amberCount + redCount, 1);
-                    const radius = 38, c = 2 * Math.PI * radius;
+                    const radius = 26, c = 2 * Math.PI * radius;
                     const greenLen = (greenCount/total)*c;
                     const amberLen = (amberCount/total)*c;
                     const redLen = (redCount/total)*c;
                     return (
                       <>
-                        <svg width="100" height="100" viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="10"/>
-                          {greenCount>0 && <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(34,197,94,0.85)" strokeWidth="10" strokeDasharray={`${greenLen} ${c-greenLen}`} strokeDashoffset="0" transform="rotate(-90 50 50)"/>}
-                          {amberCount>0 && <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(245,158,11,0.85)" strokeWidth="10" strokeDasharray={`${amberLen} ${c-amberLen}`} strokeDashoffset={-greenLen} transform="rotate(-90 50 50)"/>}
-                          {redCount>0 && <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(239,68,68,0.85)" strokeWidth="10" strokeDasharray={`${redLen} ${c-redLen}`} strokeDashoffset={-(greenLen+amberLen)} transform="rotate(-90 50 50)"/>}
-                          <text x="50" y="46" textAnchor="middle" fontSize="9" fill="rgba(249,115,22,0.5)" fontFamily="monospace" letterSpacing="1">TOTAL</text>
-                          <text x="50" y="60" textAnchor="middle" fontSize="16" fill="#e0eaff" fontFamily="monospace" fontWeight="500">{activeJobs.length}</text>
+                        <svg width="70" height="70" viewBox="0 0 70 70">
+                          <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="7"/>
+                          {greenCount>0 && <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(34,197,94,0.85)" strokeWidth="7" strokeDasharray={`${greenLen} ${c-greenLen}`} strokeDashoffset="0" transform="rotate(-90 35 35)"/>}
+                          {amberCount>0 && <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(245,158,11,0.85)" strokeWidth="7" strokeDasharray={`${amberLen} ${c-amberLen}`} strokeDashoffset={-greenLen} transform="rotate(-90 35 35)"/>}
+                          {redCount>0 && <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(239,68,68,0.85)" strokeWidth="7" strokeDasharray={`${redLen} ${c-redLen}`} strokeDashoffset={-(greenLen+amberLen)} transform="rotate(-90 35 35)"/>}
+                          <text x="35" y="38" textAnchor="middle" fontSize="14" fill="#e0eaff" fontFamily="monospace" fontWeight="500">{activeJobs.length}</text>
                         </svg>
                         <div style={{display:"flex",flexDirection:"column",gap:"6px",fontFamily:"monospace",fontSize:"11px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"6px"}}><span style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>Healthy <span style={{color:"rgba(34,197,94,0.95)"}}>{greenCount}</span></span></div>
