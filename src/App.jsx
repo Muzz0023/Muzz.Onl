@@ -19557,25 +19557,34 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 text-sm flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white">Export Data</h1>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>EXPORT DATA</div>
           </div>
         </div>
-        <div className="max-w-lg mx-auto px-6 py-10 space-y-6">
-          <div className="rounded-2xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
-            <div className="text-4xl text-center">📤</div>
-            <div className="text-white font-bold text-lg text-center">Download Your Backup</div>
-            <div className="text-sm text-center" style={{color:"rgba(148,163,184,0.6)"}}>
-              Downloads a <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file containing all your Muzz and Donny data. Keep it safe — you can use it to restore your data anytime.
+        <div className="max-w-lg mx-auto px-6 py-6" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.3)",borderLeft:"2px solid rgba(0,200,255,0.7)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>BACKUP CONSOLE</span>
             </div>
-            <button onClick={() => { doExport(); }}
-              className="w-full py-4 rounded-2xl font-bold text-white text-base"
-              style={{background:"linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))",boxShadow:"0 0 20px rgba(0,200,255,0.2)"}}>
-              📥 Download muzz-backup.json
-            </button>
+            <div style={{padding:"20px 18px",display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div>
+                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500,marginBottom:"6px"}}>DOWNLOAD BACKUP</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6}}>
+                  Exports a <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file containing all Muzz and Donny data. Keep it safe — use it to restore anytime.
+                </div>
+              </div>
+              <button onClick={() => { doExport(); }}
+                style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
+                ↓ DOWNLOAD MUZZ-BACKUP.JSON
+              </button>
+            </div>
           </div>
-          <div className="rounded-2xl p-4 text-sm" style={{background:"rgba(249,115,22,0.08)",border:"1px solid rgba(249,115,22,0.2)",color:"rgba(249,115,22,0.8)"}}>
-            💡 Tip: Export regularly to keep a fresh backup. Store it in iCloud, Google Drive, or email it to yourself.
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.25)",borderLeft:"2px solid rgba(251,191,36,0.6)",borderRadius:"6px",padding:"12px 16px",backgroundImage:"radial-gradient(rgba(251,191,36,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"4px"}}>// TIP</div>
+            <div style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",lineHeight:1.5}}>
+              Export regularly. Store backups in iCloud, Google Drive, or email them to yourself.
+            </div>
           </div>
         </div>
       </div>
@@ -19589,27 +19598,36 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-4xl mx-auto">
-            <button onClick={() => setActiveView('home')} className="mb-4 text-sm flex items-center gap-1" style={{color:"rgba(0,200,255,0.7)"}}>← Back</button>
-            <h1 className="text-3xl font-bold text-white">Import Data</h1>
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
+            <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>IMPORT DATA</div>
           </div>
         </div>
-        <div className="max-w-lg mx-auto px-6 py-10 space-y-6">
-          <div className="rounded-2xl p-6 space-y-4" style={{background:"rgba(5,15,30,0.8)",border:"1px solid rgba(0,200,255,0.15)"}}>
-            <div className="text-4xl text-center">📥</div>
-            <div className="text-white font-bold text-lg text-center">Restore From Backup</div>
-            <div className="text-sm text-center" style={{color:"rgba(148,163,184,0.6)"}}>
-              Select your <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file to restore all your data. This will overwrite your current data.
+        <div className="max-w-lg mx-auto px-6 py-6" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.3)",borderLeft:"2px solid rgba(0,200,255,0.7)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500}}>RESTORE CONSOLE</span>
             </div>
-            <label className="w-full py-4 rounded-2xl font-bold text-white text-base flex items-center justify-center gap-2 cursor-pointer"
-              style={{background:"linear-gradient(135deg,rgba(0,200,255,0.9),rgba(0,100,180,0.9))",boxShadow:"0 0 20px rgba(0,200,255,0.2)"}}>
-              📂 Select Backup File
-              <input type="file" accept=".json" className="hidden" onChange={(e) => {
-                doImport(e);
-              }}/>
-            </label>
+            <div style={{padding:"20px 18px",display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div>
+                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px",fontWeight:500,marginBottom:"6px"}}>RESTORE FROM BACKUP</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6}}>
+                  Select a <span style={{color:"#00c8ff"}}>muzz-backup.json</span> file to restore all data. This will overwrite all current data.
+                </div>
+              </div>
+              <label style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",textAlign:"center",display:"block"}}>
+                ↑ SELECT BACKUP FILE
+                <input type="file" accept=".json" style={{display:"none"}} onChange={(e) => {
+                  doImport(e);
+                }}/>
+              </label>
+            </div>
           </div>
-          <div className="rounded-2xl p-4 text-sm" style={{background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.2)",color:"rgba(239,68,68,0.8)"}}>
-            ⚠️ Warning: Importing will replace all your current data with the backup. Make sure you're selecting the right file.
+          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(239,68,68,0.25)",borderLeft:"2px solid rgba(239,68,68,0.6)",borderRadius:"6px",padding:"12px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{fontSize:"9px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:500,marginBottom:"4px"}}>// WARNING</div>
+            <div style={{fontSize:"11px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",lineHeight:1.5}}>
+              Importing will replace all current data with the backup. Verify the file before continuing.
+            </div>
           </div>
         </div>
       </div>
