@@ -15986,13 +15986,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
                       const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
                       return (
-                        <button key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }} style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",width:"100%"}}>
+                        <div key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }} style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
                           <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.7)"}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
                           <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{job.title}</div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?'#ef4444':'rgba(148,163,184,0.6)'}}>{job.dueDate?new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
                           <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:700,padding:"2px 8px",letterSpacing:"0.5px",background:`${statusColor}15`,color:statusColor,border:`0.5px solid ${statusColor}30`,borderRadius:"3px"}}>{status}</span></div>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
@@ -16136,7 +16136,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const totalMaterialsCost = jobMaterials.reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
       const jobMistakes = (donnyMistakes || []).filter(m => m.jobId === job.id);
       const jobIncidents = (donnyIncidents || []).filter(i => i.jobId === job.id);
-      const jobPhotos = (donnyPhotos || []).filter(p => p.jobId === job.id);
+      const jobPhotos = (donnyPhotos && donnyPhotos[job.id]) || [];
       const jobChecklists = (donnyChecklists || []).filter(c => c.jobId === job.id);
       const jobNotes = (donnyNotes && donnyNotes[job.id]) || [];
 
