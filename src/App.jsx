@@ -3892,6 +3892,56 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   };
 
+  // ============================================
+  // EntityChip — clickable entity reference chip
+  // ============================================
+  const EntityChip = ({ type, ref, label, sub, color, icon, size = "sm" }) => {
+    if (!ref) return null;
+    const px = size === "lg" ? "8px 10px" : "5px 8px";
+    const fs = size === "lg" ? "11px" : "10px";
+    const iconSize = size === "lg" ? "13px" : "11px";
+    return (
+      <button onClick={() => navToEntity(type, ref)}
+        style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:px,background:`${color}10`,border:`0.5px solid ${color}30`,borderLeft:`2px solid ${color}80`,borderRadius:"3px",cursor:"pointer",fontFamily:"monospace",maxWidth:"100%",overflow:"hidden",textAlign:"left"}}>
+        <span style={{fontSize:iconSize,color,lineHeight:1,flexShrink:0}}>{icon}</span>
+        <div style={{minWidth:0,flex:1,display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+          <span style={{fontSize:fs,color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"160px"}}>{label}</span>
+          {sub && <span style={{fontSize:"8px",color:`${color}99`,letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"160px"}}>{sub}</span>}
+        </div>
+      </button>
+    );
+  };
+
+  // ============================================
+  // ConnectionsPanel — entity relationships block
+  // ============================================
+  const ConnectionsPanel = ({ accent = '#f97316', sections }) => {
+    // sections: [{label, entities: [{type, ref, label, sub, color, icon}], emptyText}]
+    const total = sections.reduce((s, sec) => s + (sec.entities?.length || 0), 0);
+    return (
+      <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",backgroundImage:`radial-gradient(${accent}05 1px,transparent 1px)`,backgroundSize:"20px 20px",overflow:"hidden"}}>
+        <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${accent}1a`,borderLeft:`2px solid ${accent}b3`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <span style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px"}}>// CONNECTIONS</span>
+          <span style={{fontSize:"9px",color:`${accent}66`,fontFamily:"monospace"}}>{total} LINK{total!==1?'S':''}</span>
+        </div>
+        <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:"10px"}}>
+          {sections.map((sec,i) => (
+            <div key={i}>
+              <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>{sec.label.toUpperCase()}</div>
+              {(sec.entities && sec.entities.length > 0) ? (
+                <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                  {sec.entities.map((e,j) => <EntityChip key={`${e.type}-${e.ref?.id||e.ref?.name||j}`} {...e} />)}
+                </div>
+              ) : (
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace",letterSpacing:"0.5px",fontStyle:"italic"}}>{sec.emptyText || 'none'}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const Sidebar = () => {
     // Glyph map for muzz items
     const muzzGlyphs = {
@@ -16948,6 +16998,43 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
+            {/* CONNECTIONS — explicit relational chips */}
+            {(() => {
+              // Aggregate top materials used on this job by name
+              const matMap = {};
+              jobMaterials.forEach(m => {
+                const name = (m.item||'').trim();
+                if (!name) return;
+                if (!matMap[name]) matMap[name] = { name, qty: 0, count: 0, unit: m.unit || '' };
+                matMap[name].qty += parseFloat(m.qty)||0;
+                matMap[name].count += 1;
+              });
+              const topMaterials = Object.values(matMap).sort((a,b) => b.count - a.count).slice(0,6);
+
+              return (
+                <ConnectionsPanel
+                  accent="#f97316"
+                  sections={[
+                    {
+                      label: `Workers · ${workerHours.length}`,
+                      entities: workerHours.map(w => ({ type:'worker', ref:w, label:w.name, sub:`${w.hours.toFixed(1)}h`, color:'#f97316', icon:'⊢' })),
+                      emptyText: 'No workers logged on this job yet'
+                    },
+                    {
+                      label: 'Client',
+                      entities: client ? [{ type:'client', ref:client, label:client.name, sub:client.company||'', color:'#3b82f6', icon:'◇' }] : [],
+                      emptyText: 'No client linked'
+                    },
+                    {
+                      label: `Materials · ${topMaterials.length}`,
+                      entities: topMaterials.map(m => ({ type:'material', ref:{name:m.name}, label:m.name, sub:`${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}`, color:'#22c55e', icon:'◍' })),
+                      emptyText: 'No materials logged'
+                    },
+                  ]}
+                />
+              );
+            })()}
+
             {/* TIMELINE */}
             <div style={panel}>
               <div style={panelHeader}>
@@ -17246,6 +17333,29 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 )}
               </div>
             </div>
+
+            {/* CONNECTIONS */}
+            {(() => {
+              const clientIds = [...new Set(workerJobs.map(j => j.clientId).filter(Boolean))];
+              const linkedClients = clientIds.map(id => donnyClients.find(c => c.id === id)).filter(Boolean);
+              return (
+                <ConnectionsPanel
+                  accent="#f97316"
+                  sections={[
+                    {
+                      label: `Active Jobs · ${activeWorkerJobs.length}`,
+                      entities: activeWorkerJobs.slice(0,8).map(j => ({ type:'job', ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber}`:undefined, color:'#f97316', icon:'⊞' })),
+                      emptyText: 'No active jobs assigned'
+                    },
+                    {
+                      label: `Clients Worked For · ${linkedClients.length}`,
+                      entities: linkedClients.map(c => ({ type:'client', ref:c, label:c.name, sub:c.company||'', color:'#3b82f6', icon:'◇' })),
+                      emptyText: 'No clients linked'
+                    },
+                  ]}
+                />
+              );
+            })()}
 
             {/* PROFILE EDIT */}
             <div style={panel}>
@@ -17548,6 +17658,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
+            {/* CONNECTIONS */}
+            {(() => {
+              // Workers who've worked on this client's jobs
+              const allTs = donnyTimesheets.filter(e => clientJobIds.includes(e.jobId));
+              const workerIds = [...new Set(allTs.map(e => e.memberId).filter(Boolean))];
+              const linkedWorkers = workerIds.map(id => donnyTeam.find(m => m.id === id)).filter(Boolean);
+              // Top materials used
+              const matMap = {};
+              clientMaterials.forEach(m => {
+                const name = (m.item||'').trim();
+                if (!name) return;
+                if (!matMap[name]) matMap[name] = { name, count: 0 };
+                matMap[name].count += 1;
+              });
+              const topMaterials = Object.values(matMap).sort((a,b) => b.count - a.count).slice(0,6);
+              const activeClient = clientJobs.filter(j => !j.completed);
+              return (
+                <ConnectionsPanel
+                  accent="#3b82f6"
+                  sections={[
+                    {
+                      label: `Active Jobs · ${activeClient.length}`,
+                      entities: activeClient.slice(0,8).map(j => ({ type:'job', ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber}`:undefined, color:'#f97316', icon:'⊞' })),
+                      emptyText: 'No active jobs'
+                    },
+                    {
+                      label: `Workers Engaged · ${linkedWorkers.length}`,
+                      entities: linkedWorkers.map(w => ({ type:'worker', ref:w, label:w.name, sub:w.position||'', color:'#f97316', icon:'⊢' })),
+                      emptyText: 'No workers logged'
+                    },
+                    {
+                      label: `Top Materials · ${topMaterials.length}`,
+                      entities: topMaterials.map(m => ({ type:'material', ref:{name:m.name}, label:m.name, sub:`${m.count} entries`, color:'#22c55e', icon:'◍' })),
+                      emptyText: 'No materials logged'
+                    },
+                  ]}
+                />
+              );
+            })()}
+
             {/* DELETE */}
             <button onClick={() => { if(window.confirm(`Delete client ${client.name}? Jobs linked to them will be unlinked.`)) { setDonnyClients(donnyClients.filter(c=>c.id!==client.id)); setSelectedDonnyClient(null); setActiveView('donny-clients'); } }}
               style={{padding:"10px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"6px"}}>
@@ -17793,6 +17943,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
               </div>
             </div>
+
+            {/* CONNECTIONS */}
+            {(() => {
+              // Workers who've logged this material
+              const workerMap = {};
+              allEntries.forEach(e => {
+                if (e.addedBy) {
+                  if (!workerMap[e.addedBy]) workerMap[e.addedBy] = { name: e.addedBy, count: 0 };
+                  workerMap[e.addedBy].count += 1;
+                }
+              });
+              const workersByName = Object.values(workerMap).map(w => {
+                const matched = donnyTeam.find(m => m.name === w.name);
+                return matched ? { ...matched, _count: w.count } : null;
+              }).filter(Boolean).sort((a,b) => b._count - a._count);
+
+              // Clients whose jobs used this material
+              const clientIds = [...new Set(jobsWithMaterial.map(j => j.clientId).filter(Boolean))];
+              const linkedClients = clientIds.map(id => donnyClients.find(c => c.id === id)).filter(Boolean);
+
+              return (
+                <ConnectionsPanel
+                  accent="#22c55e"
+                  sections={[
+                    {
+                      label: `Used On Jobs · ${jobsWithMaterial.length}`,
+                      entities: jobsWithMaterial.slice(0,8).map(j => ({ type:'job', ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber}`:undefined, color:'#f97316', icon:'⊞' })),
+                      emptyText: 'Not used on any jobs'
+                    },
+                    {
+                      label: `Logged By · ${workersByName.length}`,
+                      entities: workersByName.map(w => ({ type:'worker', ref:w, label:w.name, sub:`${w._count} entries`, color:'#f97316', icon:'⊢' })),
+                      emptyText: 'No worker attribution'
+                    },
+                    {
+                      label: `For Clients · ${linkedClients.length}`,
+                      entities: linkedClients.map(c => ({ type:'client', ref:c, label:c.name, sub:c.company||'', color:'#3b82f6', icon:'◇' })),
+                      emptyText: 'No client links'
+                    },
+                  ]}
+                />
+              );
+            })()}
 
             {/* TIMELINE */}
             <div style={panel}>
