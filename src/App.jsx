@@ -2372,6 +2372,64 @@ function MuzzApp() {
   const [selectedDonnyWorker, setSelectedDonnyWorker] = useState(null);
   const [selectedDonnyClient, setSelectedDonnyClient] = useState(null);
   const [selectedDonnyMaterial, setSelectedDonnyMaterial] = useState(null);
+  const [donnyBreadcrumbs, setDonnyBreadcrumbs] = useState([]); // [{type, id, label, color, icon}]
+
+  // Push an entity onto the breadcrumb trail; auto-dedupes if already on top
+  const pushBreadcrumb = (crumb) => {
+    setDonnyBreadcrumbs(prev => {
+      // If already at the top, no-op
+      if (prev.length > 0 && prev[prev.length-1].type === crumb.type && String(prev[prev.length-1].id) === String(crumb.id)) return prev;
+      // If already in the trail somewhere, truncate to that point (so back-clicking doesn't create loops)
+      const existingIdx = prev.findIndex(c => c.type === crumb.type && String(c.id) === String(crumb.id));
+      if (existingIdx >= 0) return prev.slice(0, existingIdx + 1);
+      // Otherwise append, capped at 8
+      return [...prev, crumb].slice(-8);
+    });
+  };
+
+  // Navigate to an entity AND push it onto the trail
+  const navToEntity = (type, ref) => {
+    if (type === 'job') {
+      setSelectedDonnyJob(ref);
+      setActiveView('donny-jobdetail');
+      pushBreadcrumb({ type:'job', id:ref.id, label:ref.title, color:'#f97316', icon:'⊞' });
+    } else if (type === 'worker') {
+      setSelectedDonnyWorker(ref);
+      setActiveView('donny-workerdetail');
+      pushBreadcrumb({ type:'worker', id:ref.id, label:ref.name, color:'#f97316', icon:'⊢' });
+    } else if (type === 'client') {
+      setSelectedDonnyClient(ref);
+      setActiveView('donny-clientdetail');
+      pushBreadcrumb({ type:'client', id:ref.id, label:ref.name, color:'#3b82f6', icon:'◇' });
+    } else if (type === 'material') {
+      setSelectedDonnyMaterial(ref);
+      setActiveView('donny-materialdetail');
+      pushBreadcrumb({ type:'material', id:ref.name, label:ref.name, color:'#22c55e', icon:'◍' });
+    }
+  };
+
+  // Jump back to a breadcrumb (truncates trail to that point)
+  const jumpToBreadcrumb = (idx) => {
+    const crumb = donnyBreadcrumbs[idx];
+    if (!crumb) return;
+    setDonnyBreadcrumbs(prev => prev.slice(0, idx + 1));
+    if (crumb.type === 'job') {
+      const job = donnyJobs.find(j => String(j.id) === String(crumb.id));
+      if (job) { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }
+    } else if (crumb.type === 'worker') {
+      const worker = donnyTeam.find(w => String(w.id) === String(crumb.id));
+      if (worker) { setSelectedDonnyWorker(worker); setActiveView('donny-workerdetail'); }
+    } else if (crumb.type === 'client') {
+      const client = donnyClients.find(c => String(c.id) === String(crumb.id));
+      if (client) { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }
+    } else if (crumb.type === 'material') {
+      setSelectedDonnyMaterial({ name: crumb.id });
+      setActiveView('donny-materialdetail');
+    }
+  };
+
+  const clearBreadcrumbs = () => setDonnyBreadcrumbs([]);
+
   const [donnySearchOpen, setDonnySearchOpen] = useState(false);
   const [donnySearchQuery, setDonnySearchQuery] = useState('');
   const [donnySearchIdx, setDonnySearchIdx] = useState(0);
@@ -3727,10 +3785,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     const totalResults = Math.min(results.length, 20);
     const handleSelect = (r) => {
-      if (r.type === 'job') { setSelectedDonnyJob(r.ref); setActiveView('donny-jobdetail'); }
-      else if (r.type === 'worker') { setSelectedDonnyWorker(r.ref); setActiveView('donny-workerdetail'); }
-      else if (r.type === 'client') { setSelectedDonnyClient(r.ref); setActiveView('donny-clientdetail'); }
-      else if (r.type === 'material') { setSelectedDonnyMaterial(r.ref); setActiveView('donny-materialdetail'); }
+      if (r.type === 'job') { navToEntity('job', r.ref); }
+      else if (r.type === 'worker') { navToEntity('worker', r.ref); }
+      else if (r.type === 'client') { navToEntity('client', r.ref); }
+      else if (r.type === 'material') { navToEntity('material', r.ref); }
       setDonnySearchOpen(false);
       setDonnySearchQuery('');
     };
@@ -3792,6 +3850,44 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </span>
           </div>
         </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // DonnyBreadcrumbs — Gotham-style entity trail
+  // ============================================
+  const DonnyBreadcrumbs = () => {
+    if (donnyBreadcrumbs.length === 0) return null;
+    // Use the color of the active (last) crumb as the strip accent
+    const accent = donnyBreadcrumbs[donnyBreadcrumbs.length-1].color;
+    return (
+      <div style={{borderBottom:"0.5px solid rgba(255,255,255,0.04)",background:"rgba(2,6,16,0.6)",padding:"6px 24px",display:"flex",alignItems:"center",gap:"4px",overflowX:"auto",scrollbarWidth:"none"}}>
+        <button onClick={() => { setActiveView('donny'); clearBreadcrumbs(); }}
+          style={{display:"flex",alignItems:"center",gap:"5px",padding:"3px 8px",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace",flexShrink:0}}>
+          <span style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",lineHeight:1}}>⌂</span>
+          <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px"}}>HOME</span>
+        </button>
+        {donnyBreadcrumbs.map((c,i) => {
+          const isLast = i === donnyBreadcrumbs.length-1;
+          return (
+            <React.Fragment key={`${c.type}-${c.id}-${i}`}>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.3)",fontFamily:"monospace",flexShrink:0}}>›</span>
+              <button onClick={() => jumpToBreadcrumb(i)}
+                disabled={isLast}
+                style={{display:"flex",alignItems:"center",gap:"5px",padding:"3px 8px",background:isLast?`${c.color}15`:"none",border:isLast?`0.5px solid ${c.color}30`:"none",borderRadius:"3px",cursor:isLast?"default":"pointer",fontFamily:"monospace",flexShrink:0,maxWidth:"180px"}}>
+                <span style={{fontSize:"11px",color:c.color,lineHeight:1,flexShrink:0}}>{c.icon}</span>
+                <span style={{fontSize:"10px",color:isLast?c.color:"rgba(224,234,255,0.7)",letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.label}</span>
+              </button>
+            </React.Fragment>
+          );
+        })}
+        {donnyBreadcrumbs.length > 1 && (
+          <button onClick={clearBreadcrumbs}
+            style={{marginLeft:"auto",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",padding:"3px 8px",flexShrink:0}}>
+            CLEAR
+          </button>
+        )}
       </div>
     );
   };
@@ -16078,6 +16174,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* DONNY LEFT RAIL — desktop only */}
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
 
           {/* TOP COMMAND BAR */}
           <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(249,115,22,0.25)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
@@ -16227,7 +16324,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {anomalies.slice(0,5).map((a,i) => {
                     const c = a.severity==='red'?'239,68,68':a.severity==='amber'?'245,158,11':'34,197,94';
                     return (
-                      <button key={i} onClick={() => { if(a.jobId){ const j=donnyJobs.find(x=>x.id===a.jobId); if(j){setSelectedDonnyJob(j); setActiveView('donny-jobdetail');} } else if(a.workerId){ const w=donnyTeam.find(x=>x.id===a.workerId); if(w){setSelectedDonnyWorker(w); setActiveView('donny-workerdetail');} } }}
+                      <button key={i} onClick={() => { if(a.jobId){ const j=donnyJobs.find(x=>x.id===a.jobId); if(j){navToEntity('job', j);} } else if(a.workerId){ const w=donnyTeam.find(x=>x.id===a.workerId); if(w){navToEntity('worker', w);} } }}
                         style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(anomalies.length,5)-1?"0.5px solid rgba(249,115,22,0.04)":"none",textAlign:"left"}}>
                         <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`rgba(${c},0.08)`,color:`rgba(${c},0.95)`,border:`0.5px solid rgba(${c},0.4)`,borderRadius:"2px",letterSpacing:"1px",flexShrink:0,minWidth:"60px",textAlign:"center"}}>{a.severity.toUpperCase()}</span>
                         <span style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{a.text}</span>
@@ -16257,7 +16354,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const status = j._overdue ? 'OVERDUE' : j.completed?'DONE':j.started?'ACTIVE':'TO DO';
                     const dueStr = j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—';
                     return (
-                      <button key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                      <button key={j.id} onClick={() => { navToEntity('job', j); }}
                         style={{width:"100%",display:"grid",gridTemplateColumns:"40px 1fr 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<Math.min(jobHealth.length,8)-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                         <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
                           <span style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,boxShadow:`0 0 4px ${sc}80`,flexShrink:0}}/>
@@ -16288,7 +16385,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const utilPct = (m._weekHrs / m._capacity) * 100;
                   const utilColor = utilPct > 100 ? '239,68,68' : utilPct > 80 ? '245,158,11' : utilPct > 0 ? '34,197,94' : '148,163,184';
                   return (
-                    <button key={m.id} onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+                    <button key={m.id} onClick={() => { navToEntity('worker', m); }}
                       style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 80px 80px",padding:"10px 16px",alignItems:"center",borderBottom:i<Math.min(workerUtil.length,5)-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
                       <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
@@ -16368,6 +16465,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
@@ -16411,7 +16509,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
                       const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
                       return (
-                        <div key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }} style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
+                        <div key={job.id} onClick={() => { navToEntity('job', job); }} style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
                           <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.7)"}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
                           <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{job.title}</div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
@@ -16454,7 +16552,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           else if (cardQH > 0 && (cardHrs/cardQH) > 0.8) riskDot = '#f59e0b';
 
                           return (
-                          <div key={job.id} onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }}
+                          <div key={job.id} onClick={() => { navToEntity('job', job); }}
                             style={{background:"rgba(5,12,24,0.9)",border:`0.5px solid ${col.color}25`,borderRadius:"6px",borderLeft:`2px solid ${col.color}50`,padding:"10px 12px",cursor:"pointer",position:"relative",transition:"border-color 0.15s"}}
                             onMouseEnter={e => e.currentTarget.style.borderColor = col.color+'60'}
                             onMouseLeave={e => e.currentTarget.style.borderColor = col.color+'25'}>
@@ -16636,6 +16734,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -16655,7 +16754,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <input value={job.title||''} onChange={e => updateJob({title:e.target.value})}
                     style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"22px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"4px 0"}} placeholder="Job title..."/>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {client ? <button onClick={() => { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }} style={{background:"none",border:"none",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0}}>↳ {client.name}</button> : 'No client linked'}
+                    {client ? <button onClick={() => { navToEntity('client', client); }} style={{background:"none",border:"none",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0}}>↳ {client.name}</button> : 'No client linked'}
                     {' · '}created {formatDate(job.createdAt)}
                   </div>
                 </div>
@@ -16811,7 +16910,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 ) : (
                   <div>
                     {workerHours.map((w,i) => (
-                      <button key={w.id} onClick={() => { setSelectedDonnyWorker(w); setActiveView('donny-workerdetail'); }} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<workerHours.length-1?"0.5px solid rgba(249,115,22,0.06)":"none",textAlign:"left"}}>
+                      <button key={w.id} onClick={() => { navToEntity('worker', w); }} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<workerHours.length-1?"0.5px solid rgba(249,115,22,0.06)":"none",textAlign:"left"}}>
                         <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                           <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"9px",fontWeight:600,color:"rgba(249,115,22,0.85)"}}>{(w.name||'?').slice(0,2).toUpperCase()}</div>
                           <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{w.name}</span>
@@ -16909,6 +17008,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO WORKER SELECTED</div>
               <button onClick={() => setActiveView('donny-team')} style={{padding:"8px 18px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO TEAM</button>
@@ -16995,6 +17095,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -17099,7 +17200,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {workerJobs.slice(0,8).map((j,i) => {
                       const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
                       return (
-                        <button key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                        <button key={j.id} onClick={() => { navToEntity('job', j); }}
                           style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(workerJobs.length,8)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
                             <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
@@ -17223,6 +17324,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO CLIENT SELECTED</div>
               <button onClick={() => setActiveView('donny-clients')} style={{padding:"8px 18px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO CLIENTS</button>
@@ -17284,6 +17386,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(59,130,246,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -17367,7 +17470,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const sc = j.completed?'#22c55e':j.started?'#f97316':'#94a3b8';
                     const marginColor = j._margin>=20?'#22c55e':j._margin>=0?'#f59e0b':'#ef4444';
                     return (
-                      <div key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                      <div key={j.id} onClick={() => { navToEntity('job', j); }}
                         style={{display:"grid",gridTemplateColumns:"60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobsWithMargin.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
                         <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(59,130,246,0.7)"}}>{j.jobNumber?`#${j.jobNumber}`:'—'}</div>
                         <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"8px"}}>{j.title}</div>
@@ -17466,6 +17569,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO MATERIAL SELECTED</div>
               <button onClick={() => setActiveView('donny-materialslog')} style={{padding:"8px 18px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>← BACK TO MATERIALS</button>
@@ -17540,6 +17644,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <DonnyBreadcrumbs />
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(34,197,94,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -17630,7 +17735,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {jobsWithMaterial.slice(0,8).map((j,i) => {
                       const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
                       return (
-                        <button key={j.id} onClick={() => { setSelectedDonnyJob(j); setActiveView('donny-jobdetail'); }}
+                        <button key={j.id} onClick={() => { navToEntity('job', j); }}
                           style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(jobsWithMaterial.length,8)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
                             <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
@@ -17713,7 +17818,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.4)",flexShrink:0}}>{relTime(e.createdAt)}</span>
                           </div>
                           {e.note && <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e.note}</div>}
-                          {job && <button onClick={() => { setSelectedDonnyJob(job); setActiveView('donny-jobdetail'); }} style={{background:"none",border:"none",fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",marginTop:"2px",cursor:"pointer",padding:0}}>↳ {job.title}</button>}
+                          {job && <button onClick={() => { navToEntity('job', job); }} style={{background:"none",border:"none",fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",marginTop:"2px",cursor:"pointer",padding:0}}>↳ {job.title}</button>}
                           {e.addedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>by {e.addedBy}</div>}
                         </div>
                       </div>
@@ -18291,12 +18396,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div key={member.id} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
                       <div className="p-4">
                         <div className="flex items-center gap-3">
-                          <button onClick={() => { setSelectedDonnyWorker(member); setActiveView('donny-workerdetail'); }}
+                          <button onClick={() => { navToEntity('worker', member); }}
                             className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0"
                             style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316',cursor:'pointer'}}>
                             {member.name.charAt(0).toUpperCase()}
                           </button>
-                          <button onClick={() => { setSelectedDonnyWorker(member); setActiveView('donny-workerdetail'); }}
+                          <button onClick={() => { navToEntity('worker', member); }}
                             className="flex-1 min-w-0 text-left" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-white font-bold">{member.name}</span>
@@ -18308,7 +18413,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           </button>
                           <div className="flex gap-2 flex-shrink-0">
-                            <button onClick={() => { setSelectedDonnyWorker(member); setActiveView('donny-workerdetail'); }}
+                            <button onClick={() => { navToEntity('worker', member); }}
                               style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer",letterSpacing:"0.5px",fontFamily:"monospace"}}>
                               OPEN →
                             </button>
@@ -19475,7 +19580,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                   <div style={{maxHeight:"260px",overflowY:"auto"}}>
                     {catalog.slice(0,12).map((m,i) => (
-                      <button key={m.name} onClick={() => { setSelectedDonnyMaterial({name:m.name}); setActiveView('donny-materialdetail'); }}
+                      <button key={m.name} onClick={() => { navToEntity('material', {name:m.name}); }}
                         style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
                         <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
                           <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
@@ -20621,7 +20726,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {donnyClients.map((client, i) => {
                       const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
                       return (
-                        <div key={client.id} onClick={() => { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }}
+                        <div key={client.id} onClick={() => { navToEntity('client', client); }}
                           className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
                           style={{gridTemplateColumns:'1fr 1fr 130px 120px',borderBottom:i<donnyClients.length-1?'1px solid rgba(255,255,255,0.03)':'none',cursor:'pointer'}}>
                           <div className="flex items-center gap-2">
@@ -20664,7 +20769,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => { setSelectedDonnyClient(client); setActiveView('donny-clientdetail'); }}
+                            <button onClick={() => { navToEntity('client', client); }}
                               style={{fontSize:'10px',padding:'2px 8px',background:'rgba(59,130,246,0.1)',color:'rgba(59,130,246,0.85)',border:'0.5px solid rgba(59,130,246,0.3)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace',letterSpacing:'0.5px'}}>OPEN →</button>
                             <button onClick={()=>setEditingClientId(isEditing?null:client.id)} style={{fontSize:'10px',padding:'2px 8px',background:'rgba(148,163,184,0.06)',color:'rgba(148,163,184,0.6)',border:'0.5px solid rgba(148,163,184,0.2)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace'}}>{isEditing?'✕':'⋯'}</button>
                             <button onClick={()=>{if(window.confirm(`Remove ${client.name}?`)) saveClients(donnyClients.filter(c=>c.id!==client.id));}} style={{fontSize:'10px',padding:'2px 8px',background:'rgba(239,68,68,0.06)',color:'rgba(239,68,68,0.5)',border:'0.5px solid rgba(239,68,68,0.2)',borderRadius:'3px',cursor:'pointer'}}>×</button>
