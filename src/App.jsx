@@ -3563,6 +3563,99 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   };
 
+  // ============================================
+  // DonnyLeftRail — same vibe, orange + Donny views
+  // ============================================
+  const DonnyLeftRail = ({ activeView, setActiveView, donnyRole, hidden, onToggle }) => {
+    const sections = [
+      { id:"donny",              label:"DASH",  icon:"◈",  workerOk:true  },
+      { id:"donny-masterview",   label:"JOBS",  icon:"⊞",  workerOk:false },
+      { id:"donny-scheduler",    label:"SCHED", icon:"◴",  workerOk:false },
+      { id:"donny-dailyreport",  label:"LOG",   icon:"☰",  workerOk:true  },
+      { id:"donny-recurring",    label:"RECUR", icon:"⟳",  workerOk:false },
+      { id:"donny-team",         label:"TEAM",  icon:"⊢",  workerOk:false },
+      { id:"donny-clients",      label:"CLNT",  icon:"◇",  workerOk:false },
+      { id:"donny-photos",       label:"PHOTO", icon:"▣",  workerOk:true  },
+      { id:"donny-checklists",   label:"SWMS",  icon:"⊡",  workerOk:true  },
+      { id:"donny-incidents",    label:"INCDT", icon:"⚠",  workerOk:true  },
+      { id:"donny-mistakes",     label:"MISTK", icon:"✕",  workerOk:true  },
+      { id:"donny-safety",       label:"RISK",  icon:"◐",  workerOk:true  },
+      { id:"donny-materialslog", label:"MATL",  icon:"◍",  workerOk:true  },
+      { id:"donny-suppliers",    label:"PRICE", icon:"$",  workerOk:false },
+      { id:"donny-reports",      label:"RPRT",  icon:"⌬",  workerOk:false },
+    ];
+    return (
+      <>
+        <div style={{
+          position:"fixed",
+          left: hidden ? "-72px" : "4px",
+          top:"32px",bottom:"26px",width:"68px",zIndex:25,
+          background:"rgba(3,8,18,0.95)",
+          borderRight:"0.5px solid rgba(249,115,22,0.15)",
+          borderLeft:"0.5px solid rgba(249,115,22,0.08)",
+          display:"flex",flexDirection:"column",
+          backdropFilter:"blur(8px)",
+          transition:"left 0.22s ease"
+        }}>
+          <div style={{padding:"10px 6px 6px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",textAlign:"center"}}>
+            <div style={{fontSize:"8px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DONNY</div>
+            <div style={{fontSize:"8px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>OPS</div>
+          </div>
+          <div style={{flex:1,minHeight:0,padding:"4px 0",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+            {sections.map(s => {
+              const active = activeView === s.id;
+              const locked = donnyRole === 'worker' && !s.workerOk;
+              return (
+                <button key={s.id} onClick={() => !locked && setActiveView(s.id)} style={{
+                  flex:1,minHeight:"32px",
+                  display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"2px",
+                  width:"100%",padding:"2px 4px",
+                  background:active?"rgba(249,115,22,0.1)":"transparent",
+                  border:"none",borderLeft:active?"2px solid #f97316":"2px solid transparent",
+                  cursor:locked?"not-allowed":"pointer",
+                  opacity:locked?0.3:1
+                }}>
+                  <span style={{fontSize:"15px",color:active?"#f97316":"rgba(249,115,22,0.5)",fontFamily:"monospace",lineHeight:1}}>{s.icon}</span>
+                  <span style={{fontSize:"8.5px",color:active?"#f97316":"rgba(249,115,22,0.45)",fontFamily:"monospace",letterSpacing:"1px",lineHeight:1}}>{s.label}</span>
+                  {locked && <span style={{fontSize:"7px",color:"rgba(249,115,22,0.3)",lineHeight:1}}>🔒</span>}
+                </button>
+              );
+            })}
+          </div>
+          <div style={{padding:"6px",borderTop:"0.5px solid rgba(249,115,22,0.1)",textAlign:"center"}}>
+            <div style={{fontSize:"7.5px",color:"rgba(249,115,22,0.35)",fontFamily:"monospace",letterSpacing:"1px"}}>v2026.05</div>
+          </div>
+        </div>
+
+        <button
+          onClick={onToggle}
+          title={hidden ? "Show workspaces (›)" : "Hide workspaces (‹)"}
+          style={{
+            position:"fixed",
+            top:"50%",
+            left: hidden ? "0px" : "72px",
+            transform:"translateY(-50%)",
+            zIndex:26,
+            width:"18px",height:"54px",
+            background:"rgba(3,8,18,0.95)",
+            border:"0.5px solid rgba(249,115,22,0.3)",
+            borderLeft: hidden ? "0.5px solid rgba(249,115,22,0.3)" : "none",
+            borderRadius: "0 4px 4px 0",
+            color:"rgba(249,115,22,0.8)",
+            fontFamily:"monospace",fontSize:"12px",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            cursor:"pointer",
+            backdropFilter:"blur(8px)",
+            transition:"left 0.22s ease",
+            padding:0,
+          }}
+        >
+          {hidden ? "›" : "‹"}
+        </button>
+      </>
+    );
+  };
+
   // Sidebar Component - Palantir-style dense terminal nav
   const Sidebar = () => {
     // Glyph map for muzz items
@@ -15672,9 +15765,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const donnyAccent = {padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
 
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar />
           <SaveIndicator />
+
+          {/* DONNY LEFT RAIL — desktop only */}
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
 
           {/* TOP COMMAND BAR */}
           <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(249,115,22,0.25)",padding:"6px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
@@ -15908,8 +16004,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'2-digit'}) : '—';
       const isOverdue = (d) => d && new Date(d) < new Date();
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
@@ -16174,8 +16271,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       };
 
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
