@@ -2455,6 +2455,8 @@ function MuzzApp() {
   const [donnySearchOpen, setDonnySearchOpen] = useState(false);
   const [donnySearchQuery, setDonnySearchQuery] = useState('');
   const [donnySearchIdx, setDonnySearchIdx] = useState(0);
+  // Lineage popup — { title, value, formula, breakdown: [{label, value, ...meta}], onItemClick? }
+  const [donnyLineage, setDonnyLineage] = useState(null);
 
   // Donny search — Cmd+K / Ctrl+K to open, ESC to close
   useEffect(() => {
@@ -2465,14 +2467,17 @@ function MuzzApp() {
         setDonnySearchQuery('');
         setDonnySearchIdx(0);
       }
-      if (e.key === 'Escape' && donnySearchOpen) {
-        setDonnySearchOpen(false);
-        setDonnySearchQuery('');
+      if (e.key === 'Escape') {
+        if (donnyLineage) setDonnyLineage(null);
+        else if (donnySearchOpen) {
+          setDonnySearchOpen(false);
+          setDonnySearchQuery('');
+        }
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [donnySearchOpen]);
+  }, [donnySearchOpen, donnyLineage]);
 
   const [editingJobId, setEditingJobId] = useState(null);
   const [donnyNotes, setDonnyNotes] = useState({});
@@ -4038,6 +4043,83 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </button>
             );
           })}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // LineageNumber — clickable number that opens calculation breakdown
+  // ============================================
+  const LineageNumber = ({ value, lineage, color = "#e0eaff", style = {} }) => {
+    if (!lineage) {
+      return <span style={style}>{value}</span>;
+    }
+    return (
+      <span onClick={(e) => { e.stopPropagation(); setDonnyLineage(lineage); }}
+        title="Click to see how this is calculated"
+        style={{...style, color, cursor:"pointer", borderBottom:`0.5px dashed ${color}55`, paddingBottom:"1px"}}>
+        {value}
+      </span>
+    );
+  };
+
+  // ============================================
+  // LineagePopup — Foundry-style data lineage modal
+  // ============================================
+  const LineagePopup = () => {
+    if (!donnyLineage) return null;
+    const lin = donnyLineage;
+    const accent = lin.color || '#f97316';
+    const close = () => setDonnyLineage(null);
+    return (
+      <div onClick={close}
+        style={{position:"fixed",inset:0,zIndex:210,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"15vh"}}>
+        <div onClick={e => e.stopPropagation()}
+          style={{width:"min(640px, 92vw)",maxHeight:"70vh",background:"rgba(5,12,24,0.97)",border:`0.5px solid ${accent}4d`,borderLeft:`2px solid ${accent}b3`,borderRadius:"6px",overflow:"hidden",boxShadow:`0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px ${accent}0d`,backgroundImage:`radial-gradient(${accent}0a 1px,transparent 1px)`,backgroundSize:"20px 20px",display:"flex",flexDirection:"column"}}>
+          {/* Header */}
+          <div style={{padding:"14px 18px",borderBottom:`0.5px solid ${accent}26`,display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"12px"}}>
+            <div style={{minWidth:0,flex:1}}>
+              <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// DATA LINEAGE</div>
+              <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.5px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{lin.title}</div>
+              {lin.formula && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"0.3px"}}>{lin.formula}</div>}
+            </div>
+            <div style={{textAlign:"right",flexShrink:0}}>
+              <div style={{fontSize:"22px",color:accent,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{lin.value}</div>
+              <button onClick={close} style={{marginTop:"6px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",padding:"2px 6px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"3px",cursor:"pointer"}}>ESC</button>
+            </div>
+          </div>
+
+          {/* Breakdown */}
+          <div style={{flex:1,overflowY:"auto",minHeight:0}}>
+            {(!lin.breakdown || lin.breakdown.length === 0) ? (
+              <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>NO BREAKDOWN AVAILABLE</div>
+            ) : (
+              <>
+                <div style={{padding:"6px 18px 4px",fontSize:"8px",color:`${accent}66`,fontFamily:"monospace",letterSpacing:"2px"}}>// COMPONENTS · {lin.breakdown.length}</div>
+                {lin.breakdown.slice(0,50).map((row,i) => (
+                  <button key={i} onClick={() => {
+                      if (row.onClick) { close(); row.onClick(); }
+                    }}
+                    disabled={!row.onClick}
+                    style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"8px 18px",background:"none",border:"none",borderBottom:i<Math.min(lin.breakdown.length,50)-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:row.onClick?"pointer":"default",textAlign:"left"}}>
+                    {row.icon && <span style={{fontSize:"12px",color:row.color||accent,fontFamily:"monospace",lineHeight:1,flexShrink:0,width:"16px",textAlign:"center"}}>{row.icon}</span>}
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{row.label}</div>
+                      {row.sub && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{row.sub}</div>}
+                    </div>
+                    <div style={{fontSize:"11px",color:row.valueColor||accent,fontFamily:"monospace",flexShrink:0,fontWeight:500}}>{row.value}</div>
+                    {row.onClick && <span style={{fontSize:"10px",color:`${accent}66`,fontFamily:"monospace",flexShrink:0}}>↗</span>}
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
+
+          {/* Footer with formula recap */}
+          {lin.note && (
+            <div style={{padding:"8px 18px",borderTop:`0.5px solid ${accent}1a`,fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{lin.note}</div>
+          )}
         </div>
       </div>
     );
@@ -16325,6 +16407,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* DONNY LEFT RAIL — desktop only */}
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
 
           {/* TOP COMMAND BAR */}
@@ -16376,15 +16459,134 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{...donnyPanel,borderLeft:"2px solid #f97316"}}>
               <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
                 {[
-                  {label:"Active",  value:String(activeJobs.length), color:"#f97316", series:[activeJobs.length*0.7,activeJobs.length*0.85,activeJobs.length*0.95,activeJobs.length], view:'donny-masterview', warn:false},
-                  {label:"At Risk", value:String(atRiskJobs.length), color:atRiskJobs.length>0?"rgba(245,158,11,0.95)":"rgba(34,197,94,0.7)", series:[1,2,atRiskJobs.length||0.5,atRiskJobs.length||1], view:'donny-masterview', warn:atRiskJobs.length>0},
-                  {label:"Wk Hrs",  value:totalWeekHrs>0?`${totalWeekHrs.toFixed(0)}h`:"—", color:"#a855f7", series:labourByDay.map(d=>d.hrs), view:'donny-dailyreport', warn:false},
-                  {label:"Wk $",    value:totalWeekCost>0?`$${totalWeekCost.toFixed(0)}`:"—", color:"rgba(34,197,94,0.85)", series:labourByDay.map(d=>d.cost), view:'donny-reports', warn:false},
-                  {label:"Team",    value:String(donnyTeam.length), color:"#3b82f6", series:[donnyTeam.length*0.5,donnyTeam.length*0.8,donnyTeam.length*0.95,donnyTeam.length], view:'donny-team', warn:false},
+                  {
+                    label:"Active", value:String(activeJobs.length), color:"#f97316", series:[activeJobs.length*0.7,activeJobs.length*0.85,activeJobs.length*0.95,activeJobs.length], warn:false,
+                    lineage: {
+                      title: 'Active Jobs',
+                      value: String(activeJobs.length),
+                      color: '#f97316',
+                      formula: 'COUNT(jobs WHERE NOT completed AND NOT archived)',
+                      breakdown: activeJobs.map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: j.jobNumber ? `#${j.jobNumber} · ${j.started?'in progress':'not started'}` : (j.started?'in progress':'not started'),
+                        value: j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
+                        valueColor: j.dueDate && new Date(j.dueDate) < new Date() ? '#ef4444' : 'rgba(148,163,184,0.6)',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                      note: 'Click any row to open the job',
+                    },
+                  },
+                  {
+                    label:"At Risk", value:String(atRiskJobs.length), color:atRiskJobs.length>0?"rgba(245,158,11,0.95)":"rgba(34,197,94,0.7)", series:[1,2,atRiskJobs.length||0.5,atRiskJobs.length||1], warn:atRiskJobs.length>0,
+                    lineage: {
+                      title: 'At Risk Jobs',
+                      value: String(atRiskJobs.length),
+                      color: '#f59e0b',
+                      formula: 'jobs WHERE overdue OR hours > quote OR cost > quote',
+                      breakdown: atRiskJobs.map(j => ({
+                        icon: j._health === 'red' ? '▲' : '●', color: j._health === 'red' ? '#ef4444' : '#f59e0b',
+                        label: j.title,
+                        sub: j._reasons ? j._reasons.join(' · ') : 'risk flagged',
+                        value: j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
+                        valueColor: j._health === 'red' ? '#ef4444' : '#f59e0b',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                      note: atRiskJobs.length === 0 ? 'All jobs healthy' : 'Click any row to investigate',
+                    },
+                  },
+                  {
+                    label:"Wk Hrs", value:totalWeekHrs>0?`${totalWeekHrs.toFixed(0)}h`:"—", color:"#a855f7", series:labourByDay.map(d=>d.hrs), warn:false,
+                    lineage: {
+                      title: 'Hours This Week',
+                      value: `${totalWeekHrs.toFixed(1)}h`,
+                      color: '#a855f7',
+                      formula: 'SUM(timesheet.hours WHERE date >= start of week)',
+                      breakdown: (() => {
+                        const startOfWk = new Date(); startOfWk.setDate(startOfWk.getDate() - startOfWk.getDay()); startOfWk.setHours(0,0,0,0);
+                        const wkTs = donnyTimesheets.filter(e => new Date(e.date||e.createdAt||0) >= startOfWk);
+                        // Group by worker
+                        const byWorker = {};
+                        wkTs.forEach(e => {
+                          const w = donnyTeam.find(m => m.id === e.memberId);
+                          const key = w?.id || 'unknown';
+                          if (!byWorker[key]) byWorker[key] = { worker: w, hours: 0, count: 0 };
+                          byWorker[key].hours += parseFloat(e.hours)||0;
+                          byWorker[key].count += 1;
+                        });
+                        return Object.values(byWorker).sort((a,b) => b.hours - a.hours).map(g => ({
+                          icon: '⊢', color: '#f97316',
+                          label: g.worker?.name || 'Unknown',
+                          sub: `${g.count} entr${g.count!==1?'ies':'y'} · ${g.worker?.position||'worker'}`,
+                          value: `${g.hours.toFixed(1)}h`,
+                          valueColor: '#a855f7',
+                          onClick: g.worker ? () => navToEntity('worker', g.worker) : null,
+                        }));
+                      })(),
+                      note: 'Hours grouped by worker · click to open worker',
+                    },
+                  },
+                  {
+                    label:"Wk $", value:totalWeekCost>0?`$${totalWeekCost.toFixed(0)}`:"—", color:"rgba(34,197,94,0.85)", series:labourByDay.map(d=>d.cost), warn:false,
+                    lineage: {
+                      title: 'Labour $ This Week',
+                      value: `$${totalWeekCost.toFixed(0)}`,
+                      color: 'rgba(34,197,94,0.95)',
+                      formula: 'SUM(timesheet.hours × worker.hourlyRate)',
+                      breakdown: (() => {
+                        const startOfWk = new Date(); startOfWk.setDate(startOfWk.getDate() - startOfWk.getDay()); startOfWk.setHours(0,0,0,0);
+                        const wkTs = donnyTimesheets.filter(e => new Date(e.date||e.createdAt||0) >= startOfWk);
+                        // Group by job
+                        const byJob = {};
+                        wkTs.forEach(e => {
+                          const w = donnyTeam.find(m => m.id === e.memberId);
+                          const cost = (parseFloat(e.hours)||0) * (parseFloat(w?.hourlyRate)||0);
+                          if (!byJob[e.jobId]) byJob[e.jobId] = { jobId: e.jobId, hours: 0, cost: 0 };
+                          byJob[e.jobId].hours += parseFloat(e.hours)||0;
+                          byJob[e.jobId].cost += cost;
+                        });
+                        return Object.values(byJob).sort((a,b) => b.cost - a.cost).map(g => {
+                          const j = donnyJobs.find(x => x.id === g.jobId);
+                          return {
+                            icon: '⊞', color: '#f97316',
+                            label: j?.title || 'Unknown job',
+                            sub: `${g.hours.toFixed(1)}h${j?.jobNumber?' · #'+j.jobNumber:''}`,
+                            value: `$${g.cost.toFixed(0)}`,
+                            valueColor: 'rgba(34,197,94,0.95)',
+                            onClick: j ? () => navToEntity('job', j) : null,
+                          };
+                        });
+                      })(),
+                      note: 'Cost grouped by job · click to open job',
+                    },
+                  },
+                  {
+                    label:"Team", value:String(donnyTeam.length), color:"#3b82f6", series:[donnyTeam.length*0.5,donnyTeam.length*0.8,donnyTeam.length*0.95,donnyTeam.length], warn:false,
+                    lineage: {
+                      title: 'Team Members',
+                      value: String(donnyTeam.length),
+                      color: '#3b82f6',
+                      formula: 'COUNT(team WHERE NOT archived)',
+                      breakdown: donnyTeam.filter(m => !m.archived).map(m => ({
+                        icon: '⊢', color: '#f97316',
+                        label: m.name,
+                        sub: `${m.position||(m.roles||[])[0]||'worker'}${m.hourlyRate?' · $'+m.hourlyRate+'/hr':''}`,
+                        value: (m.roles||[]).length>0 ? `${(m.roles||[]).length} role${(m.roles||[]).length!==1?'s':''}` : '—',
+                        valueColor: 'rgba(148,163,184,0.6)',
+                        onClick: () => navToEntity('worker', m),
+                      })),
+                      note: 'Click any worker to open',
+                    },
+                  },
                 ].map((k,i) => (
-                  <button key={i} onClick={() => setActiveView(k.view)} style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:"pointer",textAlign:"left"}}>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{k.label}</div>
-                    <div style={{fontSize:"16px",color:k.warn?"rgba(245,158,11,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap"}}>{k.value}</div>
+                  <button key={i} onClick={() => setDonnyLineage(k.lineage)}
+                    title="Click to see calculation"
+                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:"pointer",textAlign:"left"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                      <span>{k.label}</span>
+                      <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>
+                    </div>
+                    <div style={{fontSize:"16px",color:k.warn?"rgba(245,158,11,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",borderBottom:"0.5px dashed rgba(249,115,22,0.2)",paddingBottom:"1px",display:"inline-block"}}>{k.value}</div>
                     <div style={{marginTop:"4px",height:"14px"}}>
                       <DonnySparkline data={k.series} w={56} h={14} color={k.color} fillOpacity={0.1} />
                     </div>
@@ -16616,6 +16818,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -16910,6 +17113,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -16984,7 +17188,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>HOURS</span>
                     <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{totalHours.toFixed(1)} / {quotedHours||'—'}</span>
                   </div>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
+                  <LineageNumber
+                    value={<>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></>}
+                    color="#e0eaff"
+                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1,display:"inline-block"}}
+                    lineage={{
+                      title: `Hours on ${job.title}`,
+                      value: `${totalHours.toFixed(1)}h`,
+                      color: '#f97316',
+                      formula: 'SUM(timesheet.hours WHERE jobId)',
+                      breakdown: workerHours.map(w => ({
+                        icon: '⊢', color: '#f97316',
+                        label: w.name,
+                        sub: `${w.position||(w.roles||[])[0]||'worker'} · $${w.hourlyRate||0}/hr`,
+                        value: `${w.hours.toFixed(1)}h`,
+                        valueColor: '#f97316',
+                        onClick: () => navToEntity('worker', w),
+                      })),
+                      note: 'Click any worker to open',
+                    }}
+                  />
                   <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
                     <div style={{height:"100%",width:`${Math.min(hoursPct,100)}%`,background:hoursPct>100?"rgba(239,68,68,0.7)":hoursPct>80?"rgba(245,158,11,0.7)":"rgba(249,115,22,0.7)",transition:"width 0.3s"}}/>
                   </div>
@@ -16998,7 +17221,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>LABOUR</span>
                     <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{workersOnJob.length} worker{workersOnJob.length!==1?'s':''}</span>
                   </div>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>${totalLabour.toFixed(0)}</div>
+                  <LineageNumber
+                    value={`$${totalLabour.toFixed(0)}`}
+                    color="#e0eaff"
+                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1,display:"inline-block"}}
+                    lineage={{
+                      title: `Labour cost on ${job.title}`,
+                      value: `$${totalLabour.toFixed(0)}`,
+                      color: 'rgba(34,197,94,0.95)',
+                      formula: 'SUM(hours × hourlyRate) per worker',
+                      breakdown: workerHours.map(w => ({
+                        icon: '⊢', color: '#f97316',
+                        label: w.name,
+                        sub: `${w.hours.toFixed(1)}h × $${w.hourlyRate||0}/hr`,
+                        value: `$${w.cost.toFixed(0)}`,
+                        valueColor: 'rgba(34,197,94,0.95)',
+                        onClick: () => navToEntity('worker', w),
+                      })),
+                      note: 'Hours × hourly rate per worker',
+                    }}
+                  />
                   <div style={{height:"3px",background:"transparent",marginBottom:"6px"}}/>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",padding:"3px 0",borderBottom:"0.5px solid transparent"}}>auto-calculated</div>
                 </div>
@@ -17009,7 +17251,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>MATERIALS</span>
                     <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{quotedMaterials?'/ $'+quotedMaterials:''}</span>
                   </div>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>${totalMaterialsCost.toFixed(0)}</div>
+                  <LineageNumber
+                    value={`$${totalMaterialsCost.toFixed(0)}`}
+                    color="#e0eaff"
+                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1,display:"inline-block"}}
+                    lineage={{
+                      title: `Materials cost on ${job.title}`,
+                      value: `$${totalMaterialsCost.toFixed(0)}`,
+                      color: '#22c55e',
+                      formula: 'SUM(material.cost WHERE jobId)',
+                      breakdown: jobMaterials.map(m => ({
+                        icon: '◍', color: '#22c55e',
+                        label: m.item || 'unknown',
+                        sub: `${m.qty||'?'}${m.unit?' '+m.unit:''}${m.note?' · '+m.note:''}`,
+                        value: m.cost ? `$${parseFloat(m.cost).toFixed(0)}` : '—',
+                        valueColor: '#22c55e',
+                        onClick: m.item ? () => navToEntity('material', {name:m.item}) : null,
+                      })),
+                      note: 'Click any material to open',
+                    }}
+                  />
                   <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
                     <div style={{height:"100%",width:`${Math.min(materialsPct,100)}%`,background:materialsPct>100?"rgba(239,68,68,0.7)":"rgba(59,130,246,0.7)",transition:"width 0.3s"}}/>
                   </div>
@@ -17279,6 +17540,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO WORKER SELECTED</div>
@@ -17378,6 +17640,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17437,9 +17700,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>ALL TIME</div>
-                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
+                  <LineageNumber
+                    value={<>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></>}
+                    color="#e0eaff"
+                    style={{fontSize:"22px",fontFamily:"monospace",fontWeight:500,lineHeight:1,display:"inline-block"}}
+                    lineage={{
+                      title: `${worker.name} · all-time hours`,
+                      value: `${totalHours.toFixed(1)}h`,
+                      color: '#f97316',
+                      formula: 'SUM(timesheet.hours WHERE memberId) grouped by job',
+                      breakdown: workerJobs.map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: j.jobNumber ? `#${j.jobNumber} · ${j.completed?'done':j.started?'active':'to do'}` : (j.completed?'done':j.started?'active':'to do'),
+                        value: `${j._hrs.toFixed(1)}h`,
+                        valueColor: '#f97316',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                      note: 'Hours broken down per job · click to open',
+                    }}
+                  />
                   <div style={{height:"3px",background:"transparent",margin:"6px 0"}}/>
-                  <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>${totalEarned.toFixed(0)}</div>
+                  <LineageNumber
+                    value={`$${totalEarned.toFixed(0)}`}
+                    color="rgba(34,197,94,0.7)"
+                    style={{fontSize:"10px",fontFamily:"monospace",display:"inline-block"}}
+                    lineage={{
+                      title: `${worker.name} · all-time earnings`,
+                      value: `$${totalEarned.toFixed(0)}`,
+                      color: 'rgba(34,197,94,0.95)',
+                      formula: `${totalHours.toFixed(1)}h × $${rate}/hr`,
+                      breakdown: workerJobs.map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: `${j._hrs.toFixed(1)}h × $${rate}/hr`,
+                        value: `$${(j._hrs * rate).toFixed(0)}`,
+                        valueColor: 'rgba(34,197,94,0.95)',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -17649,6 +17949,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO CLIENT SELECTED</div>
@@ -17725,6 +18026,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17769,7 +18071,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"14px"}}>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TOTAL QUOTED</div>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalRevenue.toFixed(0)}</div>
+                  <LineageNumber
+                    value={`$${totalRevenue.toFixed(0)}`}
+                    color="#e0eaff"
+                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,lineHeight:1,display:"inline-block"}}
+                    lineage={{
+                      title: `${client.name} · total quoted`,
+                      value: `$${totalRevenue.toFixed(0)}`,
+                      color: '#3b82f6',
+                      formula: 'SUM(job.quotedCost) per client job',
+                      breakdown: clientJobs.map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: `${j.completed?'done':j.started?'active':'to do'}${j.jobNumber?' · #'+j.jobNumber:''}`,
+                        value: j.quotedCost ? `$${parseFloat(j.quotedCost).toFixed(0)}` : '—',
+                        valueColor: '#3b82f6',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                    }}
+                  />
                   <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>across {clientJobs.length} job{clientJobs.length!==1?'s':''}</div>
                 </div>
                 <div>
@@ -17784,7 +18104,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>PROFIT</div>
-                  <div style={{fontSize:"20px",color:totalProfit>=0?"rgba(34,197,94,0.95)":"#ef4444",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalProfit>=0?'+':''}${totalProfit.toFixed(0)}</div>
+                  <LineageNumber
+                    value={`${totalProfit>=0?'+':''}$${totalProfit.toFixed(0)}`}
+                    color={totalProfit>=0?"rgba(34,197,94,0.95)":"#ef4444"}
+                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,lineHeight:1,display:"inline-block"}}
+                    lineage={{
+                      title: `${client.name} · profit`,
+                      value: `${totalProfit>=0?'+':''}$${totalProfit.toFixed(0)}`,
+                      color: totalProfit>=0 ? 'rgba(34,197,94,0.95)' : '#ef4444',
+                      formula: 'SUM(quoted - labour - materials) per job',
+                      breakdown: jobsWithMargin.map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: `quoted $${(parseFloat(j.quotedCost)||0).toFixed(0)} − cost $${j._cost.toFixed(0)}`,
+                        value: `${j._profit>=0?'+':''}$${j._profit.toFixed(0)}`,
+                        valueColor: j._profit>=0 ? 'rgba(34,197,94,0.95)' : '#ef4444',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                    }}
+                  />
                   <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>after costs</div>
                 </div>
               </div>
@@ -17980,6 +18318,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO MATERIAL SELECTED</div>
@@ -18055,6 +18394,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch />
+          <LineagePopup />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
