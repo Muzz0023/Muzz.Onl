@@ -2469,6 +2469,12 @@ function MuzzApp() {
     try { localStorage.setItem('donny_alert_config', JSON.stringify(donnyAlertConfig)); } catch(e) {}
   }, [donnyAlertConfig]);
   const [donnyAlertConfigOpen, setDonnyAlertConfigOpen] = useState(false);
+  // Donny Ask — AI query mode
+  const [donnyAskOpen, setDonnyAskOpen] = useState(false);
+  const [donnyAskQuery, setDonnyAskQuery] = useState('');
+  const [donnyAskAnswer, setDonnyAskAnswer] = useState(null);
+  const [donnyAskLoading, setDonnyAskLoading] = useState(false);
+  const [donnyAskHistory, setDonnyAskHistory] = useState([]); // [{query, answer}]
 
   // Donny search — Cmd+K / Ctrl+K to open, ESC to close
   useEffect(() => {
@@ -2479,8 +2485,16 @@ function MuzzApp() {
         setDonnySearchQuery('');
         setDonnySearchIdx(0);
       }
+      // Cmd+J / Ctrl+J — open Ask AI
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
+        e.preventDefault();
+        setDonnyAskOpen(o => !o);
+        setDonnyAskQuery('');
+        setDonnyAskAnswer(null);
+      }
       if (e.key === 'Escape') {
-        if (donnyAlertConfigOpen) setDonnyAlertConfigOpen(false);
+        if (donnyAskOpen) { setDonnyAskOpen(false); setDonnyAskQuery(''); setDonnyAskAnswer(null); }
+        else if (donnyAlertConfigOpen) setDonnyAlertConfigOpen(false);
         else if (donnyLineage) setDonnyLineage(null);
         else if (donnySearchOpen) {
           setDonnySearchOpen(false);
@@ -2490,7 +2504,7 @@ function MuzzApp() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [donnySearchOpen, donnyLineage, donnyAlertConfigOpen]);
+  }, [donnySearchOpen, donnyLineage, donnyAlertConfigOpen, donnyAskOpen]);
 
   const [editingJobId, setEditingJobId] = useState(null);
   const [donnyNotes, setDonnyNotes] = useState({});
@@ -4330,6 +4344,507 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <button onClick={close} style={{padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"4px"}}>
               ✓ DONE
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // DONNY ASK — plain-English query engine (AIP)
+  // ============================================
+  // Local intent matcher with Gemini fallback. Runs in the browser, so common
+  // queries are instant. Falls back to /api/chat with structured context for
+  // anything the local engine doesn't understand.
+  const runDonnyQuery = async (rawQuery) => {
+    const q = rawQuery.trim().toLowerCase();
+    if (!q) return null;
+
+    // ── HELPERS ──────────────────────────────────────────────────────
+    const now = new Date();
+    const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay()); startOfWeek.setHours(0,0,0,0);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+    // Determine time window from query
+    const timeWindow = (() => {
+      if (/\b(today|todays|todays')\b/.test(q)) return { start: new Date(now.getFullYear(), now.getMonth(), now.getDate()), label: 'today' };
+      if (/\bthis week\b|\bweek\b/.test(q)) return { start: startOfWeek, label: 'this week' };
+      if (/\bthis month\b|\bmonth\b/.test(q)) return { start: startOfMonth, label: 'this month' };
+      if (/\bthis year\b|\byear\b/.test(q)) return { start: startOfYear, label: 'this year' };
+      if (/\ball time\b|\bever\b|\btotal\b/.test(q)) return { start: new Date(0), label: 'all time' };
+      return null;
+    })();
+
+    const inWindow = (entry) => {
+      if (!timeWindow) return true;
+      const t = new Date(entry.date || entry.createdAt || 0);
+      return t >= timeWindow.start;
+    };
+
+    // Find a worker name in query
+    const findWorker = () => {
+      for (const m of donnyTeam) {
+        if (!m.name) continue;
+        const nm = m.name.toLowerCase();
+        // Match full name OR first name (when space-separated)
+        const firstName = nm.split(' ')[0];
+        if (q.includes(nm) || (firstName.length >= 3 && new RegExp(`\\b${firstName}\\b`).test(q))) return m;
+      }
+      return null;
+    };
+    const worker = findWorker();
+
+    // Find a job in query
+    const findJob = () => {
+      for (const j of donnyJobs) {
+        if (j.title && q.includes(j.title.toLowerCase())) return j;
+        if (j.jobNumber && q.includes(`#${j.jobNumber}`.toLowerCase())) return j;
+        if (j.jobNumber && new RegExp(`\\b${j.jobNumber}\\b`).test(q)) return j;
+      }
+      return null;
+    };
+    const job = findJob();
+
+    // Find a client in query
+    const findClient = () => {
+      for (const c of donnyClients) {
+        if (c.name && q.includes(c.name.toLowerCase())) return c;
+        if (c.company && q.includes(c.company.toLowerCase())) return c;
+      }
+      return null;
+    };
+    const client = findClient();
+
+    // ── INTENT 1 — Hours for a worker ────────────────────────────────
+    if (/(hours|hrs|how many|how much).+(work|log|do|did)/.test(q) && worker) {
+      const ts = donnyTimesheets.filter(e => String(e.memberId) === String(worker.id) && inWindow(e));
+      const totalHrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const earned = totalHrs * (parseFloat(worker.hourlyRate)||0);
+      // Group by job
+      const byJob = {};
+      ts.forEach(e => {
+        if (!byJob[e.jobId]) byJob[e.jobId] = 0;
+        byJob[e.jobId] += parseFloat(e.hours)||0;
+      });
+      const jobBreakdown = Object.entries(byJob).map(([jid, hrs]) => {
+        const j = donnyJobs.find(x => String(x.id) === String(jid));
+        return { job:j, hrs };
+      }).filter(x => x.job).sort((a,b) => b.hrs - a.hrs);
+      return {
+        kind: 'worker_hours',
+        title: `${worker.name}'s hours${timeWindow ? ' · '+timeWindow.label : ''}`,
+        bigStat: `${totalHrs.toFixed(1)}h`,
+        bigSub: `$${earned.toFixed(0)} earned${worker.hourlyRate?` @ $${worker.hourlyRate}/hr`:''}`,
+        rows: jobBreakdown.map(b => ({
+          icon: '⊞', color: '#f97316',
+          label: b.job.title,
+          sub: b.job.jobNumber ? `#${b.job.jobNumber}` : '',
+          value: `${b.hrs.toFixed(1)}h`,
+          onClick: () => navToEntity('job', b.job),
+        })),
+        primary: { type: 'worker', ref: worker },
+      };
+    }
+
+    // ── INTENT 2 — Hours on a job ────────────────────────────────────
+    if (/(hours|hrs|how many|how much|who).+(on|for)\b/.test(q) && job) {
+      const ts = donnyTimesheets.filter(e => e.jobId === job.id && inWindow(e));
+      const total = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const labour = ts.reduce((s,e) => {
+        const m = donnyTeam.find(x => x.id === e.memberId);
+        return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+      }, 0);
+      // Group by worker
+      const byWorker = {};
+      ts.forEach(e => {
+        if (!byWorker[e.memberId]) byWorker[e.memberId] = { hrs: 0, cost: 0 };
+        const m = donnyTeam.find(x => x.id === e.memberId);
+        byWorker[e.memberId].hrs += parseFloat(e.hours)||0;
+        byWorker[e.memberId].cost += (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+      });
+      const workerBreakdown = Object.entries(byWorker).map(([wid, g]) => {
+        const w = donnyTeam.find(x => String(x.id) === String(wid));
+        return w ? { ...g, worker: w } : null;
+      }).filter(Boolean).sort((a,b) => b.hrs - a.hrs);
+      return {
+        kind: 'job_hours',
+        title: `${job.title}${timeWindow ? ' · '+timeWindow.label : ''}`,
+        bigStat: `${total.toFixed(1)}h`,
+        bigSub: `$${labour.toFixed(0)} labour cost · ${workerBreakdown.length} worker${workerBreakdown.length!==1?'s':''}`,
+        rows: workerBreakdown.map(b => ({
+          icon: '⊢', color: '#f97316',
+          label: b.worker.name,
+          sub: b.worker.position || '',
+          value: `${b.hrs.toFixed(1)}h · $${b.cost.toFixed(0)}`,
+          onClick: () => navToEntity('worker', b.worker),
+        })),
+        primary: { type: 'job', ref: job },
+      };
+    }
+
+    // ── INTENT 3 — Overdue jobs ──────────────────────────────────────
+    if (/overdue|past due|late/.test(q)) {
+      const overdue = donnyJobs.filter(j => !j.completed && !j.archived && j.dueDate && new Date(j.dueDate) < now);
+      return {
+        kind: 'overdue',
+        title: `Overdue jobs`,
+        bigStat: String(overdue.length),
+        bigSub: overdue.length === 0 ? 'all on time ✓' : `past due as of today`,
+        rows: overdue.map(j => {
+          const days = Math.floor((now - new Date(j.dueDate)) / (1000*60*60*24));
+          const c = donnyClients.find(x => x.id === j.clientId);
+          return {
+            icon: '⊞', color: '#ef4444',
+            label: j.title,
+            sub: c ? `${c.name}${j.jobNumber?' · #'+j.jobNumber:''}` : (j.jobNumber?`#${j.jobNumber}`:''),
+            value: `${days}d late`,
+            valueColor: '#ef4444',
+            onClick: () => navToEntity('job', j),
+          };
+        }),
+      };
+    }
+
+    // ── INTENT 4 — Jobs that lost money / over quote ─────────────────
+    if (/lost money|lose money|losing|over quote|over budget|unprofitable/.test(q)) {
+      const losers = donnyJobs.filter(j => !j.archived).map(j => {
+        const ts = donnyTimesheets.filter(e => e.jobId === j.id);
+        const labour = ts.reduce((s,e) => {
+          const m = donnyTeam.find(x => x.id === e.memberId);
+          return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+        }, 0);
+        const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
+        const totalCost = labour + mats;
+        const quoted = parseFloat(j.quotedCost) || 0;
+        const profit = quoted - totalCost;
+        return { ...j, _cost: totalCost, _profit: profit, _quoted: quoted };
+      }).filter(j => j._quoted > 0 && j._profit < 0).sort((a,b) => a._profit - b._profit);
+      return {
+        kind: 'losers',
+        title: 'Jobs over quote',
+        bigStat: String(losers.length),
+        bigSub: losers.length === 0 ? 'every quote on track ✓' : `total loss: $${losers.reduce((s,j) => s+j._profit, 0).toFixed(0)}`,
+        rows: losers.map(j => ({
+          icon: '⊞', color: '#ef4444',
+          label: j.title,
+          sub: `quoted $${j._quoted.toFixed(0)} · spent $${j._cost.toFixed(0)}`,
+          value: `${j._profit.toFixed(0)}`,
+          valueColor: '#ef4444',
+          onClick: () => navToEntity('job', j),
+        })),
+      };
+    }
+
+    // ── INTENT 5 — Top materials ─────────────────────────────────────
+    if (/top|most used|materials|items/.test(q) && /material|item/.test(q)) {
+      const matMap = {};
+      (donnyMaterialsLog||[]).filter(inWindow).forEach(e => {
+        const name = (e.item||'').trim();
+        if (!name) return;
+        if (!matMap[name]) matMap[name] = { name, qty: 0, count: 0, cost: 0, unit: e.unit||'' };
+        matMap[name].qty += parseFloat(e.qty)||0;
+        matMap[name].count += 1;
+        matMap[name].cost += parseFloat(e.cost)||0;
+      });
+      const top = Object.values(matMap).sort((a,b) => b.count - a.count).slice(0,15);
+      return {
+        kind: 'top_materials',
+        title: `Top materials${timeWindow ? ' · '+timeWindow.label : ''}`,
+        bigStat: String(top.length),
+        bigSub: `most-logged items, ranked by entries`,
+        rows: top.map(m => ({
+          icon: '◍', color: '#22c55e',
+          label: m.name,
+          sub: `${m.count} entries`,
+          value: `${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}`,
+          valueColor: '#22c55e',
+          onClick: () => navToEntity('material', { name: m.name }),
+        })),
+      };
+    }
+
+    // ── INTENT 6 — Jobs for a client ─────────────────────────────────
+    if (client && /\b(jobs|job|work)\b/.test(q)) {
+      const cjobs = donnyJobs.filter(j => j.clientId === client.id);
+      const completed = cjobs.filter(j => j.completed);
+      const active = cjobs.filter(j => !j.completed);
+      return {
+        kind: 'client_jobs',
+        title: `${client.name}'s jobs`,
+        bigStat: String(cjobs.length),
+        bigSub: `${active.length} active · ${completed.length} done`,
+        rows: cjobs.map(j => ({
+          icon: '⊞', color: '#f97316',
+          label: j.title,
+          sub: j.jobNumber ? `#${j.jobNumber} · ${j.completed?'done':j.started?'active':'to do'}` : (j.completed?'done':j.started?'active':'to do'),
+          value: j.quotedCost ? `$${parseFloat(j.quotedCost).toFixed(0)}` : '—',
+          onClick: () => navToEntity('job', j),
+        })),
+        primary: { type: 'client', ref: client },
+      };
+    }
+
+    // ── INTENT 7 — How much earned / labour cost ─────────────────────
+    if (/(earn|earned|made|revenue|labour|labor|cost|spend|spent)\b/.test(q)) {
+      const ts = donnyTimesheets.filter(inWindow);
+      const total = ts.reduce((s,e) => {
+        const m = donnyTeam.find(x => x.id === e.memberId);
+        return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+      }, 0);
+      const totalHrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const byJob = {};
+      ts.forEach(e => {
+        if (!byJob[e.jobId]) byJob[e.jobId] = { hrs: 0, cost: 0 };
+        const m = donnyTeam.find(x => x.id === e.memberId);
+        byJob[e.jobId].hrs += parseFloat(e.hours)||0;
+        byJob[e.jobId].cost += (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+      });
+      const breakdown = Object.entries(byJob).map(([jid, g]) => {
+        const j = donnyJobs.find(x => String(x.id) === String(jid));
+        return j ? { ...g, job: j } : null;
+      }).filter(Boolean).sort((a,b) => b.cost - a.cost);
+      return {
+        kind: 'labour_cost',
+        title: `Labour cost${timeWindow ? ' · '+timeWindow.label : ''}`,
+        bigStat: `$${total.toFixed(0)}`,
+        bigSub: `${totalHrs.toFixed(1)}h across ${breakdown.length} job${breakdown.length!==1?'s':''}`,
+        rows: breakdown.map(b => ({
+          icon: '⊞', color: '#f97316',
+          label: b.job.title,
+          sub: `${b.hrs.toFixed(1)}h${b.job.jobNumber?' · #'+b.job.jobNumber:''}`,
+          value: `$${b.cost.toFixed(0)}`,
+          valueColor: 'rgba(34,197,94,0.95)',
+          onClick: () => navToEntity('job', b.job),
+        })),
+      };
+    }
+
+    // ── INTENT 8 — At-risk / health ──────────────────────────────────
+    if (/at risk|risky|in trouble|warning|alert/.test(q)) {
+      const risks = donnyJobs.filter(j => !j.completed && !j.archived).map(j => {
+        const ts = donnyTimesheets.filter(e => e.jobId === j.id);
+        const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+        const labour = ts.reduce((s,e) => {
+          const m = donnyTeam.find(x => x.id === e.memberId);
+          return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+        }, 0);
+        const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
+        const cost = labour + mats;
+        const reasons = [];
+        if (j.dueDate && new Date(j.dueDate) < now) reasons.push('OVERDUE');
+        if (j.quotedHours && (hrs / parseFloat(j.quotedHours)) >= donnyAlertConfig.hoursPct/100) reasons.push('HOURS HIGH');
+        if (j.quotedCost && (cost / parseFloat(j.quotedCost)) >= donnyAlertConfig.costPct/100) reasons.push('COST HIGH');
+        return { ...j, _reasons: reasons };
+      }).filter(j => j._reasons.length > 0);
+      return {
+        kind: 'risks',
+        title: 'Jobs needing attention',
+        bigStat: String(risks.length),
+        bigSub: risks.length === 0 ? 'all jobs healthy ✓' : 'flagged for review',
+        rows: risks.map(j => ({
+          icon: '⊞', color: '#f59e0b',
+          label: j.title,
+          sub: j._reasons.join(' · '),
+          value: j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
+          valueColor: '#f59e0b',
+          onClick: () => navToEntity('job', j),
+        })),
+      };
+    }
+
+    // ── FALLBACK — Gemini with structured context ────────────────────
+    try {
+      const ctx = {
+        team: donnyTeam.filter(m => !m.archived).map(m => ({ id:m.id, name:m.name, position:m.position, rate:m.hourlyRate })),
+        jobs: donnyJobs.filter(j => !j.archived).map(j => ({
+          id:j.id, title:j.title, number:j.jobNumber, started:!!j.started, completed:!!j.completed,
+          due:j.dueDate, quotedHours:j.quotedHours, quotedCost:j.quotedCost, clientId:j.clientId,
+        })),
+        clients: donnyClients.map(c => ({ id:c.id, name:c.name, company:c.company })),
+        timesheets_summary: {
+          total_hours: donnyTimesheets.reduce((s,e) => s + (parseFloat(e.hours)||0), 0),
+          this_week_hours: donnyTimesheets.filter(e => new Date(e.date||e.createdAt||0) >= startOfWeek).reduce((s,e) => s + (parseFloat(e.hours)||0), 0),
+        },
+      };
+      const systemPrompt = `You are an AI analyst for Donny, a trade business operations system. The user has asked a question about their data. Answer concisely (2-3 sentences max) using only the data provided. If the question can't be answered from the data, say so plainly. Don't invent numbers. The user is a tradesperson (sparky) so use direct, no-bs language.
+
+DATA:
+${JSON.stringify(ctx, null, 2)}`;
+      const response = await fetch(api('/api/chat'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: systemPrompt,
+          contents: [{ role: 'user', parts: [{ text: rawQuery }] }],
+        })
+      });
+      const data = await response.json();
+      const reply = data.reply || "Couldn't get an answer for that one.";
+      return {
+        kind: 'gemini',
+        title: 'AI Answer',
+        bigStat: null,
+        bigSub: null,
+        textAnswer: reply,
+        rows: [],
+      };
+    } catch (e) {
+      return {
+        kind: 'error',
+        title: 'No match',
+        bigStat: '—',
+        bigSub: 'try rephrasing',
+        rows: [],
+        textAnswer: `Couldn't parse that. Try things like: "how many hours did Mike do this week", "which jobs are overdue", "top materials this month", "jobs for [client name]".`,
+      };
+    }
+  };
+
+  // ============================================
+  // DonnyAsk — modal AI query interface
+  // ============================================
+  const DonnyAsk = () => {
+    if (!donnyAskOpen) return null;
+    const close = () => { setDonnyAskOpen(false); setDonnyAskQuery(''); setDonnyAskAnswer(null); };
+    const submit = async () => {
+      const q = donnyAskQuery.trim();
+      if (!q || donnyAskLoading) return;
+      setDonnyAskLoading(true);
+      setDonnyAskAnswer(null);
+      const result = await runDonnyQuery(q);
+      setDonnyAskAnswer(result);
+      setDonnyAskHistory(h => [{ query: q, answer: result }, ...h].slice(0,10));
+      setDonnyAskLoading(false);
+    };
+
+    const examples = [
+      'how many hours did this week',
+      'which jobs are overdue',
+      'top materials this month',
+      'jobs that lost money',
+      'what is at risk',
+    ];
+
+    return (
+      <div onClick={close}
+        style={{position:"fixed",inset:0,zIndex:215,background:"rgba(2,6,16,0.85)",backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"10vh"}}>
+        <div onClick={e => e.stopPropagation()}
+          style={{width:"min(680px, 92vw)",maxHeight:"80vh",background:"rgba(5,12,24,0.97)",border:"0.5px solid rgba(168,85,247,0.4)",borderLeft:"2px solid rgba(168,85,247,0.85)",borderRadius:"6px",overflow:"hidden",boxShadow:"0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(168,85,247,0.08)",backgroundImage:"radial-gradient(rgba(168,85,247,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px",display:"flex",flexDirection:"column"}}>
+          {/* Header */}
+          <div style={{padding:"14px 18px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",display:"flex",alignItems:"center",gap:"12px"}}>
+            <span style={{fontSize:"14px",color:"rgba(168,85,247,0.85)",fontFamily:"monospace",lineHeight:1}}>✦</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:"9px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>// AI ANALYST</div>
+              <input autoFocus value={donnyAskQuery}
+                onChange={e => setDonnyAskQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') submit(); }}
+                placeholder="Ask anything about your operation..."
+                style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"15px",letterSpacing:"0.3px",border:"none",outline:"none",padding:"4px 0",marginTop:"2px"}}/>
+            </div>
+            <button onClick={submit} disabled={donnyAskLoading || !donnyAskQuery.trim()}
+              style={{fontSize:"10px",fontFamily:"monospace",letterSpacing:"1.5px",padding:"6px 12px",background:"rgba(168,85,247,0.1)",color:donnyAskLoading || !donnyAskQuery.trim()?"rgba(148,163,184,0.4)":"rgba(168,85,247,0.95)",border:"0.5px solid rgba(168,85,247,0.4)",borderRadius:"3px",cursor:donnyAskLoading || !donnyAskQuery.trim()?"not-allowed":"pointer",flexShrink:0}}>
+              {donnyAskLoading ? '...' : 'ASK ↵'}
+            </button>
+            <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",padding:"2px 6px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"3px",flexShrink:0}}>ESC</span>
+          </div>
+
+          {/* Body */}
+          <div style={{flex:1,overflowY:"auto",minHeight:0}}>
+            {/* Example chips when no answer yet */}
+            {!donnyAskAnswer && !donnyAskLoading && donnyAskHistory.length === 0 && (
+              <div style={{padding:"18px"}}>
+                <div style={{fontSize:"9px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// TRY ASKING</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
+                  {examples.map((e,i) => (
+                    <button key={i} onClick={() => { setDonnyAskQuery(e); setTimeout(submit, 50); }}
+                      style={{padding:"8px 12px",background:"rgba(168,85,247,0.05)",border:"0.5px solid rgba(168,85,247,0.2)",borderLeft:"2px solid rgba(168,85,247,0.5)",borderRadius:"3px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"0.3px",cursor:"pointer",textAlign:"left"}}>
+                      <span style={{color:"rgba(168,85,247,0.6)",marginRight:"6px"}}>?</span>{e}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Loading state */}
+            {donnyAskLoading && (
+              <div style={{padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"3px"}}>ANALYZING...</div>
+                <div style={{display:"flex",justifyContent:"center",gap:"4px",marginTop:"12px"}}>
+                  {[0,1,2].map(i => <span key={i} style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(168,85,247,0.7)",animation:`blink 1.4s infinite ${i*0.2}s`}}/>)}
+                </div>
+              </div>
+            )}
+
+            {/* Answer */}
+            {donnyAskAnswer && !donnyAskLoading && (
+              <div>
+                {/* Big stat header */}
+                {donnyAskAnswer.bigStat && (
+                  <div style={{padding:"16px 18px",borderBottom:"0.5px solid rgba(168,85,247,0.15)"}}>
+                    <div style={{fontSize:"9px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {donnyAskAnswer.title.toUpperCase()}</div>
+                    <div style={{display:"flex",alignItems:"baseline",gap:"12px",flexWrap:"wrap"}}>
+                      <span style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{donnyAskAnswer.bigStat}</span>
+                      {donnyAskAnswer.bigSub && <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.3px"}}>{donnyAskAnswer.bigSub}</span>}
+                    </div>
+                    {donnyAskAnswer.primary && (
+                      <button onClick={() => { close(); navToEntity(donnyAskAnswer.primary.type, donnyAskAnswer.primary.ref); }}
+                        style={{marginTop:"8px",fontSize:"10px",color:"rgba(168,85,247,0.85)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(168,85,247,0.3)",padding:"3px 8px",borderRadius:"2px",cursor:"pointer"}}>
+                        OPEN {donnyAskAnswer.primary.type.toUpperCase()} ↗
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Text answer (Gemini fallback or empty result) */}
+                {donnyAskAnswer.textAnswer && (
+                  <div style={{padding:"14px 18px",borderBottom:"0.5px solid rgba(168,85,247,0.1)",fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",lineHeight:1.5,letterSpacing:"0.3px"}}>
+                    {donnyAskAnswer.textAnswer}
+                  </div>
+                )}
+
+                {/* Rows */}
+                {donnyAskAnswer.rows && donnyAskAnswer.rows.length > 0 && (
+                  <div>
+                    <div style={{padding:"6px 18px 4px",fontSize:"8px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>// BREAKDOWN · {donnyAskAnswer.rows.length}</div>
+                    {donnyAskAnswer.rows.slice(0,30).map((row,i) => (
+                      <button key={i} onClick={() => { if (row.onClick) { close(); row.onClick(); } }}
+                        disabled={!row.onClick}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"8px 18px",background:"none",border:"none",borderBottom:i<Math.min(donnyAskAnswer.rows.length,30)-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:row.onClick?"pointer":"default",textAlign:"left"}}>
+                        {row.icon && <span style={{fontSize:"12px",color:row.color||'rgba(168,85,247,0.7)',fontFamily:"monospace",lineHeight:1,flexShrink:0,width:"16px",textAlign:"center"}}>{row.icon}</span>}
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{row.label}</div>
+                          {row.sub && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{row.sub}</div>}
+                        </div>
+                        <div style={{fontSize:"11px",color:row.valueColor||"rgba(168,85,247,0.85)",fontFamily:"monospace",flexShrink:0,fontWeight:500}}>{row.value}</div>
+                        {row.onClick && <span style={{fontSize:"10px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",flexShrink:0}}>↗</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* History (when there's previous queries but no current answer) */}
+            {!donnyAskAnswer && !donnyAskLoading && donnyAskHistory.length > 0 && (
+              <div style={{padding:"18px"}}>
+                <div style={{fontSize:"9px",color:"rgba(168,85,247,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// RECENT QUESTIONS</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
+                  {donnyAskHistory.slice(0,5).map((h,i) => (
+                    <button key={i} onClick={() => { setDonnyAskQuery(h.query); setDonnyAskAnswer(h.answer); }}
+                      style={{padding:"8px 12px",background:"rgba(168,85,247,0.05)",border:"0.5px solid rgba(168,85,247,0.15)",borderRadius:"3px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",cursor:"pointer",textAlign:"left",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                      <span style={{color:"rgba(168,85,247,0.5)",marginRight:"6px"}}>↺</span>{h.query}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div style={{padding:"8px 18px",borderTop:"0.5px solid rgba(168,85,247,0.15)",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",display:"flex",justifyContent:"space-between"}}>
+            <span>local intent matcher · ai fallback</span>
+            <span>↵ ask · esc close</span>
           </div>
         </div>
       </div>
@@ -16620,6 +17135,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
 
           {/* TOP COMMAND BAR */}
@@ -16631,6 +17147,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {eliteName && <><span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
             </div>
             <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
+              <button onClick={() => { setDonnyAskOpen(true); setDonnyAskQuery(''); setDonnyAskAnswer(null); }}
+                style={{display:"flex",alignItems:"center",gap:"6px",padding:"3px 8px",background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.25)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace"}}>
+                <span style={{fontSize:"11px",color:"rgba(168,85,247,0.85)",lineHeight:1}}>✦</span>
+                <span style={{fontSize:"9px",color:"rgba(168,85,247,0.7)",letterSpacing:"1px"}}>ASK</span>
+                <span style={{fontSize:"8px",color:"rgba(148,163,184,0.4)",letterSpacing:"0.5px",padding:"1px 4px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"2px"}}>⌘J</span>
+              </button>
               <button onClick={() => { setDonnySearchOpen(true); setDonnySearchQuery(''); setDonnySearchIdx(0); }}
                 style={{display:"flex",alignItems:"center",gap:"6px",padding:"3px 8px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace"}}>
                 <span style={{fontSize:"11px",color:"rgba(249,115,22,0.7)",lineHeight:1}}>⌕</span>
@@ -17035,6 +17557,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17331,6 +17854,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -17759,6 +18283,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO WORKER SELECTED</div>
@@ -17860,6 +18385,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -18170,6 +18696,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO CLIENT SELECTED</div>
@@ -18248,6 +18775,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
@@ -18541,6 +19069,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
             <div style={{padding:"80px 24px",textAlign:"center"}}>
               <div style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"12px"}}>NO MATERIAL SELECTED</div>
@@ -18618,6 +19147,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <DonnySearch />
           <LineagePopup />
           <DonnyAlertConfig />
+          <DonnyAsk />
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
