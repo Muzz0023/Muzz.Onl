@@ -2430,6 +2430,28 @@ function MuzzApp() {
 
   const clearBreadcrumbs = () => setDonnyBreadcrumbs([]);
 
+  // ============================================
+  // ACTION LAYER — logAction writes to auditLog
+  // entityId format: job_<id> | worker_<id> | client_<id> | material_<name>
+  // ============================================
+  const logAction = (entityId, entry) => {
+    if (!entityId || !entry) return;
+    const ts = new Date().toISOString();
+    const actor = (donnyRole === 'worker' ? eliteName || 'Worker' : eliteName || 'Boss');
+    const fullEntry = { ts, actor, kind: 'action', ...entry };
+    setAuditLog(log => {
+      const next = { ...log };
+      next[entityId] = [...(next[entityId] || []), fullEntry].slice(-50);
+      return next;
+    });
+  };
+
+  const entityIdFor = (type, ref) => {
+    if (!ref) return null;
+    if (type === 'material') return `material_${(ref.name||'').toLowerCase().replace(/\s/g,'_')}`;
+    return `${type}_${ref.id}`;
+  };
+
   const [donnySearchOpen, setDonnySearchOpen] = useState(false);
   const [donnySearchQuery, setDonnySearchQuery] = useState('');
   const [donnySearchIdx, setDonnySearchIdx] = useState(0);
@@ -3937,6 +3959,85 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               )}
             </div>
           ))}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // AuditTrail — entity history panel
+  // ============================================
+  const AuditTrail = ({ entityId, accent = '#f97316' }) => {
+    const entries = (auditLog && auditLog[entityId]) || [];
+    if (entries.length === 0) {
+      return (
+        <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",borderLeft:`2px solid ${accent}80`,padding:"14px 16px"}}>
+          <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>// AUDIT TRAIL</div>
+          <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",fontStyle:"italic"}}>No changes recorded yet</div>
+        </div>
+      );
+    }
+    const sorted = [...entries].sort((a,b) => new Date(b.ts) - new Date(a.ts));
+    const relTime = (d) => {
+      if (!d) return '';
+      const ms = new Date() - new Date(d);
+      const s = ms/1000, m = s/60, h = m/60, days = h/24;
+      if (s < 60) return 'just now';
+      if (m < 60) return `${Math.floor(m)}m ago`;
+      if (h < 24) return `${Math.floor(h)}h ago`;
+      if (days < 7) return `${Math.floor(days)}d ago`;
+      return new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+    };
+    return (
+      <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${accent}05 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+        <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${accent}1a`,borderLeft:`2px solid ${accent}b3`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <span style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px"}}>// AUDIT TRAIL</span>
+          <span style={{fontSize:"9px",color:`${accent}66`,fontFamily:"monospace"}}>{entries.length} CHANGE{entries.length!==1?'S':''}</span>
+        </div>
+        <div style={{padding:"6px 0",maxHeight:"260px",overflowY:"auto"}}>
+          {sorted.slice(0,30).map((e,i) => {
+            const kindColor = e.kind === 'action' ? '#22c55e' : e.kind === 'delete' ? '#ef4444' : e.kind === 'create' ? '#a855f7' : '#94a3b8';
+            return (
+              <div key={i} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"7px 14px",borderBottom:i<Math.min(sorted.length,30)-1?"0.5px solid rgba(255,255,255,0.03)":"none"}}>
+                <span style={{fontSize:"8px",fontFamily:"monospace",padding:"1px 5px",background:`${kindColor}10`,color:`${kindColor}cc`,border:`0.5px solid ${kindColor}40`,borderRadius:"2px",letterSpacing:"1px",flexShrink:0,minWidth:"50px",textAlign:"center"}}>{(e.kind || 'edit').toUpperCase()}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e.summary || `${e.field}: ${e.from} → ${e.to}`}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>
+                    {e.actor || 'unknown'} · {relTime(e.ts)}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================
+  // ActionsMenu — discrete tracked actions per entity
+  // ============================================
+  const ActionsMenu = ({ actions, accent = '#f97316' }) => {
+    if (!actions || actions.length === 0) return null;
+    return (
+      <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${accent}05 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+        <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${accent}1a`,borderLeft:`2px solid ${accent}b3`}}>
+          <span style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIONS</span>
+        </div>
+        <div style={{padding:"10px",display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(120px, 1fr))",gap:"6px"}}>
+          {actions.filter(a => !a.hide).map((a,i) => {
+            const c = a.color || accent;
+            const disabled = a.disabled;
+            return (
+              <button key={i} onClick={() => { if (!disabled) a.onClick(); }}
+                disabled={disabled}
+                title={a.title || ''}
+                style={{padding:"8px 10px",background:disabled?"rgba(255,255,255,0.02)":`${c}10`,border:`0.5px solid ${disabled?"rgba(148,163,184,0.15)":`${c}40`}`,borderLeft:`2px solid ${disabled?"rgba(148,163,184,0.3)":c}`,borderRadius:"3px",cursor:disabled?"not-allowed":"pointer",textAlign:"left",fontFamily:"monospace",opacity:disabled?0.4:1,display:"flex",flexDirection:"column",gap:"2px"}}>
+                <div style={{fontSize:"11px",color:disabled?"rgba(148,163,184,0.6)":"#e0eaff",fontWeight:500,letterSpacing:"0.5px"}}>{a.label}</div>
+                {a.sub && <div style={{fontSize:"8px",color:disabled?"rgba(148,163,184,0.4)":`${c}99`,letterSpacing:"1px"}}>{a.sub}</div>}
+              </button>
+            );
+          })}
         </div>
       </div>
     );
@@ -16697,6 +16798,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const updated = donnyJobs.map(j => j.id === job.id ? {...j, ...patch} : j);
         saveDonnyJobs(updated);
         setSelectedDonnyJob(prev => prev ? {...prev, ...patch} : prev);
+        // Log significant changes (skip noisy ones like every keystroke on text fields handled by debounce — for now log all)
+        Object.entries(patch).forEach(([field, to]) => {
+          const from = job[field];
+          if (from === to) return;
+          // Skip empty-to-empty or undefined
+          if ((from === undefined || from === '') && (to === undefined || to === '')) return;
+          let summary = '';
+          if (field === 'started' && to) summary = 'Job started';
+          else if (field === 'completed' && to) summary = 'Job marked complete';
+          else if (field === 'completed' && !to && from) summary = 'Job reopened';
+          else if (field === 'title') summary = `Renamed: "${from || '—'}" → "${to || '—'}"`;
+          else if (field === 'jobNumber') summary = `Job # changed: ${from || '—'} → ${to || '—'}`;
+          else if (field === 'quotedHours') summary = `Quoted hours: ${from || 0} → ${to || 0}h`;
+          else if (field === 'quotedCost') summary = `Quoted cost: $${from || 0} → $${to || 0}`;
+          else if (field === 'quotedMaterials') summary = `Quoted materials: $${from || 0} → $${to || 0}`;
+          else if (field === 'dueDate') summary = `Due date: ${from || '—'} → ${to || '—'}`;
+          else if (field === 'startDate') summary = `Start date: ${from || '—'} → ${to || '—'}`;
+          else if (field === 'clientId') {
+            const fromClient = donnyClients.find(c => c.id === from);
+            const toClient = donnyClients.find(c => c.id === to);
+            summary = `Client: ${fromClient?.name || '—'} → ${toClient?.name || '—'}`;
+          }
+          else summary = `${field}: ${from} → ${to}`;
+          logAction(`job_${job.id}`, { kind: field === 'started' || field === 'completed' ? 'action' : 'edit', field, from, to, summary });
+        });
       };
 
       // ─── DERIVED DATA ───────────────────────────────────────────────
@@ -17035,6 +17161,64 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               );
             })()}
 
+            {/* ACTIONS — discrete tracked actions */}
+            <ActionsMenu accent="#f97316" actions={[
+              {
+                label: job.started ? 'JOB ACTIVE' : 'START JOB',
+                sub: job.started ? 'in progress' : 'mark started',
+                color: '#22c55e',
+                disabled: job.started || job.completed || donnyRole === 'worker',
+                onClick: () => {
+                  updateJob({ started: true, startedAt: new Date().toISOString() });
+                }
+              },
+              {
+                label: job.completed ? 'COMPLETED' : 'COMPLETE',
+                sub: job.completed ? 'closed out' : 'mark done',
+                color: '#22c55e',
+                disabled: !job.started || job.completed || donnyRole === 'worker',
+                onClick: () => {
+                  if (window.confirm(`Mark "${job.title}" as complete?`)) {
+                    updateJob({ completed: true, completedAt: new Date().toISOString() });
+                  }
+                }
+              },
+              {
+                label: 'REOPEN',
+                sub: 'undo complete',
+                color: '#f59e0b',
+                disabled: !job.completed || donnyRole === 'worker',
+                onClick: () => {
+                  updateJob({ completed: false, completedAt: null });
+                }
+              },
+              {
+                label: 'DUPLICATE',
+                sub: 'copy as new',
+                color: '#06b6d4',
+                disabled: donnyRole === 'worker',
+                onClick: () => {
+                  const newJob = { ...job, id: Date.now(), title: `${job.title} (copy)`, started: false, completed: false, startedAt: null, completedAt: null, createdAt: new Date().toISOString() };
+                  saveDonnyJobs([newJob, ...donnyJobs]);
+                  logAction(`job_${newJob.id}`, { kind: 'create', summary: `Duplicated from "${job.title}"` });
+                  navToEntity('job', newJob);
+                }
+              },
+              {
+                label: job.archived ? 'UNARCHIVE' : 'ARCHIVE',
+                sub: job.archived ? 'restore' : 'hide from views',
+                color: '#94a3b8',
+                disabled: donnyRole === 'worker',
+                onClick: () => {
+                  updateJob({ archived: !job.archived });
+                  logAction(`job_${job.id}`, { kind: 'action', summary: job.archived ? 'Job unarchived' : 'Job archived' });
+                }
+              },
+            ]} />
+
+            {/* AUDIT TRAIL */}
+            <AuditTrail entityId={`job_${job.id}`} accent="#f97316" />
+
             {/* TIMELINE */}
             <div style={panel}>
               <div style={panelHeader}>
@@ -17108,6 +17292,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const updated = donnyTeam.map(m => m.id === worker.id ? {...m, ...patch} : m);
         setDonnyTeam(updated);
         setSelectedDonnyWorker(prev => prev ? {...prev, ...patch} : prev);
+        Object.entries(patch).forEach(([field, to]) => {
+          const from = worker[field];
+          if (from === to) return;
+          if ((from === undefined || from === '') && (to === undefined || to === '')) return;
+          let summary = '';
+          if (field === 'name') summary = `Renamed: "${from || '—'}" → "${to || '—'}"`;
+          else if (field === 'position') summary = `Position: ${from || '—'} → ${to || '—'}`;
+          else if (field === 'hourlyRate') summary = `Rate: $${from || 0}/hr → $${to || 0}/hr`;
+          else if (field === 'roles') summary = `Roles: ${(from||[]).join(', ') || '—'} → ${(to||[]).join(', ') || '—'}`;
+          else summary = `${field}: ${from} → ${to}`;
+          logAction(`worker_${worker.id}`, { kind: 'edit', field, from, to, summary });
+        });
       };
 
       // ─── DERIVED DATA ───────────────────────────────────────────────
@@ -17378,6 +17574,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
             </div>
 
+            {/* ACTIONS */}
+            <ActionsMenu accent="#f97316" actions={[
+              {
+                label: worker.archived ? 'UNARCHIVE' : 'ARCHIVE',
+                sub: worker.archived ? 'restore' : 'hide from views',
+                color: '#94a3b8',
+                disabled: donnyRole === 'worker',
+                onClick: () => {
+                  const updated = donnyTeam.map(m => m.id === worker.id ? {...m, archived: !worker.archived} : m);
+                  setDonnyTeam(updated);
+                  setSelectedDonnyWorker(prev => prev ? {...prev, archived: !worker.archived} : prev);
+                  logAction(`worker_${worker.id}`, { kind: 'action', summary: worker.archived ? 'Worker unarchived' : 'Worker archived' });
+                }
+              },
+            ]} />
+
+            {/* AUDIT TRAIL */}
+            <AuditTrail entityId={`worker_${worker.id}`} accent="#f97316" />
+
             {/* TIMELINE */}
             <div style={panel}>
               <div style={panelHeader}>
@@ -17447,6 +17662,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const updated = donnyClients.map(c => c.id === client.id ? {...c, ...patch} : c);
         setDonnyClients(updated);
         setSelectedDonnyClient(prev => prev ? {...prev, ...patch} : prev);
+        Object.entries(patch).forEach(([field, to]) => {
+          const from = client[field];
+          if (from === to) return;
+          if ((from === undefined || from === '') && (to === undefined || to === '')) return;
+          let summary = '';
+          if (field === 'name') summary = `Renamed: "${from || '—'}" → "${to || '—'}"`;
+          else if (field === 'company') summary = `Company: ${from || '—'} → ${to || '—'}`;
+          else if (field === 'phone') summary = `Phone updated`;
+          else if (field === 'email') summary = `Email updated`;
+          else if (field === 'address') summary = `Address updated`;
+          else if (field === 'notes') summary = `Notes updated`;
+          else summary = `${field}: ${from} → ${to}`;
+          logAction(`client_${client.id}`, { kind: 'edit', field, from, to, summary });
+        });
       };
 
       // ─── DERIVED DATA ──────────────────────────────────────────────
@@ -17697,6 +17926,38 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 />
               );
             })()}
+
+            {/* ACTIONS */}
+            <ActionsMenu accent="#3b82f6" actions={[
+              {
+                label: 'NEW JOB',
+                sub: 'create job for client',
+                color: '#22c55e',
+                disabled: donnyRole === 'worker',
+                onClick: () => {
+                  const newJob = { id: Date.now(), title: `New job for ${client.name}`, clientId: client.id, started: false, completed: false, createdAt: new Date().toISOString() };
+                  saveDonnyJobs([newJob, ...donnyJobs]);
+                  logAction(`job_${newJob.id}`, { kind: 'create', summary: `New job created for ${client.name}` });
+                  logAction(`client_${client.id}`, { kind: 'action', summary: `New job linked: ${newJob.title}` });
+                  navToEntity('job', newJob);
+                }
+              },
+              {
+                label: client.archived ? 'UNARCHIVE' : 'ARCHIVE',
+                sub: client.archived ? 'restore' : 'hide from views',
+                color: '#94a3b8',
+                disabled: donnyRole === 'worker',
+                onClick: () => {
+                  const updated = donnyClients.map(c => c.id === client.id ? {...c, archived: !client.archived} : c);
+                  setDonnyClients(updated);
+                  setSelectedDonnyClient(prev => prev ? {...prev, archived: !client.archived} : prev);
+                  logAction(`client_${client.id}`, { kind: 'action', summary: client.archived ? 'Client unarchived' : 'Client archived' });
+                }
+              },
+            ]} />
+
+            {/* AUDIT TRAIL */}
+            <AuditTrail entityId={`client_${client.id}`} accent="#3b82f6" />
 
             {/* DELETE */}
             <button onClick={() => { if(window.confirm(`Delete client ${client.name}? Jobs linked to them will be unlinked.`)) { setDonnyClients(donnyClients.filter(c=>c.id!==client.id)); setSelectedDonnyClient(null); setActiveView('donny-clients'); } }}
@@ -17987,6 +18248,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               );
             })()}
 
+            {/* AUDIT TRAIL */}
+            <AuditTrail entityId={`material_${matName.toLowerCase().replace(/\s/g,'_')}`} accent="#22c55e" />
+
             {/* TIMELINE */}
             <div style={panel}>
               <div style={panelHeader}>
@@ -18102,6 +18366,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const entry = { id:Date.now(), jobId:noteJobId, memberId:tsSelectedMember, date:today, hours:parseFloat(tsHours), desc:tsDesc, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                     saveTS([entry,...donnyTimesheets]);
                     setTsHours(''); setTsDesc(''); setTsSelectedMember(null);
+                    // Audit log: hours logged on job AND attributed to worker
+                    const worker = donnyTeam.find(m => String(m.id) === String(tsSelectedMember));
+                    const workerName = worker?.name || 'unknown';
+                    const hoursStr = `${entry.hours}h${entry.desc?' · '+entry.desc:''}`;
+                    logAction(`job_${noteJobId}`, { kind: 'create', summary: `${workerName} logged ${hoursStr}` });
+                    if (worker) logAction(`worker_${worker.id}`, { kind: 'create', summary: `Logged ${hoursStr}` });
                   }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>
                     + LOG HOURS
                   </button>
@@ -19710,6 +19980,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                   saveMatLog([entry, ...donnyMaterialsLog]);
                   setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                  const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
+                  logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
+                  logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
                 }} style={{width:'100%',padding:'10px',background:'rgba(249,115,22,0.1)',border:'0.5px solid rgba(249,115,22,0.4)',borderRadius:'4px',color:'rgba(249,115,22,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer'}}>+ Log Material</button>
               </div>
               {jobEntries.length > 0 ? (
@@ -19879,6 +20152,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                   saveMatLog([entry, ...donnyMaterialsLog]);
                   setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                  const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
+                  logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
+                  logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
                 }} style={{width:'100%',padding:'10px',background:'rgba(249,115,22,0.1)',border:'0.5px solid rgba(249,115,22,0.4)',borderRadius:'4px',color:'rgba(249,115,22,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer'}}>+ Log Material</button>
               </div>
               {jobEntries.length > 0 ? (
