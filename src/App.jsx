@@ -21037,300 +21037,391 @@ ${JSON.stringify(ctx, null, 2)}`;
     if (activeView === 'donny-materialslog') {
       const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyMaterialsLog:updated}); };
 
+      // ── DRILL-IN: per-job material log ────────────────────────────
       if (matLogJobId) {
         const job = donnyJobs.find(j=>j.id===matLogJobId);
         const jobEntries = donnyMaterialsLog.filter(e=>e.jobId===matLogJobId);
         const today = new Date().toISOString().split('T')[0];
 
-        return (
-          <div className="min-h-screen bg-transparent pb-24">
-            <Sidebar /><SaveIndicator />
-            <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-              <div className="max-w-4xl mx-auto">
-                <button onClick={() => setMatLogJobId(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Extra Materials</button>
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl">📦</div>
-                  <div>
-                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// EXTRA MATERIALS</div>
-                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
-                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
-                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="col-span-2">
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
-                    <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="e.g. 2C+E 2.5mm TPS Cable"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
-                    <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>UNIT</div>
-                    <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. m, ea, kg"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTE FOR BOSS</div>
-                  <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. Ran short, need more by Thursday"
-                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                </div>
-                <button onClick={() => {
-                  if (!newMatEntry.item.trim()) return;
-                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
-                  saveMatLog([entry, ...donnyMaterialsLog]);
-                  setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
-                  const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
-                  logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
-                  logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
-                }} style={{width:'100%',padding:'10px',background:'rgba(249,115,22,0.1)',border:'0.5px solid rgba(249,115,22,0.4)',borderRadius:'4px',color:'rgba(249,115,22,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer'}}>+ Log Material</button>
-              </div>
-              {jobEntries.length > 0 ? (
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// {jobEntries.length} ITEM{jobEntries.length!==1?'S':''} LOGGED</div>
-                  {jobEntries.map(entry => (
-                    <div key={entry.id} className="rounded-xl px-4 py-3 flex items-start justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-white font-medium text-sm">{entry.item}</span>
-                          {(entry.qty||entry.unit) && <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
-                        </div>
-                        {entry.note && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
-                        <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</div>
-                        {entry.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {entry.loggedBy}</div>}
-                      </div>
-                      {donnyRole !== 'worker' && <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No materials logged yet for this job</div>
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      }
+        const totalCost = jobEntries.reduce((s,e) => s + (parseFloat(e.cost)||0), 0);
+        const uniqueItems = [...new Set(jobEntries.map(e => (e.item||'').trim().toLowerCase()))].length;
 
-      return (
-        <div className="min-h-screen bg-transparent pb-24">
-          <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>EXTRA MATERIALS</div>
-            </div>
-          </div>
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
-            {/* MATERIALS CATALOG — aggregated rollup */}
-            {(() => {
-              const matMap = {};
-              (donnyMaterialsLog||[]).forEach(e => {
-                const key = (e.item||'').trim();
-                if (!key) return;
-                if (!matMap[key]) matMap[key] = { name: key, qty: 0, cost: 0, count: 0, unit: e.unit||'' };
-                matMap[key].qty += parseFloat(e.qty)||0;
-                matMap[key].cost += parseFloat(e.cost)||0;
-                matMap[key].count += 1;
-                if (!matMap[key].unit && e.unit) matMap[key].unit = e.unit;
-              });
-              const catalog = Object.values(matMap).sort((a,b) => b.count - a.count);
-              if (catalog.length === 0) return null;
-              return (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.6)",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MATERIALS CATALOG</span>
-                    <span style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>{catalog.length} ITEM{catalog.length!==1?'S':''}</span>
+        const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
+        const relTime = (d) => {
+          if (!d) return '';
+          const ms = new Date() - new Date(d);
+          const s = ms/1000, m = s/60, h = m/60, days = h/24;
+          if (s < 60) return 'just now';
+          if (m < 60) return `${Math.floor(m)}m ago`;
+          if (h < 24) return `${Math.floor(h)}h ago`;
+          if (days < 7) return `${Math.floor(days)}d ago`;
+          return new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+        };
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <DonnySearch />
+            <LineagePopup />
+            <DonnyAlertConfig />
+            <DonnyAsk />
+            <DonnyBreadcrumbs />
+
+            {/* HEADER */}
+            <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div className="max-w-5xl mx-auto">
+                <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
+                  <button onClick={() => setMatLogJobId(null)} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← EXTRA MATERIALS</button>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace"}}>·</span>
+                  <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
+                </div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
+                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",flexShrink:0}}>📦</div>
+                  <div style={{flex:1,minWidth:"260px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>EXTRA MATERIALS</div>
+                      <button onClick={() => navToEntity('job', job)} style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",letterSpacing:"1px",cursor:"pointer"}}>OPEN JOB →</button>
+                    </div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",padding:"4px 0",borderBottom:"0.5px solid rgba(249,115,22,0.15)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?.title}</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                      {job?.jobNumber?`#${job.jobNumber} · `:''}{jobEntries.length} entr{jobEntries.length!==1?'ies':'y'}
+                      {uniqueItems > 0 && (' · '+uniqueItems+' unique item'+(uniqueItems!==1?'s':''))}
+                      {totalCost > 0 && (' · $'+totalCost.toFixed(0))}
+                    </div>
                   </div>
-                  <div style={{maxHeight:"260px",overflowY:"auto"}}>
-                    {catalog.slice(0,12).map((m,i) => (
-                      <button key={m.name} onClick={() => { navToEntity('material', {name:m.name}); }}
-                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
-                          <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
-                          <div style={{minWidth:0,flex:1}}>
-                            <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{m.count} entr{m.count!==1?'ies':'y'}{m.cost>0?' · $'+m.cost.toFixed(0):''}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+              {/* LOG NEW MATERIAL */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG EXTRA MATERIALS</span>
+                </div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>📦 ITEM / MATERIAL</div>
+                    <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="2C+E 2.5mm TPS Cable"
+                      list="donny-mat-suggestions"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                    <datalist id="donny-mat-suggestions">
+                      {[...new Set(donnyMaterialsLog.map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}
+                    </datalist>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
+                      <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
+                      <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="m, ea, kg"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>📝 NOTE FOR BOSS</div>
+                    <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="Ran short, need more by Thursday"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                  </div>
+                  <button onClick={() => {
+                    if (!newMatEntry.item.trim()) return;
+                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
+                    saveMatLog([entry, ...donnyMaterialsLog]);
+                    setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                    const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
+                    logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
+                    logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
+                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MATERIAL</button>
+                </div>
+              </div>
+
+              {/* JOB ENTRIES TIMELINE */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG ENTRIES</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{jobEntries.length} ENTR{jobEntries.length!==1?'IES':'Y'}</span>
+                </div>
+                {jobEntries.length === 0 ? (
+                  <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"2px"}}>NO MATERIALS LOGGED YET</div>
+                ) : (
+                  <div style={{maxHeight:"500px",overflowY:"auto"}}>
+                    {jobEntries.map((entry,i) => (
+                      <div key={entry.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 14px",borderBottom:i<jobEntries.length-1?"0.5px solid rgba(249,115,22,0.05)":"none"}}>
+                        <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0,marginTop:"2px"}}>◍</span>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap",marginBottom:"3px"}}>
+                            <button onClick={() => navToEntity('material', {name:entry.item})}
+                              style={{background:"none",border:"none",padding:0,cursor:"pointer",fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.3px",textAlign:"left"}}>{entry.item}</button>
+                            {(entry.qty||entry.unit) && <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.95)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px",letterSpacing:"0.5px"}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
+                            {entry.cost && parseFloat(entry.cost) > 0 && <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)"}}>${parseFloat(entry.cost).toFixed(0)}</span>}
+                          </div>
+                          {entry.note && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",marginBottom:"3px",letterSpacing:"0.3px"}}>💬 {entry.note}</div>}
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",display:"flex",gap:"8px",flexWrap:"wrap"}}>
+                            <span>{relTime(entry.createdAt)}</span>
+                            {entry.loggedBy && <span style={{color:"rgba(249,115,22,0.5)"}}>👤 {entry.loggedBy}</span>}
                           </div>
                         </div>
-                        <div style={{textAlign:"right",flexShrink:0,display:"flex",alignItems:"center",gap:"8px"}}>
-                          <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace"}}>{m.qty.toFixed(1)}{m.unit?' '+m.unit:''}</span>
-                          <span style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
-                        </div>
-                      </button>
+                        {donnyRole !== 'worker' && (
+                          <button onClick={() => { if(window.confirm(`Delete this entry?`)) saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id)); }}
+                            style={{fontSize:"11px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0}}>🗑</button>
+                        )}
+                      </div>
                     ))}
                   </div>
-                </div>
-              );
-            })()}
-            {donnyJobs.filter(j=>!j.completed).length === 0 ? (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                <div className="text-4xl mb-3">📦</div>
-                <div className="text-white font-bold mb-1">No active jobs</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log materials</div>
+                )}
               </div>
-            ) : (
-              <>
-                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
-                {donnyJobs.filter(j=>!j.completed).map(job => {
-                  const entries = donnyMaterialsLog.filter(e=>e.jobId===job.id);
-                  return (
-                    <button key={job.id} onClick={() => setMatLogJobId(job.id)}
-                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
-                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📦</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-white font-semibold truncate">{job.title}</div>
-                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
-                          {job.jobNumber?`#${job.jobNumber} · `:''}{entries.length} item{entries.length!==1?'s':''} logged
-                        </div>
-                      </div>
-                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
-                    </button>
-                  );
-                })}
-              </>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    if (activeView === 'donny-materialslog') {
-      const saveMatLog = (updated) => { setDonnyMaterialsLog(updated); if(donnyRole==='worker') saveWorkerDataToBoss({donnyMaterialsLog:updated}); };
-
-      if (matLogJobId) {
-        const job = donnyJobs.find(j=>j.id===matLogJobId);
-        const jobEntries = donnyMaterialsLog.filter(e=>e.jobId===matLogJobId);
-        const today = new Date().toISOString().split('T')[0];
-
-        return (
-          <div className="min-h-screen bg-transparent pb-24">
-            <Sidebar /><SaveIndicator />
-            <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-              <div className="max-w-4xl mx-auto">
-                <button onClick={() => setMatLogJobId(null)} className="mb-4 font-medium flex items-center gap-1 text-sm" style={{color:"rgba(249,115,22,0.8)"}}>← Extra Materials</button>
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl">📦</div>
-                  <div>
-                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// EXTRA MATERIALS</div>
-                    <h1 className="text-2xl font-bold text-white">{job?.title}</h1>
-                    {job?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{job.jobNumber}</div>}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
-                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// LOG EXTRA MATERIALS</div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="col-span-2">
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📦 ITEM / MATERIAL</div>
-                    <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="e.g. 2C+E 2.5mm TPS Cable"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>QTY</div>
-                    <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>UNIT</div>
-                    <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. m, ea, kg"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTE FOR BOSS</div>
-                  <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. Ran short, need more by Thursday"
-                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                </div>
-                <button onClick={() => {
-                  if (!newMatEntry.item.trim()) return;
-                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
-                  saveMatLog([entry, ...donnyMaterialsLog]);
-                  setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
-                  const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
-                  logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
-                  logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
-                }} style={{width:'100%',padding:'10px',background:'rgba(249,115,22,0.1)',border:'0.5px solid rgba(249,115,22,0.4)',borderRadius:'4px',color:'rgba(249,115,22,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer'}}>+ Log Material</button>
-              </div>
-              {jobEntries.length > 0 ? (
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// {jobEntries.length} ITEM{jobEntries.length!==1?'S':''} LOGGED</div>
-                  {jobEntries.map(entry => (
-                    <div key={entry.id} className="rounded-xl px-4 py-3 flex items-start justify-between" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-white font-medium text-sm">{entry.item}</span>
-                          {(entry.qty||entry.unit) && <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:'rgba(249,115,22,0.15)',color:'#f97316',border:'1px solid rgba(249,115,22,0.3)'}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
-                        </div>
-                        {entry.note && <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.6)'}}>💬 {entry.note}</div>}
-                        <div className="text-xs mt-1" style={{color:'rgba(148,163,184,0.3)'}}>{new Date(entry.createdAt).toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'})} · {new Date(entry.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}</div>
-                        {entry.loggedBy&&<div className="text-xs mt-0.5" style={{color:'rgba(249,115,22,0.5)'}}>👤 {entry.loggedBy}</div>}
-                      </div>
-                      {donnyRole !== 'worker' && <button onClick={() => saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id))} className="text-xs px-2 py-1 rounded-lg ml-3" style={{background:'rgba(239,68,68,0.1)',color:'rgba(239,68,68,0.5)',border:'1px solid rgba(239,68,68,0.2)'}}>🗑</button>}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-2xl p-8 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(255,255,255,0.05)'}}>
-                  <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>No materials logged yet for this job</div>
-                </div>
-              )}
             </div>
           </div>
         );
       }
 
+      // ── LIST VIEW: pick a job to log against ──────────────────────
+      // Aggregate catalog across all entries
+      const matMap = {};
+      (donnyMaterialsLog||[]).forEach(e => {
+        const key = (e.item||'').trim();
+        if (!key) return;
+        if (!matMap[key]) matMap[key] = { name: key, qty: 0, cost: 0, count: 0, unit: e.unit||'' };
+        matMap[key].qty += parseFloat(e.qty)||0;
+        matMap[key].cost += parseFloat(e.cost)||0;
+        matMap[key].count += 1;
+        if (!matMap[key].unit && e.unit) matMap[key].unit = e.unit;
+      });
+      const catalog = Object.values(matMap).sort((a,b) => b.count - a.count);
+
+      // Stats for KPI strip
+      const totalEntries = (donnyMaterialsLog||[]).length;
+      const uniqueMats = catalog.length;
+      const totalQty = catalog.reduce((s,m) => s + m.qty, 0);
+      const totalCatalogCost = catalog.reduce((s,m) => s + m.cost, 0);
+      const topMaterial = catalog[0];
+
+      // Today's entries
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const todayEntries = (donnyMaterialsLog||[]).filter(e => new Date(e.createdAt||0) >= todayStart);
+
+      const activeJobsList = donnyJobs.filter(j=>!j.completed);
+
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>EXTRA MATERIALS</div>
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                  <span style={{fontSize:"32px",lineHeight:1}}>📦</span>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// EXTRA MATERIALS</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MATERIAL LOG</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                      {totalEntries} entr{totalEntries!==1?'ies':'y'} · {uniqueMats} unique item{uniqueMats!==1?'s':''}
+                      {totalCatalogCost > 0 && (' · $'+totalCatalogCost.toFixed(0)+' total')}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto px-6 py-6 space-y-3">
-            {donnyJobs.filter(j=>!j.completed).length === 0 ? (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(255,255,255,0.05)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                <div className="text-4xl mb-3">📦</div>
-                <div className="text-white font-bold mb-1">No active jobs</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to log materials</div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            {totalEntries > 0 && (
+              <div style={{...panel,borderLeft:"2px solid #f97316"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Entries", value:String(totalEntries), color:"#f97316",
+                      lineage: {
+                        title: 'Material Log Entries',
+                        value: String(totalEntries),
+                        color: '#f97316',
+                        formula: 'COUNT(materialslog)',
+                        breakdown: [...donnyMaterialsLog].sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0)).slice(0,30).map(e => {
+                          const j = donnyJobs.find(x => x.id === e.jobId);
+                          return {
+                            icon: '◍', color: '#22c55e',
+                            label: e.item || 'unknown',
+                            sub: `${e.qty||'?'}${e.unit?' '+e.unit:''}${j?' · '+j.title:''}`,
+                            value: e.cost ? `$${parseFloat(e.cost).toFixed(0)}` : '—',
+                            valueColor: '#22c55e',
+                            onClick: e.item ? () => navToEntity('material', {name:e.item}) : null,
+                          };
+                        }),
+                        note: 'Most recent 30 entries · click to open material',
+                      },
+                    },
+                    {
+                      label:"Unique", value:String(uniqueMats), color:"#22c55e",
+                      lineage: {
+                        title: 'Unique Materials',
+                        value: String(uniqueMats),
+                        color: '#22c55e',
+                        formula: 'DISTINCT(material.item)',
+                        breakdown: catalog.map(m => ({
+                          icon: '◍', color: '#22c55e',
+                          label: m.name,
+                          sub: `${m.count} entries${m.qty>0?' · '+m.qty.toFixed(1)+(m.unit?' '+m.unit:''):''}`,
+                          value: m.cost > 0 ? `$${m.cost.toFixed(0)}` : `${m.count}×`,
+                          valueColor: '#22c55e',
+                          onClick: () => navToEntity('material', {name:m.name}),
+                        })),
+                      },
+                    },
+                    {
+                      label:"Today", value:String(todayEntries.length), color:"rgba(168,85,247,0.85)",
+                      lineage: todayEntries.length > 0 ? {
+                        title: 'Logged Today',
+                        value: String(todayEntries.length),
+                        color: 'rgba(168,85,247,0.95)',
+                        formula: 'WHERE created >= start of day',
+                        breakdown: todayEntries.map(e => {
+                          const j = donnyJobs.find(x => x.id === e.jobId);
+                          return {
+                            icon: '◍', color: '#22c55e',
+                            label: e.item || 'unknown',
+                            sub: `${e.qty||'?'}${e.unit?' '+e.unit:''}${j?' · '+j.title:''}`,
+                            value: new Date(e.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),
+                            valueColor: 'rgba(168,85,247,0.85)',
+                            onClick: e.item ? () => navToEntity('material', {name:e.item}) : null,
+                          };
+                        }),
+                      } : null,
+                    },
+                    {
+                      label:"Top Item", value:topMaterial ? topMaterial.name.split(' ').slice(0,2).join(' ').slice(0,12) : '—', color:"#a855f7",
+                      lineage: topMaterial ? {
+                        title: `Top Material · ${topMaterial.name}`,
+                        value: `${topMaterial.count} entries`,
+                        color: '#a855f7',
+                        formula: 'MAX(material.entry_count)',
+                        breakdown: catalog.slice(0,10).map(m => ({
+                          icon: '◍', color: '#22c55e',
+                          label: m.name,
+                          sub: `${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}${m.cost>0?' · $'+m.cost.toFixed(0):''}`,
+                          value: `${m.count}×`,
+                          valueColor: '#a855f7',
+                          onClick: () => navToEntity('material', {name:m.name}),
+                        })),
+                        note: 'Top 10 by entry count',
+                      } : null,
+                    },
+                    {
+                      label:"Total $", value:totalCatalogCost > 0 ? `$${totalCatalogCost.toFixed(0)}` : '—', color:"rgba(34,197,94,0.85)",
+                      lineage: totalCatalogCost > 0 ? {
+                        title: 'Total Material Cost',
+                        value: `$${totalCatalogCost.toFixed(0)}`,
+                        color: 'rgba(34,197,94,0.95)',
+                        formula: 'SUM(material.cost)',
+                        breakdown: [...catalog].sort((a,b) => b.cost - a.cost).filter(m => m.cost > 0).map(m => ({
+                          icon: '◍', color: '#22c55e',
+                          label: m.name,
+                          sub: `${m.count} entries · ${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}`,
+                          value: `$${m.cost.toFixed(0)}`,
+                          valueColor: 'rgba(34,197,94,0.95)',
+                          onClick: () => navToEntity('material', {name:m.name}),
+                        })),
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      title={k.lineage ? "Click to see breakdown" : ""}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
+                      </div>
+                      <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"inline-block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            ) : (
-              <>
-                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
-                {donnyJobs.filter(j=>!j.completed).map(job => {
-                  const entries = donnyMaterialsLog.filter(e=>e.jobId===job.id);
-                  return (
-                    <button key={job.id} onClick={() => setMatLogJobId(job.id)}
-                      className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
-                      style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'rgba(249,115,22,0.1)',border:'1px solid rgba(249,115,22,0.2)'}}>📦</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-white font-semibold truncate">{job.title}</div>
-                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
-                          {job.jobNumber?`#${job.jobNumber} · `:''}{entries.length} item{entries.length!==1?'s':''} logged
+            )}
+
+            {/* MATERIALS CATALOG */}
+            {catalog.length > 0 && (
+              <div style={{...panel,borderLeft:"2px solid #22c55e"}}>
+                <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MATERIALS CATALOG</span>
+                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>{catalog.length} ITEM{catalog.length!==1?'S':''}</span>
+                </div>
+                <div style={{maxHeight:"260px",overflowY:"auto"}}>
+                  {catalog.slice(0,12).map((m,i) => (
+                    <button key={m.name} onClick={() => navToEntity('material', {name:m.name})}
+                      style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
+                        <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
+                        <div style={{minWidth:0,flex:1}}>
+                          <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{m.count} entr{m.count!==1?'ies':'y'}{m.cost>0?' · $'+m.cost.toFixed(0):''}</div>
                         </div>
                       </div>
-                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                      <div style={{textAlign:"right",flexShrink:0,display:"flex",alignItems:"center",gap:"8px"}}>
+                        <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace"}}>{m.qty.toFixed(1)}{m.unit?' '+m.unit:''}</span>
+                        <span style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
+                      </div>
                     </button>
-                  );
-                })}
-              </>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* JOBS PICKER */}
+            {activeJobsList.length === 0 ? (
+              <div style={{...panel,padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"32px",marginBottom:"12px",lineHeight:1}}>📦</div>
+                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log materials</div>
+              </div>
+            ) : (
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>JOB</div><div>ITEMS</div><div></div>
+                </div>
+                <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
+                  {activeJobsList.map((job, i) => {
+                    const entries = donnyMaterialsLog.filter(e=>e.jobId===job.id);
+                    return (
+                      <button key={job.id} onClick={() => setMatLogJobId(job.id)}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        <span style={{fontSize:"15px",lineHeight:1,flexShrink:0}}>📦</span>
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
+                        </div>
+                        <div style={{fontFamily:"monospace",fontSize:"11px",color:entries.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)"}}>{entries.length} item{entries.length!==1?'s':''}</div>
+                        <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>
