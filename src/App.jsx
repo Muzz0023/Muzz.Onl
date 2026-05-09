@@ -18377,25 +18377,33 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            {/* WORKERS + LINKS GRID */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-              {/* WORKERS — INLINE ADD */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// WORKERS ON JOB</span>
-                  <button onClick={() => { setShowAddWorkerInline(s => !s); setInlineWorkerId(''); setInlineWorkerHrs(''); setInlineWorkerDesc(''); }}
+            {/* LINKED RECORDS — single full-width tile grid (workers + clients + everything) */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
+                <div style={{display:"flex",gap:"6px"}}>
+                  <button onClick={() => { setShowAddWorkerInline(s => !s); setInlineWorkerId(''); setInlineWorkerHrs(''); setInlineWorkerDesc(''); setShowAddMaterialInline(false); }}
                     style={{fontSize:"10px",padding:"3px 10px",background:showAddWorkerInline?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddWorkerInline?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddWorkerInline?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
-                    {showAddWorkerInline ? '✕' : '+ ADD'}
+                    {showAddWorkerInline ? '✕ WORKER' : '+ WORKER'}
+                  </button>
+                  <button onClick={() => { setShowAddMaterialInline(s => !s); setInlineMatItem(''); setInlineMatQty(''); setInlineMatUnit(''); setInlineMatCost(''); setShowAddWorkerInline(false); }}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showAddMaterialInline?"rgba(148,163,184,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showAddMaterialInline?"rgba(148,163,184,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showAddMaterialInline?"rgba(148,163,184,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showAddMaterialInline ? '✕ MATERIAL' : '+ MATERIAL'}
                   </button>
                 </div>
-                {showAddWorkerInline && (
-                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
-                    {donnyTeam.length === 0 ? (
-                      <div style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"center",padding:"8px"}}>
-                        NO TEAM YET · <button onClick={() => setActiveView('donny-team')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",textDecoration:"underline"}}>ADD CREW →</button>
-                      </div>
-                    ) : (
-                      <>
+              </div>
+
+              {/* INLINE WORKER ADD */}
+              {showAddWorkerInline && (
+                <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG HOURS FOR WORKER</div>
+                  {donnyTeam.length === 0 ? (
+                    <div style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"center",padding:"8px"}}>
+                      NO TEAM YET · <button onClick={() => setActiveView('donny-team')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",textDecoration:"underline"}}>ADD CREW →</button>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{display:"grid",gridTemplateColumns:"2fr 1fr",gap:"8px"}}>
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WORKER</div>
                           <select value={inlineWorkerId} onChange={e => setInlineWorkerId(e.target.value)}
@@ -18409,142 +18417,83 @@ ${JSON.stringify(ctx, null, 2)}`;
                           <input type="number" step="0.25" value={inlineWorkerHrs} onChange={e => setInlineWorkerHrs(e.target.value)} placeholder="8"
                             style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
                         </div>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT THEY DID (OPTIONAL)</div>
-                          <input value={inlineWorkerDesc} onChange={e => setInlineWorkerDesc(e.target.value)} placeholder="Cable install, Level 2"
-                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                        </div>
-                        <button onClick={() => {
-                          if (!inlineWorkerId || !inlineWorkerHrs) return;
-                          const today = new Date().toISOString().split('T')[0];
-                          const newEntry = { id: Date.now(), jobId: job.id, memberId: inlineWorkerId, hours: parseFloat(inlineWorkerHrs)||0, desc: inlineWorkerDesc, date: today, createdAt: new Date().toISOString(), loggedBy: eliteName||userEmail };
-                          setDonnyTimesheets([newEntry, ...donnyTimesheets]);
-                          const m = donnyTeam.find(x => String(x.id) === String(inlineWorkerId));
-                          logAction(`job_${job.id}`, { kind: 'create', summary: `Hours logged: ${m?.name||'worker'} · ${inlineWorkerHrs}h${inlineWorkerDesc?' · '+inlineWorkerDesc:''}` });
-                          setInlineWorkerId(''); setInlineWorkerHrs(''); setInlineWorkerDesc(''); setShowAddWorkerInline(false);
-                        }} style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG HOURS</button>
-                      </>
-                    )}
-                  </div>
-                )}
-                {workerHours.length === 0 ? (
-                  <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO HOURS LOGGED</div>
-                ) : (
-                  <div>
-                    {workerHours.map((w,i) => (
-                      <button key={w.id} onClick={() => { navToEntity('worker', w); }} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<workerHours.length-1?"0.5px solid rgba(249,115,22,0.06)":"none",textAlign:"left"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                          <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"9px",fontWeight:600,color:"rgba(249,115,22,0.85)"}}>{(w.name||'?').slice(0,2).toUpperCase()}</div>
-                          <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{w.name}</span>
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                          <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace"}}>{w.hours.toFixed(1)}h</span>
-                          <span style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>${w.cost.toFixed(0)}</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT THEY DID (OPTIONAL)</div>
+                        <input value={inlineWorkerDesc} onChange={e => setInlineWorkerDesc(e.target.value)} placeholder="Cable install, Level 2"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      </div>
+                      <button onClick={() => {
+                        if (!inlineWorkerId || !inlineWorkerHrs) return;
+                        const today = new Date().toISOString().split('T')[0];
+                        const newEntry = { id: Date.now(), jobId: job.id, memberId: inlineWorkerId, hours: parseFloat(inlineWorkerHrs)||0, desc: inlineWorkerDesc, date: today, createdAt: new Date().toISOString(), loggedBy: eliteName||userEmail };
+                        setDonnyTimesheets([newEntry, ...donnyTimesheets]);
+                        const m = donnyTeam.find(x => String(x.id) === String(inlineWorkerId));
+                        logAction(`job_${job.id}`, { kind: 'create', summary: `Hours logged: ${m?.name||'worker'} · ${inlineWorkerHrs}h${inlineWorkerDesc?' · '+inlineWorkerDesc:''}` });
+                        setInlineWorkerId(''); setInlineWorkerHrs(''); setInlineWorkerDesc(''); setShowAddWorkerInline(false);
+                      }} style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG HOURS</button>
+                    </>
+                  )}
+                </div>
+              )}
 
-              {/* LINKED RECORDS — tiles + inline material add */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
-                  <button onClick={() => { setShowAddMaterialInline(s => !s); setInlineMatItem(''); setInlineMatQty(''); setInlineMatUnit(''); setInlineMatCost(''); }}
-                    style={{fontSize:"10px",padding:"3px 10px",background:showAddMaterialInline?"rgba(148,163,184,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showAddMaterialInline?"rgba(148,163,184,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showAddMaterialInline?"rgba(148,163,184,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
-                    {showAddMaterialInline ? '✕' : '+ MATERIAL'}
-                  </button>
-                </div>
-                {showAddMaterialInline && (
-                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
-                      <input value={inlineMatItem} onChange={e => setInlineMatItem(e.target.value)} placeholder="2C+E 2.5mm Cable" list="inline-mat-suggestions"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      <datalist id="inline-mat-suggestions">{[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}</datalist>
-                    </div>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"6px"}}>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
-                        <input type="number" value={inlineMatQty} onChange={e => setInlineMatQty(e.target.value)} placeholder="10"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
-                        <input value={inlineMatUnit} onChange={e => setInlineMatUnit(e.target.value)} placeholder="m"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
-                        <input type="number" step="0.01" value={inlineMatCost} onChange={e => setInlineMatCost(e.target.value)} placeholder="120"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      </div>
-                    </div>
-                    <button onClick={() => {
-                      if (!inlineMatItem.trim()) return;
-                      const today = new Date().toISOString().split('T')[0];
-                      const entry = { id: Date.now(), jobId: job.id, item: inlineMatItem, qty: inlineMatQty, unit: inlineMatUnit, cost: inlineMatCost, note: '', date: today, createdAt: new Date().toISOString(), loggedBy: eliteName||userEmail };
-                      setDonnyMaterialsLog([entry, ...(donnyMaterialsLog||[])]);
-                      logAction(`job_${job.id}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}${entry.cost?' · $'+entry.cost:''}` });
-                      setInlineMatItem(''); setInlineMatQty(''); setInlineMatUnit(''); setInlineMatCost(''); setShowAddMaterialInline(false);
-                    }} style={{width:"100%",padding:"8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MATERIAL</button>
+              {/* INLINE MATERIAL ADD */}
+              {showAddMaterialInline && (
+                <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MATERIAL</div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
+                    <input value={inlineMatItem} onChange={e => setInlineMatItem(e.target.value)} placeholder="2C+E 2.5mm Cable" list="inline-mat-suggestions-mv"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    <datalist id="inline-mat-suggestions-mv">{[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}</datalist>
                   </div>
-                )}
-                <div style={{padding:"10px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
-                  {[
-                    {label:"MATERIALS", count:jobMaterials.length, view:'donny-materialslog', color:"#3b82f6", onOpen:() => { setMatLogJobId(job.id); setActiveView('donny-materialslog'); }},
-                    {label:"PHOTOS", count:jobPhotos.length, view:'donny-photos', color:"#a855f7", onOpen:() => { setPhotoJobId(job.id); setActiveView('donny-photos'); }},
-                    {label:"MISTAKES", count:jobMistakes.length, view:'donny-mistakes', color:jobMistakes.length>0?"#f59e0b":"#94a3b8", onOpen:() => setActiveView('donny-mistakes')},
-                    {label:"INCIDENTS", count:jobIncidents.length, view:'donny-incidents', color:jobIncidents.length>0?"#ef4444":"#94a3b8", onOpen:() => setActiveView('donny-incidents')},
-                    {label:"CHECKLISTS", count:jobChecklists.length, view:'donny-checklists', color:"#22c55e", onOpen:() => setActiveView('donny-checklists')},
-                    {label:"NOTES", count:jobNotes.length, view:'donny-dailyreport', color:"#06b6d4", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
-                  ].map(t => (
-                    <button key={t.label} onClick={t.onOpen} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
-                      <div style={{fontSize:"8px",color:t.color,letterSpacing:"1.5px",marginBottom:"3px",opacity:0.85}}>{t.label}</div>
-                      <div style={{fontSize:"16px",color:t.color,fontWeight:500}}>{t.count}</div>
-                    </button>
-                  ))}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"6px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
+                      <input type="number" value={inlineMatQty} onChange={e => setInlineMatQty(e.target.value)} placeholder="10"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
+                      <input value={inlineMatUnit} onChange={e => setInlineMatUnit(e.target.value)} placeholder="m"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
+                      <input type="number" step="0.01" value={inlineMatCost} onChange={e => setInlineMatCost(e.target.value)} placeholder="120"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                  </div>
+                  <button onClick={() => {
+                    if (!inlineMatItem.trim()) return;
+                    const today = new Date().toISOString().split('T')[0];
+                    const entry = { id: Date.now(), jobId: job.id, item: inlineMatItem, qty: inlineMatQty, unit: inlineMatUnit, cost: inlineMatCost, note: '', date: today, createdAt: new Date().toISOString(), loggedBy: eliteName||userEmail };
+                    setDonnyMaterialsLog([entry, ...(donnyMaterialsLog||[])]);
+                    logAction(`job_${job.id}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}${entry.cost?' · $'+entry.cost:''}` });
+                    setInlineMatItem(''); setInlineMatQty(''); setInlineMatUnit(''); setInlineMatCost(''); setShowAddMaterialInline(false);
+                  }} style={{width:"100%",padding:"8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MATERIAL</button>
                 </div>
+              )}
+
+              {/* TILE GRID — 4 across × 2 rows */}
+              <div style={{padding:"10px",display:"grid",gridTemplateColumns:"repeat(4, 1fr)",gap:"6px"}}>
+                {[
+                  {label:"WORKERS", count:workerHours.length, color:"#f97316", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
+                  {label:"CLIENTS", count:clients.length, color:"#3b82f6", onOpen:() => setActiveView('donny-clients')},
+                  {label:"MATERIALS", count:jobMaterials.length, color:"#22c55e", onOpen:() => { setMatLogJobId(job.id); setActiveView('donny-materialslog'); }},
+                  {label:"PHOTOS", count:jobPhotos.length, color:"#a855f7", onOpen:() => { setPhotoJobId(job.id); setActiveView('donny-photos'); }},
+                  {label:"MISTAKES", count:jobMistakes.length, color:jobMistakes.length>0?"#f59e0b":"#64748b", onOpen:() => setActiveView('donny-mistakes')},
+                  {label:"INCIDENTS", count:jobIncidents.length, color:jobIncidents.length>0?"#ef4444":"#64748b", onOpen:() => setActiveView('donny-incidents')},
+                  {label:"CHECKLISTS", count:jobChecklists.length, color:"#22c55e", onOpen:() => setActiveView('donny-checklists')},
+                  {label:"NOTES", count:jobNotes.length, color:"#06b6d4", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
+                ].map(t => (
+                  <button key={t.label} onClick={t.onOpen} style={{padding:"12px 14px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                    <div style={{fontSize:"8px",color:t.color,letterSpacing:"1.5px",marginBottom:"4px",opacity:0.85}}>{t.label}</div>
+                    <div style={{fontSize:"18px",color:t.color,fontWeight:500,lineHeight:1}}>{t.count}</div>
+                  </button>
+                ))}
               </div>
             </div>
-
-            {/* CONNECTIONS — explicit relational chips */}
-            {(() => {
-              // Aggregate top materials used on this job by name
-              const matMap = {};
-              jobMaterials.forEach(m => {
-                const name = (m.item||'').trim();
-                if (!name) return;
-                if (!matMap[name]) matMap[name] = { name, qty: 0, count: 0, unit: m.unit || '' };
-                matMap[name].qty += parseFloat(m.qty)||0;
-                matMap[name].count += 1;
-              });
-              const topMaterials = Object.values(matMap).sort((a,b) => b.count - a.count).slice(0,6);
-
-              return (
-                <ConnectionsPanel
-                  accent="#f97316"
-                  sections={[
-                    {
-                      label: `Workers · ${workerHours.length}`,
-                      entities: workerHours.map(w => ({ type:'worker', ref:w, label:w.name, sub:`${w.hours.toFixed(1)}h`, color:'#f97316', icon:'⊢' })),
-                      emptyText: 'No workers logged on this job yet'
-                    },
-                    {
-                      label: `Clients · ${clients.length}`,
-                      entities: clients.map(c => ({ type:'client', ref:c, label:c.name, sub:c.company||'', color:'#3b82f6', icon:'◇' })),
-                      emptyText: 'No clients linked'
-                    },
-                    {
-                      label: `Materials · ${topMaterials.length}`,
-                      entities: topMaterials.map(m => ({ type:'material', ref:{name:m.name}, label:m.name, sub:`${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}`, color:'#22c55e', icon:'◍' })),
-                      emptyText: 'No materials logged'
-                    },
-                  ]}
-                />
-              );
-            })()}
 
             {/* ACTIONS — discrete tracked actions */}
             <ActionsMenu accent="#f97316" actions={[
