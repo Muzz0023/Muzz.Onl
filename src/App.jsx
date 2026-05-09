@@ -18233,6 +18233,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const isSoon = daysToMs > 0 && daysToMs <= 7;
                       const dotColor = ms.completed ? 'rgba(34,197,94,0.95)' : isPast ? '#ef4444' : isToday ? '#f59e0b' : isSoon ? '#f97316' : 'rgba(168,85,247,0.85)';
                       const chipText = ms.completed ? '✓ DONE' : isPast ? `${Math.abs(daysToMs)}d LATE` : isToday ? 'TODAY' : `${daysToMs}d`;
+                      const dateLabel = msDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'});
+                      const openPicker = (e) => {
+                        const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
+                        if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
+                      };
                       return (
                         <div key={ms.id}>
                           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"4px"}}>
@@ -18244,8 +18249,14 @@ ${JSON.stringify(ctx, null, 2)}`;
                               }} style={{width:"14px",height:"14px",borderRadius:"3px",background:ms.completed?"rgba(34,197,94,0.2)":"rgba(0,0,0,0.3)",border:`0.5px solid ${ms.completed?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:"#22c55e",fontFamily:"monospace",cursor:"pointer",flexShrink:0,padding:0}}>{ms.completed && '✓'}</button>
                               <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
                             </div>
-                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
-                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",padding:"3px 6px",background:"rgba(0,0,0,0.3)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px"}}>{msDate.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
+                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                              <button onClick={openPicker}
+                                style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:"rgba(224,234,255,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer"}}>{dateLabel}</button>
+                              <input type="date" value={ms.date||''} onChange={e => {
+                                const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, date: e.target.value} : m);
+                                updateJob({ milestones });
+                                logAction(`job_${job.id}`, { kind: 'edit', summary: `Milestone date changed: ${ms.label} → ${e.target.value}` });
+                              }} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
                               <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center"}}>{chipText}</span>
                               <button onClick={() => {
                                 if (window.confirm(`Delete "${ms.label}"?`)) {
