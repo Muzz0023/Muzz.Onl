@@ -2368,6 +2368,7 @@ function MuzzApp() {
   const [donnyJobs, setDonnyJobs] = useState([]);
   const [donnyTeam, setDonnyTeam] = useState([]);
   const [donnyMistakes, setDonnyMistakes] = useState([]);
+  const [mistakeJobId, setMistakeJobId] = useState(null);
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [selectedDonnyWorker, setSelectedDonnyWorker] = useState(null);
   const [selectedDonnyClient, setSelectedDonnyClient] = useState(null);
@@ -2598,6 +2599,7 @@ function MuzzApp() {
   const [newChecklist, setNewChecklist] = useState({ title:'', type:'swms', jobId:'', items:[] });
   // Donny Incidents
   const [donnyIncidents, setDonnyIncidents] = useState([]);
+  const [incidentJobId, setIncidentJobId] = useState(null);
   const [showNewIncident, setShowNewIncident] = useState(false);
   const [newIncident, setNewIncident] = useState({ date:new Date().toISOString().split('T')[0], time:'', jobId:'', who:'', type:'near_miss', description:'', injury:'', action:'', reported:false });
   // Donny Supplier Price Book
@@ -18443,8 +18445,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {label:"CLIENTS", count:clients.length, color:"#3b82f6", onOpen:() => setActiveView('donny-clients')},
                   {label:"MATERIALS", count:jobMaterials.length, color:"#22c55e", onOpen:() => { setMatLogJobId(job.id); setActiveView('donny-materialslog'); }},
                   {label:"PHOTOS", count:jobPhotos.length, color:"#a855f7", onOpen:() => { setPhotoJobId(job.id); setActiveView('donny-photos'); }},
-                  {label:"MISTAKES", count:jobMistakes.length, color:jobMistakes.length>0?"#f59e0b":"#64748b", onOpen:() => setActiveView('donny-mistakes')},
-                  {label:"INCIDENTS", count:jobIncidents.length, color:jobIncidents.length>0?"#ef4444":"#64748b", onOpen:() => setActiveView('donny-incidents')},
+                  {label:"MISTAKES", count:jobMistakes.length, color:jobMistakes.length>0?"#f59e0b":"#64748b", onOpen:() => { setMistakeJobId(job.id); setActiveView('donny-mistakes'); }},
+                  {label:"INCIDENTS", count:jobIncidents.length, color:jobIncidents.length>0?"#ef4444":"#64748b", onOpen:() => { setIncidentJobId(job.id); setActiveView('donny-incidents'); }},
                   {label:"CHECKLISTS", count:jobChecklists.length, color:"#22c55e", onOpen:() => { setChecklistJobId(job.id); setActiveView('donny-checklists'); }},
                   {label:"NOTES", count:jobNotes.length, color:"#06b6d4", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
                 ].map(t => (
@@ -21698,6 +21700,156 @@ ${JSON.stringify(ctx, null, 2)}`;
       const clPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
       const clPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
 
+      // ── JOB-SCOPED VIEW: docs for one job ────────
+      if (checklistJobId && !selectedChecklistId) {
+        const job = donnyJobs.find(j => String(j.id) === String(checklistJobId));
+        if (!job) { setChecklistJobId(null); }
+        const jobDocs = donnyChecklists.filter(c => String(c.jobId) === String(checklistJobId));
+        const jobSwms = jobDocs.filter(c => c.type === 'swms');
+        const jobChecks = jobDocs.filter(c => c.type === 'checklist');
+        const jobInsp = jobDocs.filter(c => c.type === 'inspection');
+        const jobToolbox = jobDocs.filter(c => c.type === 'toolbox');
+        const jobTotalItems = jobDocs.reduce((s,c) => s + (c.items?.length||0), 0);
+        const jobDoneItems = jobDocs.reduce((s,c) => s + (c.items?.filter(i=>i.done).length||0), 0);
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+            <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(34,197,94,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div className="max-w-5xl mx-auto">
+                <button onClick={() => setChecklistJobId(null)} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← SWMS &amp; CHECKLISTS</button>
+                <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                    <span style={{fontSize:"28px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",lineHeight:1}}>✓</span>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}DOCS FOR JOB</div>
+                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                        {jobDocs.length} doc{jobDocs.length!==1?'s':''}
+                        {jobTotalItems > 0 && (' · '+jobDoneItems+'/'+jobTotalItems+' items done')}
+                      </div>
+                    </div>
+                  </div>
+                  <button onClick={() => { setShowNewChecklist(s => !s); setNewChecklist({title:'',type:'swms',jobId:String(job?.id||''),items:[]}); }}
+                    style={{padding:"6px 12px",background:showNewChecklist?"rgba(239,68,68,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showNewChecklist?"rgba(239,68,68,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showNewChecklist?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    {showNewChecklist ? '✕ CANCEL' : '+ NEW DOC'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+              {jobDocs.length > 0 && (
+                <div style={{...clPanel,borderLeft:"2px solid #22c55e"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+                    {[
+                      {label:"SWMS", value:jobSwms.length, color:"#ef4444"},
+                      {label:"CHECKLISTS", value:jobChecks.length, color:"#22c55e"},
+                      {label:"INSPECTIONS", value:jobInsp.length, color:"#3b82f6"},
+                      {label:"TOOLBOX", value:jobToolbox.length, color:"#f59e0b"},
+                    ].map((k,i) => (
+                      <div key={k.label} style={{padding:"14px 16px",borderRight:i<3?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
+                        <div style={{fontSize:"9px",color:`${k.color}99`,letterSpacing:"1.5px",marginBottom:"4px"}}>{k.label}</div>
+                        <div style={{fontSize:"22px",color:k.color,fontWeight:500,lineHeight:1}}>{k.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {showNewChecklist && (
+                <div style={clPanel}>
+                  <div style={clPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW DOCUMENT</span>
+                    <button onClick={()=>setShowNewChecklist(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                  </div>
+                  <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TYPE</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                        {Object.entries(typeLabels).map(([v,l])=>(
+                          <button key={v} onClick={()=>setNewChecklist(p=>({...p,type:v}))}
+                            style={{fontSize:"10px",padding:"4px 10px",fontFamily:"monospace",letterSpacing:"0.5px",background:newChecklist.type===v?`${typeColors[v]}20`:"rgba(255,255,255,0.03)",border:`0.5px solid ${newChecklist.type===v?typeColors[v]+'50':"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:newChecklist.type===v?typeColors[v]:"rgba(148,163,184,0.5)",cursor:"pointer"}}>
+                            {l}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TITLE</div>
+                      <input value={newChecklist.title} onChange={e=>setNewChecklist(p=>({...p,title:e.target.value}))} placeholder="Roof access SWMS"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                    {newChecklist.type==='swms' && (
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>QUICK TEMPLATES</div>
+                        <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                          {SWMS_TEMPLATES.map(t=>(
+                            <button key={t.title} onClick={()=>setNewChecklist(p=>({...p,title:t.title,items:t.items.map((txt,i)=>({id:Date.now()+i,text:txt,done:false}))}))}
+                              style={{fontSize:"10px",padding:"4px 10px",fontFamily:"monospace",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.85)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",cursor:"pointer"}}>
+                              {t.title}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <button onClick={()=>{
+                      if(!newChecklist.title.trim()) return;
+                      const cl = {...newChecklist,jobId:String(job?.id||''),id:Date.now(),loggedBy:eliteName||userEmail,loggedAt:new Date().toISOString(),items:newChecklist.items.length>0?newChecklist.items:[{id:Date.now(),text:'',done:false}],createdAt:new Date().toISOString()};
+                      saveChecklists([cl,...donnyChecklists]); setSelectedChecklistId(cl.id); setShowNewChecklist(false);
+                      logAction(`job_${job?.id}`, { kind: 'create', summary: `${typeLabels[cl.type]||'Doc'} added: ${cl.title}` });
+                      setNewChecklist({title:'',type:'swms',jobId:'',items:[]});
+                    }} style={{width:"100%",padding:"10px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE</button>
+                  </div>
+                </div>
+              )}
+
+              {jobDocs.length === 0 && !showNewChecklist ? (
+                <div style={{...clPanel,padding:"40px",textAlign:"center"}}>
+                  <div style={{fontSize:"32px",color:"rgba(34,197,94,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✓</div>
+                  <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO DOCS ON THIS JOB</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Tap + NEW DOC to add SWMS, checklists, inspections, or toolbox talks</div>
+                </div>
+              ) : jobDocs.length > 0 && (
+                <div style={clPanel}>
+                  <div style={clPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// DOCUMENTS</span>
+                    <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{jobDocs.length} ROW{jobDocs.length!==1?'S':''}</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 110px 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>TITLE</div><div>TYPE</div><div>DONE</div><div></div>
+                  </div>
+                  <div style={{maxHeight:jobDocs.length > 8 ? "440px" : "none",overflowY:jobDocs.length > 8 ? "auto" : "visible"}}>
+                    {jobDocs.map((cl,i)=>{
+                      const tc=typeColors[cl.type]||'#22c55e';
+                      const done=cl.items?.filter(x=>x.done).length||0; const total=cl.items?.length||0;
+                      const isComplete = done===total && total>0;
+                      return (
+                        <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
+                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 110px 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobDocs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                          <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>{isComplete?'✓':'◍'}</div>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.title}</div>
+                            {cl.loggedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>by {cl.loggedBy}</div>}
+                          </div>
+                          <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{typeLabels[cl.type]||cl.type}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:isComplete?"rgba(34,197,94,0.95)":tc,fontWeight:500}}>{done}/{total}</div>
+                          <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
       if (selectedChecklistId) {
         const selected = donnyChecklists.find(c=>c.id===selectedChecklistId);
         if (!selected) { setSelectedChecklistId(null); }
@@ -21974,6 +22126,145 @@ ${JSON.stringify(ctx, null, 2)}`;
       const incPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(239,68,68,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(239,68,68,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
       const incPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(239,68,68,0.1)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
 
+      // ── JOB-SCOPED VIEW for incidents ─────────────
+      if (incidentJobId) {
+        const job = donnyJobs.find(j => String(j.id) === String(incidentJobId));
+        if (!job) { setIncidentJobId(null); }
+        const jobIncs = donnyIncidents.filter(i => String(i.jobId) === String(incidentJobId));
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+            <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div className="max-w-5xl mx-auto">
+                <button onClick={() => setIncidentJobId(null)} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← INCIDENTS</button>
+                <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                    <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>⚠</span>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}INCIDENTS FOR JOB</div>
+                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{jobIncs.length} incident{jobIncs.length!==1?'s':''} on this job</div>
+                    </div>
+                  </div>
+                  <button onClick={()=>{ setShowNewIncident(s=>!s); setNewIncident(p=>({...p,jobId:String(job?.id||'')})); }}
+                    style={{padding:"6px 12px",background:showNewIncident?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewIncident?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewIncident?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    {showNewIncident ? '✕ CANCEL' : '+ LOG INCIDENT'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+              {showNewIncident && (
+                <div style={incPanel}>
+                  <div style={incPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG INCIDENT</span>
+                    <button onClick={()=>setShowNewIncident(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                  </div>
+                  <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                        <input type="date" value={newIncident.date} onChange={e=>setNewIncident(p=>({...p,date:e.target.value}))}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIME</div>
+                        <input type="time" value={newIncident.time} onChange={e=>setNewIncident(p=>({...p,time:e.target.value}))}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TYPE</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                        {Object.entries(typeLabels).map(([v,l])=>(
+                          <button key={v} onClick={()=>setNewIncident(p=>({...p,type:v}))}
+                            style={{fontSize:"10px",padding:"4px 10px",fontFamily:"monospace",letterSpacing:"0.5px",background:newIncident.type===v?`${typeColors[v]}20`:"rgba(255,255,255,0.03)",border:`0.5px solid ${newIncident.type===v?typeColors[v]+'50':"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:newIncident.type===v?typeColors[v]:"rgba(148,163,184,0.5)",cursor:"pointer"}}>
+                            {l}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO WAS INVOLVED</div>
+                      <input value={newIncident.who} onChange={e=>setNewIncident(p=>({...p,who:e.target.value}))} placeholder="Name(s)" list="incident-who-jobview"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      <datalist id="incident-who-jobview">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DESCRIPTION</div>
+                      <textarea value={newIncident.description} onChange={e=>setNewIncident(p=>({...p,description:e.target.value}))} rows={3} placeholder="What happened? Where? How?"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INJURY / DAMAGE</div>
+                      <input value={newIncident.injury} onChange={e=>setNewIncident(p=>({...p,injury:e.target.value}))} placeholder="Nature of injury or damage"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CORRECTIVE ACTION</div>
+                      <input value={newIncident.action} onChange={e=>setNewIncident(p=>({...p,action:e.target.value}))} placeholder="What was done to prevent recurrence?"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                    <button onClick={()=>setNewIncident(p=>({...p,reported:!p.reported}))}
+                      style={{display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",padding:"4px 0",fontFamily:"monospace"}}>
+                      <div style={{width:"18px",height:"18px",borderRadius:"3px",background:newIncident.reported?"rgba(34,197,94,0.2)":"rgba(0,0,0,0.3)",border:`0.5px solid ${newIncident.reported?"rgba(34,197,94,0.5)":"rgba(255,255,255,0.15)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#22c55e"}}>
+                        {newIncident.reported && '✓'}
+                      </div>
+                      <span style={{fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Reported to regulator (SafeWork / WorkSafe)</span>
+                    </button>
+                    <button onClick={()=>{
+                      if(!newIncident.description.trim()) return;
+                      const inc = {...newIncident,jobId:String(job?.id||''),id:Date.now(),createdAt:new Date().toISOString(),loggedBy:eliteName||userEmail,loggedAt:new Date().toISOString()};
+                      saveIncidents([inc,...donnyIncidents]);
+                      logAction(`job_${job?.id}`, { kind: 'create', summary: `Incident: ${(inc.description||'').slice(0,60)}` });
+                      setNewIncident({date:new Date().toISOString().split('T')[0],time:'',jobId:'',who:'',type:'near_miss',description:'',injury:'',action:'',reported:false});
+                      setShowNewIncident(false);
+                    }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG INCIDENT</button>
+                  </div>
+                </div>
+              )}
+
+              {jobIncs.length === 0 && !showNewIncident ? (
+                <div style={{...incPanel,padding:"40px",textAlign:"center"}}>
+                  <div style={{fontSize:"32px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✓</div>
+                  <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO INCIDENTS ON THIS JOB</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Stay safe out there mate</div>
+                </div>
+              ) : jobIncs.length > 0 && (
+                <div style={incPanel}>
+                  <div style={incPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// INCIDENTS</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobIncs.length} ROW{jobIncs.length!==1?'S':''}</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>DATE</div><div>TYPE</div><div>WHAT</div><div></div>
+                  </div>
+                  {jobIncs.map((inc,i) => {
+                    const tc = typeColors[inc.type]||'#ef4444';
+                    return (
+                      <button key={inc.id} onClick={()=>setEditingIncidentId(editingIncidentId===inc.id?null:inc.id)}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobIncs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>⚠</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)"}}>{inc.date?new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                        <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",justifySelf:"start"}}>{typeLabels[inc.type]||inc.type}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.description}</div>
+                        <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
@@ -21998,10 +22289,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                 </div>
-                <button onClick={()=>setShowNewIncident(s=>!s)}
-                  style={{padding:"6px 12px",background:showNewIncident?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewIncident?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewIncident?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
-                  {showNewIncident ? '✕ CANCEL' : '+ LOG INCIDENT'}
-                </button>
               </div>
             </div>
           </div>
@@ -22206,39 +22493,47 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* INCIDENT TABLE */}
-            {totalIncidents > 0 && (
-              <div style={incPanel}>
-                <div style={incPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// INCIDENT TABLE</span>
-                  <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{totalIncidents} ROW{totalIncidents!==1?'S':''}</span>
+            {/* JOBS PICKER */}
+            {(() => {
+              const activeJobsList = donnyJobs.filter(j => !j.completed && !j.archived);
+              if (activeJobsList.length === 0) {
+                return (
+                  <div style={{...incPanel,padding:"40px",textAlign:"center"}}>
+                    <div style={{fontSize:"28px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⚠</div>
+                    <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log incidents</div>
+                  </div>
+                );
+              }
+              return (
+                <div style={incPanel}>
+                  <div style={incPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>JOB</div><div>INCIDENTS</div><div></div>
+                  </div>
+                  <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
+                    {activeJobsList.map((j, i) => {
+                      const incs = donnyIncidents.filter(inc => String(inc.jobId) === String(j.id));
+                      return (
+                        <button key={j.id} onClick={() => setIncidentJobId(j.id)}
+                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:incs.length>0?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.6)"}}>{incs.length} {incs.length===1?'incident':'incidents'}</div>
+                          <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 90px 50px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>DATE</div><div>TYPE</div><div>WHO / DESC</div><div>JOB</div><div>REP.</div><div></div>
-                </div>
-                <div style={{maxHeight:donnyIncidents.length > 8 ? "440px" : "none",overflowY:donnyIncidents.length > 8 ? "auto" : "visible"}}>
-                  {donnyIncidents.map((inc,i)=>{
-                    const tc=typeColors[inc.type]||'#ef4444';
-                    const job=donnyJobs.find(j=>String(j.id)===String(inc.jobId));
-                    return (
-                      <button key={inc.id} onClick={()=>setEditingIncidentId(editingIncidentId===inc.id?null:inc.id)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 90px 50px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyIncidents.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingIncidentId===inc.id?"rgba(239,68,68,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>⚠</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)"}}>{inc.date?new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
-                        <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",justifySelf:"start",whiteSpace:"nowrap"}}>{typeLabels[inc.type]||inc.type}</div>
-                        <div style={{minWidth:0}}>
-                          {inc.who && <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.who}</div>}
-                          {inc.description && <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.description}</div>}
-                        </div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:job?"rgba(249,115,22,0.7)":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?(job.jobNumber?`#${job.jobNumber}`:job.title.slice(0,8)):'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"11px",color:inc.reported?"rgba(34,197,94,0.95)":"rgba(148,163,184,0.3)",fontWeight:500}}>{inc.reported?'✓':'—'}</div>
-                        <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>{editingIncidentId===inc.id?'⌄':'›'}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* INLINE EDIT/DETAIL — for the one being edited */}
             {editingIncidentId && (() => {
@@ -22703,6 +22998,122 @@ ${JSON.stringify(ctx, null, 2)}`;
       const mPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(239,68,68,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(239,68,68,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
       const mPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(239,68,68,0.1)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
 
+      // ── JOB-SCOPED VIEW for mistakes ─────────────
+      if (mistakeJobId) {
+        const job = donnyJobs.find(j => String(j.id) === String(mistakeJobId));
+        if (!job) { setMistakeJobId(null); }
+        const jobRefMatch = (m) => {
+          if (!m.jobRef) return false;
+          const ref = String(m.jobRef).toLowerCase();
+          const titleMatch = job?.title && ref.includes(String(job.title).toLowerCase());
+          const numMatch = job?.jobNumber && ref.includes(String(job.jobNumber).toLowerCase());
+          return titleMatch || numMatch;
+        };
+        const jobMists = donnyMistakes.filter(jobRefMatch);
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+            <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div className="max-w-5xl mx-auto">
+                <button onClick={() => setMistakeJobId(null)} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← MISTAKES</button>
+                <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                    <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}MISTAKES FOR JOB</div>
+                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{jobMists.length} mistake{jobMists.length!==1?'s':''} on this job</div>
+                    </div>
+                  </div>
+                  <button onClick={()=>{ setShowNewMistake(s=>!s); setNewMistake(p=>({...p,jobRef: job?.jobNumber?`#${job.jobNumber} ${job.title}`:job?.title||'',date:new Date().toISOString().split('T')[0]})); }}
+                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    {showNewMistake ? '✕ CANCEL' : '+ LOG MISTAKE'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+              {showNewMistake && (
+                <div style={mPanel}>
+                  <div style={mPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MISTAKE</span>
+                    <button onClick={()=>setShowNewMistake(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                  </div>
+                  <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
+                        <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who-jobview"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <datalist id="mistake-who-jobview">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                        <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                      <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                      <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                    </div>
+                    <button onClick={() => {
+                      if (!newMistake.what.trim()) return;
+                      const ref = job?.jobNumber?`#${job.jobNumber} ${job.title}`:job?.title||'';
+                      const m = {...newMistake, jobRef: ref, id:Date.now(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString()};
+                      saveMistakes([m, ...donnyMistakes]);
+                      logAction(`job_${job?.id}`, { kind: 'create', summary: `Mistake: ${(m.what||'').slice(0,60)}` });
+                      setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
+                      setShowNewMistake(false);
+                    }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
+                  </div>
+                </div>
+              )}
+
+              {jobMists.length === 0 && !showNewMistake ? (
+                <div style={{...mPanel,padding:"40px",textAlign:"center"}}>
+                  <div style={{fontSize:"32px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✓</div>
+                  <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO MISTAKES ON THIS JOB</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Keep it that way</div>
+                </div>
+              ) : jobMists.length > 0 && (
+                <div style={mPanel}>
+                  <div style={mPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MISTAKES</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>DATE</div><div>WHO</div><div>WHAT</div><div></div>
+                  </div>
+                  {jobMists.map((m,i) => (
+                    <button key={m.id} onClick={()=>setEditingMistakeId(editingMistakeId===m.id?null:m.id)}
+                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobMists.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(239,68,68,0.15)",border:"0.5px solid rgba(239,68,68,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#ef4444",fontFamily:"monospace",flexShrink:0}}>✕</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)"}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.who||'Unknown'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.what}</div>
+                      <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
@@ -22727,10 +23138,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                 </div>
-                <button onClick={() => setShowNewMistake(s=>!s)}
-                  style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
-                  {showNewMistake ? '✕ CANCEL' : '+ LOG MISTAKE'}
-                </button>
               </div>
             </div>
           </div>
@@ -22898,31 +23305,51 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* MISTAKES TABLE */}
-            {totalMistakes > 0 && (
-              <div style={mPanel}>
-                <div style={mPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MISTAKES TABLE</span>
-                  <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{totalMistakes} ROW{totalMistakes!==1?'S':''}</span>
+            {/* JOBS PICKER */}
+            {(() => {
+              const activeJobsList = donnyJobs.filter(j => !j.completed && !j.archived);
+              if (activeJobsList.length === 0) {
+                return (
+                  <div style={{...mPanel,padding:"40px",textAlign:"center"}}>
+                    <div style={{fontSize:"28px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✕</div>
+                    <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log mistakes</div>
+                  </div>
+                );
+              }
+              return (
+                <div style={mPanel}>
+                  <div style={mPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>JOB</div><div>MISTAKES</div><div></div>
+                  </div>
+                  <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
+                    {activeJobsList.map((j, i) => {
+                      const ms = donnyMistakes.filter(m => {
+                        if (!m.jobRef) return false;
+                        const ref = String(m.jobRef).toLowerCase();
+                        return (j.title && ref.includes(String(j.title).toLowerCase())) || (j.jobNumber && ref.includes(String(j.jobNumber).toLowerCase()));
+                      });
+                      return (
+                        <button key={j.id} onClick={() => setMistakeJobId(j.id)}
+                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:ms.length>0?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.6)"}}>{ms.length} {ms.length===1?'mistake':'mistakes'}</div>
+                          <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>DATE</div><div>WHO</div><div>WHAT</div><div>JOB</div><div></div>
-                </div>
-                <div style={{maxHeight:donnyMistakes.length > 8 ? "440px" : "none",overflowY:donnyMistakes.length > 8 ? "auto" : "visible"}}>
-                  {donnyMistakes.map((m,i)=>(
-                    <button key={m.id} onClick={()=>setEditingMistakeId(editingMistakeId===m.id?null:m.id)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyMistakes.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingMistakeId===m.id?"rgba(239,68,68,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(239,68,68,0.15)",border:"0.5px solid rgba(239,68,68,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#ef4444",fontFamily:"monospace",flexShrink:0}}>✕</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)"}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.who||'Unknown'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.what}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:m.jobRef?"rgba(249,115,22,0.7)":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.jobRef||'—'}</div>
-                      <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>{editingMistakeId===m.id?'⌄':'›'}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* INLINE EDIT */}
             {editingMistakeId && (() => {
