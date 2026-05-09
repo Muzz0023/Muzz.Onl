@@ -21188,13 +21188,14 @@ ${JSON.stringify(ctx, null, 2)}`;
       (donnyMaterialsLog||[]).forEach(e => {
         const key = (e.item||'').trim();
         if (!key) return;
-        if (!matMap[key]) matMap[key] = { name: key, qty: 0, cost: 0, count: 0, unit: e.unit||'' };
+        if (!matMap[key]) matMap[key] = { name: key, qty: 0, cost: 0, count: 0, unit: e.unit||'', jobIds: new Set() };
         matMap[key].qty += parseFloat(e.qty)||0;
         matMap[key].cost += parseFloat(e.cost)||0;
         matMap[key].count += 1;
+        if (e.jobId) matMap[key].jobIds.add(e.jobId);
         if (!matMap[key].unit && e.unit) matMap[key].unit = e.unit;
       });
-      const catalog = Object.values(matMap).sort((a,b) => b.count - a.count);
+      const catalog = Object.values(matMap).map(m => ({...m, jobIds: [...m.jobIds]})).sort((a,b) => b.count - a.count);
 
       // Stats for KPI strip
       const totalEntries = (donnyMaterialsLog||[]).length;
@@ -21308,7 +21309,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                       } : null,
                     },
                     {
-                      label:"Top Item", value:topMaterial ? topMaterial.name.split(' ').slice(0,2).join(' ').slice(0,12) : '—', color:"#a855f7",
+                      label:"Top Item", value:topMaterial ? topMaterial.name : '—', color:"#a855f7",
+                      smallValue: true,
                       lineage: topMaterial ? {
                         title: `Top Material · ${topMaterial.name}`,
                         value: `${topMaterial.count} entries`,
@@ -21350,7 +21352,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
                       </div>
-                      <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"inline-block",maxWidth:"100%"}}>{k.value}</div>
+                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
                       <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
                         <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
                       </div>
@@ -21368,22 +21370,35 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>{catalog.length} ITEM{catalog.length!==1?'S':''}</span>
                 </div>
                 <div style={{maxHeight:"260px",overflowY:"auto"}}>
-                  {catalog.slice(0,12).map((m,i) => (
-                    <button key={m.name} onClick={() => navToEntity('material', {name:m.name})}
-                      style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
-                        <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
-                        <div style={{minWidth:0,flex:1}}>
-                          <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{m.count} entr{m.count!==1?'ies':'y'}{m.cost>0?' · $'+m.cost.toFixed(0):''}</div>
+                  {catalog.slice(0,12).map((m,i) => {
+                    // Resolve linked jobs and pull job numbers
+                    const linkedJobs = (m.jobIds||[]).map(jid => donnyJobs.find(j => j.id === jid)).filter(Boolean);
+                    const jobLabels = linkedJobs.map(j => j.jobNumber ? `#${j.jobNumber}` : j.title);
+                    return (
+                      <button key={m.name} onClick={() => navToEntity('material', {name:m.name})}
+                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
+                          <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
+                          <div style={{minWidth:0,flex:1}}>
+                            <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
+                              <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"260px"}}>{m.name}</span>
+                              {jobLabels.slice(0,3).map((lbl, ji) => (
+                                <span key={ji} style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.25)",borderRadius:"2px",letterSpacing:"0.5px",whiteSpace:"nowrap"}}>{lbl}</span>
+                              ))}
+                              {jobLabels.length > 3 && (
+                                <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(249,115,22,0.5)"}}>+{jobLabels.length-3}</span>
+                              )}
+                            </div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{m.count} entr{m.count!==1?'ies':'y'}{m.cost>0?' · $'+m.cost.toFixed(0):''}{linkedJobs.length>0?' · '+linkedJobs.length+' job'+(linkedJobs.length!==1?'s':''):''}</div>
+                          </div>
                         </div>
-                      </div>
-                      <div style={{textAlign:"right",flexShrink:0,display:"flex",alignItems:"center",gap:"8px"}}>
-                        <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace"}}>{m.qty.toFixed(1)}{m.unit?' '+m.unit:''}</span>
-                        <span style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
-                      </div>
-                    </button>
-                  ))}
+                        <div style={{textAlign:"right",flexShrink:0,display:"flex",alignItems:"center",gap:"8px"}}>
+                          <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace"}}>{m.qty.toFixed(1)}{m.unit?' '+m.unit:''}</span>
+                          <span style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
