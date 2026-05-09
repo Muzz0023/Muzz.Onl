@@ -20619,14 +20619,15 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
               {/* MINI KPI STRIP */}
               <div style={{...photoPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
                   {[
+                    {label:"TOTAL", value:jobPhotos.length, color:"#f97316"},
                     {label:"BEFORE", value:beforeCount, color:"#3b82f6"},
                     {label:"AFTER", value:afterCount, color:"rgba(34,197,94,0.85)"},
-                    {label:"PROGRESS", value:progressCount, color:"#f97316"},
+                    {label:"PROGRESS", value:progressCount, color:"rgba(168,85,247,0.85)"},
                     {label:"DEFECT", value:defectCount, color:"rgba(239,68,68,0.85)"},
                   ].map((k,i) => (
-                    <div key={i} style={{padding:"10px 8px",borderRight:i<3?"0.5px solid rgba(249,115,22,0.08)":"none",fontFamily:"monospace"}}>
+                    <div key={i} style={{padding:"10px 8px",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",fontFamily:"monospace"}}>
                       <div style={{fontSize:"9px",color:`${k.color}99`,letterSpacing:"1px",marginBottom:"4px"}}>{k.label}</div>
                       <div style={{fontSize:"15px",color:"#e0eaff",fontWeight:500}}>{k.value}</div>
                       <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
