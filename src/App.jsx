@@ -4102,7 +4102,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${accent}1a`,borderLeft:`2px solid ${accent}b3`}}>
           <span style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIONS</span>
         </div>
-        <div style={{padding:"10px",display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(120px, 1fr))",gap:"6px"}}>
+        <div style={{padding:"10px",display:"grid",gridTemplateColumns:isWide?"repeat(auto-fit, minmax(120px, 1fr))":"repeat(2, 1fr)",gap:"6px"}}>
           {actions.filter(a => !a.hide).map((a,i) => {
             const c = a.color || accent;
             const disabled = a.disabled;
@@ -16560,7 +16560,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               return h > max.h ? {day:d, h} : max;
             }, {day:'—', h:0});
             return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 {[
                   {label:"BLOCKS",value:totalBlocks,sub:"SCHEDULED",color:"rgba(0,200,255,0.9)"},
                   {label:"WEEK HOURS",value:totalHours.toFixed(1),sub:"COMMITTED",color:"rgba(34,197,94,0.9)"},
@@ -17237,7 +17237,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* KPI STRIP — single panel with sparklines */}
             <div style={{...donnyPanel,borderLeft:"2px solid #f97316"}}>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+              <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                 {[
                   {
                     label:"Active", value:String(activeJobs.length), color:"#f97316", series:[activeJobs.length*0.7,activeJobs.length*0.85,activeJobs.length*0.95,activeJobs.length], warn:false,
@@ -17361,7 +17361,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 ].map((k,i) => (
                   <button key={i} onClick={() => setDonnyLineage(k.lineage)}
                     title="Click to see calculation"
-                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:"pointer",textAlign:"left"}}>
+                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:"pointer",textAlign:"left"}}>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                       <span>{k.label}</span>
                       <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>
@@ -17421,8 +17421,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"2px"}}>NO ACTIVE JOBS · <button onClick={()=>setActiveView('donny-newjob')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",letterSpacing:"2px",textDecoration:"underline"}}>+ NEW</button></div>
               ) : (
                 <>
-                  <div style={{display:"grid",gridTemplateColumns:"40px 1fr 80px 80px 90px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div>#</div><div>NAME</div><div>HOURS</div><div>DUE</div><div>STATUS</div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"40px 1fr 80px 80px 90px":"40px 1fr 70px 70px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {isWide ? (
+                      <><div>#</div><div>NAME</div><div>HOURS</div><div>DUE</div><div>STATUS</div></>
+                    ) : (
+                      <><div>#</div><div>NAME</div><div>DUE</div><div>STATUS</div></>
+                    )}
                   </div>
                   <div style={{maxHeight:jobHealth.length > 8 ? "440px" : "none",overflowY:jobHealth.length > 8 ? "auto" : "visible"}}>
                     {jobHealth.map((j,i) => {
@@ -17431,15 +17435,18 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const dueStr = j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—';
                       return (
                         <button key={j.id} onClick={() => { navToEntity('job', j); }}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:"40px 1fr 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobHealth.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                          style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"40px 1fr 80px 80px 90px":"40px 1fr 70px 70px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobHealth.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"6px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
                             <span style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,boxShadow:`0 0 4px ${sc}80`,flexShrink:0}}/>
                             <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(249,115,22,0.6)"}}>{j.jobNumber||(i+1).toString().padStart(2,'0')}</span>
                           </div>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{j.title}</div>
-                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{j._hrs.toFixed(1)}h</div>
-                          <div style={{fontFamily:"monospace",fontSize:"10px",color:j._overdue?"#ef4444":"rgba(148,163,184,0.6)"}}>{dueStr}</div>
-                          <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,padding:"2px 6px",letterSpacing:"0.5px",background:`${sc}15`,color:sc,border:`0.5px solid ${sc}30`,borderRadius:"3px"}}>{status}</span></div>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"6px"}}>{j.title}</div>
+                            {!isWide && j._hrs > 0 && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>{j._hrs.toFixed(1)}h logged</div>}
+                          </div>
+                          {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{j._hrs.toFixed(1)}h</div>}
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:j._overdue?"#ef4444":"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{dueStr}</div>
+                          <div style={{minWidth:0}}><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,padding:"2px 6px",letterSpacing:"0.5px",background:`${sc}15`,color:sc,border:`0.5px solid ${sc}30`,borderRadius:"3px",whiteSpace:"nowrap"}}>{status}</span></div>
                         </button>
                       );
                     })}
@@ -17469,7 +17476,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <button onClick={()=>{ leaveWorkspace(); }} style={{fontSize:"10px",padding:"4px 12px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>LEAVE</button>
                   </div>
                 ) : (
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>YOUR CODE</div>
                       <div style={{padding:"8px",textAlign:"center",fontFamily:"monospace",fontWeight:700,letterSpacing:"5px",fontSize:"18px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",color:"#f97316",marginBottom:"6px"}}>
@@ -17554,20 +17561,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <button onClick={() => setActiveView('donny-newjob')} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ NEW</button>
                     </div>
                   </div>
-                  <div style={{overflowX:"auto"}}>
-                    <div style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"8px 16px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                      <div>JOB #</div><div>NAME</div><div>START</div><div>DUE</div><div>STATUS</div>
+                  <div style={{overflowX:isWide?"auto":"visible"}}>
+                    <div style={{display:"grid",gridTemplateColumns:isWide?"70px minmax(120px,1fr) 85px 85px 95px":"60px 1fr 70px 70px",minWidth:isWide?"430px":"0",padding:"8px 16px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                      {isWide ? (
+                        <><div>JOB #</div><div>NAME</div><div>START</div><div>DUE</div><div>STATUS</div></>
+                      ) : (
+                        <><div>JOB #</div><div>NAME</div><div>DUE</div><div>STATUS</div></>
+                      )}
                     </div>
                     {donnyJobs.map((job, i) => {
-                      const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
+                      const status = job.completed ? 'DONE' : job.started ? 'ACTIVE' : 'TO DO';
                       const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
                       return (
-                        <div key={job.id} onClick={() => { navToEntity('job', job); }} style={{display:"grid",gridTemplateColumns:"70px minmax(120px,1fr) 85px 85px 95px",minWidth:"430px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.7)"}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
-                          <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{job.title}</div>
-                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
-                          <div style={{fontFamily:"monospace",fontSize:"10px",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?'#ef4444':'rgba(148,163,184,0.6)'}}>{job.dueDate?new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>
-                          <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:700,padding:"2px 8px",letterSpacing:"0.5px",background:`${statusColor}15`,color:statusColor,border:`0.5px solid ${statusColor}30`,borderRadius:"3px"}}>{status}</span></div>
+                        <div key={job.id} onClick={() => { navToEntity('job', job); }} style={{display:"grid",gridTemplateColumns:isWide?"70px minmax(120px,1fr) 85px 85px 95px":"60px 1fr 70px 70px",minWidth:isWide?"430px":"0",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer",gap:"6px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
+                          <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"6px",minWidth:0}}>{job.title}</div>
+                          {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{job.startDate?new Date(job.startDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}):'—'}</div>}
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?'#ef4444':'rgba(148,163,184,0.6)',overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.dueDate?new Date(job.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                          <div style={{minWidth:0}}><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:700,padding:"2px 6px",letterSpacing:"0.5px",background:`${statusColor}15`,color:statusColor,border:`0.5px solid ${statusColor}30`,borderRadius:"3px",whiteSpace:"nowrap"}}>{status}</span></div>
                         </div>
                       );
                     })}
@@ -17802,7 +17813,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const statusColor = job.completed ? '#22c55e' : job.started ? '#f97316' : '#94a3b8';
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}) : '—';
       const formatTime = (d) => d ? new Date(d).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}) : '';
@@ -17906,7 +17917,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
 
               {/* 5-CELL KPI STRIP */}
-              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+              <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                 {[
                   {
                     label:"Hours",
@@ -18005,7 +18016,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   },
                 ].map((k,i) => (
                   <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                    style={{padding:"12px 10px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left",fontFamily:"monospace"}}>
+                    style={{padding:"12px 10px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left",fontFamily:"monospace"}}>
                     <div style={{fontSize:"9px",color:k.color,letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",opacity:0.85,display:"flex",alignItems:"center",gap:"4px"}}>
                       <span>{k.label}</span>
                       {k.lineage && <span style={{fontSize:"8px",opacity:0.7}}>ƒ</span>}
@@ -18025,7 +18036,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               {showEditQuote && (
                 <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",padding:"14px 16px",background:"rgba(0,0,0,0.15)"}}>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"10px"}}>// QUOTED VALUES</div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"12px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED HOURS</div>
                       <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="e.g. 500"
@@ -18047,8 +18058,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               )}
             </div>
 
-            {/* DATES + CLIENT */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+            {/* DATES + CLIENT — side by side on desktop, stacked on mobile */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
               <div style={panel}>
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SCHEDULE</span>
@@ -18445,7 +18456,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               )}
 
               {/* TILE GRID — 4 across × 2 rows */}
-              <div style={{padding:"10px",display:"grid",gridTemplateColumns:"repeat(4, 1fr)",gap:"6px"}}>
+              <div style={{padding:"10px",display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"6px"}}>
                 {[
                   {label:"WORKERS", count:workerHours.length, color:"#f97316", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
                   {label:"CLIENTS", count:clients.length, color:"#3b82f6", onOpen:() => setActiveView('donny-clients')},
@@ -18477,29 +18488,37 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{padding:"24px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.25)",fontFamily:"monospace",letterSpacing:"1.5px"}}>NO HOURS LOGGED YET</div>
               ) : (
                 <>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 80px 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>WORKER</div><div>HOURS</div><div>RATE</div><div>COST</div><div></div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 80px 100px 30px":"32px 1fr 60px 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {isWide ? (
+                      <><div></div><div>WORKER</div><div>HOURS</div><div>RATE</div><div>COST</div><div></div></>
+                    ) : (
+                      <><div></div><div>WORKER</div><div>HOURS</div><div>COST</div><div></div></>
+                    )}
                   </div>
                   {workerHours.map((w,i) => (
                     <button key={w.id} onClick={() => navToEntity('worker', w)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 70px 80px 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<workerHours.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 80px 100px 30px":"32px 1fr 60px 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<workerHours.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"24px",height:"24px",borderRadius:"3px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"10px",fontWeight:600,color:"rgba(249,115,22,0.85)",flexShrink:0}}>{(w.name||'?').slice(0,2).toUpperCase()}</div>
                       <div style={{minWidth:0}}>
                         <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.name}</div>
-                        {(w.position || (w.roles||[])[0]) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.position || (w.roles||[])[0]}</div>}
+                        {!isWide ? (
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>${w.hourlyRate||0}/hr{(w.position||(w.roles||[])[0])?` · ${w.position||(w.roles||[])[0]}`:''}</div>
+                        ) : (
+                          (w.position || (w.roles||[])[0]) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.position || (w.roles||[])[0]}</div>
+                        )}
                       </div>
                       <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.85)"}}>{w.hours.toFixed(1)}h</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>${w.hourlyRate||0}/hr</div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>${w.hourlyRate||0}/hr</div>}
                       <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.85)"}}>${w.cost.toFixed(0)}</div>
                       <span style={{fontSize:"12px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>›</span>
                     </button>
                   ))}
                   {/* TOTAL row */}
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 80px 100px 30px",padding:"10px 16px",alignItems:"center",borderTop:"0.5px solid rgba(249,115,22,0.15)",background:"rgba(249,115,22,0.04)",gap:"8px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 80px 100px 30px":"32px 1fr 60px 80px 30px",padding:"10px 16px",alignItems:"center",borderTop:"0.5px solid rgba(249,115,22,0.15)",background:"rgba(249,115,22,0.04)",gap:"8px"}}>
                     <div></div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>TOTAL · {workerHours.length} WORKER{workerHours.length!==1?'S':''}</div>
                     <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500}}>{totalHours.toFixed(1)}h</div>
-                    <div></div>
+                    {isWide && <div></div>}
                     <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:500}}>${totalLabour.toFixed(0)}</div>
                     <div></div>
                   </div>
@@ -18507,8 +18526,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               )}
             </div>
 
-            {/* SUBS + SUPPLIERS — side by side */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+            {/* SUBS + SUPPLIERS — side by side on desktop, stacked on mobile */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
 
               {/* SUBCONTRACTORS */}
               <div style={{...panel,borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
@@ -18865,7 +18884,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       ].sort((a,b) => b._at - a._at);
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       const relTime = (d) => {
         if (!d) return '';
@@ -18930,7 +18949,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </span>
                 )}
               </div>
-              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"14px"}}>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>THIS WEEK</div>
                   <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{weekHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
@@ -18997,7 +19016,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// HOURS · 4 WEEKS</span>
               </div>
               <div style={{padding:"14px 16px"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
                   {weeklyHrs.map((h,i) => {
                     const isLatest = i === 3;
                     const heightPct = (h/maxWeekHrs)*100;
@@ -19015,8 +19034,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            {/* JOBS + LINKED RECORDS */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+            {/* JOBS + LINKED RECORDS — side by side on desktop, stacked on mobile */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
               {/* JOBS WORKED */}
               <div style={panel}>
                 <div style={panelHeader}>
@@ -19266,7 +19285,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const lastJobDate = sortedByDate[sortedByDate.length-1];
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       const initial = (client.name || '?').charAt(0).toUpperCase();
 
@@ -19413,8 +19432,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               )}
             </div>
 
-            {/* CONTACT + LINKED RECORDS */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+            {/* CONTACT + LINKED RECORDS — side by side on desktop, stacked on mobile */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
               {/* CONTACT INFO */}
               <div style={panel}>
                 <div style={panelHeader}>
@@ -19627,7 +19646,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const timeline = [...allEntries].sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       const relTime = (d) => {
         if (!d) return '';
@@ -19686,7 +19705,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// USAGE</span>
                 {lastUsed && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>last used {relTime(lastUsed)}</span>}
               </div>
-              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
+              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"14px"}}>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TOTAL QTY</div>
                   <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalQty.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>{unit||'units'}</span></div>
@@ -19708,7 +19727,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// USAGE · 4 WEEKS</span>
               </div>
               <div style={{padding:"14px 16px"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
                   {weeklyUsage.map((q,i) => {
                     const isLatest = i === 3;
                     const heightPct = (q/maxWeekUsage)*100;
@@ -19726,8 +19745,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            {/* JOBS USING + SUPPLIER */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+            {/* JOBS USING + SUPPLIER — side by side on desktop, stacked on mobile */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
               {/* JOBS USING THIS MATERIAL */}
               <div style={panel}>
                 <div style={panelHeader}>
@@ -20117,7 +20136,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {donnyJobs.length > 0 && (
               <div style={{...hPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Active Jobs", value:String(activeJobs.length), color:"#f97316",
@@ -20223,7 +20242,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -20254,8 +20273,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIVE JOBS</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{activeJobs.length} JOB{activeJobs.length!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div>LAST</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 90px 30px":"32px 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div>LAST</div><div></div></>
+                  ) : (
+                    <><div></div><div>JOB</div><div>HOURS</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:activeJobs.length > 8 ? "440px" : "none",overflowY:activeJobs.length > 8 ? "auto" : "visible"}}>
                   {activeJobs.map((job,i) => {
@@ -20265,15 +20288,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0))[0];
                     return (
                       <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 90px 30px":"32px 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                         <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#f97316",fontFamily:"monospace",flexShrink:0}}>⊞</div>
                         <div style={{minWidth:0}}>
                           <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
                           {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
                         </div>
                         <div style={{fontFamily:"monospace",fontSize:"10px",color:totalHrs>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{totalHrs>0?`${totalHrs.toFixed(1)}h`:'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length} entr${notes.length===1?'y':'ies'}`:'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{lastActivity?new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length} entr${notes.length===1?'y':'ies'}`:'—'}</div>}
+                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{lastActivity?new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>}
                         <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
                       </button>
                     );
@@ -20289,8 +20312,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// COMPLETED JOBS</span>
                   <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{completedJobs.length} DONE</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 30px":"32px 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div></div></>
+                  ) : (
+                    <><div></div><div>JOB</div><div>HOURS</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:completedJobs.length > 6 ? "320px" : "none",overflowY:completedJobs.length > 6 ? "auto" : "visible"}}>
                   {completedJobs.map((job,i) => {
@@ -20299,14 +20326,14 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                     return (
                       <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<completedJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px",opacity:0.7}}>
+                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 30px":"32px 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<completedJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px",opacity:0.7}}>
                         <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#22c55e",fontFamily:"monospace",flexShrink:0}}>✓</div>
                         <div style={{minWidth:0}}>
                           <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
                           {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
                         </div>
                         <div style={{fontFamily:"monospace",fontSize:"10px",color:totalHrs>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{totalHrs>0?`${totalHrs.toFixed(1)}h`:'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length}`:'—'}</div>
+                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length}`:'—'}</div>}
                         <span style={{fontSize:"12px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
                       </button>
                     );
@@ -20564,7 +20591,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalMembers > 0 && (
               <div style={{...teamPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Members", value:String(totalMembers), color:"#f97316",
@@ -20654,7 +20681,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -20755,21 +20782,29 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TEAM TABLE</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalMembers} MEMBER{totalMembers!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 90px 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>NAME</div><div>ROLE</div><div>RATE</div><div>HOURS</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 90px 80px 30px":"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>NAME</div><div>ROLE</div><div>RATE</div><div>HOURS</div><div></div></>
+                  ) : (
+                    <><div></div><div>NAME</div><div>RATE</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:sortedTeam.length > 8 ? "440px" : "none",overflowY:sortedTeam.length > 8 ? "auto" : "visible"}}>
                   {sortedTeam.map((m, i) => (
                     <button key={m.id} onClick={() => navToEntity('worker', m)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 90px 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<sortedTeam.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 90px 80px 30px":"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<sortedTeam.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
                       <div style={{minWidth:0}}>
                         <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
-                        {m.position && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace"}}>{m.position}</div>}
+                        {!isWide ? (
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[m.position, (m.roles||[m.role]).filter(Boolean).join(','), m._hrs>0?`${m._hrs.toFixed(1)}h logged`:''].filter(Boolean).join(' · ')}</div>
+                        ) : (
+                          m.position && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace"}}>{m.position}</div>
+                        )}
                       </div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||'—'}</div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||'—'}</div>}
                       <div style={{fontFamily:"monospace",fontSize:"10px",color:m.hourlyRate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{m.hourlyRate?`$${m.hourlyRate}/hr`:'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:m._hrs>0?"#3b82f6":"rgba(148,163,184,0.4)"}}>{m._hrs>0?`${m._hrs.toFixed(1)}h`:'—'}</div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:m._hrs>0?"#3b82f6":"rgba(148,163,184,0.4)"}}>{m._hrs>0?`${m._hrs.toFixed(1)}h`:'—'}</div>}
                       <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
                     </button>
                   ))}
@@ -21101,7 +21136,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalRecurring > 0 && (
               <div style={{...recPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Total", value:String(totalRecurring), color:"#f97316",
@@ -21208,7 +21243,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -21236,7 +21271,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <input value={newRecurring.title} onChange={e=>setNewRecurring(p=>({...p,title:e.target.value}))} placeholder="Monthly Maintenance — Westfield"
                       style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"12px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CLIENT</div>
                       <select value={newRecurring.clientId} onChange={e=>setNewRecurring(p=>({...p,clientId:e.target.value}))}
@@ -21290,8 +21325,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RECURRING TABLE</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalRecurring} ROW{totalRecurring!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 110px 110px 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>JOB</div><div>CLIENT</div><div>NEXT DATE</div><div>FREQ</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 110px 90px 30px":"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>JOB</div><div>CLIENT</div><div>NEXT DATE</div><div>FREQ</div><div></div>
+                  </>) : (
+                    <><div></div><div>JOB</div><div>NEXT</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:donnyRecurring.length > 8 ? "440px" : "none",overflowY:donnyRecurring.length > 8 ? "auto" : "visible"}}>
                   {donnyRecurring.map((r,i) => {
@@ -21302,19 +21341,20 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 7;
                     return (
                       <button key={r.id} onClick={()=>setEditingRecurringId(editingRecurringId===r.id?null:r.id)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 110px 110px 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyRecurring.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingRecurringId===r.id?"rgba(249,115,22,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 110px 90px 30px":"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyRecurring.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingRecurringId===r.id?"rgba(249,115,22,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                         <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${fc}15`,border:`0.5px solid ${fc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:fc,fontFamily:"monospace",flexShrink:0}}>↻</div>
                         <div style={{minWidth:0}}>
                           <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title}</div>
-                          {r.notes && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.notes}</div>}
+                          {!isWide && (client || r.freq) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[client?.name, freqLabels[r.freq]].filter(Boolean).join(' · ')}</div>}
+                          {isWide && r.notes && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.notes}</div>}
                         </div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:client?"#3b82f6":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{client?.name||'—'}</div>
+                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:client?"#3b82f6":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{client?.name||'—'}</div>}
                         <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"#ef4444":isDueSoon?"#f59e0b":"rgba(148,163,184,0.6)"}}>
                           {r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—'}
                           {isOverdue && <span style={{marginLeft:"4px"}}>⚠</span>}
                           {daysUntil === 0 && <span style={{marginLeft:"4px",color:"#f59e0b"}}>·TODAY</span>}
                         </div>
-                        <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${fc}15`,color:fc,border:`0.5px solid ${fc}30`,borderRadius:"2px",justifySelf:"start",whiteSpace:"nowrap"}}>{freqLabels[r.freq]}</div>
+                        {isWide && <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${fc}15`,color:fc,border:`0.5px solid ${fc}30`,borderRadius:"2px",justifySelf:"start",whiteSpace:"nowrap"}}>{freqLabels[r.freq]}</div>}
                         <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{editingRecurringId===r.id?'⌄':'›'}</span>
                       </button>
                     );
@@ -21342,7 +21382,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <input value={r.title||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,title:e.target.value}:x))}
                         style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
                     </div>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
+                    <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"10px"}}>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CLIENT</div>
                         <select value={r.clientId||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,clientId:e.target.value}:x))}
@@ -21442,7 +21482,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
               {/* MINI KPI STRIP */}
               <div style={{...photoPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {label:"TOTAL", value:jobPhotos.length, color:"#f97316"},
                     {label:"BEFORE", value:beforeCount, color:"#3b82f6"},
@@ -21450,7 +21490,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     {label:"PROGRESS", value:progressCount, color:"#a855f7"},
                     {label:"DEFECT", value:defectCount, color:"#ef4444"},
                   ].map((k,i) => (
-                    <div key={i} style={{padding:"10px 8px",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",fontFamily:"monospace"}}>
+                    <div key={i} style={{padding:"10px 8px",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",fontFamily:"monospace"}}>
                       <div style={{fontSize:"9px",color:k.color,letterSpacing:"1px",marginBottom:"4px",opacity:0.85}}>{k.label}</div>
                       <div style={{fontSize:"15px",color:"#e0eaff",fontWeight:500}}>{k.value}</div>
                       <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
@@ -21557,7 +21597,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalPhotos > 0 && (
               <div style={{...photoPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Photos", value:String(totalPhotos), color:"#f97316",
@@ -21630,7 +21670,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -21661,24 +21701,32 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnyJobs.length} JOB{donnyJobs.length!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 60px 60px 60px 60px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>JOB</div><div>BEFORE</div><div>AFTER</div><div>PROG.</div><div>DEFECT</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 60px 60px 60px 60px 30px":"32px 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>JOB</div><div>BEFORE</div><div>AFTER</div><div>PROG.</div><div>DEFECT</div><div></div></>
+                  ) : (
+                    <><div></div><div>JOB</div><div>PHOTOS</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:donnyJobs.length > 8 ? "440px" : "none",overflowY:donnyJobs.length > 8 ? "auto" : "visible"}}>
                   {donnyJobs.map((job, i) => {
                     const photos = donnyPhotos[job.id]||[];
                     return (
                       <button key={job.id} onClick={()=>{ setPhotoJobId(job.id); setPhotoFilter('all'); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 60px 60px 60px 60px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 60px 60px 60px 60px 30px":"32px 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                         <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#f97316",fontFamily:"monospace",flexShrink:0}}>⊞</div>
                         <div style={{minWidth:0}}>
                           <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
                           {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
                         </div>
-                        {['before','after','progress','defect'].map(tag => {
-                          const count = photos.filter(p=>p.tag===tag).length;
-                          return <div key={tag} style={{fontFamily:"monospace",fontSize:"11px",color:count>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.3)",fontWeight:count>0?500:400}}>{count||'—'}</div>;
-                        })}
+                        {isWide ? (
+                          ['before','after','progress','defect'].map(tag => {
+                            const count = photos.filter(p=>p.tag===tag).length;
+                            return <div key={tag} style={{fontFamily:"monospace",fontSize:"11px",color:count>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.3)",fontWeight:count>0?500:400}}>{count||'—'}</div>;
+                          })
+                        ) : (
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:photos.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.3)",fontWeight:photos.length>0?500:400}}>{photos.length||'—'}</div>
+                        )}
                         <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
                       </button>
                     );
@@ -21751,14 +21799,14 @@ ${JSON.stringify(ctx, null, 2)}`;
 
               {jobDocs.length > 0 && (
                 <div style={{...clPanel,borderLeft:"2px solid #22c55e"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
                     {[
                       {label:"SWMS", value:jobSwms.length, color:"#ef4444"},
                       {label:"CHECKLISTS", value:jobChecks.length, color:"#22c55e"},
                       {label:"INSPECTIONS", value:jobInsp.length, color:"#3b82f6"},
                       {label:"TOOLBOX", value:jobToolbox.length, color:"#f59e0b"},
                     ].map((k,i) => (
-                      <div key={k.label} style={{padding:"14px 16px",borderRight:i<3?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
+                      <div key={k.label} style={{padding:"14px 16px",borderRight:(isWide?i<3:(i%2)===0)?"0.5px solid rgba(255,255,255,0.04)":"none",borderBottom:!isWide && i<2?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
                         <div style={{fontSize:"9px",color:`${k.color}99`,letterSpacing:"1.5px",marginBottom:"4px"}}>{k.label}</div>
                         <div style={{fontSize:"22px",color:k.color,fontWeight:500,lineHeight:1}}>{k.value}</div>
                       </div>
@@ -21826,8 +21874,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// DOCUMENTS</span>
                     <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{jobDocs.length} ROW{jobDocs.length!==1?'S':''}</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 110px 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>TITLE</div><div>TYPE</div><div>DONE</div><div></div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 70px 30px":"32px 1fr 60px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {isWide ? (
+                      <><div></div><div>TITLE</div><div>TYPE</div><div>DONE</div><div></div></>
+                    ) : (
+                      <><div></div><div>TITLE</div><div>DONE</div><div></div></>
+                    )}
                   </div>
                   <div style={{maxHeight:jobDocs.length > 8 ? "440px" : "none",overflowY:jobDocs.length > 8 ? "auto" : "visible"}}>
                     {jobDocs.map((cl,i)=>{
@@ -21836,13 +21888,17 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const isComplete = done===total && total>0;
                       return (
                         <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 110px 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobDocs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                          style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 70px 30px":"32px 1fr 60px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobDocs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                           <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>{isComplete?'✓':'◍'}</div>
                           <div style={{minWidth:0}}>
                             <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.title}</div>
-                            {cl.loggedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>by {cl.loggedBy}</div>}
+                            {!isWide ? (
+                              <div style={{fontSize:"9px",fontFamily:"monospace",color:tc,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{typeLabels[cl.type]||cl.type}{cl.loggedBy?` · by ${cl.loggedBy}`:''}</div>
+                            ) : (
+                              cl.loggedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>by {cl.loggedBy}</div>
+                            )}
                           </div>
-                          <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{typeLabels[cl.type]||cl.type}</div>
+                          {isWide && <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{typeLabels[cl.type]||cl.type}</div>}
                           <div style={{fontFamily:"monospace",fontSize:"11px",color:isComplete?"rgba(34,197,94,0.95)":tc,fontWeight:500}}>{done}/{total}</div>
                           <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
                         </button>
@@ -21957,7 +22013,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalChecklists > 0 && (
               <div style={{...clPanel,borderLeft:"2px solid #22c55e"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Total", value:String(totalChecklists), color:"#22c55e",
@@ -22049,7 +22105,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(34,197,94,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(34,197,94,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(34,197,94,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(34,197,94,0.3)",opacity:0.7}}>ƒ</span>}
@@ -22248,18 +22304,25 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// INCIDENTS</span>
                     <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobIncs.length} ROW{jobIncs.length!==1?'S':''}</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>DATE</div><div>TYPE</div><div>WHAT</div><div></div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {isWide ? (
+                      <><div></div><div>DATE</div><div>TYPE</div><div>WHAT</div><div></div></>
+                    ) : (
+                      <><div></div><div>DATE</div><div>WHAT</div><div></div></>
+                    )}
                   </div>
                   {jobIncs.map((inc,i) => {
                     const tc = typeColors[inc.type]||'#ef4444';
                     return (
                       <button key={inc.id} onClick={()=>setEditingIncidentId(editingIncidentId===inc.id?null:inc.id)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobIncs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobIncs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                         <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>⚠</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)"}}>{inc.date?new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
-                        <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",justifySelf:"start"}}>{typeLabels[inc.type]||inc.type}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.description}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.date?new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                        {isWide && <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",justifySelf:"start"}}>{typeLabels[inc.type]||inc.type}</div>}
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.description}</div>
+                          {!isWide && <div style={{fontSize:"9px",fontFamily:"monospace",color:tc,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{typeLabels[inc.type]||inc.type}</div>}
+                        </div>
                         <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
                       </button>
                     );
@@ -22304,7 +22367,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalIncidents > 0 && (
               <div style={{...incPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Total", value:String(totalIncidents), color:"#ef4444",
@@ -22396,7 +22459,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(239,68,68,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(239,68,68,0.3)",opacity:0.7}}>ƒ</span>}
@@ -22628,7 +22691,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         const uniqueItems = [...new Set(jobEntries.map(e => (e.item||'').trim().toLowerCase()))].length;
 
         const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
         const relTime = (d) => {
           if (!d) return '';
@@ -22797,7 +22860,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const activeJobsList = donnyJobs.filter(j=>!j.completed);
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
@@ -22834,7 +22897,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalEntries > 0 && (
               <div style={{...panel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Entries", value:String(totalEntries), color:"#f97316",
@@ -22933,7 +22996,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
                       title={k.lineage ? "Click to see breakdown" : ""}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -23100,16 +23163,23 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MISTAKES</span>
                     <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>DATE</div><div>WHO</div><div>WHAT</div><div></div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {isWide ? (
+                      <><div></div><div>DATE</div><div>WHO</div><div>WHAT</div><div></div></>
+                    ) : (
+                      <><div></div><div>DATE</div><div>WHAT</div><div></div></>
+                    )}
                   </div>
                   {jobMists.map((m,i) => (
                     <button key={m.id} onClick={()=>setEditingMistakeId(editingMistakeId===m.id?null:m.id)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobMists.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobMists.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(239,68,68,0.15)",border:"0.5px solid rgba(239,68,68,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#ef4444",fontFamily:"monospace",flexShrink:0}}>✕</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)"}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.who||'Unknown'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.what}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.who||'Unknown'}</div>}
+                      <div style={{minWidth:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:isWide?"10px":"11px",color:isWide?"rgba(148,163,184,0.7)":"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.what}</div>
+                        {!isWide && m.who && <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>by {m.who}</div>}
+                      </div>
                       <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
                     </button>
                   ))}
@@ -23153,7 +23223,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalMistakes > 0 && (
               <div style={{...mPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Total", value:String(totalMistakes), color:"#ef4444",
@@ -23240,7 +23310,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(239,68,68,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(239,68,68,0.3)",opacity:0.7}}>ƒ</span>}
@@ -23598,18 +23668,22 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalJobs > 0 && (
               <div style={{...rPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {label:"Total Risks", value:String(totalRisks), color:"#ef4444"},
                     {label:"Jobs With Risks", value:`${allJobsWithRisks.length}/${totalJobs}`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)"},
                     {label:"No Plan", value:String(noMitigationCount), color:noMitigationCount>0?"rgba(245,158,11,0.85)":"rgba(34,197,94,0.85)"},
                     {label:"Coverage", value:`${coverage}%`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)"},
-                  ].map((k,i) => (
-                    <div key={i} style={{padding:"14px 16px",borderRight:i<3?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1.5px",marginBottom:"4px"}}>{k.label}</div>
-                      <div style={{fontSize:"18px",color:k.color,fontWeight:500,lineHeight:1}}>{k.value}</div>
-                    </div>
-                  ))}
+                  ].map((k,i) => {
+                    const isLastInRow = isWide ? i === 3 : (i % 2) === 1;
+                    const isLastRow = isWide ? false : i >= 2;
+                    return (
+                      <div key={i} style={{padding:"14px 16px",borderRight:!isLastInRow?"0.5px solid rgba(255,255,255,0.04)":"none",borderBottom:!isWide && !isLastRow?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1.5px",marginBottom:"4px"}}>{k.label}</div>
+                        <div style={{fontSize:"18px",color:k.color,fontWeight:500,lineHeight:1}}>{k.value}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -23714,7 +23788,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const completedSWMS = (donnyChecklists||[]).filter(c=>c.type==='swms' && c.items && c.items.length>0 && c.items.every(i=>i.done)).length;
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeaderFor = (color) => ({padding:"10px 14px",borderBottom:`0.5px solid ${color}1a`,borderLeft:`2px solid ${color}b3`,display:"flex",alignItems:"center",justifyContent:"space-between"});
+      const panelHeaderFor = (color) => ({padding:"10px 14px",borderBottom:`0.5px solid ${color}1a`,borderLeft:`2px solid ${color}b3`,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"});
 
       // Reusable stat row
       const StatRow = ({label, value, color='#f97316', sub, lineage}) => (
@@ -23762,7 +23836,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* KPI STRIP */}
             <div style={{...panel,borderLeft:"2px solid #f97316"}}>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+              <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                 {[
                   {
                     label:"Active", value:String(activeJobs.length), color:"#f97316",
@@ -23853,7 +23927,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 ].map((k,i) => (
                   <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
                     title={k.lineage ? "Click to see breakdown" : ""}
-                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                       <span>{k.label}</span>
                       {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -23912,17 +23986,28 @@ ${JSON.stringify(ctx, null, 2)}`;
               )}
               {donnyTeam.length > 0 && (
                 <>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px 80px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderTop:"0.5px solid rgba(249,115,22,0.1)",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>NAME</div><div>ROLE</div><div>RATE</div><div>HOURS</div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 80px 80px":"32px 1fr 70px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderTop:"0.5px solid rgba(249,115,22,0.1)",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {isWide ? (
+                      <><div></div><div>NAME</div><div>ROLE</div><div>RATE</div><div>HOURS</div></>
+                    ) : (
+                      <><div></div><div>NAME</div><div>HOURS</div></>
+                    )}
                   </div>
                   <div style={{maxHeight:teamHours.length > 8 ? "320px" : "none",overflowY:teamHours.length > 8 ? "auto" : "visible"}}>
                     {teamHours.map((m,i) => (
                       <button key={m.id} onClick={() => navToEntity('worker', m)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px 80px",padding:"8px 16px",alignItems:"center",borderBottom:i<teamHours.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 80px 80px":"32px 1fr 70px",padding:"8px 16px",alignItems:"center",borderBottom:i<teamHours.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                         <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||m.position||'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:m.hourlyRate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{m.hourlyRate?`$${m.hourlyRate}`:'—'}</div>
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                          {!isWide && (m.hourlyRate || (m.roles||[m.role]).filter(Boolean).length>0) && (
+                            <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                              {[(m.roles||[m.role]).filter(Boolean).join(',')||m.position, m.hourlyRate?`$${m.hourlyRate}/hr`:''].filter(Boolean).join(' · ')}
+                            </div>
+                          )}
+                        </div>
+                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||m.position||'—'}</div>}
+                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:m.hourlyRate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{m.hourlyRate?`$${m.hourlyRate}`:'—'}</div>}
                         <div style={{fontFamily:"monospace",fontSize:"10px",color:m._hrs>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{m._hrs>0?`${m._hrs.toFixed(1)}h`:'—'}</div>
                       </button>
                     ))}
@@ -23993,13 +24078,20 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUBCONTRACTORS</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnySubs.length}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 90px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div>NAME</div><div>TRADE</div><div>RATE</div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 90px":"1fr 90px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div>NAME</div><div>TRADE</div><div>RATE</div></>
+                  ) : (
+                    <><div>NAME</div><div>RATE</div></>
+                  )}
                 </div>
                 {donnySubs.map((s,i) => (
-                  <div key={s.id} style={{display:"grid",gridTemplateColumns:"1fr 1fr 90px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnySubs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",fontFamily:"monospace"}}>
-                    <span style={{fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</span>
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade||'—'}</span>
+                  <div key={s.id} style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 90px":"1fr 90px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnySubs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",fontFamily:"monospace",gap:"6px"}}>
+                    <div style={{minWidth:0}}>
+                      <div style={{fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                      {!isWide && s.trade && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade}</div>}
+                    </div>
+                    {isWide && <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade||'—'}</span>}
                     <span style={{fontSize:"10px",color:s.rate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</span>
                   </div>
                 ))}
@@ -24013,17 +24105,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENTS</span>
                   <span style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>{donnyClients.length}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>NAME</div><div>COMPANY</div><div>JOBS</div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 80px":"32px 1fr 70px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>NAME</div><div>COMPANY</div><div>JOBS</div></>
+                  ) : (
+                    <><div></div><div>NAME</div><div>JOBS</div></>
+                  )}
                 </div>
                 {donnyClients.map((c,i) => {
                   const linked = donnyJobs.filter(j => jobHasClient(j, c.id));
                   return (
                     <button key={c.id} onClick={() => navToEntity('client', c)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnyClients.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 80px":"32px 1fr 70px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnyClients.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(59,130,246,0.12)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#3b82f6",fontFamily:"monospace",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
-                      <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</span>
-                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</span>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
+                        {!isWide && c.company && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company}</div>}
+                      </div>
+                      {isWide && <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</span>}
                       <span style={{fontSize:"10px",color:linked.length>0?"rgba(59,130,246,0.85)":"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{linked.length} job{linked.length!==1?'s':''}</span>
                     </button>
                   );
@@ -24158,7 +24257,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalSubs > 0 && (
               <div style={{...subsPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Subs", value:String(totalSubs), color:"#f97316",
@@ -24250,7 +24349,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     },
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
@@ -24273,7 +24372,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <button onClick={()=>setShowAddSub(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px"}}>
                     {[{k:'name',l:'NAME',p:'John Smith'},{k:'company',l:'COMPANY',p:'Smith Electrical'},{k:'trade',l:'TRADE',p:'Electrician'},{k:'phone',l:'PHONE',p:'04XX XXX XXX'},{k:'email',l:'EMAIL',p:'john@example.com'},{k:'abn',l:'ABN',p:'12 345 678 901'},{k:'licenceNo',l:'LICENCE NO.',p:'NSW123456'}].map(f=>(
                       <div key={f.k}>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
@@ -24320,18 +24419,25 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUBCONTRACTOR TABLE</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalSubs} ROW{totalSubs!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>NAME</div><div>TRADE</div><div>RATE</div><div>JOBS</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 110px 90px 30px":"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>NAME</div><div>TRADE</div><div>RATE</div><div>JOBS</div><div></div></>
+                  ) : (
+                    <><div></div><div>NAME</div><div>RATE</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:donnySubs.length > 8 ? "440px" : "none",overflowY:donnySubs.length > 8 ? "auto" : "visible"}}>
                   {donnySubs.map((s, i) => (
                     <button key={s.id} onClick={() => setEditingSubId(s.id)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnySubs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 110px 90px 30px":"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnySubs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(s.name||'?').charAt(0).toUpperCase()}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade||s.company||'—'}</div>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                        {!isWide && (s.trade||s.company||(s.jobIds||[]).length) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[s.trade||s.company, (s.jobIds||[]).length>0?`${(s.jobIds||[]).length} job${(s.jobIds||[]).length!==1?'s':''}`:''].filter(Boolean).join(' · ')}</div>}
+                      </div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade||s.company||'—'}</div>}
                       <div style={{fontFamily:"monospace",fontSize:"10px",color:s.rate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:(s.jobIds||[]).length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{(s.jobIds||[]).length>0?`${(s.jobIds||[]).length} job${(s.jobIds||[]).length!==1?'s':''}`:'—'}</div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:(s.jobIds||[]).length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{(s.jobIds||[]).length>0?`${(s.jobIds||[]).length} job${(s.jobIds||[]).length!==1?'s':''}`:'—'}</div>}
                       <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
                     </button>
                   ))}
@@ -24376,7 +24482,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         const avgPrice = supplierItems.length > 0 ? totalValue / supplierItems.length : 0;
 
         const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
         return (
           <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
@@ -24422,7 +24528,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CONTACT</span>
                 </div>
-                <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px"}}>
                   {[{k:'contact',l:'CONTACT NAME'},{k:'phone',l:'PHONE'},{k:'email',l:'EMAIL'},{k:'notes',l:'NOTES'}].map(f=>(
                     <div key={f.k}>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
@@ -24540,7 +24646,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const cheapest = allItems.length > 0 ? allItems.reduce((min, it) => (parseFloat(it.price)||0) < (parseFloat(min.price)||0) ? it : min, allItems[0]) : null;
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
@@ -24578,7 +24684,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {donnySuppliers.length > 0 && (
               <div style={{...panel,borderLeft:"2px solid #22c55e"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Suppliers", value:String(donnySuppliers.length), color:"#22c55e",
@@ -24681,7 +24787,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
                       title={k.lineage ? "Click to see breakdown" : ""}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(34,197,94,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(34,197,94,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(34,197,94,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(34,197,94,0.3)",opacity:0.7}}>ƒ</span>}
@@ -24704,7 +24810,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {donnySuppliers.length > 0 && <button onClick={()=>setShowAddSupplier(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>}
                 </div>
                 <div style={{padding:"14px 16px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",marginBottom:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px",marginBottom:"12px"}}>
                     {[{k:'name',l:'SUPPLIER NAME',p:'Haymans Electrical'},{k:'contact',l:'CONTACT',p:'John Smith'},{k:'phone',l:'PHONE',p:'07 XXXX XXXX'},{k:'email',l:'EMAIL',p:'sales@supplier.com.au'}].map(f=>(
                       <div key={f.k}>
                         <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
@@ -24741,16 +24847,23 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUPPLIER TABLE</span>
                   <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{donnySuppliers.length} ROW{donnySuppliers.length!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 100px 60px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>NAME</div><div>CONTACT</div><div>PHONE</div><div>ITEMS</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 100px 60px 30px":"32px 1fr 60px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>NAME</div><div>CONTACT</div><div>PHONE</div><div>ITEMS</div><div></div></>
+                  ) : (
+                    <><div></div><div>NAME</div><div>ITEMS</div><div></div></>
+                  )}
                 </div>
                 {donnySuppliers.map((s,i)=>(
                   <button key={s.id} onClick={()=>setEditingSupplierId(s.id)}
-                    style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 100px 60px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnySuppliers.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                    style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 100px 60px 30px":"32px 1fr 60px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnySuppliers.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                     <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#22c55e",fontFamily:"monospace",flexShrink:0}}>{(s.name||'?').charAt(0).toUpperCase()}</div>
-                    <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                    <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.contact||'—'}</div>
-                    <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{s.phone||'—'}</div>
+                    <div style={{minWidth:0}}>
+                      <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                      {!isWide && (s.contact||s.phone) && <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[s.contact, s.phone].filter(Boolean).join(' · ')}</div>}
+                    </div>
+                    {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.contact||'—'}</div>}
+                    {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{s.phone||'—'}</div>}
                     <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.85)",fontWeight:500}}>{(s.items||[]).length}</div>
                     <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
                   </button>
@@ -24798,7 +24911,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         : 0;
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
@@ -24840,7 +24953,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalClients > 0 && (
               <div style={{...panel,borderLeft:"2px solid #3b82f6"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {
                       label:"Clients", value:String(totalClients), color:"#3b82f6",
@@ -24933,7 +25046,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   ].map((k,i) => (
                     <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
                       title={k.lineage ? "Click to see breakdown" : ""}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(59,130,246,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(59,130,246,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(59,130,246,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
                       <div style={{fontSize:"9px",color:"rgba(59,130,246,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
                         <span>{k.label}</span>
                         {k.lineage && <span style={{fontSize:"8px",color:"rgba(59,130,246,0.3)",opacity:0.7}}>ƒ</span>}
@@ -24956,7 +25069,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <button onClick={()=>setShowAddClient(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px"}}>
                     {[{key:'name',label:'NAME',placeholder:'John Smith'},{key:'company',label:'COMPANY',placeholder:'Smith Electrical'},{key:'phone',label:'PHONE',placeholder:'04XX XXX XXX'},{key:'email',label:'EMAIL',placeholder:'john@example.com'}].map(f=>(
                       <div key={f.key}>
                         <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.label}</div>
@@ -25012,19 +25125,26 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENT TABLE</span>
                   <span style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>{totalClients} ROW{totalClients!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 80px 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>NAME</div><div>COMPANY</div><div>PHONE</div><div>JOBS</div><div>QUOTED</div><div></div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 110px 80px 80px 30px":"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  {isWide ? (
+                    <><div></div><div>NAME</div><div>COMPANY</div><div>PHONE</div><div>JOBS</div><div>QUOTED</div><div></div></>
+                  ) : (
+                    <><div></div><div>NAME</div><div>JOBS</div><div></div></>
+                  )}
                 </div>
                 <div style={{maxHeight:clientsWithStats.length > 8 ? "440px" : "none",overflowY:clientsWithStats.length > 8 ? "auto" : "visible"}}>
                   {clientsWithStats.map((c, i) => (
                     <button key={c.id} onClick={() => navToEntity('client', c)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 80px 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<clientsWithStats.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 110px 80px 80px 30px":"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<clientsWithStats.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
                       <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(59,130,246,0.12)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#3b82f6",fontFamily:"monospace",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c.phone?"rgba(59,130,246,0.7)":"rgba(148,163,184,0.3)"}}>{c.phone||'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c._jobs.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)"}}>{c._jobs.length}{c._active.length>0?` (${c._active.length} active)`:''}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c._quoted>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{c._quoted>0?`$${c._quoted.toFixed(0)}`:'—'}</div>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
+                        {!isWide && (c.company || c.phone || c._quoted>0) && <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[c.company, c._quoted>0?`$${c._quoted.toFixed(0)} quoted`:''].filter(Boolean).join(' · ')}</div>}
+                      </div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</div>}
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:c.phone?"rgba(59,130,246,0.7)":"rgba(148,163,184,0.3)"}}>{c.phone||'—'}</div>}
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c._jobs.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)"}}>{c._jobs.length}{isWide && c._active.length>0?` (${c._active.length} active)`:''}</div>
+                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:c._quoted>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{c._quoted>0?`$${c._quoted.toFixed(0)}`:'—'}</div>}
                       <span style={{fontSize:"12px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace"}}>›</span>
                     </button>
                   ))}
@@ -25185,14 +25305,14 @@ ${JSON.stringify(ctx, null, 2)}`;
 
         {/* KPI STRIP */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-          <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+          <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
             {[
               {label:"COMPLETED",value:`${completedTodayCount}`,sub:"TODAY",color:"#00c8ff"},
               {label:"COMPLETION RATE",value:`${todayRate}%`,sub:"COMPLETION",color:todayRate>=70?"#00c8ff":todayRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
               {label:"TOP STREAK",value:bestStreakOverall,sub:"DAYS",color:"rgba(255,165,0,0.9)"},
               {label:"31-DAY AVG",value:`${overall31Rate}%`,sub:"CONSISTENCY",color:overall31Rate>=70?"#00c8ff":overall31Rate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
             ].map((kpi,i) => (
-              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+              <div key={i} style={{padding:"12px 16px",borderRight:(isWide?i<3:(i%2)===0)?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:!isWide && i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
                 <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
                 <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
                 <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
@@ -25451,14 +25571,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             <>
               {/* KPI STRIP */}
               <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-                <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+                <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
                   {[
                     {label:"TOTAL",value:blTotal,sub:"GOALS",color:"rgba(251,191,36,0.9)"},
                     {label:"COMPLETED",value:blCompleted,sub:"ACHIEVED",color:"rgba(34,197,94,0.9)"},
                     {label:"REMAINING",value:blTotal-blCompleted,sub:"TO GO",color:"rgba(0,200,255,0.8)"},
                     {label:"COMPLETION",value:`${blPct}%`,sub:"RATE",color:blPct>=70?"rgba(34,197,94,0.9)":blPct>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
                   ].map((kpi,i) => (
-                    <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
+                    <div key={i} style={{padding:"12px 16px",borderRight:(isWide?i<3:(i%2)===0)?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:!isWide && i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
                       <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
                       <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
                       <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
