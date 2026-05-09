@@ -3708,7 +3708,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { id:"donny",              label:"DASH",  icon:"◈",  workerOk:true  },
       { id:"donny-masterview",   label:"JOBS",  icon:"⊞",  workerOk:false },
       { id:"donny-scheduler",    label:"SCHED", icon:"◴",  workerOk:false },
-      { id:"donny-dailyreport",  label:"LOG",   icon:"☰",  workerOk:true  },
+      { id:"donny-dailyreport",  label:"LOGGER",   icon:"☰",  workerOk:true  },
       { id:"donny-recurring",    label:"RECUR", icon:"⟳",  workerOk:false },
       { id:"donny-team",         label:"TEAM",  icon:"⊢",  workerOk:false },
       { id:"donny-clients",      label:"CLNT",  icon:"◇",  workerOk:false },
@@ -4987,7 +4987,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   { section:'JOBS', id:'donny', label:'Dashboard', workerOk:true },
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', workerOk:false },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', workerOk:false },
-                  { section:'JOBS', id:'donny-dailyreport', label:'Daily Reports', workerOk:true },
+                  { section:'JOBS', id:'donny-dailyreport', label:'Hour Logger', workerOk:true },
                   { section:'JOBS', id:'donny-recurring', label:'Recurring', workerOk:false },
                   { section:'TEAM', id:'donny-team', label:'Team', workerOk:false },
                   { section:'TEAM', id:'donny-subs', label:'Subcontractors', workerOk:false },
@@ -17439,24 +17439,31 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{display:"grid",gridTemplateColumns:"40px 1fr 80px 80px 90px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
                     <div>#</div><div>NAME</div><div>HOURS</div><div>DUE</div><div>STATUS</div>
                   </div>
-                  {jobHealth.slice(0,8).map((j,i) => {
-                    const sc = j._health==='red'?"#ef4444":j._health==='amber'?"#f59e0b":j.started?"#f97316":"#94a3b8";
-                    const status = j._overdue ? 'OVERDUE' : j.completed?'DONE':j.started?'ACTIVE':'TO DO';
-                    const dueStr = j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—';
-                    return (
-                      <button key={j.id} onClick={() => { navToEntity('job', j); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"40px 1fr 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<Math.min(jobHealth.length,8)-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                          <span style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,boxShadow:`0 0 4px ${sc}80`,flexShrink:0}}/>
-                          <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(249,115,22,0.6)"}}>{j.jobNumber||(i+1).toString().padStart(2,'0')}</span>
-                        </div>
-                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{j.title}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{j._hrs.toFixed(1)}h</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:j._overdue?"#ef4444":"rgba(148,163,184,0.6)"}}>{dueStr}</div>
-                        <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,padding:"2px 6px",letterSpacing:"0.5px",background:`${sc}15`,color:sc,border:`0.5px solid ${sc}30`,borderRadius:"3px"}}>{status}</span></div>
-                      </button>
-                    );
-                  })}
+                  <div style={{maxHeight:jobHealth.length > 8 ? "440px" : "none",overflowY:jobHealth.length > 8 ? "auto" : "visible"}}>
+                    {jobHealth.map((j,i) => {
+                      const sc = j._health==='red'?"#ef4444":j._health==='amber'?"#f59e0b":j.started?"#f97316":"#94a3b8";
+                      const status = j._overdue ? 'OVERDUE' : j.completed?'DONE':j.started?'ACTIVE':'TO DO';
+                      const dueStr = j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—';
+                      return (
+                        <button key={j.id} onClick={() => { navToEntity('job', j); }}
+                          style={{width:"100%",display:"grid",gridTemplateColumns:"40px 1fr 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobHealth.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                            <span style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,boxShadow:`0 0 4px ${sc}80`,flexShrink:0}}/>
+                            <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(249,115,22,0.6)"}}>{j.jobNumber||(i+1).toString().padStart(2,'0')}</span>
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"12px"}}>{j.title}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{j._hrs.toFixed(1)}h</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:j._overdue?"#ef4444":"rgba(148,163,184,0.6)"}}>{dueStr}</div>
+                          <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,padding:"2px 6px",letterSpacing:"0.5px",background:`${sc}15`,color:sc,border:`0.5px solid ${sc}30`,borderRadius:"3px"}}>{status}</span></div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button onClick={() => setActiveView('donny-masterview')}
+                    style={{width:"100%",padding:"10px 16px",background:"rgba(249,115,22,0.04)",border:"none",borderTop:"0.5px solid rgba(249,115,22,0.1)",cursor:"pointer",fontFamily:"monospace",fontSize:"10px",color:"rgba(249,115,22,0.7)",letterSpacing:"1.5px",display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
+                    <span>VIEW ALL JOBS</span>
+                    <span style={{fontSize:"11px"}}>→</span>
+                  </button>
                 </>
               )}
             </div>
@@ -17471,25 +17478,32 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{display:"grid",gridTemplateColumns:"32px 1fr 90px 80px 80px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
                   <div></div><div>NAME</div><div>POSITION</div><div>WK HRS</div><div>UTIL</div>
                 </div>
-                {workerUtil.slice(0,5).map((m,i) => {
-                  const utilPct = (m._weekHrs / m._capacity) * 100;
-                  const utilColor = utilPct > 100 ? '239,68,68' : utilPct > 80 ? '245,158,11' : utilPct > 0 ? '34,197,94' : '148,163,184';
-                  return (
-                    <button key={m.id} onClick={() => { navToEntity('worker', m); }}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 80px 80px",padding:"10px 16px",alignItems:"center",borderBottom:i<Math.min(workerUtil.length,5)-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.position||(m.roles||[])[0]||'—'}</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{m._weekHrs.toFixed(1)}h</div>
-                      <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                        <div style={{flex:1,height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",minWidth:"30px"}}>
-                          <div style={{height:"100%",width:`${Math.min(utilPct,100)}%`,background:`rgba(${utilColor},0.7)`}}/>
+                <div style={{maxHeight:workerUtil.length > 8 ? "400px" : "none",overflowY:workerUtil.length > 8 ? "auto" : "visible"}}>
+                  {workerUtil.map((m,i) => {
+                    const utilPct = (m._weekHrs / m._capacity) * 100;
+                    const utilColor = utilPct > 100 ? '239,68,68' : utilPct > 80 ? '245,158,11' : utilPct > 0 ? '34,197,94' : '148,163,184';
+                    return (
+                      <button key={m.id} onClick={() => { navToEntity('worker', m); }}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 80px 80px",padding:"10px 16px",alignItems:"center",borderBottom:i<workerUtil.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.position||(m.roles||[])[0]||'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{m._weekHrs.toFixed(1)}h</div>
+                        <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                          <div style={{flex:1,height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",minWidth:"30px"}}>
+                            <div style={{height:"100%",width:`${Math.min(utilPct,100)}%`,background:`rgba(${utilColor},0.7)`}}/>
+                          </div>
+                          <span style={{fontFamily:"monospace",fontSize:"9px",color:`rgba(${utilColor},0.9)`,flexShrink:0}}>{utilPct.toFixed(0)}%</span>
                         </div>
-                        <span style={{fontFamily:"monospace",fontSize:"9px",color:`rgba(${utilColor},0.9)`,flexShrink:0}}>{utilPct.toFixed(0)}%</span>
-                      </div>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button onClick={() => setActiveView('donny-team')}
+                  style={{width:"100%",padding:"10px 16px",background:"rgba(249,115,22,0.04)",border:"none",borderTop:"0.5px solid rgba(249,115,22,0.1)",cursor:"pointer",fontFamily:"monospace",fontSize:"10px",color:"rgba(249,115,22,0.7)",letterSpacing:"1.5px",display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
+                  <span>VIEW ALL TEAM</span>
+                  <span style={{fontSize:"11px"}}>→</span>
+                </button>
               </div>
             )}
 
@@ -19411,11 +19425,11 @@ ${JSON.stringify(ctx, null, 2)}`;
             <Sidebar /><SaveIndicator />
             <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
               <div className="max-w-4xl mx-auto">
-                <button onClick={() => { setNoteJobId(null); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DAILY REPORTS</button>
+                <button onClick={() => { setNoteJobId(null); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← HOUR LOGGER</button>
                 <div className="flex items-center gap-3">
                   <div className="text-3xl">📋</div>
                   <div>
-                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// DAILY REPORT</div>
+                    <div className="text-xs font-mono mb-0.5" style={{color:"rgba(249,115,22,0.5)",letterSpacing:"2px"}}>// HOUR LOGGER</div>
                     <h1 className="text-2xl font-bold text-white">{activeJob?.title}</h1>
                     {activeJob?.jobNumber && <div className="text-xs mt-0.5" style={{color:"rgba(148,163,184,0.5)"}}>#{activeJob.jobNumber} · {todayStr}</div>}
                   </div>
@@ -19575,7 +19589,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div className="max-w-4xl mx-auto">
               <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
               <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>DAILY REPORTS</div>
+              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HOUR LOGGER</div>
             </div>
           </div>
           <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
@@ -19583,7 +19597,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
                 <div className="text-4xl mb-3">📋</div>
                 <div className="text-white font-bold mb-1">No jobs yet</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start daily reports</div>
+                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start logging hours</div>
               </div>
             ) : (
               <>
