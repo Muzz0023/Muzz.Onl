@@ -4195,7 +4195,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const ts = donnyTimesheets.filter(e => e.jobId === j.id);
       const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
       const labour = ts.reduce((s,e) => {
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
@@ -4456,14 +4456,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const ts = donnyTimesheets.filter(e => e.jobId === job.id && inWindow(e));
       const total = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
       const labour = ts.reduce((s,e) => {
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       // Group by worker
       const byWorker = {};
       ts.forEach(e => {
         if (!byWorker[e.memberId]) byWorker[e.memberId] = { hrs: 0, cost: 0 };
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         byWorker[e.memberId].hrs += parseFloat(e.hours)||0;
         byWorker[e.memberId].cost += (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       });
@@ -4515,7 +4515,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       const losers = donnyJobs.filter(j => !j.archived).map(j => {
         const ts = donnyTimesheets.filter(e => e.jobId === j.id);
         const labour = ts.reduce((s,e) => {
-          const m = donnyTeam.find(x => x.id === e.memberId);
+          const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
           return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
         }, 0);
         const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
@@ -4593,14 +4593,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     if (/(earn|earned|made|revenue|labour|labor|cost|spend|spent)\b/.test(q)) {
       const ts = donnyTimesheets.filter(inWindow);
       const total = ts.reduce((s,e) => {
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const totalHrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
       const byJob = {};
       ts.forEach(e => {
         if (!byJob[e.jobId]) byJob[e.jobId] = { hrs: 0, cost: 0 };
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         byJob[e.jobId].hrs += parseFloat(e.hours)||0;
         byJob[e.jobId].cost += (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       });
@@ -4630,7 +4630,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         const ts = donnyTimesheets.filter(e => e.jobId === j.id);
         const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
         const labour = ts.reduce((s,e) => {
-          const m = donnyTeam.find(x => x.id === e.memberId);
+          const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
           return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
         }, 0);
         const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
@@ -16932,7 +16932,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const overdueJobs = activeJobs.filter(j => j.dueDate && new Date(j.dueDate) < new Date());
       const inProgressJobs = activeJobs.filter(j => j.started);
       const totalLabourCost = donnyTimesheets.reduce((sum, e) => {
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return sum + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const totalHours = donnyTimesheets.reduce((s,e) => s+(parseFloat(e.hours)||0), 0);
@@ -16942,7 +16942,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const labourByJob = donnyJobs.slice(0,6).map(job => {
         const hrs = donnyTimesheets.filter(e=>e.jobId===job.id).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
         const cost = donnyTimesheets.filter(e=>e.jobId===job.id).reduce((s,e)=>{
-          const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0);
+          const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0);
         },0);
         return {title:job.title.slice(0,16), hrs, cost};
       }).filter(j=>j.hrs>0);
@@ -16977,7 +16977,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         });
         const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
         const cost = entries.reduce((s,e) => {
-          const m = donnyTeam.find(x => x.id === e.memberId);
+          const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
           return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
         }, 0);
         return { day, hrs, cost, label: day.toLocaleDateString('en-AU',{weekday:'short'}).toUpperCase().slice(0,3) };
@@ -16991,7 +16991,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         const t = new Date(e.date || e.createdAt || 0);
         return t >= startOfDay;
       }).reduce((s,e) => {
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const todayHrs = donnyTimesheets.filter(e => {
@@ -17003,7 +17003,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const jobHealth = activeJobs.map(j => {
         const ts = donnyTimesheets.filter(e => e.jobId === j.id);
         const hrs = ts.reduce((s,e)=>s+(parseFloat(e.hours)||0), 0);
-        const cost = ts.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
+        const cost = ts.reduce((s,e)=>{ const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
         const mats = (donnyMaterialsLog||[]).filter(m=>m.jobId===j.id).reduce((s,m)=>s+(parseFloat(m.cost)||0), 0);
         const totalCost = cost + mats;
         const qHrs = parseFloat(j.quotedHours)||0;
@@ -17042,7 +17042,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const completedQuoted = completedJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
       const totalActualCost = donnyJobs.reduce((s,j) => {
         const ts = donnyTimesheets.filter(e=>e.jobId===j.id);
-        const lab = ts.reduce((sum,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return sum+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
+        const lab = ts.reduce((sum,e)=>{ const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return sum+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
         const mats = (donnyMaterialsLog||[]).filter(m=>m.jobId===j.id).reduce((sum,m)=>sum+(parseFloat(m.cost)||0), 0);
         return s + lab + mats;
       }, 0);
@@ -17076,7 +17076,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const recurringDone = donnyJobs.filter(j => j.completed && j.recurringTemplateId);
       const profitableRecurring = recurringDone.filter(j => parseFloat(j.quotedCost)>0).map(j => {
         const ts = donnyTimesheets.filter(e=>e.jobId===j.id);
-        const cost = ts.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
+        const cost = ts.reduce((s,e)=>{ const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
         return { title:j.title, profit: parseFloat(j.quotedCost) - cost, margin: ((parseFloat(j.quotedCost)-cost)/parseFloat(j.quotedCost))*100 };
       }).sort((a,b)=>b.margin-a.margin)[0];
       if (profitableRecurring && profitableRecurring.margin > 30) {
@@ -17652,7 +17652,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const cardQH = parseFloat(job.quotedHours) || 0;
                           const cardQC = parseFloat(job.quotedCost) || 0;
                           const cardLabour = donnyTimesheets.filter(e => e.jobId === job.id).reduce((s,e) => {
-                            const m = donnyTeam.find(x => x.id === e.memberId);
+                            const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
                             return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
                           }, 0);
                           // Compute single risk indicator
@@ -17789,7 +17789,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const jobTimesheets = donnyTimesheets.filter(e => e.jobId === job.id);
       const totalHours = jobTimesheets.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
       const totalLabour = jobTimesheets.reduce((s,e) => {
-        const m = donnyTeam.find(x => x.id === e.memberId);
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
       const workersOnJob = [...new Set(jobTimesheets.map(e => e.memberId))]
@@ -18757,7 +18757,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       // Per-job profitability
       const jobsWithMargin = clientJobs.map(j => {
         const ts = donnyTimesheets.filter(e => e.jobId === j.id);
-        const lab = ts.reduce((s,e) => { const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
+        const lab = ts.reduce((s,e) => { const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); }, 0);
         const mats = (donnyMaterialsLog||[]).filter(m=>m.jobId===j.id).reduce((s,m)=>s+(parseFloat(m.cost)||0), 0);
         const totalCost = lab + mats;
         const quoted = parseFloat(j.quotedCost)||0;
@@ -19557,7 +19557,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         </div>
                       );
                     } else {
-                      const m = donnyTeam.find(x=>x.id===item.memberId);
+                      const m = donnyTeam.find(x=>String(x.id)===String(item.memberId));
                       const pay = (item.hours||0)*(parseFloat(m?.hourlyRate)||0);
                       return (
                         <div key={'t'+item.id} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.4)",padding:"10px 14px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -22930,7 +22930,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       // TEAM & LABOUR
       const totalLabourHrs = donnyTimesheets.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
-      const totalLabourCost = donnyTimesheets.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); },0);
+      const totalLabourCost = donnyTimesheets.reduce((s,e)=>{ const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); },0);
       const teamHours = donnyTeam.map(m => {
         const hrs = donnyTimesheets.filter(e => String(e.memberId) === String(m.id)).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
         const pay = hrs * (parseFloat(m.hourlyRate)||0);
@@ -24021,7 +24021,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         const totalCost = cjobs.reduce((s,j) => {
           const ts = donnyTimesheets.filter(e => e.jobId === j.id);
           const labour = ts.reduce((sum,e) => {
-            const m = donnyTeam.find(x => x.id === e.memberId);
+            const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
             return sum + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
           }, 0);
           const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((sum,m) => sum + (parseFloat(m.cost)||0), 0);
