@@ -17829,7 +17829,13 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       const jobMaterials = (donnyMaterialsLog || []).filter(m => String(m.jobId) === String(job.id));
       const totalMaterialsCost = jobMaterials.reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
-      const jobMistakes = (donnyMistakes || []).filter(m => String(m.jobId) === String(job.id));
+      const jobMistakes = (donnyMistakes || []).filter(m => {
+        if (!m.jobRef) return false;
+        const ref = String(m.jobRef).toLowerCase();
+        const titleMatch = job.title && ref.includes(String(job.title).toLowerCase());
+        const numMatch = job.jobNumber && ref.includes(String(job.jobNumber).toLowerCase());
+        return titleMatch || numMatch;
+      });
       const jobIncidents = (donnyIncidents || []).filter(i => String(i.jobId) === String(job.id));
       const jobPhotos = (donnyPhotos && donnyPhotos[job.id]) || [];
       const jobChecklists = (donnyChecklists || []).filter(c => String(c.jobId) === String(job.id));
