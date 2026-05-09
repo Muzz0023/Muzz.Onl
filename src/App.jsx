@@ -17898,7 +17898,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* QUOTE vs ACTUALS — clean 5-cell KPI strip + edit panel */}
             <div style={{...panel,borderLeft:"2px solid #f97316"}}>
@@ -18078,7 +18078,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </button>
                   </div>
                 </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                <div style={{padding:isWide?"14px 16px":"12px 10px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   {/* UNIFIED SCHEDULE TIMELINE */}
                   {(() => {
                     if (!job.startDate || !job.dueDate) {
@@ -18101,8 +18101,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const sortedMs = (job.milestones||[]).slice().sort((a,b) => new Date(a.date) - new Date(b.date));
 
                     // shared chip styles
-                    const dateChipStyle = (color, bold) => ({fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:"rgba(224,234,255,0.85)",border:`0.5px solid ${color}30`,borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer",fontWeight:bold?600:400});
-                    const statusChipStyle = (color, bold) => ({fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${color}15`,color:color,border:`0.5px solid ${color}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center",fontWeight:bold?600:500});
+                    const dateChipStyle = (color, bold) => ({fontSize:"10px",fontFamily:"monospace",padding:"3px 6px",background:"rgba(0,0,0,0.3)",color:"rgba(224,234,255,0.85)",border:`0.5px solid ${color}30`,borderRadius:"3px",letterSpacing:"0.5px",minWidth:isWide?"75px":"62px",textAlign:"center",cursor:"pointer",fontWeight:bold?600:400,whiteSpace:"nowrap"});
+                    const statusChipStyle = (color, bold) => ({fontSize:"9px",fontFamily:"monospace",padding:"1px 5px",background:`${color}15`,color:color,border:`0.5px solid ${color}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:isWide?"60px":"40px",textAlign:"center",fontWeight:bold?600:500,whiteSpace:"nowrap"});
 
                     const openPicker = (e) => {
                       const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
@@ -18163,11 +18163,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                                     <div style={{width:"10px",height:"10px",borderRadius:"50%",background:dotColor,flexShrink:0,boxShadow:`0 0 0 2px rgba(5,12,24,1), 0 0 6px ${dotColor}50`}}/>
                                     <span style={{fontSize:"11px",color:"rgba(224,234,255,0.95)",fontFamily:"monospace",letterSpacing:"1px"}}>START</span>
                                   </div>
-                                  <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"4px",flexShrink:0,position:"relative"}}>
                                     <button onClick={openPicker} style={dateChipStyle(dotColor)}>{dateLabel}</button>
                                     <input type="date" value={job.startDate||""} onChange={e => updateJob({startDate:e.target.value})} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
                                     <span style={statusChipStyle(dotColor)}>{chipText}</span>
-                                    <span style={{width:"22px",display:"inline-block"}}/>
+                                    <span style={{width:"22px",display:"inline-block",flexShrink:0}}/>
                                   </div>
                                 </div>
                               );
@@ -18193,7 +18193,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                                     style={{width:"10px",height:"10px",borderRadius:"50%",background:ms.completed?dotColor:"transparent",border:`1.5px solid ${dotColor}`,flexShrink:0,cursor:"pointer",padding:0,boxShadow:`0 0 0 2px rgba(5,12,24,1), 0 0 6px ${dotColor}50`}}/>
                                     <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"rgba(224,234,255,0.95)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
                                   </div>
-                                  <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"4px",flexShrink:0,position:"relative"}}>
                                     <button onClick={openPicker} style={dateChipStyle(dotColor)}>{dateLabel}</button>
                                     <input type="date" value={ms.date||""} onChange={e => {
                                       const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, date: e.target.value} : m);
@@ -18206,7 +18206,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                                         const milestones = (job.milestones||[]).filter(m => m.id !== ms.id);
                                         updateJob({ milestones });
                                       }
-                                    }} style={{fontSize:"10px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1,width:"22px"}}>×</button>
+                                    }} style={{fontSize:"12px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.7)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1,minWidth:"22px",flexShrink:0}}>×</button>
                                   </div>
                                 </div>
                               );
@@ -18222,11 +18222,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                                     <div style={{width:"10px",height:"10px",borderRadius:"50%",background:dotColor,flexShrink:0,boxShadow:`0 0 0 2px rgba(5,12,24,1), 0 0 6px ${dotColor}80`}}/>
                                     <span style={{fontSize:"11px",color:dotColor,fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>DUE DATE</span>
                                   </div>
-                                  <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"4px",flexShrink:0,position:"relative"}}>
                                     <button onClick={openPicker} style={dateChipStyle(dotColor, true)}>{dateLabel}</button>
                                     <input type="date" value={job.dueDate||""} onChange={e => updateJob({dueDate:e.target.value})} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
                                     <span style={statusChipStyle(dotColor, true)}>{chipText}</span>
-                                    <span style={{width:"22px",display:"inline-block"}}/>
+                                    <span style={{width:"22px",display:"inline-block",flexShrink:0}}/>
                                   </div>
                                 </div>
                               );
@@ -18329,7 +18329,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 ) : (
                   <div>
                     {clients.map((c,i) => (
-                      <div key={c.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",borderBottom:i<clients.length-1?"0.5px solid rgba(59,130,246,0.06)":"none",gap:"8px"}}>
+                      <div key={c.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isWide?"10px 14px":"10px 10px",borderBottom:i<clients.length-1?"0.5px solid rgba(59,130,246,0.06)":"none",gap:"8px"}}>
                         <button onClick={() => navToEntity('client', c)} style={{flex:1,minWidth:0,display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",padding:0}}>
                           <div style={{width:"24px",height:"24px",borderRadius:"3px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"10px",fontWeight:600,color:"rgba(59,130,246,0.85)",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
                           <div style={{minWidth:0,flex:1}}>
@@ -18349,7 +18349,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                             updateJob({ clientIds: newIds, clientId: newIds[0] || null });
                             logAction(`job_${job.id}`, { kind: 'edit', summary: `Client unlinked: ${c.name}` });
                           }
-                        }} style={{fontSize:"10px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0,letterSpacing:"0.5px"}}>×</button>
+                        }} style={{fontSize:"14px",padding:"4px 8px",background:"rgba(239,68,68,0.08)",color:"rgba(239,68,68,0.85)",border:"0.5px solid rgba(239,68,68,0.35)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace",flexShrink:0,letterSpacing:"0.5px",lineHeight:1,minWidth:"28px"}}>×</button>
                       </div>
                     ))}
                   </div>
@@ -18937,7 +18937,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* METRICS — THIS WEEK / MONTH / ALL TIME */}
             <div style={panel}>
@@ -19326,7 +19326,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* REVENUE METRICS */}
             <div style={panel}>
@@ -19697,7 +19697,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* USAGE METRICS */}
             <div style={panel}>
@@ -20131,7 +20131,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {donnyJobs.length > 0 && (
@@ -20586,7 +20586,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalMembers > 0 && (
@@ -21131,7 +21131,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalRecurring > 0 && (
@@ -21479,7 +21479,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
               {/* MINI KPI STRIP */}
               <div style={{...photoPanel,borderLeft:"2px solid #f97316"}}>
                 <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
@@ -21592,7 +21592,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalPhotos > 0 && (
@@ -21795,7 +21795,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {jobDocs.length > 0 && (
                 <div style={{...clPanel,borderLeft:"2px solid #22c55e"}}>
@@ -22008,7 +22008,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalChecklists > 0 && (
@@ -22220,7 +22220,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {showNewIncident && (
                 <div style={incPanel}>
@@ -22362,7 +22362,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalIncidents > 0 && (
@@ -22740,7 +22740,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {/* LOG NEW MATERIAL */}
               <div style={panel}>
@@ -22892,7 +22892,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalEntries > 0 && (
@@ -23106,7 +23106,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {showNewMistake && (
                 <div style={mPanel}>
@@ -23218,7 +23218,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalMistakes > 0 && (
@@ -23544,7 +23544,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {showAddRisk && (
                 <div style={rPanel}>
@@ -23663,7 +23663,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalJobs > 0 && (
@@ -23832,7 +23832,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             <div style={{...panel,borderLeft:"2px solid #f97316"}}>
@@ -24252,7 +24252,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalSubs > 0 && (
@@ -24521,7 +24521,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {/* CONTACT INFO */}
               <div style={panel}>
@@ -24679,7 +24679,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {donnySuppliers.length > 0 && (
@@ -24948,7 +24948,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
             {totalClients > 0 && (
