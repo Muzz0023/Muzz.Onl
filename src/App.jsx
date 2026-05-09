@@ -17028,11 +17028,11 @@ ${JSON.stringify(ctx, null, 2)}`;
       const workerUtil = donnyTeam.map(m => {
         const weekTs = donnyTimesheets.filter(e => {
           const t = new Date(e.date || e.createdAt || 0);
-          return e.memberId === m.id && t >= startOfWeek;
+          return String(e.memberId) === String(m.id) && t >= startOfWeek;
         });
         const hrs = weekTs.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-        const allHrs = donnyTimesheets.filter(e=>e.memberId===m.id).reduce((s,e)=>s+(parseFloat(e.hours)||0), 0);
-        const mistakes = (donnyMistakes||[]).filter(x => x.memberId === m.id || x.workerId === m.id).length;
+        const allHrs = donnyTimesheets.filter(e=>String(e.memberId)===String(m.id)).reduce((s,e)=>s+(parseFloat(e.hours)||0), 0);
+        const mistakes = (donnyMistakes||[]).filter(x => String(x.memberId) === String(m.id) || String(x.workerId) === String(m.id)).length;
         return { ...m, _weekHrs:hrs, _allHrs:allHrs, _mistakes:mistakes, _capacity:38 };
       });
 
@@ -17249,7 +17249,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         // Group by worker
                         const byWorker = {};
                         wkTs.forEach(e => {
-                          const w = donnyTeam.find(m => m.id === e.memberId);
+                          const w = donnyTeam.find(m => String(m.id) === String(e.memberId));
                           const key = w?.id || 'unknown';
                           if (!byWorker[key]) byWorker[key] = { worker: w, hours: 0, count: 0 };
                           byWorker[key].hours += parseFloat(e.hours)||0;
@@ -17280,7 +17280,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         // Group by job
                         const byJob = {};
                         wkTs.forEach(e => {
-                          const w = donnyTeam.find(m => m.id === e.memberId);
+                          const w = donnyTeam.find(m => String(m.id) === String(e.memberId));
                           const cost = (parseFloat(e.hours)||0) * (parseFloat(w?.hourlyRate)||0);
                           if (!byJob[e.jobId]) byJob[e.jobId] = { jobId: e.jobId, hours: 0, cost: 0 };
                           byJob[e.jobId].hours += parseFloat(e.hours)||0;
@@ -17797,8 +17797,8 @@ ${JSON.stringify(ctx, null, 2)}`;
         .filter(Boolean);
       const workerHours = workersOnJob.map(m => ({
         ...m,
-        hours: jobTimesheets.filter(e => e.memberId === m.id).reduce((s,e) => s + (parseFloat(e.hours)||0), 0),
-        cost: jobTimesheets.filter(e => e.memberId === m.id).reduce((s,e) => s + (parseFloat(e.hours)||0) * (parseFloat(m.hourlyRate)||0), 0),
+        hours: jobTimesheets.filter(e => String(e.memberId) === String(m.id)).reduce((s,e) => s + (parseFloat(e.hours)||0), 0),
+        cost: jobTimesheets.filter(e => String(e.memberId) === String(m.id)).reduce((s,e) => s + (parseFloat(e.hours)||0) * (parseFloat(m.hourlyRate)||0), 0),
       })).sort((a,b) => b.hours - a.hours);
 
       const jobMaterials = (donnyMaterialsLog || []).filter(m => m.jobId === job.id);
@@ -17838,7 +17838,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       // TIMELINE — combined cross-feed
       const timeline = [
-        ...jobTimesheets.map(e => ({...e, _type:'hours', _at:new Date(e.createdAt||e.date||0), _label:`Hours logged`, _by:donnyTeam.find(m=>m.id===e.memberId)?.name})),
+        ...jobTimesheets.map(e => ({...e, _type:'hours', _at:new Date(e.createdAt||e.date||0), _label:`Hours logged`, _by:donnyTeam.find(m=>String(m.id)===String(e.memberId))?.name})),
         ...jobMaterials.map(m => ({...m, _type:'material', _at:new Date(m.createdAt||0), _label:`Material added`, _by:m.addedBy})),
         ...jobMistakes.map(m => ({...m, _type:'mistake', _at:new Date(m.createdAt||0), _label:`Mistake logged`, _by:m.addedBy})),
         ...jobIncidents.map(i => ({...i, _type:'incident', _at:new Date(i.createdAt||0), _label:`Incident reported`, _by:i.addedBy})),
@@ -19416,7 +19416,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         // Timesheet data for this job
         const jobTS = donnyTimesheets.filter(e => e.jobId === noteJobId);
         const jobTotals = donnyTeam.map(m => {
-          const entries = jobTS.filter(e => e.memberId === m.id);
+          const entries = jobTS.filter(e => String(e.memberId) === String(m.id));
           const hrs = entries.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
           const pay = hrs * (parseFloat(m.hourlyRate)||0);
           return { member: m, hrs, pay };
