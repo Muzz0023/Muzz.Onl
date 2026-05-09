@@ -18445,7 +18445,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {label:"PHOTOS", count:jobPhotos.length, color:"#a855f7", onOpen:() => { setPhotoJobId(job.id); setActiveView('donny-photos'); }},
                   {label:"MISTAKES", count:jobMistakes.length, color:jobMistakes.length>0?"#f59e0b":"#64748b", onOpen:() => setActiveView('donny-mistakes')},
                   {label:"INCIDENTS", count:jobIncidents.length, color:jobIncidents.length>0?"#ef4444":"#64748b", onOpen:() => setActiveView('donny-incidents')},
-                  {label:"CHECKLISTS", count:jobChecklists.length, color:"#22c55e", onOpen:() => setActiveView('donny-checklists')},
+                  {label:"CHECKLISTS", count:jobChecklists.length, color:"#22c55e", onOpen:() => { setChecklistJobId(job.id); setActiveView('donny-checklists'); }},
                   {label:"NOTES", count:jobNotes.length, color:"#06b6d4", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
                 ].map(t => (
                   <button key={t.label} onClick={t.onOpen} style={{padding:"12px 14px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
@@ -21695,6 +21695,9 @@ ${JSON.stringify(ctx, null, 2)}`;
         { title:'General Site Induction', items:['Emergency procedures','First aid location','Amenities location','PPE requirements','Site rules understood','Hazards briefed'] },
       ];
 
+      const clPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const clPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
       if (selectedChecklistId) {
         const selected = donnyChecklists.find(c=>c.id===selectedChecklistId);
         if (!selected) { setSelectedChecklistId(null); }
@@ -21761,9 +21764,6 @@ ${JSON.stringify(ctx, null, 2)}`;
       const compRate = totalItems > 0 ? Math.round((totalDone/totalItems)*100) : 0;
       const byType = donnyChecklists.reduce((acc,c) => { acc[c.type]=(acc[c.type]||0)+1; return acc; }, {});
 
-      const clPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const clPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
-
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
@@ -21790,10 +21790,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                 </div>
-                <button onClick={()=>setShowNewChecklist(s=>!s)}
-                  style={{padding:"6px 12px",background:showNewChecklist?"rgba(239,68,68,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showNewChecklist?"rgba(239,68,68,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showNewChecklist?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
-                  {showNewChecklist ? '✕ CANCEL' : '+ NEW DOC'}
-                </button>
               </div>
             </div>
           </div>
@@ -21910,106 +21906,49 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* NEW DOC FORM */}
-            {showNewChecklist && (
-              <div style={clPanel}>
-                <div style={clPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW DOCUMENT</span>
-                  <button onClick={()=>setShowNewChecklist(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
-                </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>TYPE</div>
-                    <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
-                      {Object.entries(typeLabels).map(([v,l])=>(
-                        <button key={v} onClick={()=>setNewChecklist(p=>({...p,type:v}))}
-                          style={{fontSize:"10px",padding:"4px 10px",fontFamily:"monospace",letterSpacing:"0.5px",background:newChecklist.type===v?`${typeColors[v]}20`:"rgba(255,255,255,0.03)",border:`0.5px solid ${newChecklist.type===v?typeColors[v]+'50':"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:newChecklist.type===v?typeColors[v]:"rgba(148,163,184,0.5)",cursor:"pointer"}}>
-                          {l}
+            {/* JOBS PICKER */}
+            {(() => {
+              const activeJobsList = donnyJobs.filter(j => !j.completed && !j.archived);
+              if (activeJobsList.length === 0) {
+                return (
+                  <div style={{...clPanel,padding:"40px",textAlign:"center"}}>
+                    <div style={{fontSize:"28px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✓</div>
+                    <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log SWMS &amp; checklists</div>
+                  </div>
+                );
+              }
+              return (
+                <div style={clPanel}>
+                  <div style={clPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>JOB</div><div>DOCS</div><div></div>
+                  </div>
+                  <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
+                    {activeJobsList.map((j, i) => {
+                      const docs = donnyChecklists.filter(c => String(c.jobId) === String(j.id));
+                      const items = docs.reduce((s,c) => s + (c.items?.length||0), 0);
+                      const done = docs.reduce((s,c) => s + (c.items?.filter(x=>x.done).length||0), 0);
+                      return (
+                        <button key={j.id} onClick={() => setChecklistJobId(j.id)}
+                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:docs.length>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.5)"}}>{docs.length} doc{docs.length!==1?'s':''}{items>0?` · ${done}/${items}`:''}</div>
+                          <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
                         </button>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TITLE</div>
-                      <input value={newChecklist.title} onChange={e=>setNewChecklist(p=>({...p,title:e.target.value}))} placeholder="Roof access SWMS"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB</div>
-                      <select value={newChecklist.jobId} onChange={e=>setNewChecklist(p=>({...p,jobId:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
-                        <option value="">No job</option>
-                        {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.title}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                  {newChecklist.type==='swms' && (
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>QUICK TEMPLATES</div>
-                      <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
-                        {SWMS_TEMPLATES.map(t=>(
-                          <button key={t.title} onClick={()=>setNewChecklist(p=>({...p,title:t.title,items:t.items.map((txt,i)=>({id:Date.now()+i,text:txt,done:false}))}))}
-                            style={{fontSize:"10px",padding:"4px 10px",fontFamily:"monospace",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.85)",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",cursor:"pointer"}}>
-                            {t.title}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <button onClick={()=>{
-                    if(!newChecklist.title.trim()) return;
-                    const cl={...newChecklist,id:Date.now(),loggedBy:eliteName||userEmail,loggedAt:new Date().toISOString(),items:newChecklist.items.length>0?newChecklist.items:[{id:Date.now(),text:'',done:false}],createdAt:new Date().toISOString()};
-                    saveChecklists([cl,...donnyChecklists]); setSelectedChecklistId(cl.id); setShowNewChecklist(false);
-                    setNewChecklist({title:'',type:'swms',jobId:'',items:[]});
-                  }} style={{width:"100%",padding:"10px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE</button>
                 </div>
-              </div>
-            )}
-
-            {/* EMPTY STATE */}
-            {totalChecklists === 0 && !showNewChecklist && (
-              <div style={{...clPanel,padding:"40px",textAlign:"center"}}>
-                <div style={{fontSize:"32px",color:"rgba(34,197,94,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✓</div>
-                <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO DOCUMENTS YET</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Create SWMS, checklists, inspections, toolbox talks</div>
-              </div>
-            )}
-
-            {/* CHECKLIST TABLE */}
-            {totalChecklists > 0 && (
-              <div style={clPanel}>
-                <div style={clPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// DOCUMENT TABLE</span>
-                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{totalChecklists} ROW{totalChecklists!==1?'S':''}</span>
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 100px 80px 60px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>TITLE</div><div>TYPE</div><div>JOB</div><div>DONE</div><div></div>
-                </div>
-                <div style={{maxHeight:donnyChecklists.length > 8 ? "440px" : "none",overflowY:donnyChecklists.length > 8 ? "auto" : "visible"}}>
-                  {donnyChecklists.map((cl,i)=>{
-                    const tc=typeColors[cl.type]||'#22c55e';
-                    const done=cl.items?.filter(x=>x.done).length||0; const total=cl.items?.length||0;
-                    const job=donnyJobs.find(j=>String(j.id)===String(cl.jobId));
-                    const isComplete = done===total && total>0;
-                    return (
-                      <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 100px 80px 60px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyChecklists.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>{isComplete?'✓':'◍'}</div>
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.title}</div>
-                          {cl.loggedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>by {cl.loggedBy}</div>}
-                        </div>
-                        <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{typeLabels[cl.type]||cl.type}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:job?"rgba(249,115,22,0.7)":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?(job.jobNumber?`#${job.jobNumber}`:job.title.slice(0,8)):'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"11px",color:isComplete?"rgba(34,197,94,0.95)":tc,fontWeight:500}}>{done}/{total}</div>
-                        <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
           </div>
         </div>
