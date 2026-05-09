@@ -2513,6 +2513,7 @@ function MuzzApp() {
   const [showAddMember, setShowAddMember] = useState(false);
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [newMember, setNewMember] = useState({ name:'', roles:[], position:'', hourlyRate:'', jobAccess:[] });
+  const [showEditQuote, setShowEditQuote] = useState(false);
   const [showNewMistake, setShowNewMistake] = useState(false);
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
@@ -17930,28 +17931,26 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-            {/* QUOTE vs ACTUALS */}
-            <div style={panel}>
+            {/* QUOTE vs ACTUALS — clean 5-cell KPI strip + edit panel */}
+            <div style={{...panel,borderLeft:"2px solid #f97316"}}>
               <div style={panelHeader}>
                 <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// QUOTE vs ACTUALS</span>
-                {quotedCost > 0 && (
-                  <span style={{fontSize:"10px",fontFamily:"monospace",color:margin>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)",fontWeight:600}}>
-                    {margin>=0?'+':''}${margin.toFixed(0)} ({marginPct.toFixed(0)}%)
-                  </span>
-                )}
+                <button onClick={() => setShowEditQuote(s => !s)}
+                  style={{fontSize:"10px",padding:"3px 10px",background:showEditQuote?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showEditQuote?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showEditQuote?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                  {showEditQuote ? '✕ CLOSE' : 'EDIT QUOTE'}
+                </button>
               </div>
-              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px 20px"}}>
-                {/* HOURS */}
-                <div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>HOURS</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{totalHours.toFixed(1)} / {quotedHours||'—'}</span>
-                  </div>
-                  <LineageNumber
-                    value={<>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></>}
-                    color="#e0eaff"
-                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1,display:"inline-block"}}
-                    lineage={{
+
+              {/* 5-CELL KPI STRIP */}
+              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                {[
+                  {
+                    label:"Hours",
+                    value: <>{totalHours.toFixed(1)}<span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",marginLeft:"3px"}}>h</span></>,
+                    sub: quotedHours > 0 ? `of ${quotedHours}h` : 'no quote',
+                    pct: hoursPct,
+                    color: hoursPct > 100 ? '#ef4444' : hoursPct > 80 ? '#f59e0b' : '#f97316',
+                    lineage: workerHours.length > 0 ? {
                       title: `Hours on ${job.title}`,
                       value: `${totalHours.toFixed(1)}h`,
                       color: '#f97316',
@@ -17965,26 +17964,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                         onClick: () => navToEntity('worker', w),
                       })),
                       note: 'Click any worker to open',
-                    }}
-                  />
-                  <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
-                    <div style={{height:"100%",width:`${Math.min(hoursPct,100)}%`,background:hoursPct>100?"rgba(239,68,68,0.7)":hoursPct>80?"rgba(245,158,11,0.7)":"rgba(249,115,22,0.7)",transition:"width 0.3s"}}/>
-                  </div>
-                  <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="quoted hrs"
-                    style={{width:"100%",background:"transparent",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"3px 0"}}/>
-                </div>
-
-                {/* LABOUR $ */}
-                <div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>LABOUR</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{workersOnJob.length} worker{workersOnJob.length!==1?'s':''}</span>
-                  </div>
-                  <LineageNumber
-                    value={`$${totalLabour.toFixed(0)}`}
-                    color="#e0eaff"
-                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1,display:"inline-block"}}
-                    lineage={{
+                    } : null,
+                  },
+                  {
+                    label:"Labour",
+                    value: `$${totalLabour.toFixed(0)}`,
+                    sub: `${workersOnJob.length} worker${workersOnJob.length!==1?'s':''}`,
+                    pct: 0,
+                    color: 'rgba(34,197,94,0.95)',
+                    lineage: workerHours.length > 0 ? {
                       title: `Labour cost on ${job.title}`,
                       value: `$${totalLabour.toFixed(0)}`,
                       color: 'rgba(34,197,94,0.95)',
@@ -17997,27 +17985,18 @@ ${JSON.stringify(ctx, null, 2)}`;
                         valueColor: 'rgba(34,197,94,0.95)',
                         onClick: () => navToEntity('worker', w),
                       })),
-                      note: 'Hours × hourly rate per worker',
-                    }}
-                  />
-                  <div style={{height:"3px",background:"transparent",marginBottom:"6px"}}/>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",padding:"3px 0",borderBottom:"0.5px solid transparent"}}>auto-calculated</div>
-                </div>
-
-                {/* MATERIALS */}
-                <div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>MATERIALS</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{quotedMaterials?'/ $'+quotedMaterials:''}</span>
-                  </div>
-                  <LineageNumber
-                    value={`$${totalMaterialsCost.toFixed(0)}`}
-                    color="#e0eaff"
-                    style={{fontSize:"20px",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1,display:"inline-block"}}
-                    lineage={{
+                    } : null,
+                  },
+                  {
+                    label:"Materials",
+                    value: `$${totalMaterialsCost.toFixed(0)}`,
+                    sub: quotedMaterials > 0 ? `of $${quotedMaterials}` : 'no quote',
+                    pct: materialsPct,
+                    color: materialsPct > 100 ? '#ef4444' : '#3b82f6',
+                    lineage: jobMaterials.length > 0 ? {
                       title: `Materials cost on ${job.title}`,
                       value: `$${totalMaterialsCost.toFixed(0)}`,
-                      color: '#22c55e',
+                      color: '#3b82f6',
                       formula: 'SUM(material.cost WHERE jobId)',
                       breakdown: jobMaterials.map(m => ({
                         icon: '◍', color: '#22c55e',
@@ -18028,27 +18007,80 @@ ${JSON.stringify(ctx, null, 2)}`;
                         onClick: m.item ? () => navToEntity('material', {name:m.item}) : null,
                       })),
                       note: 'Click any material to open',
-                    }}
-                  />
-                  <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginBottom:"6px"}}>
-                    <div style={{height:"100%",width:`${Math.min(materialsPct,100)}%`,background:materialsPct>100?"rgba(239,68,68,0.7)":"rgba(59,130,246,0.7)",transition:"width 0.3s"}}/>
-                  </div>
-                  <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="materials $"
-                    style={{width:"100%",background:"transparent",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(59,130,246,0.15)",outline:"none",padding:"3px 0"}}/>
-                </div>
-
-                {/* TOTAL QUOTE */}
-                <div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>QUOTE</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>actual ${totalActualCost.toFixed(0)}</span>
-                  </div>
-                  <div style={{fontSize:"20px",color:quotedCost>0?(margin>=0?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)"):"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:500,marginBottom:"6px",lineHeight:1}}>${quotedCost||'—'}</div>
-                  <div style={{height:"3px",background:"transparent",marginBottom:"6px"}}/>
-                  <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="total quote"
-                    style={{width:"100%",background:"transparent",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",fontSize:"10px",border:"none",borderBottom:"0.5px solid rgba(34,197,94,0.15)",outline:"none",padding:"3px 0"}}/>
-                </div>
+                    } : null,
+                  },
+                  {
+                    label:"Quote",
+                    value: quotedCost > 0 ? `$${quotedCost}` : '—',
+                    sub: quotedCost > 0 ? `actual $${totalActualCost.toFixed(0)}` : 'not set',
+                    pct: 0,
+                    color: quotedCost > 0 ? (margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444') : 'rgba(148,163,184,0.5)',
+                  },
+                  {
+                    label:"Margin",
+                    value: quotedCost > 0 ? (
+                      <span style={{color: margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444'}}>
+                        {margin >= 0 ? '+' : ''}${margin.toFixed(0)}
+                      </span>
+                    ) : '—',
+                    sub: quotedCost > 0 ? `${marginPct.toFixed(0)}%` : 'no quote',
+                    pct: 0,
+                    color: quotedCost > 0 ? (margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444') : 'rgba(148,163,184,0.5)',
+                    lineage: quotedCost > 0 ? {
+                      title: `P&L · ${job.title}`,
+                      value: `${margin>=0?'+':''}$${margin.toFixed(0)}`,
+                      color: margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444',
+                      formula: 'Quote − Labour − Materials',
+                      breakdown: [
+                        { icon:'◇', color:'#3b82f6', label:'Quote', sub:'total billed', value:`+$${quotedCost.toFixed(0)}`, valueColor:'rgba(34,197,94,0.95)' },
+                        { icon:'⊢', color:'#f97316', label:'Labour', sub:`${totalHours.toFixed(1)}h`, value:`−$${totalLabour.toFixed(0)}`, valueColor:'#ef4444' },
+                        { icon:'◍', color:'#22c55e', label:'Materials', sub:`${jobMaterials.length} item${jobMaterials.length!==1?'s':''}`, value:`−$${totalMaterialsCost.toFixed(0)}`, valueColor:'#ef4444' },
+                        { icon:margin>=0?'✓':'⚠', color:margin>=0?'#22c55e':'#ef4444', label:'Margin', sub:`${marginPct.toFixed(1)}%`, value:`${margin>=0?'+':''}$${margin.toFixed(0)}`, valueColor: margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444' },
+                      ],
+                    } : null,
+                  },
+                ].map((k,i) => (
+                  <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                    style={{padding:"12px 10px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left",fontFamily:"monospace"}}>
+                    <div style={{fontSize:"9px",color:k.color,letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",opacity:0.85,display:"flex",alignItems:"center",gap:"4px"}}>
+                      <span>{k.label}</span>
+                      {k.lineage && <span style={{fontSize:"8px",opacity:0.7}}>ƒ</span>}
+                    </div>
+                    <div style={{fontSize:"18px",color:"#e0eaff",fontWeight:500,lineHeight:1,marginBottom:"4px",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"2px",display:"inline-block",maxWidth:"100%",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{k.value}</div>
+                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginTop:"2px"}}>{k.sub}</div>
+                    {k.pct > 0 && (
+                      <div style={{marginTop:"6px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(k.pct,100)}%`,background:k.color,opacity:0.7,transition:"width 0.3s"}}/>
+                      </div>
+                    )}
+                  </button>
+                ))}
               </div>
+
+              {/* EDIT QUOTE PANEL — collapsed by default */}
+              {showEditQuote && (
+                <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",padding:"14px 16px",background:"rgba(0,0,0,0.15)"}}>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"10px"}}>// QUOTED VALUES</div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"12px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED HOURS</div>
+                      <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="e.g. 500"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED MATERIALS $</div>
+                      <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="e.g. 1200"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOTAL QUOTE $</div>
+                      <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="e.g. 5000"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                    </div>
+                  </div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"8px",letterSpacing:"0.5px"}}>Labour cost auto-calculates from logged hours × hourly rates.</div>
+                </div>
+              )}
             </div>
 
             {/* DATES + CLIENT */}
