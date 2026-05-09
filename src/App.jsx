@@ -2554,7 +2554,7 @@ function MuzzApp() {
   // Donny Materials Log
   const [donnyMaterialsLog, setDonnyMaterialsLog] = useState([]);
   const [matLogJobId, setMatLogJobId] = useState(null);
-  const [newMatEntry, setNewMatEntry] = useState({ item:'', qty:'', unit:'', note:'' });
+  const [newMatEntry, setNewMatEntry] = useState({ item:'', qty:'', unit:'', cost:'', note:'' });
   // Donny Checklists / SWMS
   const [donnyChecklists, setDonnyChecklists] = useState([]);
   const [checklistJobId, setChecklistJobId] = useState(null);
@@ -4454,7 +4454,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── INTENT 2 — Hours on a job ────────────────────────────────────
     if (/(hours|hrs|how many|how much|who).+(on|for)\b/.test(q) && job) {
-      const ts = donnyTimesheets.filter(e => e.jobId === job.id && inWindow(e));
+      const ts = donnyTimesheets.filter(e => String(e.jobId) === String(job.id) && inWindow(e));
       const total = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
       const labour = ts.reduce((s,e) => {
         const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
@@ -16941,8 +16941,8 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       // Labour by job for mini chart
       const labourByJob = donnyJobs.slice(0,6).map(job => {
-        const hrs = donnyTimesheets.filter(e=>e.jobId===job.id).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
-        const cost = donnyTimesheets.filter(e=>e.jobId===job.id).reduce((s,e)=>{
+        const hrs = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id)).reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+        const cost = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id)).reduce((s,e)=>{
           const m=donnyTeam.find(x=>String(x.id)===String(e.memberId)); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0);
         },0);
         return {title:job.title.slice(0,16), hrs, cost};
@@ -17647,12 +17647,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                           <div style={{padding:"16px",textAlign:"center",fontSize:"10px",fontFamily:"monospace",background:"rgba(255,255,255,0.02)",border:`0.5px dashed ${col.color}30`,borderRadius:"6px",color:"rgba(148,163,184,0.3)"}}>NO JOBS</div>
                         )}
                         {col.jobs.map(job => {
-                          const cardHrs = donnyTimesheets.filter(e => e.jobId === job.id).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-                          const cardWorkers = new Set(donnyTimesheets.filter(e => e.jobId === job.id).map(e => e.memberId)).size;
+                          const cardHrs = donnyTimesheets.filter(e => String(e.jobId) === String(job.id)).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+                          const cardWorkers = new Set(donnyTimesheets.filter(e => String(e.jobId) === String(job.id)).map(e => e.memberId)).size;
                           const cardOverdue = job.dueDate && new Date(job.dueDate) < new Date() && !job.completed;
                           const cardQH = parseFloat(job.quotedHours) || 0;
                           const cardQC = parseFloat(job.quotedCost) || 0;
-                          const cardLabour = donnyTimesheets.filter(e => e.jobId === job.id).reduce((s,e) => {
+                          const cardLabour = donnyTimesheets.filter(e => String(e.jobId) === String(job.id)).reduce((s,e) => {
                             const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
                             return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
                           }, 0);
@@ -17787,7 +17787,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       };
 
       // ─── DERIVED DATA ───────────────────────────────────────────────
-      const jobTimesheets = donnyTimesheets.filter(e => e.jobId === job.id);
+      const jobTimesheets = donnyTimesheets.filter(e => String(e.jobId) === String(job.id));
       const totalHours = jobTimesheets.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
       const totalLabour = jobTimesheets.reduce((s,e) => {
         const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
@@ -17802,12 +17802,12 @@ ${JSON.stringify(ctx, null, 2)}`;
         cost: jobTimesheets.filter(e => String(e.memberId) === String(m.id)).reduce((s,e) => s + (parseFloat(e.hours)||0) * (parseFloat(m.hourlyRate)||0), 0),
       })).sort((a,b) => b.hours - a.hours);
 
-      const jobMaterials = (donnyMaterialsLog || []).filter(m => m.jobId === job.id);
+      const jobMaterials = (donnyMaterialsLog || []).filter(m => String(m.jobId) === String(job.id));
       const totalMaterialsCost = jobMaterials.reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
-      const jobMistakes = (donnyMistakes || []).filter(m => m.jobId === job.id);
-      const jobIncidents = (donnyIncidents || []).filter(i => i.jobId === job.id);
+      const jobMistakes = (donnyMistakes || []).filter(m => String(m.jobId) === String(job.id));
+      const jobIncidents = (donnyIncidents || []).filter(i => String(i.jobId) === String(job.id));
       const jobPhotos = (donnyPhotos && donnyPhotos[job.id]) || [];
-      const jobChecklists = (donnyChecklists || []).filter(c => c.jobId === job.id);
+      const jobChecklists = (donnyChecklists || []).filter(c => String(c.jobId) === String(job.id));
       const jobNotes = (donnyNotes && donnyNotes[job.id]) || [];
 
       const client = donnyClients.find(c => c.id === job.clientId);
@@ -21943,7 +21943,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       // ── DRILL-IN: per-job material log ────────────────────────────
       if (matLogJobId) {
         const job = donnyJobs.find(j=>j.id===matLogJobId);
-        const jobEntries = donnyMaterialsLog.filter(e=>e.jobId===matLogJobId);
+        const jobEntries = donnyMaterialsLog.filter(e=>String(e.jobId)===String(matLogJobId));
         const today = new Date().toISOString().split('T')[0];
 
         const totalCost = jobEntries.reduce((s,e) => s + (parseFloat(e.cost)||0), 0);
@@ -22016,7 +22016,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       {[...new Set(donnyMaterialsLog.map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}
                     </datalist>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
                       <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
@@ -22027,6 +22027,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="m, ea, kg"
                         style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
                     </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
+                      <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="120" type="number" step="0.01"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                    </div>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
@@ -22035,9 +22040,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                   <button onClick={() => {
                     if (!newMatEntry.item.trim()) return;
-                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
+                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, cost:newMatEntry.cost, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                     saveMatLog([entry, ...donnyMaterialsLog]);
-                    setNewMatEntry({ item:'', qty:'', unit:'', note:'' });
+                    setNewMatEntry({ item:'', qty:'', unit:'', cost:'', note:'' });
                     const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
                     logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
                     logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
@@ -22324,7 +22329,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
                 <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
                   {activeJobsList.map((job, i) => {
-                    const entries = donnyMaterialsLog.filter(e=>e.jobId===job.id);
+                    const entries = donnyMaterialsLog.filter(e=>String(e.jobId)===String(job.id));
                     return (
                       <button key={job.id} onClick={() => setMatLogJobId(job.id)}
                         style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
