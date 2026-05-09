@@ -16984,13 +16984,8 @@ ${JSON.stringify(ctx, null, 2)}`;
       }).filter(j=>j.hrs>0);
       const maxHrs = Math.max(...labourByJob.map(j=>j.hrs), 1);
 
-      // Recent activity feed
-      const recentActivity = [
-        ...donnyTimesheets.map(e=>({...e, _type:'hours', _at:new Date(e.createdAt||0)})),
-        ...Object.values(donnyNotes).flat().map(n=>({...n, _type:'note', _at:new Date(n.createdAt||0)})),
-        ...donnyMistakes?.map(m=>({...m, _type:'mistake', _at:new Date(m.createdAt||0)})) || [],
-        ...donnyIncidents?.map(i=>({...i, _type:'incident', _at:new Date(i.createdAt||0)})) || [],
-      ].sort((a,b)=>b._at-a._at).slice(0,5);
+      // Recent activity feed (computed but unused — kept block for layout reference)
+      const recentActivity = [];
 
       // ════════════════════════════════════════════════════════════
       // INTELLIGENCE LAYER — derived insights from raw data
@@ -17372,99 +17367,41 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            {/* CHARTS ROW */}
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
-              {/* LABOUR TIMELINE */}
-              <div style={donnyPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid #f97316",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Labour Timeline</span>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>7-DAY · ${totalWeekCost.toFixed(0)}</span>
-                </div>
-                <div style={{padding:"16px 20px"}}>
-                  <div style={{display:"flex",alignItems:"flex-end",gap:"10px",height:"80px"}}>
-                    {labourByDay.map((d,i) => {
-                      const pct = maxDayHrs > 0 ? (d.hrs / maxDayHrs) * 100 : 0;
-                      const isToday = d.day.toDateString() === now.toDateString();
-                      return (
-                        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%",justifyContent:"flex-end"}}>
-                          <span style={{fontSize:"9px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{d.hrs > 0 ? `${d.hrs.toFixed(1)}h` : "—"}</span>
-                          <div style={{width:"100%",background:isToday?"#f97316":"rgba(249,115,22,0.6)",borderRadius:"2px 2px 0 0",height:`${Math.max(pct,2)}%`,transition:"height 0.5s ease",boxShadow:`0 0 8px ${isToday?"#f97316":"rgba(249,115,22,0.4)"}`}}></div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div style={{display:"flex",gap:"10px",marginTop:"8px",borderTop:"0.5px solid rgba(249,115,22,0.08)",paddingTop:"8px"}}>
-                    {labourByDay.map((d,i) => {
-                      const isToday = d.day.toDateString() === now.toDateString();
-                      return (
-                        <div key={i} style={{flex:1,textAlign:"center"}}>
-                          <div style={{fontSize:"9px",color:isToday?"#f97316":"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:isToday?600:400}}>{d.label}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+            {/* JOB HEALTH ALLOCATION — full width */}
+            <div style={donnyPanel}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid #f97316",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Job Health</span>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{activeJobs.length} ACTIVE</span>
               </div>
-
-              {/* JOB HEALTH ALLOCATION */}
-              <div style={donnyPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid #f97316",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Job Health</span>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{activeJobs.length} ACTIVE</span>
-                </div>
-                <div style={{padding:"16px 20px",display:"flex",alignItems:"center",gap:"20px",justifyContent:"center"}}>
-                  {(() => {
-                    const greenCount = greenJobs.length;
-                    const amberCount = atRiskJobs.filter(j=>j._health==='amber').length;
-                    const redCount = atRiskJobs.filter(j=>j._health==='red').length;
-                    const total = Math.max(greenCount + amberCount + redCount, 1);
-                    const radius = 26, c = 2 * Math.PI * radius;
-                    const greenLen = (greenCount/total)*c;
-                    const amberLen = (amberCount/total)*c;
-                    const redLen = (redCount/total)*c;
-                    return (
-                      <>
-                        <svg width="70" height="70" viewBox="0 0 70 70">
-                          <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="7"/>
-                          {greenCount>0 && <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(34,197,94,0.85)" strokeWidth="7" strokeDasharray={`${greenLen} ${c-greenLen}`} strokeDashoffset="0" transform="rotate(-90 35 35)"/>}
-                          {amberCount>0 && <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(245,158,11,0.85)" strokeWidth="7" strokeDasharray={`${amberLen} ${c-amberLen}`} strokeDashoffset={-greenLen} transform="rotate(-90 35 35)"/>}
-                          {redCount>0 && <circle cx="35" cy="35" r={radius} fill="none" stroke="rgba(239,68,68,0.85)" strokeWidth="7" strokeDasharray={`${redLen} ${c-redLen}`} strokeDashoffset={-(greenLen+amberLen)} transform="rotate(-90 35 35)"/>}
-                          <text x="35" y="38" textAnchor="middle" fontSize="14" fill="#e0eaff" fontFamily="monospace" fontWeight="500">{activeJobs.length}</text>
-                        </svg>
-                        <div style={{display:"flex",flexDirection:"column",gap:"6px",fontFamily:"monospace",fontSize:"11px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px"}}><span style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>Healthy <span style={{color:"rgba(34,197,94,0.95)"}}>{greenCount}</span></span></div>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px"}}><span style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(245,158,11,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>At Risk <span style={{color:"rgba(245,158,11,0.95)"}}>{amberCount}</span></span></div>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px"}}><span style={{width:"6px",height:"6px",borderRadius:"50%",background:"rgba(239,68,68,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>Critical <span style={{color:"rgba(239,68,68,0.95)"}}>{redCount}</span></span></div>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
+              <div style={{padding:"20px 24px",display:"flex",alignItems:"center",gap:"32px",justifyContent:"center"}}>
+                {(() => {
+                  const greenCount = greenJobs.length;
+                  const amberCount = atRiskJobs.filter(j=>j._health==='amber').length;
+                  const redCount = atRiskJobs.filter(j=>j._health==='red').length;
+                  const total = Math.max(greenCount + amberCount + redCount, 1);
+                  const radius = 32, c = 2 * Math.PI * radius;
+                  const greenLen = (greenCount/total)*c;
+                  const amberLen = (amberCount/total)*c;
+                  const redLen = (redCount/total)*c;
+                  return (
+                    <>
+                      <svg width="90" height="90" viewBox="0 0 90 90">
+                        <circle cx="45" cy="45" r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="9"/>
+                        {greenCount>0 && <circle cx="45" cy="45" r={radius} fill="none" stroke="rgba(34,197,94,0.85)" strokeWidth="9" strokeDasharray={`${greenLen} ${c-greenLen}`} strokeDashoffset="0" transform="rotate(-90 45 45)"/>}
+                        {amberCount>0 && <circle cx="45" cy="45" r={radius} fill="none" stroke="rgba(245,158,11,0.85)" strokeWidth="9" strokeDasharray={`${amberLen} ${c-amberLen}`} strokeDashoffset={-greenLen} transform="rotate(-90 45 45)"/>}
+                        {redCount>0 && <circle cx="45" cy="45" r={radius} fill="none" stroke="rgba(239,68,68,0.85)" strokeWidth="9" strokeDasharray={`${redLen} ${c-redLen}`} strokeDashoffset={-(greenLen+amberLen)} transform="rotate(-90 45 45)"/>}
+                        <text x="45" y="49" textAnchor="middle" fontSize="18" fill="#e0eaff" fontFamily="monospace" fontWeight="500">{activeJobs.length}</text>
+                      </svg>
+                      <div style={{display:"flex",flexDirection:"column",gap:"8px",fontFamily:"monospace",fontSize:"12px"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}><span style={{width:"8px",height:"8px",borderRadius:"50%",background:"rgba(34,197,94,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>Healthy <span style={{color:"rgba(34,197,94,0.95)",fontWeight:500}}>{greenCount}</span></span></div>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}><span style={{width:"8px",height:"8px",borderRadius:"50%",background:"rgba(245,158,11,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>At Risk <span style={{color:"rgba(245,158,11,0.95)",fontWeight:500}}>{amberCount}</span></span></div>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}><span style={{width:"8px",height:"8px",borderRadius:"50%",background:"rgba(239,68,68,0.85)"}}/><span style={{color:"rgba(224,234,255,0.7)"}}>Critical <span style={{color:"rgba(239,68,68,0.95)",fontWeight:500}}>{redCount}</span></span></div>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
-
-            {/* OPERATIONAL INTEL — Pattern Alerts (only if anomalies) */}
-            {anomalies.length > 0 && (
-              <div style={donnyPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid #f97316",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Operational Intel</span>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{anomalies.length} SIGNAL{anomalies.length!==1?'S':''} · LIVE</span>
-                </div>
-                <div style={{padding:"4px 0"}}>
-                  {anomalies.slice(0,5).map((a,i) => {
-                    const c = a.severity==='red'?'239,68,68':a.severity==='amber'?'245,158,11':'34,197,94';
-                    return (
-                      <button key={i} onClick={() => { if(a.jobId){ const j=donnyJobs.find(x=>x.id===a.jobId); if(j){navToEntity('job', j);} } else if(a.workerId){ const w=donnyTeam.find(x=>x.id===a.workerId); if(w){navToEntity('worker', w);} } }}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"8px 16px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(anomalies.length,5)-1?"0.5px solid rgba(249,115,22,0.04)":"none",textAlign:"left"}}>
-                        <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`rgba(${c},0.08)`,color:`rgba(${c},0.95)`,border:`0.5px solid rgba(${c},0.4)`,borderRadius:"2px",letterSpacing:"1px",flexShrink:0,minWidth:"60px",textAlign:"center"}}>{a.severity.toUpperCase()}</span>
-                        <span style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{a.text}</span>
-                        <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",flexShrink:0}}>↗</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             {/* ENTITY TABLE — Active Jobs */}
             <div style={donnyPanel}>
@@ -17507,45 +17444,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </>
               )}
             </div>
-
-            {/* TEAM ENTITY TABLE */}
-            {donnyTeam.length > 0 && (
-              <div style={donnyPanel}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid #f97316",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"11px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Team · Entity Table</span>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{donnyTeam.length} CREW · ${totalHourlyRate.toFixed(0)}/HR</span>
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 90px 80px 80px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>NAME</div><div>POSITION</div><div>WK HRS</div><div>UTIL</div>
-                </div>
-                <div style={{maxHeight:workerUtil.length > 8 ? "400px" : "none",overflowY:workerUtil.length > 8 ? "auto" : "visible"}}>
-                  {workerUtil.map((m,i) => {
-                    const utilPct = (m._weekHrs / m._capacity) * 100;
-                    const utilColor = utilPct > 100 ? '239,68,68' : utilPct > 80 ? '245,158,11' : utilPct > 0 ? '34,197,94' : '148,163,184';
-                    return (
-                      <button key={m.id} onClick={() => { navToEntity('worker', m); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 80px 80px",padding:"10px 16px",alignItems:"center",borderBottom:i<workerUtil.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.position||(m.roles||[])[0]||'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.7)"}}>{m._weekHrs.toFixed(1)}h</div>
-                        <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                          <div style={{flex:1,height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",minWidth:"30px"}}>
-                            <div style={{height:"100%",width:`${Math.min(utilPct,100)}%`,background:`rgba(${utilColor},0.7)`}}/>
-                          </div>
-                          <span style={{fontFamily:"monospace",fontSize:"9px",color:`rgba(${utilColor},0.9)`,flexShrink:0}}>{utilPct.toFixed(0)}%</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                <button onClick={() => setActiveView('donny-team')}
-                  style={{width:"100%",padding:"10px 16px",background:"rgba(249,115,22,0.04)",border:"none",borderTop:"0.5px solid rgba(249,115,22,0.1)",cursor:"pointer",fontFamily:"monospace",fontSize:"10px",color:"rgba(249,115,22,0.7)",letterSpacing:"1.5px",display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
-                  <span>VIEW ALL TEAM</span>
-                  <span style={{fontSize:"11px"}}>→</span>
-                </button>
-              </div>
-            )}
 
             {/* WORKSPACE CARD */}
             <div style={{...donnyPanel,overflow:"hidden"}}>
