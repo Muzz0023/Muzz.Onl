@@ -18194,18 +18194,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const dotColor = startDate && startDate <= now ? 'rgba(34,197,94,0.85)' : 'rgba(148,163,184,0.5)';
                       const chipText = !startDate ? 'SET DATE' : startDate <= now ? '✓ STARTED' : `IN ${Math.ceil((startDate-now)/86400000)}d`;
                       const dateLabel = startDate ? startDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}) : '— set date —';
+                      const openPicker = (e) => {
+                        const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
+                        if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
+                      };
                       return (
                         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
                             <div style={{width:"14px",height:"14px",borderRadius:"3px",background:`${dotColor}25`,border:`0.5px solid ${dotColor}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:dotColor,fontFamily:"monospace",flexShrink:0}}>▶</div>
                             <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px"}}>START</span>
                           </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
-                            <label style={{position:"relative",cursor:"pointer"}}>
-                              <span style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:startDate?"rgba(224,234,255,0.85)":"rgba(148,163,184,0.4)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px",letterSpacing:"0.5px",display:"inline-block",minWidth:"75px",textAlign:"center"}}>{dateLabel}</span>
-                              <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
-                                style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%",border:"none",padding:0,colorScheme:"dark"}}/>
-                            </label>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                            <button onClick={openPicker}
+                              style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:startDate?"rgba(224,234,255,0.85)":"rgba(148,163,184,0.4)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer"}}>{dateLabel}</button>
+                            <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
+                              style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
                             <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center"}}>{chipText}</span>
                           </div>
                         </div>
@@ -18272,6 +18275,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const dotColor = isCompleted ? 'rgba(34,197,94,0.95)' : isOverdue ? '#ef4444' : days <= 7 ? '#f59e0b' : '#f97316';
                       const chipText = !dueDate ? 'SET DATE' : isCompleted ? '✓ DONE' : isOverdue ? `${Math.abs(days)}d LATE` : days === 0 ? 'TODAY' : `${days}d LEFT`;
                       const dateLabel = dueDate ? dueDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}) : '— set date —';
+                      const openPicker = (e) => {
+                        const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
+                        if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
+                      };
                       return (
                         <div style={{paddingTop:"6px",borderTop:"0.5px dashed rgba(249,115,22,0.15)",marginTop:"2px"}}>
                           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
@@ -18279,12 +18286,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                               <div style={{width:"14px",height:"14px",borderRadius:"3px",background:`${dotColor}25`,border:`0.5px solid ${dotColor}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:dotColor,fontFamily:"monospace",flexShrink:0}}>■</div>
                               <span style={{fontSize:"11px",color:dotColor,fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>DUE DATE</span>
                             </div>
-                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
-                              <label style={{position:"relative",cursor:"pointer"}}>
-                                <span style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:dueDate?(isOverdue?"#ef4444":"rgba(224,234,255,0.85)"):"rgba(148,163,184,0.4)",border:`0.5px solid ${dotColor}40`,borderRadius:"3px",letterSpacing:"0.5px",display:"inline-block",minWidth:"75px",textAlign:"center"}}>{dateLabel}</span>
-                                <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
-                                  style={{position:"absolute",inset:0,opacity:0,cursor:"pointer",width:"100%",height:"100%",border:"none",padding:0,colorScheme:"dark"}}/>
-                              </label>
+                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                              <button onClick={openPicker}
+                                style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:dueDate?(isOverdue?"#ef4444":"rgba(224,234,255,0.85)"):"rgba(148,163,184,0.4)",border:`0.5px solid ${dotColor}40`,borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer"}}>{dateLabel}</button>
+                              <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
+                                style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
                               <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center",fontWeight:600}}>{chipText}</span>
                             </div>
                           </div>
