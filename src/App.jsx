@@ -1798,7 +1798,7 @@ function MuzzApp() {
           const next = { ...log };
           const ts = new Date().toISOString();
           changes.forEach(c => {
-            next[c.entityId] = [...(next[c.entityId] || []), { ts, field: c.field, from: c.from, to: c.to }].slice(-30);
+            next[c.entityId] = [...(next[c.entityId] || []), { ts, field: c.field, from: c.from, to: c.to }].slice(-500);
           });
           return next;
         });
@@ -1826,7 +1826,7 @@ function MuzzApp() {
           const next = { ...log };
           const ts = new Date().toISOString();
           changes.forEach(c => {
-            next[c.entityId] = [...(next[c.entityId] || []), { ts, field: c.field, from: c.from, to: c.to }].slice(-30);
+            next[c.entityId] = [...(next[c.entityId] || []), { ts, field: c.field, from: c.from, to: c.to }].slice(-500);
           });
           return next;
         });
@@ -2450,7 +2450,7 @@ function MuzzApp() {
     const fullEntry = { ts, actor, kind: 'action', ...entry };
     setAuditLog(log => {
       const next = { ...log };
-      next[entityId] = [...(next[entityId] || []), fullEntry].slice(-50);
+      next[entityId] = [...(next[entityId] || []), fullEntry].slice(-500);
       return next;
     });
   };
