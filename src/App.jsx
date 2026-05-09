@@ -18130,18 +18130,63 @@ ${JSON.stringify(ctx, null, 2)}`;
                       {(() => { const days = Math.ceil((new Date(job.dueDate)-new Date())/(1000*60*60*24)); return days<0?`${Math.abs(days)}d OVERDUE`:days===0?'DUE TODAY':`${days}d LEFT`; })()}
                     </span>
                   )}
+                  {job.completed && (
+                    <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)",letterSpacing:"1px"}}>✓ DONE</span>
+                  )}
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>START</span>
-                    <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
-                      style={{background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"4px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                  {/* SIDE-BY-SIDE DATE INPUTS */}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>START</div>
+                      <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px",colorScheme:"dark"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE</div>
+                      <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?"#ef4444":"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px",colorScheme:"dark"}}/>
+                    </div>
                   </div>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DUE</span>
-                    <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
-                      style={{background:"rgba(0,0,0,0.3)",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?"#ef4444":"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"4px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
-                  </div>
+
+                  {/* PROGRESS BAR — % of schedule elapsed */}
+                  {(() => {
+                    if (!job.startDate || !job.dueDate) {
+                      return <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",padding:"4px 0"}}>Set both dates to see schedule progress</div>;
+                    }
+                    const start = new Date(job.startDate);
+                    const due = new Date(job.dueDate);
+                    const now = new Date();
+                    const totalMs = due - start;
+                    const elapsedMs = now - start;
+                    const totalDays = Math.max(1, Math.ceil(totalMs / 86400000));
+                    const elapsedDays = Math.max(0, Math.ceil(elapsedMs / 86400000));
+                    const remainingDays = Math.ceil((due - now) / 86400000);
+                    let pct = 0;
+                    if (totalMs > 0) pct = Math.max(0, Math.min(100, (elapsedMs / totalMs) * 100));
+                    const isOverdue = !job.completed && now > due;
+                    const isCompleted = job.completed;
+                    const barColor = isCompleted ? 'rgba(34,197,94,0.85)' : isOverdue ? '#ef4444' : pct > 80 ? '#f59e0b' : pct > 50 ? '#f97316' : 'rgba(34,197,94,0.85)';
+                    return (
+                      <div>
+                        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:"6px",fontFamily:"monospace"}}>
+                          <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px"}}>SCHEDULE PROGRESS</span>
+                          <span style={{fontSize:"11px",color:barColor,fontWeight:500}}>{isCompleted ? '100%' : Math.round(pct) + '%'}</span>
+                        </div>
+                        <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden",border:"0.5px solid rgba(249,115,22,0.1)"}}>
+                          <div style={{height:"100%",width:`${isCompleted?100:pct}%`,background:barColor,opacity:0.85,transition:"width 0.3s"}}/>
+                        </div>
+                        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginTop:"6px",fontFamily:"monospace",fontSize:"9px"}}>
+                          <span style={{color:"rgba(148,163,184,0.5)"}}>
+                            {isCompleted ? `Completed in ${elapsedDays}d` : `Day ${Math.max(0,elapsedDays)} of ${totalDays}`}
+                          </span>
+                          <span style={{color:isOverdue?"#ef4444":"rgba(148,163,184,0.5)"}}>
+                            {isCompleted ? '' : isOverdue ? `${Math.abs(remainingDays)}d overdue` : remainingDays === 0 ? 'Due today' : `${remainingDays}d remaining`}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
               <div style={panel}>
