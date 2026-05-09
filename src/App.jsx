@@ -18144,24 +18144,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {/* SIDE-BY-SIDE DATE INPUTS */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>START</div>
-                      <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px",colorScheme:"dark"}}/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE</div>
-                      <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:job.dueDate&&new Date(job.dueDate)<new Date()&&!job.completed?"#ef4444":"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px",colorScheme:"dark"}}/>
-                    </div>
-                  </div>
-
                   {/* MAIN PROGRESS BAR */}
                   {(() => {
                     if (!job.startDate || !job.dueDate) {
-                      return <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",padding:"4px 0"}}>Set both dates to see schedule progress</div>;
+                      return null;
                     }
                     const start = new Date(job.startDate);
                     const due = new Date(job.dueDate);
@@ -18197,6 +18183,108 @@ ${JSON.stringify(ctx, null, 2)}`;
                     );
                   })()}
 
+                  {/* TIMELINE — START / MILESTONES / DUE all unified */}
+                  <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TIMELINE</div>
+
+                    {/* START ROW */}
+                    {(() => {
+                      const startDate = job.startDate ? new Date(job.startDate) : null;
+                      const now = new Date();
+                      const dotColor = startDate && startDate <= now ? 'rgba(34,197,94,0.85)' : 'rgba(148,163,184,0.5)';
+                      const chipText = !startDate ? 'SET DATE' : startDate <= now ? '✓ STARTED' : `IN ${Math.ceil((startDate-now)/86400000)}d`;
+                      return (
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                            <div style={{width:"14px",height:"14px",borderRadius:"3px",background:`${dotColor}25`,border:`0.5px solid ${dotColor}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:dotColor,fontFamily:"monospace",flexShrink:0}}>▶</div>
+                            <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px"}}>START</span>
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
+                            <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
+                              style={{background:"rgba(0,0,0,0.3)",color:"rgba(148,163,184,0.85)",fontFamily:"monospace",fontSize:"10px",border:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"3px 6px",borderRadius:"3px",colorScheme:"dark"}}/>
+                            <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center"}}>{chipText}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* MILESTONES (auto-sorted between start and due) */}
+                    {(job.milestones||[]).slice().sort((a,b) => new Date(a.date) - new Date(b.date)).map(ms => {
+                      const msDate = new Date(ms.date);
+                      const now = new Date();
+                      const start = job.startDate ? new Date(job.startDate) : null;
+                      const due = job.dueDate ? new Date(job.dueDate) : null;
+                      let positionPct = 50;
+                      let nowPct = 0;
+                      if (start && due && due > start) {
+                        positionPct = Math.max(0, Math.min(100, ((msDate - start) / (due - start)) * 100));
+                        nowPct = Math.max(0, Math.min(100, ((now - start) / (due - start)) * 100));
+                      }
+                      const daysToMs = Math.ceil((msDate - now) / 86400000);
+                      const isPast = daysToMs < 0;
+                      const isToday = daysToMs === 0;
+                      const isSoon = daysToMs > 0 && daysToMs <= 7;
+                      const dotColor = ms.completed ? 'rgba(34,197,94,0.95)' : isPast ? '#ef4444' : isToday ? '#f59e0b' : isSoon ? '#f97316' : 'rgba(168,85,247,0.85)';
+                      const chipText = ms.completed ? '✓ DONE' : isPast ? `${Math.abs(daysToMs)}d LATE` : isToday ? 'TODAY' : `${daysToMs}d`;
+                      return (
+                        <div key={ms.id}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"4px"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                              <button onClick={() => {
+                                const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, completed: !m.completed} : m);
+                                updateJob({ milestones });
+                                logAction(`job_${job.id}`, { kind: ms.completed?'edit':'action', summary: `Milestone ${ms.completed?'reopened':'completed'}: ${ms.label}` });
+                              }} style={{width:"14px",height:"14px",borderRadius:"3px",background:ms.completed?"rgba(34,197,94,0.2)":"rgba(0,0,0,0.3)",border:`0.5px solid ${ms.completed?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:"#22c55e",fontFamily:"monospace",cursor:"pointer",flexShrink:0,padding:0}}>{ms.completed && '✓'}</button>
+                              <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
+                            </div>
+                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",padding:"3px 6px",background:"rgba(0,0,0,0.3)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px"}}>{msDate.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
+                              <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center"}}>{chipText}</span>
+                              <button onClick={() => {
+                                if (window.confirm(`Delete "${ms.label}"?`)) {
+                                  const milestones = (job.milestones||[]).filter(m => m.id !== ms.id);
+                                  updateJob({ milestones });
+                                }
+                              }} style={{fontSize:"10px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1}}>×</button>
+                            </div>
+                          </div>
+                          {start && due && due > start && (
+                            <div style={{position:"relative",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",marginLeft:"22px",overflow:"visible"}}>
+                              <div style={{height:"100%",width:`${nowPct}%`,background:"rgba(249,115,22,0.3)",borderRadius:"1px"}}/>
+                              <div style={{position:"absolute",left:`calc(${positionPct}% - 3px)`,top:"-2px",width:"7px",height:"7px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 0 1.5px rgba(5,12,24,1)`}}/>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* DUE ROW — highlighted as final/critical */}
+                    {(() => {
+                      const dueDate = job.dueDate ? new Date(job.dueDate) : null;
+                      const now = new Date();
+                      const isOverdue = dueDate && now > dueDate && !job.completed;
+                      const isCompleted = job.completed;
+                      const days = dueDate ? Math.ceil((dueDate - now)/86400000) : null;
+                      const dotColor = isCompleted ? 'rgba(34,197,94,0.95)' : isOverdue ? '#ef4444' : days <= 7 ? '#f59e0b' : '#f97316';
+                      const chipText = !dueDate ? 'SET DATE' : isCompleted ? '✓ DONE' : isOverdue ? `${Math.abs(days)}d LATE` : days === 0 ? 'TODAY' : `${days}d LEFT`;
+                      return (
+                        <div style={{paddingTop:"6px",borderTop:"0.5px dashed rgba(249,115,22,0.15)",marginTop:"2px"}}>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                              <div style={{width:"14px",height:"14px",borderRadius:"3px",background:`${dotColor}25`,border:`0.5px solid ${dotColor}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:dotColor,fontFamily:"monospace",flexShrink:0}}>■</div>
+                              <span style={{fontSize:"11px",color:dotColor,fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>DUE DATE</span>
+                            </div>
+                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
+                              <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
+                                style={{background:"rgba(0,0,0,0.3)",color:isOverdue?"#ef4444":"#e0eaff",fontFamily:"monospace",fontSize:"10px",border:`0.5px solid ${dotColor}40`,outline:"none",padding:"3px 6px",borderRadius:"3px",colorScheme:"dark"}}/>
+                              <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center",fontWeight:600}}>{chipText}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
                   {/* ADD MILESTONE FORM */}
                   {showAddMilestone && (
                     <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",paddingTop:"12px",display:"flex",flexDirection:"column",gap:"8px"}}>
@@ -18228,67 +18316,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   )}
 
-                  {/* MILESTONES LIST */}
-                  {(job.milestones||[]).length > 0 && (
-                    <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",paddingTop:"12px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MILESTONES · {(job.milestones||[]).length}</div>
-                      {(job.milestones||[]).slice().sort((a,b) => new Date(a.date) - new Date(b.date)).map(ms => {
-                        const msDate = new Date(ms.date);
-                        const now = new Date();
-                        const start = job.startDate ? new Date(job.startDate) : null;
-                        const due = job.dueDate ? new Date(job.dueDate) : null;
-                        // Position of milestone within START → DUE window (for the bar)
-                        let positionPct = 50;
-                        if (start && due && due > start) {
-                          positionPct = Math.max(0, Math.min(100, ((msDate - start) / (due - start)) * 100));
-                        }
-                        // Current "now" pct
-                        let nowPct = 0;
-                        if (start && due && due > start) {
-                          nowPct = Math.max(0, Math.min(100, ((now - start) / (due - start)) * 100));
-                        }
-                        const daysToMs = Math.ceil((msDate - now) / 86400000);
-                        const isPast = daysToMs < 0;
-                        const isToday = daysToMs === 0;
-                        const isSoon = daysToMs > 0 && daysToMs <= 7;
-                        const dotColor = ms.completed ? 'rgba(34,197,94,0.95)' : isPast ? '#ef4444' : isToday ? '#f59e0b' : isSoon ? '#f97316' : 'rgba(168,85,247,0.85)';
-                        const chipText = ms.completed ? '✓ DONE' : isPast ? `${Math.abs(daysToMs)}d LATE` : isToday ? 'TODAY' : `${daysToMs}d`;
-                        return (
-                          <div key={ms.id}>
-                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"4px"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
-                                <button onClick={() => {
-                                  const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, completed: !m.completed} : m);
-                                  updateJob({ milestones });
-                                  logAction(`job_${job.id}`, { kind: ms.completed?'edit':'action', summary: `Milestone ${ms.completed?'reopened':'completed'}: ${ms.label}` });
-                                }} style={{width:"14px",height:"14px",borderRadius:"3px",background:ms.completed?"rgba(34,197,94,0.2)":"rgba(0,0,0,0.3)",border:`0.5px solid ${ms.completed?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:"#22c55e",fontFamily:"monospace",cursor:"pointer",flexShrink:0,padding:0}}>{ms.completed && '✓'}</button>
-                                <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
-                              </div>
-                              <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
-                                <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{msDate.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
-                                <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px"}}>{chipText}</span>
-                                <button onClick={() => {
-                                  if (window.confirm(`Delete "${ms.label}"?`)) {
-                                    const milestones = (job.milestones||[]).filter(m => m.id !== ms.id);
-                                    updateJob({ milestones });
-                                  }
-                                }} style={{fontSize:"10px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1}}>×</button>
-                              </div>
-                            </div>
-                            {/* Mini progress bar showing where this milestone sits in the schedule */}
-                            {start && due && due > start && (
-                              <div style={{position:"relative",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",marginLeft:"22px",overflow:"visible"}}>
-                                {/* fill up to "now" */}
-                                <div style={{height:"100%",width:`${nowPct}%`,background:"rgba(249,115,22,0.3)",borderRadius:"1px"}}/>
-                                {/* milestone marker */}
-                                <div style={{position:"absolute",left:`calc(${positionPct}% - 3px)`,top:"-2px",width:"7px",height:"7px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 0 1.5px rgba(5,12,24,1)`}}/>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
               </div>
               <div style={panel}>
