@@ -22810,47 +22810,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* MATERIALS CATALOG */}
-            {catalog.length > 0 && (
-              <div style={{...panel,borderLeft:"2px solid #22c55e"}}>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MATERIALS CATALOG</span>
-                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>{catalog.length} ITEM{catalog.length!==1?'S':''}</span>
-                </div>
-                <div style={{maxHeight:"260px",overflowY:"auto"}}>
-                  {catalog.slice(0,12).map((m,i) => {
-                    // Resolve linked jobs and pull job numbers
-                    const linkedJobs = (m.jobIds||[]).map(jid => donnyJobs.find(j => j.id === jid)).filter(Boolean);
-                    const jobLabels = linkedJobs.map(j => j.jobNumber ? `#${j.jobNumber}` : j.title);
-                    return (
-                      <button key={m.name} onClick={() => navToEntity('material', {name:m.name})}
-                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(catalog.length,12)-1?"0.5px solid rgba(34,197,94,0.05)":"none",textAlign:"left"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
-                          <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</span>
-                          <div style={{minWidth:0,flex:1}}>
-                            <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
-                              <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"260px"}}>{m.name}</span>
-                              {jobLabels.slice(0,3).map((lbl, ji) => (
-                                <span key={ji} style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.25)",borderRadius:"2px",letterSpacing:"0.5px",whiteSpace:"nowrap"}}>{lbl}</span>
-                              ))}
-                              {jobLabels.length > 3 && (
-                                <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(249,115,22,0.5)"}}>+{jobLabels.length-3}</span>
-                              )}
-                            </div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"2px"}}>{m.count} entr{m.count!==1?'ies':'y'}{m.cost>0?' · $'+m.cost.toFixed(0):''}{linkedJobs.length>0?' · '+linkedJobs.length+' job'+(linkedJobs.length!==1?'s':''):''}</div>
-                          </div>
-                        </div>
-                        <div style={{textAlign:"right",flexShrink:0,display:"flex",alignItems:"center",gap:"8px"}}>
-                          <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace"}}>{m.qty.toFixed(1)}{m.unit?' '+m.unit:''}</span>
-                          <span style={{fontSize:"10px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
             {/* JOBS PICKER */}
             {activeJobsList.length === 0 ? (
               <div style={{...panel,padding:"40px",textAlign:"center"}}>
