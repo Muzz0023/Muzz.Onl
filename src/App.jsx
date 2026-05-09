@@ -18144,10 +18144,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {/* MAIN PROGRESS BAR */}
+                  {/* UNIFIED SCHEDULE TIMELINE */}
                   {(() => {
                     if (!job.startDate || !job.dueDate) {
-                      return null;
+                      return (
+                        <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",padding:"20px 0"}}>Set start &amp; due dates to see timeline</div>
+                      );
                     }
                     const start = new Date(job.startDate);
                     const due = new Date(job.dueDate);
@@ -18157,158 +18159,149 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const totalDays = Math.max(1, Math.ceil(totalMs / 86400000));
                     const elapsedDays = Math.max(0, Math.ceil(elapsedMs / 86400000));
                     const remainingDays = Math.ceil((due - now) / 86400000);
-                    let pct = 0;
-                    if (totalMs > 0) pct = Math.max(0, Math.min(100, (elapsedMs / totalMs) * 100));
+                    const pct = totalMs > 0 ? Math.max(0, Math.min(100, (elapsedMs / totalMs) * 100)) : 0;
                     const isOverdue = !job.completed && now > due;
                     const isCompleted = job.completed;
-                    const barColor = isCompleted ? 'rgba(34,197,94,0.85)' : isOverdue ? '#ef4444' : pct > 80 ? '#f59e0b' : pct > 50 ? '#f97316' : 'rgba(34,197,94,0.85)';
+                    const barColor = isCompleted ? "#22c55e" : isOverdue ? "#ef4444" : pct > 80 ? "#f59e0b" : pct > 50 ? "#f97316" : "#22c55e";
+                    const sortedMs = (job.milestones||[]).slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+
+                    // shared chip styles
+                    const dateChipStyle = (color, bold) => ({fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:"rgba(224,234,255,0.85)",border:`0.5px solid ${color}30`,borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer",fontWeight:bold?600:400});
+                    const statusChipStyle = (color, bold) => ({fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${color}15`,color:color,border:`0.5px solid ${color}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center",fontWeight:bold?600:500});
+
+                    const openPicker = (e) => {
+                      const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
+                      if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
+                    };
+
                     return (
-                      <div>
-                        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:"6px",fontFamily:"monospace"}}>
+                      <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+
+                        {/* HEADER: pct + day-count */}
+                        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",fontFamily:"monospace"}}>
                           <span style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",letterSpacing:"1.5px"}}>SCHEDULE PROGRESS</span>
-                          <span style={{fontSize:"11px",color:barColor,fontWeight:500}}>{isCompleted ? '100%' : Math.round(pct) + '%'}</span>
+                          <span style={{fontSize:"11px",color:barColor,fontWeight:500}}>{isCompleted ? "100%" : Math.round(pct) + "%"}</span>
                         </div>
-                        <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden",border:"0.5px solid rgba(249,115,22,0.1)"}}>
-                          <div style={{height:"100%",width:`${isCompleted?100:pct}%`,background:barColor,opacity:0.85,transition:"width 0.3s"}}/>
+
+                        {/* MAIN PROGRESS BAR with milestone dots ON it */}
+                        <div style={{position:"relative",height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",border:"0.5px solid rgba(249,115,22,0.1)",overflow:"visible"}}>
+                          {/* fill */}
+                          <div style={{position:"absolute",inset:0,height:"100%",width:`${isCompleted?100:pct}%`,background:barColor,opacity:0.85,borderRadius:"1.5px",transition:"width 0.3s"}}/>
+                          {/* milestone dots ON the bar */}
+                          {sortedMs.map(ms => {
+                            const msDate = new Date(ms.date);
+                            let positionPct = 50;
+                            if (totalMs > 0) positionPct = Math.max(0, Math.min(100, ((msDate - start) / totalMs) * 100));
+                            const daysToMs = Math.ceil((msDate - now) / 86400000);
+                            const isPast = daysToMs < 0;
+                            const dotColor = ms.completed ? "#22c55e" : isPast ? "#ef4444" : daysToMs === 0 ? "#f59e0b" : daysToMs <= 7 ? "#f97316" : "#a855f7";
+                            return (
+                              <div key={ms.id} title={`${ms.label} · ${msDate.toLocaleDateString("en-AU",{day:"numeric",month:"short"})}`}
+                                style={{position:"absolute",left:`calc(${positionPct}% - 5px)`,top:"-2px",width:"10px",height:"10px",borderRadius:"50%",background:dotColor,boxShadow:"0 0 0 2px rgba(5,12,24,1)",cursor:"pointer",zIndex:2}}/>
+                            );
+                          })}
                         </div>
-                        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginTop:"6px",fontFamily:"monospace",fontSize:"9px"}}>
+
+                        {/* DAY COUNTER */}
+                        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",fontFamily:"monospace",fontSize:"9px",marginTop:"-6px"}}>
                           <span style={{color:"rgba(148,163,184,0.5)"}}>
                             {isCompleted ? `Completed in ${elapsedDays}d` : `Day ${Math.max(0,elapsedDays)} of ${totalDays}`}
                           </span>
                           <span style={{color:isOverdue?"#ef4444":"rgba(148,163,184,0.5)"}}>
-                            {isCompleted ? '' : isOverdue ? `${Math.abs(remainingDays)}d overdue` : remainingDays === 0 ? 'Due today' : `${remainingDays}d remaining`}
+                            {isCompleted ? "" : isOverdue ? `${Math.abs(remainingDays)}d overdue` : remainingDays === 0 ? "Due today" : `${remainingDays}d remaining`}
                           </span>
+                        </div>
+
+                        {/* UNIFIED ROWS — all same shape */}
+                        <div style={{display:"flex",flexDirection:"column"}}>
+                          {/* helper: build all rows in one array so spacing is uniform */}
+                          {(() => {
+                            const rows = [];
+                            // START
+                            (() => {
+                              const dotColor = "#22c55e";
+                              const chipText = "✓ STARTED";
+                              const dateLabel = start.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"2-digit"});
+                              rows.push(
+                                <div key="row-start" style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"8px 0",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
+                                    <div style={{width:"10px",height:"10px",borderRadius:"50%",background:dotColor,flexShrink:0,boxShadow:`0 0 0 2px rgba(5,12,24,1), 0 0 6px ${dotColor}50`}}/>
+                                    <span style={{fontSize:"11px",color:"rgba(224,234,255,0.95)",fontFamily:"monospace",letterSpacing:"1px"}}>START</span>
+                                  </div>
+                                  <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                                    <button onClick={openPicker} style={dateChipStyle(dotColor)}>{dateLabel}</button>
+                                    <input type="date" value={job.startDate||""} onChange={e => updateJob({startDate:e.target.value})} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
+                                    <span style={statusChipStyle(dotColor)}>{chipText}</span>
+                                    <span style={{width:"22px",display:"inline-block"}}/>
+                                  </div>
+                                </div>
+                              );
+                            })();
+                            // MILESTONES
+                            sortedMs.forEach(ms => {
+                              const msDate = new Date(ms.date);
+                              const daysToMs = Math.ceil((msDate - now) / 86400000);
+                              const isPast = daysToMs < 0;
+                              const isToday = daysToMs === 0;
+                              const isSoon = daysToMs > 0 && daysToMs <= 7;
+                              const dotColor = ms.completed ? "#22c55e" : isPast ? "#ef4444" : isToday ? "#f59e0b" : isSoon ? "#f97316" : "#a855f7";
+                              const chipText = ms.completed ? "✓ DONE" : isPast ? `${Math.abs(daysToMs)}d LATE` : isToday ? "TODAY" : `${daysToMs}d`;
+                              const dateLabel = msDate.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"2-digit"});
+                              rows.push(
+                                <div key={`row-ms-${ms.id}`} style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"8px 0",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
+                                    <button onClick={() => {
+                                      const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, completed: !m.completed} : m);
+                                      updateJob({ milestones });
+                                      logAction(`job_${job.id}`, { kind: ms.completed?'edit':'action', summary: `Milestone ${ms.completed?'reopened':'completed'}: ${ms.label}` });
+                                    }} title={ms.completed?"Mark incomplete":"Mark complete"}
+                                    style={{width:"10px",height:"10px",borderRadius:"50%",background:ms.completed?dotColor:"transparent",border:`1.5px solid ${dotColor}`,flexShrink:0,cursor:"pointer",padding:0,boxShadow:`0 0 0 2px rgba(5,12,24,1), 0 0 6px ${dotColor}50`}}/>
+                                    <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"rgba(224,234,255,0.95)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
+                                  </div>
+                                  <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                                    <button onClick={openPicker} style={dateChipStyle(dotColor)}>{dateLabel}</button>
+                                    <input type="date" value={ms.date||""} onChange={e => {
+                                      const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, date: e.target.value} : m);
+                                      updateJob({ milestones });
+                                      logAction(`job_${job.id}`, { kind: 'edit', summary: `Milestone date changed: ${ms.label} → ${e.target.value}` });
+                                    }} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
+                                    <span style={statusChipStyle(dotColor)}>{chipText}</span>
+                                    <button onClick={() => {
+                                      if (window.confirm(`Delete "${ms.label}"?`)) {
+                                        const milestones = (job.milestones||[]).filter(m => m.id !== ms.id);
+                                        updateJob({ milestones });
+                                      }
+                                    }} style={{fontSize:"10px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1,width:"22px"}}>×</button>
+                                  </div>
+                                </div>
+                              );
+                            });
+                            // DUE
+                            (() => {
+                              const dotColor = isCompleted ? "#22c55e" : isOverdue ? "#ef4444" : remainingDays <= 7 ? "#f59e0b" : "#f97316";
+                              const chipText = isCompleted ? "✓ DONE" : isOverdue ? `${Math.abs(remainingDays)}d LATE` : remainingDays === 0 ? "TODAY" : `${remainingDays}d LEFT`;
+                              const dateLabel = due.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"2-digit"});
+                              rows.push(
+                                <div key="row-due" style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",padding:"8px 0"}}>
+                                  <div style={{display:"flex",alignItems:"center",gap:"10px",minWidth:0,flex:1}}>
+                                    <div style={{width:"10px",height:"10px",borderRadius:"50%",background:dotColor,flexShrink:0,boxShadow:`0 0 0 2px rgba(5,12,24,1), 0 0 6px ${dotColor}80`}}/>
+                                    <span style={{fontSize:"11px",color:dotColor,fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>DUE DATE</span>
+                                  </div>
+                                  <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
+                                    <button onClick={openPicker} style={dateChipStyle(dotColor, true)}>{dateLabel}</button>
+                                    <input type="date" value={job.dueDate||""} onChange={e => updateJob({dueDate:e.target.value})} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
+                                    <span style={statusChipStyle(dotColor, true)}>{chipText}</span>
+                                    <span style={{width:"22px",display:"inline-block"}}/>
+                                  </div>
+                                </div>
+                              );
+                            })();
+                            return rows;
+                          })()}
                         </div>
                       </div>
                     );
                   })()}
-
-                  {/* TIMELINE — START / MILESTONES / DUE all unified */}
-                  <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TIMELINE</div>
-
-                    {/* START ROW */}
-                    {(() => {
-                      const startDate = job.startDate ? new Date(job.startDate) : null;
-                      const now = new Date();
-                      const dotColor = startDate && startDate <= now ? 'rgba(34,197,94,0.85)' : 'rgba(148,163,184,0.5)';
-                      const chipText = !startDate ? 'SET DATE' : startDate <= now ? '✓ STARTED' : `IN ${Math.ceil((startDate-now)/86400000)}d`;
-                      const dateLabel = startDate ? startDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}) : '— set date —';
-                      const openPicker = (e) => {
-                        const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
-                        if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
-                      };
-                      return (
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
-                            <div style={{width:"14px",height:"14px",borderRadius:"3px",background:`${dotColor}25`,border:`0.5px solid ${dotColor}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:dotColor,fontFamily:"monospace",flexShrink:0}}>▶</div>
-                            <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1px"}}>START</span>
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
-                            <button onClick={openPicker}
-                              style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:startDate?"rgba(224,234,255,0.85)":"rgba(148,163,184,0.4)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer"}}>{dateLabel}</button>
-                            <input type="date" value={job.startDate||''} onChange={e => updateJob({startDate:e.target.value})}
-                              style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
-                            <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center"}}>{chipText}</span>
-                          </div>
-                        </div>
-                      );
-                    })()}
-
-                    {/* MILESTONES (auto-sorted between start and due) */}
-                    {(job.milestones||[]).slice().sort((a,b) => new Date(a.date) - new Date(b.date)).map(ms => {
-                      const msDate = new Date(ms.date);
-                      const now = new Date();
-                      const start = job.startDate ? new Date(job.startDate) : null;
-                      const due = job.dueDate ? new Date(job.dueDate) : null;
-                      let positionPct = 50;
-                      let nowPct = 0;
-                      if (start && due && due > start) {
-                        positionPct = Math.max(0, Math.min(100, ((msDate - start) / (due - start)) * 100));
-                        nowPct = Math.max(0, Math.min(100, ((now - start) / (due - start)) * 100));
-                      }
-                      const daysToMs = Math.ceil((msDate - now) / 86400000);
-                      const isPast = daysToMs < 0;
-                      const isToday = daysToMs === 0;
-                      const isSoon = daysToMs > 0 && daysToMs <= 7;
-                      const dotColor = ms.completed ? 'rgba(34,197,94,0.95)' : isPast ? '#ef4444' : isToday ? '#f59e0b' : isSoon ? '#f97316' : 'rgba(168,85,247,0.85)';
-                      const chipText = ms.completed ? '✓ DONE' : isPast ? `${Math.abs(daysToMs)}d LATE` : isToday ? 'TODAY' : `${daysToMs}d`;
-                      const dateLabel = msDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'});
-                      const openPicker = (e) => {
-                        const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
-                        if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
-                      };
-                      return (
-                        <div key={ms.id}>
-                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"4px"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
-                              <button onClick={() => {
-                                const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, completed: !m.completed} : m);
-                                updateJob({ milestones });
-                                logAction(`job_${job.id}`, { kind: ms.completed?'edit':'action', summary: `Milestone ${ms.completed?'reopened':'completed'}: ${ms.label}` });
-                              }} style={{width:"14px",height:"14px",borderRadius:"3px",background:ms.completed?"rgba(34,197,94,0.2)":"rgba(0,0,0,0.3)",border:`0.5px solid ${ms.completed?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:"#22c55e",fontFamily:"monospace",cursor:"pointer",flexShrink:0,padding:0}}>{ms.completed && '✓'}</button>
-                              <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
-                            </div>
-                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
-                              <button onClick={openPicker}
-                                style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:"rgba(224,234,255,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer"}}>{dateLabel}</button>
-                              <input type="date" value={ms.date||''} onChange={e => {
-                                const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, date: e.target.value} : m);
-                                updateJob({ milestones });
-                                logAction(`job_${job.id}`, { kind: 'edit', summary: `Milestone date changed: ${ms.label} → ${e.target.value}` });
-                              }} style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
-                              <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center"}}>{chipText}</span>
-                              <button onClick={() => {
-                                if (window.confirm(`Delete "${ms.label}"?`)) {
-                                  const milestones = (job.milestones||[]).filter(m => m.id !== ms.id);
-                                  updateJob({ milestones });
-                                }
-                              }} style={{fontSize:"10px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1}}>×</button>
-                            </div>
-                          </div>
-                          {start && due && due > start && (
-                            <div style={{position:"relative",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",marginLeft:"22px",overflow:"visible"}}>
-                              <div style={{height:"100%",width:`${nowPct}%`,background:"rgba(249,115,22,0.3)",borderRadius:"1px"}}/>
-                              <div style={{position:"absolute",left:`calc(${positionPct}% - 3px)`,top:"-2px",width:"7px",height:"7px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 0 1.5px rgba(5,12,24,1)`}}/>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-
-                    {/* DUE ROW — highlighted as final/critical */}
-                    {(() => {
-                      const dueDate = job.dueDate ? new Date(job.dueDate) : null;
-                      const now = new Date();
-                      const isOverdue = dueDate && now > dueDate && !job.completed;
-                      const isCompleted = job.completed;
-                      const days = dueDate ? Math.ceil((dueDate - now)/86400000) : null;
-                      const dotColor = isCompleted ? 'rgba(34,197,94,0.95)' : isOverdue ? '#ef4444' : days <= 7 ? '#f59e0b' : '#f97316';
-                      const chipText = !dueDate ? 'SET DATE' : isCompleted ? '✓ DONE' : isOverdue ? `${Math.abs(days)}d LATE` : days === 0 ? 'TODAY' : `${days}d LEFT`;
-                      const dateLabel = dueDate ? dueDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}) : '— set date —';
-                      const openPicker = (e) => {
-                        const inp = e.currentTarget.parentElement.querySelector('input[type="date"]');
-                        if (inp) { try { inp.showPicker(); } catch { inp.click(); inp.focus(); } }
-                      };
-                      return (
-                        <div style={{paddingTop:"6px",borderTop:"0.5px dashed rgba(249,115,22,0.15)",marginTop:"2px"}}>
-                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
-                              <div style={{width:"14px",height:"14px",borderRadius:"3px",background:`${dotColor}25`,border:`0.5px solid ${dotColor}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:dotColor,fontFamily:"monospace",flexShrink:0}}>■</div>
-                              <span style={{fontSize:"11px",color:dotColor,fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>DUE DATE</span>
-                            </div>
-                            <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0,position:"relative"}}>
-                              <button onClick={openPicker}
-                                style={{fontSize:"10px",fontFamily:"monospace",padding:"3px 8px",background:"rgba(0,0,0,0.3)",color:dueDate?(isOverdue?"#ef4444":"rgba(224,234,255,0.85)"):"rgba(148,163,184,0.4)",border:`0.5px solid ${dotColor}40`,borderRadius:"3px",letterSpacing:"0.5px",minWidth:"75px",textAlign:"center",cursor:"pointer"}}>{dateLabel}</button>
-                              <input type="date" value={job.dueDate||''} onChange={e => updateJob({dueDate:e.target.value})}
-                                style={{position:"absolute",width:"1px",height:"1px",opacity:0,pointerEvents:"none"}} tabIndex={-1}/>
-                              <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px",minWidth:"60px",textAlign:"center",fontWeight:600}}>{chipText}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
 
                   {/* ADD MILESTONE FORM */}
                   {showAddMilestone && (
