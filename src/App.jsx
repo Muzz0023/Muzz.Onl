@@ -20623,15 +20623,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {[
                     {label:"TOTAL", value:jobPhotos.length, color:"#f97316"},
                     {label:"BEFORE", value:beforeCount, color:"#3b82f6"},
-                    {label:"AFTER", value:afterCount, color:"rgba(34,197,94,0.85)"},
-                    {label:"PROGRESS", value:progressCount, color:"rgba(168,85,247,0.85)"},
-                    {label:"DEFECT", value:defectCount, color:"rgba(239,68,68,0.85)"},
+                    {label:"AFTER", value:afterCount, color:"#22c55e"},
+                    {label:"PROGRESS", value:progressCount, color:"#a855f7"},
+                    {label:"DEFECT", value:defectCount, color:"#ef4444"},
                   ].map((k,i) => (
                     <div key={i} style={{padding:"10px 8px",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",fontFamily:"monospace"}}>
-                      <div style={{fontSize:"9px",color:`${k.color}99`,letterSpacing:"1px",marginBottom:"4px"}}>{k.label}</div>
+                      <div style={{fontSize:"9px",color:k.color,letterSpacing:"1px",marginBottom:"4px",opacity:0.85}}>{k.label}</div>
                       <div style={{fontSize:"15px",color:"#e0eaff",fontWeight:500}}>{k.value}</div>
                       <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${jobPhotos.length>0?(k.value/jobPhotos.length)*100:0}%`,background:`${k.color}aa`}}/>
+                        <div style={{height:"100%",width:`${jobPhotos.length>0?(k.value/jobPhotos.length)*100:0}%`,background:k.color,opacity:0.7}}/>
                       </div>
                     </div>
                   ))}
