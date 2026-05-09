@@ -2514,6 +2514,19 @@ function MuzzApp() {
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [newMember, setNewMember] = useState({ name:'', roles:[], position:'', hourlyRate:'', jobAccess:[] });
   const [showEditQuote, setShowEditQuote] = useState(false);
+  const [showAddWorkerInline, setShowAddWorkerInline] = useState(false);
+  const [inlineWorkerId, setInlineWorkerId] = useState('');
+  const [inlineWorkerHrs, setInlineWorkerHrs] = useState('');
+  const [inlineWorkerDesc, setInlineWorkerDesc] = useState('');
+  const [showAddMaterialInline, setShowAddMaterialInline] = useState(false);
+  const [inlineMatItem, setInlineMatItem] = useState('');
+  const [inlineMatQty, setInlineMatQty] = useState('');
+  const [inlineMatUnit, setInlineMatUnit] = useState('');
+  const [inlineMatCost, setInlineMatCost] = useState('');
+  const [showAddClientInline, setShowAddClientInline] = useState(false);
+  const [inlineClientName, setInlineClientName] = useState('');
+  const [inlineClientCompany, setInlineClientCompany] = useState('');
+  const [inlineClientPhone, setInlineClientPhone] = useState('');
   const [showNewMistake, setShowNewMistake] = useState(false);
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
@@ -18116,16 +18129,48 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={panel}>
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENT</span>
+                  <button onClick={() => setShowAddClientInline(s => !s)}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showAddClientInline?"rgba(148,163,184,0.06)":"rgba(59,130,246,0.1)",border:`0.5px solid ${showAddClientInline?"rgba(148,163,184,0.3)":"rgba(59,130,246,0.4)"}`,borderRadius:"3px",color:showAddClientInline?"rgba(148,163,184,0.85)":"rgba(59,130,246,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showAddClientInline ? '✕' : '+ NEW'}
+                  </button>
                 </div>
-                <div style={{padding:"14px 16px"}}>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {donnyClients.length === 0 ? (
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>No clients · <button onClick={() => setActiveView('donny-clients')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0,textDecoration:"underline"}}>add one</button></div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>No clients yet — tap + NEW above</div>
                   ) : (
                     <select value={job.clientId||''} onChange={e => updateJob({clientId:e.target.value})}
                       style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}>
                       <option value="">— No client linked —</option>
-                      {donnyClients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      {donnyClients.map(c => <option key={c.id} value={c.id}>{c.name}{c.company?` · ${c.company}`:''}</option>)}
                     </select>
+                  )}
+                  {client && !showAddClientInline && (
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderTop:"0.5px solid rgba(59,130,246,0.1)"}}>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>
+                        {client.company && <div>{client.company}</div>}
+                        {client.phone && <div style={{color:"rgba(34,197,94,0.6)"}}>{client.phone}</div>}
+                      </div>
+                      <button onClick={() => navToEntity('client', client)} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"3px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>OPEN →</button>
+                    </div>
+                  )}
+                  {showAddClientInline && (
+                    <div style={{borderTop:"0.5px solid rgba(59,130,246,0.1)",paddingTop:"10px",display:"flex",flexDirection:"column",gap:"8px"}}>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW CLIENT</div>
+                      <input value={inlineClientName} onChange={e => setInlineClientName(e.target.value)} placeholder="Client name *"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      <input value={inlineClientCompany} onChange={e => setInlineClientCompany(e.target.value)} placeholder="Company (optional)"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      <input value={inlineClientPhone} onChange={e => setInlineClientPhone(e.target.value)} placeholder="Phone (optional)"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      <button onClick={() => {
+                        if (!inlineClientName.trim()) return;
+                        const newClient = { id: Date.now(), name: inlineClientName.trim(), company: inlineClientCompany, phone: inlineClientPhone, email:'', address:'', notes:'', jobIds:[job.id] };
+                        setDonnyClients([newClient, ...donnyClients]);
+                        updateJob({ clientId: newClient.id });
+                        logAction(`client_${newClient.id}`, { kind: 'create', summary: `Client created: ${newClient.name}` });
+                        setInlineClientName(''); setInlineClientCompany(''); setInlineClientPhone(''); setShowAddClientInline(false);
+                      }} style={{width:"100%",padding:"8px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE & LINK</button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -18133,12 +18178,54 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* WORKERS + LINKS GRID */}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-              {/* WORKERS */}
+              {/* WORKERS — INLINE ADD */}
               <div style={panel}>
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// WORKERS ON JOB</span>
-                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{workersOnJob.length}</span>
+                  <button onClick={() => { setShowAddWorkerInline(s => !s); setInlineWorkerId(''); setInlineWorkerHrs(''); setInlineWorkerDesc(''); }}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showAddWorkerInline?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddWorkerInline?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddWorkerInline?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showAddWorkerInline ? '✕' : '+ ADD'}
+                  </button>
                 </div>
+                {showAddWorkerInline && (
+                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
+                    {donnyTeam.length === 0 ? (
+                      <div style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"center",padding:"8px"}}>
+                        NO TEAM YET · <button onClick={() => setActiveView('donny-team')} style={{background:"none",border:"none",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",textDecoration:"underline"}}>ADD CREW →</button>
+                      </div>
+                    ) : (
+                      <>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WORKER</div>
+                          <select value={inlineWorkerId} onChange={e => setInlineWorkerId(e.target.value)}
+                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                            <option value="">Select worker...</option>
+                            {donnyTeam.map(m => <option key={m.id} value={m.id}>{m.name}{m.position?` (${m.position})`:''}{m.hourlyRate?` · $${m.hourlyRate}/hr`:''}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURS</div>
+                          <input type="number" step="0.25" value={inlineWorkerHrs} onChange={e => setInlineWorkerHrs(e.target.value)} placeholder="8"
+                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT THEY DID (OPTIONAL)</div>
+                          <input value={inlineWorkerDesc} onChange={e => setInlineWorkerDesc(e.target.value)} placeholder="Cable install, Level 2"
+                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        </div>
+                        <button onClick={() => {
+                          if (!inlineWorkerId || !inlineWorkerHrs) return;
+                          const today = new Date().toISOString().split('T')[0];
+                          const newEntry = { id: Date.now(), jobId: job.id, memberId: inlineWorkerId, hours: parseFloat(inlineWorkerHrs)||0, desc: inlineWorkerDesc, date: today, createdAt: new Date().toISOString(), loggedBy: eliteName||userEmail };
+                          setDonnyTimesheets([newEntry, ...donnyTimesheets]);
+                          const m = donnyTeam.find(x => String(x.id) === String(inlineWorkerId));
+                          logAction(`job_${job.id}`, { kind: 'create', summary: `Hours logged: ${m?.name||'worker'} · ${inlineWorkerHrs}h${inlineWorkerDesc?' · '+inlineWorkerDesc:''}` });
+                          setInlineWorkerId(''); setInlineWorkerHrs(''); setInlineWorkerDesc(''); setShowAddWorkerInline(false);
+                        }} style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG HOURS</button>
+                      </>
+                    )}
+                  </div>
+                )}
                 {workerHours.length === 0 ? (
                   <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO HOURS LOGGED</div>
                 ) : (
@@ -18159,22 +18246,61 @@ ${JSON.stringify(ctx, null, 2)}`;
                 )}
               </div>
 
-              {/* LINKED ENTITIES TILES */}
+              {/* LINKED RECORDS — tiles + inline material add */}
               <div style={panel}>
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
+                  <button onClick={() => { setShowAddMaterialInline(s => !s); setInlineMatItem(''); setInlineMatQty(''); setInlineMatUnit(''); setInlineMatCost(''); }}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showAddMaterialInline?"rgba(148,163,184,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showAddMaterialInline?"rgba(148,163,184,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showAddMaterialInline?"rgba(148,163,184,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showAddMaterialInline ? '✕' : '+ MATERIAL'}
+                  </button>
                 </div>
+                {showAddMaterialInline && (
+                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
+                      <input value={inlineMatItem} onChange={e => setInlineMatItem(e.target.value)} placeholder="2C+E 2.5mm Cable" list="inline-mat-suggestions"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      <datalist id="inline-mat-suggestions">{[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}</datalist>
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"6px"}}>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
+                        <input type="number" value={inlineMatQty} onChange={e => setInlineMatQty(e.target.value)} placeholder="10"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
+                        <input value={inlineMatUnit} onChange={e => setInlineMatUnit(e.target.value)} placeholder="m"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
+                        <input type="number" step="0.01" value={inlineMatCost} onChange={e => setInlineMatCost(e.target.value)} placeholder="120"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      </div>
+                    </div>
+                    <button onClick={() => {
+                      if (!inlineMatItem.trim()) return;
+                      const today = new Date().toISOString().split('T')[0];
+                      const entry = { id: Date.now(), jobId: job.id, item: inlineMatItem, qty: inlineMatQty, unit: inlineMatUnit, cost: inlineMatCost, note: '', date: today, createdAt: new Date().toISOString(), loggedBy: eliteName||userEmail };
+                      setDonnyMaterialsLog([entry, ...(donnyMaterialsLog||[])]);
+                      logAction(`job_${job.id}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}${entry.cost?' · $'+entry.cost:''}` });
+                      setInlineMatItem(''); setInlineMatQty(''); setInlineMatUnit(''); setInlineMatCost(''); setShowAddMaterialInline(false);
+                    }} style={{width:"100%",padding:"8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MATERIAL</button>
+                  </div>
+                )}
                 <div style={{padding:"10px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
                   {[
-                    {label:"MATERIALS", count:jobMaterials.length, view:'donny-materialslog', color:"#3b82f6"},
-                    {label:"PHOTOS", count:jobPhotos.length, view:'donny-photos', color:"#a855f7"},
-                    {label:"MISTAKES", count:jobMistakes.length, view:'donny-mistakes', color:jobMistakes.length>0?"#f59e0b":"#94a3b8"},
-                    {label:"INCIDENTS", count:jobIncidents.length, view:'donny-incidents', color:jobIncidents.length>0?"#ef4444":"#94a3b8"},
-                    {label:"CHECKLISTS", count:jobChecklists.length, view:'donny-checklists', color:"#22c55e"},
-                    {label:"NOTES", count:jobNotes.length, view:'donny-dailyreport', color:"#06b6d4"},
+                    {label:"MATERIALS", count:jobMaterials.length, view:'donny-materialslog', color:"#3b82f6", onOpen:() => { setMatLogJobId(job.id); setActiveView('donny-materialslog'); }},
+                    {label:"PHOTOS", count:jobPhotos.length, view:'donny-photos', color:"#a855f7", onOpen:() => { setPhotoJobId(job.id); setActiveView('donny-photos'); }},
+                    {label:"MISTAKES", count:jobMistakes.length, view:'donny-mistakes', color:jobMistakes.length>0?"#f59e0b":"#94a3b8", onOpen:() => setActiveView('donny-mistakes')},
+                    {label:"INCIDENTS", count:jobIncidents.length, view:'donny-incidents', color:jobIncidents.length>0?"#ef4444":"#94a3b8", onOpen:() => setActiveView('donny-incidents')},
+                    {label:"CHECKLISTS", count:jobChecklists.length, view:'donny-checklists', color:"#22c55e", onOpen:() => setActiveView('donny-checklists')},
+                    {label:"NOTES", count:jobNotes.length, view:'donny-dailyreport', color:"#06b6d4", onOpen:() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }},
                   ].map(t => (
-                    <button key={t.label} onClick={() => setActiveView(t.view)} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
-                      <div style={{fontSize:"8px",color:`${t.color}99`,letterSpacing:"1.5px",marginBottom:"3px"}}>{t.label}</div>
+                    <button key={t.label} onClick={t.onOpen} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"8px",color:t.color,letterSpacing:"1.5px",marginBottom:"3px",opacity:0.85}}>{t.label}</div>
                       <div style={{fontSize:"16px",color:t.color,fontWeight:500}}>{t.count}</div>
                     </button>
                   ))}
