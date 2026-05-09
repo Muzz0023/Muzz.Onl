@@ -3914,6 +3914,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // ============================================
   const DonnyBreadcrumbs = () => {
     if (donnyBreadcrumbs.length === 0) return null;
+    // Only render on entity detail views — list/index views shouldn't show stale crumbs
+    const detailViews = ['donny-jobdetail','donny-workerdetail','donny-clientdetail','donny-materialdetail'];
+    if (!detailViews.includes(activeView)) return null;
     // Use the color of the active (last) crumb as the strip accent
     const accent = donnyBreadcrumbs[donnyBreadcrumbs.length-1].color;
     return (
@@ -4999,7 +5002,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   { section:'SITE', id:'donny-safety', label:'Risk Register', workerOk:true },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', workerOk:true },
                   { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', workerOk:true },
-                  { section:'COSTS', id:'donny-suppliers', label:'Price Book', workerOk:false },
+                  { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
                 ];
                 const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)' };
@@ -19833,243 +19836,283 @@ ${JSON.stringify(ctx, null, 2)}`;
       ];
       const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
       const allRoleOptions = ROLES.flatMap(g => g.options);
+
+      // ─── DERIVED STATS ─────────────────────────────────────────────
+      const teamWithStats = donnyTeam.map(m => {
+        const ts = donnyTimesheets.filter(e => String(e.memberId) === String(m.id));
+        const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+        const earned = hrs * (parseFloat(m.hourlyRate)||0);
+        return { ...m, _hrs: hrs, _earned: earned };
+      });
+      const sortedTeam = [...teamWithStats].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); });
+
+      const totalMembers = donnyTeam.length;
+      const totalHourlyRate = donnyTeam.reduce((s,m) => s + (parseFloat(m.hourlyRate)||0), 0);
+      const totalHrsLogged = teamWithStats.reduce((s,m) => s + m._hrs, 0);
+      const totalEarned = teamWithStats.reduce((s,m) => s + m._earned, 0);
+      const teamWithRate = donnyTeam.filter(m => parseFloat(m.hourlyRate)||0 > 0);
+      const avgRate = teamWithRate.length > 0 ? teamWithRate.reduce((s,m) => s + (parseFloat(m.hourlyRate)||0), 0) / teamWithRate.length : 0;
+      const topEarner = [...teamWithStats].sort((a,b) => b._earned - a._earned)[0];
+
+      const teamPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const teamPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TEAM</div>
-            </div>
-          </div>
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-            {/* TEAM TABLE at top */}
-            {donnyTeam.length > 0 && (() => {
-              const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
-              const sorted = [...donnyTeam].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); });
-              const totalRate = donnyTeam.reduce((sum,m) => sum+(parseFloat(m.hourlyRate)||0), 0);
-              return (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
-                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TEAM TABLE</span>
-                    <div className="flex items-center gap-3">
-                      <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{donnyTeam.length} MEMBERS</span>
-                      <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>+ ADD</button>
-                    </div>
-                  </div>
-                  <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>NAME</div><div>ROLE</div><div>RATE</div>
-                  </div>
-                  {sorted.map((member,i) => (
-                    <div key={member.id} className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
-                      style={{gridTemplateColumns:'1fr 1fr 80px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{member.name.charAt(0).toUpperCase()}</div>
-                        <div>
-                          <span className="text-white font-medium text-sm truncate block">{member.name}</span>
-                          {member.position&&<span className="text-xs" style={{color:'rgba(249,115,22,0.6)'}}>{member.position}</span>}
-                        </div>
-                      </div>
-                      <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')||'—'}</div>
-                      <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{member.hourlyRate?`$${member.hourlyRate}/hr`:'—'}</div>
-                    </div>
-                  ))}
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderTop:"0.5px solid rgba(249,115,22,0.15)",background:"rgba(249,115,22,0.04)"}}>
-                    <div className="text-xs font-mono font-bold" style={{color:'rgba(249,115,22,0.7)'}}>TOTAL HOURLY COST</div>
-                    <div className="text-base font-black" style={{color:'#22c55e'}}>${totalRate.toFixed(2)}<span className="text-xs font-normal ml-1" style={{color:'rgba(34,197,94,0.6)'}}>/ hr</span></div>
-                  </div>
-                </div>
-              );
-            })()}
-            <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }} style={{width:"100%",padding:"12px",background:"rgba(249,115,22,0.06)",border:"0.5px dashed rgba(249,115,22,0.3)",borderRadius:"6px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>
-              {showAddMember ? '✕ Cancel' : '+ Add Team Member'}
-            </button>
-            {showAddMember && (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
-                <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.5)'}}>// NEW MEMBER</div>
-                <div>
-                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>👤 FULL NAME</div>
-                  <input value={newMember.name} onChange={e => setNewMember(p=>({...p,name:e.target.value}))} placeholder="e.g. James Smith"
-                    className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                </div>
-                <div>
-                  <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>💼 ROLE</div>
-                  {ROLES.map(group => (
-                    <div key={group.group} className="mb-3">
-                      <div className="text-xs mb-1.5" style={{color:'rgba(249,115,22,0.4)',letterSpacing:'2px'}}>{group.group}</div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {group.options.map(opt => {
-                          const active = (newMember.roles||[]).includes(opt);
-                          return (
-                            <button key={opt} onClick={() => setNewMember(p=>({...p,roles:active?(p.roles||[]).filter(r=>r!==opt):[...(p.roles||[]),opt]}))}
-                              className="text-xs px-3 py-1 rounded-lg font-medium"
-                              style={{background:active?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:active?'1px solid rgba(249,115,22,0.5)':'1px solid rgba(255,255,255,0.08)',color:active?'#f97316':'rgba(148,163,184,0.6)'}}>
-                              {opt}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="grid grid-cols-2 gap-3">
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                  <span style={{fontSize:"28px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>⊢</span>
                   <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🏅 POSITION</div>
-                    <select value={newMember.position} onChange={e => setNewMember(p=>({...p,position:e.target.value}))}
-                      className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1 appearance-none" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                      <option value="">Select...</option>
-                      {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 HOURLY RATE (AUD)</div>
-                    <input value={newMember.hourlyRate} onChange={e => setNewMember(p=>({...p,hourlyRate:e.target.value}))}
-                      placeholder="e.g. 45.00" type="number"
-                      className="w-full bg-transparent text-white font-medium focus:outline-none text-sm border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                </div>
-                {donnyJobs.length > 0 && (
-                  <div>
-                    <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>🔨 JOB ACCESS</div>
-                    <div className="flex flex-wrap gap-2">
-                      {donnyJobs.map(job => (
-                        <button key={job.id} onClick={() => setNewMember(p=>({...p,jobAccess:p.jobAccess.includes(job.id)?p.jobAccess.filter(id=>id!==job.id):[...p.jobAccess,job.id]}))}
-                          className="text-xs px-3 py-1 rounded-lg font-medium"
-                          style={{background:newMember.jobAccess.includes(job.id)?'rgba(34,197,94,0.15)':'rgba(255,255,255,0.04)',border:newMember.jobAccess.includes(job.id)?'1px solid rgba(34,197,94,0.4)':'1px solid rgba(255,255,255,0.08)',color:newMember.jobAccess.includes(job.id)?'#22c55e':'rgba(148,163,184,0.6)'}}>
-                          {job.jobNumber?`#${job.jobNumber} `:''}{ job.title}
-                        </button>
-                      ))}
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// CREW REGISTRY</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TEAM</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                      {totalMembers} member{totalMembers!==1?'s':''}
+                      {totalHourlyRate > 0 && (' · $'+totalHourlyRate.toFixed(0)+'/hr combined')}
+                      {totalHrsLogged > 0 && (' · '+totalHrsLogged.toFixed(0)+'h logged')}
                     </div>
                   </div>
-                )}
-                <button onClick={() => {
-                  if (!newMember.name.trim()) return;
-                  saveTeam([...donnyTeam, {...newMember, id:Date.now()}]);
-                  setNewMember({name:'',roles:[],position:'',hourlyRate:'',jobAccess:[]});
-                  setShowAddMember(false);
-                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
-                  Add Member
+                </div>
+                <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }}
+                  style={{padding:"6px 12px",background:showAddMember?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddMember?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddMember?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {showAddMember ? '✕ CANCEL' : '+ ADD MEMBER'}
                 </button>
               </div>
-            )}
-            {donnyTeam.length === 0 && !showAddMember ? (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.08)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                <div className="text-4xl mb-3">👷</div>
-                <div className="text-white font-bold mb-1">No team members yet</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add your crew above</div>
-              </div>
-            ) : (
-              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-                {[...donnyTeam].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); }).map(member => {
-                  const isEditing = editingMemberId === member.id;
-                  return (
-                    <div key={member.id} className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                      <div className="p-4">
-                        <div className="flex items-center gap-3">
-                          <button onClick={() => { navToEntity('worker', member); }}
-                            className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0"
-                            style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316',cursor:'pointer'}}>
-                            {member.name.charAt(0).toUpperCase()}
-                          </button>
-                          <button onClick={() => { navToEntity('worker', member); }}
-                            className="flex-1 min-w-0 text-left" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-white font-bold">{member.name}</span>
-                              {member.position && <span className="text-xs px-2 py-0.5 rounded-full font-mono" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.8)',border:'1px solid rgba(249,115,22,0.2)'}}>{member.position}</span>}
-                            </div>
-                            <div className="flex items-center gap-3 mt-0.5">
-                              {(member.roles||[member.role]).filter(Boolean).length > 0 && <span className="text-xs" style={{color:'rgba(148,163,184,0.6)'}}>{(member.roles||[member.role]).filter(Boolean).join(', ')}</span>}
-                              {member.hourlyRate && <span className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>💰 ${member.hourlyRate}/hr</span>}
-                            </div>
-                          </button>
-                          <div className="flex gap-2 flex-shrink-0">
-                            <button onClick={() => { navToEntity('worker', member); }}
-                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer",letterSpacing:"0.5px",fontFamily:"monospace"}}>
-                              OPEN →
-                            </button>
-                            <button onClick={() => setEditingMemberId(isEditing?null:member.id)}
-                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(148,163,184,0.06)",color:"rgba(148,163,184,0.6)",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",cursor:"pointer",fontFamily:"monospace"}}>
-                              {isEditing?'✕':'⋯'}
-                            </button>
-                            <button onClick={() => { if(window.confirm(`Remove ${member.name}?`)) saveTeam(donnyTeam.filter(m=>m.id!==member.id)); }}
-                              style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
-                          </div>
-                        </div>
-                        {(member.jobAccess||[]).length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-1.5">
-                            {(member.jobAccess||[]).map(jid => { const job=donnyJobs.find(j=>j.id===jid); return job?(<span key={jid} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(34,197,94,0.08)',color:'rgba(34,197,94,0.7)',border:'1px solid rgba(34,197,94,0.2)'}}>🔨 {job.jobNumber?`#${job.jobNumber} `:''}{ job.title}</span>):null; })}
-                          </div>
-                        )}
-                        {isEditing && (
-                          <div className="mt-4 pt-4 space-y-3" style={{borderTop:'1px solid rgba(249,115,22,0.1)'}}>
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>NAME</div>
-                                <input value={member.name} onChange={e => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,name:e.target.value}:m))}
-                                  className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                              </div>
-                              <div>
-                                <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>HOURLY RATE</div>
-                                <input value={member.hourlyRate} onChange={e => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,hourlyRate:e.target.value}:m))}
-                                  type="text" inputMode="decimal" className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.4)'}}>ROLE</div>
-                              {ROLES.map(group => (
-                                <div key={group.group} className="mb-2">
-                                  <div className="text-xs mb-1.5" style={{color:'rgba(249,115,22,0.4)',letterSpacing:'2px'}}>{group.group}</div>
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {group.options.map(opt => {
-                                      const active = (member.roles||[]).includes(opt);
-                                      return (
-                                        <button key={opt} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,roles:active?(m.roles||[]).filter(r=>r!==opt):[...(m.roles||[]),opt]}:m))}
-                                          className="text-xs px-2.5 py-1 rounded-lg"
-                                          style={{background:active?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:active?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:active?'#f97316':'rgba(148,163,184,0.5)'}}>
-                                          {opt}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                            <div>
-                              <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>POSITION</div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {POSITIONS.map(pos => (
-                                  <button key={pos} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,position:pos}:m))}
-                                    className="text-xs px-2.5 py-1 rounded-lg"
-                                    style={{background:member.position===pos?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.03)',border:member.position===pos?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.06)',color:member.position===pos?'#f97316':'rgba(148,163,184,0.5)'}}>
-                                    {pos}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                            {donnyJobs.length > 0 && (
-                              <div>
-                                <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>JOB ACCESS</div>
-                                <div className="flex flex-wrap gap-1.5">
-                                  {donnyJobs.map(job => { const hasAccess=(member.jobAccess||[]).includes(job.id); return (
-                                    <button key={job.id} onClick={() => saveTeam(donnyTeam.map(m=>m.id===member.id?{...m,jobAccess:hasAccess?(m.jobAccess||[]).filter(id=>id!==job.id):[...(m.jobAccess||[]),job.id]}:m))}
-                                      className="text-xs px-2.5 py-1 rounded-lg"
-                                      style={{background:hasAccess?'rgba(34,197,94,0.15)':'rgba(255,255,255,0.03)',border:hasAccess?'1px solid rgba(34,197,94,0.3)':'1px solid rgba(255,255,255,0.06)',color:hasAccess?'#22c55e':'rgba(148,163,184,0.5)'}}>
-                                      {job.jobNumber?`#${job.jobNumber} `:''}{ job.title}
-                                    </button>
-                                  ); })}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            {totalMembers > 0 && (
+              <div style={{...teamPanel,borderLeft:"2px solid #f97316"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Members", value:String(totalMembers), color:"#f97316",
+                      lineage: {
+                        title: 'Team Members',
+                        value: String(totalMembers),
+                        color: '#f97316',
+                        formula: 'COUNT(team)',
+                        breakdown: sortedTeam.map(m => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: m.position || (m.roles||[])[0] || 'worker',
+                          value: m.hourlyRate ? `$${m.hourlyRate}/hr` : '—',
+                          valueColor: m.hourlyRate ? 'rgba(34,197,94,0.95)' : 'rgba(148,163,184,0.5)',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                        note: 'Click to open worker',
+                      },
+                    },
+                    {
+                      label:"Avg Rate", value:avgRate > 0 ? `$${avgRate.toFixed(0)}/hr` : '—', color:"rgba(34,197,94,0.85)",
+                      lineage: avgRate > 0 ? {
+                        title: 'Average Hourly Rate',
+                        value: `$${avgRate.toFixed(2)}/hr`,
+                        color: 'rgba(34,197,94,0.95)',
+                        formula: 'AVG(hourlyRate) WHERE rate > 0',
+                        breakdown: [...teamWithRate].sort((a,b) => (parseFloat(b.hourlyRate)||0) - (parseFloat(a.hourlyRate)||0)).map(m => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: m.position || (m.roles||[])[0] || '—',
+                          value: `$${m.hourlyRate}/hr`,
+                          valueColor: 'rgba(34,197,94,0.95)',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Total $/hr", value:totalHourlyRate > 0 ? `$${totalHourlyRate.toFixed(0)}` : '—', color:"rgba(168,85,247,0.85)",
+                      lineage: totalHourlyRate > 0 ? {
+                        title: 'Combined Hourly Cost',
+                        value: `$${totalHourlyRate.toFixed(2)}/hr`,
+                        color: 'rgba(168,85,247,0.95)',
+                        formula: 'SUM(hourlyRate) — running cost if all crew working',
+                        breakdown: teamWithRate.map(m => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: m.position || '—',
+                          value: `$${m.hourlyRate}/hr`,
+                          valueColor: 'rgba(168,85,247,0.95)',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Hours", value:totalHrsLogged > 0 ? `${totalHrsLogged.toFixed(0)}h` : '—', color:"#3b82f6",
+                      lineage: totalHrsLogged > 0 ? {
+                        title: 'Total Hours Logged',
+                        value: `${totalHrsLogged.toFixed(1)}h`,
+                        color: '#3b82f6',
+                        formula: 'SUM(timesheet.hours) per worker',
+                        breakdown: [...teamWithStats].filter(m => m._hrs > 0).sort((a,b) => b._hrs - a._hrs).map(m => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: m.position || '—',
+                          value: `${m._hrs.toFixed(1)}h`,
+                          valueColor: '#3b82f6',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Top Earner", value:topEarner && topEarner._earned > 0 ? topEarner.name : '—', color:"#a855f7", smallValue: true,
+                      lineage: topEarner && topEarner._earned > 0 ? {
+                        title: `Top Earner · ${topEarner.name}`,
+                        value: `$${topEarner._earned.toFixed(0)}`,
+                        color: '#a855f7',
+                        formula: 'MAX(hours × rate)',
+                        breakdown: [...teamWithStats].filter(m => m._earned > 0).sort((a,b) => b._earned - a._earned).map(m => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: `${m._hrs.toFixed(1)}h × $${m.hourlyRate||0}/hr`,
+                          value: `$${m._earned.toFixed(0)}`,
+                          valueColor: '#a855f7',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
                       </div>
-                    </div>
-                  );
-                })}
+                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
+            {/* ADD MEMBER FORM */}
+            {showAddMember && (
+              <div style={teamPanel}>
+                <div style={teamPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MEMBER</span>
+                  <button onClick={()=>setShowAddMember(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                </div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FULL NAME</div>
+                    <input value={newMember.name} onChange={e => setNewMember(p=>({...p,name:e.target.value}))} placeholder="James Smith"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>ROLE</div>
+                    {ROLES.map(group => (
+                      <div key={group.group} style={{marginBottom:"8px"}}>
+                        <div style={{fontSize:"8px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>{group.group}</div>
+                        <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                          {group.options.map(opt => {
+                            const active = (newMember.roles||[]).includes(opt);
+                            return (
+                              <button key={opt} onClick={() => setNewMember(p=>({...p,roles:active?(p.roles||[]).filter(r=>r!==opt):[...(p.roles||[]),opt]}))}
+                                style={{fontSize:"10px",padding:"3px 8px",fontFamily:"monospace",background:active?"rgba(249,115,22,0.15)":"rgba(255,255,255,0.03)",border:`0.5px solid ${active?"rgba(249,115,22,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:active?"rgba(249,115,22,0.95)":"rgba(148,163,184,0.5)",cursor:"pointer"}}>
+                                {opt}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
+                      <select value={newMember.position} onChange={e => setNewMember(p=>({...p,position:e.target.value}))}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        <option value="">Select...</option>
+                        {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE (AUD)</div>
+                      <input value={newMember.hourlyRate} onChange={e => setNewMember(p=>({...p,hourlyRate:e.target.value}))} placeholder="45.00" type="number"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    </div>
+                  </div>
+                  {donnyJobs.length > 0 && (
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>JOB ACCESS</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                        {donnyJobs.map(job => (
+                          <button key={job.id} onClick={() => setNewMember(p=>({...p,jobAccess:p.jobAccess.includes(job.id)?p.jobAccess.filter(id=>id!==job.id):[...p.jobAccess,job.id]}))}
+                            style={{fontSize:"10px",padding:"3px 8px",fontFamily:"monospace",background:newMember.jobAccess.includes(job.id)?"rgba(34,197,94,0.15)":"rgba(255,255,255,0.03)",border:`0.5px solid ${newMember.jobAccess.includes(job.id)?"rgba(34,197,94,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:newMember.jobAccess.includes(job.id)?"rgba(34,197,94,0.95)":"rgba(148,163,184,0.5)",cursor:"pointer"}}>
+                            {job.jobNumber?`#${job.jobNumber} `:''}{job.title}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <button onClick={() => {
+                    if (!newMember.name.trim()) return;
+                    saveTeam([...donnyTeam, {...newMember, id:Date.now()}]);
+                    setNewMember({name:'',roles:[],position:'',hourlyRate:'',jobAccess:[]});
+                    setShowAddMember(false);
+                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD MEMBER</button>
+                </div>
+              </div>
+            )}
+
+            {/* EMPTY STATE */}
+            {totalMembers === 0 && !showAddMember && (
+              <div style={{...teamPanel,padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"32px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⊢</div>
+                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO TEAM MEMBERS YET</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add your crew above</div>
+              </div>
+            )}
+
+            {/* TEAM TABLE */}
+            {totalMembers > 0 && (
+              <div style={teamPanel}>
+                <div style={teamPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// TEAM TABLE</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalMembers} MEMBER{totalMembers!==1?'S':''}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 90px 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>NAME</div><div>ROLE</div><div>RATE</div><div>HOURS</div><div></div>
+                </div>
+                <div style={{maxHeight:sortedTeam.length > 8 ? "440px" : "none",overflowY:sortedTeam.length > 8 ? "auto" : "visible"}}>
+                  {sortedTeam.map((m, i) => (
+                    <button key={m.id} onClick={() => navToEntity('worker', m)}
+                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 90px 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<sortedTeam.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                        {m.position && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace"}}>{m.position}</div>}
+                      </div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:m.hourlyRate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{m.hourlyRate?`$${m.hourlyRate}/hr`:'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:m._hrs>0?"#3b82f6":"rgba(148,163,184,0.4)"}}>{m._hrs>0?`${m._hrs.toFixed(1)}h`:'—'}</div>
+                      <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
+                    </button>
+                  ))}
+                </div>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderTop:"0.5px solid rgba(249,115,22,0.15)",background:"rgba(249,115,22,0.04)",fontFamily:"monospace"}}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",letterSpacing:"1.5px"}}>TOTAL HOURLY COST</span>
+                  <span style={{fontSize:"14px",color:"rgba(34,197,94,0.95)",fontWeight:500}}>${totalHourlyRate.toFixed(2)}<span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",marginLeft:"4px"}}>/hr</span></span>
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
@@ -22173,116 +22216,236 @@ ${JSON.stringify(ctx, null, 2)}`;
         );
       }
 
-      // LIST VIEW
+      // ─── LIST VIEW — Palantir style ───────────────────────────
+      const totalSubs = donnySubs.length;
+      const subsWithRate = donnySubs.filter(s => parseFloat(s.rate)||0 > 0);
+      const avgRate = subsWithRate.length > 0 ? subsWithRate.reduce((sum,s) => sum + (parseFloat(s.rate)||0), 0) / subsWithRate.length : 0;
+      const trades = [...new Set(donnySubs.map(s => s.trade).filter(Boolean))];
+      const subsWithJobs = donnySubs.filter(s => (s.jobIds||[]).length > 0).length;
+      const topRate = subsWithRate.length > 0 ? Math.max(...subsWithRate.map(s => parseFloat(s.rate)||0)) : 0;
+
+      const subsPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const subsPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUBCONTRACTORS</div>
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                  <span style={{fontSize:"28px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>⊿</span>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// EXTERNAL CREW</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUBCONTRACTORS</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                      {totalSubs} sub{totalSubs!==1?'s':''}
+                      {trades.length > 0 && (' · '+trades.length+' trade'+(trades.length!==1?'s':''))}
+                      {avgRate > 0 && (' · avg $'+avgRate.toFixed(0)+'/hr')}
+                    </div>
+                  </div>
+                </div>
+                <button onClick={()=>setShowAddSub(s=>!s)}
+                  style={{padding:"6px 12px",background:showAddSub?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddSub?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddSub?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {showAddSub ? '✕ CANCEL' : '+ ADD SUB'}
+                </button>
+              </div>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-            {/* Master table */}
-            {donnySubs.length > 0 && (
-              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(249,115,22,0.2)',borderRadius:'6px',overflow:'hidden'}}>
-                <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(249,115,22,0.1)'}}>
-                  <div className="text-xs font-mono tracking-widest" style={{color:'rgba(249,115,22,0.7)'}}>// SUBCONTRACTOR TABLE</div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(249,115,22,0.1)',color:'#f97316'}}>{donnySubs.length} subs</span>
-                    <button onClick={()=>setShowAddSub(s=>!s)} className="text-xs px-3 py-1.5 rounded-lg font-bold" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
-                      {showAddSub?'✕ Cancel':'+ Add Sub'}
-                    </button>
-                  </div>
-                </div>
-                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 80px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                  <div>NAME</div><div>TRADE</div><div>RATE</div>
-                </div>
-                {donnySubs.map((s,i)=>(
-                  <button key={s.id} onClick={()=>setEditingSubId(s.id)}
-                    className="w-full grid px-5 py-3 text-sm items-center text-left hover:bg-white/[0.02]"
-                    style={{gridTemplateColumns:'1fr 1fr 80px',borderBottom:i<donnySubs.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{s.name.charAt(0).toUpperCase()}</div>
-                      <span className="text-white font-medium truncate">{s.name}</span>
-                    </div>
-                    <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{s.trade||s.company||'—'}</div>
-                    <div className="text-xs font-bold" style={{color:'rgba(34,197,94,0.7)'}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</div>
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-            {/* Add form */}
-            {showAddSub && (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
-                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW SUBCONTRACTOR</div>
-                <div className="grid grid-cols-2 gap-3">
-                  {[{k:'name',l:'👤 NAME',p:'John Smith'},{k:'company',l:'🏢 COMPANY',p:'Smith Electrical'},{k:'trade',l:'🔧 TRADE',p:'Electrician'},{k:'phone',l:'📞 PHONE',p:'04XX XXX XXX'},{k:'email',l:'📧 EMAIL',p:'john@example.com'},{k:'abn',l:'ABN',p:'12 345 678 901'},{k:'licenceNo',l:'LICENCE NO.',p:'NSW123456'}].map(f=>(
-                    <div key={f.k}>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>{f.l}</div>
-                      <input value={newSub[f.k]} onChange={e=>setNewSub(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                  ))}
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>💰 RATE</div>
-                    <input value={newSub.rate} onChange={e=>setNewSub(p=>({...p,rate:e.target.value}))} placeholder="e.g. 120" type="number"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>RATE TYPE</div>
-                    <select value={newSub.rateType} onChange={e=>setNewSub(p=>({...p,rateType:e.target.value}))}
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                      <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
-                    </select>
-                  </div>
-                </div>
-                <button onClick={()=>{
-                  if(!newSub.name.trim()) return;
-                  saveSubs([...donnySubs,{...newSub,id:Date.now(),jobIds:[]}]);
-                  setNewSub({name:'',company:'',trade:'',phone:'',email:'',rate:'',rateType:'hr',abn:'',licenceNo:'',jobIds:[]});
-                  setShowAddSub(false);
-                }} style={{width:'100%',padding:'10px',background:'rgba(249,115,22,0.1)',border:'0.5px solid rgba(249,115,22,0.4)',borderRadius:'4px',color:'rgba(249,115,22,0.9)',fontFamily:'monospace',fontSize:'11px',letterSpacing:'1.5px',cursor:'pointer'}}>Add Subcontractor</button>
-              </div>
-            )}
-
-            {donnySubs.length === 0 && !showAddSub && (
-              <div className="rounded-2xl p-10 text-center" style={{background:'rgba(5,15,30,0.8)',border:'1px solid rgba(249,115,22,0.06)'}}>
-                <div className="text-4xl mb-3">🔩</div>
-                <div className="text-white font-bold mb-1">No subcontractors yet</div>
-                <div className="text-sm mb-4" style={{color:'rgba(148,163,184,0.4)'}}>Add external tradies you bring in</div>
-                <button onClick={()=>setShowAddSub(true)} className="px-6 py-2.5 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>+ Add Subcontractor</button>
-              </div>
-            )}
-
-            {/* Cards */}
-            {donnySubs.length > 0 && !showAddSub && (
-              <>
-                <div className="text-xs font-mono px-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// TAP TO VIEW & EDIT</div>
-                {donnySubs.map(sub=>(
-                  <button key={sub.id} onClick={()=>setEditingSubId(sub.id)}
-                    className="w-full rounded-2xl p-4 text-left flex items-center gap-4"
-                    style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.12)'}}>
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0" style={{background:'rgba(249,115,22,0.15)',border:'1px solid rgba(249,115,22,0.3)',color:'#f97316'}}>
-                      {sub.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-white font-semibold">{sub.name}</div>
-                      <div className="text-xs mt-0.5 flex gap-2 flex-wrap" style={{color:'rgba(148,163,184,0.5)'}}>
-                        {sub.trade && <span>{sub.trade}</span>}
-                        {sub.company && <span>{sub.company}</span>}
-                        {sub.rate && <span style={{color:'rgba(34,197,94,0.7)'}}>💰 ${sub.rate}/{sub.rateType||'hr'}</span>}
-                        {sub.abn && <span>ABN {sub.abn}</span>}
+            {/* KPI STRIP */}
+            {totalSubs > 0 && (
+              <div style={{...subsPanel,borderLeft:"2px solid #f97316"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Subs", value:String(totalSubs), color:"#f97316",
+                      lineage: {
+                        title: 'Subcontractors',
+                        value: String(totalSubs),
+                        color: '#f97316',
+                        formula: 'COUNT(subs)',
+                        breakdown: donnySubs.map(s => ({
+                          icon: '⊿', color: '#f97316',
+                          label: s.name,
+                          sub: s.trade || s.company || '—',
+                          value: s.rate ? `$${s.rate}/${s.rateType||'hr'}` : '—',
+                          valueColor: s.rate ? 'rgba(34,197,94,0.95)' : 'rgba(148,163,184,0.5)',
+                          onClick: () => setEditingSubId(s.id),
+                        })),
+                        note: 'Click to open subcontractor',
+                      },
+                    },
+                    {
+                      label:"Trades", value:String(trades.length), color:"#3b82f6",
+                      lineage: trades.length > 0 ? {
+                        title: 'Trades Covered',
+                        value: String(trades.length),
+                        color: '#3b82f6',
+                        formula: 'DISTINCT(sub.trade)',
+                        breakdown: trades.map(t => {
+                          const subsOfTrade = donnySubs.filter(s => s.trade === t);
+                          return {
+                            icon: '⊿', color: '#f97316',
+                            label: t,
+                            sub: `${subsOfTrade.length} sub${subsOfTrade.length!==1?'s':''}`,
+                            value: subsOfTrade.length,
+                            valueColor: '#3b82f6',
+                          };
+                        }),
+                      } : null,
+                    },
+                    {
+                      label:"Avg Rate", value:avgRate > 0 ? `$${avgRate.toFixed(0)}/hr` : '—', color:"rgba(34,197,94,0.85)",
+                      lineage: avgRate > 0 ? {
+                        title: 'Average Hourly Rate',
+                        value: `$${avgRate.toFixed(2)}/hr`,
+                        color: 'rgba(34,197,94,0.95)',
+                        formula: 'AVG(sub.rate) WHERE rate > 0',
+                        breakdown: [...subsWithRate].sort((a,b) => (parseFloat(b.rate)||0) - (parseFloat(a.rate)||0)).map(s => ({
+                          icon: '⊿', color: '#f97316',
+                          label: s.name,
+                          sub: s.trade || '—',
+                          value: `$${s.rate}/${s.rateType||'hr'}`,
+                          valueColor: 'rgba(34,197,94,0.95)',
+                          onClick: () => setEditingSubId(s.id),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Top Rate", value:topRate > 0 ? `$${topRate}` : '—', color:"#a855f7",
+                      lineage: topRate > 0 ? {
+                        title: 'Highest Rate',
+                        value: `$${topRate}/hr`,
+                        color: '#a855f7',
+                        formula: 'MAX(sub.rate)',
+                        breakdown: subsWithRate.filter(s => parseFloat(s.rate) === topRate).map(s => ({
+                          icon: '⊿', color: '#f97316',
+                          label: s.name,
+                          sub: s.trade || s.company || '—',
+                          value: `$${s.rate}/${s.rateType||'hr'}`,
+                          valueColor: '#a855f7',
+                          onClick: () => setEditingSubId(s.id),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"On Jobs", value:String(subsWithJobs), color:"rgba(168,85,247,0.85)",
+                      lineage: subsWithJobs > 0 ? {
+                        title: 'Subs Linked to Jobs',
+                        value: String(subsWithJobs),
+                        color: 'rgba(168,85,247,0.95)',
+                        formula: 'COUNT(subs WHERE jobIds.length > 0)',
+                        breakdown: donnySubs.filter(s => (s.jobIds||[]).length > 0).map(s => ({
+                          icon: '⊿', color: '#f97316',
+                          label: s.name,
+                          sub: s.trade || '—',
+                          value: `${(s.jobIds||[]).length} job${(s.jobIds||[]).length!==1?'s':''}`,
+                          valueColor: 'rgba(168,85,247,0.95)',
+                          onClick: () => setEditingSubId(s.id),
+                        })),
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
                       </div>
+                      <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ADD SUB FORM */}
+            {showAddSub && (
+              <div style={subsPanel}>
+                <div style={subsPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW SUBCONTRACTOR</span>
+                  <button onClick={()=>setShowAddSub(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                </div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                    {[{k:'name',l:'NAME',p:'John Smith'},{k:'company',l:'COMPANY',p:'Smith Electrical'},{k:'trade',l:'TRADE',p:'Electrician'},{k:'phone',l:'PHONE',p:'04XX XXX XXX'},{k:'email',l:'EMAIL',p:'john@example.com'},{k:'abn',l:'ABN',p:'12 345 678 901'},{k:'licenceNo',l:'LICENCE NO.',p:'NSW123456'}].map(f=>(
+                      <div key={f.k}>
+                        <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
+                        <input value={newSub[f.k]} onChange={e=>setNewSub(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      </div>
+                    ))}
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATE</div>
+                      <input value={newSub.rate} onChange={e=>setNewSub(p=>({...p,rate:e.target.value}))} placeholder="120" type="number"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
                     </div>
-                    <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
-                  </button>
-                ))}
-              </>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATE TYPE</div>
+                      <select value={newSub.rateType} onChange={e=>setNewSub(p=>({...p,rateType:e.target.value}))}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button onClick={()=>{
+                    if(!newSub.name.trim()) return;
+                    saveSubs([...donnySubs,{...newSub,id:Date.now(),jobIds:[]}]);
+                    setNewSub({name:'',company:'',trade:'',phone:'',email:'',rate:'',rateType:'hr',abn:'',licenceNo:'',jobIds:[]});
+                    setShowAddSub(false);
+                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD SUBCONTRACTOR</button>
+                </div>
+              </div>
+            )}
+
+            {/* EMPTY STATE */}
+            {totalSubs === 0 && !showAddSub && (
+              <div style={{...subsPanel,padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"32px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⊿</div>
+                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO SUBCONTRACTORS YET</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add external tradies you bring in</div>
+              </div>
+            )}
+
+            {/* SUBS TABLE */}
+            {totalSubs > 0 && (
+              <div style={subsPanel}>
+                <div style={subsPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUBCONTRACTOR TABLE</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalSubs} ROW{totalSubs!==1?'S':''}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>NAME</div><div>TRADE</div><div>RATE</div><div>JOBS</div><div></div>
+                </div>
+                <div style={{maxHeight:donnySubs.length > 8 ? "440px" : "none",overflowY:donnySubs.length > 8 ? "auto" : "visible"}}>
+                  {donnySubs.map((s, i) => (
+                    <button key={s.id} onClick={() => setEditingSubId(s.id)}
+                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnySubs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(s.name||'?').charAt(0).toUpperCase()}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade||s.company||'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:s.rate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:(s.jobIds||[]).length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{(s.jobIds||[]).length>0?`${(s.jobIds||[]).length} job${(s.jobIds||[]).length!==1?'s':''}`:'—'}</div>
+                      <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
 
           </div>
@@ -22338,7 +22501,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(34,197,94,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
                 <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
-                  <button onClick={() => { setEditingSupplierId(null); setSupplierNewItem({desc:'',unit:'',price:''}); }} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← PRICE BOOK</button>
+                  <button onClick={() => { setEditingSupplierId(null); setSupplierNewItem({desc:'',unit:'',price:''}); }} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← SUPPLIERS</button>
                   <span style={{fontSize:"10px",color:"rgba(34,197,94,0.3)",fontFamily:"monospace"}}>·</span>
                   <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
                 </div>
@@ -22383,7 +22546,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* ADD NEW ITEM */}
               <div style={panel}>
                 <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ADD ITEM TO PRICE BOOK</span>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ADD ITEM TO CATALOG</span>
                 </div>
                 <div style={{padding:"14px 16px"}}>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 80px 90px",gap:"10px",marginBottom:"10px"}}>
@@ -22417,7 +22580,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* PRICE BOOK ITEMS */}
               <div style={panel}>
                 <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// PRICE BOOK</span>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUPPLIERS</span>
                   <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{supplierItems.length} ITEM{supplierItems.length!==1?'S':''}</span>
                 </div>
                 {supplierItems.length === 0 ? (
@@ -22504,7 +22667,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                 <div>
-                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// PRICE BOOK</div>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// SUPPLIERS</div>
                   <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUPPLIERS</div>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
                     {donnySuppliers.length} supplier{donnySuppliers.length!==1?'s':''} · {totalItems} catalog item{totalItems!==1?'s':''}
