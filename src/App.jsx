@@ -4326,12 +4326,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <button onClick={() => setDonnyAlertConfigOpen(true)} style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"2px",padding:"2px 6px",cursor:"pointer"}}>⚙ THRESHOLDS</button>
         </div>
         {/* Signal cells */}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)"}}>
+        <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(6,1fr)":"repeat(3,1fr)"}}>
           {signals.map((s,i) => {
             const c = colorMap[s.level];
+            const isLastInRow = isWide ? i === 5 : (i % 3) === 2;
+            const isLastRow = isWide ? false : i >= 3;
             return (
               <button key={i} onClick={s.onClick}
-                style={{padding:"8px 10px",background:s.level !== 'green' ? c.bg : 'transparent',border:"none",borderRight:i<5?"0.5px solid rgba(255,255,255,0.04)":"none",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                style={{padding:"10px 10px",background:s.level !== 'green' ? c.bg : 'transparent',border:"none",borderRight:!isLastInRow?"0.5px solid rgba(255,255,255,0.04)":"none",borderBottom:!isWide && !isLastRow?"0.5px solid rgba(255,255,255,0.04)":"none",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"5px",marginBottom:"3px"}}>
                   <span style={{width:"4px",height:"4px",borderRadius:"50%",background:c.dot,flexShrink:0}}/>
                   <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.label}</span>
