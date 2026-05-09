@@ -2388,6 +2388,15 @@ function MuzzApp() {
   };
 
   // Navigate to an entity AND push it onto the trail
+  // Helper: get client IDs from a job (supports legacy single clientId + new clientIds array)
+  const getJobClientIds = (j) => {
+    if (!j) return [];
+    const ids = Array.isArray(j.clientIds) ? [...j.clientIds] : [];
+    if (j.clientId && !ids.includes(j.clientId)) ids.push(j.clientId);
+    return ids.filter(Boolean);
+  };
+  const jobHasClient = (j, clientId) => getJobClientIds(j).some(id => String(id) === String(clientId));
+
   const navToEntity = (type, ref) => {
     if (type === 'job') {
       setSelectedDonnyJob(ref);
@@ -4511,7 +4520,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         bigSub: overdue.length === 0 ? 'all on time ✓' : `past due as of today`,
         rows: overdue.map(j => {
           const days = Math.floor((now - new Date(j.dueDate)) / (1000*60*60*24));
-          const c = donnyClients.find(x => x.id === j.clientId);
+          const c = donnyClients.find(x => getJobClientIds(j).map(String).includes(String(x.id)));
           return {
             icon: '⊞', color: '#ef4444',
             label: j.title,
@@ -4584,7 +4593,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
     // ── INTENT 6 — Jobs for a client ─────────────────────────────────
     if (client && /\b(jobs|job|work)\b/.test(q)) {
-      const cjobs = donnyJobs.filter(j => j.clientId === client.id);
+      const cjobs = donnyJobs.filter(j => jobHasClient(j, client.id));
       const completed = cjobs.filter(j => j.completed);
       const active = cjobs.filter(j => !j.completed);
       return {
@@ -17823,7 +17832,9 @@ ${JSON.stringify(ctx, null, 2)}`;
       const jobChecklists = (donnyChecklists || []).filter(c => String(c.jobId) === String(job.id));
       const jobNotes = (donnyNotes && donnyNotes[job.id]) || [];
 
-      const client = donnyClients.find(c => c.id === job.clientId);
+      const clientIds = getJobClientIds(job);
+      const clients = clientIds.map(id => donnyClients.find(c => String(c.id) === String(id))).filter(Boolean);
+      const client = clients[0]; // legacy single-client ref for backward compat in this view
 
       // QUOTE vs ACTUALS
       const quotedHours = parseFloat(job.quotedHours) || 0;
@@ -17907,7 +17918,14 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <input value={job.title||''} onChange={e => updateJob({title:e.target.value})}
                     style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"22px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"4px 0"}} placeholder="Job title..."/>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {client ? <button onClick={() => { navToEntity('client', client); }} style={{background:"none",border:"none",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0}}>↳ {client.name}</button> : 'No client linked'}
+                    {clients.length > 0 ? (
+                      <span>{clients.map((c,i) => (
+                        <React.Fragment key={c.id}>
+                          {i > 0 && <span style={{color:"rgba(148,163,184,0.4)"}}> · </span>}
+                          <button onClick={() => navToEntity('client', c)} style={{background:"none",border:"none",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",padding:0}}>↳ {c.name}</button>
+                        </React.Fragment>
+                      ))}</span>
+                    ) : 'No client linked'}
                     {' · '}created {formatDate(job.createdAt)}
                   </div>
                 </div>
@@ -18128,51 +18146,87 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
               <div style={panel}>
                 <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENT</span>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENTS · STAKEHOLDERS</span>
                   <button onClick={() => setShowAddClientInline(s => !s)}
                     style={{fontSize:"10px",padding:"3px 10px",background:showAddClientInline?"rgba(148,163,184,0.06)":"rgba(59,130,246,0.1)",border:`0.5px solid ${showAddClientInline?"rgba(148,163,184,0.3)":"rgba(59,130,246,0.4)"}`,borderRadius:"3px",color:showAddClientInline?"rgba(148,163,184,0.85)":"rgba(59,130,246,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
-                    {showAddClientInline ? '✕' : '+ NEW'}
+                    {showAddClientInline ? '✕' : '+ ADD'}
                   </button>
                 </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  {donnyClients.length === 0 ? (
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>No clients yet — tap + NEW above</div>
-                  ) : (
-                    <select value={job.clientId||''} onChange={e => updateJob({clientId:e.target.value})}
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}>
-                      <option value="">— No client linked —</option>
-                      {donnyClients.map(c => <option key={c.id} value={c.id}>{c.name}{c.company?` · ${c.company}`:''}</option>)}
-                    </select>
-                  )}
-                  {client && !showAddClientInline && (
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderTop:"0.5px solid rgba(59,130,246,0.1)"}}>
-                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>
-                        {client.company && <div>{client.company}</div>}
-                        {client.phone && <div style={{color:"rgba(34,197,94,0.6)"}}>{client.phone}</div>}
+
+                {/* ADD INLINE */}
+                {showAddClientInline && (
+                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"10px"}}>
+                    {donnyClients.filter(c => !jobHasClient(job, c.id)).length > 0 && (
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LINK EXISTING</div>
+                        <select value="" onChange={e => {
+                          if (!e.target.value) return;
+                          const newIds = [...getJobClientIds(job), e.target.value];
+                          updateJob({ clientIds: newIds, clientId: newIds[0] });
+                          const c = donnyClients.find(x => String(x.id) === String(e.target.value));
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Client linked: ${c?.name||'?'}` });
+                          setShowAddClientInline(false);
+                        }} style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          <option value="">Select client to link...</option>
+                          {donnyClients.filter(c => !jobHasClient(job, c.id)).map(c => <option key={c.id} value={c.id}>{c.name}{c.company?` · ${c.company}`:''}</option>)}
+                        </select>
                       </div>
-                      <button onClick={() => navToEntity('client', client)} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"3px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>OPEN →</button>
+                    )}
+                    <div style={{borderTop:donnyClients.filter(c => !jobHasClient(job, c.id)).length > 0 ? "0.5px solid rgba(59,130,246,0.1)" : "none",paddingTop:donnyClients.filter(c => !jobHasClient(job, c.id)).length > 0 ? "10px" : "0"}}>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>OR CREATE NEW</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                        <input value={inlineClientName} onChange={e => setInlineClientName(e.target.value)} placeholder="Name *"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <input value={inlineClientCompany} onChange={e => setInlineClientCompany(e.target.value)} placeholder="Company / role (e.g. engineer, builder)"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <input value={inlineClientPhone} onChange={e => setInlineClientPhone(e.target.value)} placeholder="Phone"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <button onClick={() => {
+                          if (!inlineClientName.trim()) return;
+                          const newClient = { id: Date.now(), name: inlineClientName.trim(), company: inlineClientCompany, phone: inlineClientPhone, email:'', address:'', notes:'', jobIds:[job.id] };
+                          setDonnyClients([newClient, ...donnyClients]);
+                          const newIds = [...getJobClientIds(job), newClient.id];
+                          updateJob({ clientIds: newIds, clientId: newIds[0] });
+                          logAction(`client_${newClient.id}`, { kind: 'create', summary: `Client created: ${newClient.name}` });
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Client linked: ${newClient.name}` });
+                          setInlineClientName(''); setInlineClientCompany(''); setInlineClientPhone(''); setShowAddClientInline(false);
+                        }} style={{width:"100%",padding:"8px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE & LINK</button>
+                      </div>
                     </div>
-                  )}
-                  {showAddClientInline && (
-                    <div style={{borderTop:"0.5px solid rgba(59,130,246,0.1)",paddingTop:"10px",display:"flex",flexDirection:"column",gap:"8px"}}>
-                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW CLIENT</div>
-                      <input value={inlineClientName} onChange={e => setInlineClientName(e.target.value)} placeholder="Client name *"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      <input value={inlineClientCompany} onChange={e => setInlineClientCompany(e.target.value)} placeholder="Company (optional)"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      <input value={inlineClientPhone} onChange={e => setInlineClientPhone(e.target.value)} placeholder="Phone (optional)"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
-                      <button onClick={() => {
-                        if (!inlineClientName.trim()) return;
-                        const newClient = { id: Date.now(), name: inlineClientName.trim(), company: inlineClientCompany, phone: inlineClientPhone, email:'', address:'', notes:'', jobIds:[job.id] };
-                        setDonnyClients([newClient, ...donnyClients]);
-                        updateJob({ clientId: newClient.id });
-                        logAction(`client_${newClient.id}`, { kind: 'create', summary: `Client created: ${newClient.name}` });
-                        setInlineClientName(''); setInlineClientCompany(''); setInlineClientPhone(''); setShowAddClientInline(false);
-                      }} style={{width:"100%",padding:"8px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE & LINK</button>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
+
+                {/* CLIENTS TABLE */}
+                {clients.length === 0 ? (
+                  <div style={{padding:"20px",textAlign:"center",fontSize:"10px",color:"rgba(59,130,246,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO CLIENTS LINKED</div>
+                ) : (
+                  <div>
+                    {clients.map((c,i) => (
+                      <div key={c.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",borderBottom:i<clients.length-1?"0.5px solid rgba(59,130,246,0.06)":"none",gap:"8px"}}>
+                        <button onClick={() => navToEntity('client', c)} style={{flex:1,minWidth:0,display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",padding:0}}>
+                          <div style={{width:"24px",height:"24px",borderRadius:"3px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"10px",fontWeight:600,color:"rgba(59,130,246,0.85)",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
+                          <div style={{minWidth:0,flex:1}}>
+                            <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
+                            {(c.company || c.phone) && (
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                                {c.company && <span>{c.company}</span>}
+                                {c.company && c.phone && <span> · </span>}
+                                {c.phone && <span style={{color:"rgba(34,197,94,0.6)"}}>{c.phone}</span>}
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                        <button onClick={() => {
+                          if (window.confirm(`Unlink ${c.name} from this job?`)) {
+                            const newIds = getJobClientIds(job).filter(id => String(id) !== String(c.id));
+                            updateJob({ clientIds: newIds, clientId: newIds[0] || null });
+                            logAction(`job_${job.id}`, { kind: 'edit', summary: `Client unlinked: ${c.name}` });
+                          }
+                        }} style={{fontSize:"10px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0,letterSpacing:"0.5px"}}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -18331,9 +18385,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                       emptyText: 'No workers logged on this job yet'
                     },
                     {
-                      label: 'Client',
-                      entities: client ? [{ type:'client', ref:client, label:client.name, sub:client.company||'', color:'#3b82f6', icon:'◇' }] : [],
-                      emptyText: 'No client linked'
+                      label: `Clients · ${clients.length}`,
+                      entities: clients.map(c => ({ type:'client', ref:c, label:c.name, sub:c.company||'', color:'#3b82f6', icon:'◇' })),
+                      emptyText: 'No clients linked'
                     },
                     {
                       label: `Materials · ${topMaterials.length}`,
@@ -18759,7 +18813,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* CONNECTIONS */}
             {(() => {
-              const clientIds = [...new Set(workerJobs.map(j => j.clientId).filter(Boolean))];
+              const clientIds = [...new Set(workerJobs.flatMap(j => getJobClientIds(j)))];
               const linkedClients = clientIds.map(id => donnyClients.find(c => c.id === id)).filter(Boolean);
               return (
                 <ConnectionsPanel
@@ -18909,7 +18963,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       };
 
       // ─── DERIVED DATA ──────────────────────────────────────────────
-      const clientJobs = donnyJobs.filter(j => j.clientId === client.id);
+      const clientJobs = donnyJobs.filter(j => jobHasClient(j, client.id));
       const activeClientJobs = clientJobs.filter(j => !j.completed);
       const completedClientJobs = clientJobs.filter(j => j.completed);
 
@@ -19496,7 +19550,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               }).filter(Boolean).sort((a,b) => b._count - a._count);
 
               // Clients whose jobs used this material
-              const clientIds = [...new Set(jobsWithMaterial.map(j => j.clientId).filter(Boolean))];
+              const clientIds = [...new Set(jobsWithMaterial.flatMap(j => getJobClientIds(j)))];
               const linkedClients = clientIds.map(id => donnyClients.find(c => c.id === id)).filter(Boolean);
 
               return (
@@ -23431,7 +23485,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div></div><div>NAME</div><div>COMPANY</div><div>JOBS</div>
                 </div>
                 {donnyClients.map((c,i) => {
-                  const linked = donnyJobs.filter(j => j.clientId === c.id);
+                  const linked = donnyJobs.filter(j => jobHasClient(j, c.id));
                   return (
                     <button key={c.id} onClick={() => navToEntity('client', c)}
                       style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnyClients.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
@@ -24183,7 +24237,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       // ── DERIVED STATS ─────────────────────────────────────────────
       // For each client: jobs + revenue + profit
       const clientsWithStats = donnyClients.map(c => {
-        const cjobs = donnyJobs.filter(j => j.clientId === c.id);
+        const cjobs = donnyJobs.filter(j => jobHasClient(j, c.id));
         const active = cjobs.filter(j => !j.completed);
         const completed = cjobs.filter(j => j.completed);
         const totalQuoted = cjobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
