@@ -21079,7 +21079,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
                 </div>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
-                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",flexShrink:0}}>📦</div>
+                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"22px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</div>
                   <div style={{flex:1,minWidth:"260px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>EXTRA MATERIALS</div>
@@ -21105,7 +21105,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>📦 ITEM / MATERIAL</div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM / MATERIAL</div>
                     <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="2C+E 2.5mm TPS Cable"
                       list="donny-mat-suggestions"
                       style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
@@ -21126,7 +21126,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>📝 NOTE FOR BOSS</div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
                     <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="Ran short, need more by Thursday"
                       style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
                   </div>
@@ -21162,15 +21162,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                             {(entry.qty||entry.unit) && <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.95)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px",letterSpacing:"0.5px"}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
                             {entry.cost && parseFloat(entry.cost) > 0 && <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)"}}>${parseFloat(entry.cost).toFixed(0)}</span>}
                           </div>
-                          {entry.note && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",marginBottom:"3px",letterSpacing:"0.3px"}}>💬 {entry.note}</div>}
+                          {entry.note && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",marginBottom:"3px",letterSpacing:"0.3px"}}>↳ {entry.note}</div>}
                           <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",display:"flex",gap:"8px",flexWrap:"wrap"}}>
                             <span>{relTime(entry.createdAt)}</span>
-                            {entry.loggedBy && <span style={{color:"rgba(249,115,22,0.5)"}}>👤 {entry.loggedBy}</span>}
+                            {entry.loggedBy && <span style={{color:"rgba(249,115,22,0.5)"}}>by {entry.loggedBy}</span>}
                           </div>
                         </div>
                         {donnyRole !== 'worker' && (
                           <button onClick={() => { if(window.confirm(`Delete this entry?`)) saveMatLog(donnyMaterialsLog.filter(e=>e.id!==entry.id)); }}
-                            style={{fontSize:"11px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0}}>🗑</button>
+                            style={{fontSize:"11px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0,letterSpacing:"0.5px"}}>DEL</button>
                         )}
                       </div>
                     ))}
@@ -21228,7 +21228,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                  <span style={{fontSize:"32px",lineHeight:1}}>📦</span>
+                  <span style={{fontSize:"22px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>◍</span>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// EXTRA MATERIALS</div>
                     <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MATERIAL LOG</div>
@@ -21391,7 +21391,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* JOBS PICKER */}
             {activeJobsList.length === 0 ? (
               <div style={{...panel,padding:"40px",textAlign:"center"}}>
-                <div style={{fontSize:"32px",marginBottom:"12px",lineHeight:1}}>📦</div>
+                <div style={{fontSize:"28px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>◍</div>
                 <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
                 <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log materials</div>
               </div>
@@ -21410,7 +21410,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     return (
                       <button key={job.id} onClick={() => setMatLogJobId(job.id)}
                         style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <span style={{fontSize:"15px",lineHeight:1,flexShrink:0}}>📦</span>
+                        <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
                         <div style={{minWidth:0}}>
                           <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
                           {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
