@@ -17818,8 +17818,8 @@ ${JSON.stringify(ctx, null, 2)}`;
         const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
         return s + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
       }, 0);
-      const workersOnJob = [...new Set(jobTimesheets.map(e => e.memberId))]
-        .map(id => donnyTeam.find(m => m.id === id))
+      const workersOnJob = [...new Set(jobTimesheets.map(e => String(e.memberId)))]
+        .map(id => donnyTeam.find(m => String(m.id) === String(id)))
         .filter(Boolean);
       const workerHours = workersOnJob.map(m => ({
         ...m,
@@ -19399,7 +19399,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               // Workers who've worked on this client's jobs
               const allTs = donnyTimesheets.filter(e => clientJobIds.includes(e.jobId));
               const workerIds = [...new Set(allTs.map(e => e.memberId).filter(Boolean))];
-              const linkedWorkers = workerIds.map(id => donnyTeam.find(m => m.id === id)).filter(Boolean);
+              const linkedWorkers = workerIds.map(id => donnyTeam.find(m => String(m.id) === String(id))).filter(Boolean);
               // Top materials used
               const matMap = {};
               clientMaterials.forEach(m => {
