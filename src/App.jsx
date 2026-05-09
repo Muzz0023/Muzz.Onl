@@ -5002,7 +5002,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   { section:'SITE', id:'donny-incidents', label:'Incidents', workerOk:true },
                   { section:'SITE', id:'donny-safety', label:'Risk Register', workerOk:true },
                   { section:'SITE', id:'donny-mistakes', label:'Mistakes', workerOk:true },
-                  { section:'COSTS', id:'donny-materialslog', label:'Extra Materials', workerOk:true },
+                  { section:'COSTS', id:'donny-materialslog', label:'Materials', workerOk:true },
                   { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
                 ];
@@ -17935,10 +17935,16 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{...panel,borderLeft:"2px solid #f97316"}}>
               <div style={panelHeader}>
                 <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// QUOTE vs ACTUALS</span>
-                <button onClick={() => setShowEditQuote(s => !s)}
-                  style={{fontSize:"10px",padding:"3px 10px",background:showEditQuote?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showEditQuote?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showEditQuote?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
-                  {showEditQuote ? '✕ CLOSE' : 'EDIT QUOTE'}
-                </button>
+                <div style={{display:"flex",gap:"6px"}}>
+                  <button onClick={() => { setMatLogJobId(job.id); setActiveView('donny-materialslog'); }}
+                    style={{fontSize:"10px",padding:"3px 10px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    + MATERIAL
+                  </button>
+                  <button onClick={() => setShowEditQuote(s => !s)}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showEditQuote?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showEditQuote?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showEditQuote?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showEditQuote ? '✕ CLOSE' : 'EDIT QUOTE'}
+                  </button>
+                </div>
               </div>
 
               {/* 5-CELL KPI STRIP */}
@@ -17947,7 +17953,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {
                     label:"Hours",
                     value: <>{totalHours.toFixed(1)}<span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",marginLeft:"3px"}}>h</span></>,
-                    sub: quotedHours > 0 ? `of ${quotedHours}h` : 'no quote',
+                    sub: quotedHours > 0 ? `worked / ${quotedHours}h quoted` : `${totalHours>0?'worked':'none yet'}`,
                     pct: hoursPct,
                     color: hoursPct > 100 ? '#ef4444' : hoursPct > 80 ? '#f59e0b' : '#f97316',
                     lineage: workerHours.length > 0 ? {
@@ -17969,7 +17975,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {
                     label:"Labour",
                     value: `$${totalLabour.toFixed(0)}`,
-                    sub: `${workersOnJob.length} worker${workersOnJob.length!==1?'s':''}`,
+                    sub: `spent · ${workersOnJob.length} worker${workersOnJob.length!==1?'s':''}`,
                     pct: 0,
                     color: 'rgba(34,197,94,0.95)',
                     lineage: workerHours.length > 0 ? {
@@ -17990,7 +17996,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {
                     label:"Materials",
                     value: `$${totalMaterialsCost.toFixed(0)}`,
-                    sub: quotedMaterials > 0 ? `of $${quotedMaterials}` : 'no quote',
+                    sub: quotedMaterials > 0 ? `spent / $${quotedMaterials} quoted` : (jobMaterials.length>0?`spent · ${jobMaterials.length} item${jobMaterials.length!==1?'s':''}`:'none yet'),
                     pct: materialsPct,
                     color: materialsPct > 100 ? '#ef4444' : '#3b82f6',
                     lineage: jobMaterials.length > 0 ? {
@@ -18006,13 +18012,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                         valueColor: '#22c55e',
                         onClick: m.item ? () => navToEntity('material', {name:m.item}) : null,
                       })),
-                      note: 'Click any material to open',
+                      note: 'Click any material to open · Add more via + MATERIAL above',
                     } : null,
                   },
                   {
                     label:"Quote",
                     value: quotedCost > 0 ? `$${quotedCost}` : '—',
-                    sub: quotedCost > 0 ? `actual $${totalActualCost.toFixed(0)}` : 'not set',
+                    sub: quotedCost > 0 ? `total · spent $${totalActualCost.toFixed(0)}` : 'tap EDIT QUOTE',
                     pct: 0,
                     color: quotedCost > 0 ? (margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444') : 'rgba(148,163,184,0.5)',
                   },
@@ -18023,7 +18029,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         {margin >= 0 ? '+' : ''}${margin.toFixed(0)}
                       </span>
                     ) : '—',
-                    sub: quotedCost > 0 ? `${marginPct.toFixed(0)}%` : 'no quote',
+                    sub: quotedCost > 0 ? `${marginPct.toFixed(0)}% · ${margin>=0?'profit':'loss'}` : 'set quote first',
                     pct: 0,
                     color: quotedCost > 0 ? (margin >= 0 ? 'rgba(34,197,94,0.95)' : '#ef4444') : 'rgba(148,163,184,0.5)',
                     lineage: quotedCost > 0 ? {
@@ -20334,7 +20340,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       );
     }
 
-    // ── EXTRA MATERIALS LOG ─────────────────────────────────────────────────
+    // ── MATERIALS LOG ─────────────────────────────────────────────────
     // ── SCHEDULER ────────────────────────────────────────────────────────────
     if (activeView === 'donny-scheduler') {
       const saveSched = (updated) => { setDonnySchedule(updated) };
@@ -21971,7 +21977,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
                 <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
-                  <button onClick={() => setMatLogJobId(null)} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← EXTRA MATERIALS</button>
+                  <button onClick={() => setMatLogJobId(null)} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← MATERIALS</button>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace"}}>·</span>
                   <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
                 </div>
@@ -21979,7 +21985,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"22px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</div>
                   <div style={{flex:1,minWidth:"260px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>EXTRA MATERIALS</div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>MATERIALS</div>
                       <button onClick={() => navToEntity('job', job)} style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",letterSpacing:"1px",cursor:"pointer"}}>OPEN JOB →</button>
                     </div>
                     <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",padding:"4px 0",borderBottom:"0.5px solid rgba(249,115,22,0.15)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?.title}</div>
@@ -21998,7 +22004,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* LOG NEW MATERIAL */}
               <div style={panel}>
                 <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG EXTRA MATERIALS</span>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MATERIAL</span>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   <div>
@@ -22128,8 +22134,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                   <span style={{fontSize:"22px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>◍</span>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// EXTRA MATERIALS</div>
-                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MATERIAL LOG</div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// MATERIALS</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MATERIALS</div>
                     <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
                       {totalEntries} entr{totalEntries!==1?'ies':'y'} · {uniqueMats} unique item{uniqueMats!==1?'s':''}
                       {totalCatalogCost > 0 && (' · $'+totalCatalogCost.toFixed(0)+' total')}
