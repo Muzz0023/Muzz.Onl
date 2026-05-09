@@ -2536,6 +2536,9 @@ function MuzzApp() {
   const [inlineClientName, setInlineClientName] = useState('');
   const [inlineClientCompany, setInlineClientCompany] = useState('');
   const [inlineClientPhone, setInlineClientPhone] = useState('');
+  const [showAddMilestone, setShowAddMilestone] = useState(false);
+  const [inlineMilestoneLabel, setInlineMilestoneLabel] = useState('');
+  const [inlineMilestoneDate, setInlineMilestoneDate] = useState('');
   const [showNewMistake, setShowNewMistake] = useState(false);
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
@@ -18125,14 +18128,20 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={panel}>
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SCHEDULE</span>
-                  {job.dueDate && !job.completed && (
-                    <span style={{fontSize:"9px",fontFamily:"monospace",color:new Date(job.dueDate)<new Date()?"#ef4444":"rgba(148,163,184,0.5)"}}>
-                      {(() => { const days = Math.ceil((new Date(job.dueDate)-new Date())/(1000*60*60*24)); return days<0?`${Math.abs(days)}d OVERDUE`:days===0?'DUE TODAY':`${days}d LEFT`; })()}
-                    </span>
-                  )}
-                  {job.completed && (
-                    <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)",letterSpacing:"1px"}}>✓ DONE</span>
-                  )}
+                  <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
+                    {job.dueDate && !job.completed && (
+                      <span style={{fontSize:"9px",fontFamily:"monospace",color:new Date(job.dueDate)<new Date()?"#ef4444":"rgba(148,163,184,0.5)"}}>
+                        {(() => { const days = Math.ceil((new Date(job.dueDate)-new Date())/(1000*60*60*24)); return days<0?`${Math.abs(days)}d OVERDUE`:days===0?'DUE TODAY':`${days}d LEFT`; })()}
+                      </span>
+                    )}
+                    {job.completed && (
+                      <span style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)",letterSpacing:"1px"}}>✓ DONE</span>
+                    )}
+                    <button onClick={() => { setShowAddMilestone(s => !s); setInlineMilestoneLabel(''); setInlineMilestoneDate(''); }}
+                      style={{fontSize:"10px",padding:"3px 10px",background:showAddMilestone?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddMilestone?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddMilestone?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                      {showAddMilestone ? '✕' : '+ MILESTONE'}
+                    </button>
+                  </div>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   {/* SIDE-BY-SIDE DATE INPUTS */}
@@ -18149,7 +18158,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
 
-                  {/* PROGRESS BAR — % of schedule elapsed */}
+                  {/* MAIN PROGRESS BAR */}
                   {(() => {
                     if (!job.startDate || !job.dueDate) {
                       return <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",padding:"4px 0"}}>Set both dates to see schedule progress</div>;
@@ -18187,6 +18196,99 @@ ${JSON.stringify(ctx, null, 2)}`;
                       </div>
                     );
                   })()}
+
+                  {/* ADD MILESTONE FORM */}
+                  {showAddMilestone && (
+                    <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",paddingTop:"12px",display:"flex",flexDirection:"column",gap:"8px"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MILESTONE</div>
+                      <input value={inlineMilestoneLabel} onChange={e => setInlineMilestoneLabel(e.target.value)} placeholder="e.g. FAT, Site Inspection, Council Sign-off" list="milestone-suggestions"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      <datalist id="milestone-suggestions">
+                        <option value="FAT (Factory Acceptance Test)"/>
+                        <option value="SAT (Site Acceptance Test)"/>
+                        <option value="Client Walkthrough"/>
+                        <option value="Site Inspection"/>
+                        <option value="Council Inspection"/>
+                        <option value="Council Sign-off"/>
+                        <option value="Certification"/>
+                        <option value="Practical Completion"/>
+                        <option value="Defects Liability"/>
+                        <option value="Handover"/>
+                      </datalist>
+                      <input type="date" value={inlineMilestoneDate} onChange={e => setInlineMilestoneDate(e.target.value)}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                      <button onClick={() => {
+                        if (!inlineMilestoneLabel.trim() || !inlineMilestoneDate) return;
+                        const newMs = { id: Date.now(), label: inlineMilestoneLabel.trim(), date: inlineMilestoneDate, completed: false };
+                        const milestones = [...(job.milestones||[]), newMs].sort((a,b) => new Date(a.date) - new Date(b.date));
+                        updateJob({ milestones });
+                        logAction(`job_${job.id}`, { kind: 'create', summary: `Milestone added: ${newMs.label} · ${newMs.date}` });
+                        setInlineMilestoneLabel(''); setInlineMilestoneDate(''); setShowAddMilestone(false);
+                      }} style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD MILESTONE</button>
+                    </div>
+                  )}
+
+                  {/* MILESTONES LIST */}
+                  {(job.milestones||[]).length > 0 && (
+                    <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",paddingTop:"12px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MILESTONES · {(job.milestones||[]).length}</div>
+                      {(job.milestones||[]).slice().sort((a,b) => new Date(a.date) - new Date(b.date)).map(ms => {
+                        const msDate = new Date(ms.date);
+                        const now = new Date();
+                        const start = job.startDate ? new Date(job.startDate) : null;
+                        const due = job.dueDate ? new Date(job.dueDate) : null;
+                        // Position of milestone within START → DUE window (for the bar)
+                        let positionPct = 50;
+                        if (start && due && due > start) {
+                          positionPct = Math.max(0, Math.min(100, ((msDate - start) / (due - start)) * 100));
+                        }
+                        // Current "now" pct
+                        let nowPct = 0;
+                        if (start && due && due > start) {
+                          nowPct = Math.max(0, Math.min(100, ((now - start) / (due - start)) * 100));
+                        }
+                        const daysToMs = Math.ceil((msDate - now) / 86400000);
+                        const isPast = daysToMs < 0;
+                        const isToday = daysToMs === 0;
+                        const isSoon = daysToMs > 0 && daysToMs <= 7;
+                        const dotColor = ms.completed ? 'rgba(34,197,94,0.95)' : isPast ? '#ef4444' : isToday ? '#f59e0b' : isSoon ? '#f97316' : 'rgba(168,85,247,0.85)';
+                        const chipText = ms.completed ? '✓ DONE' : isPast ? `${Math.abs(daysToMs)}d LATE` : isToday ? 'TODAY' : `${daysToMs}d`;
+                        return (
+                          <div key={ms.id}>
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"4px"}}>
+                              <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                                <button onClick={() => {
+                                  const milestones = (job.milestones||[]).map(m => m.id === ms.id ? {...m, completed: !m.completed} : m);
+                                  updateJob({ milestones });
+                                  logAction(`job_${job.id}`, { kind: ms.completed?'edit':'action', summary: `Milestone ${ms.completed?'reopened':'completed'}: ${ms.label}` });
+                                }} style={{width:"14px",height:"14px",borderRadius:"3px",background:ms.completed?"rgba(34,197,94,0.2)":"rgba(0,0,0,0.3)",border:`0.5px solid ${ms.completed?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.3)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:"#22c55e",fontFamily:"monospace",cursor:"pointer",flexShrink:0,padding:0}}>{ms.completed && '✓'}</button>
+                                <span style={{fontSize:"11px",color:ms.completed?"rgba(148,163,184,0.5)":"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:ms.completed?"line-through":"none"}}>{ms.label}</span>
+                              </div>
+                              <div style={{display:"flex",alignItems:"center",gap:"6px",flexShrink:0}}>
+                                <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{msDate.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
+                                <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:`${dotColor}15`,color:dotColor,border:`0.5px solid ${dotColor}40`,borderRadius:"2px",letterSpacing:"0.5px"}}>{chipText}</span>
+                                <button onClick={() => {
+                                  if (window.confirm(`Delete "${ms.label}"?`)) {
+                                    const milestones = (job.milestones||[]).filter(m => m.id !== ms.id);
+                                    updateJob({ milestones });
+                                  }
+                                }} style={{fontSize:"10px",padding:"1px 5px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",lineHeight:1}}>×</button>
+                              </div>
+                            </div>
+                            {/* Mini progress bar showing where this milestone sits in the schedule */}
+                            {start && due && due > start && (
+                              <div style={{position:"relative",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",marginLeft:"22px",overflow:"visible"}}>
+                                {/* fill up to "now" */}
+                                <div style={{height:"100%",width:`${nowPct}%`,background:"rgba(249,115,22,0.3)",borderRadius:"1px"}}/>
+                                {/* milestone marker */}
+                                <div style={{position:"absolute",left:`calc(${positionPct}% - 3px)`,top:"-2px",width:"7px",height:"7px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 0 1.5px rgba(5,12,24,1)`}}/>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
               <div style={panel}>
