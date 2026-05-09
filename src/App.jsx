@@ -19585,67 +19585,250 @@ ${JSON.stringify(ctx, null, 2)}`;
         );
       }
 
-      // JOB LIST
+      // ─── JOB LIST — Palantir style ───────────────────────────────
+      const activeJobs = donnyJobs.filter(j=>!j.completed);
+      const completedJobs = donnyJobs.filter(j=>j.completed);
+      const totalHrsAllJobs = donnyTimesheets.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const totalEntries = donnyTimesheets.length;
+      const totalDiary = Object.values(donnyNotes||{}).reduce((s,arr) => s + (arr?.length||0), 0);
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const todayHrs = donnyTimesheets.filter(e => new Date(e.createdAt||e.date||0) >= todayStart).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+      const totalLabour = donnyTimesheets.reduce((s,e) => {
+        const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
+        return s + ((parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0));
+      }, 0);
+      const jobsLogged = [...new Set(donnyTimesheets.map(e => e.jobId))].length;
+
+      const hPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const hPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HOUR LOGGER</div>
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                <span style={{fontSize:"28px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>◷</span>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// LABOUR &amp; DIARY</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>HOUR LOGGER</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {donnyJobs.length===0 ? 'No jobs · add jobs to start logging' : `${activeJobs.length} active · ${totalHrsAllJobs.toFixed(0)}h logged · $${totalLabour.toFixed(0)} labour`}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-            {donnyJobs.length === 0 ? (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.1)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                <div className="text-4xl mb-3">📋</div>
-                <div className="text-white font-bold mb-1">No jobs yet</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add jobs first to start logging hours</div>
-              </div>
-            ) : (
-              <>
-                <div className="text-xs font-mono px-1 pb-1" style={{color:'rgba(249,115,22,0.5)',letterSpacing:'2px'}}>// SELECT A JOB</div>
-                {donnyJobs.filter(j=>!j.completed).map(job => {
-                  const notes = donnyNotes[job.id]||[];
-                  const tsEntries = donnyTimesheets.filter(e=>e.jobId===job.id);
-                  const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
-                  const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))[0];
-                  return (
-                    <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{width:"100%",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.5)",padding:"12px 16px",textAlign:"left",display:"flex",alignItems:"center",gap:"12px",cursor:"pointer"}}>
-                      <div style={{width:"36px",height:"36px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",flexShrink:0,fontSize:"16px"}}>📋</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-white font-semibold truncate">{job.title}</div>
-                        <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>
-                          {job.jobNumber?`#${job.jobNumber} · `:''}{notes.length} entr{notes.length===1?'y':'ies'} · {totalHrs.toFixed(1)}h logged
-                          {lastActivity ? ` · ${new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
-                        </div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            {donnyJobs.length > 0 && (
+              <div style={{...hPanel,borderLeft:"2px solid #f97316"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Active Jobs", value:String(activeJobs.length), color:"#f97316",
+                      lineage: activeJobs.length > 0 ? {
+                        title: 'Active Jobs',
+                        value: String(activeJobs.length),
+                        color: '#f97316',
+                        formula: 'WHERE NOT job.completed',
+                        breakdown: activeJobs.map(j => {
+                          const ts = donnyTimesheets.filter(e => e.jobId === j.id);
+                          const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+                          return {
+                            icon: '⊞', color: '#f97316',
+                            label: j.title,
+                            sub: j.jobNumber?`#${j.jobNumber}`:'',
+                            value: `${hrs.toFixed(1)}h`,
+                            valueColor: hrs > 0 ? 'rgba(34,197,94,0.85)' : 'rgba(148,163,184,0.5)',
+                            onClick: () => { setNoteJobId(j.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); },
+                          };
+                        }),
+                      } : null,
+                    },
+                    {
+                      label:"Total Hours", value:`${totalHrsAllJobs.toFixed(0)}h`, color:"#3b82f6",
+                      lineage: totalHrsAllJobs > 0 ? {
+                        title: 'Total Hours Logged',
+                        value: `${totalHrsAllJobs.toFixed(1)}h`,
+                        color: '#3b82f6',
+                        formula: 'SUM(timesheet.hours)',
+                        breakdown: donnyTeam.map(m => {
+                          const ts = donnyTimesheets.filter(e => String(e.memberId) === String(m.id));
+                          const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+                          return { m, hrs };
+                        }).filter(x => x.hrs > 0).sort((a,b) => b.hrs - a.hrs).map(({m,hrs}) => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: m.position || (m.roles||[])[0] || '—',
+                          value: `${hrs.toFixed(1)}h`,
+                          valueColor: '#3b82f6',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Today", value:`${todayHrs.toFixed(1)}h`, color:"rgba(168,85,247,0.85)",
+                      lineage: todayHrs > 0 ? {
+                        title: 'Hours Logged Today',
+                        value: `${todayHrs.toFixed(1)}h`,
+                        color: 'rgba(168,85,247,0.95)',
+                        formula: 'WHERE date >= midnight',
+                        breakdown: donnyTimesheets.filter(e => new Date(e.createdAt||e.date||0) >= todayStart).map(e => {
+                          const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
+                          const j = donnyJobs.find(x => String(x.id) === String(e.jobId));
+                          return {
+                            icon: '⊢', color: '#f97316',
+                            label: m?.name || 'Unknown',
+                            sub: j ? (j.jobNumber?`#${j.jobNumber} ${j.title.slice(0,20)}`:j.title.slice(0,30)) : '—',
+                            value: `${parseFloat(e.hours)||0}h`,
+                            valueColor: 'rgba(168,85,247,0.95)',
+                            onClick: () => j && setNoteJobId(j.id),
+                          };
+                        }),
+                      } : null,
+                    },
+                    {
+                      label:"Labour $", value:totalLabour > 0 ? `$${totalLabour.toFixed(0)}` : '—', color:"rgba(34,197,94,0.95)",
+                      lineage: totalLabour > 0 ? {
+                        title: 'Total Labour Cost',
+                        value: `$${totalLabour.toFixed(2)}`,
+                        color: 'rgba(34,197,94,0.95)',
+                        formula: 'SUM(hours × hourlyRate) per member',
+                        breakdown: donnyTeam.map(m => {
+                          const ts = donnyTimesheets.filter(e => String(e.memberId) === String(m.id));
+                          const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+                          const pay = hrs * (parseFloat(m.hourlyRate)||0);
+                          return { m, hrs, pay };
+                        }).filter(x => x.pay > 0).sort((a,b) => b.pay - a.pay).map(({m,hrs,pay}) => ({
+                          icon: '⊢', color: '#f97316',
+                          label: m.name,
+                          sub: `${hrs.toFixed(1)}h × $${m.hourlyRate||0}/hr`,
+                          value: `$${pay.toFixed(0)}`,
+                          valueColor: 'rgba(34,197,94,0.95)',
+                          onClick: () => navToEntity('worker', m),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Diary", value:String(totalDiary), color:"#a855f7",
+                      lineage: totalDiary > 0 ? {
+                        title: 'Site Diary Entries',
+                        value: String(totalDiary),
+                        color: '#a855f7',
+                        formula: 'COUNT(notes across all jobs)',
+                        breakdown: donnyJobs.filter(j => (donnyNotes[j.id]||[]).length > 0).map(j => ({
+                          icon: '⊞', color: '#f97316',
+                          label: j.title,
+                          sub: j.jobNumber?`#${j.jobNumber}`:'',
+                          value: `${(donnyNotes[j.id]||[]).length}`,
+                          valueColor: '#a855f7',
+                          onClick: () => { setNoteJobId(j.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); },
+                        })),
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
                       </div>
-                      <span style={{color:'rgba(249,115,22,0.5)',fontSize:'20px'}}>›</span>
+                      <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:k.color,opacity:0.7}}/>
+                      </div>
                     </button>
-                  );
-                })}
-                {donnyJobs.filter(j=>j.completed).length > 0 && (
-                  <>
-                    <div className="text-xs font-mono px-1 pt-2" style={{color:'rgba(34,197,94,0.5)',letterSpacing:'2px'}}>// COMPLETED JOBS</div>
-                    {donnyJobs.filter(j=>j.completed).map(job => {
-                      const notes = donnyNotes[job.id]||[];
-                      const tsEntries = donnyTimesheets.filter(e=>e.jobId===job.id);
-                      const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
-                      return (
-                        <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }} style={{width:"100%",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(34,197,94,0.3)",padding:"12px 16px",textAlign:"left",display:"flex",alignItems:"center",gap:"12px",cursor:"pointer",opacity:0.6}}>
-                          <div style={{width:"36px",height:"36px",borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",flexShrink:0,fontSize:"16px"}}>✅</div>
-                          <div className="flex-1 min-w-0">
-                            <div className="text-white font-semibold truncate">{job.title}</div>
-                            <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{notes.length} entr{notes.length===1?'y':'ies'} · {totalHrs.toFixed(1)}h logged</div>
-                          </div>
-                          <span style={{color:'rgba(148,163,184,0.3)',fontSize:'20px'}}>›</span>
-                        </button>
-                      );
-                    })}
-                  </>
-                )}
-              </>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* EMPTY STATE */}
+            {donnyJobs.length === 0 && (
+              <div style={{...hPanel,padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"32px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>◷</div>
+                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO JOBS YET</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Add jobs first to start logging hours</div>
+              </div>
+            )}
+
+            {/* ACTIVE JOBS TABLE */}
+            {activeJobs.length > 0 && (
+              <div style={hPanel}>
+                <div style={hPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIVE JOBS</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{activeJobs.length} JOB{activeJobs.length!==1?'S':''}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div>LAST</div><div></div>
+                </div>
+                <div style={{maxHeight:activeJobs.length > 8 ? "440px" : "none",overflowY:activeJobs.length > 8 ? "auto" : "visible"}}>
+                  {activeJobs.map((job,i) => {
+                    const notes = donnyNotes[job.id]||[];
+                    const tsEntries = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id));
+                    const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                    const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0))[0];
+                    return (
+                      <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#f97316",fontFamily:"monospace",flexShrink:0}}>⊞</div>
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
+                        </div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:totalHrs>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{totalHrs>0?`${totalHrs.toFixed(1)}h`:'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length} entr${notes.length===1?'y':'ies'}`:'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{lastActivity?new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
+                        <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* COMPLETED JOBS TABLE */}
+            {completedJobs.length > 0 && (
+              <div style={{...hPanel,border:"0.5px solid rgba(34,197,94,0.15)",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// COMPLETED JOBS</span>
+                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{completedJobs.length} DONE</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div></div>
+                </div>
+                <div style={{maxHeight:completedJobs.length > 6 ? "320px" : "none",overflowY:completedJobs.length > 6 ? "auto" : "visible"}}>
+                  {completedJobs.map((job,i) => {
+                    const notes = donnyNotes[job.id]||[];
+                    const tsEntries = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id));
+                    const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                    return (
+                      <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 70px 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<completedJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px",opacity:0.7}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#22c55e",fontFamily:"monospace",flexShrink:0}}>✓</div>
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
+                        </div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:totalHrs>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{totalHrs>0?`${totalHrs.toFixed(1)}h`:'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length}`:'—'}</div>
+                        <span style={{fontSize:"12px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -20380,176 +20563,332 @@ ${JSON.stringify(ctx, null, 2)}`;
       const saveRecurring = (updated) => { setDonnyRecurring(updated) };
       const freqLabels = { daily:'Daily', weekly:'Weekly', fortnightly:'Fortnightly', monthly:'Monthly', quarterly:'Quarterly', yearly:'Yearly' };
       const freqColors = { daily:'#ef4444', weekly:'#f97316', fortnightly:'#f59e0b', monthly:'#22c55e', quarterly:'#3b82f6', yearly:'#a855f7' };
+
+      // ─── DERIVED ─────────────────────────────────────────────────
+      const totalRecurring = donnyRecurring.length;
+      const overdue = donnyRecurring.filter(r => r.nextDate && new Date(r.nextDate) < new Date()).length;
+      const dueSoon = donnyRecurring.filter(r => {
+        if(!r.nextDate) return false;
+        const days = Math.ceil((new Date(r.nextDate) - new Date())/86400000);
+        return days >= 0 && days <= 7;
+      }).length;
+      const noNextDate = donnyRecurring.filter(r => !r.nextDate).length;
+      const byFreq = donnyRecurring.reduce((acc,r) => { acc[r.freq]=(acc[r.freq]||0)+1; return acc; }, {});
+      const topFreq = Object.entries(byFreq).sort((a,b) => b[1]-a[1])[0];
+      const withClient = donnyRecurring.filter(r => r.clientId).length;
+
+      const recPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const recPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>RECURRING JOBS</div>
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                  <span style={{fontSize:"28px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>↻</span>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// MAINTENANCE CONTRACTS</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>RECURRING JOBS</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                      {totalRecurring===0 ? 'No recurring jobs · add one below' : `${totalRecurring} job${totalRecurring!==1?'s':''}${overdue>0?' · '+overdue+' overdue':''}${dueSoon>0?' · '+dueSoon+' due this week':''}`}
+                    </div>
+                  </div>
+                </div>
+                <button onClick={()=>setShowNewRecurring(s=>!s)}
+                  style={{padding:"6px 12px",background:showNewRecurring?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showNewRecurring?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showNewRecurring?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {showNewRecurring ? '✕ CANCEL' : '+ ADD JOB'}
+                </button>
+              </div>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-            {/* Master table */}
-            {donnyRecurring.length > 0 && (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",overflow:"hidden"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RECURRING TABLE</span>
-                  <div className="flex items-center gap-3">
-                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{donnyRecurring.length} JOBS</span>
-                    <button onClick={()=>setShowNewRecurring(s=>!s)} style={{fontSize:"10px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(249,115,22,0.3)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>
-                      {showNewRecurring?'✕ Cancel':'+ Add Job'}
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            {totalRecurring > 0 && (
+              <div style={{...recPanel,borderLeft:"2px solid #f97316"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Total", value:String(totalRecurring), color:"#f97316",
+                      lineage: {
+                        title: 'All Recurring Jobs',
+                        value: String(totalRecurring),
+                        color: '#f97316',
+                        formula: 'COUNT(recurring)',
+                        breakdown: donnyRecurring.map(r => {
+                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
+                          return {
+                            icon: '↻', color: freqColors[r.freq]||'#f97316',
+                            label: r.title,
+                            sub: `${c?.name||'no client'} · ${freqLabels[r.freq]||r.freq}`,
+                            value: r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
+                            valueColor: r.nextDate && new Date(r.nextDate) < new Date() ? '#ef4444' : 'rgba(148,163,184,0.85)',
+                            onClick: () => setEditingRecurringId(r.id),
+                          };
+                        }),
+                      },
+                    },
+                    {
+                      label:"Overdue", value:String(overdue), color:overdue>0?"#ef4444":"rgba(34,197,94,0.85)",
+                      lineage: overdue > 0 ? {
+                        title: 'Overdue Jobs',
+                        value: String(overdue),
+                        color: '#ef4444',
+                        formula: 'WHERE nextDate < today',
+                        breakdown: donnyRecurring.filter(r => r.nextDate && new Date(r.nextDate) < new Date()).sort((a,b) => new Date(a.nextDate) - new Date(b.nextDate)).map(r => {
+                          const days = Math.abs(Math.ceil((new Date(r.nextDate) - new Date())/86400000));
+                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
+                          return {
+                            icon: '⚠', color: '#ef4444',
+                            label: r.title,
+                            sub: c?.name || 'no client',
+                            value: `${days}d late`,
+                            valueColor: '#ef4444',
+                            onClick: () => setEditingRecurringId(r.id),
+                          };
+                        }),
+                        note: 'Click to update next date',
+                      } : null,
+                    },
+                    {
+                      label:"Due Week", value:String(dueSoon), color:dueSoon>0?"#f59e0b":"rgba(34,197,94,0.85)",
+                      lineage: dueSoon > 0 ? {
+                        title: 'Due This Week',
+                        value: String(dueSoon),
+                        color: '#f59e0b',
+                        formula: 'WHERE nextDate within 7 days',
+                        breakdown: donnyRecurring.filter(r => {
+                          if(!r.nextDate) return false;
+                          const days = Math.ceil((new Date(r.nextDate) - new Date())/86400000);
+                          return days >= 0 && days <= 7;
+                        }).sort((a,b) => new Date(a.nextDate) - new Date(b.nextDate)).map(r => {
+                          const days = Math.ceil((new Date(r.nextDate) - new Date())/86400000);
+                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
+                          return {
+                            icon: '◷', color: '#f59e0b',
+                            label: r.title,
+                            sub: c?.name || 'no client',
+                            value: days === 0 ? 'Today' : `${days}d`,
+                            valueColor: '#f59e0b',
+                            onClick: () => setEditingRecurringId(r.id),
+                          };
+                        }),
+                      } : null,
+                    },
+                    {
+                      label:"Top Freq", value:topFreq ? freqLabels[topFreq[0]] : '—', color:topFreq ? freqColors[topFreq[0]] : "#a855f7", smallValue:true,
+                      lineage: topFreq ? {
+                        title: 'Jobs by Frequency',
+                        value: `${topFreq[1]} ${freqLabels[topFreq[0]]}`,
+                        color: freqColors[topFreq[0]],
+                        formula: 'GROUP BY freq',
+                        breakdown: Object.entries(byFreq).sort((a,b) => b[1]-a[1]).map(([freq,count]) => ({
+                          icon: '↻', color: freqColors[freq]||'#f97316',
+                          label: freqLabels[freq]||freq,
+                          sub: '',
+                          value: count,
+                          valueColor: freqColors[freq]||'#f97316',
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"With Client", value:`${withClient}/${totalRecurring}`, color:"#3b82f6",
+                      lineage: withClient > 0 ? {
+                        title: 'Linked to Clients',
+                        value: String(withClient),
+                        color: '#3b82f6',
+                        formula: 'WHERE clientId is set',
+                        breakdown: donnyRecurring.filter(r => r.clientId).map(r => {
+                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
+                          return {
+                            icon: '◇', color: '#3b82f6',
+                            label: r.title,
+                            sub: freqLabels[r.freq]||r.freq,
+                            value: c?.name || '—',
+                            valueColor: '#3b82f6',
+                            onClick: () => c && navToEntity('client', c),
+                          };
+                        }),
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
+                      </div>
+                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:k.color,opacity:0.7}}/>
+                      </div>
                     </button>
-                  </div>
+                  ))}
                 </div>
-                <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 100px 110px 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                  <div>TITLE</div><div>CLIENT</div><div>NEXT DATE</div><div>FREQ</div>
-                </div>
-                {donnyRecurring.map((r,i) => {
-                  const client = donnyClients.find(c=>c.id===r.clientId);
-                  const fc = freqColors[r.freq]||'#f97316';
-                  const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
-                  return (
-                    <div key={r.id} className="grid px-5 py-3 items-center" style={{gridTemplateColumns:'1fr 100px 110px 90px',borderBottom:i<donnyRecurring.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}>
-                      <div className="text-white font-medium text-sm truncate pr-2">{r.title}</div>
-                      <div className="text-xs truncate" style={{color:'rgba(148,163,184,0.5)'}}>{client?.name||'—'}</div>
-                      <div className="text-xs" style={{color: daysUntil!==null&&daysUntil<=7?'#f97316':'rgba(148,163,184,0.5)'}}>
-                        {r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—'}
-                        {daysUntil!==null && <span className="ml-1">{daysUntil<0?'⚠️':daysUntil===0?'· Today':''}</span>}
-                      </div>
-                      <div><span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${fc}15`,color:fc,border:`1px solid ${fc}30`}}>{freqLabels[r.freq]}</span></div>
-                    </div>
-                  );
-                })}
               </div>
             )}
 
-            <button onClick={()=>setShowNewRecurring(s=>!s)} style={{width:"100%",padding:"12px",background:"rgba(249,115,22,0.06)",border:"0.5px dashed rgba(249,115,22,0.3)",borderRadius:"6px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>
-              {showNewRecurring?'✕ Cancel':'+ Add Recurring Job'}
-            </button>
+            {/* NEW RECURRING FORM */}
             {showNewRecurring && (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
-                <div className="text-xs font-mono" style={{color:'rgba(249,115,22,0.6)'}}>// NEW RECURRING JOB</div>
-                <div>
-                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>JOB TITLE</div>
-                  <input value={newRecurring.title} onChange={e=>setNewRecurring(p=>({...p,title:e.target.value}))} placeholder="e.g. Monthly Maintenance — Westfield"
-                    className="w-full bg-transparent text-white font-bold focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+              <div style={recPanel}>
+                <div style={recPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW RECURRING JOB</span>
+                  <button onClick={()=>setShowNewRecurring(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🤝 CLIENT</div>
-                    <select value={newRecurring.clientId} onChange={e=>setNewRecurring(p=>({...p,clientId:e.target.value}))}
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                      <option value="">No client</option>
-                      {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
-                    </select>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB TITLE</div>
+                    <input value={newRecurring.title} onChange={e=>setNewRecurring(p=>({...p,title:e.target.value}))} placeholder="Monthly Maintenance — Westfield"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"12px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CLIENT</div>
+                      <select value={newRecurring.clientId} onChange={e=>setNewRecurring(p=>({...p,clientId:e.target.value}))}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        <option value="">No client</option>
+                        {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FREQUENCY</div>
+                      <select value={newRecurring.freq} onChange={e=>setNewRecurring(p=>({...p,freq:e.target.value}))}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT DATE</div>
+                      <input type="date" value={newRecurring.nextDate} onChange={e=>setNewRecurring(p=>({...p,nextDate:e.target.value}))}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                    </div>
                   </div>
                   <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>🔁 FREQUENCY</div>
-                    <select value={newRecurring.freq} onChange={e=>setNewRecurring(p=>({...p,freq:e.target.value}))}
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                      {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
-                    </select>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
+                    <textarea value={newRecurring.notes} onChange={e=>setNewRecurring(p=>({...p,notes:e.target.value}))} rows={4}
+                      placeholder="Scope of work, access details, materials needed..."
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical",lineHeight:1.5}}/>
                   </div>
-                  <div>
-                    <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📅 NEXT DATE</div>
-                    <input type="date" value={newRecurring.nextDate} onChange={e=>setNewRecurring(p=>({...p,nextDate:e.target.value}))}
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                  </div>
+                  <button onClick={()=>{
+                    if(!newRecurring.title.trim()) return;
+                    saveRecurring([{...newRecurring,id:Date.now(),createdAt:new Date().toISOString()},...donnyRecurring]);
+                    setNewRecurring({title:'',clientId:'',freq:'monthly',nextDate:'',notes:''});
+                    setShowNewRecurring(false);
+                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD RECURRING JOB</button>
                 </div>
-                <div>
-                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📝 NOTES</div>
-                  <textarea value={newRecurring.notes} onChange={e=>setNewRecurring(p=>({...p,notes:e.target.value}))}
-                    placeholder="Scope of work, access details, materials needed, anything important..."
-                    rows={5} className="w-full bg-transparent text-white text-sm focus:outline-none resize-none leading-relaxed border-b"
-                    style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                </div>
-                <button onClick={()=>{ if(!newRecurring.title.trim()) return; saveRecurring([{...newRecurring,id:Date.now(),createdAt:new Date().toISOString()},...donnyRecurring]); setNewRecurring({title:'',clientId:'',freq:'monthly',nextDate:'',notes:''}); setShowNewRecurring(false); }}
-                  style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer"}}>ADD RECURRING JOB</button>
               </div>
             )}
-            {donnyRecurring.length===0 && !showNewRecurring && (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.08)",borderRadius:"6px",padding:"40px",textAlign:"center"}}>
-                <div className="text-4xl mb-3">🔁</div>
-                <div className="text-white font-bold mb-1">No recurring jobs</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add maintenance contracts that repeat</div>
+
+            {/* EMPTY STATE */}
+            {totalRecurring === 0 && !showNewRecurring && (
+              <div style={{...recPanel,padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"32px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>↻</div>
+                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO RECURRING JOBS</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Add maintenance contracts that repeat</div>
               </div>
             )}
-            {donnyRecurring.map(r => {
-              const client = donnyClients.find(c=>c.id===r.clientId);
-              const fc = freqColors[r.freq]||'#f97316';
-              const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
-              const isEditing = editingRecurringId === r.id;
+
+            {/* RECURRING TABLE */}
+            {totalRecurring > 0 && (
+              <div style={recPanel}>
+                <div style={recPanelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RECURRING TABLE</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalRecurring} ROW{totalRecurring!==1?'S':''}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 110px 110px 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>JOB</div><div>CLIENT</div><div>NEXT DATE</div><div>FREQ</div><div></div>
+                </div>
+                <div style={{maxHeight:donnyRecurring.length > 8 ? "440px" : "none",overflowY:donnyRecurring.length > 8 ? "auto" : "visible"}}>
+                  {donnyRecurring.map((r,i) => {
+                    const client = donnyClients.find(c => String(c.id) === String(r.clientId));
+                    const fc = freqColors[r.freq]||'#f97316';
+                    const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
+                    const isOverdue = daysUntil !== null && daysUntil < 0;
+                    const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 7;
+                    return (
+                      <button key={r.id} onClick={()=>setEditingRecurringId(editingRecurringId===r.id?null:r.id)}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 110px 110px 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyRecurring.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingRecurringId===r.id?"rgba(249,115,22,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${fc}15`,border:`0.5px solid ${fc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:fc,fontFamily:"monospace",flexShrink:0}}>↻</div>
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title}</div>
+                          {r.notes && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.notes}</div>}
+                        </div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:client?"#3b82f6":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{client?.name||'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"#ef4444":isDueSoon?"#f59e0b":"rgba(148,163,184,0.6)"}}>
+                          {r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—'}
+                          {isOverdue && <span style={{marginLeft:"4px"}}>⚠</span>}
+                          {daysUntil === 0 && <span style={{marginLeft:"4px",color:"#f59e0b"}}>·TODAY</span>}
+                        </div>
+                        <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${fc}15`,color:fc,border:`0.5px solid ${fc}30`,borderRadius:"2px",justifySelf:"start",whiteSpace:"nowrap"}}>{freqLabels[r.freq]}</div>
+                        <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{editingRecurringId===r.id?'⌄':'›'}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* INLINE EDIT */}
+            {editingRecurringId && (() => {
+              const r = donnyRecurring.find(x => x.id === editingRecurringId);
+              if (!r) return null;
               return (
-                <div key={r.id} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${isEditing?"rgba(249,115,22,0.4)":"rgba(249,115,22,0.15)"}`,borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.5)",padding:"12px 16px"}}>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-white font-bold">{r.title}</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${fc}15`,color:fc,border:`1px solid ${fc}30`}}>{freqLabels[r.freq]}</span>
-                      </div>
-                      {client && <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>🤝 {client.name}</div>}
-                      {r.nextDate && <div className="text-xs mt-1" style={{color: daysUntil !== null && daysUntil <= 7 ? '#f97316' : 'rgba(148,163,184,0.5)'}}>
-                        Next: {new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {daysUntil<0?'Overdue':daysUntil===0?'Today':`${daysUntil}d away`}
-                      </div>}
-                      {r.notes && !isEditing && <div className="text-sm mt-2 leading-relaxed whitespace-pre-wrap" style={{color:'rgba(148,163,184,0.6)'}}>{r.notes}</div>}
-                    </div>
-                    <div className="flex gap-2 ml-3 flex-shrink-0">
-                      <button onClick={()=>setEditingRecurringId(isEditing?null:r.id)}
-                        style={{fontSize:"10px",padding:"2px 8px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.7)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"3px",cursor:"pointer"}}>
-                        {isEditing?'✕':'✏️'}
-                      </button>
-                      <button onClick={()=>{ if(window.confirm('Delete?')) saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); }}
-                        style={{fontSize:"10px",padding:"2px 8px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",cursor:"pointer"}}>×</button>
+                <div style={recPanel}>
+                  <div style={recPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// EDIT RECURRING</span>
+                    <div style={{display:"flex",gap:"6px"}}>
+                      <button onClick={()=>setEditingRecurringId(null)} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.3)",color:"rgba(34,197,94,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DONE</button>
+                      <button onClick={()=>{ if(window.confirm('Delete this recurring job?')){ saveRecurring(donnyRecurring.filter(x=>x.id!==r.id)); setEditingRecurringId(null); } }} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",color:"rgba(239,68,68,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>
                     </div>
                   </div>
-                  {isEditing && (
-                    <div className="mt-4 pt-4 space-y-3" style={{borderTop:'1px solid rgba(249,115,22,0.15)'}}>
-                      <div>
-                        <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>JOB TITLE</div>
-                        <input value={r.title} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,title:e.target.value}:x))}
-                          className="w-full bg-transparent text-white font-bold focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>🤝 CLIENT</div>
-                          <select value={r.clientId||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,clientId:e.target.value}:x))}
-                            className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                            <option value="">No client</option>
-                            {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>🔁 FREQUENCY</div>
-                          <select value={r.freq} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,freq:e.target.value}:x))}
-                            className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
-                            {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>📅 NEXT DATE</div>
-                          <input type="date" value={r.nextDate||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,nextDate:e.target.value}:x))}
-                            className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}/>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>📝 NOTES</div>
-                        <textarea value={r.notes||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,notes:e.target.value}:x))}
-                          placeholder="Scope of work, access details, materials needed..."
-                          rows={4} className="w-full bg-transparent text-white text-sm focus:outline-none resize-none leading-relaxed border-b"
-                          style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                      </div>
-                      <button onClick={()=>setEditingRecurringId(null)}
-                        style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"4px",color:"rgba(249,115,22,0.9)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer"}}>
-                        ✓ Done
-                      </button>
+                  <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB TITLE</div>
+                      <input value={r.title||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,title:e.target.value}:x))}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
                     </div>
-                  )}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CLIENT</div>
+                        <select value={r.clientId||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,clientId:e.target.value}:x))}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          <option value="">No client</option>
+                          {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FREQUENCY</div>
+                        <select value={r.freq} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,freq:e.target.value}:x))}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT DATE</div>
+                        <input type="date" value={r.nextDate||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,nextDate:e.target.value}:x))}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
+                      <textarea value={r.notes||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,notes:e.target.value}:x))} rows={4}
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical",lineHeight:1.5}}/>
+                    </div>
+                  </div>
                 </div>
               );
-            })}
+            })()}
           </div>
         </div>
       );
