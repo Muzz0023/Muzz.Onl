@@ -2396,6 +2396,8 @@ function MuzzApp() {
     return ids.filter(Boolean);
   };
   const jobHasClient = (j, clientId) => getJobClientIds(j).some(id => String(id) === String(clientId));
+  // Sub/supplier job-linking helpers (entity has jobIds array)
+  const entityOnJob = (entity, jobId) => Array.isArray(entity?.jobIds) && entity.jobIds.some(id => String(id) === String(jobId));
 
   const navToEntity = (type, ref) => {
     if (type === 'job') {
@@ -2539,6 +2541,14 @@ function MuzzApp() {
   const [showAddMilestone, setShowAddMilestone] = useState(false);
   const [inlineMilestoneLabel, setInlineMilestoneLabel] = useState('');
   const [inlineMilestoneDate, setInlineMilestoneDate] = useState('');
+  const [showAddSubInline, setShowAddSubInline] = useState(false);
+  const [inlineSubName, setInlineSubName] = useState('');
+  const [inlineSubTrade, setInlineSubTrade] = useState('');
+  const [inlineSubPhone, setInlineSubPhone] = useState('');
+  const [showAddSupplierInline, setShowAddSupplierInline] = useState(false);
+  const [inlineSupplierName, setInlineSupplierName] = useState('');
+  const [inlineSupplierContact, setInlineSupplierContact] = useState('');
+  const [inlineSupplierPhone, setInlineSupplierPhone] = useState('');
   const [showNewMistake, setShowNewMistake] = useState(false);
   const [newMistake, setNewMistake] = useState({ who:'', what:'', affected:'', jobRef:'', date: new Date().toISOString().split('T')[0] });
   const [showNewDonnyJob, setShowNewDonnyJob] = useState(false);
@@ -17829,6 +17839,8 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       const jobMaterials = (donnyMaterialsLog || []).filter(m => String(m.jobId) === String(job.id));
       const totalMaterialsCost = jobMaterials.reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
+      const jobSubs = (donnySubs || []).filter(s => entityOnJob(s, job.id));
+      const jobSuppliers = (donnySuppliers || []).filter(s => entityOnJob(s, job.id));
       const jobMistakes = (donnyMistakes || []).filter(m => {
         if (!m.jobRef) return false;
         const ref = String(m.jobRef).toLowerCase();
@@ -18587,6 +18599,164 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </>
               )}
+            </div>
+
+            {/* SUBS + SUPPLIERS — side by side */}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+
+              {/* SUBCONTRACTORS */}
+              <div style={{...panel,borderLeft:"2px solid rgba(249,115,22,0.7)"}}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUBCONTRACTORS</span>
+                  <button onClick={() => { setShowAddSubInline(s => !s); setInlineSubName(''); setInlineSubTrade(''); setInlineSubPhone(''); }}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showAddSubInline?"rgba(148,163,184,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddSubInline?"rgba(148,163,184,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddSubInline?"rgba(148,163,184,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showAddSubInline ? '✕' : '+ ADD'}
+                  </button>
+                </div>
+
+                {showAddSubInline && (
+                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
+                    {(donnySubs||[]).filter(s => !entityOnJob(s, job.id)).length > 0 && (
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LINK EXISTING</div>
+                        <select value="" onChange={e => {
+                          if (!e.target.value) return;
+                          const updated = donnySubs.map(s => String(s.id) === String(e.target.value) ? {...s, jobIds:[...(s.jobIds||[]), job.id]} : s);
+                          setDonnySubs(updated);
+                          const sub = donnySubs.find(s => String(s.id) === String(e.target.value));
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Subcontractor linked: ${sub?.name||'?'}` });
+                          setShowAddSubInline(false);
+                        }} style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          <option value="">Select sub...</option>
+                          {(donnySubs||[]).filter(s => !entityOnJob(s, job.id)).map(s => <option key={s.id} value={s.id}>{s.name}{s.trade?` · ${s.trade}`:''}</option>)}
+                        </select>
+                      </div>
+                    )}
+                    <div style={{borderTop:(donnySubs||[]).filter(s => !entityOnJob(s, job.id)).length > 0 ? "0.5px solid rgba(249,115,22,0.1)" : "none",paddingTop:(donnySubs||[]).filter(s => !entityOnJob(s, job.id)).length > 0 ? "10px" : "0"}}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>OR CREATE NEW</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                        <input value={inlineSubName} onChange={e => setInlineSubName(e.target.value)} placeholder="Name *"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <input value={inlineSubTrade} onChange={e => setInlineSubTrade(e.target.value)} placeholder="Trade (electrician, plumber...)"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <input value={inlineSubPhone} onChange={e => setInlineSubPhone(e.target.value)} placeholder="Phone"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <button onClick={() => {
+                          if (!inlineSubName.trim()) return;
+                          const newSub = { id: Date.now(), name: inlineSubName.trim(), company:'', trade: inlineSubTrade, phone: inlineSubPhone, email:'', rate:'', rateType:'hr', abn:'', licenceNo:'', jobIds:[job.id] };
+                          setDonnySubs([newSub, ...(donnySubs||[])]);
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Subcontractor added: ${newSub.name}` });
+                          setInlineSubName(''); setInlineSubTrade(''); setInlineSubPhone(''); setShowAddSubInline(false);
+                        }} style={{width:"100%",padding:"8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE & LINK</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {jobSubs.length === 0 ? (
+                  <div style={{padding:"24px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.25)",fontFamily:"monospace",letterSpacing:"1.5px"}}>NO SUBS LINKED</div>
+                ) : (
+                  jobSubs.map((s, i) => (
+                    <div key={s.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",borderBottom:i<jobSubs.length-1?"0.5px solid rgba(249,115,22,0.06)":"none",gap:"8px"}}>
+                      <button onClick={() => navToEntity('sub', s)} style={{flex:1,minWidth:0,display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",padding:0}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"10px",color:"rgba(249,115,22,0.85)",flexShrink:0}}>⊿</div>
+                        <div style={{minWidth:0,flex:1}}>
+                          <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                          {(s.trade || s.phone) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {s.trade && <span>{s.trade}</span>}
+                            {s.trade && s.phone && <span> · </span>}
+                            {s.phone && <span style={{color:"rgba(34,197,94,0.6)"}}>{s.phone}</span>}
+                          </div>}
+                        </div>
+                      </button>
+                      <button onClick={() => {
+                        if (window.confirm(`Unlink ${s.name} from this job?`)) {
+                          const updated = donnySubs.map(x => x.id === s.id ? {...x, jobIds:(x.jobIds||[]).filter(id => String(id) !== String(job.id))} : x);
+                          setDonnySubs(updated);
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Subcontractor unlinked: ${s.name}` });
+                        }
+                      }} style={{fontSize:"10px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0}}>×</button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* SUPPLIERS */}
+              <div style={{...panel,borderLeft:"2px solid rgba(34,197,94,0.7)"}}>
+                <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUPPLIERS</span>
+                  <button onClick={() => { setShowAddSupplierInline(s => !s); setInlineSupplierName(''); setInlineSupplierContact(''); setInlineSupplierPhone(''); }}
+                    style={{fontSize:"10px",padding:"3px 10px",background:showAddSupplierInline?"rgba(148,163,184,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showAddSupplierInline?"rgba(148,163,184,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showAddSupplierInline?"rgba(148,163,184,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                    {showAddSupplierInline ? '✕' : '+ ADD'}
+                  </button>
+                </div>
+
+                {showAddSupplierInline && (
+                  <div style={{padding:"12px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",background:"rgba(0,0,0,0.15)",display:"flex",flexDirection:"column",gap:"8px"}}>
+                    {(donnySuppliers||[]).filter(s => !entityOnJob(s, job.id)).length > 0 && (
+                      <div>
+                        <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LINK EXISTING</div>
+                        <select value="" onChange={e => {
+                          if (!e.target.value) return;
+                          const updated = donnySuppliers.map(s => String(s.id) === String(e.target.value) ? {...s, jobIds:[...(s.jobIds||[]), job.id]} : s);
+                          setDonnySuppliers(updated);
+                          const sup = donnySuppliers.find(s => String(s.id) === String(e.target.value));
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Supplier linked: ${sup?.name||'?'}` });
+                          setShowAddSupplierInline(false);
+                        }} style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          <option value="">Select supplier...</option>
+                          {(donnySuppliers||[]).filter(s => !entityOnJob(s, job.id)).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                        </select>
+                      </div>
+                    )}
+                    <div style={{borderTop:(donnySuppliers||[]).filter(s => !entityOnJob(s, job.id)).length > 0 ? "0.5px solid rgba(34,197,94,0.1)" : "none",paddingTop:(donnySuppliers||[]).filter(s => !entityOnJob(s, job.id)).length > 0 ? "10px" : "0"}}>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>OR CREATE NEW</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                        <input value={inlineSupplierName} onChange={e => setInlineSupplierName(e.target.value)} placeholder="Name * (e.g. Lawrence & Hanson)"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <input value={inlineSupplierContact} onChange={e => setInlineSupplierContact(e.target.value)} placeholder="Contact (rep name)"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <input value={inlineSupplierPhone} onChange={e => setInlineSupplierPhone(e.target.value)} placeholder="Phone"
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        <button onClick={() => {
+                          if (!inlineSupplierName.trim()) return;
+                          const newSup = { id: Date.now(), name: inlineSupplierName.trim(), contact: inlineSupplierContact, phone: inlineSupplierPhone, email:'', items:[], jobIds:[job.id] };
+                          setDonnySuppliers([newSup, ...(donnySuppliers||[])]);
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Supplier added: ${newSup.name}` });
+                          setInlineSupplierName(''); setInlineSupplierContact(''); setInlineSupplierPhone(''); setShowAddSupplierInline(false);
+                        }} style={{width:"100%",padding:"8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ CREATE & LINK</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {jobSuppliers.length === 0 ? (
+                  <div style={{padding:"24px",textAlign:"center",fontSize:"10px",color:"rgba(34,197,94,0.25)",fontFamily:"monospace",letterSpacing:"1.5px"}}>NO SUPPLIERS LINKED</div>
+                ) : (
+                  jobSuppliers.map((s, i) => (
+                    <div key={s.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",borderBottom:i<jobSuppliers.length-1?"0.5px solid rgba(34,197,94,0.06)":"none",gap:"8px"}}>
+                      <button onClick={() => navToEntity('supplier', s)} style={{flex:1,minWidth:0,display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",padding:0}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)",flexShrink:0}}>¥</div>
+                        <div style={{minWidth:0,flex:1}}>
+                          <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                          {(s.contact || s.phone) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {s.contact && <span>{s.contact}</span>}
+                            {s.contact && s.phone && <span> · </span>}
+                            {s.phone && <span style={{color:"rgba(34,197,94,0.6)"}}>{s.phone}</span>}
+                          </div>}
+                        </div>
+                      </button>
+                      <button onClick={() => {
+                        if (window.confirm(`Unlink ${s.name} from this job?`)) {
+                          const updated = donnySuppliers.map(x => x.id === s.id ? {...x, jobIds:(x.jobIds||[]).filter(id => String(id) !== String(job.id))} : x);
+                          setDonnySuppliers(updated);
+                          logAction(`job_${job.id}`, { kind: 'edit', summary: `Supplier unlinked: ${s.name}` });
+                        }
+                      }} style={{fontSize:"10px",padding:"3px 7px",background:"rgba(239,68,68,0.06)",color:"rgba(239,68,68,0.5)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",flexShrink:0}}>×</button>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
 
             {/* ACTIONS — discrete tracked actions */}
