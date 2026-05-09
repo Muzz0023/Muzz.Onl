@@ -18375,8 +18375,8 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       // Activity timeline (their attribution feed)
       const timeline = [
-        ...workerTs.map(e => ({...e, _type:'hours', _at:new Date(e.date||e.createdAt||0), _label:`Hours logged`, _job: donnyJobs.find(j=>j.id===e.jobId)?.title})),
-        ...workerMistakes.map(m => ({...m, _type:'mistake', _at:new Date(m.createdAt||0), _label:`Mistake logged`, _job: donnyJobs.find(j=>j.id===m.jobId)?.title})),
+        ...workerTs.map(e => ({...e, _type:'hours', _at:new Date(e.date||e.createdAt||0), _label:`Hours logged`, _job: donnyJobs.find(j=>String(j.id)===String(e.jobId))?.title})),
+        ...workerMistakes.map(m => ({...m, _type:'mistake', _at:new Date(m.createdAt||0), _label:`Mistake logged`, _job: donnyJobs.find(j=>String(j.id)===String(m.jobId))?.title})),
         ...workerIncidents.map(i => ({...i, _type:'incident', _at:new Date(i.createdAt||0), _label:`Incident reported`, _job: donnyJobs.find(j=>j.id===i.jobId)?.title})),
       ].sort((a,b) => b._at - a._at);
 
@@ -21174,7 +21174,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {donnyChecklists.map((cl,i)=>{
                     const tc=typeColors[cl.type]||'#22c55e';
                     const done=cl.items?.filter(x=>x.done).length||0; const total=cl.items?.length||0;
-                    const job=donnyJobs.find(j=>j.id===cl.jobId);
+                    const job=donnyJobs.find(j=>String(j.id)===String(cl.jobId));
                     const isComplete = done===total && total>0;
                     return (
                       <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
@@ -21266,7 +21266,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         color: '#ef4444',
                         formula: 'COUNT(incidents)',
                         breakdown: donnyIncidents.map(inc => {
-                          const job = donnyJobs.find(j => j.id === inc.jobId);
+                          const job = donnyJobs.find(j => String(j.id) === String(inc.jobId));
                           return {
                             icon: '⚠', color: typeColors[inc.type]||'#ef4444',
                             label: inc.description?.slice(0,40) || typeLabels[inc.type] || 'Incident',
@@ -21464,7 +21464,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{maxHeight:donnyIncidents.length > 8 ? "440px" : "none",overflowY:donnyIncidents.length > 8 ? "auto" : "visible"}}>
                   {donnyIncidents.map((inc,i)=>{
                     const tc=typeColors[inc.type]||'#ef4444';
-                    const job=donnyJobs.find(j=>j.id===inc.jobId);
+                    const job=donnyJobs.find(j=>String(j.id)===String(inc.jobId));
                     return (
                       <button key={inc.id} onClick={()=>setEditingIncidentId(editingIncidentId===inc.id?null:inc.id)}
                         style={{width:"100%",display:"grid",gridTemplateColumns:"32px 90px 110px 1fr 90px 50px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyIncidents.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingIncidentId===inc.id?"rgba(239,68,68,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
@@ -21490,7 +21490,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               const inc = donnyIncidents.find(x => x.id === editingIncidentId);
               if (!inc) return null;
               const tc = typeColors[inc.type]||'#ef4444';
-              const job = donnyJobs.find(j => j.id === inc.jobId);
+              const job = donnyJobs.find(j => String(j.id) === String(inc.jobId));
               return (
                 <div style={incPanel}>
                   <div style={incPanelHeader}>
@@ -22848,7 +22848,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(34,197,94,0.1)"}}>
                   <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>// RECENT</div>
                   {recentMaterials.map((m,i) => {
-                    const job = donnyJobs.find(j => j.id === m.jobId);
+                    const job = donnyJobs.find(j => String(j.id) === String(m.jobId));
                     return (
                       <button key={m.id} onClick={() => navToEntity('material', {name:m.item})}
                         style={{width:"100%",display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"6px 10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"monospace",borderBottom:i<recentMaterials.length-1?"0.5px solid rgba(34,197,94,0.05)":"none",gap:"8px"}}>
