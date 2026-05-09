@@ -22212,6 +22212,13 @@ ${JSON.stringify(ctx, null, 2)}`;
       // ─── LIST VIEW ────────────────────────────────────────────────
       const totalItems = donnySuppliers.reduce((s,sup) => s + ((sup.items||[]).length), 0);
       const totalCatalogValue = donnySuppliers.reduce((sum,sup) => sum + ((sup.items||[]).reduce((s,it)=>s+(parseFloat(it.price)||0), 0)), 0);
+      const avgItemPrice = totalItems > 0 ? totalCatalogValue / totalItems : 0;
+      // Top supplier by item count
+      const topSupplier = [...donnySuppliers].sort((a,b) => (b.items||[]).length - (a.items||[]).length)[0];
+      // Most expensive item across catalog
+      const allItems = donnySuppliers.flatMap(s => (s.items||[]).map(it => ({...it, _supplier: s})));
+      const mostExpensive = allItems.length > 0 ? allItems.reduce((max, it) => (parseFloat(it.price)||0) > (parseFloat(max.price)||0) ? it : max, allItems[0]) : null;
+      const cheapest = allItems.length > 0 ? allItems.reduce((min, it) => (parseFloat(it.price)||0) < (parseFloat(min.price)||0) ? it : min, allItems[0]) : null;
 
       const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
       const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
@@ -22248,6 +22255,127 @@ ${JSON.stringify(ctx, null, 2)}`;
           </div>
 
           <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            {donnySuppliers.length > 0 && (
+              <div style={{...panel,borderLeft:"2px solid #22c55e"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Suppliers", value:String(donnySuppliers.length), color:"#22c55e",
+                      lineage: {
+                        title: 'Suppliers',
+                        value: String(donnySuppliers.length),
+                        color: '#22c55e',
+                        formula: 'COUNT(suppliers)',
+                        breakdown: donnySuppliers.map(s => ({
+                          icon: '◍', color: '#22c55e',
+                          label: s.name,
+                          sub: s.contact || s.phone || '—',
+                          value: `${(s.items||[]).length} items`,
+                          valueColor: '#22c55e',
+                          onClick: () => setEditingSupplierId(s.id),
+                        })),
+                        note: 'Click to open supplier',
+                      },
+                    },
+                    {
+                      label:"Items", value:String(totalItems), color:"#3b82f6",
+                      lineage: {
+                        title: 'Catalog Items',
+                        value: String(totalItems),
+                        color: '#3b82f6',
+                        formula: 'SUM((suppliers).items.length)',
+                        breakdown: [...donnySuppliers].sort((a,b) => (b.items||[]).length - (a.items||[]).length).map(s => ({
+                          icon: '◍', color: '#22c55e',
+                          label: s.name,
+                          sub: 'supplier',
+                          value: `${(s.items||[]).length}`,
+                          valueColor: '#3b82f6',
+                          onClick: () => setEditingSupplierId(s.id),
+                        })),
+                      },
+                    },
+                    {
+                      label:"Avg Price", value:totalItems>0?`$${avgItemPrice.toFixed(2)}`:"—", color:"#f97316",
+                      lineage: avgItemPrice > 0 ? {
+                        title: 'Average Item Price',
+                        value: `$${avgItemPrice.toFixed(2)}`,
+                        color: '#f97316',
+                        formula: `$${totalCatalogValue.toFixed(0)} ÷ ${totalItems} items`,
+                        breakdown: [...allItems].sort((a,b) => (parseFloat(b.price)||0) - (parseFloat(a.price)||0)).map(it => ({
+                          icon: '◍', color: '#22c55e',
+                          label: it.desc,
+                          sub: `${it._supplier.name}${it.unit?' · per '+it.unit:''}`,
+                          value: `$${parseFloat(it.price).toFixed(2)}`,
+                          valueColor: '#f97316',
+                          onClick: () => setEditingSupplierId(it._supplier.id),
+                        })),
+                        note: 'Sorted by price · click to view supplier',
+                      } : null,
+                    },
+                    {
+                      label:"Top Supplier", value:topSupplier ? topSupplier.name.split(' ')[0].slice(0,8) : '—', color:"#a855f7",
+                      lineage: topSupplier ? {
+                        title: `Top Supplier · ${topSupplier.name}`,
+                        value: `${(topSupplier.items||[]).length} items`,
+                        color: '#a855f7',
+                        formula: 'MAX(supplier.items.length)',
+                        breakdown: (topSupplier.items||[]).map(it => ({
+                          icon: '◍', color: '#22c55e',
+                          label: it.desc,
+                          sub: it.unit ? `per ${it.unit}` : '',
+                          value: `$${parseFloat(it.price).toFixed(2)}`,
+                          valueColor: '#22c55e',
+                          onClick: () => setEditingSupplierId(topSupplier.id),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Most Exp.", value:mostExpensive ? `$${parseFloat(mostExpensive.price).toFixed(0)}` : '—', color:"rgba(245,158,11,0.95)",
+                      lineage: mostExpensive ? {
+                        title: 'Price Range',
+                        value: `$${parseFloat(cheapest.price).toFixed(2)} → $${parseFloat(mostExpensive.price).toFixed(2)}`,
+                        color: '#f59e0b',
+                        formula: 'MIN(price) ... MAX(price)',
+                        breakdown: [
+                          {
+                            icon: '⬆', color: '#f59e0b',
+                            label: mostExpensive.desc,
+                            sub: `${mostExpensive._supplier.name}${mostExpensive.unit?' · per '+mostExpensive.unit:''}`,
+                            value: `$${parseFloat(mostExpensive.price).toFixed(2)}`,
+                            valueColor: '#f59e0b',
+                            onClick: () => setEditingSupplierId(mostExpensive._supplier.id),
+                          },
+                          {
+                            icon: '⬇', color: '#22c55e',
+                            label: cheapest.desc,
+                            sub: `${cheapest._supplier.name}${cheapest.unit?' · per '+cheapest.unit:''}`,
+                            value: `$${parseFloat(cheapest.price).toFixed(2)}`,
+                            valueColor: '#22c55e',
+                            onClick: () => setEditingSupplierId(cheapest._supplier.id),
+                          },
+                        ],
+                        note: 'Highest and lowest priced items in catalog',
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      title={k.lineage ? "Click to see breakdown" : ""}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(34,197,94,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(34,197,94,0.3)",opacity:0.7}}>ƒ</span>}
+                      </div>
+                      <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(34,197,94,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"inline-block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* ADD SUPPLIER FORM */}
             {(showAddSupplier || donnySuppliers.length === 0) && (
