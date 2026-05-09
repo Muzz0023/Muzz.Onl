@@ -21741,8 +21741,9 @@ ${JSON.stringify(ctx, null, 2)}`;
     }
 
     if (activeView === 'donny-reports') {
+      // ─── DERIVED METRICS ─────────────────────────────────────────
       // JOBS
-      const activeJobs = donnyJobs.filter(j=>!j.completed);
+      const activeJobs = donnyJobs.filter(j=>!j.completed && !j.archived);
       const completedJobs = donnyJobs.filter(j=>j.completed);
       const overdueJobs = activeJobs.filter(j=>j.dueDate && new Date(j.dueDate)<new Date());
       const todoJobs = activeJobs.filter(j=>!j.started);
@@ -21751,191 +21752,349 @@ ${JSON.stringify(ctx, null, 2)}`;
       // TEAM & LABOUR
       const totalLabourHrs = donnyTimesheets.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
       const totalLabourCost = donnyTimesheets.reduce((s,e)=>{ const m=donnyTeam.find(x=>x.id===e.memberId); return s+(parseFloat(e.hours)||0)*(parseFloat(m?.hourlyRate)||0); },0);
-      const teamHours = donnyTeam.map(m=>{ const hrs=donnyTimesheets.filter(e=>e.memberId===m.id).reduce((s,e)=>s+(parseFloat(e.hours)||0),0); const pay=hrs*(parseFloat(m.hourlyRate)||0); return {...m,hrs,pay}; }).filter(x=>x.hrs>0).sort((a,b)=>b.hrs-a.hrs);
+      const teamHours = donnyTeam.map(m => {
+        const hrs = donnyTimesheets.filter(e => String(e.memberId) === String(m.id)).reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
+        const pay = hrs * (parseFloat(m.hourlyRate)||0);
+        return { ...m, _hrs: hrs, _pay: pay };
+      });
+      const totalHourlyRate = donnyTeam.reduce((s,m) => s + (parseFloat(m.hourlyRate)||0), 0);
 
-      // COSTS
+      // FINANCIAL
+      const totalQuoted = donnyJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+      const completedRevenue = completedJobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+      const totalMaterialsCost = (donnyMaterialsLog||[]).reduce((s,m) => s + (parseFloat(m.cost)||0), 0);
+      const totalCosts = totalLabourCost + totalMaterialsCost;
+      const profit = totalQuoted - totalCosts;
+      const margin = totalQuoted > 0 ? (profit / totalQuoted) * 100 : 0;
 
-      // EXTRA MATERIALS
-      const recentMaterials = donnyMaterialsLog.slice(0,5);
+      // MATERIALS
+      const totalMaterialEntries = (donnyMaterialsLog||[]).length;
+      const recentMaterials = (donnyMaterialsLog||[]).slice(0,5);
 
-      // SITE SAFETY
-      const totalIncidents = donnyIncidents.length;
-      const incidentsByType = donnyIncidents.reduce((acc,i)=>{ acc[i.type]=(acc[i.type]||0)+1; return acc; },{});
+      // SAFETY
+      const totalIncidents = (donnyIncidents||[]).length;
+      const incidentsByType = (donnyIncidents||[]).reduce((acc,i)=>{ acc[i.type]=(acc[i.type]||0)+1; return acc; },{});
       const openRisks = donnyJobs.filter(j=>j.risk&&!j.completed).length;
-      const totalMistakes = donnyMistakes.length;
-      const totalSWMS = donnyChecklists.filter(c=>c.type==='swms').length;
-      const completedSWMS = donnyChecklists.filter(c=>c.type==='swms'&&c.items.length>0&&c.items.every(i=>i.done)).length;
+      const totalMistakes = (donnyMistakes||[]).length;
+      const totalSWMS = (donnyChecklists||[]).filter(c=>c.type==='swms').length;
+      const completedSWMS = (donnyChecklists||[]).filter(c=>c.type==='swms' && c.items && c.items.length>0 && c.items.every(i=>i.done)).length;
 
-      // SCHEDULER
-      const today = new Date().toISOString().split('T')[0];
-      const thisWeekAssignments = Object.entries(donnySchedule).filter(([d])=>d>=today).flatMap(([d,entries])=>entries.map(e=>({...e,date:d}))).slice(0,8);
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeaderFor = (color) => ({padding:"10px 14px",borderBottom:`0.5px solid ${color}1a`,borderLeft:`2px solid ${color}b3`,display:"flex",alignItems:"center",justifyContent:"space-between"});
 
-      const Section = ({title,color,children}) => (
-        <div className="rounded-2xl overflow-hidden" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${color}20`}}>
-          <div className="px-5 py-3 font-semibold text-white text-sm flex items-center gap-2" style={{borderBottom:`1px solid ${color}15`,background:`${color}08`}}>{title}</div>
-          <div className="p-4 space-y-3">{children}</div>
-        </div>
-      );
-      const StatRow = ({label,value,color='#f97316',sub}) => (
-        <div className="flex items-center justify-between py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-          <span className="text-sm" style={{color:'rgba(148,163,184,0.7)'}}>{label}</span>
-          <div className="text-right">
-            <span className="text-sm font-bold" style={{color}}>{value}</span>
-            {sub && <div className="text-xs" style={{color:'rgba(148,163,184,0.4)'}}>{sub}</div>}
+      // Reusable stat row
+      const StatRow = ({label, value, color='#f97316', sub, lineage}) => (
+        <button onClick={() => lineage && setDonnyLineage(lineage)} disabled={!lineage}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 14px",background:"none",border:"none",borderBottom:"0.5px solid rgba(255,255,255,0.04)",cursor:lineage?"pointer":"default",textAlign:"left",fontFamily:"monospace"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+            <span style={{fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{label}</span>
+            {lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.4)"}}>ƒ</span>}
           </div>
-        </div>
+          <div style={{textAlign:"right"}}>
+            <span style={{fontSize:"12px",color,fontWeight:500,borderBottom:lineage?`0.5px dashed ${color}55`:"none",paddingBottom:"1px"}}>{value}</span>
+            {sub && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",marginTop:"2px"}}>{sub}</div>}
+          </div>
+        </button>
       );
 
       return (
-        <div className="min-h-screen bg-transparent pb-24">
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-5xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>REPORTS</div>
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                <span style={{fontSize:"28px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>≣</span>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// INTEL BRIEFING</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>REPORTS</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    Generated {new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
 
-            {/* Summary stat cards */}
-            <div className="grid grid-cols-4 gap-3">
-              {[
-                {label:'Active Jobs', value:activeJobs.length, color:'#f97316'},
-                {label:'Overdue', value:overdueJobs.length, color: overdueJobs.length>0?'#ef4444':'#22c55e'},
-                {label:'Team Members', value:donnyTeam.length, color:'#f97316'},
-                {label:'Clients', value:donnyClients.length, color:'#3b82f6'},
-              ].map((s,i)=>(
-                <div key={i} className="rounded-2xl p-3 text-center" style={{background:'rgba(5,15,30,0.9)',border:`1px solid ${s.color}20`}}>
-                  <div className="text-2xl font-black" style={{color:s.color}}>{s.value}</div>
-                  <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{s.label}</div>
-                </div>
-              ))}
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            <div style={{...panel,borderLeft:"2px solid #f97316"}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                {[
+                  {
+                    label:"Active", value:String(activeJobs.length), color:"#f97316",
+                    lineage: {
+                      title: 'Active Jobs',
+                      value: String(activeJobs.length),
+                      color: '#f97316',
+                      formula: 'COUNT(jobs WHERE NOT completed AND NOT archived)',
+                      breakdown: activeJobs.map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: j.jobNumber ? `#${j.jobNumber} · ${j.started?'in progress':'not started'}` : (j.started?'in progress':'not started'),
+                        value: j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
+                        valueColor: j.dueDate && new Date(j.dueDate) < new Date() ? '#ef4444' : 'rgba(148,163,184,0.6)',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                    },
+                  },
+                  {
+                    label:"Overdue", value:String(overdueJobs.length), color:overdueJobs.length>0?"rgba(239,68,68,0.95)":"rgba(34,197,94,0.85)",
+                    lineage: overdueJobs.length > 0 ? {
+                      title: 'Overdue Jobs',
+                      value: String(overdueJobs.length),
+                      color: 'rgba(239,68,68,0.95)',
+                      formula: 'WHERE dueDate < today AND NOT completed',
+                      breakdown: overdueJobs.map(j => {
+                        const days = Math.floor((new Date() - new Date(j.dueDate)) / (1000*60*60*24));
+                        return {
+                          icon: '⊞', color: '#ef4444',
+                          label: j.title,
+                          sub: j.jobNumber ? `#${j.jobNumber}` : '',
+                          value: `${days}d late`,
+                          valueColor: '#ef4444',
+                          onClick: () => navToEntity('job', j),
+                        };
+                      }),
+                    } : null,
+                  },
+                  {
+                    label:"Labour $", value:totalLabourCost > 0 ? `$${totalLabourCost.toFixed(0)}` : '—', color:"rgba(34,197,94,0.85)",
+                    lineage: totalLabourCost > 0 ? {
+                      title: 'Total Labour Cost',
+                      value: `$${totalLabourCost.toFixed(0)}`,
+                      color: 'rgba(34,197,94,0.95)',
+                      formula: 'SUM(hours × rate) per worker',
+                      breakdown: teamHours.filter(m => m._hrs > 0).sort((a,b) => b._pay - a._pay).map(m => ({
+                        icon: '⊢', color: '#f97316',
+                        label: m.name,
+                        sub: `${m._hrs.toFixed(1)}h × $${m.hourlyRate||0}/hr`,
+                        value: `$${m._pay.toFixed(0)}`,
+                        valueColor: 'rgba(34,197,94,0.95)',
+                        onClick: () => navToEntity('worker', m),
+                      })),
+                    } : null,
+                  },
+                  {
+                    label:"Revenue", value:completedRevenue > 0 ? `$${completedRevenue.toFixed(0)}` : '—', color:"#3b82f6",
+                    lineage: completedRevenue > 0 ? {
+                      title: 'Completed Revenue',
+                      value: `$${completedRevenue.toFixed(0)}`,
+                      color: '#3b82f6',
+                      formula: 'SUM(quotedCost) WHERE completed',
+                      breakdown: completedJobs.filter(j => parseFloat(j.quotedCost)||0 > 0).sort((a,b) => (parseFloat(b.quotedCost)||0) - (parseFloat(a.quotedCost)||0)).map(j => ({
+                        icon: '⊞', color: '#f97316',
+                        label: j.title,
+                        sub: j.jobNumber ? `#${j.jobNumber}` : '',
+                        value: `$${parseFloat(j.quotedCost).toFixed(0)}`,
+                        valueColor: '#3b82f6',
+                        onClick: () => navToEntity('job', j),
+                      })),
+                    } : null,
+                  },
+                  {
+                    label:"Margin", value:totalQuoted > 0 ? `${margin.toFixed(0)}%` : '—', color:margin>=20?"rgba(34,197,94,0.85)":margin>=0?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)",
+                    lineage: totalQuoted > 0 ? {
+                      title: 'Profit Margin',
+                      value: `${margin.toFixed(1)}%`,
+                      color: margin>=20?'rgba(34,197,94,0.95)':margin>=0?'rgba(245,158,11,0.95)':'rgba(239,68,68,0.95)',
+                      formula: '(quoted − labour − materials) / quoted',
+                      breakdown: [
+                        { icon: '+', color: '#3b82f6', label: 'Total Quoted', sub: `${donnyJobs.length} jobs`, value: `$${totalQuoted.toFixed(0)}`, valueColor: '#3b82f6' },
+                        { icon: '−', color: '#f59e0b', label: 'Labour Cost', sub: `${totalLabourHrs.toFixed(0)}h tracked`, value: `$${totalLabourCost.toFixed(0)}`, valueColor: '#f59e0b' },
+                        { icon: '−', color: '#22c55e', label: 'Materials Cost', sub: `${totalMaterialEntries} entries`, value: `$${totalMaterialsCost.toFixed(0)}`, valueColor: '#22c55e' },
+                        { icon: '=', color: 'rgba(34,197,94,0.95)', label: 'Profit', sub: '', value: `${profit>=0?'+':''}$${profit.toFixed(0)}`, valueColor: profit>=0?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.95)' },
+                      ],
+                    } : null,
+                  },
+                ].map((k,i) => (
+                  <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                    title={k.lineage ? "Click to see breakdown" : ""}
+                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                      <span>{k.label}</span>
+                      {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
+                    </div>
+                    <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
+                    <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* JOBS */}
-            <Section title="🔨 Jobs" color="#f97316">
-              <StatRow label="Total jobs" value={donnyJobs.length}/>
-              <StatRow label="Active" value={activeJobs.length}/>
+            {/* JOBS PANEL */}
+            <div style={panel}>
+              <div style={panelHeaderFor("rgba(249,115,22,0.7)")}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS</span>
+                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnyJobs.length} TOTAL</span>
+              </div>
+              <StatRow label="Total jobs" value={donnyJobs.length} color="#e0eaff"/>
+              <StatRow label="Active" value={activeJobs.length} color="#f97316"/>
               <StatRow label="In progress" value={inProgressJobs.length} color="#f97316"/>
               <StatRow label="To do" value={todoJobs.length} color="#94a3b8"/>
               <StatRow label="Completed" value={completedJobs.length} color="#22c55e"/>
               <StatRow label="Overdue" value={overdueJobs.length} color={overdueJobs.length>0?'#ef4444':'#22c55e'}/>
-              {overdueJobs.length>0 && (
-                <div className="mt-2 space-y-1.5">
-                  {overdueJobs.map(j=>(
-                    <div key={j.id} className="flex items-center justify-between text-xs px-3 py-2 rounded-lg" style={{background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.15)'}}>
-                      <span className="text-white">{j.title}</span>
-                      <span style={{color:'#ef4444'}}>Due {new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Section>
-
-            {/* LABOUR */}
-            <Section title="⏱️ Labour" color="#f97316">
-              <StatRow label="Team members" value={donnyTeam.length}/>
-              <StatRow label="Combined hourly rate" value={`$${donnyTeam.reduce((s,m)=>s+(parseFloat(m.hourlyRate)||0),0).toFixed(2)}/hr`} color="#22c55e"/>
-              {donnyTeam.length > 0 && (
-                <div className="mt-2 rounded-xl overflow-hidden" style={{border:'1px solid rgba(255,255,255,0.05)'}}>
-                  <div className="grid text-xs font-mono px-4 py-2" style={{gridTemplateColumns:'1fr 1fr 90px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <div>MEMBER</div><div>ROLE</div><div>RATE</div>
-                  </div>
-                  {donnyTeam.map(m=>(
-                    <div key={m.id} className="grid px-4 py-2.5 text-sm" style={{gridTemplateColumns:'1fr 1fr 90px',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
-                      <span className="text-white font-medium">{m.name}</span>
-                      <span className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.5)'}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||'—'}</span>
-                      <span style={{color:'#22c55e'}}>{m.hourlyRate?`$${m.hourlyRate}/hr`:'—'}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {totalLabourHrs > 0 && (
-                <>
-                  <StatRow label="Hours logged (timesheets)" value={`${totalLabourHrs.toFixed(1)}h`}/>
-                  <StatRow label="Labour cost (timesheets)" value={`$${totalLabourCost.toFixed(0)}`} color="#22c55e"/>
-                </>
-              )}
-            </Section>
-
-
-
-            {/* EXTRA MATERIALS */}
-            {donnyMaterialsLog.length > 0 && (
-              <Section title="📦 Extra Materials Logged" color="#f97316">
-                <StatRow label="Total items logged" value={donnyMaterialsLog.length}/>
-                <div className="mt-2 space-y-2">
-                  {recentMaterials.map(m=>{
-                    const job=donnyJobs.find(j=>j.id===m.jobId);
-                    return(
-                      <div key={m.id} className="flex items-start justify-between text-xs px-3 py-2 rounded-lg" style={{background:'rgba(249,115,22,0.06)',border:'1px solid rgba(249,115,22,0.12)'}}>
-                        <div>
-                          <span className="text-white font-medium">{m.item}</span>
-                          {(m.qty||m.unit)&&<span className="ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'#f97316'}}>{m.qty}{m.unit?` ${m.unit}`:''}</span>}
-                          {m.note&&<div className="mt-0.5" style={{color:'rgba(148,163,184,0.5)'}}>{m.note}</div>}
-                        </div>
-                        {job&&<span style={{color:'rgba(148,163,184,0.4)'}}>{job.title.slice(0,20)}</span>}
-                      </div>
+              {overdueJobs.length > 0 && (
+                <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(239,68,68,0.1)",background:"rgba(239,68,68,0.03)"}}>
+                  <div style={{fontSize:"8px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>// OVERDUE LIST</div>
+                  {overdueJobs.map((j,i) => {
+                    const days = Math.floor((new Date() - new Date(j.dueDate)) / (1000*60*60*24));
+                    return (
+                      <button key={j.id} onClick={() => navToEntity('job', j)}
+                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"monospace",borderBottom:i<overdueJobs.length-1?"0.5px solid rgba(239,68,68,0.05)":"none"}}>
+                        <span style={{fontSize:"11px",color:"#e0eaff"}}>{j.title}</span>
+                        <span style={{fontSize:"10px",color:"#ef4444"}}>{days}d late</span>
+                      </button>
                     );
                   })}
-                  {donnyMaterialsLog.length>5&&<div className="text-xs text-center" style={{color:'rgba(148,163,184,0.3)'}}>+ {donnyMaterialsLog.length-5} more items</div>}
                 </div>
-              </Section>
+              )}
+            </div>
+
+            {/* LABOUR PANEL */}
+            <div style={panel}>
+              <div style={panelHeaderFor("rgba(249,115,22,0.7)")}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LABOUR &amp; TEAM</span>
+                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnyTeam.length} CREW</span>
+              </div>
+              <StatRow label="Team members" value={donnyTeam.length} color="#e0eaff"/>
+              <StatRow label="Combined hourly rate" value={`$${totalHourlyRate.toFixed(0)}/hr`} color="#22c55e"/>
+              {totalLabourHrs > 0 && (
+                <>
+                  <StatRow label="Hours logged" value={`${totalLabourHrs.toFixed(1)}h`} color="rgba(168,85,247,0.85)"/>
+                  <StatRow label="Labour cost" value={`$${totalLabourCost.toFixed(0)}`} color="rgba(34,197,94,0.85)"/>
+                </>
+              )}
+              {donnyTeam.length > 0 && (
+                <>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px 80px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderTop:"0.5px solid rgba(249,115,22,0.1)",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>NAME</div><div>ROLE</div><div>RATE</div><div>HOURS</div>
+                  </div>
+                  <div style={{maxHeight:teamHours.length > 8 ? "320px" : "none",overflowY:teamHours.length > 8 ? "auto" : "visible"}}>
+                    {teamHours.map((m,i) => (
+                      <button key={m.id} onClick={() => navToEntity('worker', m)}
+                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px 80px",padding:"8px 16px",alignItems:"center",borderBottom:i<teamHours.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{(m.name||'?').charAt(0).toUpperCase()}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(m.roles||[m.role]).filter(Boolean).join(', ')||m.position||'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:m.hourlyRate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{m.hourlyRate?`$${m.hourlyRate}`:'—'}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:m._hrs>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{m._hrs>0?`${m._hrs.toFixed(1)}h`:'—'}</div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* MATERIALS PANEL */}
+            {totalMaterialEntries > 0 && (
+              <div style={panel}>
+                <div style={panelHeaderFor("rgba(34,197,94,0.7)")}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MATERIALS</span>
+                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{totalMaterialEntries} ENTR{totalMaterialEntries!==1?'IES':'Y'}</span>
+                </div>
+                <StatRow label="Total entries logged" value={totalMaterialEntries} color="rgba(34,197,94,0.85)"/>
+                {totalMaterialsCost > 0 && <StatRow label="Total material cost" value={`$${totalMaterialsCost.toFixed(0)}`} color="rgba(34,197,94,0.85)"/>}
+                <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(34,197,94,0.1)"}}>
+                  <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>// RECENT</div>
+                  {recentMaterials.map((m,i) => {
+                    const job = donnyJobs.find(j => j.id === m.jobId);
+                    return (
+                      <button key={m.id} onClick={() => navToEntity('material', {name:m.item})}
+                        style={{width:"100%",display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"6px 10px",background:"none",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"monospace",borderBottom:i<recentMaterials.length-1?"0.5px solid rgba(34,197,94,0.05)":"none",gap:"8px"}}>
+                        <div style={{minWidth:0,flex:1}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}>
+                            <span style={{fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"220px"}}>{m.item}</span>
+                            {(m.qty||m.unit) && <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 5px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.95)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px"}}>{m.qty}{m.unit?` ${m.unit}`:''}</span>}
+                          </div>
+                          {m.note && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginTop:"2px"}}>↳ {m.note}</div>}
+                        </div>
+                        {job && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",flexShrink:0}}>{job.jobNumber?`#${job.jobNumber}`:job.title.slice(0,12)}</span>}
+                      </button>
+                    );
+                  })}
+                  {totalMaterialEntries > 5 && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",textAlign:"center",padding:"6px 0",letterSpacing:"1px"}}>+ {totalMaterialEntries-5} MORE</div>}
+                </div>
+              </div>
             )}
 
-            {/* SITE SAFETY */}
-            <Section title="🦺 Site Safety" color="#ef4444">
+            {/* SAFETY PANEL */}
+            <div style={panel}>
+              <div style={panelHeaderFor("rgba(239,68,68,0.7)")}>
+                <span style={{fontSize:"10px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SITE SAFETY</span>
+                <span style={{fontSize:"9px",color:totalIncidents>0?"rgba(239,68,68,0.6)":"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>{totalIncidents>0?`${totalIncidents} INCIDENT${totalIncidents!==1?'S':''}`:'CLEAR'}</span>
+              </div>
               <StatRow label="Incidents logged" value={totalIncidents} color={totalIncidents>0?'#ef4444':'#22c55e'}/>
               <StatRow label="Open risks" value={openRisks} color={openRisks>0?'#f59e0b':'#22c55e'}/>
               <StatRow label="Mistakes logged" value={totalMistakes} color={totalMistakes>0?'#f59e0b':'#22c55e'}/>
               <StatRow label="SWMS completed" value={`${completedSWMS}/${totalSWMS}`} color="#22c55e"/>
-              {totalIncidents>0&&(
-                <div className="mt-2 space-y-1.5">
-                  {Object.entries(incidentsByType).map(([type,count])=>(
-                    <div key={type} className="flex items-center justify-between text-xs px-3 py-1.5 rounded-lg" style={{background:'rgba(239,68,68,0.06)',border:'1px solid rgba(239,68,68,0.12)'}}>
-                      <span className="text-white capitalize">{type.replace('_',' ')}</span>
-                      <span style={{color:'#ef4444'}}>{count}</span>
+              {totalIncidents > 0 && (
+                <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(239,68,68,0.1)",background:"rgba(239,68,68,0.03)"}}>
+                  <div style={{fontSize:"8px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>// BY TYPE</div>
+                  {Object.entries(incidentsByType).map(([type, count],i) => (
+                    <div key={type} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 10px",borderBottom:i<Object.keys(incidentsByType).length-1?"0.5px solid rgba(239,68,68,0.05)":"none",fontFamily:"monospace"}}>
+                      <span style={{fontSize:"11px",color:"#e0eaff",textTransform:"capitalize"}}>{type.replace(/_/g,' ')}</span>
+                      <span style={{fontSize:"11px",color:"#ef4444",fontWeight:500}}>{count}</span>
                     </div>
                   ))}
                 </div>
               )}
-            </Section>
+            </div>
 
-            {/* SCHEDULER */}
-
-
-            {/* SUBCONTRACTORS */}
-            {donnySubs.length>0&&(
-              <Section title="🔩 Subcontractors" color="#f97316">
-                <StatRow label="Total subcontractors" value={donnySubs.length}/>
-                {donnySubs.map(s=>(
-                  <div key={s.id} className="flex items-center justify-between text-xs py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                    <span className="text-white font-medium">{s.name}</span>
-                    {s.trade&&<span style={{color:'rgba(148,163,184,0.5)'}}>{s.trade}</span>}
-                    {s.rate&&<span style={{color:'#22c55e'}}>${s.rate}/{s.rateType}</span>}
+            {/* SUBCONTRACTORS PANEL */}
+            {(donnySubs||[]).length > 0 && (
+              <div style={panel}>
+                <div style={panelHeaderFor("rgba(249,115,22,0.7)")}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SUBCONTRACTORS</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnySubs.length}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 90px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div>NAME</div><div>TRADE</div><div>RATE</div>
+                </div>
+                {donnySubs.map((s,i) => (
+                  <div key={s.id} style={{display:"grid",gridTemplateColumns:"1fr 1fr 90px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnySubs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",fontFamily:"monospace"}}>
+                    <span style={{fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.trade||'—'}</span>
+                    <span style={{fontSize:"10px",color:s.rate?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{s.rate?`$${s.rate}/${s.rateType||'hr'}`:'—'}</span>
                   </div>
                 ))}
-              </Section>
+              </div>
             )}
 
-            {/* CLIENTS */}
-            {donnyClients.length>0&&(
-              <Section title="🤝 Clients" color="#3b82f6">
-                <StatRow label="Total clients" value={donnyClients.length} color="#3b82f6"/>
-                {donnyClients.map(c=>{
-                  const linked=(c.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
-                  return(
-                    <div key={c.id} className="flex items-center justify-between text-xs py-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                      <div>
-                        <span className="text-white font-medium">{c.name}</span>
-                        {c.company&&<span className="ml-2" style={{color:'rgba(148,163,184,0.5)'}}>{c.company}</span>}
-                      </div>
-                      <span style={{color:'rgba(59,130,246,0.7)'}}>{linked.length} job{linked.length!==1?'s':''}</span>
-                    </div>
+            {/* CLIENTS PANEL */}
+            {donnyClients.length > 0 && (
+              <div style={panel}>
+                <div style={panelHeaderFor("rgba(59,130,246,0.7)")}>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENTS</span>
+                  <span style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>{donnyClients.length}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>NAME</div><div>COMPANY</div><div>JOBS</div>
+                </div>
+                {donnyClients.map((c,i) => {
+                  const linked = donnyJobs.filter(j => j.clientId === c.id);
+                  return (
+                    <button key={c.id} onClick={() => navToEntity('client', c)}
+                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 80px",padding:"8px 16px",alignItems:"center",borderBottom:i<donnyClients.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(59,130,246,0.12)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#3b82f6",fontFamily:"monospace",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
+                      <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</span>
+                      <span style={{fontSize:"10px",color:linked.length>0?"rgba(59,130,246,0.85)":"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{linked.length} job{linked.length!==1?'s':''}</span>
+                    </button>
                   );
                 })}
-              </Section>
+              </div>
             )}
 
           </div>
@@ -22552,170 +22711,273 @@ ${JSON.stringify(ctx, null, 2)}`;
 
     if (activeView === 'donny-clients') {
       const saveClients = (updated) => { setDonnyClients(updated) };
-      return (
-        <div className="min-h-screen bg-transparent pb-24">
-          <Sidebar /><SaveIndicator />
-          <div style={{borderBottom:"0.5px solid rgba(59,130,246,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-4xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DONNY</button>
-              <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>BUSINESS INTELLIGENCE</div>
-              <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>CLIENTS</div>
-            </div>
-          </div>
-          <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-            <button onClick={()=>{ setShowAddClient(s=>!s); setEditingClientId(null); }}
-              style={{width:'100%',padding:'12px',background:'rgba(59,130,246,0.06)',border:'0.5px dashed rgba(59,130,246,0.3)',borderRadius:'6px',color:'rgba(59,130,246,0.7)',fontFamily:'monospace',fontSize:'12px',letterSpacing:'1.5px',cursor:'pointer'}}>
-              {showAddClient ? '✕ Cancel' : '+ Add Client'}
-            </button>
 
-            {showAddClient && (
-              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(59,130,246,0.2)',borderRadius:'6px',borderLeft:'2px solid rgba(59,130,246,0.6)',padding:'16px'}}>
-                <div className="text-xs font-mono" style={{color:'rgba(59,130,246,0.6)'}}>// NEW CLIENT</div>
-                <div className="grid grid-cols-2 gap-3">
-                  {[{key:'name',label:'👤 FULL NAME',placeholder:'John Smith'},{key:'company',label:'🏢 COMPANY',placeholder:'Smith Electrical'},{key:'phone',label:'📞 PHONE',placeholder:'04XX XXX XXX'},{key:'email',label:'📧 EMAIL',placeholder:'john@example.com'}].map(f=>(
-                    <div key={f.key}>
-                      <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>{f.label}</div>
-                      <input value={newClient[f.key]} onChange={e=>setNewClient(p=>({...p,[f.key]:e.target.value}))} placeholder={f.placeholder}
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.5)'}}>📍 ADDRESS</div>
-                  <input value={newClient.address} onChange={e=>setNewClient(p=>({...p,address:e.target.value}))} placeholder="123 Main St, Brisbane QLD 4000"
-                    className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                </div>
-                {donnyJobs.length > 0 && (
+      // ── DERIVED STATS ─────────────────────────────────────────────
+      // For each client: jobs + revenue + profit
+      const clientsWithStats = donnyClients.map(c => {
+        const cjobs = donnyJobs.filter(j => j.clientId === c.id);
+        const active = cjobs.filter(j => !j.completed);
+        const completed = cjobs.filter(j => j.completed);
+        const totalQuoted = cjobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+        const totalCost = cjobs.reduce((s,j) => {
+          const ts = donnyTimesheets.filter(e => e.jobId === j.id);
+          const labour = ts.reduce((sum,e) => {
+            const m = donnyTeam.find(x => x.id === e.memberId);
+            return sum + (parseFloat(e.hours)||0) * (parseFloat(m?.hourlyRate)||0);
+          }, 0);
+          const mats = (donnyMaterialsLog||[]).filter(m => m.jobId === j.id).reduce((sum,m) => sum + (parseFloat(m.cost)||0), 0);
+          return s + labour + mats;
+        }, 0);
+        const completedQuoted = completed.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+        const profit = totalQuoted - totalCost;
+        const margin = totalQuoted > 0 ? (profit / totalQuoted) * 100 : 0;
+        return { ...c, _jobs: cjobs, _active: active, _completed: completed, _quoted: totalQuoted, _completedQuoted: completedQuoted, _cost: totalCost, _profit: profit, _margin: margin };
+      });
+
+      const totalClients = donnyClients.length;
+      const totalActiveJobs = clientsWithStats.reduce((s,c) => s + c._active.length, 0);
+      const totalRevenue = clientsWithStats.reduce((s,c) => s + c._completedQuoted, 0);
+      const topClient = [...clientsWithStats].sort((a,b) => b._quoted - a._quoted)[0];
+      const clientsWithMargin = clientsWithStats.filter(c => c._completed.length > 0 && c._quoted > 0);
+      const avgMargin = clientsWithMargin.length > 0
+        ? clientsWithMargin.reduce((s,c) => s + c._margin, 0) / clientsWithMargin.length
+        : 0;
+
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(59,130,246,0.1)",borderLeft:"2px solid rgba(59,130,246,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch />
+          <LineagePopup />
+          <DonnyAlertConfig />
+          <DonnyAsk />
+          <DonnyBreadcrumbs />
+
+          {/* HEADER */}
+          <div style={{borderBottom:"0.5px solid rgba(59,130,246,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                  <span style={{fontSize:"28px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",lineHeight:1}}>◇</span>
                   <div>
-                    <div className="text-xs font-mono mb-2" style={{color:'rgba(148,163,184,0.5)'}}>🔨 LINKED JOBS</div>
-                    <div className="flex flex-wrap gap-2">
-                      {donnyJobs.map(job=>(
-                        <button key={job.id} onClick={()=>setNewClient(p=>({...p,jobIds:p.jobIds.includes(job.id)?p.jobIds.filter(id=>id!==job.id):[...p.jobIds,job.id]}))}
-                          className="text-xs px-3 py-1 rounded-lg font-medium"
-                          style={{background:newClient.jobIds.includes(job.id)?'rgba(59,130,246,0.2)':'rgba(255,255,255,0.04)',border:newClient.jobIds.includes(job.id)?'1px solid rgba(59,130,246,0.5)':'1px solid rgba(255,255,255,0.08)',color:newClient.jobIds.includes(job.id)?'#3b82f6':'rgba(148,163,184,0.6)'}}>
-                          {job.jobNumber?`#${job.jobNumber} `:''}  {job.title}
-                        </button>
-                      ))}
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// CLIENT REGISTRY</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>CLIENTS</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                      {totalClients} client{totalClients!==1?'s':''}
+                      {totalActiveJobs > 0 && (' · '+totalActiveJobs+' active job'+(totalActiveJobs!==1?'s':''))}
+                      {totalRevenue > 0 && (' · $'+totalRevenue.toFixed(0)+' earned')}
                     </div>
                   </div>
-                )}
-                <button onClick={()=>{
-                  if(!newClient.name.trim()) return;
-                  saveClients([...donnyClients,{...newClient,id:Date.now(),createdAt:new Date().toISOString()}]);
-                  setNewClient({name:'',company:'',phone:'',email:'',address:'',jobIds:[]});
-                  setShowAddClient(false);
-                }} className="w-full py-3 rounded-xl font-bold text-white text-sm" style={{background:'linear-gradient(135deg,rgba(59,130,246,0.9),rgba(37,99,235,0.9))'}}>
-                  Add Client
+                </div>
+                <button onClick={()=>{ setShowAddClient(s=>!s); setEditingClientId(null); }}
+                  style={{padding:"6px 12px",background:showAddClient?"rgba(239,68,68,0.06)":"rgba(59,130,246,0.1)",border:`0.5px solid ${showAddClient?"rgba(239,68,68,0.3)":"rgba(59,130,246,0.4)"}`,borderRadius:"3px",color:showAddClient?"rgba(239,68,68,0.85)":"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  {showAddClient ? '✕ CANCEL' : '+ ADD CLIENT'}
                 </button>
               </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+
+            {/* KPI STRIP */}
+            {totalClients > 0 && (
+              <div style={{...panel,borderLeft:"2px solid #3b82f6"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                  {[
+                    {
+                      label:"Clients", value:String(totalClients), color:"#3b82f6",
+                      lineage: {
+                        title: 'Clients',
+                        value: String(totalClients),
+                        color: '#3b82f6',
+                        formula: 'COUNT(clients)',
+                        breakdown: clientsWithStats.map(c => ({
+                          icon: '◇', color: '#3b82f6',
+                          label: c.name,
+                          sub: c.company || c.phone || '—',
+                          value: `${c._jobs.length} jobs`,
+                          valueColor: '#3b82f6',
+                          onClick: () => navToEntity('client', c),
+                        })),
+                        note: 'Click to open client',
+                      },
+                    },
+                    {
+                      label:"Active Jobs", value:String(totalActiveJobs), color:"#f97316",
+                      lineage: totalActiveJobs > 0 ? {
+                        title: 'Active Jobs Across Clients',
+                        value: String(totalActiveJobs),
+                        color: '#f97316',
+                        formula: 'COUNT(jobs WHERE NOT completed AND has client)',
+                        breakdown: [...clientsWithStats].filter(c => c._active.length > 0).sort((a,b) => b._active.length - a._active.length).map(c => ({
+                          icon: '◇', color: '#3b82f6',
+                          label: c.name,
+                          sub: c.company || '—',
+                          value: `${c._active.length}`,
+                          valueColor: '#f97316',
+                          onClick: () => navToEntity('client', c),
+                        })),
+                        note: 'Clients with active jobs',
+                      } : null,
+                    },
+                    {
+                      label:"Revenue", value:totalRevenue > 0 ? `$${totalRevenue.toFixed(0)}` : '—', color:"rgba(34,197,94,0.85)",
+                      lineage: totalRevenue > 0 ? {
+                        title: 'Earned Revenue',
+                        value: `$${totalRevenue.toFixed(0)}`,
+                        color: 'rgba(34,197,94,0.95)',
+                        formula: 'SUM(quotedCost) WHERE job.completed',
+                        breakdown: [...clientsWithStats].filter(c => c._completedQuoted > 0).sort((a,b) => b._completedQuoted - a._completedQuoted).map(c => ({
+                          icon: '◇', color: '#3b82f6',
+                          label: c.name,
+                          sub: `${c._completed.length} completed job${c._completed.length!==1?'s':''}`,
+                          value: `$${c._completedQuoted.toFixed(0)}`,
+                          valueColor: 'rgba(34,197,94,0.95)',
+                          onClick: () => navToEntity('client', c),
+                        })),
+                      } : null,
+                    },
+                    {
+                      label:"Top Client", value:topClient ? topClient.name : '—', color:"#a855f7", smallValue: true,
+                      lineage: topClient ? {
+                        title: `Top Client · ${topClient.name}`,
+                        value: `$${topClient._quoted.toFixed(0)}`,
+                        color: '#a855f7',
+                        formula: 'MAX(SUM(client.jobs.quotedCost))',
+                        breakdown: [...clientsWithStats].filter(c => c._quoted > 0).sort((a,b) => b._quoted - a._quoted).slice(0,10).map(c => ({
+                          icon: '◇', color: '#3b82f6',
+                          label: c.name,
+                          sub: `${c._jobs.length} jobs · ${c._completed.length} done`,
+                          value: `$${c._quoted.toFixed(0)}`,
+                          valueColor: '#a855f7',
+                          onClick: () => navToEntity('client', c),
+                        })),
+                        note: 'Top 10 by total quoted',
+                      } : null,
+                    },
+                    {
+                      label:"Avg Margin", value:clientsWithMargin.length > 0 ? `${avgMargin.toFixed(0)}%` : '—', color:avgMargin >= 20 ? "rgba(34,197,94,0.85)" : avgMargin >= 0 ? "rgba(245,158,11,0.85)" : "rgba(239,68,68,0.85)",
+                      lineage: clientsWithMargin.length > 0 ? {
+                        title: 'Average Profit Margin',
+                        value: `${avgMargin.toFixed(1)}%`,
+                        color: avgMargin >= 20 ? 'rgba(34,197,94,0.95)' : avgMargin >= 0 ? 'rgba(245,158,11,0.95)' : 'rgba(239,68,68,0.95)',
+                        formula: 'AVG((quoted - cost) / quoted) per client',
+                        breakdown: [...clientsWithMargin].sort((a,b) => b._margin - a._margin).map(c => ({
+                          icon: '◇', color: '#3b82f6',
+                          label: c.name,
+                          sub: `quoted $${c._quoted.toFixed(0)} − cost $${c._cost.toFixed(0)}`,
+                          value: `${c._margin.toFixed(0)}%`,
+                          valueColor: c._margin >= 20 ? 'rgba(34,197,94,0.95)' : c._margin >= 0 ? 'rgba(245,158,11,0.95)' : 'rgba(239,68,68,0.95)',
+                          onClick: () => navToEntity('client', c),
+                        })),
+                      } : null,
+                    },
+                  ].map((k,i) => (
+                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
+                      title={k.lineage ? "Click to see breakdown" : ""}
+                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(59,130,246,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
+                        <span>{k.label}</span>
+                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(59,130,246,0.3)",opacity:0.7}}>ƒ</span>}
+                      </div>
+                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(59,130,246,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
+                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
 
-            {donnyClients.length===0 && !showAddClient ? (
-              <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(59,130,246,0.08)',borderRadius:'6px',padding:'40px',textAlign:'center'}}>
-                <div className="text-4xl mb-3">🤝</div>
-                <div className="text-white font-bold mb-1">No clients yet</div>
-                <div className="text-sm" style={{color:'rgba(148,163,184,0.4)'}}>Add your first client above</div>
-              </div>
-            ) : (
-              <>
-                {/* Master Table */}
-                {donnyClients.length > 0 && (
-                  <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(59,130,246,0.2)',borderRadius:'6px',overflow:'hidden'}}>
-                    <div className="flex items-center justify-between px-5 py-4" style={{borderBottom:'1px solid rgba(59,130,246,0.1)'}}>
-                      <div className="text-xs font-mono tracking-widest" style={{color:'rgba(59,130,246,0.7)'}}>// CLIENT TABLE</div>
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{background:'rgba(59,130,246,0.1)',color:'#3b82f6'}}>{donnyClients.length} clients</span>
-                    </div>
-                    <div className="grid text-xs font-mono px-5 py-2.5" style={{gridTemplateColumns:'1fr 1fr 130px 120px',color:'rgba(148,163,184,0.4)',borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-                      <div>NAME</div><div>COMPANY</div><div>PHONE</div><div>JOBS</div>
-                    </div>
-                    {donnyClients.map((client, i) => {
-                      const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
-                      return (
-                        <div key={client.id} onClick={() => { navToEntity('client', client); }}
-                          className="grid px-5 py-3 items-center hover:bg-white/[0.02]"
-                          style={{gridTemplateColumns:'1fr 1fr 130px 120px',borderBottom:i<donnyClients.length-1?'1px solid rgba(255,255,255,0.03)':'none',cursor:'pointer'}}>
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0" style={{background:'rgba(59,130,246,0.15)',color:'#3b82f6'}}>{client.name.charAt(0).toUpperCase()}</div>
-                            <span className="text-white font-medium text-sm truncate">{client.name}</span>
-                          </div>
-                          <div className="text-xs truncate pr-2" style={{color:'rgba(148,163,184,0.6)'}}>{client.company||'—'}</div>
-                          <div>
-                            {client.phone
-                              ? <a href={`tel:${client.phone}`} className="text-xs" style={{color:'rgba(59,130,246,0.7)'}}>{client.phone}</a>
-                              : <span className="text-xs" style={{color:'rgba(148,163,184,0.3)'}}>—</span>}
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {linkedJobs.length > 0
-                              ? linkedJobs.map(j => <span key={j.id} className="text-xs px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.1)',color:'rgba(249,115,22,0.7)'}}>{j.jobNumber?`#${j.jobNumber}`:j.title.slice(0,8)}</span>)
-                              : <span className="text-xs" style={{color:'rgba(148,163,184,0.3)'}}>—</span>}
-                          </div>
-                        </div>
-                      );
-                    })}
+            {/* ADD CLIENT FORM */}
+            {showAddClient && (
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW CLIENT</span>
+                  <button onClick={()=>setShowAddClient(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                </div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                    {[{key:'name',label:'NAME',placeholder:'John Smith'},{key:'company',label:'COMPANY',placeholder:'Smith Electrical'},{key:'phone',label:'PHONE',placeholder:'04XX XXX XXX'},{key:'email',label:'EMAIL',placeholder:'john@example.com'}].map(f=>(
+                      <div key={f.key}>
+                        <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.label}</div>
+                        <input value={newClient[f.key]} onChange={e=>setNewClient(p=>({...p,[f.key]:e.target.value}))} placeholder={f.placeholder}
+                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      </div>
+                    ))}
                   </div>
-                )}
-
-                {/* Client cards */}
-                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-                {donnyClients.map(client => {
-                  const isEditing = editingClientId===client.id;
-                  const linkedJobs = (client.jobIds||[]).map(id=>donnyJobs.find(j=>j.id===id)).filter(Boolean);
-                  return (
-                    <div key={client.id} style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(59,130,246,0.2)',borderRadius:'6px',overflow:'hidden'}}>
-                      <div className="p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black flex-shrink-0" style={{background:'rgba(59,130,246,0.15)',border:'1px solid rgba(59,130,246,0.3)',color:'#3b82f6'}}>
-                              {client.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                              <div className="text-white font-bold">{client.name}</div>
-                              {client.company && <div className="text-xs mt-0.5" style={{color:'rgba(148,163,184,0.6)'}}>{client.company}</div>}
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <button onClick={() => { navToEntity('client', client); }}
-                              style={{fontSize:'10px',padding:'2px 8px',background:'rgba(59,130,246,0.1)',color:'rgba(59,130,246,0.85)',border:'0.5px solid rgba(59,130,246,0.3)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace',letterSpacing:'0.5px'}}>OPEN →</button>
-                            <button onClick={()=>setEditingClientId(isEditing?null:client.id)} style={{fontSize:'10px',padding:'2px 8px',background:'rgba(148,163,184,0.06)',color:'rgba(148,163,184,0.6)',border:'0.5px solid rgba(148,163,184,0.2)',borderRadius:'3px',cursor:'pointer',fontFamily:'monospace'}}>{isEditing?'✕':'⋯'}</button>
-                            <button onClick={()=>{if(window.confirm(`Remove ${client.name}?`)) saveClients(donnyClients.filter(c=>c.id!==client.id));}} style={{fontSize:'10px',padding:'2px 8px',background:'rgba(239,68,68,0.06)',color:'rgba(239,68,68,0.5)',border:'0.5px solid rgba(239,68,68,0.2)',borderRadius:'3px',cursor:'pointer'}}>×</button>
-                          </div>
-                        </div>
-                        <div className="mt-3 grid grid-cols-2 gap-2">
-                          {client.phone&&<a href={`tel:${client.phone}`} className="text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5" style={{background:'rgba(59,130,246,0.08)',color:'rgba(59,130,246,0.8)',border:'1px solid rgba(59,130,246,0.15)'}}>📞 {client.phone}</a>}
-                          {client.email&&<a href={`mailto:${client.email}`} className="text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 truncate" style={{background:'rgba(59,130,246,0.08)',color:'rgba(59,130,246,0.8)',border:'1px solid rgba(59,130,246,0.15)'}}>📧 {client.email}</a>}
-                          {client.address&&<div className="text-xs px-3 py-1.5 rounded-lg col-span-2" style={{background:'rgba(59,130,246,0.08)',color:'rgba(59,130,246,0.8)',border:'1px solid rgba(59,130,246,0.15)'}}>📍 {client.address}</div>}
-                        </div>
-                        {linkedJobs.length>0&&<div className="mt-3 flex flex-wrap gap-1.5">{linkedJobs.map(j=><span key={j.id} className="text-xs px-2 py-0.5 rounded-lg" style={{background:'rgba(249,115,22,0.08)',color:'rgba(249,115,22,0.7)',border:'1px solid rgba(249,115,22,0.2)'}}>🔨 {j.jobNumber?`#${j.jobNumber} `:''}  {j.title}</span>)}</div>}
-                        {isEditing&&(
-                          <div className="mt-4 pt-4 space-y-3" style={{borderTop:'1px solid rgba(59,130,246,0.1)'}}>
-                            {[{key:'name',label:'NAME'},{key:'company',label:'COMPANY'},{key:'phone',label:'PHONE'},{key:'email',label:'EMAIL'},{key:'address',label:'ADDRESS'}].map(f=>(
-                              <div key={f.key}>
-                                <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.4)'}}>{f.label}</div>
-                                <input value={client[f.key]||''} onChange={e=>saveClients(donnyClients.map(c=>c.id===client.id?{...c,[f.key]:e.target.value}:c))}
-                                  className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                              </div>
-                            ))}
-                            {donnyJobs.length>0&&<div>
-                              <div className="text-xs font-mono mb-1.5" style={{color:'rgba(148,163,184,0.4)'}}>LINKED JOBS</div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {donnyJobs.map(job=>{const linked=(client.jobIds||[]).includes(job.id); return(
-                                  <button key={job.id} onClick={()=>saveClients(donnyClients.map(c=>c.id===client.id?{...c,jobIds:linked?(c.jobIds||[]).filter(id=>id!==job.id):[...(c.jobIds||[]),job.id]}:c))}
-                                    className="text-xs px-2.5 py-1 rounded-lg"
-                                    style={{background:linked?'rgba(59,130,246,0.2)':'rgba(255,255,255,0.03)',border:linked?'1px solid rgba(59,130,246,0.4)':'1px solid rgba(255,255,255,0.06)',color:linked?'#3b82f6':'rgba(148,163,184,0.5)'}}>
-                                    {job.jobNumber?`#${job.jobNumber} `:''}  {job.title}
-                                  </button>
-                                );})}
-                              </div>
-                            </div>}
-                          </div>
-                        )}
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ADDRESS</div>
+                    <input value={newClient.address} onChange={e=>setNewClient(p=>({...p,address:e.target.value}))} placeholder="123 Main St, Brisbane QLD 4000"
+                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                  </div>
+                  {donnyJobs.length > 0 && (
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>LINKED JOBS</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+                        {donnyJobs.map(job => {
+                          const linked = newClient.jobIds.includes(job.id);
+                          return (
+                            <button key={job.id} onClick={()=>setNewClient(p=>({...p,jobIds:linked?p.jobIds.filter(id=>id!==job.id):[...p.jobIds,job.id]}))}
+                              style={{fontSize:"10px",padding:"3px 8px",fontFamily:"monospace",letterSpacing:"0.3px",background:linked?"rgba(249,115,22,0.15)":"rgba(255,255,255,0.03)",border:`0.5px solid ${linked?"rgba(249,115,22,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:linked?"rgba(249,115,22,0.95)":"rgba(148,163,184,0.5)",cursor:"pointer"}}>
+                              {job.jobNumber?`#${job.jobNumber} `:''}{job.title}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
-                  );
-                })}
+                  )}
+                  <button onClick={()=>{
+                    if(!newClient.name.trim()) return;
+                    saveClients([...donnyClients,{...newClient,id:Date.now(),createdAt:new Date().toISOString()}]);
+                    setNewClient({name:'',company:'',phone:'',email:'',address:'',jobIds:[]});
+                    setShowAddClient(false);
+                  }} style={{width:"100%",padding:"10px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD CLIENT</button>
+                </div>
               </div>
-              </>
             )}
+
+            {/* EMPTY STATE */}
+            {totalClients === 0 && !showAddClient && (
+              <div style={{...panel,padding:"40px",textAlign:"center"}}>
+                <div style={{fontSize:"32px",color:"rgba(59,130,246,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>◇</div>
+                <div style={{fontSize:"11px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO CLIENTS YET</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add your first client above to start tracking revenue</div>
+              </div>
+            )}
+
+            {/* CLIENT TABLE */}
+            {totalClients > 0 && (
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENT TABLE</span>
+                  <span style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>{totalClients} ROW{totalClients!==1?'S':''}</span>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 80px 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                  <div></div><div>NAME</div><div>COMPANY</div><div>PHONE</div><div>JOBS</div><div>QUOTED</div><div></div>
+                </div>
+                <div style={{maxHeight:clientsWithStats.length > 8 ? "440px" : "none",overflowY:clientsWithStats.length > 8 ? "auto" : "visible"}}>
+                  {clientsWithStats.map((c, i) => (
+                    <button key={c.id} onClick={() => navToEntity('client', c)}
+                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 1fr 110px 80px 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<clientsWithStats.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(59,130,246,0.12)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#3b82f6",fontFamily:"monospace",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c.phone?"rgba(59,130,246,0.7)":"rgba(148,163,184,0.3)"}}>{c.phone||'—'}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c._jobs.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)"}}>{c._jobs.length}{c._active.length>0?` (${c._active.length} active)`:''}</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c._quoted>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{c._quoted>0?`$${c._quoted.toFixed(0)}`:'—'}</div>
+                      <span style={{fontSize:"12px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace"}}>›</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       );
