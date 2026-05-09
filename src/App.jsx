@@ -18495,6 +18495,49 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
+            {/* WORKERS HOURS ROLLUP — table on masterview */}
+            <div style={panel}>
+              <div style={panelHeader}>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// WORKERS ON JOB</span>
+                <button onClick={() => { setNoteJobId(job.id); setActiveView('donny-dailyreport'); }}
+                  style={{fontSize:"10px",padding:"3px 10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>
+                  HOUR LOGGER →
+                </button>
+              </div>
+              {workerHours.length === 0 ? (
+                <div style={{padding:"24px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.25)",fontFamily:"monospace",letterSpacing:"1.5px"}}>NO HOURS LOGGED YET</div>
+              ) : (
+                <>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 80px 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>WORKER</div><div>HOURS</div><div>RATE</div><div>COST</div><div></div>
+                  </div>
+                  {workerHours.map((w,i) => (
+                    <button key={w.id} onClick={() => navToEntity('worker', w)}
+                      style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 70px 80px 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<workerHours.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                      <div style={{width:"24px",height:"24px",borderRadius:"3px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:"10px",fontWeight:600,color:"rgba(249,115,22,0.85)",flexShrink:0}}>{(w.name||'?').slice(0,2).toUpperCase()}</div>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.name}</div>
+                        {(w.position || (w.roles||[])[0]) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.position || (w.roles||[])[0]}</div>}
+                      </div>
+                      <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(249,115,22,0.85)"}}>{w.hours.toFixed(1)}h</div>
+                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>${w.hourlyRate||0}/hr</div>
+                      <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.85)"}}>${w.cost.toFixed(0)}</div>
+                      <span style={{fontSize:"12px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>›</span>
+                    </button>
+                  ))}
+                  {/* TOTAL row */}
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 70px 80px 100px 30px",padding:"10px 16px",alignItems:"center",borderTop:"0.5px solid rgba(249,115,22,0.15)",background:"rgba(249,115,22,0.04)",gap:"8px"}}>
+                    <div></div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>TOTAL · {workerHours.length} WORKER{workerHours.length!==1?'S':''}</div>
+                    <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500}}>{totalHours.toFixed(1)}h</div>
+                    <div></div>
+                    <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.95)",fontWeight:500}}>${totalLabour.toFixed(0)}</div>
+                    <div></div>
+                  </div>
+                </>
+              )}
+            </div>
+
             {/* ACTIONS — discrete tracked actions */}
             <ActionsMenu accent="#f97316" actions={[
               {
