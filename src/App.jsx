@@ -2627,9 +2627,13 @@ function MuzzApp() {
   const [editingIncidentId, setEditingIncidentId] = useState(null);
   const [editingMistakeId, setEditingMistakeId] = useState(null);
   const [editingRiskJobId, setEditingRiskJobId] = useState(null);
-  const [newRiskJobId, setNewRiskJobId] = useState(null);
+  const [riskJobId, setRiskJobId] = useState(null);
+  const [showAddRisk, setShowAddRisk] = useState(false);
   const [newRiskText, setNewRiskText] = useState('');
   const [newRiskAvoid, setNewRiskAvoid] = useState('');
+  const [editingRiskId, setEditingRiskId] = useState(null);
+  // legacy state kept so older code that references it doesn't break
+  const [newRiskJobId, setNewRiskJobId] = useState(null);
   const [newRecurring, setNewRecurring] = useState({ title:'', clientId:'', freq:'monthly', nextDate:'', notes:'' });
   const [ttTab, setTtTab] = useState('week');
   const [ttNewBlock, setTtNewBlock] = useState({ title: '', type: 'uni', day: 'Mon', startHour: 9, endHour: 10, color: '#8b5cf6', location: '' });
@@ -23403,56 +23407,65 @@ ${JSON.stringify(ctx, null, 2)}`;
     }
 
     if (activeView === 'donny-safety') {
-      // If a job is selected, drill into it
-      const safetyJob = donnyJobs.find(j => j.id === selectedDonnyJob?.id && j.risk);
-      const jobsWithRisks = donnyJobs.filter(j => j.risk);
+      // Multi-risk per job. Each risk: {id, what, mitigation, loggedBy, loggedAt}
+      // Backward compat: if job.risk (string) exists but no job.risks (array), treat the string as risk #1
+      const getJobRisks = (j) => {
+        if (Array.isArray(j?.risks) && j.risks.length > 0) return j.risks;
+        if (j?.risk && j.risk.trim()) {
+          return [{ id: 'legacy-' + j.id, what: j.risk, mitigation: j.riskAvoid || '', loggedBy: j.riskLoggedBy || '', loggedAt: j.riskLoggedAt || '' }];
+        }
+        return [];
+      };
+      const saveJobRisks = (jobId, newRisks) => {
+        const updated = donnyJobs.map(j => {
+          if (String(j.id) !== String(jobId)) return j;
+          const cleaned = { ...j, risks: newRisks };
+          // Clear legacy fields to avoid double-counting
+          if (cleaned.risk) delete cleaned.risk;
+          if (cleaned.riskAvoid) delete cleaned.riskAvoid;
+          return cleaned;
+        });
+        saveDonnyJobs(updated);
+      };
 
-      // ─── DERIVED ─────────────────────────────────────────────────
-      const totalRisks = jobsWithRisks.length;
-      const activeRisks = jobsWithRisks.filter(j => !j.completed).length;
-      const completedRisks = jobsWithRisks.filter(j => j.completed).length;
-      const withMitigation = jobsWithRisks.filter(j => j.riskAvoid && j.riskAvoid.trim()).length;
-      const noMitigation = totalRisks - withMitigation;
+      const allJobsWithRisks = donnyJobs.filter(j => getJobRisks(j).length > 0);
+      const totalRisks = donnyJobs.reduce((s, j) => s + getJobRisks(j).length, 0);
+      const jobsWithMitigation = allJobsWithRisks.filter(j => getJobRisks(j).every(r => r.mitigation && r.mitigation.trim()));
+      const noMitigationCount = allJobsWithRisks.length - jobsWithMitigation.length;
       const totalJobs = donnyJobs.length;
-      const coverage = totalJobs > 0 ? Math.round((totalRisks/totalJobs)*100) : 0;
+      const coverage = totalJobs > 0 ? Math.round((allJobsWithRisks.length / totalJobs) * 100) : 0;
 
       const rPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(239,68,68,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(239,68,68,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
       const rPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(239,68,68,0.1)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
 
-      // ─── DRILL-IN: per-job risk detail ───────────────────────────
-      if (selectedDonnyJob && selectedDonnyJob.risk) {
-        const riskJob = donnyJobs.find(j=>j.id===selectedDonnyJob.id) || selectedDonnyJob;
-        const saveRisk = (field, val) => { const updated = donnyJobs.map(j=>j.id===riskJob.id?{...j,[field]:val}:j); saveDonnyJobs(updated); setSelectedDonnyJob({...riskJob,[field]:val}); };
-        const isEditing = editingRiskJobId === riskJob.id;
+      // ── JOB-SCOPED VIEW: all risks for one job ────────────
+      if (riskJobId) {
+        const job = donnyJobs.find(j => String(j.id) === String(riskJobId));
+        if (!job) { setRiskJobId(null); }
+        const risks = getJobRisks(job);
+
         return (
           <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
             <Sidebar /><SaveIndicator />
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
-            <DonnySearch />
-            <LineagePopup />
-            <DonnyAlertConfig />
-            <DonnyAsk />
-            <DonnyBreadcrumbs />
+            <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
             <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
-                <button onClick={() => setSelectedDonnyJob(null)} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← RISK REGISTER</button>
+                <button onClick={() => { setRiskJobId(null); setShowAddRisk(false); setEditingRiskId(null); }} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← RISK REGISTER</button>
                 <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
                     <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>⚠</span>
                     <div>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"4px"}}>
-                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>// RISK · JOB</div>
-                        <button onClick={() => navToEntity('job', riskJob)} style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",letterSpacing:"1px",cursor:"pointer"}}>OPEN JOB →</button>
-                      </div>
-                      <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{riskJob.title}</div>
-                      {riskJob.jobNumber && <div style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",marginTop:"4px"}}>#{riskJob.jobNumber}</div>}
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}RISKS FOR JOB</div>
+                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
+                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{risks.length} risk{risks.length!==1?'s':''} on this job</div>
                     </div>
                   </div>
                   {donnyRole !== 'worker' && (
-                    <button onClick={()=>setEditingRiskJobId(isEditing?null:riskJob.id)}
-                      style={{padding:"6px 12px",background:isEditing?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${isEditing?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:isEditing?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
-                      {isEditing ? '✕ CANCEL' : 'EDIT'}
+                    <button onClick={()=>{ setShowAddRisk(s=>!s); setNewRiskText(''); setNewRiskAvoid(''); }}
+                      style={{padding:"6px 12px",background:showAddRisk?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showAddRisk?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showAddRisk?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                      {showAddRisk ? '✕ CANCEL' : '+ ADD RISK'}
                     </button>
                   )}
                 </div>
@@ -23460,69 +23473,107 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
 
             <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              {/* RISK */}
-              <div style={{...rPanel,borderLeft:"2px solid rgba(239,68,68,0.7)"}}>
-                <div style={rPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// BIGGEST RISK</span>
-                  <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>HAZARD</span>
-                </div>
-                <div style={{padding:"14px 16px"}}>
-                  {isEditing ? (
-                    <textarea value={riskJob.risk||''} onChange={e=>saveRisk('risk',e.target.value)} rows={4}
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",lineHeight:1.6,border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"10px 12px",borderRadius:"3px",resize:"vertical"}}/>
-                  ) : (
-                    <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,whiteSpace:"pre-wrap"}}>{riskJob.risk}</div>
-                  )}
-                </div>
-              </div>
 
-              {/* MITIGATION */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// HOW TO AVOID</span>
-                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>MITIGATION</span>
-                </div>
-                <div style={{padding:"14px 16px"}}>
-                  {isEditing ? (
-                    <textarea value={riskJob.riskAvoid||''} onChange={e=>saveRisk('riskAvoid',e.target.value)} rows={4} placeholder="Mitigation steps, controls, PPE, procedures..."
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",lineHeight:1.6,border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"10px 12px",borderRadius:"3px",resize:"vertical"}}/>
-                  ) : (
-                    riskJob.riskAvoid ? (
-                      <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,whiteSpace:"pre-wrap"}}>{riskJob.riskAvoid}</div>
-                    ) : (
-                      <div style={{fontSize:"11px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>⚠ NO MITIGATION DOCUMENTED</div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* META */}
-              {(riskJob.riskLoggedBy || riskJob.riskLoggedAt) && !isEditing && (
-                <div style={{padding:"8px 14px",fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
-                  {riskJob.riskLoggedBy && <>Logged by <span style={{color:"rgba(249,115,22,0.85)"}}>{riskJob.riskLoggedBy}</span></>}
-                  {riskJob.riskLoggedAt && <> · {new Date(riskJob.riskLoggedAt).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})}</>}
+              {showAddRisk && (
+                <div style={rPanel}>
+                  <div style={rPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW RISK</span>
+                    <button onClick={()=>setShowAddRisk(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
+                  </div>
+                  <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HAZARD / RISK</div>
+                      <textarea value={newRiskText} onChange={e=>setNewRiskText(e.target.value)} rows={3} placeholder="e.g. Working at height — risk of falling from scaffold"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",lineHeight:1.5,border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOW TO AVOID</div>
+                      <textarea value={newRiskAvoid} onChange={e=>setNewRiskAvoid(e.target.value)} rows={3} placeholder="e.g. Full harness required, anchor points checked before start"
+                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",lineHeight:1.5,border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                    </div>
+                    <button onClick={()=>{
+                      if(!newRiskText.trim()) return;
+                      const newRisk = { id: Date.now(), what: newRiskText.trim(), mitigation: newRiskAvoid.trim(), loggedBy: eliteName||userEmail, loggedAt: new Date().toISOString() };
+                      saveJobRisks(job.id, [...risks, newRisk]);
+                      logAction(`job_${job.id}`, { kind: 'create', summary: `Risk added: ${newRisk.what.slice(0,60)}` });
+                      setNewRiskText(''); setNewRiskAvoid(''); setShowAddRisk(false);
+                    }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ SAVE RISK</button>
+                  </div>
                 </div>
               )}
 
-              {isEditing && (
-                <button onClick={()=>setEditingRiskJobId(null)}
-                  style={{width:"100%",padding:"10px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>✓ DONE</button>
+              {risks.length === 0 && !showAddRisk ? (
+                <div style={{...rPanel,padding:"40px",textAlign:"center"}}>
+                  <div style={{fontSize:"32px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✓</div>
+                  <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO RISKS ON THIS JOB</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Tap + ADD RISK to log a hazard</div>
+                </div>
+              ) : risks.length > 0 && (
+                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {risks.map((r, i) => {
+                    const hasMit = r.mitigation && r.mitigation.trim();
+                    const isEdit = editingRiskId === r.id;
+                    return (
+                      <div key={r.id} style={{...rPanel,borderLeft:`2px solid ${hasMit?"rgba(34,197,94,0.7)":"rgba(245,158,11,0.7)"}`}}>
+                        <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(239,68,68,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                          <span style={{fontSize:"10px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RISK {i+1}{!hasMit?<span style={{color:"rgba(245,158,11,0.85)",marginLeft:"6px"}}>· NO PLAN</span>:''}</span>
+                          {donnyRole !== 'worker' && (
+                            <div style={{display:"flex",gap:"6px"}}>
+                              <button onClick={()=>setEditingRiskId(isEdit?null:r.id)} style={{fontSize:"10px",padding:"3px 8px",background:isEdit?"rgba(34,197,94,0.1)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isEdit?"rgba(34,197,94,0.3)":"rgba(255,255,255,0.1)"}`,color:isEdit?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.7)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>{isEdit?'DONE':'EDIT'}</button>
+                              <button onClick={()=>{
+                                if(window.confirm('Delete this risk?')) {
+                                  saveJobRisks(job.id, risks.filter(x => x.id !== r.id));
+                                  logAction(`job_${job.id}`, { kind: 'delete', summary: `Risk deleted: ${r.what.slice(0,60)}` });
+                                  setEditingRiskId(null);
+                                }
+                              }} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",color:"rgba(239,68,68,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>
+                            </div>
+                          )}
+                        </div>
+                        <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HAZARD</div>
+                            {isEdit ? (
+                              <textarea value={r.what||''} onChange={e=>saveJobRisks(job.id, risks.map(x => x.id===r.id?{...x,what:e.target.value}:x))} rows={3}
+                                style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",lineHeight:1.5,border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px",resize:"vertical"}}/>
+                            ) : (
+                              <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,whiteSpace:"pre-wrap"}}>{r.what}</div>
+                            )}
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HOW TO AVOID</div>
+                            {isEdit ? (
+                              <textarea value={r.mitigation||''} onChange={e=>saveJobRisks(job.id, risks.map(x => x.id===r.id?{...x,mitigation:e.target.value}:x))} rows={3} placeholder="Mitigation steps, controls, PPE..."
+                                style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",lineHeight:1.5,border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px",resize:"vertical"}}/>
+                            ) : hasMit ? (
+                              <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,whiteSpace:"pre-wrap"}}>{r.mitigation}</div>
+                            ) : (
+                              <div style={{fontSize:"11px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>⚠ NO MITIGATION DOCUMENTED</div>
+                            )}
+                          </div>
+                          {(r.loggedBy || r.loggedAt) && !isEdit && (
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                              {r.loggedBy && <>by <span style={{color:"rgba(249,115,22,0.7)"}}>{r.loggedBy}</span></>}
+                              {r.loggedAt && <> · {new Date(r.loggedAt).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})}</>}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </div>
           </div>
         );
       }
 
-      // ─── LIST VIEW ────────────────────────────────────────────────
+      // ─── LIST VIEW: JOBS PICKER ────────────────────────────────────
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
-          <DonnySearch />
-          <LineagePopup />
-          <DonnyAlertConfig />
-          <DonnyAsk />
-          <DonnyBreadcrumbs />
+          <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
           <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-5xl mx-auto">
@@ -23533,7 +23584,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// HAZARD INTEL</div>
                   <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>RISK REGISTER</div>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {totalRisks===0 ? `${totalJobs} job${totalJobs!==1?'s':''} · no risks logged` : `${totalRisks} risk${totalRisks!==1?'s':''} on ${totalJobs} job${totalJobs!==1?'s':''} · ${coverage}% coverage`}
+                    {totalRisks===0 ? `${totalJobs} job${totalJobs!==1?'s':''} · no risks logged` : `${totalRisks} risk${totalRisks!==1?'s':''} across ${allJobsWithRisks.length} job${allJobsWithRisks.length!==1?'s':''} · ${coverage}% coverage`}
                   </div>
                 </div>
               </div>
@@ -23545,136 +23596,18 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* KPI STRIP */}
             {totalJobs > 0 && (
               <div style={{...rPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
                   {[
-                    {
-                      label:"Total Risks", value:String(totalRisks), color:"#ef4444",
-                      lineage: totalRisks > 0 ? {
-                        title:'All Logged Risks', value:String(totalRisks), color:'#ef4444',
-                        formula:'COUNT(jobs WHERE risk IS set)',
-                        breakdown: jobsWithRisks.map(j => ({
-                          icon:'⚠', color:'#ef4444',
-                          label: j.title,
-                          sub: j.jobNumber ? `#${j.jobNumber}` : '',
-                          value: (j.risk||'').slice(0,40),
-                          valueColor: 'rgba(239,68,68,0.85)',
-                          onClick: () => setSelectedDonnyJob(j),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Active", value:String(activeRisks), color:activeRisks>0?"rgba(245,158,11,0.85)":"rgba(34,197,94,0.85)",
-                      lineage: activeRisks > 0 ? {
-                        title:'Risks On Active Jobs', value:String(activeRisks), color:'rgba(245,158,11,0.95)',
-                        formula:'WHERE risk AND NOT completed',
-                        breakdown: jobsWithRisks.filter(j => !j.completed).map(j => ({
-                          icon:'⚠', color:'#f59e0b',
-                          label: j.title,
-                          sub: j.jobNumber ? `#${j.jobNumber}` : '',
-                          value: (j.risk||'').slice(0,40),
-                          valueColor: 'rgba(245,158,11,0.95)',
-                          onClick: () => setSelectedDonnyJob(j),
-                        })),
-                        note: 'Hot list — open right now',
-                      } : null,
-                    },
-                    {
-                      label:"Mitigated", value:`${withMitigation}/${totalRisks||0}`, color:"rgba(34,197,94,0.85)",
-                      lineage: withMitigation > 0 ? {
-                        title:'Has Mitigation Plan', value:String(withMitigation), color:'rgba(34,197,94,0.95)',
-                        formula:'WHERE riskAvoid IS set',
-                        breakdown: jobsWithRisks.filter(j => j.riskAvoid && j.riskAvoid.trim()).map(j => ({
-                          icon:'✓', color:'#22c55e',
-                          label: j.title,
-                          sub: (j.risk||'').slice(0,40),
-                          value: 'mitigated',
-                          valueColor: 'rgba(34,197,94,0.95)',
-                          onClick: () => setSelectedDonnyJob(j),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"No Plan", value:String(noMitigation), color:noMitigation>0?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.85)",
-                      lineage: noMitigation > 0 ? {
-                        title:'Risks Without Mitigation', value:String(noMitigation), color:'rgba(239,68,68,0.95)',
-                        formula:'WHERE risk IS set AND riskAvoid IS empty',
-                        breakdown: jobsWithRisks.filter(j => !j.riskAvoid || !j.riskAvoid.trim()).map(j => ({
-                          icon:'⚠', color:'#ef4444',
-                          label: j.title,
-                          sub: (j.risk||'').slice(0,40),
-                          value: 'NO PLAN',
-                          valueColor: '#ef4444',
-                          onClick: () => setSelectedDonnyJob(j),
-                        })),
-                        note: 'Click to add mitigation',
-                      } : null,
-                    },
-                    {
-                      label:"Coverage", value:`${coverage}%`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)",
-                      lineage: totalJobs > 0 ? {
-                        title:'Risk Coverage', value:`${totalRisks}/${totalJobs} jobs`, color:coverage>=70?'rgba(34,197,94,0.95)':'rgba(245,158,11,0.95)',
-                        formula:'COUNT(jobs WHERE risk) / COUNT(jobs) × 100',
-                        breakdown: donnyJobs.map(j => ({
-                          icon:'⊞', color:'#f97316',
-                          label: j.title,
-                          sub: j.jobNumber?`#${j.jobNumber}`:'',
-                          value: j.risk ? '✓ logged' : '— missing',
-                          valueColor: j.risk ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.85)',
-                          onClick: () => j.risk ? setSelectedDonnyJob(j) : (setNewRiskJobId(j.id)),
-                        })),
-                      } : null,
-                    },
+                    {label:"Total Risks", value:String(totalRisks), color:"#ef4444"},
+                    {label:"Jobs With Risks", value:`${allJobsWithRisks.length}/${totalJobs}`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)"},
+                    {label:"No Plan", value:String(noMitigationCount), color:noMitigationCount>0?"rgba(245,158,11,0.85)":"rgba(34,197,94,0.85)"},
+                    {label:"Coverage", value:`${coverage}%`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)"},
                   ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:i<4?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(239,68,68,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(239,68,68,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
+                    <div key={i} style={{padding:"14px 16px",borderRight:i<3?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1.5px",marginBottom:"4px"}}>{k.label}</div>
+                      <div style={{fontSize:"18px",color:k.color,fontWeight:500,lineHeight:1}}>{k.value}</div>
+                    </div>
                   ))}
-                </div>
-              </div>
-            )}
-
-            {/* ADD RISK FORM */}
-            {donnyJobs.length > 0 && (
-              <div style={rPanel}>
-                <div style={rPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ADD / UPDATE RISK</span>
-                  <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>HAZARD ENTRY</span>
-                </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB</div>
-                    <select value={newRiskJobId||''} onChange={e=>setNewRiskJobId(e.target.value||null)}
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
-                      <option value="">Select a job...</option>
-                      {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.title}{j.risk?' · ⚠ has risk':''}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>BIGGEST RISK</div>
-                    <textarea value={newRiskText} onChange={e=>setNewRiskText(e.target.value)} rows={3}
-                      placeholder="e.g. Working at height — risk of falling from scaffold"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",lineHeight:1.5,border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOW TO AVOID</div>
-                    <textarea value={newRiskAvoid} onChange={e=>setNewRiskAvoid(e.target.value)} rows={3}
-                      placeholder="e.g. Full harness required, anchor points checked before start"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",lineHeight:1.5,border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
-                  </div>
-                  <button onClick={()=>{
-                    if(!newRiskJobId||!newRiskText.trim()) return;
-                    const updated = donnyJobs.map(j=>String(j.id)===String(newRiskJobId)?{...j,risk:newRiskText.trim(),riskAvoid:newRiskAvoid.trim(),riskLoggedBy:eliteName||userEmail,riskLoggedAt:new Date().toISOString()}:j);
-                    saveDonnyJobs(updated);
-                    setNewRiskJobId(null); setNewRiskText(''); setNewRiskAvoid('');
-                  }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ SAVE RISK</button>
                 </div>
               </div>
             )}
@@ -23688,37 +23621,51 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* RISK TABLE */}
-            {totalRisks > 0 && (
-              <div style={rPanel}>
-                <div style={rPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RISKS LOGGED</span>
-                  <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{totalRisks} ROW{totalRisks!==1?'S':''}</span>
+            {/* JOBS PICKER */}
+            {donnyJobs.length > 0 && (() => {
+              const activeJobsList = donnyJobs.filter(j => !j.completed && !j.archived);
+              if (activeJobsList.length === 0) {
+                return (
+                  <div style={{...rPanel,padding:"40px",textAlign:"center"}}>
+                    <div style={{fontSize:"28px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⚠</div>
+                    <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO ACTIVE JOBS</div>
+                  </div>
+                );
+              }
+              return (
+                <div style={rPanel}>
+                  <div style={rPanelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 90px 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    <div></div><div>JOB</div><div>RISKS</div><div>STATUS</div><div></div>
+                  </div>
+                  <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
+                    {activeJobsList.map((j, i) => {
+                      const jr = getJobRisks(j);
+                      const allMitigated = jr.length > 0 && jr.every(r => r.mitigation && r.mitigation.trim());
+                      const someMissing = jr.length > 0 && !allMitigated;
+                      const status = jr.length === 0 ? '— none' : allMitigated ? 'PLAN' : 'NO PLAN';
+                      const statusColor = jr.length === 0 ? "rgba(148,163,184,0.4)" : allMitigated ? "rgba(34,197,94,0.85)" : "rgba(245,158,11,0.85)";
+                      return (
+                        <button key={j.id} onClick={() => setRiskJobId(j.id)}
+                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
+                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"11px",color:jr.length>0?"rgba(239,68,68,0.85)":"rgba(148,163,184,0.5)"}}>{jr.length} {jr.length===1?'risk':'risks'}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",padding:"2px 6px",background:`${statusColor.replace('0.85','0.1').replace('0.4','0.06')}`,color:statusColor,border:`0.5px solid ${statusColor.replace('0.85','0.3').replace('0.4','0.15')}`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{status}</div>
+                          <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"32px 70px 1fr 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  <div></div><div>JOB #</div><div>JOB</div><div>BIGGEST RISK</div><div>STATUS</div><div></div>
-                </div>
-                <div style={{maxHeight:jobsWithRisks.length > 8 ? "440px" : "none",overflowY:jobsWithRisks.length > 8 ? "auto" : "visible"}}>
-                  {jobsWithRisks.map((job, i) => {
-                    const hasMit = job.riskAvoid && job.riskAvoid.trim();
-                    return (
-                      <button key={job.id} onClick={()=>setSelectedDonnyJob(job)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:"32px 70px 1fr 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobsWithRisks.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(239,68,68,0.12)",border:"0.5px solid rgba(239,68,68,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#ef4444",fontFamily:"monospace",flexShrink:0}}>⚠</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(249,115,22,0.7)"}}>{job.jobNumber?`#${job.jobNumber}`:'—'}</div>
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
-                          {job.completed && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",marginTop:"2px"}}>✓ JOB DONE</div>}
-                        </div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(239,68,68,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.risk}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",padding:"2px 6px",background:hasMit?"rgba(34,197,94,0.1)":"rgba(245,158,11,0.1)",color:hasMit?"rgba(34,197,94,0.95)":"rgba(245,158,11,0.95)",border:`0.5px solid ${hasMit?"rgba(34,197,94,0.3)":"rgba(245,158,11,0.3)"}`,borderRadius:"2px",textAlign:"center"}}>{hasMit?'PLAN':'NO PLAN'}</div>
-                        <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
           </div>
         </div>
@@ -23759,7 +23706,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       // SAFETY
       const totalIncidents = (donnyIncidents||[]).length;
       const incidentsByType = (donnyIncidents||[]).reduce((acc,i)=>{ acc[i.type]=(acc[i.type]||0)+1; return acc; },{});
-      const openRisks = donnyJobs.filter(j=>j.risk&&!j.completed).length;
+      const openRisks = donnyJobs.filter(j => !j.completed && ((Array.isArray(j.risks) && j.risks.length>0) || (j.risk && j.risk.trim()))).length;
       const totalMistakes = (donnyMistakes||[]).length;
       const totalSWMS = (donnyChecklists||[]).filter(c=>c.type==='swms').length;
       const completedSWMS = (donnyChecklists||[]).filter(c=>c.type==='swms' && c.items && c.items.length>0 && c.items.every(i=>i.done)).length;
