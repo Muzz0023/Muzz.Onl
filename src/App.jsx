@@ -17866,12 +17866,12 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       // TIMELINE — combined cross-feed
       const timeline = [
-        ...jobTimesheets.map(e => ({...e, _type:'hours', _at:new Date(e.createdAt||e.date||0), _label:`Hours logged`, _by:donnyTeam.find(m=>String(m.id)===String(e.memberId))?.name})),
-        ...jobMaterials.map(m => ({...m, _type:'material', _at:new Date(m.createdAt||0), _label:`Material added`, _by:m.addedBy})),
-        ...jobMistakes.map(m => ({...m, _type:'mistake', _at:new Date(m.createdAt||0), _label:`Mistake logged`, _by:m.addedBy})),
-        ...jobIncidents.map(i => ({...i, _type:'incident', _at:new Date(i.createdAt||0), _label:`Incident reported`, _by:i.addedBy})),
-        ...jobNotes.map(n => ({...n, _type:'note', _at:new Date(n.createdAt||0), _label:`Note added`, _by:n.addedBy})),
-        ...jobPhotos.map(p => ({...p, _type:'photo', _at:new Date(p.createdAt||0), _label:`Photo added`, _by:p.addedBy})),
+        ...jobTimesheets.map(e => ({...e, _type:'hours', _at:new Date(e.createdAt||e.date||0), _label:`Hours logged`, _for:donnyTeam.find(m=>String(m.id)===String(e.memberId))?.name, _by:e.loggedBy||null})),
+        ...jobMaterials.map(m => ({...m, _type:'material', _at:new Date(m.createdAt||0), _label:`Material added`, _by:m.loggedBy||m.addedBy})),
+        ...jobMistakes.map(m => ({...m, _type:'mistake', _at:new Date(m.createdAt||0), _label:`Mistake logged`, _by:m.loggedBy||m.addedBy})),
+        ...jobIncidents.map(i => ({...i, _type:'incident', _at:new Date(i.createdAt||0), _label:`Incident reported`, _by:i.loggedBy||i.addedBy})),
+        ...jobNotes.map(n => ({...n, _type:'note', _at:new Date(n.createdAt||0), _label:`Note added`, _by:n.loggedBy||n.addedBy})),
+        ...jobPhotos.map(p => ({...p, _type:'photo', _at:new Date(p.createdAt||0), _label:`Photo added`, _by:p.loggedBy||p.addedBy})),
       ].sort((a,b) => b._at - a._at);
 
       const status = job.completed ? 'DONE' : job.started ? 'IN PROGRESS' : 'TO DO';
@@ -18567,7 +18567,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const colorMap = {hours:"#f97316",material:"#3b82f6",mistake:"#f59e0b",incident:"#ef4444",note:"#06b6d4",photo:"#a855f7"};
                     const c = colorMap[evt._type] || "#94a3b8";
                     let detail = '';
-                    if (evt._type==='hours') detail = `${evt.hours}h${evt.note?' · '+evt.note:''}`;
+                    if (evt._type==='hours') detail = `${evt.hours}h${evt._for?' for '+evt._for:''}${evt.desc?' · '+evt.desc:''}${evt.note?' · '+evt.note:''}`;
                     else if (evt._type==='material') detail = `${evt.item||evt.name||'item'}${evt.qty?' · '+evt.qty+(evt.unit?' '+evt.unit:'')+'':''}${evt.cost?' · $'+evt.cost:''}`;
                     else if (evt._type==='mistake') detail = evt.description||evt.text||'';
                     else if (evt._type==='incident') detail = evt.description||evt.text||'';
@@ -18984,7 +18984,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const colorMap = {hours:"#f97316",mistake:"#f59e0b",incident:"#ef4444"};
                     const c = colorMap[evt._type] || "#94a3b8";
                     let detail = '';
-                    if (evt._type==='hours') detail = `${evt.hours}h${evt.note?' · '+evt.note:''}`;
+                    if (evt._type==='hours') detail = `${evt.hours}h${evt._for?' for '+evt._for:''}${evt.desc?' · '+evt.desc:''}${evt.note?' · '+evt.note:''}`;
                     else if (evt._type==='mistake') detail = evt.description || evt.text || '';
                     else if (evt._type==='incident') detail = evt.description || evt.text || '';
                     return (
