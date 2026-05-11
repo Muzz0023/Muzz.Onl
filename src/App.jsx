@@ -1408,7 +1408,11 @@ function MuzzApp() {
   const [feedbackSent, setFeedbackSent] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
   const [businessSubscriptions, setBusinessSubscriptions] = useState([]);
-  const [billsType, setBillsType] = useState('personal');
+  const [billsType, setBillsType] = useState('personal'); // legacy — kept for backward compat
+  // User-configurable bill buckets. Each bucket has its own income + bills.
+  // Seeded on first load from legacy subscriptions / businessSubscriptions / monthlySalary.
+  const [billBuckets, setBillBuckets] = useState(null); // null = not yet hydrated; [] = empty
+  const [activeBucketId, setActiveBucketId] = useState(null);
   const [muzzPersonality, setMuzzPersonality] = useState(true);
   const [funnyGreetings, setFunnyGreetings] = useState(false);
   const [dashFunnyGreeting] = useState(() => loginGreetings[Math.floor(Math.random() * loginGreetings.length)]);
@@ -1757,7 +1761,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
   // Generate a workspace code for the boss
   const generateWorkspaceCode = () => {
@@ -1887,6 +1891,7 @@ function MuzzApp() {
   const doImport = (e) => { const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=(ev)=>{ try{ const d=JSON.parse(ev.target.result);
     if(d.subscriptions) setSubscriptions(d.subscriptions);
     if(d.businessSubscriptions) setBusinessSubscriptions(d.businessSubscriptions);
+    if(d.billBuckets) setBillBuckets(d.billBuckets);
     if(d.muzzPersonality!==undefined) setMuzzPersonality(d.muzzPersonality);
     if(d.funnyGreetings!==undefined) setFunnyGreetings(d.funnyGreetings);
     if(d.customDiets) setCustomDiets(d.customDiets);
@@ -1967,6 +1972,8 @@ function MuzzApp() {
     const fullData = {
       subscriptions: d.subscriptions||[],
       businessSubscriptions: d.businessSubscriptions||[],
+      billBuckets: d.billBuckets||null,
+      activeBucketId: d.activeBucketId||null,
       muzzPersonality: d.muzzPersonality!==undefined?d.muzzPersonality:true,
       funnyGreetings: d.funnyGreetings||false,
       customDiets: d.customDiets||[],
@@ -2586,6 +2593,8 @@ function MuzzApp() {
           if (result.stripe_donny_elite !== undefined) setStripeDonnyElite(result.stripe_donny_elite);
           if (d.subscriptions) setSubscriptions(d.subscriptions);
           if (d.businessSubscriptions) setBusinessSubscriptions(d.businessSubscriptions);
+          if (d.billBuckets) setBillBuckets(d.billBuckets);
+          if (d.activeBucketId) setActiveBucketId(d.activeBucketId);
           if (d.muzzPersonality !== undefined) setMuzzPersonality(d.muzzPersonality);
           if (d.funnyGreetings !== undefined) setFunnyGreetings(d.funnyGreetings);
           if (d.customDiets) setCustomDiets(d.customDiets);
@@ -2682,6 +2691,44 @@ function MuzzApp() {
     setDataLoaded(false);
   }, [userId]);
 
+  // Migration: seed billBuckets from legacy subscriptions/businessSubscriptions on first load.
+  // Runs once after data loads; if user already has buckets we skip.
+  useEffect(() => {
+    if (!dataLoaded) return;
+    if (billBuckets !== null) return; // already hydrated
+    const personalBills = (subscriptions || []).map(s => ({ ...s, id: s.id || (Date.now() + Math.random()) }));
+    const businessBills = (businessSubscriptions || []).map(s => ({ ...s, id: s.id || (Date.now() + Math.random()) }));
+    const personalIncome = String(monthlySalary || monthlySalaryStr || '');
+    const seeded = [
+      { id: 'bucket_personal',  name: 'Personal',  icon: '🍺', color: '#22c55e', incomeStr: personalIncome, incomeLabel: 'Monthly Income',  bills: personalBills },
+      { id: 'bucket_business',  name: 'Business',  icon: '💼', color: '#a855f7', incomeStr: '',             incomeLabel: 'Monthly Revenue', bills: businessBills },
+      { id: 'bucket_home',      name: 'Home',      icon: '🏠', color: '#3b82f6', incomeStr: '',             incomeLabel: 'Household Income', bills: [] },
+      { id: 'bucket_partner',   name: 'Partner',   icon: '💕', color: '#ec4899', incomeStr: '',             incomeLabel: 'Partner Income',   bills: [] },
+    ];
+    setBillBuckets(seeded);
+    setActiveBucketId('bucket_personal');
+  }, [dataLoaded, billBuckets, subscriptions, businessSubscriptions, monthlySalary, monthlySalaryStr]);
+
+  // Backward-compat sync: mirror Personal bucket bills → legacy `subscriptions` and
+  // Business bucket bills → legacy `businessSubscriptions`. This keeps the dashboard
+  // totals, calendar bill-due reminders, and chat context working unchanged.
+  useEffect(() => {
+    if (!dataLoaded || !billBuckets) return;
+    const personalBucket = billBuckets.find(b => b.id === 'bucket_personal');
+    const businessBucket = billBuckets.find(b => b.id === 'bucket_business');
+    if (personalBucket) {
+      const newSubs = personalBucket.bills || [];
+      // shallow compare to avoid infinite loop
+      const same = newSubs.length === subscriptions.length && newSubs.every((s, i) => s === subscriptions[i]);
+      if (!same) setSubscriptions(newSubs);
+    }
+    if (businessBucket) {
+      const newSubs = businessBucket.bills || [];
+      const same = newSubs.length === businessSubscriptions.length && newSubs.every((s, i) => s === businessSubscriptions[i]);
+      if (!same) setBusinessSubscriptions(newSubs);
+    }
+  }, [billBuckets, dataLoaded]);
+
   // Save data to Supabase when it changes
   useEffect(() => {
     if (!userId || !dataLoaded) return;
@@ -2692,6 +2739,8 @@ function MuzzApp() {
         const allData = {
           subscriptions,
           businessSubscriptions,
+          billBuckets,
+          activeBucketId,
           muzzPersonality,
           funnyGreetings,
           customDiets,
@@ -2784,7 +2833,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -9472,15 +9521,76 @@ ${JSON.stringify(ctx, null, 2)}`;
       return ((bills / salary) * 100).toFixed(1);
     };
 
-    const currentSubs = billsType === 'personal' ? subscriptions : businessSubscriptions;
+    // ---- BILL BUCKETS — user-configurable categories ----
+    const buckets = billBuckets || [];
+    const activeBucket = buckets.find(b => b.id === activeBucketId) || buckets[0] || null;
+    const activeBucketIdx = buckets.findIndex(b => b.id === activeBucket?.id);
+
+    const updateBucket = (id, patch) => {
+      setBillBuckets(prev => (prev||[]).map(b => b.id === id ? { ...b, ...patch } : b));
+    };
+    const updateBucketBills = (id, newBills) => updateBucket(id, { bills: newBills });
+    const addBucket = () => {
+      const name = window.prompt('Name this section (e.g. Pets, Kids, Rental):', '');
+      if (!name || !name.trim()) return;
+      const palette = ['#22c55e','#a855f7','#3b82f6','#ec4899','#f97316','#06b6d4','#eab308','#14b8a6','#84cc16'];
+      const used = (billBuckets||[]).map(b => b.color);
+      const color = palette.find(c => !used.includes(c)) || palette[Math.floor(Math.random()*palette.length)];
+      const newBucket = { id: 'bucket_' + Date.now(), name: name.trim(), icon: '📁', color, incomeStr: '', incomeLabel: 'Income', bills: [] };
+      setBillBuckets(prev => [...(prev||[]), newBucket]);
+      setActiveBucketId(newBucket.id);
+    };
+    const renameBucket = (id) => {
+      const b = (billBuckets||[]).find(x => x.id === id); if (!b) return;
+      const name = window.prompt('Rename section:', b.name);
+      if (!name || !name.trim()) return;
+      updateBucket(id, { name: name.trim() });
+    };
+    const deleteBucket = (id) => {
+      const b = (billBuckets||[]).find(x => x.id === id); if (!b) return;
+      if (!window.confirm(`Delete "${b.name}" and all its bills?`)) return;
+      const remaining = (billBuckets||[]).filter(x => x.id !== id);
+      setBillBuckets(remaining);
+      if (activeBucketId === id && remaining.length > 0) setActiveBucketId(remaining[0].id);
+    };
+
+    const addBillToBucket = (bucketId) => {
+      const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
+      const newBills = [...(b.bills||[]), { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '', dateAdded: new Date().toISOString() }];
+      updateBucketBills(bucketId, newBills);
+    };
+    const updateBillInBucket = (bucketId, idx, field, value) => {
+      const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
+      const bills = [...(b.bills||[])];
+      if (!bills[idx]) bills[idx] = { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '' };
+      if (field === 'name') bills[idx] = { ...bills[idx], name: value };
+      else if (field === 'cost') bills[idx] = { ...bills[idx], monthly: parseFloat(value) || 0, monthlyStr: value };
+      else if (field === 'dueDate') bills[idx] = { ...bills[idx], dueDate: value };
+      updateBucketBills(bucketId, bills);
+    };
+    const removeBillFromBucket = (bucketId, idx) => {
+      const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
+      updateBucketBills(bucketId, (b.bills||[]).filter((_, i) => i !== idx));
+    };
+    const updateBucketIncome = (bucketId, value) => {
+      updateBucket(bucketId, { incomeStr: value });
+      // mirror Personal income to legacy monthlySalary for backward compat with dashboard/exports
+      if (bucketId === 'bucket_personal') {
+        setMonthlySalaryStr(value);
+        setMonthlySalary(parseFloat(value) || 0);
+      }
+    };
+
+    // Active bucket derived values (replace legacy currentSubs/totalMonthly/salaryNum)
+    const currentSubs = activeBucket ? (activeBucket.bills || []) : [];
     const filledSubs = currentSubs.filter(s => s && s.monthly > 0);
     const totalMonthly = filledSubs.reduce((sum, s) => sum + s.monthly, 0);
-    const salaryNum = parseFloat(monthlySalary) || 0;
+    const salaryNum = activeBucket ? (parseFloat(activeBucket.incomeStr) || 0) : 0;
+    const handleSalaryChange = (value) => activeBucket && updateBucketIncome(activeBucket.id, value);
 
-    const handleSalaryChange = (value) => {
-      setMonthlySalaryStr(value);
-      setMonthlySalary(parseFloat(value) || 0);
-    };
+    // Legacy alias kept so existing variable references downstream keep working
+    const isPersonal = activeBucket?.id === 'bucket_personal';
+    const bucketAccent = activeBucket?.color || '#00c8ff';
 
     return (
       <div className="min-h-screen bg-transparent">
@@ -9497,8 +9607,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>BILLS</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>MONTHLY TOTAL</div>
-                <div style={{fontSize:"24px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>${totalMonthly.toLocaleString()}</div>
+                <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>MONTHLY TOTAL · ALL</div>
+                <div style={{fontSize:"24px",color:"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>${(buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0).toLocaleString()}</div>
+                {activeBucket && totalMonthly !== (buckets||[]).reduce((sum, b) => sum + (b.bills||[]).filter(s => s && s.monthly > 0).reduce((s2, x) => s2 + x.monthly, 0), 0) && (
+                  <div style={{fontSize:"9px",color:`${bucketAccent}aa`,fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"2px"}}>{activeBucket.name}: ${totalMonthly.toLocaleString()}</div>
+                )}
               </div>
             </div>
             {/* Main tabs */}
@@ -9516,20 +9629,42 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {billsSubTab === 'bills' && (
             <>
-          {/* Personal/Business Toggle */}
-          <div style={{display:"flex",gap:"4px"}}>
-            <button onClick={() => setBillsType('personal')} style={{padding:"6px 14px",background:billsType==='personal'?"rgba(34,197,94,0.1)":"transparent",border:`0.5px solid ${billsType==='personal'?"rgba(34,197,94,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:billsType==='personal'?"rgba(34,197,94,0.9)":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
-              PERSONAL
-            </button>
-            <button onClick={() => setBillsType('business')} style={{padding:"6px 14px",background:billsType==='business'?"rgba(168,85,247,0.1)":"transparent",border:`0.5px solid ${billsType==='business'?"rgba(168,85,247,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:billsType==='business'?"rgba(168,85,247,0.9)":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
-              BUSINESS
-            </button>
+          {/* Bucket Bar — horizontal scroll, tap to switch, long-press/icon to manage */}
+          <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
+            {buckets.map(b => {
+              const isActive = b.id === activeBucketId;
+              return (
+                <div key={b.id} style={{display:"flex",alignItems:"center",flexShrink:0}}>
+                  <button onClick={() => setActiveBucketId(b.id)} style={{padding:"6px 12px",background:isActive?`${b.color}1a`:"transparent",border:`0.5px solid ${isActive?`${b.color}66`:"rgba(255,255,255,0.08)"}`,borderRadius:"3px 0 0 3px",borderRight:"none",color:isActive?b.color:"rgba(148,163,184,0.55)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}>
+                    <span style={{fontSize:"12px"}}>{b.icon}</span>
+                    {(b.name||'').toUpperCase()}
+                    {(b.bills||[]).filter(x=>x&&x.monthly>0).length > 0 && (
+                      <span style={{fontSize:"8px",opacity:0.6}}>· {(b.bills||[]).filter(x=>x&&x.monthly>0).length}</span>
+                    )}
+                  </button>
+                  <button onClick={() => {
+                    const choice = window.prompt(`"${b.name}" — type R to rename, D to delete:`, '');
+                    if (!choice) return;
+                    if (choice.toLowerCase().startsWith('r')) renameBucket(b.id);
+                    else if (choice.toLowerCase().startsWith('d')) deleteBucket(b.id);
+                  }} style={{padding:"6px 6px",background:isActive?`${b.color}1a`:"transparent",border:`0.5px solid ${isActive?`${b.color}66`:"rgba(255,255,255,0.08)"}`,borderRadius:"0 3px 3px 0",borderLeft:`0.5px solid ${isActive?`${b.color}33`:"rgba(255,255,255,0.05)"}`,color:isActive?b.color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer"}} title="Rename or delete">⋯</button>
+                </div>
+              );
+            })}
+            <button onClick={addBucket} style={{padding:"6px 12px",background:"transparent",border:"0.5px dashed rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>+ ADD</button>
           </div>
 
-          {/* Salary Input */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{billsType === 'personal' ? 'Monthly Income' : 'Monthly Revenue'}</h2>
+          {!activeBucket && (
+            <div style={{padding:"40px 20px",textAlign:"center",fontFamily:"monospace",color:"rgba(148,163,184,0.5)",fontSize:"11px",letterSpacing:"1px"}}>
+              No sections yet. Tap + ADD to create your first bills section.
+            </div>
+          )}
+
+          {activeBucket && (<>
+          {/* Income Input */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+            <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
+              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.incomeLabel || 'Monthly Income'} — {activeBucket.name}</h2>
             </div>
             <div style={{padding:"12px"}}>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
@@ -9537,7 +9672,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <input
                   type="text"
                   inputMode="decimal"
-                  value={monthlySalaryStr}
+                  value={activeBucket.incomeStr || ''}
                   onChange={(e) => handleSalaryChange(e.target.value)}
                   placeholder="0"
                   className="text-xl font-semibold w-32 px-3 py-2 border-2 rounded-xl focus:outline-none focus:border-blue-500"
@@ -9549,14 +9684,14 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Salary Breakdown */}
           {salaryNum > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{billsType === 'personal' ? 'Income' : 'Revenue'}</h2>
+            <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.incomeLabel || 'Income'}</h2>
               </div>
               <div style={{overflowX:"auto"}}>
                 <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
-                    <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
+                    <tr style={{background:`${bucketAccent}08`,borderBottom:`0.5px solid ${bucketAccent}1a`}}>
                       <th className="text-left py-3 px-4 font-semibold">Period</th>
                       <th className="text-right py-3 px-4 font-semibold">Daily</th>
                       <th className="text-right py-3 px-4 font-semibold">Weekly</th>
@@ -9567,8 +9702,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </tr>
                   </thead>
                   <tbody>
-                    <tr style={billsType === 'personal' ? {background:"rgba(34,197,94,0.06)",borderTop:"0.5px solid rgba(34,197,94,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(34,197,94,0.95)"} : {background:"rgba(168,85,247,0.06)",borderTop:"0.5px solid rgba(168,85,247,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(168,85,247,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{billsType === 'personal' ? 'Income' : 'Revenue'}</td>
+                    <tr style={{background:`${bucketAccent}10`,borderTop:`0.5px solid ${bucketAccent}55`,fontFamily:"monospace",fontWeight:600,color:`${bucketAccent}ee`}}>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{activeBucket.incomeLabel || 'Income'}</td>
                       <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'daily')}</td>
                       <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'weekly')}</td>
                       <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${calcCost(salaryNum, 'monthly')}</td>
@@ -9582,30 +9717,22 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
-          {/* Bills List - Personal or Business */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div style={billsType === 'business' ? {padding:"12px 16px",borderBottom:"0.5px solid rgba(168,85,247,0.2)",background:"rgba(168,85,247,0.04)"} : {padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{billsType === 'personal' ? '🍺 Personal Bills' : '💼 Business Bills'}</h2>
+          {/* Bills List - active bucket */}
+          <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+            <div style={{padding:"12px 16px",borderBottom:`0.5px solid ${bucketAccent}20`,background:`${bucketAccent}08`}}>
+              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.icon} {activeBucket.name} Bills</h2>
             </div>
             <div style={{padding:"12px"}}>
               <div style={{overflowX:'auto'}}>
               <div style={{display:"flex",flexDirection:"column",gap:"6px",minWidth:"420px"}}>
-                {(billsType === 'personal' ? subscriptions : businessSubscriptions).map((sub, index) => (
-                  <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+                {currentSubs.map((sub, index) => (
+                  <div key={sub?.id || index} className="flex items-center gap-3 py-2 border-b border-gray-100">
                     <span className="w-8 text-right text-gray-400 text-sm">{index + 1}.</span>
                     <input
                       type="text"
                       value={sub?.name || ''}
-                      onChange={(e) => {
-                        if (billsType === 'personal') {
-                          updateSubscription(index, 'name', e.target.value);
-                        } else {
-                          const newSubs = [...businessSubscriptions];
-                          newSubs[index] = { ...newSubs[index], name: e.target.value };
-                          setBusinessSubscriptions(newSubs);
-                        }
-                      }}
-                      placeholder={billsType === 'personal' ? 'Netflix' : 'Software License'}
+                      onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
+                      placeholder="Bill name"
                       className="w-40 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-500"
                     />
                     <div className="flex items-center gap-1">
@@ -9614,16 +9741,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         type="text"
                         inputMode="decimal"
                         value={sub?.monthlyStr ?? sub?.monthly ?? ''}
-                        onChange={(e) => {
-                          if (billsType === 'personal') {
-                            updateSubscription(index, 'cost', e.target.value);
-                          } else {
-                            const val = e.target.value;
-                            const newSubs = [...businessSubscriptions];
-                            newSubs[index] = { ...newSubs[index], monthlyStr: val, monthly: parseFloat(val) || 0 };
-                            setBusinessSubscriptions(newSubs);
-                          }
-                        }}
+                        onChange={(e) => updateBillInBucket(activeBucket.id, index, 'cost', e.target.value)}
                         placeholder="0"
                         className="w-20 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-500"
                       />
@@ -9633,26 +9751,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <input
                         type="text"
                         value={sub?.dueDate || ''}
-                        onChange={(e) => {
-                          if (billsType === 'personal') {
-                            updateSubscription(index, 'dueDate', e.target.value);
-                          } else {
-                            const newSubs = [...businessSubscriptions];
-                            newSubs[index] = { ...newSubs[index], dueDate: e.target.value };
-                            setBusinessSubscriptions(newSubs);
-                          }
-                        }}
+                        onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
                         placeholder="23rd"
                         className="w-16 px-2 py-2 border rounded-lg text-sm text-center focus:outline-none focus:border-blue-500"
                       />
                     </div>
-                    <button onClick={() => {
-                      if (billsType === 'personal') {
-                        removeSubscription(index);
-                      } else {
-                        setBusinessSubscriptions(prev => prev.filter((_, i) => i !== index));
-                      }
-                    }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
+                    <button onClick={() => removeBillFromBucket(activeBucket.id, index)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
                         <Trash2 style={{width:"16px",height:"16px"}} />
                     </button>
                   </div>
@@ -9660,20 +9764,10 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
               </div>{/* end scroll */}
               <button
-                onClick={() => {
-                  if (billsType === 'personal') {
-                    setSubscriptions(prev => [...prev, { name: '', monthly: 0, monthlyStr: '', dueDate: '', dateAdded: new Date().toISOString() }]);
-                  } else {
-                    setBusinessSubscriptions(prev => [...prev, { name: '', monthly: 0, monthlyStr: '', dueDate: '', dateAdded: new Date().toISOString() }]);
-                  }
-                }}
-                className={`w-full mt-4 py-3 border-2 border-dashed rounded-xl transition-colors text-sm font-medium ${
-                  billsType === 'personal' 
-                    ? 'border-gray-300 text-gray-500 hover:border-green-500 hover:text-green-500'
-                    : 'border-gray-300 text-gray-500 hover:border-purple-500 hover:text-purple-500'
-                }`}
+                onClick={() => addBillToBucket(activeBucket.id)}
+                style={{width:"100%",marginTop:"16px",padding:"12px",border:`2px dashed ${bucketAccent}55`,borderRadius:"12px",background:"transparent",color:`${bucketAccent}cc`,fontFamily:"monospace",fontSize:"12px",cursor:"pointer",letterSpacing:"1px"}}
               >
-                + Add {billsType === 'personal' ? 'Personal' : 'Business'} Bill
+                + Add {activeBucket.name} Bill
               </button>
             </div>
           </div>
@@ -9906,7 +10000,7 @@ ${JSON.stringify(ctx, null, 2)}`;
           )}
 
           {/* Muzz Advice Categories Info - Personal Only */}
-          {billsType === 'personal' && filledSubs.length === 0 && (
+          {isPersonal && filledSubs.length === 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"14px 16px"}}>
                 <div style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"8px"}}>// MUZZ CAN HELP YOU SAVE ON</div>
@@ -9930,7 +10024,7 @@ ${JSON.stringify(ctx, null, 2)}`;
           )}
 
           {/* Muzz Money Tips - Personal Only */}
-          {billsType === 'personal' && filledSubs.length > 0 && (() => {
+          {isPersonal && filledSubs.length > 0 && (() => {
             const tips = [];
             
             // Streaming services
@@ -10106,6 +10200,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
           )}
+          </>)}{/* end activeBucket wrapper */}
             </>
           )}
 
