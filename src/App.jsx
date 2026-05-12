@@ -1577,6 +1577,8 @@ function MuzzApp() {
   const [newBillAmount, setNewBillAmount] = useState('');
   const [tasks, setTasks] = useState([]);
   const [tasksSubTab, setTasksSubTab] = useState('daily');
+  // If a user had tasksSubTab persisted as 'pomodoro' (now removed), bump back to daily
+  useEffect(() => { if (tasksSubTab === 'pomodoro') setTasksSubTab('daily'); }, [tasksSubTab]);
   const [dailyTasks, setDailyTasks] = useState([]);
   const [weeklyTasks, setWeeklyTasks] = useState([]);
   const [generalTasks, setGeneralTasks] = useState([]);
@@ -5173,8 +5175,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               {id:'daily', label:'DAILY', items: dailyItems, color:'#00c8ff'},
               {id:'weekly', label:'WEEKLY', items: weeklyItems, color:'rgba(99,102,241,0.9)'},
               {id:'general', label:'GENERAL', items: generalItems, color:'rgba(34,197,94,0.9)'},
-              {id:'rotation', label:'ROTATION', items: [], color:'rgba(251,191,36,0.8)'},
-              {id:'pomodoro', label:'POMODORO', items: [], color:'rgba(239,68,68,0.7)'},
             ].map(tab => {
               const done = tab.items.filter(i => i.checked).length;
               const total = tab.items.length;
@@ -5194,24 +5194,27 @@ ${JSON.stringify(ctx, null, 2)}`;
               const isActive = tasksSubTab === list.id;
               return (
                 <div key={list.id} style={{display:"flex",alignItems:"center",flexShrink:0}}>
-                  <button onClick={() => setTasksSubTab(list.id)} style={{padding:"6px 12px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderRadius:"3px 0 0 3px",borderRight:"none",color:isActive?list.color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}>
+                  <button
+                    onClick={() => setTasksSubTab(list.id)}
+                    onDoubleClick={() => {
+                      const newName = window.prompt('Rename list:', list.name);
+                      if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
+                    }}
+                    style={{padding:"6px 12px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderRadius:isActive?"3px 0 0 3px":"3px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}
+                    title="Tap to open · Double-tap to rename"
+                  >
                     {list.icon && <span style={{fontSize:"12px"}}>{list.icon}</span>}
                     {(list.name||'').toUpperCase()}
                     {total > 0 && <span style={{fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)"}}>{done}/{total}</span>}
                   </button>
-                  <button onClick={() => {
-                    const choice = window.prompt(`"${list.name}" — type R to rename, D to delete:`, '');
-                    if (!choice) return;
-                    if (choice.toLowerCase().startsWith('r')) {
-                      const newName = window.prompt('Rename list:', list.name);
-                      if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
-                    } else if (choice.toLowerCase().startsWith('d')) {
+                  {isActive && (
+                    <button onClick={() => {
                       if (window.confirm(`Delete "${list.name}" and all its tasks?`)) {
                         setCustomTaskLists(prev => prev.filter(l => l.id !== list.id));
-                        if (tasksSubTab === list.id) setTasksSubTab('daily');
+                        setTasksSubTab('daily');
                       }
-                    }
-                  }} style={{padding:"6px 6px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderLeft:`0.5px solid ${isActive?`${list.color}33`:"rgba(255,255,255,0.05)"}`,borderRadius:"0 3px 3px 0",color:isActive?list.color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",flexShrink:0}} title="Rename or delete">⋯</button>
+                    }} style={{padding:"6px 8px",background:`${list.color}1a`,border:`0.5px solid ${list.color}66`,borderLeft:`0.5px solid ${list.color}33`,borderRadius:"0 3px 3px 0",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",fontWeight:600,cursor:"pointer",flexShrink:0,lineHeight:1}} title="Delete this list">×</button>
+                  )}
                 </div>
               );
             })}
@@ -5226,6 +5229,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
             }} style={{padding:"6px 12px",background:"transparent",border:"0.5px dashed rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>+ ADD</button>
+            {/* ROTATION — always at the end */}
+            <button onClick={() => setTasksSubTab('rotation')} style={{padding:"6px 14px",background:tasksSubTab==='rotation'?"rgba(251,191,36,0.1)":"transparent",border:`0.5px solid ${tasksSubTab==='rotation'?"rgba(251,191,36,0.4)":"transparent"}`,borderRadius:"3px",color:tasksSubTab==='rotation'?"rgba(251,191,36,0.9)":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>ROTATION</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
@@ -5410,42 +5415,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
-          {/* POMODORO */}
-          {tasksSubTab === 'pomodoro' && (() => {
-            const pomodoroModes = {work:25*60, shortBreak:5*60, longBreak:15*60};
-            const startPomodoro = () => { if (!pomodoroRunning) setPomodoroRunning(true); };
-            const pausePomodoro = () => setPomodoroRunning(false);
-            const resetPom = (mode) => { setPomodoroRunning(false); const m=mode||pomodoroMode; setPomodoroMode(m); setPomodoroTime(pomodoroModes[m]); };
-            const formatTime = (s) => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(239,68,68,0.7)",padding:"24px",textAlign:"center",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{display:"flex",justifyContent:"center",gap:"6px",marginBottom:"24px"}}>
-                    {[{id:'work',label:'FOCUS'},{id:'shortBreak',label:'SHORT BREAK'},{id:'longBreak',label:'LONG BREAK'}].map(m => (
-                      <button key={m.id} onClick={() => resetPom(m.id)} style={{padding:"5px 12px",background:pomodoroMode===m.id?"rgba(239,68,68,0.15)":"transparent",border:`0.5px solid ${pomodoroMode===m.id?"rgba(239,68,68,0.5)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:pomodoroMode===m.id?"rgba(239,68,68,0.9)":"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>{m.label}</button>
-                    ))}
-                  </div>
-                  <div style={{fontSize:"72px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"4px",marginBottom:"24px"}}>{formatTime(pomodoroTime)}</div>
-                  <div style={{display:"flex",justifyContent:"center",gap:"10px",marginBottom:"20px"}}>
-                    {!pomodoroRunning ? (
-                      <button onClick={startPomodoro} style={{padding:"10px 32px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.5)",borderRadius:"3px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2px",cursor:"pointer"}}>START</button>
-                    ) : (
-                      <button onClick={pausePomodoro} style={{padding:"10px 32px",background:"rgba(251,191,36,0.1)",border:"0.5px solid rgba(251,191,36,0.5)",borderRadius:"3px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2px",cursor:"pointer"}}>PAUSE</button>
-                    )}
-                    <button onClick={() => resetPom(pomodoroMode)} style={{padding:"10px 32px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2px",cursor:"pointer"}}>RESET</button>
-                  </div>
-                  <div style={{display:"flex",justifyContent:"center",gap:"6px",marginBottom:"8px"}}>
-                    {[...Array(4)].map((_,i) => (<div key={i} style={{width:"10px",height:"10px",borderRadius:"50%",background:i<(pomodoroSessions%4)?"rgba(239,68,68,0.8)":"rgba(255,255,255,0.1)"}} />))}
-                  </div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{pomodoroSessions} SESSIONS COMPLETED</div>
-                </div>
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"14px 16px"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HOW IT WORKS</div>
-                  <div style={{fontSize:"12px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",lineHeight:"1.6"}}>Focus 25 min → 5 min break. After 4 sessions take a 15 min break. Stays sharp, avoids burnout.</div>
-                </div>
-              </div>
-            );
-          })()}
         </div>
       </div>
     );
@@ -9693,25 +9662,27 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {billsSubTab === 'bills' && (
             <>
-          {/* Bucket Bar — horizontal scroll, tap to switch, long-press/icon to manage */}
+          {/* Bucket Bar — tap to switch, double-tap to rename, × to delete (when active) */}
           <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
             {buckets.map(b => {
               const isActive = b.id === activeBucketId;
               return (
                 <div key={b.id} style={{display:"flex",alignItems:"center",flexShrink:0}}>
-                  <button onClick={() => setActiveBucketId(b.id)} style={{padding:"6px 12px",background:isActive?`${b.color}1a`:"transparent",border:`0.5px solid ${isActive?`${b.color}66`:"rgba(255,255,255,0.08)"}`,borderRadius:"3px 0 0 3px",borderRight:"none",color:isActive?b.color:"rgba(148,163,184,0.55)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}>
+                  <button
+                    onClick={() => setActiveBucketId(b.id)}
+                    onDoubleClick={() => renameBucket(b.id)}
+                    style={{padding:"6px 12px",background:isActive?`${b.color}1a`:"transparent",border:`0.5px solid ${isActive?`${b.color}66`:"rgba(255,255,255,0.08)"}`,borderRadius:isActive?"3px 0 0 3px":"3px",borderRight:isActive?"none":undefined,color:isActive?b.color:"rgba(148,163,184,0.55)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}
+                    title="Tap to open · Double-tap to rename"
+                  >
                     <span style={{fontSize:"12px"}}>{b.icon}</span>
                     {(b.name||'').toUpperCase()}
                     {(b.bills||[]).filter(x=>x&&x.monthly>0).length > 0 && (
                       <span style={{fontSize:"8px",opacity:0.6}}>· {(b.bills||[]).filter(x=>x&&x.monthly>0).length}</span>
                     )}
                   </button>
-                  <button onClick={() => {
-                    const choice = window.prompt(`"${b.name}" — type R to rename, D to delete:`, '');
-                    if (!choice) return;
-                    if (choice.toLowerCase().startsWith('r')) renameBucket(b.id);
-                    else if (choice.toLowerCase().startsWith('d')) deleteBucket(b.id);
-                  }} style={{padding:"6px 6px",background:isActive?`${b.color}1a`:"transparent",border:`0.5px solid ${isActive?`${b.color}66`:"rgba(255,255,255,0.08)"}`,borderRadius:"0 3px 3px 0",borderLeft:`0.5px solid ${isActive?`${b.color}33`:"rgba(255,255,255,0.05)"}`,color:isActive?b.color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer"}} title="Rename or delete">⋯</button>
+                  {isActive && (
+                    <button onClick={() => deleteBucket(b.id)} style={{padding:"6px 8px",background:`${b.color}1a`,border:`0.5px solid ${b.color}66`,borderLeft:`0.5px solid ${b.color}33`,borderRadius:"0 3px 3px 0",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",fontWeight:600,cursor:"pointer",lineHeight:1}} title="Delete this section">×</button>
+                  )}
                 </div>
               );
             })}
