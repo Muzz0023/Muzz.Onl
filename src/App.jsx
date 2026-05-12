@@ -5203,7 +5203,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     style={{padding:"6px 12px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderRadius:isActive?"3px 0 0 3px":"3px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}
                     title="Tap to open · Double-tap to rename"
                   >
-                    {list.icon && <span style={{fontSize:"12px"}}>{list.icon}</span>}
                     {(list.name||'').toUpperCase()}
                     {total > 0 && <span style={{fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)"}}>{done}/{total}</span>}
                   </button>
@@ -5225,7 +5224,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               const palette = ['#00c8ff','#a855f7','#22c55e','#3b82f6','#ec4899','#f97316','#06b6d4','#eab308','#14b8a6','#84cc16','rgba(99,102,241,0.9)'];
               const used = customTaskLists.map(l => l.color);
               const color = palette.find(c => !used.includes(c)) || palette[Math.floor(Math.random()*palette.length)];
-              const newList = { id: 'custom_' + Date.now(), name: name.trim(), icon: '📋', color, note: '' };
+              const newList = { id: 'custom_' + Date.now(), name: name.trim(), color, note: '' };
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
             }} style={{padding:"6px 12px",background:"transparent",border:"0.5px dashed rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>+ ADD</button>
