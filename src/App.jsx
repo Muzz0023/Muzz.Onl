@@ -1583,6 +1583,8 @@ function MuzzApp() {
   const [dailyNote, setDailyNote] = useState('');
   const [weeklyNote, setWeeklyNote] = useState('');
   const [generalNote, setGeneralNote] = useState('');
+  // User-defined custom task lists (alongside the built-in daily/weekly/general)
+  const [customTaskLists, setCustomTaskLists] = useState([]);
   const [dailyRotation, setDailyRotation] = useState([
     { time: '1am', activity: '-' },
     { time: '2am', activity: '-' },
@@ -1761,7 +1763,7 @@ function MuzzApp() {
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [editingPin, setEditingPin] = useState(null);
-  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
+  const doExport = () => { try { const d=JSON.stringify({subscriptions,businessSubscriptions,billBuckets,activeBucketId,muzzPersonality,funnyGreetings,customDiets,trackedStocks,monthlySalary,monthlySalaryStr,assets,stocks,investmentSettings,smallGoals,bigGoals,holdingsResearch,futureStocks,futureResearch,futureResearchColumns,investmentSmallGoals,investmentBigGoals,investmentNotes,declinedCompanies,companyEconomics,economicsColumns,researchColumns,biggestRisks,risksColumns,billSmallGoals,billBigGoals,debts,calendarBills,tasks,dailyTasks,weeklyTasks,generalTasks,customTaskLists,dailyRotation,birthdays,reminders,groceries,shoppingLists,dailyMeals,waterIntake,dailySteps,workoutPlan,sleepData,mentalHealthData,timesheetData,customCategories,eliteName,stripeElite,stripeDonnyElite,timetableBlocks,habits,habitLog,journalEntries,countdowns,bucketList,assetMapNodes,mapPins,donnyJobs,donnyTeam,donnyNotes,donnyTimesheets,donnyClients,donnySubs,donnySuppliers,donnyMaterialsLog,donnyMistakes,donnyIncidents,donnyChecklists,donnyPhotos,donnySchedule,donnyRecurring,donnyCosts,donnyWorkspaceCode,donnyWorkerAccess,savedViews,auditLog},null,2); const b=new Blob([d],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='muzz-backup.json'; a.click(); } catch(e) {} };
 
   // Generate a workspace code for the boss
   const generateWorkspaceCode = () => {
@@ -1924,6 +1926,7 @@ function MuzzApp() {
     if(d.dailyTasks) setDailyTasks(d.dailyTasks);
     if(d.weeklyTasks) setWeeklyTasks(d.weeklyTasks);
     if(d.generalTasks) setGeneralTasks(d.generalTasks);
+    if(d.customTaskLists) setCustomTaskLists(d.customTaskLists);
     if(d.dailyNote !== undefined) setDailyNote(d.dailyNote||'');
     if(d.weeklyNote !== undefined) setWeeklyNote(d.weeklyNote||'');
     if(d.generalNote !== undefined) setGeneralNote(d.generalNote||'');
@@ -2006,6 +2009,7 @@ function MuzzApp() {
       dailyTasks: d.dailyTasks||[],
       weeklyTasks: d.weeklyTasks||[],
       generalTasks: d.generalTasks||[],
+      customTaskLists: d.customTaskLists||[],
       dailyRotation: d.dailyRotation||[],
       birthdays: d.birthdays||[],
       reminders: d.reminders||[],
@@ -2627,6 +2631,7 @@ function MuzzApp() {
           if (d.dailyTasks) setDailyTasks(d.dailyTasks);
           if (d.weeklyTasks) setWeeklyTasks(d.weeklyTasks);
           if (d.generalTasks) setGeneralTasks(d.generalTasks);
+          if (d.customTaskLists) setCustomTaskLists(d.customTaskLists);
           if (d.dailyNote !== undefined) setDailyNote(d.dailyNote||'');
           if (d.weeklyNote !== undefined) setWeeklyNote(d.weeklyNote||'');
           if (d.generalNote !== undefined) setGeneralNote(d.generalNote||'');
@@ -2773,6 +2778,7 @@ function MuzzApp() {
           dailyTasks,
           weeklyTasks,
           generalTasks,
+          customTaskLists,
           dailyNote,
           weeklyNote,
           generalNote,
@@ -2833,7 +2839,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -5119,7 +5125,8 @@ ${JSON.stringify(ctx, null, 2)}`;
     const dailyItems = parseItems(dailyNote);
     const weeklyItems = parseItems(weeklyNote);
     const generalItems = parseItems(generalNote);
-    const allItems = [...dailyItems, ...weeklyItems, ...generalItems];
+    const customItems = customTaskLists.flatMap(l => parseItems(l.note || ''));
+    const allItems = [...dailyItems, ...weeklyItems, ...generalItems, ...customItems];
     const totalTasks = allItems.length;
     const totalCompleted = allItems.filter(i => i.checked).length;
     const totalRemaining = totalTasks - totalCompleted;
@@ -5161,7 +5168,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
         <div className="max-w-5xl mx-auto px-6 py-5">
           {/* Tab bar with progress */}
-          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto"}}>
+          <div style={{display:"flex",gap:"4px",marginBottom:"16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"12px",overflowX:"auto",alignItems:"center"}}>
             {[
               {id:'daily', label:'DAILY', items: dailyItems, color:'#00c8ff'},
               {id:'weekly', label:'WEEKLY', items: weeklyItems, color:'rgba(99,102,241,0.9)'},
@@ -5178,15 +5185,72 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </button>
               );
             })}
+            {/* CUSTOM TASK LISTS */}
+            {customTaskLists.map(list => {
+              let listItems = [];
+              try { listItems = JSON.parse(list.note || ''); if (!Array.isArray(listItems)) listItems = []; } catch { listItems = []; }
+              const done = listItems.filter(i => i.checked).length;
+              const total = listItems.length;
+              const isActive = tasksSubTab === list.id;
+              return (
+                <div key={list.id} style={{display:"flex",alignItems:"center",flexShrink:0}}>
+                  <button onClick={() => setTasksSubTab(list.id)} style={{padding:"6px 12px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderRadius:"3px 0 0 3px",borderRight:"none",color:isActive?list.color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}>
+                    {list.icon && <span style={{fontSize:"12px"}}>{list.icon}</span>}
+                    {(list.name||'').toUpperCase()}
+                    {total > 0 && <span style={{fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)"}}>{done}/{total}</span>}
+                  </button>
+                  <button onClick={() => {
+                    const choice = window.prompt(`"${list.name}" — type R to rename, D to delete:`, '');
+                    if (!choice) return;
+                    if (choice.toLowerCase().startsWith('r')) {
+                      const newName = window.prompt('Rename list:', list.name);
+                      if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
+                    } else if (choice.toLowerCase().startsWith('d')) {
+                      if (window.confirm(`Delete "${list.name}" and all its tasks?`)) {
+                        setCustomTaskLists(prev => prev.filter(l => l.id !== list.id));
+                        if (tasksSubTab === list.id) setTasksSubTab('daily');
+                      }
+                    }
+                  }} style={{padding:"6px 6px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderLeft:`0.5px solid ${isActive?`${list.color}33`:"rgba(255,255,255,0.05)"}`,borderRadius:"0 3px 3px 0",color:isActive?list.color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer",flexShrink:0}} title="Rename or delete">⋯</button>
+                </div>
+              );
+            })}
+            {/* + ADD CUSTOM LIST */}
+            <button onClick={() => {
+              const name = window.prompt('Name this task list (e.g. Work, Errands, Project X):', '');
+              if (!name || !name.trim()) return;
+              const palette = ['#00c8ff','#a855f7','#22c55e','#3b82f6','#ec4899','#f97316','#06b6d4','#eab308','#14b8a6','#84cc16','rgba(99,102,241,0.9)'];
+              const used = customTaskLists.map(l => l.color);
+              const color = palette.find(c => !used.includes(c)) || palette[Math.floor(Math.random()*palette.length)];
+              const newList = { id: 'custom_' + Date.now(), name: name.trim(), icon: '📋', color, note: '' };
+              setCustomTaskLists(prev => [...prev, newList]);
+              setTasksSubTab(newList.id);
+            }} style={{padding:"6px 12px",background:"transparent",border:"0.5px dashed rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>+ ADD</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
-          {['daily','weekly','general'].includes(tasksSubTab) && (() => {
-            const noteVal = tasksSubTab === 'daily' ? dailyNote : tasksSubTab === 'weekly' ? weeklyNote : generalNote;
-            const setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
-            const accentColor = tasksSubTab === 'daily' ? '#00c8ff' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
-            const borderColor = tasksSubTab === 'daily' ? 'rgba(0,200,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
-            const headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase() : tasksSubTab === 'weekly' ? 'THIS WEEK' : 'GENERAL';
+          {(() => {
+            const builtIns = ['daily','weekly','general'];
+            const activeCustom = customTaskLists.find(l => l.id === tasksSubTab);
+            const isBuiltIn = builtIns.includes(tasksSubTab);
+            if (!isBuiltIn && !activeCustom) return null;
+
+            // Resolve where data lives + visual accent
+            let noteVal, setNote, accentColor, borderColor, headerLabel;
+            if (isBuiltIn) {
+              noteVal = tasksSubTab === 'daily' ? dailyNote : tasksSubTab === 'weekly' ? weeklyNote : generalNote;
+              setNote = tasksSubTab === 'daily' ? setDailyNote : tasksSubTab === 'weekly' ? setWeeklyNote : setGeneralNote;
+              accentColor = tasksSubTab === 'daily' ? '#00c8ff' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.9)' : 'rgba(34,197,94,0.9)';
+              borderColor = tasksSubTab === 'daily' ? 'rgba(0,200,255,0.15)' : tasksSubTab === 'weekly' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)';
+              headerLabel = tasksSubTab === 'daily' ? new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'}).toUpperCase() : tasksSubTab === 'weekly' ? 'THIS WEEK' : 'GENERAL';
+            } else {
+              // Custom list — stored as JSON inside the list's `note` field
+              noteVal = activeCustom.note || '';
+              setNote = (val) => setCustomTaskLists(prev => prev.map(l => l.id === activeCustom.id ? {...l, note: val} : l));
+              accentColor = activeCustom.color || '#00c8ff';
+              borderColor = `${activeCustom.color || '#00c8ff'}33`;
+              headerLabel = (activeCustom.name || 'CUSTOM').toUpperCase();
+            }
 
             let items = [];
             try { items = JSON.parse(noteVal); if (!Array.isArray(items)) throw 0; } catch { items = []; }
