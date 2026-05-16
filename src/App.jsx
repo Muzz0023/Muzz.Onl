@@ -4981,24 +4981,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           </div>
         </div>
 
-        {/* KPI STRIP */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-          <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
-            {[
-              {label:"PINNED",value:pinnedCount,sub:"REMINDERS",color:"#00c8ff"},
-              {label:"OVERDUE",value:overdueCount,sub:"REMINDERS",color:overdueCount>0?"rgba(239,68,68,0.9)":"rgba(34,197,94,0.7)"},
-              {label:"THIS WEEK",value:thisWeekCount,sub:"DUE",color:"rgba(251,191,36,0.8)"},
-              {label:"BIRTHDAYS",value:upcomingBdays,sub:"UPCOMING",color:"rgba(236,72,153,0.8)"},
-            ].map((kpi,i) => (
-              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
           {/* REMINDERS TAB */}
@@ -5205,24 +5187,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>LIFE INTELLIGENCE SYSTEM</div>
               <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TASKS</div>
             </div>
-          </div>
-        </div>
-
-        {/* KPI STRIP */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-          <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
-            {[
-              {label:"TOTAL",value:totalTasks,sub:"TASKS",color:"#00c8ff"},
-              {label:"COMPLETED",value:totalCompleted,sub:"DONE",color:"rgba(34,197,94,0.9)"},
-              {label:"REMAINING",value:totalRemaining,sub:"LEFT",color:totalRemaining>0?"rgba(251,191,36,0.9)":"rgba(34,197,94,0.9)"},
-              {label:"COMPLETION",value:`${overallRate}%`,sub:"RATE",color:overallRate>=70?"#00c8ff":overallRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
-            ].map((kpi,i) => (
-              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-              </div>
-            ))}
           </div>
         </div>
 
@@ -5662,22 +5626,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* Shopping Lists - Overview or Detail */}
               {!activeShoppingList ? (
                 <>
-                  {/* KPI Strip */}
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    {[
-                      {label:"LISTS",value:totalLists,sub:"ACTIVE",color:"rgba(0,200,255,0.9)"},
-                      {label:"TO BUY",value:totalToBuy,sub:"PENDING",color:"rgba(251,191,36,0.9)"},
-                      {label:"IN BAG",value:totalInBag,sub:"COLLECTED",color:"rgba(34,197,94,0.9)"},
-                      {label:"TOTAL ITEMS",value:totalItems,sub:"ACROSS LISTS",color:"rgba(0,200,255,0.7)"},
-                    ].map((kpi,i) => (
-                      <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                        <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                        <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                        <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                      </div>
-                    ))}
-                  </div>
-
                   {/* Create New List */}
                   <button
                     onClick={() => {
@@ -5932,22 +5880,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             const avgPerDay = daysLogged > 0 ? (weekMealsTotal / daysLogged).toFixed(1) : '—';
             return (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {/* KPI Strip */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                {[
-                  {label:"TODAY",value:todayMealsCount,sub:"MEALS LOGGED",color:"rgba(251,146,60,0.9)"},
-                  {label:"WEEK TOTAL",value:weekMealsTotal,sub:"ALL MEALS",color:"rgba(0,200,255,0.9)"},
-                  {label:"DAYS LOGGED",value:daysLogged,sub:"OUT OF 7",color:"rgba(34,197,94,0.9)"},
-                  {label:"AVG / DAY",value:avgPerDay,sub:"WHEN LOGGED",color:"rgba(251,191,36,0.9)"},
-                ].map((kpi,i) => (
-                  <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                  </div>
-                ))}
-              </div>
-
               {/* Reset Week */}
               <div style={{display:"flex",justifyContent:"flex-end"}}>
                 <button
@@ -6040,22 +5972,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                {/* KPI Strip */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  {[
-                    {label:"TODAY",value:`${todayAmount.toFixed(1)}L`,sub:`${Math.round(todayPercent)}% OF GOAL`,color:todayPercent>=100?"rgba(34,197,94,0.9)":todayPercent>=50?"rgba(0,200,255,0.9)":"rgba(251,191,36,0.9)"},
-                    {label:"WEEK TOTAL",value:`${weekTotal.toFixed(1)}L`,sub:"7 DAYS",color:"rgba(0,200,255,0.9)"},
-                    {label:"WEEK AVG",value:`${weekAvg.toFixed(1)}L`,sub:"PER DAY",color:weekAvg>=goalAmount?"rgba(34,197,94,0.9)":"rgba(251,191,36,0.9)"},
-                    {label:"GOAL HITS",value:`${daysHitGoal}/7`,sub:"DAYS",color:daysHitGoal>=5?"rgba(34,197,94,0.9)":daysHitGoal>=3?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.8)"},
-                  ].map((kpi,i) => (
-                    <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                      <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                      <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                    </div>
-                  ))}
-                </div>
-
                 {/* Today's Bottle + Input */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid rgba(0,200,255,0.6)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -6255,20 +6171,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             ];
             return (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {/* KPI Strip */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"1fr 1fr",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                {[
-                  {label:"PREBUILT PLANS",value:plans.length,sub:"AVAILABLE",color:"rgba(0,200,255,0.9)"},
-                  {label:"VIEWING",value:expandedDietPlan ? '1' : '—',sub:expandedDietPlan ? 'EXPANDED' : 'TAP TO EXPAND',color:"rgba(251,191,36,0.9)"},
-                ].map((kpi,i) => (
-                  <div key={i} style={{padding:"12px 16px",borderRight:i<1?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                  </div>
-                ))}
-              </div>
-
               {plans.map((plan) => {
                 const isOpen = expandedDietPlan === plan.id;
                 return (
@@ -6312,21 +6214,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             const totalCalories = customDiets.reduce((sum, d) => sum + d.meals.reduce((s, m) => s + (parseInt(m.calories)||0), 0), 0);
             return (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {/* KPI Strip */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(3,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                {[
-                  {label:"CUSTOM DIETS",value:customDiets.length,sub:"BUILT",color:"rgba(0,200,255,0.9)"},
-                  {label:"TOTAL MEALS",value:totalMeals,sub:"ACROSS PLANS",color:"rgba(251,146,60,0.9)"},
-                  {label:"TOTAL KCAL",value:totalCalories.toLocaleString(),sub:"ALL DIETS",color:"rgba(34,197,94,0.9)"},
-                ].map((kpi,i) => (
-                  <div key={i} style={{padding:"12px 16px",borderRight:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                  </div>
-                ))}
-              </div>
-
               {/* New Diet Button */}
               <button
                 onClick={() => {
@@ -6535,26 +6422,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
         </div>
-
-        {/* KPI STRIP */}
-        {gymTab === 'steps' && (
-          <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-            <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
-              {[
-                {label:"TODAY",value:todaySteps.toLocaleString(),sub:`${todayPct}% OF GOAL`,color:todayPct>=100?"rgba(34,197,94,0.9)":todayPct>=50?"rgba(251,191,36,0.8)":"#00c8ff"},
-                {label:"WEEK TOTAL",value:(totalWeekSteps/1000).toFixed(1)+'K',sub:"STEPS",color:"#00c8ff"},
-                {label:"ACTIVE DAYS",value:activeDays,sub:"THIS WEEK",color:"rgba(34,197,94,0.8)"},
-                {label:"BEST DAY",value:bestDay>0?(bestDay/1000).toFixed(1)+'K':'—',sub:"STEPS",color:"rgba(255,165,0,0.8)"},
-              ].map((kpi,i) => (
-                <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                  <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                  <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                  <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* STEPS BAR CHART */}
         {gymTab === 'steps' && activeDays > 0 && (
@@ -6796,46 +6663,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </button>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* KPI STRIP */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-          <div className="max-w-5xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
-            {gymSubTab === 'sleep' ? [
-              {label:"AVG SLEEP",value:avgSleep,sub:"HOURS / NIGHT",color:parseFloat(avgSleep)>=7?"rgba(34,197,94,0.9)":parseFloat(avgSleep)>=6?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.8)"},
-              {label:"TRACKED",value:sleepDaysTracked,sub:"DAYS THIS WEEK",color:"#00c8ff"},
-              {label:"GOOD NIGHTS",value:goodSleepNights,sub:"7H+ SLEEP",color:"rgba(34,197,94,0.9)"},
-              {label:"TARGET",value:"8H",sub:"IDEAL SLEEP",color:"rgba(148,163,184,0.4)"},
-            ].map((kpi,i) => (
-              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-              </div>
-            )) : [
-              {label:"DAYS LOGGED",value:mentalDaysLogged,sub:"THIS WEEK",color:"rgba(236,72,153,0.9)"},
-              {label:"AVG ENERGY",value:avgEnergy,sub:"OUT OF 5",color:"rgba(251,191,36,0.8)"},
-              {label:"AVG STRESS",value:avgStress,sub:"OUT OF 5",color:parseFloat(avgStress)<=2?"rgba(34,197,94,0.8)":parseFloat(avgStress)<=3?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.8)"},
-              {label:"MOOD TREND",value:'__MOOD_TREND__',sub:"THIS WEEK",color:"rgba(236,72,153,0.8)"},
-            ].map((kpi,i) => (
-              <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                {kpi.value === '__MOOD_TREND__' ? (
-                  <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"3px",height:"20px"}}>
-                    {weekDays.map((d,di) => {
-                      const m = mentalHealthData[d.date]?.mood;
-                      const cfg = getMoodConfig(m);
-                      const letter = m ? m.charAt(0).toUpperCase() : '·';
-                      return <div key={di} style={{width:"14px",height:"14px",borderRadius:"2px",background:m?cfg.bg:"rgba(255,255,255,0.04)",border:`0.5px solid ${m?cfg.border:"rgba(255,255,255,0.06)"}`,fontSize:"8px",color:m?cfg.color:"rgba(148,163,184,0.3)",fontFamily:"monospace",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center"}}>{letter}</div>;
-                    })}
-                  </div>
-                ) : (
-                  <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                )}
-                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-              </div>
-            ))}
           </div>
         </div>
 
@@ -8467,22 +8294,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           {/* Total Summary Tab */}
           {workSubTab === 'summary' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-
-              {/* KPI Strip */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                {[
-                  {label:"TOTAL HOURS",value:grandTotals.hours.toFixed(1),sub:"THIS WEEK",color:"rgba(34,197,94,0.9)"},
-                  {label:"TOTAL PAY",value:`$${grandTotals.pay.toFixed(0)}`,sub:"PRE-TAX",color:"rgba(34,197,94,0.9)"},
-                  {label:"AVG / DAY",value:avgPerDay > 0 ? avgPerDay.toFixed(1)+'h' : '—',sub:`${daysWorked} DAYS WORKED`,color:"rgba(0,200,255,0.9)"},
-                  {label:"BEST DAY",value:bestDay && bestDay.totalPay > 0 ? `$${bestDay.totalPay.toFixed(0)}` : '—',sub:bestDay && bestDay.totalPay > 0 ? bestDay.dayShort.toUpperCase() : '—',color:"rgba(251,191,36,0.9)"},
-                ].map((kpi,i) => (
-                  <div key={i} style={{padding:"12px 16px",borderRight:i<3?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                  </div>
-                ))}
-              </div>
 
               {/* 7-Day Chart */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -25945,24 +25756,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           </div>
         </div>
 
-        {/* KPI STRIP */}
-        <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-          <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
-            {[
-              {label:"COMPLETED",value:`${completedTodayCount}`,sub:"TODAY",color:"#00c8ff"},
-              {label:"COMPLETION RATE",value:`${todayRate}%`,sub:"COMPLETION",color:todayRate>=70?"#00c8ff":todayRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
-              {label:"TOP STREAK",value:bestStreakOverall,sub:"DAYS",color:"rgba(255,165,0,0.9)"},
-              {label:"31-DAY AVG",value:`${overall31Rate}%`,sub:"CONSISTENCY",color:overall31Rate>=70?"#00c8ff":overall31Rate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
-            ].map((kpi,i) => (
-              <div key={i} style={{padding:"12px 16px",borderRight:(isWide?i<3:(i%2)===0)?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:!isWide && i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
           <button
             onClick={() => setHabits(prev => [...prev, { id: Date.now().toString(), name: '', icon: '✅', createdAt: today }])}
@@ -26194,23 +25987,6 @@ ${JSON.stringify(ctx, null, 2)}`;
         {/* COUNTDOWNS TAB */}
         {countdownsSubTab === 'countdowns' && (
           <>
-            {/* KPI STRIP */}
-            <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-              <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)"}}>
-                {[
-                  {label:"ACTIVE",value:activeCountdowns.length,sub:"COUNTDOWNS",color:"#00c8ff"},
-                  {label:"NEXT EVENT",value:nextCountdown ? `${nextDays}d` : '—',sub:nextCountdown ? (nextCountdown.name||'Unnamed').toUpperCase().slice(0,12) : 'NONE SET',color:nextDays !== null ? getUrgencyColor(nextDays).color : "rgba(148,163,184,0.3)"},
-                  {label:"PASSED",value:passedCountdowns.length,sub:"EVENTS",color:"rgba(34,197,94,0.7)"},
-                ].map((kpi,i) => (
-                  <div key={i} style={{padding:"12px 16px",borderRight:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                    <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                    <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               <button
                 onClick={() => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}])}
@@ -26302,24 +26078,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           const filteredList = blFilter === 'all' ? bucketList : bucketList.filter(b => b.category === blFilter);
           return (
             <>
-              {/* KPI STRIP */}
-              <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.1)",background:"rgba(5,12,24,0.6)"}}>
-                <div className="max-w-4xl mx-auto" style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {label:"TOTAL",value:blTotal,sub:"GOALS",color:"rgba(251,191,36,0.9)"},
-                    {label:"COMPLETED",value:blCompleted,sub:"ACHIEVED",color:"rgba(34,197,94,0.9)"},
-                    {label:"REMAINING",value:blTotal-blCompleted,sub:"TO GO",color:"rgba(0,200,255,0.8)"},
-                    {label:"COMPLETION",value:`${blPct}%`,sub:"RATE",color:blPct>=70?"rgba(34,197,94,0.9)":blPct>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
-                  ].map((kpi,i) => (
-                    <div key={i} style={{padding:"12px 16px",borderRight:(isWide?i<3:(i%2)===0)?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:!isWide && i<2?"0.5px solid rgba(0,200,255,0.08)":"none",textAlign:"center"}}>
-                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.35)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{kpi.label}</div>
-                      <div style={{fontSize:"20px",color:kpi.color,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{kpi.value}</div>
-                      <div style={{fontSize:"7px",color:"rgba(0,200,255,0.25)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"3px"}}>{kpi.sub}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Category filter */}
               <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.08)",background:"rgba(5,12,24,0.4)"}}>
                 <div className="max-w-4xl mx-auto" style={{padding:"8px 24px",display:"flex",gap:"4px",overflowX:"auto"}}>
