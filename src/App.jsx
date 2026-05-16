@@ -886,7 +886,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // VIP Users - Always Elite, no subscription needed
 const DONNY_WORKER_CODE = 'DONNY-WORKER';
 
-const VIP_EMAILS = ['muzz.onl@outlook.com'];
+const VIP_EMAILS = [];
 
 // Elite limits
 const FREE_AI_LIMIT = 10;
