@@ -3446,7 +3446,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   flex:1,minHeight:"32px",
                   display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"2px",
                   width:"100%",padding:"2px 4px",
-                  background:active?"rgba(0,200,255,0.1)":"transparent",
+                  background:active?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",
                   border:"none",borderLeft:active?"2px solid #00c8ff":"2px solid transparent",
                   cursor:locked?"not-allowed":"pointer",
                   opacity:locked?0.3:1
@@ -4973,7 +4973,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             <div style={{display:"flex",gap:"4px"}}>
               {[{id:'reminders',label:'REMINDERS'},{id:'birthdays',label:'BIRTHDAYS'}].map(tab => (
-                <button key={tab.id} onClick={() => setRemindersSubTab(tab.id)} style={{padding:"6px 14px",background:remindersSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${remindersSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:remindersSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                <button key={tab.id} onClick={() => setRemindersSubTab(tab.id)} style={{padding:"6px 14px",background:remindersSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${remindersSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:remindersSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -5179,7 +5179,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               const done = tab.items.filter(i => i.checked).length;
               const total = tab.items.length;
               return (
-                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"6px 14px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative"}}>
+                <button key={tab.id} onClick={() => setTasksSubTab(tab.id)} style={{padding:"8px 16px",background:tasksSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:tasksSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,position:"relative",fontWeight:600}}>
                   {tab.label}
                   {total > 0 && <span style={{marginLeft:"6px",fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)",fontFamily:"monospace"}}>{done}/{total}</span>}
                 </button>
@@ -5200,11 +5200,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const newName = window.prompt('Rename list:', list.name);
                       if (newName && newName.trim()) setCustomTaskLists(prev => prev.map(l => l.id === list.id ? {...l, name: newName.trim()} : l));
                     }}
-                    style={{padding:"6px 12px",background:isActive?`${list.color}1a`:"transparent",border:`0.5px solid ${isActive?`${list.color}66`:"transparent"}`,borderRadius:isActive?"3px 0 0 3px":"3px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}
+                    style={{padding:"8px 16px",background:isActive?`${list.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${list.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?list.color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
                     title="Tap to open · Double-tap to rename"
                   >
                     {(list.name||'').toUpperCase()}
-                    {total > 0 && <span style={{fontSize:"8px",color:done===total?"rgba(34,197,94,0.8)":"rgba(251,191,36,0.7)"}}>{done}/{total}</span>}
+                    {total > 0 && <span style={{fontSize:"9px",color:done===total?"rgba(34,197,94,0.9)":"rgba(251,191,36,0.8)"}}>{done}/{total}</span>}
                   </button>
                   {isActive && (
                     <button onClick={() => {
@@ -5212,7 +5212,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         setCustomTaskLists(prev => prev.filter(l => l.id !== list.id));
                         setTasksSubTab('daily');
                       }
-                    }} style={{padding:"6px 8px",background:`${list.color}1a`,border:`0.5px solid ${list.color}66`,borderLeft:`0.5px solid ${list.color}33`,borderRadius:"0 3px 3px 0",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",fontWeight:600,cursor:"pointer",flexShrink:0,lineHeight:1}} title="Delete this list">×</button>
+                    }} style={{padding:"8px 10px",background:`${list.color}26`,border:`1px solid ${list.color}99`,borderLeft:`1px solid ${list.color}55`,borderRadius:"0 4px 4px 0",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"14px",fontWeight:700,cursor:"pointer",flexShrink:0,lineHeight:1}} title="Delete this list">×</button>
                   )}
                 </div>
               );
@@ -5227,9 +5227,9 @@ ${JSON.stringify(ctx, null, 2)}`;
               const newList = { id: 'custom_' + Date.now(), name: name.trim(), color, note: '' };
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
-            }} style={{padding:"6px 12px",background:"transparent",border:"0.5px dashed rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>+ ADD</button>
+            }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
             {/* ROTATION — always at the end */}
-            <button onClick={() => setTasksSubTab('rotation')} style={{padding:"6px 14px",background:tasksSubTab==='rotation'?"rgba(251,191,36,0.1)":"transparent",border:`0.5px solid ${tasksSubTab==='rotation'?"rgba(251,191,36,0.4)":"transparent"}`,borderRadius:"3px",color:tasksSubTab==='rotation'?"rgba(251,191,36,0.9)":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>ROTATION</button>
+            <button onClick={() => setTasksSubTab('rotation')} style={{padding:"8px 16px",background:tasksSubTab==='rotation'?"rgba(251,191,36,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab==='rotation'?"rgba(251,191,36,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:tasksSubTab==='rotation'?"rgba(251,191,36,0.95)":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>ROTATION</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
@@ -5287,12 +5287,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               }
             };
 
-            const priorityConfig = {
-              high: {label:'HIGH', color:'rgba(239,68,68,0.8)', bg:'rgba(239,68,68,0.1)'},
-              med: {label:'MED', color:'rgba(251,191,36,0.8)', bg:'rgba(251,191,36,0.08)'},
-              low: {label:'LOW', color:'rgba(34,197,94,0.7)', bg:'rgba(34,197,94,0.08)'},
-            };
-
             const unchecked = items.filter(i => !i.checked);
             const checked = items.filter(i => i.checked);
             const completionPct = items.length > 0 ? Math.round((checked.length / items.length) * 100) : 0;
@@ -5322,7 +5316,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {unchecked.map(item => (
                     <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
                       <button onClick={() => updateItem(item.id, {checked: true})}
-                        style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid rgba(148,163,184,0.3)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
+                        style={{width:"22px",height:"22px",borderRadius:"50%",border:`1.5px solid rgba(148,163,184,0.3)`,background:"transparent",flexShrink:0,cursor:"pointer",padding:0}}>
                       </button>
                       <input
                         id={`item-${item.id}`}
@@ -5331,18 +5325,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                         onKeyDown={(e) => handleKeyDown(e, item)}
                         onFocus={scrollInputIntoView}
                         placeholder="Task..."
-                        style={{flex:1,background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontSize:"15px",fontFamily:"system-ui",lineHeight:"1.6"}}
+                        style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.9)",fontSize:"15px",fontFamily:"system-ui",lineHeight:"1.6"}}
                       />
-                      {/* Priority tag */}
-                      <div style={{display:"flex",gap:"3px",flexShrink:0}}>
-                        {['high','med','low'].map(p => (
-                          <button key={p} onClick={() => updateItem(item.id, {priority: item.priority === p ? null : p})}
-                            style={{fontSize:"7px",fontFamily:"monospace",letterSpacing:"0.5px",padding:"2px 5px",borderRadius:"2px",border:`0.5px solid ${item.priority===p?priorityConfig[p].color:"rgba(255,255,255,0.08)"}`,background:item.priority===p?priorityConfig[p].bg:"transparent",color:item.priority===p?priorityConfig[p].color:"rgba(148,163,184,0.2)",cursor:"pointer"}}>
-                            {priorityConfig[p].label}
-                          </button>
-                        ))}
-                      </div>
-                      <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.2)",fontSize:"16px",padding:0,flexShrink:0}}>×</button>
+                      <button onClick={() => deleteItem(item.id)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.5)",fontSize:"18px",padding:"4px 6px",flexShrink:0,lineHeight:1}}>×</button>
                     </div>
                   ))}
 
@@ -5500,7 +5485,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
               {[{id:'groceries',label:'GROCERIES'},{id:'meals',label:'MEALS'},{id:'water',label:'WATER'},{id:'plans',label:'DIET PLANS'},{id:'custom',label:'MY DIETS'}].map(tab => (
-                <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"6px 14px",background:dietSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${dietSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:dietSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"8px 16px",background:dietSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${dietSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:dietSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -6349,7 +6334,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px",marginBottom:"16px"}}>GYM</div>
             <div style={{display:"flex",gap:"4px"}}>
               {[{id:'steps',label:'WEEKLY STEPS'},{id:'plan',label:'WORKOUT PLAN'}].map(tab => (
-                <button key={tab.id} onClick={() => setGymTab(tab.id)} style={{padding:"6px 14px",background:gymTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                <button key={tab.id} onClick={() => setGymTab(tab.id)} style={{padding:"6px 14px",background:gymTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${gymTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:gymTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -6568,7 +6553,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
               {[{id:'sleep',label:'SLEEP'},{id:'mental',label:'MENTAL'}].map(tab => (
-                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:gymSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${gymSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:gymSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:gymSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${gymSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:gymSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -6945,7 +6930,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div key={tab.id} style={{position:"relative"}}>
                   <button
                     onClick={() => updateCategory({ activeSubTab: tab.id })}
-                    style={{padding:"6px 14px",background:customCat.activeSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${customCat.activeSubTab===tab.id?"rgba(0,200,255,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:customCat.activeSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}
+                    style={{padding:"6px 14px",background:customCat.activeSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${customCat.activeSubTab===tab.id?"rgba(0,200,255,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:customCat.activeSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}
                   >
                     {tab.name.toUpperCase()}
                   </button>
@@ -6954,7 +6939,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   )}
                 </div>
               ))}
-              <button onClick={addSubTab} style={{padding:"6px 14px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+              <button onClick={addSubTab} style={{padding:"6px 14px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                 + TAB
               </button>
             </div>
@@ -8222,16 +8207,16 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             {/* Tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              <button onClick={() => setWorkSubTab('summary')} style={{padding:"6px 14px",background:workSubTab==='summary'?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${workSubTab==='summary'?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:workSubTab==='summary'?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+              <button onClick={() => setWorkSubTab('summary')} style={{padding:"8px 16px",background:workSubTab==='summary'?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${workSubTab==='summary'?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:workSubTab==='summary'?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                 SUMMARY
               </button>
               {jobs.map(job => (
-                <button key={job.id} onClick={() => { setTimesheetData(prev => ({...prev, activeJobId: job.id})); setWorkSubTab('timesheet'); }} style={{padding:"6px 14px",background:workSubTab==='timesheet'&&activeJobId===job.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${workSubTab==='timesheet'&&activeJobId===job.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:workSubTab==='timesheet'&&activeJobId===job.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                <button key={job.id} onClick={() => { setTimesheetData(prev => ({...prev, activeJobId: job.id})); setWorkSubTab('timesheet'); }} style={{padding:"8px 16px",background:workSubTab==='timesheet'&&activeJobId===job.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${workSubTab==='timesheet'&&activeJobId===job.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:workSubTab==='timesheet'&&activeJobId===job.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {job.name.toUpperCase()}
                 </button>
               ))}
               {jobs.length < 5 && (
-                <button onClick={addJob} style={{padding:"6px 14px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                <button onClick={addJob} style={{padding:"6px 14px",background:"transparent",border:"0.5px dashed rgba(0,200,255,0.2)",borderRadius:"3px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   + JOB
                 </button>
               )}
@@ -8280,7 +8265,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <div style={{width:"100%",height:`${pct}%`,minHeight:totalH>0?"4px":"0",display:"flex",flexDirection:"column-reverse",borderRadius:"2px",overflow:"hidden",border:totalH>0?"0.5px solid rgba(0,200,255,0.2)":"none"}}>
                           {segs.map((s, si) => totalH > 0 && s.h > 0 && <div key={si} style={{flex:s.h, background:s.color}}/>)}
                         </div>
-                        <div style={{fontSize:"8px",color:d.isToday?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",fontWeight:d.isToday?600:400}}>{d.dayShort.toUpperCase().slice(0,3)}</div>
+                        <div style={{fontSize:"8px",color:d.isToday?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",fontWeight:d.isToday?600:400}}>{d.dayShort.toUpperCase().slice(0,3)}</div>
                       </div>
                     );
                   })}
@@ -9649,7 +9634,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'bills',label:'BILLS'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
-                <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"6px 14px",background:billsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:billsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -9670,22 +9655,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <button
                     onClick={() => setActiveBucketId(b.id)}
                     onDoubleClick={() => renameBucket(b.id)}
-                    style={{padding:"6px 12px",background:isActive?`${b.color}1a`:"transparent",border:`0.5px solid ${isActive?`${b.color}66`:"rgba(255,255,255,0.08)"}`,borderRadius:isActive?"3px 0 0 3px":"3px",borderRight:isActive?"none":undefined,color:isActive?b.color:"rgba(148,163,184,0.55)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px"}}
+                    style={{padding:"8px 16px",background:isActive?`${b.color}26`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?`${b.color}99`:"rgba(255,255,255,0.15)"}`,borderRadius:isActive?"4px 0 0 4px":"4px",borderRight:isActive?"none":undefined,color:isActive?b.color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"6px",fontWeight:600}}
                     title="Tap to open · Double-tap to rename"
                   >
-                    <span style={{fontSize:"12px"}}>{b.icon}</span>
                     {(b.name||'').toUpperCase()}
                     {(b.bills||[]).filter(x=>x&&x.monthly>0).length > 0 && (
-                      <span style={{fontSize:"8px",opacity:0.6}}>· {(b.bills||[]).filter(x=>x&&x.monthly>0).length}</span>
+                      <span style={{fontSize:"9px",opacity:0.7}}>· {(b.bills||[]).filter(x=>x&&x.monthly>0).length}</span>
                     )}
                   </button>
                   {isActive && (
-                    <button onClick={() => deleteBucket(b.id)} style={{padding:"6px 8px",background:`${b.color}1a`,border:`0.5px solid ${b.color}66`,borderLeft:`0.5px solid ${b.color}33`,borderRadius:"0 3px 3px 0",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",fontWeight:600,cursor:"pointer",lineHeight:1}} title="Delete this section">×</button>
+                    <button onClick={() => deleteBucket(b.id)} style={{padding:"8px 10px",background:`${b.color}26`,border:`1px solid ${b.color}99`,borderLeft:`1px solid ${b.color}55`,borderRadius:"0 4px 4px 0",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"14px",fontWeight:700,cursor:"pointer",lineHeight:1}} title="Delete this section">×</button>
                   )}
                 </div>
               );
             })}
-            <button onClick={addBucket} style={{padding:"6px 12px",background:"transparent",border:"0.5px dashed rgba(148,163,184,0.3)",borderRadius:"3px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>+ ADD</button>
+            <button onClick={addBucket} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
           </div>
 
           {!activeBucket && (
@@ -9754,7 +9738,7 @@ ${JSON.stringify(ctx, null, 2)}`;
           {/* Bills List - active bucket */}
           <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
             <div style={{padding:"12px 16px",borderBottom:`0.5px solid ${bucketAccent}20`,background:`${bucketAccent}08`}}>
-              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.icon} {activeBucket.name} Bills</h2>
+              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.name} Bills</h2>
             </div>
             <div style={{padding:"12px"}}>
               <div style={{overflowX:'auto'}}>
@@ -9871,11 +9855,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 />
                               );
                             })()}
-                            <circle cx="110" cy="110" r="50" fill="white" />
-                            <text x="110" y="105" textAnchor="middle" className="text-lg font-bold fill-gray-700">
+                            <circle cx="110" cy="110" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
+                            <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>
                               {((totalMonthly / salaryNum) * 100).toFixed(0)}%
                             </text>
-                            <text x="110" y="125" textAnchor="middle" className="text-xs fill-gray-500">
+                            <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>
                               of income
                             </text>
                           </>
@@ -10951,8 +10935,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"6px",padding:"14px 16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"12px"}}>// DEBT PAYOFF CALCULATOR</h2>
                   <div style={{display:"flex",gap:"8px",marginBottom:"12px"}}>
-                    <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>SNOWBALL (SMALLEST FIRST)</button>
-                    <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>AVALANCHE (HIGHEST RATE)</button>
+                    <button onClick={() => setDebtCalcMethod('snowball')} style={debtCalcMethod === 'snowball' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>SNOWBALL (SMALLEST FIRST)</button>
+                    <button onClick={() => setDebtCalcMethod('avalanche')} style={debtCalcMethod === 'avalanche' ? {flex:1,padding:"8px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"} : {flex:1,padding:"8px 12px",background:"transparent",border:"0.5px solid rgba(148,163,184,0.2)",borderRadius:"3px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>AVALANCHE (HIGHEST RATE)</button>
                   </div>
                   <div style={{background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",padding:"12px 14px",marginBottom:"12px"}}>
                     <p style={{fontSize:"11px",color:"rgba(148,163,184,0.85)",fontFamily:"monospace",lineHeight:1.6}}>{debtCalcMethod === 'snowball' ? 'Snowball: Pay minimums on everything, throw extra cash at the smallest debt first. Quick wins keep you motivated!' : 'Avalanche: Pay minimums on everything, attack the highest interest rate first. Saves you the most money mathematically!'}</p>
@@ -11396,11 +11380,11 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'assets',label:'ASSETS'},{id:'goals',label:'GOALS'},{id:'knowledge',label:'GUIDE'},{id:'assetMap',label:'ASSET MAP'}].map(tab => (
-                <button key={tab.id} onClick={() => setAssetsSubTab(tab.id)} style={{padding:"6px 14px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                <button key={tab.id} onClick={() => setAssetsSubTab(tab.id)} style={{padding:"8px 16px",background:assetsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${assetsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:assetsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
-              <button onClick={() => setActiveView('worldmap')} style={{padding:"6px 14px",background:"transparent",border:"0.5px solid transparent",borderRadius:"3px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+              <button onClick={() => setActiveView('worldmap')} style={{padding:"6px 14px",background:"transparent",border:"0.5px solid transparent",borderRadius:"3px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                 WORLD MAP
               </button>
             </div>
@@ -11656,11 +11640,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                               />
                             );
                           })}
-                          <circle cx="110" cy="110" r="50" fill="white" />
-                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"14px",fontWeight:600,fill:"rgba(224,234,255,0.9)",fontFamily:"monospace"}}>
+                          <circle cx="110" cy="110" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
+                          <text x="110" y="105" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>
                             {filledAssets.length}
                           </text>
-                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                          <text x="110" y="125" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>
                             assets
                           </text>
                         </>
@@ -11675,7 +11659,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     
                     return sortedAssets.map((asset, idx) => (
                       <div key={idx} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",fontFamily:"monospace",color:"rgba(224,234,255,0.85)"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%"}} style={{ backgroundColor: colors[idx % colors.length] }} />
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",backgroundColor:colors[idx % colors.length],flexShrink:0}} />
                         <span style={{color:"rgba(148,163,184,0.75)",fontFamily:"monospace",fontSize:"11px",lineHeight:"1.6"}}>{asset.name}</span>
                         <span style={{color:"rgba(148,163,184,0.6)",fontFamily:"monospace",fontSize:"10px"}}>({((asset.value / totalAssets) * 100).toFixed(1)}%)</span>
                       </div>
@@ -12529,7 +12513,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {id:'sp500',label:'S&P 500'},
                 {id:'compound',label:'COMPOUND'},
               ].map(tab => (
-                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:investmentsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${investmentsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:investmentsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:investmentsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${investmentsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:investmentsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
@@ -13059,9 +13043,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                             );
                           });
                         })()}
-                        <circle cx="125" cy="125" r="50" fill="white" />
-                        <text x="125" y="120" textAnchor="middle" className="text-xs fill-gray-500">{filledStocks.length} stocks</text>
-                        <text x="125" y="140" textAnchor="middle" className="text-lg font-bold fill-gray-800">${(totalStocksValue / 1000).toFixed(0)}k</text>
+                        <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
+                        <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{filledStocks.length} stocks</text>
+                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>${(totalStocksValue / 1000).toFixed(0)}k</text>
                       </svg>
                     </div>
                     
@@ -13139,9 +13123,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                             );
                           });
                         })()}
-                        <circle cx="125" cy="125" r="50" fill="white" />
-                        <text x="125" y="120" textAnchor="middle" className="text-xs fill-gray-500">Total</text>
-                        <text x="125" y="140" textAnchor="middle" className="text-lg font-bold fill-gray-800">${(totalStocksValue / 1000).toFixed(0)}k</text>
+                        <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
+                        <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total</text>
+                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>${(totalStocksValue / 1000).toFixed(0)}k</text>
                       </svg>
                     </div>
                     
@@ -14899,9 +14883,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 );
                               });
                             })()}
-                            <circle cx="125" cy="125" r="50" fill="white" />
-                            <text x="125" y="120" textAnchor="middle" className="text-xs fill-gray-500">Total</text>
-                            <text x="125" y="140" textAnchor="middle" className="text-lg font-bold fill-gray-800">{totalDeclined}</text>
+                            <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
+                            <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total</text>
+                            <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>{totalDeclined}</text>
                           </svg>
                         </div>
                         
@@ -16360,7 +16344,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {[{id:'week',label:'WEEK VIEW'},{id:'list',label:'LIST'},{id:'add',label:'+ ADD BLOCK'}].map(t => (
                 <button key={t.id} onClick={()=>{setTtTab(t.id);if(t.id!=='add')setTtEditingId(null);}}
-                  style={{padding:"6px 14px",background:ttTab===t.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${ttTab===t.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:ttTab===t.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                  style={{padding:"6px 14px",background:ttTab===t.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${ttTab===t.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:ttTab===t.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {t.label}
                 </button>
               ))}
@@ -20400,7 +20384,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }}
-                  style={{padding:"6px 12px",background:showAddMember?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddMember?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddMember?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  style={{padding:"6px 12px",background:showAddMember?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddMember?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddMember?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {showAddMember ? '✕ CANCEL' : '+ ADD MEMBER'}
                 </button>
               </div>
@@ -20945,7 +20929,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <button onClick={()=>setShowNewRecurring(s=>!s)}
-                  style={{padding:"6px 12px",background:showNewRecurring?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showNewRecurring?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showNewRecurring?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  style={{padding:"6px 12px",background:showNewRecurring?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showNewRecurring?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showNewRecurring?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {showNewRecurring ? '✕ CANCEL' : '+ ADD JOB'}
                 </button>
               </div>
@@ -21609,7 +21593,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <button onClick={() => { setShowNewChecklist(s => !s); setNewChecklist({title:'',type:'swms',jobId:String(job?.id||''),items:[]}); }}
-                    style={{padding:"6px 12px",background:showNewChecklist?"rgba(239,68,68,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showNewChecklist?"rgba(239,68,68,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showNewChecklist?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    style={{padding:"6px 12px",background:showNewChecklist?"rgba(239,68,68,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showNewChecklist?"rgba(239,68,68,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showNewChecklist?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                     {showNewChecklist ? '✕ CANCEL' : '+ NEW DOC'}
                   </button>
                 </div>
@@ -22034,7 +22018,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <button onClick={()=>{ setShowNewIncident(s=>!s); setNewIncident(p=>({...p,jobId:String(job?.id||'')})); }}
-                    style={{padding:"6px 12px",background:showNewIncident?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewIncident?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewIncident?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    style={{padding:"6px 12px",background:showNewIncident?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewIncident?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewIncident?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                     {showNewIncident ? '✕ CANCEL' : '+ LOG INCIDENT'}
                   </button>
                 </div>
@@ -22920,7 +22904,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <button onClick={()=>{ setShowNewMistake(s=>!s); setNewMistake(p=>({...p,jobRef: job?.jobNumber?`#${job.jobNumber} ${job.title}`:job?.title||'',date:new Date().toISOString().split('T')[0]})); }}
-                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                     {showNewMistake ? '✕ CANCEL' : '+ LOG MISTAKE'}
                   </button>
                 </div>
@@ -23357,7 +23341,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                   {donnyRole !== 'worker' && (
                     <button onClick={()=>{ setShowAddRisk(s=>!s); setNewRiskText(''); setNewRiskAvoid(''); }}
-                      style={{padding:"6px 12px",background:showAddRisk?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showAddRisk?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showAddRisk?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                      style={{padding:"6px 12px",background:showAddRisk?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showAddRisk?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showAddRisk?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                       {showAddRisk ? '✕ CANCEL' : '+ ADD RISK'}
                     </button>
                   )}
@@ -24066,7 +24050,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <button onClick={()=>setShowAddSub(s=>!s)}
-                  style={{padding:"6px 12px",background:showAddSub?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddSub?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddSub?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  style={{padding:"6px 12px",background:showAddSub?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddSub?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddSub?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {showAddSub ? '✕ CANCEL' : '+ ADD SUB'}
                 </button>
               </div>
@@ -24493,7 +24477,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <button onClick={()=>setShowAddSupplier(s=>!s)}
-                  style={{padding:"6px 12px",background:showAddSupplier?"rgba(239,68,68,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showAddSupplier?"rgba(239,68,68,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showAddSupplier?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  style={{padding:"6px 12px",background:showAddSupplier?"rgba(239,68,68,0.06)":"rgba(34,197,94,0.1)",border:`0.5px solid ${showAddSupplier?"rgba(239,68,68,0.3)":"rgba(34,197,94,0.4)"}`,borderRadius:"3px",color:showAddSupplier?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {showAddSupplier ? '✕ CANCEL' : '+ ADD SUPPLIER'}
                 </button>
               </div>
@@ -24762,7 +24746,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <button onClick={()=>{ setShowAddClient(s=>!s); setEditingClientId(null); }}
-                  style={{padding:"6px 12px",background:showAddClient?"rgba(239,68,68,0.06)":"rgba(59,130,246,0.1)",border:`0.5px solid ${showAddClient?"rgba(239,68,68,0.3)":"rgba(59,130,246,0.4)"}`,borderRadius:"3px",color:showAddClient?"rgba(239,68,68,0.85)":"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                  style={{padding:"6px 12px",background:showAddClient?"rgba(239,68,68,0.06)":"rgba(59,130,246,0.1)",border:`0.5px solid ${showAddClient?"rgba(239,68,68,0.3)":"rgba(59,130,246,0.4)"}`,borderRadius:"3px",color:showAddClient?"rgba(239,68,68,0.85)":"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {showAddClient ? '✕ CANCEL' : '+ ADD CLIENT'}
                 </button>
               </div>
@@ -25225,20 +25209,22 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                 {/* Heatmap */}
                 <div style={{padding:"10px 16px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(22px, 1fr))",gap:"3px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(28px, 1fr))":"repeat(auto-fill, minmax(40px, 1fr))",gap:isWide?"4px":"6px"}}>
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
+                      const d = new Date(date);
+                      const dayNum = d.getDate();
                       return (
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          style={{aspectRatio:"1",borderRadius:"2px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"0.5px solid rgba(0,200,255,0.4)":"none",boxShadow:done?"0 0 4px rgba(0,200,255,0.5)":"none"}}
-                        />
+                          style={{aspectRatio:"1",borderRadius:"4px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 6px rgba(0,200,255,0.55)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:isWide?"9px":"11px",fontWeight:500,color:done?"#001821":isToday?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.4)",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
+                        >{dayNum}</div>
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"9px",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
+                  <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"8px"}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
                 </div>
               </div>
             );
@@ -25305,7 +25291,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             <div style={{display:"flex",gap:"4px"}}>
               {[{id:'countdowns',label:'COUNTDOWNS'},{id:'bucketlist',label:'BUCKET LIST'}].map(tab => (
-                <button key={tab.id} onClick={() => setCountdownsSubTab(tab.id)} style={{padding:"6px 14px",background:countdownsSubTab===tab.id?"rgba(0,200,255,0.1)":"transparent",border:`0.5px solid ${countdownsSubTab===tab.id?"rgba(0,200,255,0.4)":"transparent"}`,borderRadius:"3px",color:countdownsSubTab===tab.id?"#00c8ff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                <button key={tab.id} onClick={() => setCountdownsSubTab(tab.id)} style={{padding:"6px 14px",background:countdownsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${countdownsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:countdownsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                   {tab.label}
                 </button>
               ))}
