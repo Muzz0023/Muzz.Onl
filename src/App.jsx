@@ -4706,14 +4706,14 @@ ${JSON.stringify(ctx, null, 2)}`;
           borderLeft:active?`3px solid ${accent}`:'3px solid transparent',
           cursor:locked?'default':'pointer',
           borderRadius:'3px',
-          opacity:locked?0.35:1,
+          opacity:locked?0.7:1,
           textAlign:'left',
         }}
       >
-        <span style={{fontSize:'14px',color:active?accent:'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
-        <span style={{fontSize:'13px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.78)':'rgba(224,234,255,0.88)',letterSpacing:'0.3px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
+        <span style={{fontSize:'14px',color:active?accent:locked?'rgba(251,191,36,0.5)':'rgba(0,200,255,0.5)',fontFamily:'monospace',lineHeight:1,textAlign:'center'}}>{item.glyph || '◇'}</span>
+        <span style={{fontSize:'13px',fontFamily:'monospace',color:active?accent:item.danger?'rgba(239,68,68,0.78)':locked?'rgba(224,234,255,0.55)':'rgba(224,234,255,0.88)',letterSpacing:'0.3px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{item.label}</span>
         <span style={{display:'flex',alignItems:'center',gap:'5px',fontFamily:'monospace',fontSize:'10px',lineHeight:1}}>
-          {locked && <span style={{color:'rgba(0,200,255,0.5)',fontSize:'12px'}}>⚡</span>}
+          {locked && <span style={{fontSize:'8px',color:'rgba(251,191,36,0.95)',fontFamily:'monospace',letterSpacing:'1px',padding:'2px 6px',border:'0.5px solid rgba(251,191,36,0.5)',borderRadius:'2px',background:'rgba(251,191,36,0.08)',fontWeight:600}}>🔒 ELITE</span>}
           {item.lockGlyph && <span style={{color:'rgba(148,163,184,0.5)'}}>{item.lockGlyph}</span>}
           {active && <span style={{width:'6px',height:'6px',borderRadius:'50%',background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}} />}
         </span>
@@ -4839,7 +4839,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           key={item.id}
                           item={{...item, glyph: muzzGlyphs[item.id] || '◇'}}
                           active={active}
-                          locked={false}
+                          locked={locked}
                           accent={'#00c8ff'}
                           onClick={async () => {
                             if(locked){setActiveView('upgrade');}
