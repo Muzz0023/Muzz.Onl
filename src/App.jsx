@@ -1992,6 +1992,356 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
 }
 
 
+// ============================================
+// ASSET MAP GRAPH — drag/drop personal wealth structure
+// ============================================
+function AssetMapGraph({ graph, setGraph }) {
+  const safeGraph = (graph && typeof graph === 'object' && !Array.isArray(graph)) ? graph : { nodes: [], edges: [], types: [] };
+  const nodes = Array.isArray(safeGraph.nodes) ? safeGraph.nodes : [];
+  const edges = Array.isArray(safeGraph.edges) ? safeGraph.edges : [];
+  const userTypes = Array.isArray(safeGraph.types) ? safeGraph.types : [];
+
+  const defaultTypes = [
+    { id: 'person',   label: 'PERSON',   color: '#00c8ff' },
+    { id: 'entity',   label: 'ENTITY',   color: '#a855f7' },
+    { id: 'property', label: 'PROPERTY', color: '#22c55e' },
+    { id: 'shares',   label: 'SHARES',   color: '#3b82f6' },
+    { id: 'cash',     label: 'CASH',     color: '#22c55e' },
+    { id: 'super',    label: 'SUPER',    color: '#f59e0b' },
+    { id: 'crypto',   label: 'CRYPTO',   color: '#f97316' },
+    { id: 'liability',label: 'LIABILITY',color: '#ef4444' },
+  ];
+  const allTypes = userTypes.length > 0 ? userTypes : defaultTypes;
+  const typeMap = {};
+  allTypes.forEach(t => { typeMap[t.id] = t; });
+
+  const svgRef = React.useRef(null);
+  const [drag, setDrag] = React.useState(null);
+  const [pan, setPan] = React.useState({ x: 0, y: 0 });
+  const [panning, setPanning] = React.useState(null);
+  const [zoom, setZoom] = React.useState(1);
+  const [connectFrom, setConnectFrom] = React.useState(null);
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+  const [selectedNode, setSelectedNode] = React.useState(null);
+  const [editing, setEditing] = React.useState(null);
+  const [showPalette, setShowPalette] = React.useState(false);
+  const [showTypeEditor, setShowTypeEditor] = React.useState(false);
+  const [newTypeName, setNewTypeName] = React.useState('');
+  const [newTypeColor, setNewTypeColor] = React.useState('#00c8ff');
+
+  const NODE_W = 180;
+  const NODE_H = 56;
+
+  const formatMoney = (v) => {
+    const n = parseFloat(v) || 0;
+    if (n === 0) return '';
+    if (Math.abs(n) >= 1000000) return `$${(n/1000000).toFixed(2)}M`;
+    if (Math.abs(n) >= 1000) return `$${(n/1000).toFixed(1)}k`;
+    return `$${n.toFixed(0)}`;
+  };
+
+  const totalValue = nodes.reduce((s, n) => {
+    const v = parseFloat(n.value) || 0;
+    const t = typeMap[n.type];
+    const isLiab = (t && t.label && t.label.toUpperCase().indexOf('LIAB') >= 0) || n.type === 'liability';
+    return s + (isLiab ? -v : v);
+  }, 0);
+
+  const updateGraph = (updater) => {
+    setGraph(prev => {
+      const safe = (prev && typeof prev === 'object' && !Array.isArray(prev)) ? prev : { nodes: [], edges: [], types: [] };
+      const safeFull = { nodes: Array.isArray(safe.nodes) ? safe.nodes : [], edges: Array.isArray(safe.edges) ? safe.edges : [], types: Array.isArray(safe.types) ? safe.types : [] };
+      return typeof updater === 'function' ? updater(safeFull) : updater;
+    });
+  };
+
+  const toGraphCoords = (clientX, clientY) => {
+    const svg = svgRef.current;
+    if (!svg) return { x: clientX, y: clientY };
+    const rect = svg.getBoundingClientRect();
+    return { x: (clientX - rect.left - pan.x) / zoom, y: (clientY - rect.top - pan.y) / zoom };
+  };
+
+  const handlePointerDownNode = (e, node) => {
+    e.stopPropagation();
+    const p = toGraphCoords(e.clientX, e.clientY);
+    setDrag({ nodeId: node.id, offsetX: p.x - node.x, offsetY: p.y - node.y });
+    setSelectedNode(node.id);
+    setShowPalette(false);
+    setShowTypeEditor(false);
+  };
+  const handlePointerDownCanvas = (e) => {
+    if (e.target.tagName === 'svg' || (e.target.classList && e.target.classList.contains('assetmap-canvas-bg'))) {
+      setPanning({ startX: e.clientX, startY: e.clientY, originX: pan.x, originY: pan.y });
+      setSelectedNode(null); setShowPalette(false); setShowTypeEditor(false);
+    }
+  };
+  const handlePointerDownConnector = (e, nodeId) => {
+    e.stopPropagation();
+    setConnectFrom(nodeId);
+    setMousePos(toGraphCoords(e.clientX, e.clientY));
+  };
+  const handlePointerMove = (e) => {
+    const p = toGraphCoords(e.clientX, e.clientY);
+    if (drag) {
+      updateGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === drag.nodeId ? { ...n, x: p.x - drag.offsetX, y: p.y - drag.offsetY } : n) }));
+    } else if (panning) {
+      setPan({ x: panning.originX + (e.clientX - panning.startX), y: panning.originY + (e.clientY - panning.startY) });
+    } else if (connectFrom) {
+      setMousePos(p);
+    }
+  };
+  const handlePointerUp = (e) => {
+    if (connectFrom) {
+      const targetEl = document.elementFromPoint(e.clientX, e.clientY);
+      const targetNodeEl = targetEl && targetEl.closest ? targetEl.closest('[data-node-id]') : null;
+      if (targetNodeEl) {
+        const targetId = targetNodeEl.dataset.nodeId;
+        if (targetId !== connectFrom) {
+          const exists = edges.some(ed => ed.from === connectFrom && ed.to === targetId);
+          if (!exists) updateGraph(g => ({ ...g, edges: [...g.edges, { id: `e${Date.now()}`, from: connectFrom, to: targetId }] }));
+        }
+      }
+    }
+    setDrag(null); setPanning(null); setConnectFrom(null);
+  };
+  const touchHandlers = (handler) => (e) => {
+    if (e.touches && e.touches.length > 0) {
+      e.preventDefault();
+      const t = e.touches[0];
+      handler({ clientX: t.clientX, clientY: t.clientY, target: e.target, stopPropagation: () => e.stopPropagation(), preventDefault: () => e.preventDefault() });
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+      const t = e.changedTouches[0];
+      handler({ clientX: t.clientX, clientY: t.clientY, target: e.target, stopPropagation: () => e.stopPropagation(), preventDefault: () => e.preventDefault() });
+    }
+  };
+  React.useEffect(() => {
+    if (!drag && !panning && !connectFrom) return;
+    const move = (e) => handlePointerMove(e);
+    const up = (e) => handlePointerUp(e);
+    const tmove = touchHandlers(handlePointerMove);
+    const tup = touchHandlers(handlePointerUp);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', tmove, { passive: false });
+    window.addEventListener('touchend', tup);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', tmove);
+      window.removeEventListener('touchend', tup);
+    };
+  }, [drag, panning, connectFrom, pan, zoom]);
+
+  const addNode = (typeId) => {
+    const t = typeMap[typeId] || allTypes[0];
+    const newNode = {
+      id: String(Date.now()),
+      type: typeId,
+      label: t.label.charAt(0) + t.label.slice(1).toLowerCase(),
+      value: 0,
+      x: 200 + Math.random() * 100,
+      y: 200 + Math.random() * 100,
+    };
+    updateGraph(g => ({ ...g, nodes: [...g.nodes, newNode] }));
+    setSelectedNode(newNode.id);
+    setEditing(newNode.id);
+    setShowPalette(false);
+  };
+
+  const deleteNode = (id) => {
+    updateGraph(g => ({ nodes: g.nodes.filter(n => n.id !== id), edges: g.edges.filter(e => e.from !== id && e.to !== id), types: g.types }));
+    setSelectedNode(null);
+  };
+  const deleteEdge = (id) => updateGraph(g => ({ ...g, edges: g.edges.filter(e => e.id !== id) }));
+  const renameNode = (id, label) => updateGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, label } : n) }));
+  const setNodeValue = (id, value) => updateGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, value } : n) }));
+  const setNodeType = (id, typeId) => updateGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, type: typeId } : n) }));
+  const resetView = () => { setPan({ x: 0, y: 0 }); setZoom(1); };
+
+  const addType = () => {
+    if (!newTypeName.trim()) return;
+    const newType = { id: `t_${Date.now()}`, label: newTypeName.trim().toUpperCase(), color: newTypeColor };
+    updateGraph(g => ({ ...g, types: [...(g.types.length > 0 ? g.types : defaultTypes), newType] }));
+    setNewTypeName(''); setNewTypeColor('#00c8ff');
+  };
+  const deleteType = (typeId) => {
+    if (nodes.some(n => n.type === typeId)) {
+      if (!window.confirm('This type is used by nodes. Delete it anyway?')) return;
+    }
+    updateGraph(g => ({ ...g, types: (g.types.length > 0 ? g.types : defaultTypes).filter(t => t.id !== typeId) }));
+  };
+
+  const seedTemplate = () => {
+    const baseId = Date.now();
+    const you = String(baseId);
+    const trust = String(baseId + 1);
+    const prop = String(baseId + 2);
+    const shares = String(baseId + 3);
+    const sup = String(baseId + 4);
+    const bank = String(baseId + 5);
+    const newNodes = [
+      { id: you,    type: 'person',   label: 'You',                  value: 0,      x: 60,  y: 200 },
+      { id: trust,  type: 'entity',   label: 'Family Trust',         value: 0,      x: 280, y: 100 },
+      { id: prop,   type: 'property', label: 'Investment Property',  value: 650000, x: 520, y: 40  },
+      { id: shares, type: 'shares',   label: 'Stock Portfolio',      value: 45000,  x: 520, y: 130 },
+      { id: sup,    type: 'super',    label: 'Super',                value: 28000,  x: 280, y: 240 },
+      { id: bank,   type: 'cash',     label: 'Bank Savings',         value: 12000,  x: 280, y: 320 },
+    ];
+    const link = (from, to) => ({ id: `e${from}-${to}`, from, to });
+    const newEdges = [link(you, trust), link(trust, prop), link(trust, shares), link(you, sup), link(you, bank)];
+    updateGraph(g => ({ types: g.types || [], nodes: newNodes, edges: newEdges }));
+  };
+
+  const edgePath = (from, to) => {
+    const fx = from.x + NODE_W, fy = from.y + NODE_H / 2;
+    const tx = to.x, ty = to.y + NODE_H / 2;
+    const dx = Math.abs(tx - fx) * 0.5;
+    return `M ${fx} ${fy} C ${fx + dx} ${fy}, ${tx - dx} ${ty}, ${tx} ${ty}`;
+  };
+
+  let previewPath = null;
+  if (connectFrom) {
+    const fromNode = nodes.find(n => n.id === connectFrom);
+    if (fromNode) {
+      const fx = fromNode.x + NODE_W, fy = fromNode.y + NODE_H / 2;
+      const dx = Math.abs(mousePos.x - fx) * 0.5;
+      previewPath = `M ${fx} ${fy} C ${fx + dx} ${fy}, ${mousePos.x - dx} ${mousePos.y}, ${mousePos.x} ${mousePos.y}`;
+    }
+  }
+
+  return (
+    <div style={{ position: 'relative', height: '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '10px 14px', borderBottom: '0.5px solid rgba(0,200,255,0.15)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
+        <div>
+          <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.55)', fontFamily: 'monospace', letterSpacing: '2px' }}>// ASSET MAP</div>
+          <div style={{ fontSize: '13px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1px' }}>NET POSITION: <span style={{ color: totalValue >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' }}>{totalValue >= 0 ? '+' : ''}{formatMoney(totalValue) || '$0'}</span></div>
+        </div>
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <button onClick={() => { setShowPalette(p => !p); setShowTypeEditor(false); }} style={{ padding: '7px 12px', background: showPalette ? 'rgba(0,200,255,0.18)' : 'rgba(0,200,255,0.08)', border: '1px solid rgba(0,200,255,0.5)', borderRadius: '4px', color: 'rgba(0,200,255,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ NODE</button>
+          <button onClick={() => { setShowTypeEditor(t => !t); setShowPalette(false); }} style={{ padding: '7px 12px', background: showTypeEditor ? 'rgba(168,85,247,0.18)' : 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>TYPES</button>
+          <button onClick={() => setZoom(z => Math.min(z * 1.2, 3))} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>+</button>
+          <button onClick={() => setZoom(z => Math.max(z / 1.2, 0.3))} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>−</button>
+          <button onClick={resetView} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>FIT</button>
+        </div>
+      </div>
+
+      {showPalette && (
+        <div style={{ position: 'absolute', top: 60, right: 14, zIndex: 11, background: 'rgba(5,12,24,0.97)', border: '1px solid rgba(0,200,255,0.5)', borderRadius: '6px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '4px', backdropFilter: 'blur(12px)', maxHeight: '70%', overflowY: 'auto' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.6)', fontFamily: 'monospace', letterSpacing: '2px', marginBottom: '4px' }}>ADD NODE</div>
+          {allTypes.map(t => (
+            <button key={t.id} onClick={() => addNode(t.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 10px', background: `${t.color}26`, border: `0.5px solid ${t.color}99`, borderLeft: `2px solid ${t.color}`, borderRadius: '3px', color: t.color, fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, minWidth: '130px', textAlign: 'left' }}>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: t.color, boxShadow: `0 0 4px ${t.color}` }} />{t.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {showTypeEditor && (
+        <div style={{ position: 'absolute', top: 60, right: 14, zIndex: 11, background: 'rgba(5,12,24,0.97)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '6px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', backdropFilter: 'blur(12px)', maxHeight: '70%', overflowY: 'auto', width: '260px' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2px' }}>NODE TYPES</div>
+          {allTypes.map(t => (
+            <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 8px', background: 'rgba(255,255,255,0.03)', borderLeft: `2px solid ${t.color}`, borderRadius: '2px' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: t.color, flexShrink: 0 }} />
+              <span style={{ flex: 1, fontFamily: 'monospace', fontSize: '10px', color: '#e0eaff', letterSpacing: '1.5px' }}>{t.label}</span>
+              <button onClick={() => deleteType(t.id)} style={{ background: 'none', border: 'none', color: 'rgba(239,68,68,0.7)', cursor: 'pointer', fontFamily: 'monospace', fontSize: '12px' }}>×</button>
+            </div>
+          ))}
+          <div style={{ borderTop: '0.5px solid rgba(168,85,247,0.2)', paddingTop: '8px', marginTop: '4px' }}>
+            <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '1.5px', marginBottom: '6px' }}>NEW TYPE</div>
+            <input value={newTypeName} onChange={(e) => setNewTypeName(e.target.value)} placeholder="e.g. CRYPTO" style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(168,85,247,0.4)', borderRadius: '3px', color: '#e0eaff', fontFamily: 'monospace', fontSize: '11px', padding: '6px 8px', outline: 'none', marginBottom: '6px' }} />
+            <div style={{ display: 'flex', gap: '4px', marginBottom: '6px', flexWrap: 'wrap' }}>
+              {['#00c8ff','#a855f7','#22c55e','#3b82f6','#f59e0b','#f97316','#ef4444','#ec4899'].map(c => (
+                <button key={c} onClick={() => setNewTypeColor(c)} style={{ width: '24px', height: '24px', background: c, border: newTypeColor === c ? '2px solid #fff' : '0.5px solid rgba(255,255,255,0.2)', borderRadius: '3px', cursor: 'pointer' }} />
+              ))}
+            </div>
+            <button onClick={addType} style={{ width: '100%', padding: '7px', background: 'rgba(168,85,247,0.18)', border: '1px solid rgba(168,85,247,0.6)', borderRadius: '3px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ ADD TYPE</button>
+          </div>
+        </div>
+      )}
+
+      {selectedNode && (() => {
+        const n = nodes.find(x => x.id === selectedNode);
+        if (!n) return null;
+        const t = typeMap[n.type] || allTypes[0];
+        return (
+          <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10, zIndex: 10, padding: '10px 12px', background: 'rgba(5,12,24,0.97)', border: `1px solid ${t.color}99`, borderLeft: `2px solid ${t.color}`, borderRadius: '6px', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <select value={n.type} onChange={(e) => setNodeType(n.id, e.target.value)} style={{ background: 'rgba(255,255,255,0.06)', border: `0.5px solid ${t.color}99`, borderRadius: '3px', color: t.color, fontFamily: 'monospace', fontSize: '9px', padding: '4px 6px', letterSpacing: '1.5px', fontWeight: 600, cursor: 'pointer' }}>
+              {allTypes.map(tt => <option key={tt.id} value={tt.id} style={{ background: '#0a0e1a' }}>{tt.label}</option>)}
+            </select>
+            {editing === selectedNode ? (
+              <input autoFocus value={n.label} onChange={(e) => renameNode(n.id, e.target.value)} onBlur={() => setEditing(null)} onKeyDown={(e) => { if (e.key === 'Enter') setEditing(null); }} style={{ flex: 1, minWidth: 100, background: 'rgba(255,255,255,0.06)', border: `0.5px solid ${t.color}99`, borderRadius: '3px', color: '#e0eaff', fontFamily: 'monospace', fontSize: '12px', padding: '4px 8px', outline: 'none' }} />
+            ) : (
+              <div onClick={() => setEditing(n.id)} style={{ flex: 1, minWidth: 100, fontFamily: 'monospace', fontSize: '12px', color: '#e0eaff', cursor: 'text', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.label}</div>
+            )}
+            <input type="number" inputMode="decimal" value={n.value || ''} onChange={(e) => setNodeValue(n.id, e.target.value)} placeholder="$ value" style={{ width: '90px', background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(34,197,94,0.4)', borderRadius: '3px', color: 'rgba(34,197,94,0.95)', fontFamily: 'monospace', fontSize: '11px', padding: '4px 8px', outline: 'none' }} />
+            <button onClick={() => deleteNode(n.id)} style={{ padding: '4px 10px', background: 'rgba(239,68,68,0.1)', border: '0.5px solid rgba(239,68,68,0.4)', borderRadius: '3px', color: 'rgba(239,68,68,0.9)', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>DELETE</button>
+          </div>
+        );
+      })()}
+
+      {nodes.length === 0 && (
+        <div style={{ position: 'absolute', top: '52%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '92%', width: '460px' }}>
+          <div style={{ fontSize: '10px', color: 'rgba(0,200,255,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px' }}>// EMPTY MAP</div>
+          <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your wealth structure.</div>
+          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>Visualise where your assets sit. You at the top, trusts and companies below, then property, shares, super, cash etc. Each node holds a dollar value.</div>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button onClick={seedTemplate} style={{ padding: '11px 16px', background: 'rgba(0,200,255,0.18)', border: '1px solid rgba(0,200,255,0.7)', borderRadius: '4px', color: 'rgba(0,200,255,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>USE THIS TEMPLATE</button>
+            <button onClick={() => addNode('person')} style={{ padding: '11px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>START FRESH</button>
+          </div>
+        </div>
+      )}
+
+      <svg ref={svgRef} onMouseDown={handlePointerDownCanvas} onTouchStart={touchHandlers(handlePointerDownCanvas)} width="100%" height="100%" style={{ display: 'block', cursor: panning ? 'grabbing' : 'grab', touchAction: 'none' }}>
+        <defs>
+          <pattern id="assetgrid" width="32" height="32" patternUnits="userSpaceOnUse" patternTransform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+            <circle cx="1" cy="1" r="1" fill="rgba(0,200,255,0.05)" />
+          </pattern>
+          <marker id="assetarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(0,200,255,0.5)" />
+          </marker>
+        </defs>
+        <rect className="assetmap-canvas-bg" width="100%" height="100%" fill="url(#assetgrid)" />
+
+        <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+          {edges.map(edge => {
+            const from = nodes.find(n => n.id === edge.from);
+            const to = nodes.find(n => n.id === edge.to);
+            if (!from || !to) return null;
+            return (
+              <g key={edge.id} style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); if (window.confirm('Delete this link?')) deleteEdge(edge.id); }}>
+                <path d={edgePath(from, to)} stroke="rgba(0,200,255,0.45)" strokeWidth="1.5" fill="none" markerEnd="url(#assetarrow)" />
+                <circle r="2.5" fill="rgba(0,200,255,0.85)"><animateMotion dur="3.5s" repeatCount="indefinite" path={edgePath(from, to)} /></circle>
+              </g>
+            );
+          })}
+
+          {previewPath && <path d={previewPath} stroke="rgba(0,200,255,0.7)" strokeWidth="1.5" strokeDasharray="4 4" fill="none" />}
+
+          {nodes.map(node => {
+            const t = typeMap[node.type] || allTypes[0];
+            const isSelected = selectedNode === node.id;
+            const moneyStr = formatMoney(node.value);
+            return (
+              <g key={node.id} data-node-id={node.id} transform={`translate(${node.x},${node.y})`} style={{ cursor: drag && drag.nodeId === node.id ? 'grabbing' : 'grab' }}>
+                <rect onMouseDown={(e) => handlePointerDownNode(e, node)} onTouchStart={touchHandlers((ev) => handlePointerDownNode(ev, node))} width={NODE_W} height={NODE_H} rx="4" fill={`${t.color}26`} stroke={isSelected ? t.color : `${t.color}99`} strokeWidth={isSelected ? 1.5 : 0.75} />
+                <rect x="0" y="0" width="3" height={NODE_H} fill={t.color} rx="2" />
+                <text x="10" y="14" fill={t.color} style={{ fontFamily: 'monospace', fontSize: '7px', letterSpacing: '1.5px', fontWeight: 600, pointerEvents: 'none' }}>{t.label}</text>
+                <text x="10" y="30" fill="#e0eaff" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 500, pointerEvents: 'none' }}>{node.label.length > 22 ? node.label.slice(0, 21) + '…' : node.label}</text>
+                {moneyStr && <text x="10" y="46" fill="rgba(34,197,94,0.9)" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 600, pointerEvents: 'none', letterSpacing: '0.5px' }}>{moneyStr}</text>}
+                <circle cx={NODE_W} cy={NODE_H / 2} r="10" fill={t.color} stroke="rgba(5,12,24,0.95)" strokeWidth="2" style={{ cursor: 'crosshair' }} onMouseDown={(e) => handlePointerDownConnector(e, node.id)} onTouchStart={touchHandlers((ev) => handlePointerDownConnector(ev, node.id))} />
+                <circle cx={NODE_W} cy={NODE_H / 2} r="4" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
+                <circle cx="0" cy={NODE_H / 2} r="6" fill="rgba(5,12,24,0.95)" stroke={`${t.color}99`} strokeWidth="1.5" style={{ pointerEvents: 'none' }} />
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+
 function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
@@ -2409,6 +2759,8 @@ function MuzzApp() {
   const [assetMapNodes, setAssetMapNodes] = useState([
     { id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }
   ]);
+  // Asset Map Graph — drag/drop wealth structure
+  const [assetMapGraph, setAssetMapGraph] = useState({ nodes: [], edges: [], types: [] });
   const [showMapControls, setShowMapControls] = useState(true);
   const [mapPins, setMapPins] = useState([]);
   const [editingPinId, setEditingPinId] = useState(null);
@@ -2607,6 +2959,7 @@ function MuzzApp() {
     if(d.countdowns) setCountdowns(d.countdowns);
     if(d.bucketList) setBucketList(d.bucketList);
     if(d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
+    if(d.assetMapGraph) setAssetMapGraph(d.assetMapGraph);
     if(d.mapPins) setMapPins(d.mapPins);
     if(d.netWorthHistory) setNetWorthHistory(d.netWorthHistory);
     if(d.savedViews) setSavedViews(d.savedViews);
@@ -3316,6 +3669,7 @@ function MuzzApp() {
           if (d.countdowns) setCountdowns(d.countdowns);
           if (d.bucketList) setBucketList(d.bucketList);
           if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
+          if (d.assetMapGraph) setAssetMapGraph(d.assetMapGraph);
           if (d.mapPins) setMapPins(d.mapPins);
           // Donny data
           if (d.donnyJobs) setDonnyJobs(d.donnyJobs);
@@ -3465,6 +3819,7 @@ function MuzzApp() {
           countdowns,
           bucketList,
           assetMapNodes,
+          assetMapGraph,
           mapPins,
           netWorthHistory,
           savedViews,
@@ -3503,7 +3858,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -13024,12 +13379,10 @@ ${JSON.stringify(ctx, null, 2)}`;
             </>
           )}
 
-          {/* Asset Map — temporarily disabled, debugging */}
+          {/* Asset Map — drag/drop wealth structure */}
           {assetsSubTab === 'assetMap' && (
-            <div style={{padding:"24px 16px",textAlign:"center"}}>
-              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// TEMPORARILY DISABLED</div>
-              <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",marginBottom:"8px"}}>Asset Map is being rebuilt.</div>
-              <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6,padding:"0 20px"}}>The new drag/drop version is in progress. Your old asset map data is safe and will return shortly.</div>
+            <div style={{padding:"12px 16px"}}>
+              <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} />
             </div>
           )}
 
