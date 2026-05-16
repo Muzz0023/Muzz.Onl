@@ -11496,7 +11496,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FAQ</span>
             </div>
             {[
-              {q:"What plans are available?",a:"Muzz Elite at $4.99/month. Muzz & Donny at $7.99/month adds the full Donny trade business system."},
+              {q:"What plans are available?",a:"Muzz Elite at $4.99/month. Muzz & Donny at $29.99/month adds the full Donny trade business system."},
               {q:"What is Donny?",a:"Donny is a trade business management system with job tracking, scheduler, team management, SWMS, incident logs, price book, reports and multi-user workspace."},
               {q:"How does the Donny workspace work?",a:"As a boss, generate a join code and share it with workers. Workers enter the code to access your workspace in real time."},
               {q:"Is my data safe?",a:"Stored securely in the cloud via Supabase. Only you can access it. Export a backup anytime from Settings."},
@@ -11585,7 +11585,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIER 02</div>
                   <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>MUZZ & DONNY</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"4px"}}>
-                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>$7.99</span>
+                    <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>$29.99</span>
                     <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>/MONTH</span>
                   </div>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>EVERYTHING IN MUZZ + DONNY TRADE SYS</div>
@@ -11599,7 +11599,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
                 <button onClick={handleUpgradeDonny}
                   style={{width:"100%",padding:"12px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.5)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}>
-                  SUBSCRIBE — $7.99/MONTH
+                  SUBSCRIBE — $29.99/MONTH
                 </button>
               </div>
 
@@ -17419,7 +17419,7 @@ ${JSON.stringify(ctx, null, 2)}`;
           <div className="text-center space-y-3">
             <div className="text-6xl">🐨</div>
             <h2 className="text-2xl font-bold text-white">Donny Business System</h2>
-            <p className="text-sm" style={{color:'rgba(148,163,184,0.6)'}}>Upgrade to Muzz & Donny ($7.99/month) to access Donny, or enter your worker access code below.</p>
+            <p className="text-sm" style={{color:'rgba(148,163,184,0.6)'}}>Upgrade to Muzz & Donny ($29.99/month) to access Donny, or enter your worker access code below.</p>
           </div>
           <button onClick={() => setActiveView('upgrade')}
             className="w-full py-4 rounded-2xl font-bold text-white"
