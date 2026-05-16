@@ -886,6 +886,146 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // VIP Users - Always Elite, no subscription needed
 const DONNY_WORKER_CODE = 'DONNY-WORKER';
 
+// Donny Presets — different industry layouts
+// Same Donny engine, different labels and section visibility per industry
+const DONNY_PRESETS = {
+  trades: {
+    name: 'Trades',
+    tagline: 'For sparkies, plumbers, carpenters and any trade business.',
+    icon: '⚡',
+    labels: {
+      'donny-dailyreport': 'Hour Logger',
+      'donny-subs':        'Subcontractors',
+      'donny-clients':     'Clients',
+      'donny-photos':      'Site Photos',
+      'donny-checklists':  'SWMS',
+      'donny-incidents':   'Incidents',
+      'donny-safety':      'Risk Register',
+      'donny-mistakes':    'Mistakes',
+      'donny-materialslog':'Materials',
+      'donny-suppliers':   'Suppliers',
+      'donny-scheduler':   'Scheduler',
+      'donny-recurring':   'Recurring',
+      'donny-masterview':  'Masterview',
+      'donny-team':        'Team',
+      'donny-reports':     'Reports',
+      'donny-intel':       'Crew Plan',
+      'donny-jobs':        'Jobs',
+    },
+    jobsLabel: 'Job',
+    jobsPluralLabel: 'Jobs',
+    hidden: [], // all sections shown
+  },
+  services: {
+    name: 'Services',
+    tagline: 'For cleaners, gardeners, mobile mechanics, locksmiths — any field service.',
+    icon: '◇',
+    labels: {
+      'donny-dailyreport': 'Hour Logger',
+      'donny-subs':        'Subcontractors',
+      'donny-clients':     'Clients',
+      'donny-photos':      'Job Photos',
+      'donny-checklists':  'Safety Docs',
+      'donny-incidents':   'Incidents',
+      'donny-safety':      'Risk Register',
+      'donny-mistakes':    'Issues',
+      'donny-materialslog':'Supplies',
+      'donny-suppliers':   'Suppliers',
+      'donny-scheduler':   'Scheduler',
+      'donny-recurring':   'Recurring',
+      'donny-masterview':  'Masterview',
+      'donny-team':        'Team',
+      'donny-reports':     'Reports',
+      'donny-intel':       'Crew Plan',
+      'donny-jobs':        'Jobs',
+    },
+    jobsLabel: 'Job',
+    jobsPluralLabel: 'Jobs',
+    hidden: [],
+  },
+  retail: {
+    name: 'Retail',
+    tagline: 'For shops, boutiques, retailers managing staff, stock and customers.',
+    icon: '◉',
+    labels: {
+      'donny-dailyreport': 'Shifts',
+      'donny-subs':        'Casuals',
+      'donny-clients':     'Customers',
+      'donny-photos':      'Store Photos',
+      'donny-checklists':  'Procedures',
+      'donny-incidents':   'Incidents',
+      'donny-safety':      'Risk Register',
+      'donny-mistakes':    'Returns / Refunds',
+      'donny-materialslog':'Stock',
+      'donny-suppliers':   'Suppliers',
+      'donny-scheduler':   'Roster',
+      'donny-recurring':   'Recurring',
+      'donny-masterview':  'Overview',
+      'donny-team':        'Staff',
+      'donny-reports':     'Sales Reports',
+      'donny-intel':       'Staff Plan',
+      'donny-jobs':        'Orders',
+    },
+    jobsLabel: 'Order',
+    jobsPluralLabel: 'Orders',
+    hidden: ['donny-subs'], // no subbies in retail
+  },
+  hospitality: {
+    name: 'Hospitality',
+    tagline: 'For cafés, restaurants, bars, salons managing staff, bookings and stock.',
+    icon: '◈',
+    labels: {
+      'donny-dailyreport': 'Shifts',
+      'donny-subs':        'Casuals',
+      'donny-clients':     'Guests',
+      'donny-photos':      'Venue Photos',
+      'donny-checklists':  'Procedures',
+      'donny-incidents':   'Incidents',
+      'donny-safety':      'Risk Register',
+      'donny-mistakes':    'Complaints',
+      'donny-materialslog':'Stock',
+      'donny-suppliers':   'Suppliers',
+      'donny-scheduler':   'Roster',
+      'donny-recurring':   'Recurring',
+      'donny-masterview':  'Overview',
+      'donny-team':        'Staff',
+      'donny-reports':     'Reports',
+      'donny-intel':       'Service Plan',
+      'donny-jobs':        'Bookings',
+    },
+    jobsLabel: 'Booking',
+    jobsPluralLabel: 'Bookings',
+    hidden: ['donny-subs'],
+  },
+  office: {
+    name: 'Office',
+    tagline: 'For agencies, consultants, professional services — anyone running projects.',
+    icon: '◫',
+    labels: {
+      'donny-dailyreport': 'Time Tracker',
+      'donny-subs':        'Freelancers',
+      'donny-clients':     'Clients',
+      'donny-photos':      'Files',
+      'donny-checklists':  'SOPs',
+      'donny-incidents':   'Incidents',
+      'donny-safety':      'Risk Register',
+      'donny-mistakes':    'Issues',
+      'donny-materialslog':'Inventory',
+      'donny-suppliers':   'Vendors',
+      'donny-scheduler':   'Calendar',
+      'donny-recurring':   'Recurring',
+      'donny-masterview':  'Overview',
+      'donny-team':        'Team',
+      'donny-reports':     'Reports',
+      'donny-intel':       'Project Plan',
+      'donny-jobs':        'Projects',
+    },
+    jobsLabel: 'Project',
+    jobsPluralLabel: 'Projects',
+    hidden: ['donny-materialslog'], // no inventory for typical office work
+  },
+};
+
 const VIP_EMAILS = ['muzz.onl@outlook.com'];
 
 // Elite limits
@@ -2835,6 +2975,8 @@ function MuzzApp() {
   // Donny Recurring Jobs
   const [donnyRecurring, setDonnyRecurring] = useState([]);
   const [donnyWorkspaceCode, setDonnyWorkspaceCode] = useState('');
+  const [donnyPreset, setDonnyPreset] = useState('trades'); // trades | services | retail | hospitality | office
+  const [showPresetPicker, setShowPresetPicker] = useState(false);
   const [donnyWorkerAccess, setDonnyWorkerAccess] = useState(false);
   const [donnyWorkerCodeInput, setDonnyWorkerCodeInput] = useState('');
   const [donnyWorkerCodeError, setDonnyWorkerCodeError] = useState('');
@@ -3193,6 +3335,7 @@ function MuzzApp() {
           if (d.donnyCosts) setDonnyCosts(d.donnyCosts);
           if (d.donnyIntelGraph) setDonnyIntelGraph(d.donnyIntelGraph);
           if (d.donnyWorkspaceCode) setDonnyWorkspaceCode(d.donnyWorkspaceCode);
+          if (d.donnyPreset) setDonnyPreset(d.donnyPreset);
           if (d.donnyWorkerAccess) setDonnyWorkerAccess(d.donnyWorkerAccess);
           if (d.donnyRole) setDonnyRole(d.donnyRole);
           if (d.donnyBossUserId) setDonnyBossUserId(d.donnyBossUserId);
@@ -3343,6 +3486,7 @@ function MuzzApp() {
           donnyCosts,
           donnyIntelGraph,
           donnyWorkspaceCode,
+          donnyPreset,
           donnyWorkerAccess,
           donnyRole,
           donnyBossUserId
@@ -3359,7 +3503,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -5300,25 +5444,27 @@ ${JSON.stringify(ctx, null, 2)}`;
                   'donny-materialslog':'≣','donny-suppliers':'¥',
                   'donny-reports':'◫','donny-intel':'◈',
                 };
+                const preset = DONNY_PRESETS[donnyPreset] || DONNY_PRESETS.trades;
+                const L = preset.labels;
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', workerOk:true },
-                  { section:'JOBS', id:'donny-masterview', label:'Masterview', workerOk:false },
-                  { section:'JOBS', id:'donny-scheduler', label:'Scheduler', workerOk:false },
-                  { section:'JOBS', id:'donny-dailyreport', label:'Time Logger', workerOk:true },
-                  { section:'JOBS', id:'donny-recurring', label:'Recurring', workerOk:false },
-                  { section:'TEAM', id:'donny-team', label:'Team', workerOk:false },
-                  { section:'TEAM', id:'donny-subs', label:'Contractors', workerOk:false },
-                  { section:'CLIENTS', id:'donny-clients', label:'Clients', workerOk:false },
-                  { section:'OPS', id:'donny-photos', label:'Photos', workerOk:true },
-                  { section:'OPS', id:'donny-checklists', label:'SWMS', workerOk:true },
-                  { section:'OPS', id:'donny-incidents', label:'Incidents', workerOk:true },
-                  { section:'OPS', id:'donny-safety', label:'Risk Register', workerOk:true },
-                  { section:'OPS', id:'donny-mistakes', label:'Issues Log', workerOk:true },
-                  { section:'COSTS', id:'donny-materialslog', label:'Inventory', workerOk:true },
-                  { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
-                  { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
-                  { section:'INTEL', id:'donny-intel', label:'Crew Plan', workerOk:false },
-                ];
+                  { section:'JOBS', id:'donny-masterview', label: L['donny-masterview'], workerOk:false },
+                  { section:'JOBS', id:'donny-scheduler', label: L['donny-scheduler'], workerOk:false },
+                  { section:'JOBS', id:'donny-dailyreport', label: L['donny-dailyreport'], workerOk:true },
+                  { section:'JOBS', id:'donny-recurring', label: L['donny-recurring'], workerOk:false },
+                  { section:'TEAM', id:'donny-team', label: L['donny-team'], workerOk:false },
+                  { section:'TEAM', id:'donny-subs', label: L['donny-subs'], workerOk:false },
+                  { section:'CLIENTS', id:'donny-clients', label: L['donny-clients'], workerOk:false },
+                  { section:'OPS', id:'donny-photos', label: L['donny-photos'], workerOk:true },
+                  { section:'OPS', id:'donny-checklists', label: L['donny-checklists'], workerOk:true },
+                  { section:'OPS', id:'donny-incidents', label: L['donny-incidents'], workerOk:true },
+                  { section:'OPS', id:'donny-safety', label: L['donny-safety'], workerOk:true },
+                  { section:'OPS', id:'donny-mistakes', label: L['donny-mistakes'], workerOk:true },
+                  { section:'COSTS', id:'donny-materialslog', label: L['donny-materialslog'], workerOk:true },
+                  { section:'COSTS', id:'donny-suppliers', label: L['donny-suppliers'], workerOk:false },
+                  { section:'REPORTS', id:'donny-reports', label: L['donny-reports'], workerOk:false },
+                  { section:'INTEL', id:'donny-intel', label: L['donny-intel'], workerOk:false },
+                ].filter(item => !preset.hidden.includes(item.id));
                 const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', OPS:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)', INTEL:'rgba(168,85,247,0.95)' };
                 return donnySections.map(sec => {
                   const items = donnyItems.filter(i => i.section === sec);
@@ -18158,6 +18304,8 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden"}}>
               <span style={{fontSize:"11px",color:"#f97316",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>DONNY.OPS</span>
               <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
+              <button onClick={() => setShowPresetPicker(true)} style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",padding:0,flexShrink:0}}>{DONNY_PRESETS[donnyPreset].icon} {DONNY_PRESETS[donnyPreset].name.toUpperCase()} ▼</button>
+              <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
               <span style={{fontSize:"10px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
               {eliteName && <><span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>{eliteName.toUpperCase()}</span></>}
             </div>
@@ -18181,6 +18329,43 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
           </div>
+
+          {/* PRESET PICKER MODAL */}
+          {showPresetPicker && (
+            <div onClick={() => setShowPresetPicker(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",backdropFilter:"blur(8px)",zIndex:100,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px"}}>
+              <div onClick={(e) => e.stopPropagation()} style={{maxWidth:"680px",width:"100%",maxHeight:"90vh",overflowY:"auto",background:"rgba(5,12,24,0.98)",border:"1px solid rgba(249,115,22,0.4)",borderLeft:"2px solid #f97316",borderRadius:"8px",padding:"24px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"20px"}}>
+                  <div>
+                    <div style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2.5px",marginBottom:"6px"}}>// DONNY MODE</div>
+                    <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>Pick your industry</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.6,marginTop:"6px"}}>Donny adapts its labels and sections to fit your workplace. Switch any time — your data stays.</div>
+                  </div>
+                  <button onClick={() => setShowPresetPicker(false)} style={{background:"none",border:"none",color:"rgba(224,234,255,0.6)",fontSize:"20px",cursor:"pointer",padding:"4px 10px",fontFamily:"monospace"}}>×</button>
+                </div>
+
+                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                  {Object.entries(DONNY_PRESETS).map(([key, p]) => {
+                    const isActive = key === donnyPreset;
+                    return (
+                      <button key={key} onClick={() => { setDonnyPreset(key); setShowPresetPicker(false); }}
+                        style={{display:"flex",alignItems:"center",gap:"14px",padding:"14px 16px",background:isActive?"rgba(249,115,22,0.15)":"rgba(255,255,255,0.03)",border:`1px solid ${isActive?"rgba(249,115,22,0.6)":"rgba(255,255,255,0.1)"}`,borderLeft:`2px solid ${isActive?"#f97316":"rgba(249,115,22,0.3)"}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                        <span style={{fontSize:"22px",color:isActive?"#f97316":"rgba(249,115,22,0.6)",flexShrink:0,width:"30px",textAlign:"center"}}>{p.icon}</span>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,letterSpacing:"1px",marginBottom:"2px"}}>{p.name.toUpperCase()}</div>
+                          <div style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",lineHeight:1.5}}>{p.tagline}</div>
+                        </div>
+                        {isActive && <span style={{fontSize:"9px",color:"#f97316",letterSpacing:"1.5px",fontWeight:600,padding:"3px 8px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.5)",borderRadius:"2px",flexShrink:0}}>ACTIVE</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div style={{marginTop:"20px",padding:"12px",background:"rgba(168,85,247,0.05)",border:"0.5px solid rgba(168,85,247,0.2)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"4px",fontSize:"10px",color:"rgba(168,85,247,0.85)",fontFamily:"monospace",lineHeight:1.6,letterSpacing:"0.5px"}}>
+                  Switching modes only changes labels and which sections show. Your jobs, team, clients and all data stay exactly where they are.
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* HEADER */}
           <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.15)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
