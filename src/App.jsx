@@ -1490,6 +1490,59 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
     updatePlan(g => ({ nodes: [...(g.nodes || []), jobNode], edges: g.edges || [] }));
   };
 
+  const seedFullTemplate = () => {
+    const job = jobs.find(j => j.id === activeJobId);
+    if (!job) return;
+    const baseId = Date.now();
+
+    // Sample workers — use real team if available, otherwise placeholder names
+    const sampleWorkerNames = team.length >= 2
+      ? team.slice(0, 2).map(w => w.name || 'Worker')
+      : team.length === 1
+        ? [team[0].name || 'Worker', 'Apprentice']
+        : ['Muzz', 'Dad'];
+
+    const jobNodeId = String(baseId);
+    const worker1Id = String(baseId + 1);
+    const worker2Id = String(baseId + 2);
+    const t1 = String(baseId + 10);
+    const t2 = String(baseId + 11);
+    const t3 = String(baseId + 12);
+    const t4 = String(baseId + 13);
+    const t5 = String(baseId + 14);
+    const t6 = String(baseId + 15);
+
+    const nodes = [
+      // Job in centre-left
+      { id: jobNodeId, type: 'job', label: job.title || job.name || 'Job', x: 60, y: 200 },
+      // Two workers stacked next to job
+      { id: worker1Id, type: 'worker', label: sampleWorkerNames[0], x: 280, y: 100 },
+      { id: worker2Id, type: 'worker', label: sampleWorkerNames[1], x: 280, y: 300 },
+      // Tasks under worker 1
+      { id: t1, type: 'task', label: 'Demo wall',     x: 500, y: 40  },
+      { id: t2, type: 'task', label: 'Run new cable', x: 500, y: 110 },
+      { id: t3, type: 'done', label: 'Pick up parts', x: 500, y: 180 },
+      // Tasks under worker 2
+      { id: t4, type: 'task', label: 'Install GPOs',    x: 500, y: 260 },
+      { id: t5, type: 'task', label: 'Hook up board',   x: 500, y: 330 },
+      { id: t6, type: 'task', label: 'Test + label',    x: 500, y: 400 },
+    ];
+
+    const link = (from, to) => ({ id: `e${from}-${to}`, from, to });
+    const edges = [
+      link(jobNodeId, worker1Id),
+      link(jobNodeId, worker2Id),
+      link(worker1Id, t1),
+      link(worker1Id, t2),
+      link(worker1Id, t3),
+      link(worker2Id, t4),
+      link(worker2Id, t5),
+      link(worker2Id, t6),
+    ];
+
+    updatePlan(() => ({ nodes, edges }));
+  };
+
   const addWorkerNode = (worker) => {
     const newNode = {
       id: `worker_${worker.id}_${Date.now()}`,
@@ -1679,12 +1732,29 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
       )}
 
       {jobs.length > 0 && activeJobId && nodes.length === 0 && (
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '90%' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '92%', width: '480px' }}>
           <div style={{ fontSize: '10px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '12px' }}>// EMPTY PLAN</div>
           <div style={{ fontSize: '16px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '8px' }}>Plan your crew for this job.</div>
-          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px', padding: '0 20px' }}>Drop the job on the canvas, add your workers, then break down tasks under each one.</div>
+          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px', padding: '0 20px' }}>Map who's on the job and what they're doing. Drag nodes around, drag from the right dot to link them, tap a task to mark it done.</div>
+
+          {/* Mini preview of what the template looks like */}
+          <div style={{ background: 'rgba(168,85,247,0.05)', border: '1px solid rgba(168,85,247,0.25)', borderLeft: '2px solid rgba(168,85,247,0.7)', borderRadius: '6px', padding: '14px', marginBottom: '14px', textAlign: 'left' }}>
+            <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.7)', fontFamily: 'monospace', letterSpacing: '2px', marginBottom: '10px' }}>// PREVIEW · WHAT YOU'LL GET</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', fontFamily: 'monospace', fontSize: '10px', lineHeight: 1.8 }}>
+              <span style={{ padding: '3px 8px', background: 'rgba(249,115,22,0.18)', border: '0.5px solid rgba(249,115,22,0.5)', borderLeft: '2px solid rgba(249,115,22,0.9)', borderRadius: '3px', color: '#e0eaff' }}>JOB</span>
+              <span style={{ color: 'rgba(168,85,247,0.5)' }}>→</span>
+              <span style={{ padding: '3px 8px', background: 'rgba(59,130,246,0.18)', border: '0.5px solid rgba(59,130,246,0.5)', borderLeft: '2px solid rgba(59,130,246,0.9)', borderRadius: '3px', color: '#e0eaff' }}>WORKER</span>
+              <span style={{ color: 'rgba(168,85,247,0.5)' }}>→</span>
+              <span style={{ padding: '3px 8px', background: 'rgba(168,85,247,0.18)', border: '0.5px solid rgba(168,85,247,0.5)', borderLeft: '2px solid rgba(168,85,247,0.9)', borderRadius: '3px', color: '#e0eaff' }}>TASKS</span>
+            </div>
+            <div style={{ marginTop: '10px', fontSize: '10px', color: 'rgba(148,163,184,0.6)', fontFamily: 'monospace', lineHeight: 1.5 }}>
+              Sample plan with 2 crew members{team.length === 0 ? ' (Muzz + Dad)' : ''}, 6 tasks linked, 1 already marked done. Drag to rearrange or rename anything.
+            </div>
+          </div>
+
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={seedJobNode} style={{ padding: '12px 18px', background: 'rgba(249,115,22,0.18)', border: '1px solid rgba(249,115,22,0.7)', borderRadius: '4px', color: 'rgba(249,115,22,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ DROP JOB ON CANVAS</button>
+            <button onClick={seedFullTemplate} style={{ flex: '1 1 200px', padding: '12px 18px', background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.7)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>USE THIS TEMPLATE</button>
+            <button onClick={seedJobNode} style={{ flex: '1 1 200px', padding: '12px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>START FRESH</button>
           </div>
         </div>
       )}
@@ -1754,16 +1824,16 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
                 <circle
                   cx={NODE_W}
                   cy={NODE_H / 2}
-                  r="6"
+                  r="10"
                   fill={t.color}
                   stroke="rgba(5,12,24,0.95)"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   style={{ cursor: 'crosshair' }}
                   onMouseDown={(e) => handlePointerDownConnector(e, node.id)}
                   onTouchStart={touchHandlers((ev) => handlePointerDownConnector(ev, node.id))}
                 />
-                <circle cx={NODE_W} cy={NODE_H / 2} r="2.5" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
-                <circle cx="0" cy={NODE_H / 2} r="4" fill="rgba(5,12,24,0.95)" stroke={t.border} strokeWidth="1" style={{ pointerEvents: 'none' }} />
+                <circle cx={NODE_W} cy={NODE_H / 2} r="4" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
+                <circle cx="0" cy={NODE_H / 2} r="6" fill="rgba(5,12,24,0.95)" stroke={t.border} strokeWidth="1.5" style={{ pointerEvents: 'none' }} />
               </g>
             );
           })}
