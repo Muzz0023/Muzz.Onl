@@ -1486,7 +1486,7 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
   const seedJobNode = () => {
     const job = jobs.find(j => j.id === activeJobId);
     if (!job) return;
-    const jobNode = { id: `job_${activeJobId}_${Date.now()}`, type: 'job', label: job.name || job.address || 'Job', x: 60, y: 60 };
+    const jobNode = { id: `job_${activeJobId}_${Date.now()}`, type: 'job', label: job.title || job.name || job.address || 'Job', x: 60, y: 60 };
     updatePlan(g => ({ nodes: [...(g.nodes || []), jobNode], edges: g.edges || [] }));
   };
 
@@ -1571,7 +1571,7 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
           <div style={{ minWidth: 0, flex: 1 }}>
             <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.5)', fontFamily: 'monospace', letterSpacing: '2px' }}>// CREW PLAN</div>
             <button onClick={() => setShowJobPicker(p => !p)} style={{ fontSize: '14px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
-              {activeJob ? `${activeJob.name || activeJob.address || 'Job'} ▼` : (jobs.length === 0 ? 'No jobs yet' : 'Pick a job ▼')}
+              {activeJob ? `${activeJob.title || activeJob.name || activeJob.address || 'Job'} ▼` : (jobs.length === 0 ? 'No jobs yet' : 'Pick a job ▼')}
             </button>
           </div>
         </div>
@@ -1604,7 +1604,7 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
           )}
           {jobs.map(j => (
             <button key={j.id} onClick={() => { setActiveJobId(j.id); setShowJobPicker(false); resetView(); }} style={{ padding: '8px 12px', background: j.id === activeJobId ? 'rgba(168,85,247,0.18)' : 'transparent', border: `0.5px solid ${j.id === activeJobId ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '3px', color: j.id === activeJobId ? 'rgba(168,85,247,0.95)' : 'rgba(224,234,255,0.8)', fontFamily: 'monospace', fontSize: '11px', cursor: 'pointer', textAlign: 'left', fontWeight: j.id === activeJobId ? 600 : 400 }}>
-              {j.name || j.address || 'Untitled job'}
+              {j.title || j.name || j.address || 'Untitled job'}
             </button>
           ))}
         </div>
