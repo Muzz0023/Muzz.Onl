@@ -1993,6 +1993,8 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
 
 
 function MuzzApp() {
+  // All state declarations at the top
+  const [activeView, setActiveView] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showHealthModal, setShowHealthModal] = useState(false);
   const [liveTime, setLiveTime] = useState(() => new Date());
