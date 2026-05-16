@@ -25134,11 +25134,68 @@ ${JSON.stringify(ctx, null, 2)}`;
             + ADD NEW HABIT
           </button>
 
-          {habits.length === 0 && (
-            <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>
-              NO HABITS TRACKED — ADD ONE ABOVE
-            </div>
-          )}
+          {habits.length === 0 && (() => {
+            // Sample preview — what habit tracking LOOKS LIKE when you're using it
+            const samples = [
+              { icon: '💧', name: 'Drink 2L water',     pattern: [1,1,0,1,1,1,0, 1,1,1,1,0,1,1, 0,1,1,1,1,1,1, 1,1,1,0,1,1,1, 1,1,1] },
+              { icon: '🏃', name: 'Exercise 30min',     pattern: [1,0,1,0,1,0,0, 1,0,1,0,1,1,0, 1,0,1,1,0,1,0, 1,1,0,1,1,0,1, 0,1,0] },
+              { icon: '📚', name: 'Read before bed',    pattern: [1,1,1,1,0,1,1, 1,1,0,1,1,1,1, 1,1,1,1,1,0,1, 1,1,1,1,1,1,0, 1,1,1] },
+            ];
+            const useTemplate = () => {
+              const baseId = Date.now();
+              const newHabits = samples.map((s, i) => ({ id: (baseId + i).toString(), name: s.name, icon: s.icon, createdAt: today }));
+              setHabits(newHabits);
+              // Pre-fill habit log with the sample pattern so the user sees how it looks
+              const newLog = { ...habitLog };
+              const last31Days = last31;
+              samples.forEach((s, hi) => {
+                const habitId = (baseId + hi).toString();
+                s.pattern.forEach((checked, di) => {
+                  if (checked) newLog[`${habitId}:${last31Days[di]}`] = true;
+                });
+              });
+              setHabitLog(newLog);
+            };
+            const startFresh = () => {
+              setHabits([{ id: Date.now().toString(), name: '', icon: '✅', createdAt: today }]);
+            };
+            return (
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",borderLeft:"2px solid #00c8ff",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"14px 16px 8px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                  <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · NOT YOUR DATA</div>
+                  <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.5px",marginBottom:"4px"}}>Track your habits — daily things you want to stick with.</div>
+                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5}}>Tap a square each day to mark it done. Build streaks, see your consistency.</div>
+                </div>
+
+                {/* Sample habit previews */}
+                <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
+                  {samples.map((s, i) => {
+                    const doneCount = s.pattern.filter(Boolean).length;
+                    return (
+                      <div key={i} style={{opacity:0.85}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}}>
+                          <div style={{width:"24px",height:"24px",borderRadius:"4px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px"}}>{s.icon}</div>
+                          <div style={{flex:1,fontSize:"12px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace"}}>{s.name}</div>
+                          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.65)",fontFamily:"monospace",letterSpacing:"1px"}}>{doneCount}/31</div>
+                        </div>
+                        <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(31, 1fr)":"repeat(31, 1fr)",gap:"2px"}}>
+                          {s.pattern.map((c, di) => (
+                            <div key={di} style={{aspectRatio:"1",borderRadius:"2px",background:c?"#00c8ff":"rgba(255,255,255,0.04)",boxShadow:c?"0 0 3px rgba(0,200,255,0.5)":"none"}} />
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* CTAs */}
+                <div style={{padding:"12px 16px 14px",borderTop:"0.5px solid rgba(0,200,255,0.08)",display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                  <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                  <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                </div>
+              </div>
+            );
+          })()}
 
           {habits.map(habit => {
             const completedToday = !!habitLog[`${habit.id}:${today}`];
