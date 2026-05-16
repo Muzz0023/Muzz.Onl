@@ -1338,25 +1338,60 @@ function FloatingChat() {
 }
 
 // ============================================
-// DONNY INTELLIGENCE GRAPH — drag/drop node editor
+// DONNY CREW PLAN — drag/drop crew + task planner per job
 // ============================================
-function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView }) {
-  const { nodes = [], edges = [] } = graph;
+function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView }) {
+  // graph is { [jobId]: { nodes, edges } } — keyed by job id
+  const jobs = donnyJobs || [];
+  const team = donnyTeam || [];
+  const [activeJobId, setActiveJobId] = React.useState(() => jobs[0]?.id || null);
+  const [showJobPicker, setShowJobPicker] = React.useState(false);
+  const [showWorkerPicker, setShowWorkerPicker] = React.useState(false);
+  const [showTaskInput, setShowTaskInput] = React.useState(false);
+  const [taskInput, setTaskInput] = React.useState('');
+
+  // Get the current job's plan (or empty)
+  const currentPlan = activeJobId && graph?.[activeJobId] ? graph[activeJobId] : { nodes: [], edges: [] };
+  const { nodes = [], edges = [] } = currentPlan;
+
+  // Update the current job's plan
+  const updatePlan = (updater) => {
+    setGraph(prev => {
+      const safe = (prev && typeof prev === 'object' && !Array.isArray(prev) && !('nodes' in prev)) ? prev : {};
+      const existing = safe[activeJobId] || { nodes: [], edges: [] };
+      const next = typeof updater === 'function' ? updater(existing) : updater;
+      return { ...safe, [activeJobId]: next };
+    });
+  };
+
+  // Migrate old format (single graph) to new keyed format if needed
+  React.useEffect(() => {
+    if (graph && Array.isArray(graph.nodes) && jobs.length > 0 && !graph[jobs[0].id]) {
+      // Old single-graph format detected — wipe and start fresh per-job
+      setGraph({});
+    }
+  }, []);
+
+  const NODE_TYPES = {
+    job:    { label: 'JOB',    color: '#f97316', bg: 'rgba(249,115,22,0.15)', border: 'rgba(249,115,22,0.7)' },
+    worker: { label: 'WORKER', color: '#3b82f6', bg: 'rgba(59,130,246,0.15)', border: 'rgba(59,130,246,0.7)' },
+    task:   { label: 'TASK',   color: '#a855f7', bg: 'rgba(168,85,247,0.15)', border: 'rgba(168,85,247,0.7)' },
+    done:   { label: 'DONE',   color: '#22c55e', bg: 'rgba(34,197,94,0.15)',  border: 'rgba(34,197,94,0.7)'  },
+  };
+
   const svgRef = React.useRef(null);
-  const [drag, setDrag] = React.useState(null); // { nodeId, offsetX, offsetY }
+  const [drag, setDrag] = React.useState(null);
   const [pan, setPan] = React.useState({ x: 0, y: 0 });
   const [panning, setPanning] = React.useState(null);
   const [zoom, setZoom] = React.useState(1);
-  const [connectFrom, setConnectFrom] = React.useState(null); // node id we're dragging an edge from
+  const [connectFrom, setConnectFrom] = React.useState(null);
   const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
   const [selectedNode, setSelectedNode] = React.useState(null);
-  const [editing, setEditing] = React.useState(null); // node id being renamed
-  const [showPalette, setShowPalette] = React.useState(false);
+  const [editing, setEditing] = React.useState(null);
 
   const NODE_W = 160;
   const NODE_H = 44;
 
-  // Translate raw pointer coords to graph coords (account for pan + zoom)
   const toGraphCoords = (clientX, clientY) => {
     const svg = svgRef.current;
     if (!svg) return { x: clientX, y: clientY };
@@ -1370,18 +1405,14 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
   const handlePointerDownNode = (e, node) => {
     e.stopPropagation();
     const p = toGraphCoords(e.clientX, e.clientY);
-    setDrag({ nodeId: node.id, offsetX: p.x - node.x, offsetY: p.y - node.y });
+    setDrag({ nodeId: node.id, offsetX: p.x - node.x, offsetY: p.y - node.y, moved: false });
     setSelectedNode(node.id);
-    setShowPalette(false);
   };
 
   const handlePointerDownCanvas = (e) => {
-    // Only start panning on plain canvas tap, not on node
-    if (e.target.tagName === 'svg' || e.target.classList?.contains('intel-canvas-bg')) {
-      const p = { x: e.clientX, y: e.clientY };
-      setPanning({ startX: p.x, startY: p.y, originX: pan.x, originY: pan.y });
+    if (e.target.tagName === 'svg' || e.target.classList?.contains('crew-canvas-bg')) {
+      setPanning({ startX: e.clientX, startY: e.clientY, originX: pan.x, originY: pan.y });
       setSelectedNode(null);
-      setShowPalette(false);
     }
   };
 
@@ -1395,7 +1426,8 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
   const handlePointerMove = (e) => {
     const p = toGraphCoords(e.clientX, e.clientY);
     if (drag) {
-      setGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === drag.nodeId ? { ...n, x: p.x - drag.offsetX, y: p.y - drag.offsetY } : n) }));
+      updatePlan(g => ({ ...g, nodes: g.nodes.map(n => n.id === drag.nodeId ? { ...n, x: p.x - drag.offsetX, y: p.y - drag.offsetY } : n) }));
+      setDrag(d => d ? { ...d, moved: true } : null);
     } else if (panning) {
       setPan({ x: panning.originX + (e.clientX - panning.startX), y: panning.originY + (e.clientY - panning.startY) });
     } else if (connectFrom) {
@@ -1405,7 +1437,6 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
 
   const handlePointerUp = (e) => {
     if (connectFrom) {
-      // Did we end on a node?
       const targetEl = document.elementFromPoint(e.clientX, e.clientY);
       const targetNodeEl = targetEl?.closest('[data-node-id]');
       if (targetNodeEl) {
@@ -1413,7 +1444,7 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
         if (targetId !== connectFrom) {
           const exists = edges.some(ed => ed.from === connectFrom && ed.to === targetId);
           if (!exists) {
-            setGraph(g => ({ ...g, edges: [...(g.edges || []), { id: `e${Date.now()}`, from: connectFrom, to: targetId }] }));
+            updatePlan(g => ({ ...g, edges: [...(g.edges || []), { id: `e${Date.now()}`, from: connectFrom, to: targetId }] }));
           }
         }
       }
@@ -1423,7 +1454,6 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
     setConnectFrom(null);
   };
 
-  // Touch handlers — convert single-touch into pointer events
   const touchHandlers = (handler) => (e) => {
     if (e.touches && e.touches.length > 0) {
       e.preventDefault();
@@ -1453,23 +1483,45 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
     };
   }, [drag, panning, connectFrom, pan, zoom]);
 
-  const addNode = (type) => {
-    const t = nodeTypes[type];
+  const seedJobNode = () => {
+    const job = jobs.find(j => j.id === activeJobId);
+    if (!job) return;
+    const jobNode = { id: `job_${activeJobId}_${Date.now()}`, type: 'job', label: job.name || job.address || 'Job', x: 60, y: 60 };
+    updatePlan(g => ({ nodes: [...(g.nodes || []), jobNode], edges: g.edges || [] }));
+  };
+
+  const addWorkerNode = (worker) => {
     const newNode = {
-      id: String(Date.now()),
-      type,
-      label: t.label.charAt(0) + t.label.slice(1).toLowerCase(),
-      x: 200 + Math.random() * 100,
-      y: 200 + Math.random() * 100,
+      id: `worker_${worker.id}_${Date.now()}`,
+      type: 'worker',
+      label: worker.name || 'Worker',
+      x: 250 + Math.random() * 80,
+      y: 80 + nodes.filter(n => n.type === 'worker').length * 70,
     };
-    setGraph(g => ({ ...g, nodes: [...(g.nodes || []), newNode] }));
-    setSelectedNode(newNode.id);
-    setEditing(newNode.id);
-    setShowPalette(false);
+    updatePlan(g => ({ ...g, nodes: [...(g.nodes || []), newNode] }));
+    setShowWorkerPicker(false);
+  };
+
+  const addTaskNode = (name) => {
+    if (!name?.trim()) return;
+    const newNode = {
+      id: `task_${Date.now()}`,
+      type: 'task',
+      label: name.trim(),
+      x: 460 + Math.random() * 80,
+      y: 80 + nodes.filter(n => n.type === 'task').length * 60,
+    };
+    updatePlan(g => ({ ...g, nodes: [...(g.nodes || []), newNode] }));
+    setTaskInput('');
+    setShowTaskInput(false);
+  };
+
+  const toggleDone = (id) => {
+    updatePlan(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, type: n.type === 'done' ? 'task' : 'done' } : n) }));
   };
 
   const deleteNode = (id) => {
-    setGraph(g => ({
+    updatePlan(g => ({
       nodes: (g.nodes || []).filter(n => n.id !== id),
       edges: (g.edges || []).filter(e => e.from !== id && e.to !== id),
     }));
@@ -1477,16 +1529,15 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
   };
 
   const deleteEdge = (id) => {
-    setGraph(g => ({ ...g, edges: (g.edges || []).filter(e => e.id !== id) }));
+    updatePlan(g => ({ ...g, edges: (g.edges || []).filter(e => e.id !== id) }));
   };
 
   const renameNode = (id, newLabel) => {
-    setGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, label: newLabel } : n) }));
+    updatePlan(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, label: newLabel } : n) }));
   };
 
   const resetView = () => { setPan({ x: 0, y: 0 }); setZoom(1); };
 
-  // Bezier curve between two nodes
   const edgePath = (from, to) => {
     const fx = from.x + NODE_W;
     const fy = from.y + NODE_H / 2;
@@ -1496,7 +1547,6 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
     return `M ${fx} ${fy} C ${fx + dx} ${fy}, ${tx - dx} ${ty}, ${tx} ${ty}`;
   };
 
-  // Connector preview line
   const previewPath = connectFrom ? (() => {
     const from = nodes.find(n => n.id === connectFrom);
     if (!from) return null;
@@ -1506,35 +1556,85 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
     return `M ${fx} ${fy} C ${fx + dx} ${fy}, ${mousePos.x - dx} ${mousePos.y}, ${mousePos.x} ${mousePos.y}`;
   })() : null;
 
+  // KPIs
+  const taskNodes = nodes.filter(n => n.type === 'task' || n.type === 'done');
+  const doneTasks = nodes.filter(n => n.type === 'done').length;
+  const workerNodes = nodes.filter(n => n.type === 'worker');
+  const activeJob = jobs.find(j => j.id === activeJobId);
+
   return (
     <div style={{ minHeight: '100vh', background: '#020611', position: 'relative' }}>
       {/* Top toolbar */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '12px 16px', borderBottom: '0.5px solid rgba(168,85,247,0.2)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <button onClick={() => setActiveView('donny')} style={{ fontSize: '11px', color: 'rgba(168,85,247,0.7)', fontFamily: 'monospace', letterSpacing: '1px', background: 'none', border: 'none', cursor: 'pointer' }}>← DONNY</button>
-          <div>
-            <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.5)', fontFamily: 'monospace', letterSpacing: '2px' }}>// INTELLIGENCE</div>
-            <div style={{ fontSize: '14px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1.5px' }}>DATA FLOW GRAPH</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0, flex: 1 }}>
+          <button onClick={() => setActiveView('donny')} style={{ fontSize: '11px', color: 'rgba(168,85,247,0.7)', fontFamily: 'monospace', letterSpacing: '1px', background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0 }}>← DONNY</button>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.5)', fontFamily: 'monospace', letterSpacing: '2px' }}>// CREW PLAN</div>
+            <button onClick={() => setShowJobPicker(p => !p)} style={{ fontSize: '14px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+              {activeJob ? `${activeJob.name || activeJob.address || 'Job'} ▼` : (jobs.length === 0 ? 'No jobs yet' : 'Pick a job ▼')}
+            </button>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          <button onClick={() => setShowPalette(p => !p)} style={{ padding: '7px 12px', background: showPalette ? 'rgba(168,85,247,0.25)' : 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ NODE</button>
-          <button onClick={() => setZoom(z => Math.min(z * 1.2, 3))} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', cursor: 'pointer', fontWeight: 600 }}>+</button>
-          <button onClick={() => setZoom(z => Math.max(z / 1.2, 0.3))} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', cursor: 'pointer', fontWeight: 600 }}>−</button>
-          <button onClick={resetView} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>FIT</button>
-        </div>
+        {activeJobId && (
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            <button onClick={() => setShowWorkerPicker(p => !p)} disabled={team.length === 0} style={{ padding: '7px 12px', background: team.length === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(59,130,246,0.15)', border: `1px solid ${team.length === 0 ? 'rgba(255,255,255,0.1)' : 'rgba(59,130,246,0.6)'}`, borderRadius: '4px', color: team.length === 0 ? 'rgba(148,163,184,0.4)' : 'rgba(59,130,246,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: team.length === 0 ? 'not-allowed' : 'pointer', fontWeight: 600 }}>+ WORKER</button>
+            <button onClick={() => setShowTaskInput(p => !p)} style={{ padding: '7px 12px', background: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.6)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ TASK</button>
+            <button onClick={() => setZoom(z => Math.min(z * 1.2, 3))} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>+</button>
+            <button onClick={() => setZoom(z => Math.max(z / 1.2, 0.3))} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>−</button>
+            <button onClick={resetView} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>FIT</button>
+          </div>
+        )}
       </div>
 
-      {/* Node palette popup */}
-      {showPalette && (
-        <div style={{ position: 'absolute', top: 70, right: 16, zIndex: 11, background: 'rgba(5,12,24,0.95)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '6px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '4px', backdropFilter: 'blur(12px)' }}>
-          <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2px', marginBottom: '4px' }}>ADD NODE</div>
-          {Object.entries(nodeTypes).map(([key, t]) => (
-            <button key={key} onClick={() => addNode(key)} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 10px', background: t.bg, border: `0.5px solid ${t.border}`, borderLeft: `2px solid ${t.color}`, borderRadius: '3px', color: t.color, fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, textAlign: 'left', minWidth: '120px' }}>
-              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: t.color, boxShadow: `0 0 4px ${t.color}` }} />
-              {t.label}
+      {/* Job stats bar */}
+      {activeJobId && nodes.length > 0 && (
+        <div style={{ position: 'absolute', top: 64, left: 16, zIndex: 9, padding: '6px 12px', background: 'rgba(5,12,24,0.85)', border: '0.5px solid rgba(168,85,247,0.2)', borderRadius: '4px', backdropFilter: 'blur(12px)', display: 'flex', gap: '14px', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1px' }}>
+          <span style={{ color: 'rgba(59,130,246,0.85)' }}>◉ {workerNodes.length} CREW</span>
+          <span style={{ color: 'rgba(168,85,247,0.85)' }}>◇ {taskNodes.length - doneTasks} OPEN</span>
+          <span style={{ color: 'rgba(34,197,94,0.85)' }}>✓ {doneTasks} DONE</span>
+        </div>
+      )}
+
+      {/* Job picker dropdown */}
+      {showJobPicker && (
+        <div style={{ position: 'absolute', top: 70, left: 16, zIndex: 11, background: 'rgba(5,12,24,0.95)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '4px', backdropFilter: 'blur(12px)', maxHeight: '60vh', overflowY: 'auto', minWidth: '240px' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2px', padding: '4px 8px' }}>SELECT JOB</div>
+          {jobs.length === 0 && (
+            <div style={{ padding: '12px 8px', fontFamily: 'monospace', fontSize: '10px', color: 'rgba(148,163,184,0.5)' }}>No jobs yet. Create a job first.</div>
+          )}
+          {jobs.map(j => (
+            <button key={j.id} onClick={() => { setActiveJobId(j.id); setShowJobPicker(false); resetView(); }} style={{ padding: '8px 12px', background: j.id === activeJobId ? 'rgba(168,85,247,0.18)' : 'transparent', border: `0.5px solid ${j.id === activeJobId ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '3px', color: j.id === activeJobId ? 'rgba(168,85,247,0.95)' : 'rgba(224,234,255,0.8)', fontFamily: 'monospace', fontSize: '11px', cursor: 'pointer', textAlign: 'left', fontWeight: j.id === activeJobId ? 600 : 400 }}>
+              {j.name || j.address || 'Untitled job'}
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Worker picker dropdown */}
+      {showWorkerPicker && (
+        <div style={{ position: 'absolute', top: 70, right: 16, zIndex: 11, background: 'rgba(5,12,24,0.95)', border: '1px solid rgba(59,130,246,0.5)', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '4px', backdropFilter: 'blur(12px)', maxHeight: '60vh', overflowY: 'auto', minWidth: '200px' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(59,130,246,0.6)', fontFamily: 'monospace', letterSpacing: '2px', padding: '4px 8px' }}>ADD WORKER</div>
+          {team.map(w => (
+            <button key={w.id} onClick={() => addWorkerNode(w)} style={{ padding: '8px 12px', background: 'transparent', border: '0.5px solid rgba(59,130,246,0.3)', borderLeft: '2px solid rgba(59,130,246,0.7)', borderRadius: '3px', color: 'rgba(224,234,255,0.85)', fontFamily: 'monospace', fontSize: '11px', cursor: 'pointer', textAlign: 'left' }}>
+              {w.name || 'Worker'}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Task input */}
+      {showTaskInput && (
+        <div style={{ position: 'absolute', top: 70, right: 16, zIndex: 11, background: 'rgba(5,12,24,0.95)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '6px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', backdropFilter: 'blur(12px)', minWidth: '240px' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2px' }}>NEW TASK</div>
+          <input
+            autoFocus
+            value={taskInput}
+            onChange={(e) => setTaskInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') addTaskNode(taskInput); if (e.key === 'Escape') { setShowTaskInput(false); setTaskInput(''); } }}
+            placeholder="e.g. Demo wall"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(168,85,247,0.4)', borderRadius: '3px', color: '#e0eaff', fontFamily: 'monospace', fontSize: '12px', padding: '8px', outline: 'none' }}
+          />
+          <button onClick={() => addTaskNode(taskInput)} style={{ padding: '8px', background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.6)', borderRadius: '3px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>ADD TASK</button>
         </div>
       )}
 
@@ -1542,7 +1642,8 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
       {selectedNode && (() => {
         const n = nodes.find(x => x.id === selectedNode);
         if (!n) return null;
-        const t = nodeTypes[n.type];
+        const t = NODE_TYPES[n.type];
+        const isTask = n.type === 'task' || n.type === 'done';
         return (
           <div style={{ position: 'absolute', bottom: 16, left: 16, right: 16, zIndex: 10, padding: '10px 14px', background: 'rgba(5,12,24,0.95)', border: `1px solid ${t.border}`, borderLeft: `2px solid ${t.color}`, borderRadius: '6px', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
             <div style={{ fontSize: '9px', color: t.color, fontFamily: 'monospace', letterSpacing: '1.5px', fontWeight: 600 }}>{t.label}</div>
@@ -1558,26 +1659,38 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
             ) : (
               <div onClick={() => setEditing(n.id)} style={{ flex: 1, minWidth: 0, fontFamily: 'monospace', fontSize: '12px', color: '#e0eaff', cursor: 'text', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.label}</div>
             )}
+            {isTask && (
+              <button onClick={() => toggleDone(n.id)} style={{ padding: '5px 10px', background: n.type === 'done' ? 'rgba(34,197,94,0.18)' : 'rgba(255,255,255,0.04)', border: `0.5px solid ${n.type === 'done' ? 'rgba(34,197,94,0.5)' : 'rgba(255,255,255,0.15)'}`, borderRadius: '3px', color: n.type === 'done' ? 'rgba(34,197,94,0.95)' : 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>{n.type === 'done' ? '✓ DONE' : 'MARK DONE'}</button>
+            )}
             <button onClick={() => setEditing(n.id)} style={{ padding: '5px 10px', background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.15)', borderRadius: '3px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>RENAME</button>
             <button onClick={() => deleteNode(n.id)} style={{ padding: '5px 10px', background: 'rgba(239,68,68,0.1)', border: '0.5px solid rgba(239,68,68,0.4)', borderRadius: '3px', color: 'rgba(239,68,68,0.9)', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>DELETE</button>
           </div>
         );
       })()}
 
-      {/* Empty state */}
-      {nodes.length === 0 && (
+      {/* Empty states */}
+      {jobs.length === 0 && (
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '90%' }}>
-          <div style={{ fontSize: '10px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '12px' }}>// EMPTY GRAPH</div>
-          <div style={{ fontSize: '16px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '8px' }}>Build a data flow for Donny.</div>
-          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px', padding: '0 20px' }}>Drag nodes, draw connections, map how your business data flows from raw input to alerts.</div>
+          <div style={{ fontSize: '10px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '12px' }}>// NO JOBS</div>
+          <div style={{ fontSize: '16px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '8px' }}>Create a job first.</div>
+          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px', padding: '0 20px' }}>Crew Plan works per-job. Head to Jobs to add one, then come back to plan the crew.</div>
+          <button onClick={() => setActiveView('donny-jobs')} style={{ padding: '12px 18px', background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.7)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>GO TO JOBS</button>
+        </div>
+      )}
+
+      {jobs.length > 0 && activeJobId && nodes.length === 0 && (
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '90%' }}>
+          <div style={{ fontSize: '10px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '12px' }}>// EMPTY PLAN</div>
+          <div style={{ fontSize: '16px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '8px' }}>Plan your crew for this job.</div>
+          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px', padding: '0 20px' }}>Drop the job on the canvas, add your workers, then break down tasks under each one.</div>
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={seedGraph} style={{ padding: '12px 18px', background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.7)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>USE THIS TEMPLATE</button>
-            <button onClick={() => addNode('raw')} style={{ padding: '12px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>START FRESH</button>
+            <button onClick={seedJobNode} style={{ padding: '12px 18px', background: 'rgba(249,115,22,0.18)', border: '1px solid rgba(249,115,22,0.7)', borderRadius: '4px', color: 'rgba(249,115,22,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ DROP JOB ON CANVAS</button>
           </div>
         </div>
       )}
 
       {/* SVG canvas */}
+      {activeJobId && (
       <svg
         ref={svgRef}
         onMouseDown={handlePointerDownCanvas}
@@ -1587,14 +1700,14 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
         style={{ display: 'block', cursor: panning ? 'grabbing' : 'grab', touchAction: 'none' }}
       >
         <defs>
-          <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse" patternTransform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+          <pattern id="crewgrid" width="32" height="32" patternUnits="userSpaceOnUse" patternTransform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
             <circle cx="1" cy="1" r="1" fill="rgba(168,85,247,0.06)" />
           </pattern>
-          <marker id="arrowend" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <marker id="crewarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(168,85,247,0.6)" />
           </marker>
         </defs>
-        <rect className="intel-canvas-bg" width="100%" height="100%" fill="url(#grid)" />
+        <rect className="crew-canvas-bg" width="100%" height="100%" fill="url(#crewgrid)" />
 
         <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
           {/* Edges */}
@@ -1604,8 +1717,7 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
             if (!from || !to) return null;
             return (
               <g key={edge.id} style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); if (window.confirm('Delete this connection?')) deleteEdge(edge.id); }}>
-                <path d={edgePath(from, to)} stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" fill="none" markerEnd="url(#arrowend)" />
-                {/* Animated flow dots */}
+                <path d={edgePath(from, to)} stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" fill="none" markerEnd="url(#crewarrow)" />
                 <circle r="2.5" fill="rgba(168,85,247,0.9)">
                   <animateMotion dur="3s" repeatCount="indefinite" path={edgePath(from, to)} />
                 </circle>
@@ -1613,13 +1725,13 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
             );
           })}
 
-          {/* Preview line while connecting */}
           {previewPath && <path d={previewPath} stroke="rgba(168,85,247,0.7)" strokeWidth="1.5" strokeDasharray="4 4" fill="none" />}
 
           {/* Nodes */}
           {nodes.map(node => {
-            const t = nodeTypes[node.type] || nodeTypes.raw;
+            const t = NODE_TYPES[node.type] || NODE_TYPES.task;
             const isSelected = selectedNode === node.id;
+            const isDone = node.type === 'done';
             return (
               <g key={node.id} data-node-id={node.id} transform={`translate(${node.x},${node.y})`} style={{ cursor: drag?.nodeId === node.id ? 'grabbing' : 'grab' }}>
                 <rect
@@ -1631,16 +1743,14 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
                   fill={t.bg}
                   stroke={isSelected ? t.color : t.border}
                   strokeWidth={isSelected ? 1.5 : 0.75}
+                  opacity={isDone ? 0.65 : 1}
                 />
-                {/* Left accent bar */}
                 <rect x="0" y="0" width="3" height={NODE_H} fill={t.color} rx="2" />
-                {/* Type label */}
                 <text x="10" y="14" fill={t.color} style={{ fontFamily: 'monospace', fontSize: '7px', letterSpacing: '1.5px', fontWeight: 600, pointerEvents: 'none' }}>{t.label}</text>
-                {/* Node label */}
-                <text x="10" y="32" fill="#e0eaff" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 500, pointerEvents: 'none' }}>
+                <text x="10" y="32" fill="#e0eaff" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 500, pointerEvents: 'none', textDecoration: isDone ? 'line-through' : 'none', opacity: isDone ? 0.7 : 1 }}>
                   {node.label.length > 18 ? node.label.slice(0, 17) + '…' : node.label}
                 </text>
-                {/* Right output connector (drag from here to create edge) */}
+                {isDone && <text x={NODE_W - 16} y={28} fill={t.color} style={{ fontFamily: 'monospace', fontSize: '14px', fontWeight: 700, pointerEvents: 'none' }}>✓</text>}
                 <circle
                   cx={NODE_W}
                   cy={NODE_H / 2}
@@ -1653,18 +1763,18 @@ function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView 
                   onTouchStart={touchHandlers((ev) => handlePointerDownConnector(ev, node.id))}
                 />
                 <circle cx={NODE_W} cy={NODE_H / 2} r="2.5" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
-                {/* Left input connector — visual only */}
                 <circle cx="0" cy={NODE_H / 2} r="4" fill="rgba(5,12,24,0.95)" stroke={t.border} strokeWidth="1" style={{ pointerEvents: 'none' }} />
               </g>
             );
           })}
         </g>
       </svg>
+      )}
 
       {/* Help footer */}
       {nodes.length > 0 && !selectedNode && (
-        <div style={{ position: 'absolute', bottom: 16, left: 16, zIndex: 9, padding: '8px 12px', background: 'rgba(5,12,24,0.85)', border: '0.5px solid rgba(168,85,247,0.2)', borderRadius: '4px', backdropFilter: 'blur(12px)', fontFamily: 'monospace', fontSize: '9px', color: 'rgba(168,85,247,0.6)', letterSpacing: '1.5px', lineHeight: 1.5, maxWidth: '320px' }}>
-          DRAG NODES · DRAG FROM ◉ TO CONNECT · TAP NODE TO SELECT · TAP LINK TO DELETE · DRAG CANVAS TO PAN
+        <div style={{ position: 'absolute', bottom: 16, left: 16, zIndex: 9, padding: '8px 12px', background: 'rgba(5,12,24,0.85)', border: '0.5px solid rgba(168,85,247,0.2)', borderRadius: '4px', backdropFilter: 'blur(12px)', fontFamily: 'monospace', fontSize: '9px', color: 'rgba(168,85,247,0.6)', letterSpacing: '1.5px', lineHeight: 1.5, maxWidth: '340px' }}>
+          DRAG NODES · DRAG FROM ◉ TO LINK · TAP NODE TO EDIT / MARK DONE · TAP LINK TO DELETE
         </div>
       )}
     </div>
@@ -5137,7 +5247,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   { section:'COSTS', id:'donny-materialslog', label:'Materials', workerOk:true },
                   { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
-                  { section:'INTEL', id:'donny-intel', label:'Intelligence Graph', workerOk:false },
+                  { section:'INTEL', id:'donny-intel', label:'Crew Plan', workerOk:false },
                 ];
                 const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)', INTEL:'rgba(168,85,247,0.95)' };
                 return donnySections.map(sec => {
@@ -25949,67 +26059,13 @@ ${JSON.stringify(ctx, null, 2)}`;
       );
     }
 
-    // DONNY INTELLIGENCE GRAPH — drag-drop nodes + connections
+    // DONNY CREW PLAN — drag-drop visual planner per job
     if (activeView === 'donny-intel') {
-      const { nodes = [], edges = [] } = donnyIntelGraph;
-
-      // Node type palette
-      const NODE_TYPES = {
-        raw:      { label: 'RAW',      color: '#eab308', bg: 'rgba(234,179,8,0.15)',  border: 'rgba(234,179,8,0.7)'  },
-        clean:    { label: 'CLEAN',    color: '#22c55e', bg: 'rgba(34,197,94,0.15)',  border: 'rgba(34,197,94,0.7)'  },
-        entity:   { label: 'ENTITY',   color: '#ef4444', bg: 'rgba(239,68,68,0.15)',  border: 'rgba(239,68,68,0.7)'  },
-        rule:     { label: 'RULE',     color: '#ec4899', bg: 'rgba(236,72,153,0.15)', border: 'rgba(236,72,153,0.7)' },
-        alert:    { label: 'ALERT',    color: '#3b82f6', bg: 'rgba(59,130,246,0.15)', border: 'rgba(59,130,246,0.7)' },
-        transform:{ label: 'TRANSFORM',color: '#f97316', bg: 'rgba(249,115,22,0.15)', border: 'rgba(249,115,22,0.7)' },
-        ontology: { label: 'ONTOLOGY', color: '#a855f7', bg: 'rgba(168,85,247,0.15)', border: 'rgba(168,85,247,0.7)' },
-      };
-
-      const seedGraph = () => {
-        // Real Donny data flow: raw sources → cleaned → entities → rules → alerts
-        const baseId = Date.now();
-        const seedNodes = [
-          // RAW (left column)
-          { id: String(baseId + 1),  type: 'raw',   label: 'Daily Reports',  x: 60,  y: 60   },
-          { id: String(baseId + 2),  type: 'raw',   label: 'Timesheets',     x: 60,  y: 140  },
-          { id: String(baseId + 3),  type: 'raw',   label: 'Photos',         x: 60,  y: 220  },
-          { id: String(baseId + 4),  type: 'raw',   label: 'Materials Log',  x: 60,  y: 300  },
-          { id: String(baseId + 5),  type: 'raw',   label: 'Incidents',      x: 60,  y: 380  },
-          // CLEAN (col 2)
-          { id: String(baseId + 11), type: 'clean', label: 'Hours Cleaned',  x: 280, y: 100  },
-          { id: String(baseId + 12), type: 'clean', label: 'Tagged Photos',  x: 280, y: 220  },
-          { id: String(baseId + 13), type: 'clean', label: 'Cost Records',   x: 280, y: 340  },
-          // ENTITIES (col 3)
-          { id: String(baseId + 21), type: 'entity', label: '[DONNY] Worker', x: 500, y: 70  },
-          { id: String(baseId + 22), type: 'entity', label: '[DONNY] Job',    x: 500, y: 170 },
-          { id: String(baseId + 23), type: 'entity', label: '[DONNY] Client', x: 500, y: 270 },
-          { id: String(baseId + 24), type: 'entity', label: '[DONNY] Material', x: 500, y: 370 },
-          // RULES (col 4)
-          { id: String(baseId + 31), type: 'rule',  label: 'Margin Rule',    x: 720, y: 130  },
-          { id: String(baseId + 32), type: 'rule',  label: 'Safety Rule',    x: 720, y: 280  },
-          // ALERTS (col 5)
-          { id: String(baseId + 41), type: 'alert', label: 'Cost Overrun',   x: 940, y: 130  },
-          { id: String(baseId + 42), type: 'alert', label: 'Compliance Flag',x: 940, y: 280  },
-        ];
-        const link = (a, b) => ({ id: `e${a}-${b}`, from: String(a), to: String(b) });
-        const seedEdges = [
-          link(baseId+1, baseId+11), link(baseId+2, baseId+11),
-          link(baseId+3, baseId+12), link(baseId+5, baseId+12),
-          link(baseId+4, baseId+13),
-          link(baseId+11, baseId+21), link(baseId+11, baseId+22),
-          link(baseId+12, baseId+22), link(baseId+13, baseId+22), link(baseId+13, baseId+24),
-          link(baseId+22, baseId+31), link(baseId+24, baseId+31),
-          link(baseId+21, baseId+32), link(baseId+22, baseId+32),
-          link(baseId+31, baseId+41),
-          link(baseId+32, baseId+42),
-        ];
-        setDonnyIntelGraph({ nodes: seedNodes, edges: seedEdges });
-      };
-
-      return <DonnyIntelGraph
+      return <DonnyCrewPlan
         graph={donnyIntelGraph}
         setGraph={setDonnyIntelGraph}
-        nodeTypes={NODE_TYPES}
-        seedGraph={seedGraph}
+        donnyTeam={donnyTeam}
+        donnyJobs={donnyJobs}
         setActiveView={setActiveView}
       />;
     }
