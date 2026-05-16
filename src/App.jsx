@@ -25213,14 +25213,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
-                      const d = new Date(date);
-                      const dayNum = d.getDate();
                       return (
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          style={{aspectRatio:"1",borderRadius:"4px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 6px rgba(0,200,255,0.55)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"monospace",fontSize:isWide?"9px":"11px",fontWeight:500,color:done?"#001821":isToday?"rgba(0,200,255,0.7)":"rgba(148,163,184,0.4)",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
-                        >{dayNum}</div>
+                          style={{aspectRatio:"1",borderRadius:"4px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 6px rgba(0,200,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
+                        />
                       );
                     })}
                   </div>
