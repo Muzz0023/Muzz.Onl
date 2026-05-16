@@ -13372,10 +13372,12 @@ ${JSON.stringify(ctx, null, 2)}`;
             </>
           )}
 
-          {/* Asset Map — drag/drop wealth structure */}
+          {/* Asset Map — temporarily disabled, debugging */}
           {assetsSubTab === 'assetMap' && (
-            <div style={{padding:"12px 16px"}}>
-              <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} />
+            <div style={{padding:"24px 16px",textAlign:"center"}}>
+              <div style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px"}}>// TEMPORARILY DISABLED</div>
+              <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",marginBottom:"8px"}}>Asset Map is being rebuilt.</div>
+              <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.6,padding:"0 20px"}}>The new drag/drop version is in progress. Your old asset map data is safe and will return shortly.</div>
             </div>
           )}
 
