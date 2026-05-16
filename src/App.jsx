@@ -5006,9 +5006,39 @@ ${JSON.stringify(ctx, null, 2)}`;
             <>
               <button onClick={addReminder} style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD REMINDER</button>
 
-              {sortedReminders.length === 0 && (
-                <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>NO REMINDERS — ADD ONE ABOVE</div>
-              )}
+              {sortedReminders.length === 0 && (() => {
+                const today = new Date();
+                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; };
+                const samples = [
+                  { title: 'Renew car rego',           date: inDays(5),  permanent: false },
+                  { title: 'Dad\'s birthday gift',     date: inDays(14), permanent: false },
+                  { title: 'Always carry water bottle', date: '',         permanent: true  },
+                ];
+                const useTemplate = () => {
+                  const baseId = Date.now();
+                  setReminders(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, title: s.title, date: s.date, notes: '', permanent: s.permanent }))]);
+                };
+                return (
+                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE REMINDERS</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Stay on top of important dates and pinned notes.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Pin notes that stay forever (📌), or set dated reminders that count down to "today" automatically.</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                      {samples.map((s, i) => (
+                        <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:`2px solid ${s.permanent?"#00c8ff":"rgba(0,200,255,0.4)"}`,borderRadius:"3px"}}>
+                          {s.permanent && <div style={{fontSize:"8px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>📌 PINNED</div>}
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.title}</div>
+                          {!s.permanent && <div style={{fontSize:"9px",color:"rgba(0,200,255,0.65)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"1px"}}>IN {Math.round((new Date(s.date) - today)/(86400000))} DAYS</div>}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={addReminder} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {sortedReminders.map(reminder => {
                 const diff = getReminderDiff(reminder.date);
@@ -5064,9 +5094,37 @@ ${JSON.stringify(ctx, null, 2)}`;
             <>
               <button onClick={addBirthday} style={{width:"100%",padding:"12px",background:"rgba(236,72,153,0.06)",border:"0.5px dashed rgba(236,72,153,0.3)",borderRadius:"6px",color:"rgba(236,72,153,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD BIRTHDAY</button>
 
-              {sortedBirthdays.length === 0 && (
-                <div style={{padding:"40px",textAlign:"center",color:"rgba(236,72,153,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(236,72,153,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>NO BIRTHDAYS — ADD ONE ABOVE</div>
-              )}
+              {sortedBirthdays.length === 0 && (() => {
+                const samples = [
+                  { name: 'Mum',        date: '1962-08-12', category: 'family' },
+                  { name: 'Dad',        date: '1960-03-04', category: 'family' },
+                  { name: 'Sarah',      date: '1996-11-22', category: 'friend' },
+                  { name: 'Liam',       date: '1995-06-18', category: 'friend' },
+                ];
+                const useTemplate = () => {
+                  const baseId = Date.now();
+                  setBirthdays(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, name: s.name, date: s.date, category: s.category }))]);
+                };
+                return (
+                  <div style={{border:"1px solid rgba(236,72,153,0.4)",borderLeft:"2px solid rgba(236,72,153,0.9)",borderRadius:"6px",padding:"14px",background:"rgba(236,72,153,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"rgba(236,72,153,0.9)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · SAMPLE BIRTHDAYS</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Never forget a birthday again.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Add family + friends. The app sorts by who's coming up next.</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
+                      {samples.map((s, i) => (
+                        <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(236,72,153,0.15)",borderRadius:"3px"}}>
+                          <span style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.category === 'family' ? '👪' : '🎂'} {s.name}</span>
+                          <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(236,72,153,0.75)"}}>{new Date(s.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(236,72,153,0.18)",border:"1px solid rgba(236,72,153,0.7)",borderRadius:"4px",color:"rgba(236,72,153,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={addBirthday} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {sortedBirthdays.map(bday => {
                 const diff = getBdayDiff(bday.date);
@@ -5308,9 +5366,58 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                 {/* Items */}
                 <div style={{padding:"10px 16px",minHeight:"55vh",display:"flex",flexDirection:"column",gap:"2px"}}>
-                  {items.length === 0 && (
-                    <div style={{color:"rgba(148,163,184,0.2)",fontFamily:"system-ui",fontSize:"15px",padding:"8px 0"}}>Tap + to add a task...</div>
-                  )}
+                  {items.length === 0 && (() => {
+                    // Tailored sample tasks per built-in tab
+                    const samplesByTab = {
+                      daily: [
+                        { text: 'Drink water — 2L', checked: true },
+                        { text: 'Morning workout', checked: true },
+                        { text: 'Reply to important emails', checked: false },
+                        { text: 'Plan tomorrow', checked: false },
+                      ],
+                      weekly: [
+                        { text: 'Grocery shop', checked: true },
+                        { text: 'Wash car', checked: false },
+                        { text: 'Call parents', checked: false },
+                        { text: 'Review week goals', checked: false },
+                      ],
+                      general: [
+                        { text: 'Renew car rego', checked: false },
+                        { text: 'Get tax records sorted', checked: false },
+                        { text: 'Backup phone photos', checked: false },
+                        { text: 'Book dentist appointment', checked: false },
+                      ],
+                    };
+                    const samples = samplesByTab[tasksSubTab] || samplesByTab.general;
+                    const subtitle = tasksSubTab === 'daily'   ? 'Things you want to do today.'
+                                   : tasksSubTab === 'weekly'  ? 'Things to handle this week.'
+                                   : tasksSubTab === 'general' ? 'One-off tasks that need doing eventually.'
+                                                               : `Add tasks for "${headerLabel}".`;
+                    const useTemplate = () => {
+                      const baseId = Date.now();
+                      const newItems = samples.map((s, i) => ({ id: baseId + i, text: s.text, checked: s.checked, priority: null }));
+                      save(newItems);
+                    };
+                    return (
+                      <div style={{border:`1px solid ${accentColor}55`,borderLeft:`2px solid ${accentColor}`,borderRadius:"6px",padding:"14px",background:`${accentColor}08`,marginBottom:"8px"}}>
+                        <div style={{fontSize:"10px",color:accentColor,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · NOT YOUR TASKS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>{subtitle}</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1.5}}>Tap the circle to check off. Press Enter to add another. × to delete.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.85}}>
+                          {samples.map((s, i) => (
+                            <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0"}}>
+                              <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px solid ${s.checked?accentColor:"rgba(148,163,184,0.3)"}`,background:s.checked?accentColor:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#0a0e1a",fontWeight:700}}>{s.checked?'✓':''}</div>
+                              <div style={{flex:1,fontSize:"14px",fontFamily:"system-ui",color:s.checked?"rgba(148,163,184,0.5)":"rgba(224,234,255,0.85)",textDecoration:s.checked?"line-through":"none"}}>{s.text}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${accentColor}26`,border:`1px solid ${accentColor}99`,borderRadius:"4px",color:accentColor,fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={addItem} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Unchecked */}
                   {unchecked.map(item => (
@@ -5384,6 +5491,55 @@ ${JSON.stringify(ctx, null, 2)}`;
                 ])} style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(251,191,36,0.2)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>RESET</button>
               </div>
               <div>
+                {dailyRotation.length === 0 && (() => {
+                  const useTemplate = () => setDailyRotation([
+                    {time:'6am',activity:'Wake + water'},
+                    {time:'7am',activity:'Gym'},
+                    {time:'8am',activity:'Breakfast + shower'},
+                    {time:'9am',activity:'Deep work'},
+                    {time:'10am',activity:'Deep work'},
+                    {time:'11am',activity:'Emails + admin'},
+                    {time:'12pm',activity:'Lunch + walk'},
+                    {time:'1pm',activity:'Meetings'},
+                    {time:'2pm',activity:'Focused project'},
+                    {time:'3pm',activity:'Focused project'},
+                    {time:'4pm',activity:'Wrap up + planning'},
+                    {time:'5pm',activity:'Errands'},
+                    {time:'6pm',activity:'Dinner'},
+                    {time:'7pm',activity:'Family / friends'},
+                    {time:'8pm',activity:'Reading'},
+                    {time:'9pm',activity:'Wind down'},
+                    {time:'10pm',activity:'Sleep'},
+                    {time:'11pm',activity:'-'},
+                    {time:'12am',activity:'-'},
+                  ]);
+                  const startFresh = () => setDailyRotation([
+                    {time:'6am',activity:'-'},{time:'7am',activity:'-'},{time:'8am',activity:'-'},{time:'9am',activity:'-'},
+                    {time:'10am',activity:'-'},{time:'11am',activity:'-'},{time:'12pm',activity:'-'},{time:'1pm',activity:'-'},
+                    {time:'2pm',activity:'-'},{time:'3pm',activity:'-'},{time:'4pm',activity:'-'},{time:'5pm',activity:'-'},
+                    {time:'6pm',activity:'-'},{time:'7pm',activity:'-'},{time:'8pm',activity:'-'},{time:'9pm',activity:'-'},
+                    {time:'10pm',activity:'-'},{time:'11pm',activity:'-'},{time:'12am',activity:'-'},
+                  ]);
+                  return (
+                    <div style={{padding:"14px",margin:"12px",border:"1px solid rgba(251,191,36,0.4)",borderLeft:"2px solid rgba(251,191,36,0.9)",borderRadius:"6px",background:"rgba(251,191,36,0.05)"}}>
+                      <div style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · SAMPLE DAY</div>
+                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Map out your ideal day, hour by hour.</div>
+                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Build a routine you can stick to. Each hour gets an activity.</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:"3px",marginBottom:"12px",opacity:0.9}}>
+                        {[['6am','Wake + water'],['9am','Deep work'],['12pm','Lunch + walk'],['3pm','Focused project'],['6pm','Dinner'],['10pm','Sleep']].map(([t,a],i) => (
+                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"6px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"3px"}}>
+                            <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(251,191,36,0.7)",minWidth:"36px"}}>{t}</span>
+                            <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{a}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                        <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(251,191,36,0.18)",border:"1px solid rgba(251,191,36,0.7)",borderRadius:"4px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                        <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH (BLANK ROTATION)</button>
+                      </div>
+                    </div>
+                  );
+                })()}
                 {dailyRotation.map((slot, index) => (
                   <div key={index} style={{display:"flex",alignItems:"center",gap:"12px",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
                     <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",minWidth:"40px",letterSpacing:"0.5px"}}>{slot.time}</span>
@@ -5584,11 +5740,49 @@ ${JSON.stringify(ctx, null, 2)}`;
                     );
                   })}
 
-                  {shoppingLists.length === 0 && (
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px 24px",textAlign:"center"}}>
-                      <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>NO LISTS — CREATE ONE TO START</div>
-                    </div>
-                  )}
+                  {shoppingLists.length === 0 && (() => {
+                    const useTemplate = () => {
+                      const id1 = Date.now().toString();
+                      const id2 = (Date.now() + 1).toString();
+                      const id3 = (Date.now() + 2).toString();
+                      setShoppingLists([
+                        { id: id1, name: 'Weekly Groceries' },
+                        { id: id2, name: 'BBQ Saturday'     },
+                        { id: id3, name: 'Bulk Costco run'  },
+                      ]);
+                      const baseG = Date.now();
+                      setGroceries(prev => [...prev,
+                        { id: baseG + 1, item: 'Milk',         quantity: '2L', listId: id1, subCategory: '', checked: false },
+                        { id: baseG + 2, item: 'Bread',        quantity: '1',  listId: id1, subCategory: '', checked: false },
+                        { id: baseG + 3, item: 'Bananas',      quantity: '6',  listId: id1, subCategory: '', checked: false },
+                        { id: baseG + 4, item: 'Chicken breast', quantity:'1kg', listId: id1, subCategory:'', checked: false },
+                        { id: baseG + 5, item: 'Coffee beans', quantity: '500g',listId: id1, subCategory: '', checked: false },
+                        { id: baseG + 6, item: 'Sausages',     quantity: '12', listId: id2, subCategory: '', checked: false },
+                        { id: baseG + 7, item: 'Burger patties',quantity:'8',  listId: id2, subCategory: '', checked: false },
+                        { id: baseG + 8, item: 'Beer (case)',  quantity: '1',  listId: id2, subCategory: '', checked: false },
+                      ]);
+                    };
+                    const startFresh = () => setShoppingLists(prev => [...prev, { id: Date.now().toString(), name: 'My List' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE LISTS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Shopping lists for different trips — groceries, parties, bulk runs.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Tap a list to add items. Tick them off as you shop.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {['Weekly Groceries · 5 items','BBQ Saturday · 3 items','Bulk Costco run · empty'].map((s, i) => (
+                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                              <span style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.split(' · ')[0]}</span>
+                              <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{s.split(' · ')[1]}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </>
               ) : (() => {
                 /* Detail view for a single list */
@@ -6434,6 +6628,50 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {gymTab === 'plan' && (
             <>
+              {([1,2,3,4].every(w => !(workoutPlan.weeks?.[w]?.exercises||[]).length && !(workoutPlan.weeks?.[w]?.name))) && (() => {
+                const useTemplate = () => {
+                  const samplePlan = {
+                    1: { name: 'WEEK 1 — UPPER/LOWER SPLIT', exercises: [
+                      { id: Date.now()+1,  amount: '4x8',  name: 'Bench Press',     details: '' },
+                      { id: Date.now()+2,  amount: '4x10', name: 'Bent-Over Rows',  details: '' },
+                      { id: Date.now()+3,  amount: '3x12', name: 'Overhead Press',  details: '' },
+                      { id: Date.now()+4,  amount: '3x12', name: 'Pull-Ups',        details: '' },
+                    ]},
+                    2: { name: 'WEEK 2 — LEGS', exercises: [
+                      { id: Date.now()+5,  amount: '4x6',  name: 'Squats',          details: '' },
+                      { id: Date.now()+6,  amount: '3x8',  name: 'Romanian Deadlifts', details: '' },
+                      { id: Date.now()+7,  amount: '3x12', name: 'Leg Press',       details: '' },
+                      { id: Date.now()+8,  amount: '4x15', name: 'Calf Raises',     details: '' },
+                    ]},
+                    3: { name: 'WEEK 3 — PUSH', exercises: [
+                      { id: Date.now()+9,  amount: '4x8',  name: 'Incline Bench',   details: '' },
+                      { id: Date.now()+10, amount: '3x10', name: 'Dumbbell Press',  details: '' },
+                      { id: Date.now()+11, amount: '3x12', name: 'Tricep Dips',     details: '' },
+                      { id: Date.now()+12, amount: '3x15', name: 'Lateral Raises',  details: '' },
+                    ]},
+                    4: { name: 'WEEK 4 — PULL', exercises: [
+                      { id: Date.now()+13, amount: '4x6',  name: 'Deadlifts',       details: '' },
+                      { id: Date.now()+14, amount: '4x10', name: 'Barbell Rows',    details: '' },
+                      { id: Date.now()+15, amount: '3x10', name: 'Lat Pulldowns',   details: '' },
+                      { id: Date.now()+16, amount: '3x12', name: 'Bicep Curls',     details: '' },
+                    ]},
+                  };
+                  setWorkoutPlan(prev => ({ ...prev, weeks: samplePlan }));
+                };
+                return (
+                  <div style={{border:"1px solid rgba(139,92,246,0.4)",borderLeft:"2px solid rgba(139,92,246,0.9)",borderRadius:"6px",padding:"14px",background:"rgba(139,92,246,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"rgba(139,92,246,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · SAMPLE 4-WEEK PLAN</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>4-week training program — upper/lower/push/pull split.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Each week gets a focus. Exercises with sets × reps. Tweak from there.</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                      {['WEEK 1 · Upper/Lower · 4 exercises','WEEK 2 · Legs · 4 exercises','WEEK 3 · Push · 4 exercises','WEEK 4 · Pull · 4 exercises'].map((s, i) => (
+                        <div key={i} style={{padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(139,92,246,0.15)",borderLeft:"2px solid rgba(139,92,246,0.5)",borderRadius:"3px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{s}</div>
+                      ))}
+                    </div>
+                    <button onClick={useTemplate} style={{width:"100%",padding:"12px",background:"rgba(139,92,246,0.18)",border:"1px solid rgba(139,92,246,0.7)",borderRadius:"4px",color:"rgba(139,92,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                  </div>
+                );
+              })()}
               {[1,2,3,4].map(week => (
                 <div key={week} style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(139,92,246,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(139,92,246,0.6)",overflow:"hidden",backgroundImage:"radial-gradient(rgba(139,92,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(139,92,246,0.15)",background:"rgba(139,92,246,0.06)"}}>
@@ -9741,6 +9979,63 @@ ${JSON.stringify(ctx, null, 2)}`;
               <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.name} Bills</h2>
             </div>
             <div style={{padding:"12px"}}>
+              {currentSubs.length === 0 && (() => {
+                // Sample bills tailored to bucket type
+                const isBusinessBucket = activeBucket.id === 'bucket_business';
+                const isHomeBucket = activeBucket.id === 'bucket_home';
+                const samples = isBusinessBucket ? [
+                  { name: 'Office rent',         monthly: 1800, dueDate: '1st'  },
+                  { name: 'Software licenses',   monthly: 250,  dueDate: '15th' },
+                  { name: 'Accountant',          monthly: 350,  dueDate: '20th' },
+                  { name: 'Phone & internet',    monthly: 120,  dueDate: '7th'  },
+                  { name: 'Insurance',           monthly: 200,  dueDate: '28th' },
+                ] : isHomeBucket ? [
+                  { name: 'Rent / Mortgage',     monthly: 2400, dueDate: '1st'  },
+                  { name: 'Electricity',         monthly: 180,  dueDate: '14th' },
+                  { name: 'Internet',            monthly: 80,   dueDate: '23rd' },
+                  { name: 'Water',               monthly: 60,   dueDate: '10th' },
+                  { name: 'Council rates',       monthly: 150,  dueDate: '20th' },
+                ] : [
+                  { name: 'Netflix',             monthly: 18,   dueDate: '12th' },
+                  { name: 'Spotify',             monthly: 13,   dueDate: '5th'  },
+                  { name: 'Gym',                 monthly: 65,   dueDate: '1st'  },
+                  { name: 'Phone',               monthly: 55,   dueDate: '20th' },
+                  { name: 'Car insurance',       monthly: 120,  dueDate: '15th' },
+                ];
+                const sampleTotal = samples.reduce((s, x) => s + x.monthly, 0);
+                const useTemplate = () => {
+                  const newBills = samples.map(s => ({ id: Date.now() + Math.random(), name: s.name, monthly: s.monthly, monthlyStr: String(s.monthly), dueDate: s.dueDate, dateAdded: new Date().toISOString() }));
+                  updateBucketBills(activeBucket.id, newBills);
+                };
+                const startFresh = () => addBillToBucket(activeBucket.id);
+                return (
+                  <div style={{border:`1px solid ${bucketAccent}33`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px",background:`${bucketAccent}05`}}>
+                    <div style={{padding:"12px 14px 8px",borderBottom:`0.5px solid ${bucketAccent}1a`}}>
+                      <div style={{fontSize:"10px",color:bucketAccent,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · NOT YOUR DATA</div>
+                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track {activeBucket.name.toLowerCase()} bills — see where your {isBusinessBucket?'revenue':'income'} goes each month.</div>
+                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5}}>Add bill name, monthly cost, and the day it's due. The app shows totals across daily/weekly/monthly/annual breakdowns.</div>
+                    </div>
+                    <div style={{padding:"10px 14px"}}>
+                      {samples.map((s, i) => (
+                        <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"6px 0",borderBottom:i<samples.length-1?"0.5px solid rgba(255,255,255,0.04)":"none",alignItems:"center",fontFamily:"monospace",fontSize:"12px",opacity:0.85}}>
+                          <div style={{color:"rgba(224,234,255,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                          <div style={{color:bucketAccent,textAlign:"right"}}>${s.monthly}/mo</div>
+                          <div style={{color:"rgba(148,163,184,0.55)",textAlign:"right",fontSize:"10px"}}>{s.dueDate}</div>
+                        </div>
+                      ))}
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 80px 50px",gap:"10px",padding:"8px 0 4px",borderTop:`0.5px solid ${bucketAccent}33`,marginTop:"4px",alignItems:"center",fontFamily:"monospace",fontSize:"12px",fontWeight:600}}>
+                        <div style={{color:"rgba(224,234,255,0.95)"}}>TOTAL</div>
+                        <div style={{color:bucketAccent,textAlign:"right"}}>${sampleTotal}/mo</div>
+                        <div></div>
+                      </div>
+                    </div>
+                    <div style={{padding:"10px 14px 12px",borderTop:`0.5px solid ${bucketAccent}1a`,display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:`${bucketAccent}26`,border:`1px solid ${bucketAccent}99`,borderRadius:"4px",color:bucketAccent,fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                    </div>
+                  </div>
+                );
+              })()}
               <div style={{overflowX:'auto'}}>
               <div style={{display:"flex",flexDirection:"column",gap:"6px",minWidth:"420px"}}>
                 {currentSubs.map((sub, index) => (
@@ -10475,6 +10770,45 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
                 <div className="p-4 space-y-4">
+                  {billSmallGoals.length === 0 && (() => {
+                    const samples = [
+                      { name: 'Emergency fund',      target: 5000, current: 1800 },
+                      { name: 'New laptop',          target: 2500, current: 600  },
+                      { name: 'Weekend Sydney trip', target: 1200, current: 400  },
+                    ];
+                    const useTemplate = () => {
+                      setBillSmallGoals(samples.map(s => ({ name: s.name, target: s.target, targetStr: String(s.target), current: s.current, currentStr: String(s.current) })));
+                    };
+                    const startFresh = () => setBillSmallGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE GOALS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Short-term savings goals — under $10k, achievable in months.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Set a target, track your progress. The bar fills as you save.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => {
+                            const pct = Math.min((s.current / s.target) * 100, 100);
+                            return (
+                              <div key={i}>
+                                <div style={{display:"flex",justifyContent:"space-between",fontFamily:"monospace",fontSize:"11px",marginBottom:"4px"}}>
+                                  <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                  <span style={{color:"#00c8ff"}}>${s.current.toLocaleString()} / ${s.target.toLocaleString()}</span>
+                                </div>
+                                <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"3px",overflow:"hidden"}}>
+                                  <div style={{height:"100%",width:`${pct}%`,background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)"}} />
+                                </div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"1px"}}>{pct.toFixed(0)}%</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {billSmallGoals.map((goal, index) => {
                     const target = goal?.target || 0;
                     const current = goal?.current || 0;
@@ -10574,6 +10908,45 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
                 </div>
                 <div className="p-4 space-y-4">
+                  {billBigGoals.length === 0 && (() => {
+                    const samples = [
+                      { name: 'House deposit',     target: 80000,  current: 22000 },
+                      { name: 'Pay off car loan',  target: 25000,  current: 9000  },
+                      { name: 'Retire by 50',      target: 500000, current: 45000 },
+                    ];
+                    const useTemplate = () => {
+                      setBillBigGoals(samples.map(s => ({ name: s.name, target: s.target, targetStr: String(s.target), current: s.current, currentStr: String(s.current) })));
+                    };
+                    const startFresh = () => setBillBigGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE GOALS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Long-term targets — house deposit, debt freedom, retirement.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Years-long milestones. Track the slow climb.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => {
+                            const pct = Math.min((s.current / s.target) * 100, 100);
+                            return (
+                              <div key={i}>
+                                <div style={{display:"flex",justifyContent:"space-between",fontFamily:"monospace",fontSize:"11px",marginBottom:"4px"}}>
+                                  <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                  <span style={{color:"#00c8ff"}}>${(s.current/1000).toFixed(1)}k / ${(s.target/1000).toFixed(0)}k</span>
+                                </div>
+                                <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"3px",overflow:"hidden"}}>
+                                  <div style={{height:"100%",width:`${pct}%`,background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)"}} />
+                                </div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"1px"}}>{pct.toFixed(0)}%</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {billBigGoals.map((goal, index) => {
                     const target = goal?.target || 0;
                     const current = goal?.current || 0;
@@ -10886,6 +11259,47 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div className="p-4 space-y-4">
+                    {personalDebts.length === 0 && (() => {
+                      const samples = [
+                        { name: 'Credit card',         total: 4500,  paid: 1200 },
+                        { name: 'Car loan',            total: 18000, paid: 6500 },
+                        { name: 'Afterpay balance',    total: 800,   paid: 200  },
+                      ];
+                      const useTemplate = () => {
+                        const baseId = Date.now();
+                        setDebts(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, type: 'personal', name: s.name, total: s.total, totalStr: String(s.total), paid: s.paid, paidStr: String(s.paid) }))]);
+                      };
+                      const startFresh = () => addDebt('personal');
+                      return (
+                        <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                          <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE DEBTS</div>
+                          <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track personal debts — see what you owe and what you've paid off.</div>
+                          <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Total borrowed minus what's paid. Watch the bar shrink as you knock them down.</div>
+                          <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
+                            {samples.map((s, i) => {
+                              const remaining = s.total - s.paid;
+                              const pct = Math.min((s.paid / s.total) * 100, 100);
+                              return (
+                                <div key={i}>
+                                  <div style={{display:"flex",justifyContent:"space-between",fontFamily:"monospace",fontSize:"11px",marginBottom:"4px"}}>
+                                    <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                    <span style={{color:"rgba(239,68,68,0.9)"}}>${remaining.toLocaleString()} left</span>
+                                  </div>
+                                  <div style={{height:"6px",background:"rgba(239,68,68,0.15)",borderRadius:"3px",overflow:"hidden"}}>
+                                    <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.85)"}} />
+                                  </div>
+                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"1px"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          </div>
+                        </div>
+                      );
+                    })()}
                     {personalDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('personal')}
@@ -10907,6 +11321,46 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div className="p-4 space-y-4">
+                    {businessDebts.length === 0 && (() => {
+                      const samples = [
+                        { name: 'Equipment finance',    total: 35000, paid: 12000 },
+                        { name: 'Business line of credit', total: 15000, paid: 5500 },
+                      ];
+                      const useTemplate = () => {
+                        const baseId = Date.now();
+                        setDebts(prev => [...prev, ...samples.map((s, i) => ({ id: baseId + i, type: 'business', name: s.name, total: s.total, totalStr: String(s.total), paid: s.paid, paidStr: String(s.paid) }))]);
+                      };
+                      const startFresh = () => addDebt('business');
+                      return (
+                        <div style={{border:"1px solid rgba(168,85,247,0.4)",borderLeft:"2px solid rgba(168,85,247,0.9)",borderRadius:"6px",padding:"14px",background:"rgba(168,85,247,0.05)"}}>
+                          <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · BUSINESS DEBTS</div>
+                          <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track debts owed by the business — equipment finance, lines of credit.</div>
+                          <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Keep separate from personal debt to track business cashflow accurately.</div>
+                          <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
+                            {samples.map((s, i) => {
+                              const remaining = s.total - s.paid;
+                              const pct = Math.min((s.paid / s.total) * 100, 100);
+                              return (
+                                <div key={i}>
+                                  <div style={{display:"flex",justifyContent:"space-between",fontFamily:"monospace",fontSize:"11px",marginBottom:"4px"}}>
+                                    <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                    <span style={{color:"rgba(239,68,68,0.9)"}}>${remaining.toLocaleString()} left</span>
+                                  </div>
+                                  <div style={{height:"6px",background:"rgba(239,68,68,0.15)",borderRadius:"3px",overflow:"hidden"}}>
+                                    <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.85)"}} />
+                                  </div>
+                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"1px"}}>{pct.toFixed(0)}% paid · ${s.paid.toLocaleString()} / ${s.total.toLocaleString()}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                            <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(168,85,247,0.18)",border:"1px solid rgba(168,85,247,0.7)",borderRadius:"4px",color:"rgba(168,85,247,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                            <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                          </div>
+                        </div>
+                      );
+                    })()}
                     {businessDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('business')}
@@ -11440,6 +11894,52 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* Assets Cards */}
             <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+              {assets.length === 0 && (() => {
+                const samples = [
+                  { name: 'Bank — savings',       category: 'cash',    value: 18500  },
+                  { name: 'Superannuation',       category: 'super',   value: 64000  },
+                  { name: 'Car (Mazda 3)',        category: 'vehicle', value: 14000  },
+                  { name: 'Investment portfolio', category: 'shares',  value: 25500  },
+                  { name: 'Investment property',  category: 'property',value: 620000 },
+                ];
+                const sampleTotal = samples.reduce((s, x) => s + x.value, 0);
+                const useTemplate = () => {
+                  const baseId = Date.now();
+                  setAssets(samples.map((s, i) => ({ id: baseId + i, name: s.name, category: s.category, value: s.value, valueStr: String(s.value), dateAdded: new Date().toISOString() })));
+                };
+                const startFresh = () => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]);
+                const catEmoji = { cash:'💵', super:'🏦', vehicle:'🚗', shares:'📈', property:'🏠' };
+                return (
+                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE ASSETS</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track your total net worth — everything you own.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Cash, super, vehicles, shares, property. The pie chart breaks down where your money lives.</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
+                      {samples.map((s, i) => {
+                        const pct = (s.value / sampleTotal) * 100;
+                        return (
+                          <div key={i} style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px",alignItems:"center",fontFamily:"monospace",fontSize:"11px"}}>
+                            <div style={{fontSize:"14px"}}>{catEmoji[s.category]}</div>
+                            <div style={{color:"rgba(224,234,255,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                            <div style={{color:"#00c8ff",textAlign:"right"}}>${s.value.toLocaleString()}</div>
+                            <div style={{color:"rgba(148,163,184,0.6)",textAlign:"right",fontSize:"10px"}}>{pct.toFixed(0)}%</div>
+                          </div>
+                        );
+                      })}
+                      <div style={{display:"grid",gridTemplateColumns:"24px 1fr 100px 50px",gap:"8px",padding:"8px 10px",borderTop:"0.5px solid rgba(0,200,255,0.3)",marginTop:"2px",alignItems:"center",fontFamily:"monospace",fontSize:"11px",fontWeight:600}}>
+                        <div></div>
+                        <div style={{color:"rgba(224,234,255,0.95)",letterSpacing:"1px"}}>NET WORTH</div>
+                        <div style={{color:"#00c8ff",textAlign:"right"}}>${sampleTotal.toLocaleString()}</div>
+                        <div></div>
+                      </div>
+                    </div>
+                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                    </div>
+                  </div>
+                );
+              })()}
               {assets.map((asset, index) => (
                 <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                   {/* Row 1: Name + Delete */}
@@ -12151,12 +12651,57 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </button>
                 </div>
 
-                {rootNodes.length === 0 && (
-                  <button
-                    onClick={() => setAssetMapNodes([{ id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }])}
-                    style={{width:"100%",padding:"12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
-                  >+ CREATE ASSET MAP</button>
-                )}
+                {rootNodes.length === 0 && (() => {
+                  const useTemplate = () => {
+                    // Family trust style tree: You -> Trust -> {Property, Shares, Cash}
+                    const baseId = Date.now();
+                    const nodes = [
+                      { id: 'root',                       name: 'You',                  emoji: '👤', parentId: null  },
+                      { id: (baseId+1).toString(),        name: 'Family Trust',         emoji: '🛡️', parentId: 'root' },
+                      { id: (baseId+2).toString(),        name: 'Investment Property',  emoji: '🏠', parentId: (baseId+1).toString() },
+                      { id: (baseId+3).toString(),        name: 'Share Portfolio',      emoji: '📈', parentId: (baseId+1).toString() },
+                      { id: (baseId+4).toString(),        name: 'Cash Holdings',        emoji: '💵', parentId: (baseId+1).toString() },
+                      { id: (baseId+5).toString(),        name: 'Super Fund',           emoji: '🏦', parentId: 'root' },
+                      { id: (baseId+6).toString(),        name: 'Personal Bank',        emoji: '💳', parentId: 'root' },
+                    ];
+                    setAssetMapNodes(nodes);
+                  };
+                  const startFresh = () => setAssetMapNodes([{ id: 'root', name: 'My Assets', emoji: '🏠', parentId: null }]);
+                  return (
+                    <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                      <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE STRUCTURE</div>
+                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Map how your wealth is structured — entities, trusts, holdings.</div>
+                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Trust hierarchies, ownership chains. Great for visualising dynasty wealth structures.</div>
+                      <div style={{padding:"16px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"4px",marginBottom:"12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.8)",opacity:0.9}}>
+                        <div style={{textAlign:"center"}}>
+                          <div style={{padding:"6px 12px",background:"rgba(0,200,255,0.1)",border:"0.5px solid rgba(0,200,255,0.3)",borderLeft:"2px solid rgba(0,200,255,0.6)",borderRadius:"3px",display:"inline-block"}}>👤 You</div>
+                        </div>
+                        <div style={{textAlign:"center",color:"rgba(0,200,255,0.3)",margin:"3px 0"}}>│</div>
+                        <div style={{display:"flex",justifyContent:"center",gap:"24px",flexWrap:"wrap"}}>
+                          <div style={{textAlign:"center"}}>
+                            <div style={{padding:"6px 10px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"3px"}}>🛡️ Family Trust</div>
+                            <div style={{color:"rgba(0,200,255,0.25)",margin:"3px 0"}}>│</div>
+                            <div style={{display:"flex",flexDirection:"column",gap:"3px",alignItems:"center"}}>
+                              <div style={{padding:"4px 8px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",fontSize:"10px"}}>🏠 Property</div>
+                              <div style={{padding:"4px 8px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",fontSize:"10px"}}>📈 Shares</div>
+                              <div style={{padding:"4px 8px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",fontSize:"10px"}}>💵 Cash</div>
+                            </div>
+                          </div>
+                          <div style={{textAlign:"center"}}>
+                            <div style={{padding:"6px 10px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"3px"}}>🏦 Super</div>
+                          </div>
+                          <div style={{textAlign:"center"}}>
+                            <div style={{padding:"6px 10px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"3px"}}>💳 Bank</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                        <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                        <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",padding:"14px 16px",overflowX:"auto",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{display:"flex",justifyContent:"center",minWidth:"fit-content"}}>
@@ -12669,6 +13214,50 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                 {/* Stocks Cards */}
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {stocks.length === 0 && (() => {
+                    const samples = [
+                      { name: 'VAS (Vanguard AU Shares)', invested: 8000,  currentValue: 9200,  industry: 'etf'        },
+                      { name: 'VGS (Vanguard Intl)',      invested: 6000,  currentValue: 7100,  industry: 'etf'        },
+                      { name: 'CSL Limited',              invested: 4000,  currentValue: 4350,  industry: 'healthcare' },
+                      { name: 'Commonwealth Bank',        invested: 3500,  currentValue: 3850,  industry: 'finance'    },
+                    ];
+                    const totalInv = samples.reduce((s, x) => s + x.invested, 0);
+                    const totalVal = samples.reduce((s, x) => s + x.currentValue, 0);
+                    const useTemplate = () => {
+                      const baseId = Date.now();
+                      setStocks(samples.map((s, i) => ({ id: baseId + i, name: s.name, invested: s.invested, investedStr: String(s.invested), currentValue: s.currentValue, currentValueStr: String(s.currentValue), industry: s.industry, dateAdded: new Date().toISOString() })));
+                    };
+                    const startFresh = () => setStocks([{ id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE PORTFOLIO</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track your stock & ETF holdings — see gains, losses, and total portfolio value.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Enter what you invested, the current value, and the app calculates returns + breaks down by stock and industry.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => {
+                            const g = s.currentValue - s.invested;
+                            const gp = (g / s.invested) * 100;
+                            return (
+                              <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 90px 80px",gap:"8px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px",alignItems:"center",fontFamily:"monospace",fontSize:"11px"}}>
+                                <div style={{color:"rgba(224,234,255,0.85)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                                <div style={{color:"rgba(148,163,184,0.7)",textAlign:"right",fontSize:"10px"}}>${s.currentValue.toLocaleString()}</div>
+                                <div style={{color:g>=0?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)",textAlign:"right",fontWeight:600,fontSize:"10px"}}>{g>=0?'+':''}{gp.toFixed(1)}%</div>
+                              </div>
+                            );
+                          })}
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 90px 80px",gap:"8px",padding:"8px 10px",borderTop:"0.5px solid rgba(0,200,255,0.3)",marginTop:"2px",alignItems:"center",fontFamily:"monospace",fontSize:"11px",fontWeight:600}}>
+                            <div style={{color:"rgba(224,234,255,0.95)",letterSpacing:"1px"}}>TOTAL</div>
+                            <div style={{color:"#00c8ff",textAlign:"right"}}>${totalVal.toLocaleString()}</div>
+                            <div style={{color:totalVal>=totalInv?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)",textAlign:"right"}}>{totalVal>=totalInv?'+':''}{(((totalVal-totalInv)/totalInv)*100).toFixed(1)}%</div>
+                          </div>
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {stocks.map((stock, index) => {
                     const gainLoss = (stock?.currentValue || 0) - (stock?.invested || 0);
                     const gainLossPercent = stock?.invested > 0 ? ((gainLoss / stock.invested) * 100) : 0;
@@ -13260,6 +13849,34 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Research stocks you're considering for your portfolio</p>
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {futureResearch.length === 0 && (() => {
+                    const samples = [
+                      { ticker: 'GOOG',   notes: 'AI tailwind, search moat, advertising dominance' },
+                      { ticker: 'AXP',    notes: 'Premium spending, network effects'              },
+                      { ticker: 'V',      notes: 'Payment rails, scaling globally'                },
+                    ];
+                    const useTemplate = () => setFutureResearch(samples);
+                    const startFresh = () => setFutureResearch(prev => [...prev, { ticker: '', notes: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · WATCHLIST</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Stocks you're researching to potentially buy.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Build conviction before allocating capital. Track the thesis for each candidate.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => (
+                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",fontWeight:600,color:"#e0eaff",marginBottom:"4px"}}>{s.ticker}</div>
+                              <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",lineHeight:1.5}}>{s.notes}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {futureResearch.map((holding, index) => (
                     <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
@@ -14011,6 +14628,34 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
 
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {holdingsResearch.length === 0 && (() => {
+                    const samples = [
+                      { ticker: 'BRK.B', notes: 'Buffett moat, durable competitive advantage' },
+                      { ticker: 'COST',  notes: 'Membership economics, customer loyalty'    },
+                      { ticker: 'AAPL',  notes: 'Ecosystem lock-in, services growing'      },
+                    ];
+                    const useTemplate = () => setHoldingsResearch(samples);
+                    const startFresh = () => setHoldingsResearch(prev => [...prev, { ticker: '', notes: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · RESEARCH NOTES</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Research notes on companies you own — what's the thesis?</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Why you bought, what would change your mind, key moats. Customize the columns to fit your framework.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => (
+                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",fontWeight:600,color:"#e0eaff",marginBottom:"4px"}}>{s.ticker}</div>
+                              <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",lineHeight:1.5}}>{s.notes}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {holdingsResearch.map((holding, index) => (
                     <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
@@ -14234,6 +14879,34 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {companyEconomics.length === 0 && (() => {
+                    const samples = [
+                      { ticker: 'COST', metric: 'ROE 28%, ROIC 22%, debt/equity 0.4'  },
+                      { ticker: 'BRK.B',metric: 'Book value $400/share, $325B cash pile' },
+                      { ticker: 'AAPL', metric: 'Gross margin 45%, FCF $100B+ annual' },
+                    ];
+                    const useTemplate = () => setCompanyEconomics(samples);
+                    const startFresh = () => setCompanyEconomics(prev => [...prev, { ticker: '', metric: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · ECONOMIC METRICS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track the underlying business economics of companies you follow.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>ROE, ROIC, margins, debt levels — the Buffett/Munger lens. Add custom columns to fit your framework.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => (
+                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",fontWeight:600,color:"#e0eaff",marginBottom:"4px"}}>{s.ticker}</div>
+                              <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",lineHeight:1.5}}>{s.metric}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {companyEconomics.map((company, index) => (
                     <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
@@ -14367,6 +15040,34 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {biggestRisks.length === 0 && (() => {
+                    const samples = [
+                      { ticker: 'PLTR', risk: 'Moat erosion if open-source ontologies mature' },
+                      { ticker: 'TSLA', risk: 'Key-person dependency, Musk attention split'   },
+                      { ticker: 'META', risk: 'Regulatory action on data + advertising'      },
+                    ];
+                    const useTemplate = () => setBiggestRisks(samples);
+                    const startFresh = () => setBiggestRisks(prev => [...prev, { ticker: '', risk: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(239,68,68,0.4)",borderLeft:"2px solid rgba(239,68,68,0.9)",borderRadius:"6px",padding:"14px",background:"rgba(239,68,68,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · WHAT COULD GO WRONG</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>What could kill the thesis for each holding?</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>The pre-mortem. Identify killer risks early. If one materialises, you already know to act.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => (
+                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(239,68,68,0.15)",borderLeft:"2px solid rgba(239,68,68,0.5)",borderRadius:"3px"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",fontWeight:600,color:"#e0eaff",marginBottom:"4px"}}>{s.ticker}</div>
+                              <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",lineHeight:1.5}}>{s.risk}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(239,68,68,0.18)",border:"1px solid rgba(239,68,68,0.7)",borderRadius:"4px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {biggestRisks.map((risk, index) => (
                     <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
@@ -14459,6 +15160,43 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Short-term investment targets</p>
                 </div>
                 <div className="p-4 space-y-4">
+                  {investmentSmallGoals.length === 0 && (() => {
+                    const samples = [
+                      { name: 'Hit $10k portfolio value', target: 10000, current: 3200  },
+                      { name: 'Reach $5k in VAS',         target: 5000,  current: 2100  },
+                      { name: 'First $1k in dividends',   target: 1000,  current: 250   },
+                    ];
+                    const useTemplate = () => setInvestmentSmallGoals(samples.map(s => ({ name: s.name, target: s.target, targetStr: String(s.target), current: s.current, currentStr: String(s.current) })));
+                    const startFresh = () => setInvestmentSmallGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE GOALS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Short-term investment milestones — under 12 months.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Portfolio value milestones, dividend targets, specific holding sizes.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => {
+                            const pct = Math.min((s.current / s.target) * 100, 100);
+                            return (
+                              <div key={i}>
+                                <div style={{display:"flex",justifyContent:"space-between",fontFamily:"monospace",fontSize:"11px",marginBottom:"4px"}}>
+                                  <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                  <span style={{color:"#00c8ff"}}>${s.current.toLocaleString()} / ${s.target.toLocaleString()}</span>
+                                </div>
+                                <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"3px",overflow:"hidden"}}>
+                                  <div style={{height:"100%",width:`${pct}%`,background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)"}} />
+                                </div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"1px"}}>{pct.toFixed(0)}%</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {investmentSmallGoals.map((goal, index) => {
                     const target = goal?.target || 0;
                     const current = goal?.current || 0;
@@ -14558,6 +15296,43 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Long-term investment targets</p>
                 </div>
                 <div className="p-4 space-y-4">
+                  {investmentBigGoals.length === 0 && (() => {
+                    const samples = [
+                      { name: 'Hit $100k portfolio',     target: 100000, current: 32000  },
+                      { name: 'Build $500k passive',     target: 500000, current: 45000  },
+                      { name: 'FI/RE at age 50',         target: 1500000,current: 180000 },
+                    ];
+                    const useTemplate = () => setInvestmentBigGoals(samples.map(s => ({ name: s.name, target: s.target, targetStr: String(s.target), current: s.current, currentStr: String(s.current) })));
+                    const startFresh = () => setInvestmentBigGoals([{ name: '', target: 0, targetStr: '', current: 0, currentStr: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE GOALS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Long-term wealth milestones — years to decades.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Net worth targets, financial independence, retirement number.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => {
+                            const pct = Math.min((s.current / s.target) * 100, 100);
+                            return (
+                              <div key={i}>
+                                <div style={{display:"flex",justifyContent:"space-between",fontFamily:"monospace",fontSize:"11px",marginBottom:"4px"}}>
+                                  <span style={{color:"rgba(224,234,255,0.85)"}}>{s.name}</span>
+                                  <span style={{color:"#00c8ff"}}>${(s.current/1000).toFixed(0)}k / ${(s.target/1000).toFixed(0)}k</span>
+                                </div>
+                                <div style={{height:"6px",background:"rgba(255,255,255,0.05)",borderRadius:"3px",overflow:"hidden"}}>
+                                  <div style={{height:"100%",width:`${pct}%`,background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)"}} />
+                                </div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px",letterSpacing:"1px"}}>{pct.toFixed(0)}%</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {investmentBigGoals.map((goal, index) => {
                     const target = goal?.target || 0;
                     const current = goal?.current || 0;
@@ -14739,6 +15514,37 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
 
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {declinedCompanies.length === 0 && (() => {
+                    const samples = [
+                      { ticker: 'TSLA', industry: 'Automotive',     reason: 'P/E too high, no margin of safety. Reliance on Musk personality risk.' },
+                      { ticker: 'GME',  industry: 'Retail',         reason: 'Dying business model. Speculation, not investing.' },
+                      { ticker: 'AAL',  industry: 'Airlines',       reason: 'Cyclical, capital intensive, low ROIC, high debt.' },
+                    ];
+                    const useTemplate = () => setDeclinedCompanies(samples);
+                    const startFresh = () => setDeclinedCompanies(prev => [...prev, { ticker: '', industry: '', reason: '' }]);
+                    return (
+                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · WHY YOU SAID NO</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Track companies you've passed on — and the reasons why.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Build your "anti-portfolio". When the market shifts, look back and learn from past calls.</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                          {samples.map((s, i) => (
+                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(239,68,68,0.5)",borderRadius:"3px"}}>
+                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
+                                <span style={{fontFamily:"monospace",fontSize:"12px",fontWeight:600,color:"#e0eaff"}}>{s.ticker}</span>
+                                <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.6)",letterSpacing:"1px"}}>{s.industry.toUpperCase()}</span>
+                              </div>
+                              <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.75)",lineHeight:1.5}}>{s.reason}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   {declinedCompanies.map((company, index) => (
                     <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
                       {/* Row 1: Ticker + Delete */}
@@ -16453,12 +17259,43 @@ ${JSON.stringify(ctx, null, 2)}`;
           {/* LIST VIEW */}
           {ttTab==='list' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {timetableBlocks.length===0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"40px 24px",textAlign:"center"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>NO BLOCKS SCHEDULED</div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP "+ ADD BLOCK" TO START</div>
-                </div>
-              )}
+              {timetableBlocks.length===0 && (() => {
+                const samples = [
+                  { title: 'Maths Lecture',     type: 'uni',      day: 'Mon', startHour: 9,    endHour: 10.5, color: '#8b5cf6', location: 'Room 204' },
+                  { title: 'Gym Session',       type: 'gym',      day: 'Mon', startHour: 17,   endHour: 18.5, color: '#22c55e', location: 'PureFit'  },
+                  { title: 'Work Shift',        type: 'work',     day: 'Tue', startHour: 8,    endHour: 16,   color: '#3b82f6', location: 'Office'   },
+                  { title: 'Study Block',       type: 'study',    day: 'Wed', startHour: 14,   endHour: 17,   color: '#f59e0b', location: 'Library'  },
+                  { title: 'Dinner with friends',type: 'personal', day: 'Fri', startHour: 19,   endHour: 21,   color: '#ec4899', location: 'In town'  },
+                ];
+                const useTemplate = () => {
+                  const baseId = Date.now();
+                  setTimetableBlocks(samples.map((s, i) => ({ ...s, id: baseId + i })));
+                };
+                const startFresh = () => setTtTab('add');
+                return (
+                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE WEEK</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Plan your week — uni, work, gym, study, personal.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Block out your time visually. Each type gets its own color across the week grid.</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
+                      {samples.map((s, i) => (
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px"}}>
+                          <div style={{width:"4px",height:"24px",borderRadius:"2px",background:s.color,boxShadow:`0 0 4px ${s.color}99`,flexShrink:0}} />
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.title}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.5px",marginTop:"2px"}}>{s.day} · {fmt12(s.startHour)}–{fmt12(s.endHour)}{s.location?` · ${s.location}`:''}</div>
+                          </div>
+                          <span style={{fontSize:"8px",fontFamily:"monospace",letterSpacing:"1px",padding:"2px 6px",borderRadius:"2px",background:hexToRgba(s.color,0.15),border:`0.5px solid ${hexToRgba(s.color,0.4)}`,color:s.color,flexShrink:0}}>{s.type.toUpperCase()}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                    </div>
+                  </div>
+                );
+              })()}
               {days.map(d=>{
                 const dayBlocks = timetableBlocks.filter(b=>b.day===d).sort((a,b)=>a.startHour-b.startHour);
                 if(!dayBlocks.length) return null;
@@ -25380,11 +26217,45 @@ ${JSON.stringify(ctx, null, 2)}`;
                 style={{width:"100%",padding:"12px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"6px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}
               >+ ADD COUNTDOWN</button>
 
-              {countdowns.length === 0 && (
-                <div style={{padding:"40px",textAlign:"center",color:"rgba(0,200,255,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>
-                  NO COUNTDOWNS — ADD ONE ABOVE
-                </div>
-              )}
+              {countdowns.length === 0 && (() => {
+                const today = new Date();
+                const inDays = (n) => { const d = new Date(today); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; };
+                const samples = [
+                  { name: 'Bali trip',         emoji: '✈️', date: inDays(45)  },
+                  { name: 'My birthday',       emoji: '🎂', date: inDays(120) },
+                  { name: 'Move into new place', emoji:'🏠', date: inDays(8)   },
+                ];
+                const useTemplate = () => {
+                  const baseId = Date.now();
+                  setCountdowns(prev => [...prev, ...samples.map((s, i) => ({ id: (baseId + i).toString(), name: s.name, emoji: s.emoji, date: s.date }))]);
+                };
+                const startFresh = () => setCountdowns(prev => [...prev, {id:Date.now().toString(), name:'', emoji:'✈️', date:''}]);
+                return (
+                  <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
+                    <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · SAMPLE COUNTDOWNS</div>
+                    <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Count down to events you're excited about.</div>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Trips, birthdays, deadlines. The closer the date, the brighter it glows.</div>
+                    <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"1fr",gap:"8px",marginBottom:"12px",opacity:0.9}}>
+                      {samples.map((s, i) => {
+                        const diff = Math.ceil((new Date(s.date) - today) / 86400000);
+                        const color = diff <= 14 ? "rgba(239,68,68,0.9)" : diff <= 60 ? "rgba(251,191,36,0.9)" : "rgba(34,197,94,0.9)";
+                        return (
+                          <div key={i} style={{padding:"14px",background:"rgba(0,0,0,0.25)",border:`0.5px solid ${color}33`,borderLeft:`2px solid ${color}`,borderRadius:"3px",textAlign:"center"}}>
+                            <div style={{fontSize:"24px",marginBottom:"4px"}}>{s.emoji}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)",marginBottom:"6px"}}>{s.name}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"22px",color,fontWeight:600}}>{diff}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>DAYS</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                      <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                      <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {countdowns.map(cd => {
                 const countdown = cd.date ? getCountdown(cd.date) : null;
@@ -25466,9 +26337,40 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
                 <button onClick={() => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}])} style={{width:"100%",padding:"12px",background:"rgba(251,191,36,0.06)",border:"0.5px dashed rgba(251,191,36,0.3)",borderRadius:"6px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD TO BUCKET LIST</button>
 
-                {filteredList.length === 0 && (
-                  <div style={{padding:"40px",textAlign:"center",color:"rgba(251,191,36,0.2)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",border:"0.5px solid rgba(251,191,36,0.1)",borderRadius:"6px",background:"rgba(5,12,24,0.85)"}}>BUCKET LIST EMPTY — ADD YOUR GOALS ABOVE</div>
-                )}
+                {filteredList.length === 0 && (() => {
+                  const samples = [
+                    { text: 'Visit Japan',                emoji: '🗾', category: 'travel'     },
+                    { text: 'Run a marathon',             emoji: '🏃', category: 'fitness'    },
+                    { text: 'Learn to play guitar',       emoji: '🎸', category: 'skill'      },
+                    { text: 'See the northern lights',    emoji: '🌌', category: 'experience' },
+                    { text: 'Skydive',                    emoji: '🪂', category: 'experience' },
+                  ];
+                  const useTemplate = () => {
+                    const baseId = Date.now();
+                    setBucketList(prev => [...prev, ...samples.map((s, i) => ({ id: (baseId + i).toString(), text: s.text, emoji: s.emoji, category: s.category, completed: false }))]);
+                  };
+                  const startFresh = () => setBucketList(prev => [...prev, {id:Date.now().toString(), text:'', emoji:'⭐', category:'experience', completed:false}]);
+                  return (
+                    <div style={{border:"1px solid rgba(251,191,36,0.4)",borderLeft:"2px solid rgba(251,191,36,0.9)",borderRadius:"6px",padding:"14px",background:"rgba(251,191,36,0.05)"}}>
+                      <div style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · SAMPLE BUCKET LIST</div>
+                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Things you want to do before you die.</div>
+                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Travel, fitness, skills, experiences. Tick them off as life happens.</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:"4px",marginBottom:"12px",opacity:0.9}}>
+                        {samples.map((s, i) => (
+                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"3px"}}>
+                            <div style={{width:"18px",height:"18px",borderRadius:"50%",border:"1px solid rgba(251,191,36,0.5)",flexShrink:0}} />
+                            <span style={{fontSize:"16px"}}>{s.emoji}</span>
+                            <span style={{flex:1,fontFamily:"monospace",fontSize:"12px",color:"rgba(224,234,255,0.85)"}}>{s.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
+                        <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(251,191,36,0.18)",border:"1px solid rgba(251,191,36,0.7)",borderRadius:"4px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                        <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {filteredList.filter(b => !b.completed).map(item => {
                   const cfg = categoryConfig[item.category] || categoryConfig.experience;
