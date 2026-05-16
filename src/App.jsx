@@ -1337,6 +1337,340 @@ function FloatingChat() {
   return null;
 }
 
+// ============================================
+// DONNY INTELLIGENCE GRAPH — drag/drop node editor
+// ============================================
+function DonnyIntelGraph({ graph, setGraph, nodeTypes, seedGraph, setActiveView }) {
+  const { nodes = [], edges = [] } = graph;
+  const svgRef = React.useRef(null);
+  const [drag, setDrag] = React.useState(null); // { nodeId, offsetX, offsetY }
+  const [pan, setPan] = React.useState({ x: 0, y: 0 });
+  const [panning, setPanning] = React.useState(null);
+  const [zoom, setZoom] = React.useState(1);
+  const [connectFrom, setConnectFrom] = React.useState(null); // node id we're dragging an edge from
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+  const [selectedNode, setSelectedNode] = React.useState(null);
+  const [editing, setEditing] = React.useState(null); // node id being renamed
+  const [showPalette, setShowPalette] = React.useState(false);
+
+  const NODE_W = 160;
+  const NODE_H = 44;
+
+  // Translate raw pointer coords to graph coords (account for pan + zoom)
+  const toGraphCoords = (clientX, clientY) => {
+    const svg = svgRef.current;
+    if (!svg) return { x: clientX, y: clientY };
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left - pan.x) / zoom,
+      y: (clientY - rect.top - pan.y) / zoom,
+    };
+  };
+
+  const handlePointerDownNode = (e, node) => {
+    e.stopPropagation();
+    const p = toGraphCoords(e.clientX, e.clientY);
+    setDrag({ nodeId: node.id, offsetX: p.x - node.x, offsetY: p.y - node.y });
+    setSelectedNode(node.id);
+    setShowPalette(false);
+  };
+
+  const handlePointerDownCanvas = (e) => {
+    // Only start panning on plain canvas tap, not on node
+    if (e.target.tagName === 'svg' || e.target.classList?.contains('intel-canvas-bg')) {
+      const p = { x: e.clientX, y: e.clientY };
+      setPanning({ startX: p.x, startY: p.y, originX: pan.x, originY: pan.y });
+      setSelectedNode(null);
+      setShowPalette(false);
+    }
+  };
+
+  const handlePointerDownConnector = (e, nodeId) => {
+    e.stopPropagation();
+    setConnectFrom(nodeId);
+    const p = toGraphCoords(e.clientX, e.clientY);
+    setMousePos(p);
+  };
+
+  const handlePointerMove = (e) => {
+    const p = toGraphCoords(e.clientX, e.clientY);
+    if (drag) {
+      setGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === drag.nodeId ? { ...n, x: p.x - drag.offsetX, y: p.y - drag.offsetY } : n) }));
+    } else if (panning) {
+      setPan({ x: panning.originX + (e.clientX - panning.startX), y: panning.originY + (e.clientY - panning.startY) });
+    } else if (connectFrom) {
+      setMousePos(p);
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (connectFrom) {
+      // Did we end on a node?
+      const targetEl = document.elementFromPoint(e.clientX, e.clientY);
+      const targetNodeEl = targetEl?.closest('[data-node-id]');
+      if (targetNodeEl) {
+        const targetId = targetNodeEl.dataset.nodeId;
+        if (targetId !== connectFrom) {
+          const exists = edges.some(ed => ed.from === connectFrom && ed.to === targetId);
+          if (!exists) {
+            setGraph(g => ({ ...g, edges: [...(g.edges || []), { id: `e${Date.now()}`, from: connectFrom, to: targetId }] }));
+          }
+        }
+      }
+    }
+    setDrag(null);
+    setPanning(null);
+    setConnectFrom(null);
+  };
+
+  // Touch handlers — convert single-touch into pointer events
+  const touchHandlers = (handler) => (e) => {
+    if (e.touches && e.touches.length > 0) {
+      e.preventDefault();
+      const t = e.touches[0];
+      handler({ clientX: t.clientX, clientY: t.clientY, target: e.target, stopPropagation: () => e.stopPropagation(), preventDefault: () => e.preventDefault() });
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+      const t = e.changedTouches[0];
+      handler({ clientX: t.clientX, clientY: t.clientY, target: e.target, stopPropagation: () => e.stopPropagation(), preventDefault: () => e.preventDefault() });
+    }
+  };
+
+  React.useEffect(() => {
+    if (!drag && !panning && !connectFrom) return;
+    const move = (e) => handlePointerMove(e);
+    const up = (e) => handlePointerUp(e);
+    const tmove = touchHandlers(handlePointerMove);
+    const tup = touchHandlers(handlePointerUp);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', tmove, { passive: false });
+    window.addEventListener('touchend', tup);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', tmove);
+      window.removeEventListener('touchend', tup);
+    };
+  }, [drag, panning, connectFrom, pan, zoom]);
+
+  const addNode = (type) => {
+    const t = nodeTypes[type];
+    const newNode = {
+      id: String(Date.now()),
+      type,
+      label: t.label.charAt(0) + t.label.slice(1).toLowerCase(),
+      x: 200 + Math.random() * 100,
+      y: 200 + Math.random() * 100,
+    };
+    setGraph(g => ({ ...g, nodes: [...(g.nodes || []), newNode] }));
+    setSelectedNode(newNode.id);
+    setEditing(newNode.id);
+    setShowPalette(false);
+  };
+
+  const deleteNode = (id) => {
+    setGraph(g => ({
+      nodes: (g.nodes || []).filter(n => n.id !== id),
+      edges: (g.edges || []).filter(e => e.from !== id && e.to !== id),
+    }));
+    setSelectedNode(null);
+  };
+
+  const deleteEdge = (id) => {
+    setGraph(g => ({ ...g, edges: (g.edges || []).filter(e => e.id !== id) }));
+  };
+
+  const renameNode = (id, newLabel) => {
+    setGraph(g => ({ ...g, nodes: g.nodes.map(n => n.id === id ? { ...n, label: newLabel } : n) }));
+  };
+
+  const resetView = () => { setPan({ x: 0, y: 0 }); setZoom(1); };
+
+  // Bezier curve between two nodes
+  const edgePath = (from, to) => {
+    const fx = from.x + NODE_W;
+    const fy = from.y + NODE_H / 2;
+    const tx = to.x;
+    const ty = to.y + NODE_H / 2;
+    const dx = Math.abs(tx - fx) * 0.5;
+    return `M ${fx} ${fy} C ${fx + dx} ${fy}, ${tx - dx} ${ty}, ${tx} ${ty}`;
+  };
+
+  // Connector preview line
+  const previewPath = connectFrom ? (() => {
+    const from = nodes.find(n => n.id === connectFrom);
+    if (!from) return null;
+    const fx = from.x + NODE_W;
+    const fy = from.y + NODE_H / 2;
+    const dx = Math.abs(mousePos.x - fx) * 0.5;
+    return `M ${fx} ${fy} C ${fx + dx} ${fy}, ${mousePos.x - dx} ${mousePos.y}, ${mousePos.x} ${mousePos.y}`;
+  })() : null;
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#020611', position: 'relative' }}>
+      {/* Top toolbar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '12px 16px', borderBottom: '0.5px solid rgba(168,85,247,0.2)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <button onClick={() => setActiveView('donny')} style={{ fontSize: '11px', color: 'rgba(168,85,247,0.7)', fontFamily: 'monospace', letterSpacing: '1px', background: 'none', border: 'none', cursor: 'pointer' }}>← DONNY</button>
+          <div>
+            <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.5)', fontFamily: 'monospace', letterSpacing: '2px' }}>// INTELLIGENCE</div>
+            <div style={{ fontSize: '14px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1.5px' }}>DATA FLOW GRAPH</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <button onClick={() => setShowPalette(p => !p)} style={{ padding: '7px 12px', background: showPalette ? 'rgba(168,85,247,0.25)' : 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ NODE</button>
+          <button onClick={() => setZoom(z => Math.min(z * 1.2, 3))} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', cursor: 'pointer', fontWeight: 600 }}>+</button>
+          <button onClick={() => setZoom(z => Math.max(z / 1.2, 0.3))} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', cursor: 'pointer', fontWeight: 600 }}>−</button>
+          <button onClick={resetView} style={{ padding: '7px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>FIT</button>
+        </div>
+      </div>
+
+      {/* Node palette popup */}
+      {showPalette && (
+        <div style={{ position: 'absolute', top: 70, right: 16, zIndex: 11, background: 'rgba(5,12,24,0.95)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '6px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '4px', backdropFilter: 'blur(12px)' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2px', marginBottom: '4px' }}>ADD NODE</div>
+          {Object.entries(nodeTypes).map(([key, t]) => (
+            <button key={key} onClick={() => addNode(key)} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 10px', background: t.bg, border: `0.5px solid ${t.border}`, borderLeft: `2px solid ${t.color}`, borderRadius: '3px', color: t.color, fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, textAlign: 'left', minWidth: '120px' }}>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: t.color, boxShadow: `0 0 4px ${t.color}` }} />
+              {t.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Selected node toolbar */}
+      {selectedNode && (() => {
+        const n = nodes.find(x => x.id === selectedNode);
+        if (!n) return null;
+        const t = nodeTypes[n.type];
+        return (
+          <div style={{ position: 'absolute', bottom: 16, left: 16, right: 16, zIndex: 10, padding: '10px 14px', background: 'rgba(5,12,24,0.95)', border: `1px solid ${t.border}`, borderLeft: `2px solid ${t.color}`, borderRadius: '6px', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={{ fontSize: '9px', color: t.color, fontFamily: 'monospace', letterSpacing: '1.5px', fontWeight: 600 }}>{t.label}</div>
+            {editing === selectedNode ? (
+              <input
+                autoFocus
+                value={n.label}
+                onChange={(e) => renameNode(n.id, e.target.value)}
+                onBlur={() => setEditing(null)}
+                onKeyDown={(e) => { if (e.key === 'Enter') setEditing(null); }}
+                style={{ flex: 1, minWidth: 0, background: 'rgba(255,255,255,0.06)', border: `0.5px solid ${t.border}`, borderRadius: '3px', color: '#e0eaff', fontFamily: 'monospace', fontSize: '12px', padding: '4px 8px', outline: 'none' }}
+              />
+            ) : (
+              <div onClick={() => setEditing(n.id)} style={{ flex: 1, minWidth: 0, fontFamily: 'monospace', fontSize: '12px', color: '#e0eaff', cursor: 'text', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.label}</div>
+            )}
+            <button onClick={() => setEditing(n.id)} style={{ padding: '5px 10px', background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.15)', borderRadius: '3px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>RENAME</button>
+            <button onClick={() => deleteNode(n.id)} style={{ padding: '5px 10px', background: 'rgba(239,68,68,0.1)', border: '0.5px solid rgba(239,68,68,0.4)', borderRadius: '3px', color: 'rgba(239,68,68,0.9)', fontFamily: 'monospace', fontSize: '9px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>DELETE</button>
+          </div>
+        );
+      })()}
+
+      {/* Empty state */}
+      {nodes.length === 0 && (
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '90%' }}>
+          <div style={{ fontSize: '10px', color: 'rgba(168,85,247,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '12px' }}>// EMPTY GRAPH</div>
+          <div style={{ fontSize: '16px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '8px' }}>Build a data flow for Donny.</div>
+          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px', padding: '0 20px' }}>Drag nodes, draw connections, map how your business data flows from raw input to alerts.</div>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button onClick={seedGraph} style={{ padding: '12px 18px', background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.7)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>USE THIS TEMPLATE</button>
+            <button onClick={() => addNode('raw')} style={{ padding: '12px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>START FRESH</button>
+          </div>
+        </div>
+      )}
+
+      {/* SVG canvas */}
+      <svg
+        ref={svgRef}
+        onMouseDown={handlePointerDownCanvas}
+        onTouchStart={touchHandlers(handlePointerDownCanvas)}
+        width="100%"
+        height="100vh"
+        style={{ display: 'block', cursor: panning ? 'grabbing' : 'grab', touchAction: 'none' }}
+      >
+        <defs>
+          <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse" patternTransform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+            <circle cx="1" cy="1" r="1" fill="rgba(168,85,247,0.06)" />
+          </pattern>
+          <marker id="arrowend" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(168,85,247,0.6)" />
+          </marker>
+        </defs>
+        <rect className="intel-canvas-bg" width="100%" height="100%" fill="url(#grid)" />
+
+        <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+          {/* Edges */}
+          {edges.map(edge => {
+            const from = nodes.find(n => n.id === edge.from);
+            const to = nodes.find(n => n.id === edge.to);
+            if (!from || !to) return null;
+            return (
+              <g key={edge.id} style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); if (window.confirm('Delete this connection?')) deleteEdge(edge.id); }}>
+                <path d={edgePath(from, to)} stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" fill="none" markerEnd="url(#arrowend)" />
+                {/* Animated flow dots */}
+                <circle r="2.5" fill="rgba(168,85,247,0.9)">
+                  <animateMotion dur="3s" repeatCount="indefinite" path={edgePath(from, to)} />
+                </circle>
+              </g>
+            );
+          })}
+
+          {/* Preview line while connecting */}
+          {previewPath && <path d={previewPath} stroke="rgba(168,85,247,0.7)" strokeWidth="1.5" strokeDasharray="4 4" fill="none" />}
+
+          {/* Nodes */}
+          {nodes.map(node => {
+            const t = nodeTypes[node.type] || nodeTypes.raw;
+            const isSelected = selectedNode === node.id;
+            return (
+              <g key={node.id} data-node-id={node.id} transform={`translate(${node.x},${node.y})`} style={{ cursor: drag?.nodeId === node.id ? 'grabbing' : 'grab' }}>
+                <rect
+                  onMouseDown={(e) => handlePointerDownNode(e, node)}
+                  onTouchStart={touchHandlers((ev) => handlePointerDownNode(ev, node))}
+                  width={NODE_W}
+                  height={NODE_H}
+                  rx="4"
+                  fill={t.bg}
+                  stroke={isSelected ? t.color : t.border}
+                  strokeWidth={isSelected ? 1.5 : 0.75}
+                />
+                {/* Left accent bar */}
+                <rect x="0" y="0" width="3" height={NODE_H} fill={t.color} rx="2" />
+                {/* Type label */}
+                <text x="10" y="14" fill={t.color} style={{ fontFamily: 'monospace', fontSize: '7px', letterSpacing: '1.5px', fontWeight: 600, pointerEvents: 'none' }}>{t.label}</text>
+                {/* Node label */}
+                <text x="10" y="32" fill="#e0eaff" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 500, pointerEvents: 'none' }}>
+                  {node.label.length > 18 ? node.label.slice(0, 17) + '…' : node.label}
+                </text>
+                {/* Right output connector (drag from here to create edge) */}
+                <circle
+                  cx={NODE_W}
+                  cy={NODE_H / 2}
+                  r="6"
+                  fill={t.color}
+                  stroke="rgba(5,12,24,0.95)"
+                  strokeWidth="1.5"
+                  style={{ cursor: 'crosshair' }}
+                  onMouseDown={(e) => handlePointerDownConnector(e, node.id)}
+                  onTouchStart={touchHandlers((ev) => handlePointerDownConnector(ev, node.id))}
+                />
+                <circle cx={NODE_W} cy={NODE_H / 2} r="2.5" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
+                {/* Left input connector — visual only */}
+                <circle cx="0" cy={NODE_H / 2} r="4" fill="rgba(5,12,24,0.95)" stroke={t.border} strokeWidth="1" style={{ pointerEvents: 'none' }} />
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+
+      {/* Help footer */}
+      {nodes.length > 0 && !selectedNode && (
+        <div style={{ position: 'absolute', bottom: 16, left: 16, zIndex: 9, padding: '8px 12px', background: 'rgba(5,12,24,0.85)', border: '0.5px solid rgba(168,85,247,0.2)', borderRadius: '4px', backdropFilter: 'blur(12px)', fontFamily: 'monospace', fontSize: '9px', color: 'rgba(168,85,247,0.6)', letterSpacing: '1.5px', lineHeight: 1.5, maxWidth: '320px' }}>
+          DRAG NODES · DRAG FROM ◉ TO CONNECT · TAP NODE TO SELECT · TAP LINK TO DELETE · DRAG CANVAS TO PAN
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 function MuzzApp() {
   // All state declarations at the top
@@ -2270,6 +2604,8 @@ function MuzzApp() {
   const [tsDesc, setTsDesc] = useState('');
   // Donny Daily Cost Tracker
   const [donnyCosts, setDonnyCosts] = useState([]);
+  // Donny Intelligence Graph — drag-drop nodes + connections
+  const [donnyIntelGraph, setDonnyIntelGraph] = useState({ nodes: [], edges: [] });
   // Donny Clients
   const [donnyClients, setDonnyClients] = useState([]);
   const [showAddClient, setShowAddClient] = useState(false);
@@ -2675,6 +3011,7 @@ function MuzzApp() {
           if (d.donnySchedule) setDonnySchedule(d.donnySchedule);
           if (d.donnyRecurring) setDonnyRecurring(d.donnyRecurring);
           if (d.donnyCosts) setDonnyCosts(d.donnyCosts);
+          if (d.donnyIntelGraph) setDonnyIntelGraph(d.donnyIntelGraph);
           if (d.donnyWorkspaceCode) setDonnyWorkspaceCode(d.donnyWorkspaceCode);
           if (d.donnyWorkerAccess) setDonnyWorkerAccess(d.donnyWorkerAccess);
           if (d.donnyRole) setDonnyRole(d.donnyRole);
@@ -2824,6 +3161,7 @@ function MuzzApp() {
           donnySchedule,
           donnyRecurring,
           donnyCosts,
+          donnyIntelGraph,
           donnyWorkspaceCode,
           donnyWorkerAccess,
           donnyRole,
@@ -2841,7 +3179,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -4774,13 +5112,13 @@ ${JSON.stringify(ctx, null, 2)}`;
           <div style={{position:'relative',zIndex:10,padding:'14px 16px 8px',flex:1,minHeight:0,overflow:'hidden'}}>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px',height:'100%'}}>
               {appMode === 'donny' ? (() => {
-                const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS'];
+                const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS','INTEL'];
                 const donnyGlyphs = {
                   donny:'◆','donny-masterview':'⊞','donny-scheduler':'◷','donny-dailyreport':'≡','donny-recurring':'↻',
                   'donny-team':'◉','donny-subs':'◎','donny-clients':'◌',
                   'donny-photos':'◰','donny-checklists':'☑','donny-incidents':'⚠','donny-safety':'◬','donny-mistakes':'✕',
                   'donny-materialslog':'≣','donny-suppliers':'¥',
-                  'donny-reports':'◫',
+                  'donny-reports':'◫','donny-intel':'◈',
                 };
                 const donnyItems = [
                   { section:'JOBS', id:'donny', label:'Dashboard', workerOk:true },
@@ -4799,8 +5137,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                   { section:'COSTS', id:'donny-materialslog', label:'Materials', workerOk:true },
                   { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
+                  { section:'INTEL', id:'donny-intel', label:'Intelligence Graph', workerOk:false },
                 ];
-                const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)' };
+                const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)', INTEL:'rgba(168,85,247,0.95)' };
                 return donnySections.map(sec => {
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
@@ -25609,6 +25948,72 @@ ${JSON.stringify(ctx, null, 2)}`;
         </div>
       );
     }
+
+    // DONNY INTELLIGENCE GRAPH — drag-drop nodes + connections
+    if (activeView === 'donny-intel') {
+      const { nodes = [], edges = [] } = donnyIntelGraph;
+
+      // Node type palette
+      const NODE_TYPES = {
+        raw:      { label: 'RAW',      color: '#eab308', bg: 'rgba(234,179,8,0.15)',  border: 'rgba(234,179,8,0.7)'  },
+        clean:    { label: 'CLEAN',    color: '#22c55e', bg: 'rgba(34,197,94,0.15)',  border: 'rgba(34,197,94,0.7)'  },
+        entity:   { label: 'ENTITY',   color: '#ef4444', bg: 'rgba(239,68,68,0.15)',  border: 'rgba(239,68,68,0.7)'  },
+        rule:     { label: 'RULE',     color: '#ec4899', bg: 'rgba(236,72,153,0.15)', border: 'rgba(236,72,153,0.7)' },
+        alert:    { label: 'ALERT',    color: '#3b82f6', bg: 'rgba(59,130,246,0.15)', border: 'rgba(59,130,246,0.7)' },
+        transform:{ label: 'TRANSFORM',color: '#f97316', bg: 'rgba(249,115,22,0.15)', border: 'rgba(249,115,22,0.7)' },
+        ontology: { label: 'ONTOLOGY', color: '#a855f7', bg: 'rgba(168,85,247,0.15)', border: 'rgba(168,85,247,0.7)' },
+      };
+
+      const seedGraph = () => {
+        // Real Donny data flow: raw sources → cleaned → entities → rules → alerts
+        const baseId = Date.now();
+        const seedNodes = [
+          // RAW (left column)
+          { id: String(baseId + 1),  type: 'raw',   label: 'Daily Reports',  x: 60,  y: 60   },
+          { id: String(baseId + 2),  type: 'raw',   label: 'Timesheets',     x: 60,  y: 140  },
+          { id: String(baseId + 3),  type: 'raw',   label: 'Photos',         x: 60,  y: 220  },
+          { id: String(baseId + 4),  type: 'raw',   label: 'Materials Log',  x: 60,  y: 300  },
+          { id: String(baseId + 5),  type: 'raw',   label: 'Incidents',      x: 60,  y: 380  },
+          // CLEAN (col 2)
+          { id: String(baseId + 11), type: 'clean', label: 'Hours Cleaned',  x: 280, y: 100  },
+          { id: String(baseId + 12), type: 'clean', label: 'Tagged Photos',  x: 280, y: 220  },
+          { id: String(baseId + 13), type: 'clean', label: 'Cost Records',   x: 280, y: 340  },
+          // ENTITIES (col 3)
+          { id: String(baseId + 21), type: 'entity', label: '[DONNY] Worker', x: 500, y: 70  },
+          { id: String(baseId + 22), type: 'entity', label: '[DONNY] Job',    x: 500, y: 170 },
+          { id: String(baseId + 23), type: 'entity', label: '[DONNY] Client', x: 500, y: 270 },
+          { id: String(baseId + 24), type: 'entity', label: '[DONNY] Material', x: 500, y: 370 },
+          // RULES (col 4)
+          { id: String(baseId + 31), type: 'rule',  label: 'Margin Rule',    x: 720, y: 130  },
+          { id: String(baseId + 32), type: 'rule',  label: 'Safety Rule',    x: 720, y: 280  },
+          // ALERTS (col 5)
+          { id: String(baseId + 41), type: 'alert', label: 'Cost Overrun',   x: 940, y: 130  },
+          { id: String(baseId + 42), type: 'alert', label: 'Compliance Flag',x: 940, y: 280  },
+        ];
+        const link = (a, b) => ({ id: `e${a}-${b}`, from: String(a), to: String(b) });
+        const seedEdges = [
+          link(baseId+1, baseId+11), link(baseId+2, baseId+11),
+          link(baseId+3, baseId+12), link(baseId+5, baseId+12),
+          link(baseId+4, baseId+13),
+          link(baseId+11, baseId+21), link(baseId+11, baseId+22),
+          link(baseId+12, baseId+22), link(baseId+13, baseId+22), link(baseId+13, baseId+24),
+          link(baseId+22, baseId+31), link(baseId+24, baseId+31),
+          link(baseId+21, baseId+32), link(baseId+22, baseId+32),
+          link(baseId+31, baseId+41),
+          link(baseId+32, baseId+42),
+        ];
+        setDonnyIntelGraph({ nodes: seedNodes, edges: seedEdges });
+      };
+
+      return <DonnyIntelGraph
+        graph={donnyIntelGraph}
+        setGraph={setDonnyIntelGraph}
+        nodeTypes={NODE_TYPES}
+        seedGraph={seedGraph}
+        setActiveView={setActiveView}
+      />;
+    }
+
     return null;
   }
 
