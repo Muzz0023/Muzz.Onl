@@ -4984,7 +4984,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           this_week_hours: donnyTimesheets.filter(e => new Date(e.date||e.createdAt||0) >= startOfWeek).reduce((s,e) => s + (parseFloat(e.hours)||0), 0),
         },
       };
-      const systemPrompt = `You are an AI analyst for Donny, a trade business operations system. The user has asked a question about their data. Answer concisely (2-3 sentences max) using only the data provided. If the question can't be answered from the data, say so plainly. Don't invent numbers. The user is a tradesperson (sparky) so use direct, no-bs language.
+      const systemPrompt = `You are an AI analyst for Donny, a business operations system. The user has asked a question about their data. Answer concisely (2-3 sentences max) using only the data provided. If the question can't be answered from the data, say so plainly. Don't invent numbers. Use direct, no-bs language.
 
 DATA:
 ${JSON.stringify(ctx, null, 2)}`;
@@ -5292,7 +5292,7 @@ ${JSON.stringify(ctx, null, 2)}`;
           <div style={{position:'relative',zIndex:10,padding:'14px 16px 8px',flex:1,minHeight:0,overflow:'hidden'}}>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0 16px',height:'100%'}}>
               {appMode === 'donny' ? (() => {
-                const donnySections = ['JOBS','SITE','TEAM','COSTS','REPORTS','CLIENTS','INTEL'];
+                const donnySections = ['JOBS','OPS','TEAM','COSTS','REPORTS','CLIENTS','INTEL'];
                 const donnyGlyphs = {
                   donny:'◆','donny-masterview':'⊞','donny-scheduler':'◷','donny-dailyreport':'≡','donny-recurring':'↻',
                   'donny-team':'◉','donny-subs':'◎','donny-clients':'◌',
@@ -5304,22 +5304,22 @@ ${JSON.stringify(ctx, null, 2)}`;
                   { section:'JOBS', id:'donny', label:'Dashboard', workerOk:true },
                   { section:'JOBS', id:'donny-masterview', label:'Masterview', workerOk:false },
                   { section:'JOBS', id:'donny-scheduler', label:'Scheduler', workerOk:false },
-                  { section:'JOBS', id:'donny-dailyreport', label:'Hour Logger', workerOk:true },
+                  { section:'JOBS', id:'donny-dailyreport', label:'Time Logger', workerOk:true },
                   { section:'JOBS', id:'donny-recurring', label:'Recurring', workerOk:false },
                   { section:'TEAM', id:'donny-team', label:'Team', workerOk:false },
-                  { section:'TEAM', id:'donny-subs', label:'Subcontractors', workerOk:false },
+                  { section:'TEAM', id:'donny-subs', label:'Contractors', workerOk:false },
                   { section:'CLIENTS', id:'donny-clients', label:'Clients', workerOk:false },
-                  { section:'SITE', id:'donny-photos', label:'Photos', workerOk:true },
-                  { section:'SITE', id:'donny-checklists', label:'SWMS', workerOk:true },
-                  { section:'SITE', id:'donny-incidents', label:'Incidents', workerOk:true },
-                  { section:'SITE', id:'donny-safety', label:'Risk Register', workerOk:true },
-                  { section:'SITE', id:'donny-mistakes', label:'Mistakes', workerOk:true },
-                  { section:'COSTS', id:'donny-materialslog', label:'Materials', workerOk:true },
+                  { section:'OPS', id:'donny-photos', label:'Photos', workerOk:true },
+                  { section:'OPS', id:'donny-checklists', label:'SWMS', workerOk:true },
+                  { section:'OPS', id:'donny-incidents', label:'Incidents', workerOk:true },
+                  { section:'OPS', id:'donny-safety', label:'Risk Register', workerOk:true },
+                  { section:'OPS', id:'donny-mistakes', label:'Issues Log', workerOk:true },
+                  { section:'COSTS', id:'donny-materialslog', label:'Inventory', workerOk:true },
                   { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
                   { section:'REPORTS', id:'donny-reports', label:'Reports', workerOk:false },
                   { section:'INTEL', id:'donny-intel', label:'Crew Plan', workerOk:false },
                 ];
-                const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)', INTEL:'rgba(168,85,247,0.95)' };
+                const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', OPS:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', REPORTS:'rgba(249,115,22,0.85)', INTEL:'rgba(168,85,247,0.95)' };
                 return donnySections.map(sec => {
                   const items = donnyItems.filter(i => i.section === sec);
                   const color = donnyColors[sec];
@@ -11826,8 +11826,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               <span style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>FAQ</span>
             </div>
             {[
-              {q:"What plans are available?",a:"Muzz Elite at $4.99/month. Muzz & Donny at $29.99/month adds the full Donny trade business system."},
-              {q:"What is Donny?",a:"Donny is a trade business management system with job tracking, scheduler, team management, SWMS, incident logs, price book, reports and multi-user workspace."},
+              {q:"What plans are available?",a:"Muzz Elite at $4.99/month. Muzz & Donny at $29.99/month adds the full Donny business management system."},
+              {q:"What is Donny?",a:"Donny is a business management system with job tracking, scheduler, team management, safety procedures, incident logs, price book, reports and multi-user workspace. Built for trades but works for any small business."},
               {q:"How does the Donny workspace work?",a:"As a boss, generate a join code and share it with workers. Workers enter the code to access your workspace in real time."},
               {q:"Is my data safe?",a:"Stored securely in the cloud via Supabase. Only you can access it. Export a backup anytime from Settings."},
               {q:"How do I cancel?",a:"Go to Elite Status in the sidebar and hit Cancel. You'll keep access until the end of your billing period."},
@@ -11918,7 +11918,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"28px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>$29.99</span>
                     <span style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>/MONTH</span>
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>EVERYTHING IN MUZZ + DONNY TRADE SYS</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>EVERYTHING IN MUZZ + DONNY BUSINESS SYS</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(249,115,22,0.15)",paddingTop:"12px"}}>
                   {['Everything in Muzz Elite','Job Tracking & Scheduler','Team & Subcontractor Management','Client Management','SWMS & Incident Logs','Price Book','Reports','Multi-user Workspace'].map((f,i) => (
