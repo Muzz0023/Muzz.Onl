@@ -24319,9 +24319,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                         {c._active.length > 0 && (
                           <span style={{fontFamily:"monospace",fontSize:"10px",color:`${accent}d8`,letterSpacing:"0.5px"}}>{c._active.length} active</span>
                         )}
-                        {c.billable !== false && c._quoted > 0 && (
-                          <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)"}}>${c._quoted.toLocaleString('en-AU',{maximumFractionDigits:0})}</span>
-                        )}
                         <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
                       </div>
                     </button>
