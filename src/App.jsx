@@ -20804,7 +20804,15 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* CONTACT — clean, no panel */}
             <div style={{marginTop:"24px"}}>
-              <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",fontWeight:600}}>// CONTACT</div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)"}}>
+                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// CONTACT</div>
+                {(client.company || client.role) && (
+                  <button onClick={() => updateClient({company:'', role:''})}
+                    style={{fontSize:"9px",padding:"3px 8px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer",fontWeight:600}}>
+                    CLEAR COMPANY/ROLE
+                  </button>
+                )}
+              </div>
               <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"22px 32px"}}>
                 <div>
                   <label className="slick-label accent-blue">Company</label>
@@ -24342,7 +24350,11 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                 {list.map(c => {
                   const accent = c.billable === false ? '#f97316' : '#3b82f6';
-                  const companyRole = [c.company, c.role].filter(Boolean).join(' ');
+                  // Combine company + role but dedupe (old data sometimes has both fields containing same string)
+                  const parts = [];
+                  if (c.company) parts.push(c.company);
+                  if (c.role && !c.company?.toLowerCase().includes(c.role.toLowerCase())) parts.push(c.role);
+                  const companyRole = parts.join(' ');
                   const subtitle = [companyRole, c.phone].filter(Boolean).join(' · ');
                   return (
                     <button key={c.id} onClick={() => { setSelectedDonnyClient(c); setActiveView('donny-clientdetail'); }}
