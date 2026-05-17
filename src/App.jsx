@@ -20869,13 +20869,11 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
 
             {/* CONTACT + LINKED RECORDS — side by side on desktop, stacked on mobile */}
-            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
-              {/* CONTACT INFO */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CONTACT</span>
-                </div>
-                <div style={{padding:"16px 18px 18px",display:"flex",flexDirection:"column",gap:"14px"}}>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"24px",marginTop:"8px"}}>
+              {/* CONTACT — clean, no panel */}
+              <div>
+                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"18px",paddingBottom:"6px",borderBottom:"0.5px solid rgba(59,130,246,0.15)"}}>// CONTACT</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"18px"}}>
                   <div>
                     <label className="slick-label">Email</label>
                     <input className="slick-input accent-blue" value={client.email||''} onChange={e => updateClient({email:e.target.value})}
@@ -20900,27 +20898,25 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               </div>
 
-              {/* LINKED RECORDS */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
-                </div>
-                <div style={{padding:"10px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+              {/* LINKED RECORDS — clean, no panel */}
+              <div>
+                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"18px",paddingBottom:"6px",borderBottom:"0.5px solid rgba(59,130,246,0.15)"}}>// LINKED RECORDS</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                   {[
                     {label:"TOTAL JOBS", count:clientJobs.length, view:'donny-masterview', color:"#3b82f6"},
                     {label:"PHOTOS", count:clientPhotosCount, view:'donny-photos', color:"#a855f7"},
                     {label:"MATERIALS", count:clientMaterials.length, view:'donny-materialslog', color:"#3b82f6"},
                     {label:"MISTAKES", count:clientMistakes.length, view:'donny-mistakes', color:clientMistakes.length>0?"#f59e0b":"#94a3b8"},
                   ].map(t => (
-                    <button key={t.label} onClick={() => setActiveView(t.view)} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
-                      <div style={{fontSize:"8px",color:`${t.color}99`,letterSpacing:"1.5px",marginBottom:"3px"}}>{t.label}</div>
-                      <div style={{fontSize:"16px",color:t.color,fontWeight:500}}>{t.count}</div>
+                    <button key={t.label} onClick={() => setActiveView(t.view)} style={{padding:"12px 14px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
+                      <div style={{fontSize:"8px",color:`${t.color}99`,letterSpacing:"1.5px",marginBottom:"4px"}}>{t.label}</div>
+                      <div style={{fontSize:"18px",color:t.color,fontWeight:500}}>{t.count}</div>
                     </button>
                   ))}
                 </div>
                 {lastJobDate && (
-                  <div style={{padding:"10px 14px",borderTop:"0.5px solid rgba(59,130,246,0.05)"}}>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>LAST JOB</div>
+                  <div style={{marginTop:"14px",paddingTop:"12px",borderTop:"0.5px solid rgba(59,130,246,0.1)"}}>
+                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LAST JOB</div>
                     <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace"}}>{lastJobDate.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
                   </div>
                 )}
