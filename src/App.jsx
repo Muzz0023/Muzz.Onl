@@ -271,12 +271,13 @@ const StarryBackground = ({ children }) => {
           box-sizing: border-box;
           background: transparent !important;
           background-color: transparent !important;
-          color: #e0eaff;
+          color: #e0eaff !important;
+          -webkit-text-fill-color: #e0eaff !important;
           font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
           font-size: 13px;
           letter-spacing: 0.3px;
           border: none;
-          border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+          border-bottom: 1px solid rgba(148, 163, 184, 0.18) !important;
           border-radius: 0;
           outline: none;
           padding: 9px 2px;
