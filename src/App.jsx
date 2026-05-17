@@ -20803,15 +20803,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* CONTACT — clean, no panel */}
             <div style={{marginTop:"24px"}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)"}}>
-                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// CONTACT</div>
-                {(client.company || client.role) && (
-                  <button onClick={() => updateClient({company:'', role:''})}
-                    style={{fontSize:"9px",padding:"3px 8px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer",fontWeight:600}}>
-                    CLEAR COMPANY/ROLE
-                  </button>
-                )}
-              </div>
+              <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",fontWeight:600}}>// CONTACT</div>
               <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"22px 32px"}}>
                 <div>
                   <label className="slick-label accent-blue">Company</label>
