@@ -21467,8 +21467,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     if (lastActivity) subParts.push(new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}));
                     return (
                       <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasActivity?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobs.length-1?"6px":"0"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasActivity?accent:`${accent}40`,boxShadow:hasActivity?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobs.length-1?"6px":"0"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                           <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
                           {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
@@ -22282,8 +22282,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     }
                     return (
                       <button key={r.id} onClick={()=>setEditingRecurringId(editingRecurringId===r.id?null:r.id)}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:editingRecurringId===r.id?"rgba(249,115,22,0.06)":"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isOverdue?'#ef4444':isDueSoon?'#f59e0b':accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isOverdue?'#ef4444':isDueSoon?'#f59e0b':accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:editingRecurringId===r.id?"rgba(249,115,22,0.06)":"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                           <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title||'—'}</div>
                           {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"rgba(239,68,68,0.85)":"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
@@ -22556,8 +22556,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     if (tagCounts.length>0) subParts.push(tagCounts.map(t=>`${t.n} ${t.tag}`).join(', '));
                     return (
                       <button key={job.id} onClick={()=>{ setPhotoJobId(job.id); setPhotoFilter('all'); }}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasPhotos?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<donnyJobs.length-1?"6px":"0"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasPhotos?accent:`${accent}40`,boxShadow:hasPhotos?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<donnyJobs.length-1?"6px":"0"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                           <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>
@@ -22866,8 +22866,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                       if (items > 0) subParts.push(`${done}/${items} done`);
                       return (
                         <button key={j.id} onClick={() => setChecklistJobId(j.id)}
-                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasDocs?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
-                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasDocs?accent:`${accent}40`,boxShadow:hasDocs?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                             <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
                             <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>
@@ -23190,8 +23190,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const hasIncs = incs.length > 0;
                       return (
                         <button key={j.id} onClick={() => setIncidentJobId(j.id)}
-                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasIncs?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
-                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasIncs?accent:`${accent}40`,boxShadow:hasIncs?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                             <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
                             <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
@@ -23804,8 +23804,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const hasMistakes = ms.length > 0;
                       return (
                         <button key={j.id} onClick={() => setMistakeJobId(j.id)}
-                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasMistakes?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
-                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasMistakes?accent:`${accent}40`,boxShadow:hasMistakes?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                             <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
                             <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
@@ -24098,8 +24098,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                       if (hasRisks) subtitleParts.push(allMitigated ? 'mitigated' : 'no plan');
                       return (
                         <button key={j.id} onClick={() => setRiskJobId(j.id)}
-                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasRisks?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
-                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasRisks?accent:`${accent}40`,boxShadow:hasRisks?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                             <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
                             <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitleParts.join(' · ')}</div>
