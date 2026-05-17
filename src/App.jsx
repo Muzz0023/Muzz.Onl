@@ -296,23 +296,26 @@ const StarryBackground = ({ children }) => {
         }
         .slick-input::placeholder,
         .slick-textarea::placeholder {
-          color: rgba(148, 163, 184, 0.22) !important;
+          color: rgba(148, 163, 184, 0.28) !important;
           font-style: italic;
           font-weight: 300;
+          font-size: 11px;
           opacity: 1;
           letter-spacing: 0.2px;
         }
         .slick-input::-webkit-input-placeholder,
         .slick-textarea::-webkit-input-placeholder {
-          color: rgba(148, 163, 184, 0.22) !important;
+          color: rgba(148, 163, 184, 0.28) !important;
           font-style: italic;
           font-weight: 300;
+          font-size: 11px;
         }
         .slick-input::-moz-placeholder,
         .slick-textarea::-moz-placeholder {
-          color: rgba(148, 163, 184, 0.22) !important;
+          color: rgba(148, 163, 184, 0.28) !important;
           font-style: italic;
           font-weight: 300;
+          font-size: 11px;
           opacity: 1;
         }
         .slick-input:hover,
@@ -25161,7 +25164,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* LABOUR PANEL */}
             <div style={panel}>
               <div style={panelHeaderFor("rgba(249,115,22,0.7)")}>
-                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LABOUR &amp; TEAM</span>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LABOUR COST</span>
                 <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnyTeam.length} CREW</span>
               </div>
               <StatRow label="Team members" value={donnyTeam.length} color="#e0eaff"/>
@@ -25646,12 +25649,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{display:"grid",gridTemplateColumns:"1fr 80px 90px",gap:"10px",marginBottom:"10px"}}>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
-                      <input value={supplierNewItem.desc} onChange={e=>setSupplierNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. GPOs, 2.5mm TPS cable…"
+                      <input value={supplierNewItem.desc} onChange={e=>setSupplierNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. GPOs"
                         className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
-                      <input value={supplierNewItem.unit} onChange={e=>setSupplierNewItem(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea, m, kg"
+                      <input value={supplierNewItem.unit} onChange={e=>setSupplierNewItem(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea"
                         className="slick-input accent-orange"/>
                     </div>
                     <div>
