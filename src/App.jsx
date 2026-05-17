@@ -269,42 +269,49 @@ const StarryBackground = ({ children }) => {
         .slick-select {
           width: 100%;
           box-sizing: border-box;
-          background: rgba(255, 255, 255, 0.02);
+          background: transparent !important;
+          background-color: transparent !important;
           color: #e0eaff;
           font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
-          font-size: 12px;
+          font-size: 13px;
           letter-spacing: 0.3px;
           border: none;
           border-bottom: 1px solid rgba(148, 163, 184, 0.18);
           border-radius: 0;
           outline: none;
-          padding: 9px 4px;
-          transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+          padding: 9px 2px;
+          transition: border-color 0.18s ease, box-shadow 0.18s ease;
           caret-color: rgba(0, 200, 255, 0.85);
           appearance: none;
           -webkit-appearance: none;
+          -webkit-box-shadow: none;
+          box-shadow: none;
+        }
+        .slick-input:-webkit-autofill,
+        .slick-textarea:-webkit-autofill {
+          -webkit-text-fill-color: #e0eaff;
+          -webkit-box-shadow: 0 0 0 1000px transparent inset;
+          transition: background-color 9999s ease-in-out 0s;
         }
         .slick-input::placeholder,
         .slick-textarea::placeholder {
-          color: rgba(148, 163, 184, 0.32);
+          color: rgba(148, 163, 184, 0.28);
           font-style: normal;
         }
         .slick-input:hover,
         .slick-textarea:hover,
         .slick-select:hover {
-          border-bottom-color: rgba(0, 200, 255, 0.35);
-          background: rgba(255, 255, 255, 0.035);
+          border-bottom-color: rgba(0, 200, 255, 0.4);
         }
         .slick-input:focus,
         .slick-textarea:focus,
         .slick-select:focus {
-          border-bottom-color: rgba(0, 200, 255, 0.85);
-          background: rgba(0, 200, 255, 0.04);
+          border-bottom-color: rgba(0, 200, 255, 0.9);
           box-shadow: 0 1px 0 0 rgba(0, 200, 255, 0.6);
         }
         .slick-textarea {
           resize: vertical;
-          min-height: 60px;
+          min-height: 70px;
           line-height: 1.55;
         }
         /* Donny variant — orange accent */
@@ -313,12 +320,11 @@ const StarryBackground = ({ children }) => {
         .slick-select.accent-orange { caret-color: rgba(249, 115, 22, 0.85); }
         .slick-input.accent-orange:hover,
         .slick-textarea.accent-orange:hover,
-        .slick-select.accent-orange:hover { border-bottom-color: rgba(249, 115, 22, 0.4); }
+        .slick-select.accent-orange:hover { border-bottom-color: rgba(249, 115, 22, 0.45); }
         .slick-input.accent-orange:focus,
         .slick-textarea.accent-orange:focus,
         .slick-select.accent-orange:focus {
-          border-bottom-color: rgba(249, 115, 22, 0.9);
-          background: rgba(249, 115, 22, 0.04);
+          border-bottom-color: rgba(249, 115, 22, 0.95);
           box-shadow: 0 1px 0 0 rgba(249, 115, 22, 0.6);
         }
         /* Client variant — blue accent */
@@ -327,12 +333,11 @@ const StarryBackground = ({ children }) => {
         .slick-select.accent-blue { caret-color: rgba(59, 130, 246, 0.85); }
         .slick-input.accent-blue:hover,
         .slick-textarea.accent-blue:hover,
-        .slick-select.accent-blue:hover { border-bottom-color: rgba(59, 130, 246, 0.45); }
+        .slick-select.accent-blue:hover { border-bottom-color: rgba(59, 130, 246, 0.5); }
         .slick-input.accent-blue:focus,
         .slick-textarea.accent-blue:focus,
         .slick-select.accent-blue:focus {
-          border-bottom-color: rgba(59, 130, 246, 0.9);
-          background: rgba(59, 130, 246, 0.04);
+          border-bottom-color: rgba(59, 130, 246, 0.95);
           box-shadow: 0 1px 0 0 rgba(59, 130, 246, 0.6);
         }
         /* Tiny field label that pairs with .slick-input */
