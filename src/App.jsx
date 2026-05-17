@@ -21435,129 +21435,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {donnyJobs.length > 0 && (
-              <div style={{...hPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Active Jobs", value:String(activeJobs.length), color:"#f97316",
-                      lineage: activeJobs.length > 0 ? {
-                        title: 'Active Jobs',
-                        value: String(activeJobs.length),
-                        color: '#f97316',
-                        formula: 'WHERE NOT job.completed',
-                        breakdown: activeJobs.map(j => {
-                          const ts = donnyTimesheets.filter(e => e.jobId === j.id);
-                          const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-                          return {
-                            icon: '⊞', color: '#f97316',
-                            label: j.title,
-                            sub: j.jobNumber?`#${j.jobNumber}`:'',
-                            value: `${hrs.toFixed(1)}h`,
-                            valueColor: hrs > 0 ? 'rgba(34,197,94,0.85)' : 'rgba(148,163,184,0.5)',
-                            onClick: () => { setNoteJobId(j.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); },
-                          };
-                        }),
-                      } : null,
-                    },
-                    {
-                      label:"Total Hours", value:`${totalHrsAllJobs.toFixed(0)}h`, color:"#3b82f6",
-                      lineage: totalHrsAllJobs > 0 ? {
-                        title: 'Total Hours Logged',
-                        value: `${totalHrsAllJobs.toFixed(1)}h`,
-                        color: '#3b82f6',
-                        formula: 'SUM(timesheet.hours)',
-                        breakdown: donnyTeam.map(m => {
-                          const ts = donnyTimesheets.filter(e => String(e.memberId) === String(m.id));
-                          const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-                          return { m, hrs };
-                        }).filter(x => x.hrs > 0).sort((a,b) => b.hrs - a.hrs).map(({m,hrs}) => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: m.position || (m.roles||[])[0] || '—',
-                          value: `${hrs.toFixed(1)}h`,
-                          valueColor: '#3b82f6',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Today", value:`${todayHrs.toFixed(1)}h`, color:"rgba(168,85,247,0.85)",
-                      lineage: todayHrs > 0 ? {
-                        title: 'Hours Logged Today',
-                        value: `${todayHrs.toFixed(1)}h`,
-                        color: 'rgba(168,85,247,0.95)',
-                        formula: 'WHERE date >= midnight',
-                        breakdown: donnyTimesheets.filter(e => new Date(e.createdAt||e.date||0) >= todayStart).map(e => {
-                          const m = donnyTeam.find(x => String(x.id) === String(e.memberId));
-                          const j = donnyJobs.find(x => String(x.id) === String(e.jobId));
-                          return {
-                            icon: '⊢', color: '#f97316',
-                            label: m?.name || 'Unknown',
-                            sub: j ? (j.jobNumber?`#${j.jobNumber} ${j.title.slice(0,20)}`:j.title.slice(0,30)) : '—',
-                            value: `${parseFloat(e.hours)||0}h`,
-                            valueColor: 'rgba(168,85,247,0.95)',
-                            onClick: () => j && setNoteJobId(j.id),
-                          };
-                        }),
-                      } : null,
-                    },
-                    {
-                      label:"Labour $", value:totalLabour > 0 ? `$${totalLabour.toFixed(0)}` : '—', color:"rgba(34,197,94,0.95)",
-                      lineage: totalLabour > 0 ? {
-                        title: 'Total Labour Cost',
-                        value: `$${totalLabour.toFixed(2)}`,
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'SUM(hours × hourlyRate) per member',
-                        breakdown: donnyTeam.map(m => {
-                          const ts = donnyTimesheets.filter(e => String(e.memberId) === String(m.id));
-                          const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-                          const pay = hrs * (parseFloat(m.hourlyRate)||0);
-                          return { m, hrs, pay };
-                        }).filter(x => x.pay > 0).sort((a,b) => b.pay - a.pay).map(({m,hrs,pay}) => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: `${hrs.toFixed(1)}h × $${m.hourlyRate||0}/hr`,
-                          value: `$${pay.toFixed(0)}`,
-                          valueColor: 'rgba(34,197,94,0.95)',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Diary", value:String(totalDiary), color:"#a855f7",
-                      lineage: totalDiary > 0 ? {
-                        title: 'Site Diary Entries',
-                        value: String(totalDiary),
-                        color: '#a855f7',
-                        formula: 'COUNT(notes across all jobs)',
-                        breakdown: donnyJobs.filter(j => (donnyNotes[j.id]||[]).length > 0).map(j => ({
-                          icon: '⊞', color: '#f97316',
-                          label: j.title,
-                          sub: j.jobNumber?`#${j.jobNumber}`:'',
-                          value: `${(donnyNotes[j.id]||[]).length}`,
-                          valueColor: '#a855f7',
-                          onClick: () => { setNoteJobId(j.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); },
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:k.color,opacity:0.7}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* EMPTY STATE */}
             {donnyJobs.length === 0 && (
@@ -21581,7 +21458,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const tsEntries = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id));
                     const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                     const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0))[0];
-                    const accent = '#a855f7';
+                    const accent = '#f97316'; // hour logger = orange
                     const hasActivity = totalHrs > 0 || notes.length > 0;
                     const subParts = [];
                     if (job.jobNumber) subParts.push(`#${job.jobNumber}`);
@@ -22392,7 +22269,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
                     const isOverdue = daysUntil !== null && daysUntil < 0;
                     const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 7;
-                    const accent = fc;
+                    const accent = '#f97316'; // recurring section = orange
                     const dateStr = r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
                     const subParts = [];
                     if (client?.name) subParts.push(client.name);
@@ -22833,7 +22710,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{jobDocs.length} ROW{jobDocs.length!==1?'S':''}</span>
                   </div>
                   {jobDocs.map((cl,i)=>{
-                    const accent = typeColors[cl.type]||'#22c55e';
+                    const accent = '#22c55e'; // SWMS section = green
                     const done = cl.items?.filter(x=>x.done).length||0; const total=cl.items?.length||0;
                     const isComplete = done===total && total>0;
                     const subParts = [];
@@ -23146,7 +23023,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                   {jobIncs.map((inc,i) => {
                     const tc = typeColors[inc.type]||'#ef4444';
-                    const accent = tc;
+                    const accent = '#ef4444'; // incidents section = red
                     const dateStr = inc.date ? new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
                     const typeLabel = typeLabels[inc.type] || inc.type;
                     const subtitle = [dateStr, typeLabel].filter(Boolean).join(' · ');
@@ -23708,20 +23585,20 @@ ${JSON.stringify(ctx, null, 2)}`;
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
             <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
-            <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{borderBottom:"0.5px solid rgba(245,158,11,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
-                <button onClick={() => setMistakeJobId(null)} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← MISTAKES</button>
+                <button onClick={() => setMistakeJobId(null)} style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← MISTAKES</button>
                 <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                    <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
+                    <span style={{fontSize:"28px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}MISTAKES FOR JOB</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}MISTAKES FOR JOB</div>
                       <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
                       <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{jobMists.length} mistake{jobMists.length!==1?'s':''} on this job</div>
                     </div>
                   </div>
                   <button onClick={()=>{ setShowNewMistake(s=>!s); setNewMistake(p=>({...p,jobRef: job?.jobNumber?`#${job.jobNumber} ${job.title}`:job?.title||'',date:new Date().toISOString().split('T')[0]})); }}
-                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(245,158,11,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(245,158,11,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                     {showNewMistake ? '✕ CANCEL' : '+ LOG MISTAKE'}
                   </button>
                 </div>
@@ -23733,30 +23610,30 @@ ${JSON.stringify(ctx, null, 2)}`;
               {showNewMistake && (
                 <div style={mPanel}>
                   <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MISTAKE</span>
+                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MISTAKE</span>
                     <button onClick={()=>setShowNewMistake(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                   </div>
                   <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
+                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who-jobview"
                           className="slick-input accent-orange"/>
                         <datalist id="mistake-who-jobview">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
                       </div>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
                           className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                       <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
                         className="slick-textarea accent-orange"/>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                       <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
                         className="slick-textarea accent-orange"/>
                     </div>
@@ -23768,7 +23645,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       logAction(`job_${job?.id}`, { kind: 'create', summary: `Mistake: ${(m.what||'').slice(0,60)}` });
                       setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
                       setShowNewMistake(false);
-                    }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
+                    }} style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
                   </div>
                 </div>
               )}
@@ -23782,11 +23659,11 @@ ${JSON.stringify(ctx, null, 2)}`;
               ) : jobMists.length > 0 && (
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// MISTAKES</span>
-                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
+                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// MISTAKES</span>
+                    <span style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
                   </div>
                   {jobMists.map((m,i) => {
-                    const accent = '#ef4444';
+                    const accent = '#f59e0b';
                     const dateStr = m.date ? new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
                     const subtitle = [dateStr, m.who].filter(Boolean).join(' · ');
                     return (
@@ -23818,14 +23695,14 @@ ${JSON.stringify(ctx, null, 2)}`;
           <DonnyAsk />
           <DonnyBreadcrumbs />
 
-          <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{borderBottom:"0.5px solid rgba(245,158,11,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-5xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                  <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
+                  <span style={{fontSize:"28px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// LESSONS LEARNED</div>
+                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// LESSONS LEARNED</div>
                     <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MISTAKES</div>
                     <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
                       {totalMistakes===0 ? 'Nothing logged · keep it that way' : `${totalMistakes} logged${thisMonthMistakes>0?' · '+thisMonthMistakes+' this month':''}`}
@@ -23843,35 +23720,35 @@ ${JSON.stringify(ctx, null, 2)}`;
             {showNewMistake && (
               <div style={mPanel}>
                 <div style={mPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MISTAKE</span>
+                  <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MISTAKE</span>
                   <button onClick={()=>setShowNewMistake(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO MADE IT</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO MADE IT</div>
                       <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who"
                         className="slick-input accent-orange"/>
                       <datalist id="mistake-who">{teamNames.map(n=><option key={n} value={n}/>)}</datalist>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                       <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
                         className="slick-input accent-orange"/>
                     </div>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                     <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
                       className="slick-textarea accent-orange"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                     <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
                       className="slick-textarea accent-orange"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RELATED JOB (OPTIONAL)</div>
+                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RELATED JOB (OPTIONAL)</div>
                     <input value={newMistake.jobRef} onChange={e => setNewMistake(p=>({...p,jobRef:e.target.value}))} placeholder="Job name or number..." list="mistake-jobs"
                       className="slick-input accent-orange"/>
                     <datalist id="mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
@@ -23881,7 +23758,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     saveMistakes([{...newMistake, id:Date.now(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString()}, ...donnyMistakes]);
                     setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
                     setShowNewMistake(false);
-                  }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
+                  }} style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
                 </div>
               </div>
             )}
@@ -23901,8 +23778,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               if (activeJobsList.length === 0) {
                 return (
                   <div style={{...mPanel,padding:"40px",textAlign:"center"}}>
-                    <div style={{fontSize:"28px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✕</div>
-                    <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                    <div style={{fontSize:"28px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✕</div>
+                    <div style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
                     <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log mistakes</div>
                   </div>
                 );
@@ -23910,8 +23787,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               return (
                 <div style={mPanel}>
                   <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
-                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
                     <div></div><div>JOB</div><div>MISTAKES</div><div></div>
@@ -23923,7 +23800,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         const ref = String(m.jobRef).toLowerCase();
                         return (j.title && ref.includes(String(j.title).toLowerCase())) || (j.jobNumber && ref.includes(String(j.jobNumber).toLowerCase()));
                       });
-                      const accent = '#ef4444';
+                      const accent = '#f59e0b';
                       const hasMistakes = ms.length > 0;
                       return (
                         <button key={j.id} onClick={() => setMistakeJobId(j.id)}
@@ -23951,37 +23828,37 @@ ${JSON.stringify(ctx, null, 2)}`;
               return (
                 <div style={mPanel}>
                   <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// EDIT MISTAKE</span>
+                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// EDIT MISTAKE</span>
                     <div style={{display:"flex",gap:"6px"}}>
                       <button onClick={()=>setEditingMistakeId(null)} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.3)",color:"rgba(34,197,94,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DONE</button>
-                      {donnyRole !== 'worker' && <button onClick={()=>{if(window.confirm('Delete this mistake?')){saveMistakes(donnyMistakes.filter(x=>x.id!==m.id));setEditingMistakeId(null);}}} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",color:"rgba(239,68,68,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>}
+                      {donnyRole !== 'worker' && <button onClick={()=>{if(window.confirm('Delete this mistake?')){saveMistakes(donnyMistakes.filter(x=>x.id!==m.id));setEditingMistakeId(null);}}} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",color:"rgba(245,158,11,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>}
                     </div>
                   </div>
                   <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
+                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={m.who||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,who:e.target.value}:x))}
                           className="slick-input accent-orange"/>
                       </div>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={m.date||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,date:e.target.value}:x))}
                           className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                       <textarea value={m.what||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,what:e.target.value}:x))} rows={2}
                         className="slick-textarea accent-orange"/>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                       <input value={m.affected||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,affected:e.target.value}:x))}
                         className="slick-input accent-orange"/>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB REF</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB REF</div>
                       <input value={m.jobRef||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,jobRef:e.target.value}:x))} list="edit-mistake-jobs"
                         className="slick-input accent-orange"/>
                       <datalist id="edit-mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
