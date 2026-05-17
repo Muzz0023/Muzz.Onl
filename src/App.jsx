@@ -690,12 +690,12 @@ const StarryBackground = ({ children }) => {
         }
 
         /* --- FORM INPUTS --- */
-        .dark-mode input, .dark-mode textarea, .dark-mode select {
+        .dark-mode input:not(.slick-input):not(.slick-select), .dark-mode textarea:not(.slick-textarea), .dark-mode select:not(.slick-select) {
           background-color: rgba(30, 41, 59, 0.9) !important;
           color: #f3f4f6 !important;
           border-color: rgba(71, 85, 105, 0.7) !important;
         }
-        .dark-mode input::placeholder, .dark-mode textarea::placeholder {
+        .dark-mode input:not(.slick-input)::placeholder, .dark-mode textarea:not(.slick-textarea)::placeholder {
           color: #6b7280 !important;
         }
 
