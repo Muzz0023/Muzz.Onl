@@ -3436,7 +3436,7 @@ function MuzzApp() {
   const [showAddSupplier, setShowAddSupplier] = useState(false);
   const [newSupplier, setNewSupplier] = useState({ name:'', contact:'', phone:'', email:'', items:[] });
   const [editingSupplierId, setEditingSupplierId] = useState(null);
-  const [supplierNewItem, setSupplierNewItem] = useState({ desc:'', unit:'', price:'' });
+  const [supplierNewItem, setSupplierNewItem] = useState({ desc:'', unit:'', price:'', jobId:'' });
   const [editingPriceItemId, setEditingPriceItemId] = useState(null);
   // Donny Recurring Jobs
   const [donnyRecurring, setDonnyRecurring] = useState([]);
@@ -25697,11 +25697,42 @@ ${JSON.stringify(ctx, null, 2)}`;
                         className="slick-input"/>
                     </div>
                   </div>
+                  <div style={{marginBottom:"10px"}}>
+                    <div style={{fontSize:"8px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>LINK TO JOB (OPTIONAL)</div>
+                    <select value={supplierNewItem.jobId||''} onChange={e=>setSupplierNewItem(p=>({...p,jobId:e.target.value}))}
+                      className="slick-select accent-orange" style={{colorScheme:"dark"}}>
+                      <option value="">— none —</option>
+                      {donnyJobs.filter(j=>!j.completed).map(j=>(
+                        <option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} `:''}{j.title}</option>
+                      ))}
+                    </select>
+                  </div>
                   <button onClick={()=>{
                     if(!supplierNewItem.desc.trim()||!supplierNewItem.price) return;
-                    const newItem = { ...supplierNewItem, id: `i_${Date.now()}_${Math.random().toString(36).slice(2,7)}` };
+                    const { jobId, ...itemFields } = supplierNewItem;
+                    const newItem = { ...itemFields, id: `i_${Date.now()}_${Math.random().toString(36).slice(2,7)}` };
                     saveSuppliers(donnySuppliers.map(s=>s.id===supplier.id?{...s,items:[...(s.items||[]),newItem]}:s));
-                    setSupplierNewItem({desc:'',unit:'',price:''});
+                    // If a job was picked, also log it as a material entry on that job
+                    if (jobId) {
+                      const job = donnyJobs.find(j=>String(j.id)===String(jobId));
+                      const entry = {
+                        id: Date.now()+1,
+                        jobId: job?.id,
+                        item: newItem.desc,
+                        qty: newItem.unit||'',
+                        unit: '',
+                        cost: String(newItem.price||''),
+                        note: '',
+                        supplierId: supplier.id,
+                        date: new Date().toISOString().split('T')[0],
+                        createdAt: new Date().toISOString(),
+                        loggedBy: eliteName||userEmail,
+                        loggedAt: new Date().toISOString(),
+                      };
+                      setDonnyMaterialsLog([entry, ...donnyMaterialsLog]);
+                      if (job) logAction(`job_${job.id}`, { kind: 'create', summary: `Material logged from ${supplier.name}: ${newItem.desc}` });
+                    }
+                    setSupplierNewItem({desc:'',unit:'',price:'',jobId:''});
                   }} style={{width:"100%",padding:"10px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>
                     + ADD ITEM
                   </button>
