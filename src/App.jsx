@@ -343,14 +343,18 @@ const StarryBackground = ({ children }) => {
         }
         /* Tiny field label that pairs with .slick-input */
         .slick-label {
-          font-size: 9px;
-          color: rgba(148, 163, 184, 0.55);
+          font-size: 10px;
+          color: rgba(0, 200, 255, 0.7);
           font-family: ui-monospace, 'SF Mono', monospace;
-          letter-spacing: 1.8px;
-          margin-bottom: 6px;
+          letter-spacing: 2px;
+          margin-bottom: 8px;
           display: block;
           text-transform: uppercase;
+          font-weight: 600;
+          user-select: none;
         }
+        .slick-label.accent-blue { color: rgba(59, 130, 246, 0.85); }
+        .slick-label.accent-orange { color: rgba(249, 115, 22, 0.85); }
 
         /* Noise texture */
         .noise-overlay::before {
@@ -20873,25 +20877,25 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"24px",marginTop:"8px"}}>
               {/* CONTACT — clean, no panel */}
               <div>
-                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"18px",paddingBottom:"6px",borderBottom:"0.5px solid rgba(59,130,246,0.15)"}}>// CONTACT</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"18px"}}>
+                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",fontWeight:600}}>// CONTACT</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"22px"}}>
                   <div>
-                    <label className="slick-label">Email</label>
+                    <label className="slick-label accent-blue">Email</label>
                     <input className="slick-input accent-blue" value={client.email||''} onChange={e => updateClient({email:e.target.value})}
                       placeholder="name@example.com"/>
                   </div>
                   <div>
-                    <label className="slick-label">Phone</label>
+                    <label className="slick-label accent-blue">Phone</label>
                     <input className="slick-input accent-blue" value={client.phone||''} onChange={e => updateClient({phone:e.target.value})}
                       placeholder="04XX XXX XXX"/>
                   </div>
                   <div>
-                    <label className="slick-label">Address</label>
+                    <label className="slick-label accent-blue">Address</label>
                     <input className="slick-input accent-blue" value={client.address||''} onChange={e => updateClient({address:e.target.value})}
                       placeholder="Street, suburb"/>
                   </div>
                   <div>
-                    <label className="slick-label">Notes</label>
+                    <label className="slick-label accent-blue">Notes</label>
                     <textarea className="slick-textarea accent-blue" value={client.notes||''} onChange={e => updateClient({notes:e.target.value})}
                       placeholder="Anything worth remembering…"
                       rows={3}/>
@@ -20901,7 +20905,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
               {/* LINKED RECORDS — clean, no panel */}
               <div>
-                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"18px",paddingBottom:"6px",borderBottom:"0.5px solid rgba(59,130,246,0.15)"}}>// LINKED RECORDS</div>
+                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",fontWeight:600}}>// LINKED RECORDS</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
                   {[
                     {label:"TOTAL JOBS", count:clientJobs.length, view:'donny-masterview', color:"#3b82f6"},
