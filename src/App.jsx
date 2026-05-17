@@ -3086,6 +3086,7 @@ function MuzzApp() {
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
   const [selectedDonnyWorker, setSelectedDonnyWorker] = useState(null);
   const [selectedDonnyClient, setSelectedDonnyClient] = useState(null);
+  const [clientsSubTab, setClientsSubTab] = useState('clients'); // 'clients' | 'contacts'
   const [selectedDonnyMaterial, setSelectedDonnyMaterial] = useState(null);
   const [donnyBreadcrumbs, setDonnyBreadcrumbs] = useState([]); // [{type, id, label, color, icon}]
 
@@ -26232,6 +26233,23 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
+            {/* TABS */}
+            {(() => {
+              const billableCount = clientsWithStats.filter(c => c.billable !== false).length;
+              const contactCount = clientsWithStats.filter(c => c.billable === false).length;
+              return (
+                <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+                  <button onClick={() => setClientsSubTab('clients')} style={{padding:"8px 16px",background:clientsSubTab==='clients'?"rgba(59,130,246,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${clientsSubTab==='clients'?"rgba(59,130,246,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:clientsSubTab==='clients'?"#3b82f6":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                    CLIENTS <span style={{opacity:0.6,marginLeft:"4px"}}>{billableCount}</span>
+                  </button>
+                  <button onClick={() => setClientsSubTab('contacts')} style={{padding:"8px 16px",background:clientsSubTab==='contacts'?"rgba(148,163,184,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${clientsSubTab==='contacts'?"rgba(148,163,184,0.6)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:clientsSubTab==='contacts'?"#cbd5e1":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                    CONTACTS <span style={{opacity:0.6,marginLeft:"4px"}}>{contactCount}</span>
+                  </button>
+                </div>
+              );
+            })()}
+
+
             {/* KPI STRIP */}
 
             {/* ADD CLIENT FORM */}
@@ -26291,67 +26309,59 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* CLIENT LIST — split into billable Clients and Contacts */}
+            {/* CLIENT LIST — filtered by active tab */}
             {totalClients > 0 && (() => {
-              const billable = clientsWithStats.filter(c => c.billable !== false);
-              const contacts = clientsWithStats.filter(c => c.billable === false);
-
-              const renderRow = (c, accent) => {
-                const hasActive = c._active.length > 0;
-                const showQuoted = c.billable !== false && c._jobs.some(j => j.trackQuote !== false) && c._quoted > 0;
-                const dotColor = c.billable === false
-                  ? (hasActive ? "rgba(148,163,184,0.7)" : "rgba(148,163,184,0.3)")
-                  : (hasActive ? "#3b82f6" : "rgba(59,130,246,0.3)");
-                const dotGlow = c.billable === false ? "none" : (hasActive ? "0 0 6px rgba(59,130,246,0.5)" : "none");
-                return (
-                  <button key={c.id} onClick={() => navToEntity('client', c)}
-                    style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",transition:"background 0.15s ease"}}>
-                    <div style={{width:"10px",height:"10px",borderRadius:"50%",background:dotColor,boxShadow:dotGlow,flexShrink:0}} />
-                    <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                      <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name||'Unnamed'}</div>
-                      {(c.company || c.phone) && (
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                          {[c.company, c.phone].filter(Boolean).join(' · ')}
-                        </div>
-                      )}
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                      {c._jobs.length > 0 && (
-                        <span style={{fontFamily:"monospace",fontSize:"10px",color:hasActive?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>
-                          {hasActive ? `${c._active.length} active` : `${c._jobs.length} job${c._jobs.length!==1?'s':''}`}
-                        </span>
-                      )}
-                      {showQuoted && (
-                        <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)",letterSpacing:"0.5px"}}>${c._quoted.toFixed(0)}</span>
-                      )}
-                      <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
-                    </div>
-                  </button>
-                );
-              };
-
-              const sectionHeader = (label, count, hint, accent) => (
-                <div style={{display:"flex",alignItems:"baseline",gap:"10px",padding:"4px 6px",marginTop:"4px"}}>
-                  <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {label}</span>
-                  <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>{count}</span>
-                  <span style={{fontSize:"9px",color:"rgba(148,163,184,0.45)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{hint}</span>
-                </div>
+              const isBillableTab = clientsSubTab === 'clients';
+              const filtered = clientsWithStats.filter(c =>
+                isBillableTab ? c.billable !== false : c.billable === false
               );
+              const accent = isBillableTab ? '#3b82f6' : 'rgba(148,163,184,0.6)';
+
+              if (filtered.length === 0) {
+                return (
+                  <div style={{padding:"50px 20px",textAlign:"center",fontFamily:"monospace"}}>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.45)",letterSpacing:"2px",marginBottom:"8px"}}>// EMPTY</div>
+                    <div style={{fontSize:"12px",color:"rgba(224,234,255,0.6)",marginBottom:"4px"}}>{isBillableTab ? 'No billable clients yet.' : 'No contacts yet.'}</div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",lineHeight:1.5,maxWidth:"360px",margin:"0 auto"}}>{isBillableTab ? 'Clients you bill for jobs show up here.' : 'Workers, engineers and contacts linked to jobs but not billed show up here. Toggle a client to CONTACT ONLY to move them.'}</div>
+                  </div>
+                );
+              }
 
               return (
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  {billable.length > 0 && (
-                    <>
-                      {sectionHeader('CLIENTS', `${billable.length}`, '· billable', '#3b82f6')}
-                      {billable.map(c => renderRow(c, '#3b82f6'))}
-                    </>
-                  )}
-                  {contacts.length > 0 && (
-                    <>
-                      {sectionHeader('CONTACTS', `${contacts.length}`, '· linked, not billed', 'rgba(148,163,184,0.7)')}
-                      {contacts.map(c => renderRow(c, 'rgba(148,163,184,0.5)'))}
-                    </>
-                  )}
+                  {filtered.map(c => {
+                    const hasActive = c._active.length > 0;
+                    const showQuoted = c.billable !== false && c._jobs.some(j => j.trackQuote !== false) && c._quoted > 0;
+                    const dotColor = c.billable === false
+                      ? (hasActive ? "rgba(148,163,184,0.7)" : "rgba(148,163,184,0.3)")
+                      : (hasActive ? "#3b82f6" : "rgba(59,130,246,0.3)");
+                    const dotGlow = c.billable === false ? "none" : (hasActive ? "0 0 6px rgba(59,130,246,0.5)" : "none");
+                    return (
+                      <button key={c.id} onClick={() => navToEntity('client', c)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",transition:"background 0.15s ease"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:dotColor,boxShadow:dotGlow,flexShrink:0}} />
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name||'Unnamed'}</div>
+                          {(c.company || c.phone) && (
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                              {[c.company, c.phone].filter(Boolean).join(' · ')}
+                            </div>
+                          )}
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                          {c._jobs.length > 0 && (
+                            <span style={{fontFamily:"monospace",fontSize:"10px",color:hasActive?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>
+                              {hasActive ? `${c._active.length} active` : `${c._jobs.length} job${c._jobs.length!==1?'s':''}`}
+                            </span>
+                          )}
+                          {showQuoted && (
+                            <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)",letterSpacing:"0.5px"}}>${c._quoted.toFixed(0)}</span>
+                          )}
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               );
             })()}
