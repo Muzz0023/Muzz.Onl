@@ -25756,29 +25756,24 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                           {/* LINK TO JOB — appears when editing */}
                           {isEditing && (
-                            <div style={{padding:"6px 16px 14px 16px",background:"rgba(34,197,94,0.04)"}}>
-                              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px",fontWeight:600}}>→ ADD TO JOB</div>
+                            <div style={{padding:"4px 16px 14px 16px",background:"rgba(34,197,94,0.04)"}}>
+                              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px",fontWeight:600}}>→ TAP A JOB TO LOG THIS ITEM</div>
                               {donnyJobs.filter(j => !j.completed).length === 0 ? (
                                 <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",fontStyle:"italic"}}>No active jobs.</div>
                               ) : (
-                                <>
-                                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px",alignItems:"center",marginBottom:"8px"}}>
-                                    <input type="number" min="1" value={item._qtyDraft||''} onChange={e=>updateItem(item.id, {_qtyDraft:e.target.value})} placeholder="qty"
-                                      style={{width:"70px",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.4)",outline:"none",padding:"4px 8px",borderRadius:"2px"}}/>
-                                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{item.unit||'ea'} → tap a job to log:</span>
-                                  </div>
-                                  <div style={{display:"flex",flexWrap:"wrap",gap:"6px"}}>
-                                    {donnyJobs.filter(j => !j.completed).map(job => (
+                                <div style={{display:"flex",flexWrap:"wrap",gap:"6px"}}>
+                                  {donnyJobs.filter(j => !j.completed).map(job => {
+                                    const alreadyLogged = (donnyMaterialsLog||[]).some(e => e.jobId === job.id && (e.item||'').toLowerCase() === (item.desc||'').toLowerCase());
+                                    return (
                                       <button key={job.id} onClick={() => {
-                                        const qty = parseFloat(item._qtyDraft) || 1;
-                                        const totalCost = (parseFloat(item.price)||0) * qty;
+                                        const qty = parseFloat(item.unit)||1; // unit field is qty in your data (e.g. "2")
                                         const entry = {
                                           id: Date.now(),
                                           jobId: job.id,
                                           item: item.desc,
-                                          qty: String(qty),
-                                          unit: item.unit||'',
-                                          cost: String(totalCost),
+                                          qty: String(item.unit||''),
+                                          unit: '',
+                                          cost: String(item.price||''),
                                           note: '',
                                           supplierId: supplier.id,
                                           date: new Date().toISOString().split('T')[0],
@@ -25787,15 +25782,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                                           loggedAt: new Date().toISOString(),
                                         };
                                         setDonnyMaterialsLog([entry, ...donnyMaterialsLog]);
-                                        logAction(`job_${job.id}`, { kind: 'create', summary: `Material logged from ${supplier.name}: ${item.desc} × ${qty}${item.unit?' '+item.unit:''}` });
-                                        updateItem(item.id, {_qtyDraft:''});
-                                        alert(`Logged ${qty}${item.unit?' '+item.unit:''} of ${item.desc} to ${job.title} ($${totalCost.toFixed(2)})`);
-                                      }} style={{padding:"5px 10px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",fontWeight:600}}>
-                                        {job.jobNumber?`#${job.jobNumber} `:''}{job.title}
+                                        logAction(`job_${job.id}`, { kind: 'create', summary: `Material logged from ${supplier.name}: ${item.desc}${item.unit?' × '+item.unit:''}` });
+                                      }} style={{padding:"5px 10px",background:alreadyLogged?"rgba(34,197,94,0.15)":"rgba(249,115,22,0.08)",border:`0.5px solid ${alreadyLogged?"rgba(34,197,94,0.5)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:alreadyLogged?"rgba(34,197,94,0.95)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",fontWeight:600}}>
+                                        {alreadyLogged ? '✓ ' : ''}{job.jobNumber?`#${job.jobNumber} `:''}{job.title}
                                       </button>
-                                    ))}
-                                  </div>
-                                </>
+                                    );
+                                  })}
+                                </div>
                               )}
                             </div>
                           )}
