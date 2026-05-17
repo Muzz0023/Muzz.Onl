@@ -12667,7 +12667,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {tab.label}
                 </button>
               ))}
-              <button onClick={() => setActiveView('worldmap')} style={{padding:"6px 14px",background:"transparent",border:"0.5px solid transparent",borderRadius:"3px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+              <button onClick={() => setActiveView('worldmap')} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                 WORLD MAP
               </button>
             </div>
@@ -19341,25 +19341,41 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* EDIT QUOTE PANEL — collapsed by default */}
               {showEditQuote && (
                 <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",padding:"14px 16px",background:"rgba(0,0,0,0.15)"}}>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"10px"}}>// QUOTED VALUES</div>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"12px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED HOURS</div>
-                      <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="e.g. 500"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                  {/* Track quote toggle */}
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"10px 12px",background:"rgba(249,115,22,0.04)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"4px",marginBottom:"14px"}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:"10px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600,marginBottom:"3px"}}>TRACK QUOTE</div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5}}>Turn off for jobs you're not billing (e.g. helping out a mate, internal work). Hides quote/cost/margin everywhere.</div>
                     </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED MATERIALS $</div>
-                      <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="e.g. 1200"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOTAL QUOTE $</div>
-                      <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="e.g. 5000"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
-                    </div>
+                    <button onClick={() => updateJob({trackQuote: job.trackQuote === false ? true : false})}
+                      style={{position:"relative",width:"44px",height:"24px",background:job.trackQuote === false ? "rgba(148,163,184,0.2)" : "rgba(249,115,22,0.5)",border:`1px solid ${job.trackQuote === false ? "rgba(148,163,184,0.4)" : "rgba(249,115,22,0.8)"}`,borderRadius:"12px",cursor:"pointer",flexShrink:0,padding:0}}>
+                      <div style={{position:"absolute",top:"2px",left:job.trackQuote === false ? "2px" : "22px",width:"18px",height:"18px",borderRadius:"50%",background:"#e0eaff",transition:"left 0.15s ease",boxShadow:"0 1px 2px rgba(0,0,0,0.5)"}} />
+                    </button>
                   </div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"8px",letterSpacing:"0.5px"}}>Labour cost auto-calculates from logged hours × hourly rates.</div>
+
+                  {job.trackQuote !== false && (
+                    <>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"10px"}}>// QUOTED VALUES</div>
+                      <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"12px"}}>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED HOURS</div>
+                          <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="e.g. 500"
+                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED MATERIALS $</div>
+                          <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="e.g. 1200"
+                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOTAL QUOTE $</div>
+                          <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="e.g. 5000"
+                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                        </div>
+                      </div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"8px",letterSpacing:"0.5px"}}>Labour cost auto-calculates from logged hours × hourly rates.</div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -20801,77 +20817,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            {/* CONNECTIONS */}
-            {(() => {
-              // Workers who've worked on this client's jobs
-              const allTs = donnyTimesheets.filter(e => clientJobIds.includes(e.jobId));
-              const workerIds = [...new Set(allTs.map(e => e.memberId).filter(Boolean))];
-              const linkedWorkers = workerIds.map(id => donnyTeam.find(m => String(m.id) === String(id))).filter(Boolean);
-              // Top materials used
-              const matMap = {};
-              clientMaterials.forEach(m => {
-                const name = (m.item||'').trim();
-                if (!name) return;
-                if (!matMap[name]) matMap[name] = { name, count: 0 };
-                matMap[name].count += 1;
-              });
-              const topMaterials = Object.values(matMap).sort((a,b) => b.count - a.count).slice(0,6);
-              const activeClient = clientJobs.filter(j => !j.completed);
-              return (
-                <ConnectionsPanel
-                  accent="#3b82f6"
-                  sections={[
-                    {
-                      label: `Active Jobs · ${activeClient.length}`,
-                      entities: activeClient.slice(0,8).map(j => ({ type:'job', ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber}`:undefined, color:'#f97316', icon:'⊞' })),
-                      emptyText: 'No active jobs'
-                    },
-                    {
-                      label: `Workers Engaged · ${linkedWorkers.length}`,
-                      entities: linkedWorkers.map(w => ({ type:'worker', ref:w, label:w.name, sub:w.position||'', color:'#f97316', icon:'⊢' })),
-                      emptyText: 'No workers logged'
-                    },
-                    {
-                      label: `Top Materials · ${topMaterials.length}`,
-                      entities: topMaterials.map(m => ({ type:'material', ref:{name:m.name}, label:m.name, sub:`${m.count} entries`, color:'#22c55e', icon:'◍' })),
-                      emptyText: 'No materials logged'
-                    },
-                  ]}
-                />
-              );
-            })()}
-
-            {/* ACTIONS */}
-            <ActionsMenu accent="#3b82f6" actions={[
-              {
-                label: 'NEW JOB',
-                sub: 'create job for client',
-                color: '#22c55e',
-                disabled: donnyRole === 'worker',
-                onClick: () => {
-                  const newJob = { id: Date.now(), title: `New job for ${client.name}`, clientId: client.id, started: false, completed: false, createdAt: new Date().toISOString() };
-                  saveDonnyJobs([newJob, ...donnyJobs]);
-                  logAction(`job_${newJob.id}`, { kind: 'create', summary: `New job created for ${client.name}` });
-                  logAction(`client_${client.id}`, { kind: 'action', summary: `New job linked: ${newJob.title}` });
-                  navToEntity('job', newJob);
-                }
-              },
-              {
-                label: client.archived ? 'UNARCHIVE' : 'ARCHIVE',
-                sub: client.archived ? 'restore' : 'hide from views',
-                color: '#94a3b8',
-                disabled: donnyRole === 'worker',
-                onClick: () => {
-                  const updated = donnyClients.map(c => c.id === client.id ? {...c, archived: !client.archived} : c);
-                  setDonnyClients(updated);
-                  setSelectedDonnyClient(prev => prev ? {...prev, archived: !client.archived} : prev);
-                  logAction(`client_${client.id}`, { kind: 'action', summary: client.archived ? 'Client unarchived' : 'Client archived' });
-                }
-              },
-            ]} />
-
-            {/* AUDIT TRAIL */}
-            <AuditTrail entityId={`client_${client.id}`} accent="#3b82f6" />
 
             {/* DELETE */}
             <button onClick={() => { if(window.confirm(`Delete client ${client.name}? Jobs linked to them will be unlinked.`)) { setDonnyClients(donnyClients.filter(c=>c.id!==client.id)); setSelectedDonnyClient(null); setActiveView('donny-clients'); } }}
@@ -26257,115 +26202,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* KPI STRIP */}
-            {totalClients > 0 && (
-              <div style={{...panel,borderLeft:"2px solid #3b82f6"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Clients", value:String(totalClients), color:"#3b82f6",
-                      lineage: {
-                        title: 'Clients',
-                        value: String(totalClients),
-                        color: '#3b82f6',
-                        formula: 'COUNT(clients)',
-                        breakdown: clientsWithStats.map(c => ({
-                          icon: '◇', color: '#3b82f6',
-                          label: c.name,
-                          sub: c.company || c.phone || '—',
-                          value: `${c._jobs.length} jobs`,
-                          valueColor: '#3b82f6',
-                          onClick: () => navToEntity('client', c),
-                        })),
-                        note: 'Click to open client',
-                      },
-                    },
-                    {
-                      label:"Active Jobs", value:String(totalActiveJobs), color:"#f97316",
-                      lineage: totalActiveJobs > 0 ? {
-                        title: 'Active Jobs Across Clients',
-                        value: String(totalActiveJobs),
-                        color: '#f97316',
-                        formula: 'COUNT(jobs WHERE NOT completed AND has client)',
-                        breakdown: [...clientsWithStats].filter(c => c._active.length > 0).sort((a,b) => b._active.length - a._active.length).map(c => ({
-                          icon: '◇', color: '#3b82f6',
-                          label: c.name,
-                          sub: c.company || '—',
-                          value: `${c._active.length}`,
-                          valueColor: '#f97316',
-                          onClick: () => navToEntity('client', c),
-                        })),
-                        note: 'Clients with active jobs',
-                      } : null,
-                    },
-                    {
-                      label:"Revenue", value:totalRevenue > 0 ? `$${totalRevenue.toFixed(0)}` : '—', color:"rgba(34,197,94,0.85)",
-                      lineage: totalRevenue > 0 ? {
-                        title: 'Earned Revenue',
-                        value: `$${totalRevenue.toFixed(0)}`,
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'SUM(quotedCost) WHERE job.completed',
-                        breakdown: [...clientsWithStats].filter(c => c._completedQuoted > 0).sort((a,b) => b._completedQuoted - a._completedQuoted).map(c => ({
-                          icon: '◇', color: '#3b82f6',
-                          label: c.name,
-                          sub: `${c._completed.length} completed job${c._completed.length!==1?'s':''}`,
-                          value: `$${c._completedQuoted.toFixed(0)}`,
-                          valueColor: 'rgba(34,197,94,0.95)',
-                          onClick: () => navToEntity('client', c),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Top Client", value:topClient ? topClient.name : '—', color:"#a855f7", smallValue: true,
-                      lineage: topClient ? {
-                        title: `Top Client · ${topClient.name}`,
-                        value: `$${topClient._quoted.toFixed(0)}`,
-                        color: '#a855f7',
-                        formula: 'MAX(SUM(client.jobs.quotedCost))',
-                        breakdown: [...clientsWithStats].filter(c => c._quoted > 0).sort((a,b) => b._quoted - a._quoted).slice(0,10).map(c => ({
-                          icon: '◇', color: '#3b82f6',
-                          label: c.name,
-                          sub: `${c._jobs.length} jobs · ${c._completed.length} done`,
-                          value: `$${c._quoted.toFixed(0)}`,
-                          valueColor: '#a855f7',
-                          onClick: () => navToEntity('client', c),
-                        })),
-                        note: 'Top 10 by total quoted',
-                      } : null,
-                    },
-                    {
-                      label:"Avg Margin", value:clientsWithMargin.length > 0 ? `${avgMargin.toFixed(0)}%` : '—', color:avgMargin >= 20 ? "rgba(34,197,94,0.85)" : avgMargin >= 0 ? "rgba(245,158,11,0.85)" : "rgba(239,68,68,0.85)",
-                      lineage: clientsWithMargin.length > 0 ? {
-                        title: 'Average Profit Margin',
-                        value: `${avgMargin.toFixed(1)}%`,
-                        color: avgMargin >= 20 ? 'rgba(34,197,94,0.95)' : avgMargin >= 0 ? 'rgba(245,158,11,0.95)' : 'rgba(239,68,68,0.95)',
-                        formula: 'AVG((quoted - cost) / quoted) per client',
-                        breakdown: [...clientsWithMargin].sort((a,b) => b._margin - a._margin).map(c => ({
-                          icon: '◇', color: '#3b82f6',
-                          label: c.name,
-                          sub: `quoted $${c._quoted.toFixed(0)} − cost $${c._cost.toFixed(0)}`,
-                          value: `${c._margin.toFixed(0)}%`,
-                          valueColor: c._margin >= 20 ? 'rgba(34,197,94,0.95)' : c._margin >= 0 ? 'rgba(245,158,11,0.95)' : 'rgba(239,68,68,0.95)',
-                          onClick: () => navToEntity('client', c),
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      title={k.lineage ? "Click to see breakdown" : ""}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(59,130,246,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(59,130,246,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(59,130,246,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(59,130,246,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* ADD CLIENT FORM */}
             {showAddClient && (
@@ -26424,37 +26260,39 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* CLIENT TABLE */}
+            {/* CLIENT LIST — clean task-style rows */}
             {totalClients > 0 && (
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CLIENT TABLE</span>
-                  <span style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>{totalClients} ROW{totalClients!==1?'S':''}</span>
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 110px 80px 80px 30px":"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  {isWide ? (
-                    <><div></div><div>NAME</div><div>COMPANY</div><div>PHONE</div><div>JOBS</div><div>QUOTED</div><div></div></>
-                  ) : (
-                    <><div></div><div>NAME</div><div>JOBS</div><div></div></>
-                  )}
-                </div>
-                <div style={{maxHeight:clientsWithStats.length > 8 ? "440px" : "none",overflowY:clientsWithStats.length > 8 ? "auto" : "visible"}}>
-                  {clientsWithStats.map((c, i) => (
+              <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                {clientsWithStats.map((c) => {
+                  const initial = (c.name||'?').charAt(0).toUpperCase();
+                  const hasActive = c._active.length > 0;
+                  const showQuoted = c._jobs.some(j => j.trackQuote !== false) && c._quoted > 0;
+                  return (
                     <button key={c.id} onClick={() => navToEntity('client', c)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 1fr 110px 80px 80px 30px":"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<clientsWithStats.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(59,130,246,0.12)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",fontWeight:700,color:"#3b82f6",fontFamily:"monospace",flexShrink:0}}>{(c.name||'?').charAt(0).toUpperCase()}</div>
-                      <div style={{minWidth:0}}>
-                        <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</div>
-                        {!isWide && (c.company || c.phone || c._quoted>0) && <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[c.company, c._quoted>0?`$${c._quoted.toFixed(0)} quoted`:''].filter(Boolean).join(' · ')}</div>}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(59,130,246,0.12)",borderLeft:`2px solid ${hasActive?"#3b82f6":"rgba(59,130,246,0.3)"}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",transition:"background 0.15s ease"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasActive?"#3b82f6":"rgba(59,130,246,0.3)",boxShadow:hasActive?"0 0 6px rgba(59,130,246,0.5)":"none",flexShrink:0}} />
+                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name||'Unnamed client'}</div>
+                        {(c.company || c.phone) && (
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {[c.company, c.phone].filter(Boolean).join(' · ')}
+                          </div>
+                        )}
                       </div>
-                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.company||'—'}</div>}
-                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:c.phone?"rgba(59,130,246,0.7)":"rgba(148,163,184,0.3)"}}>{c.phone||'—'}</div>}
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:c._jobs.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)"}}>{c._jobs.length}{isWide && c._active.length>0?` (${c._active.length} active)`:''}</div>
-                      {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:c._quoted>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{c._quoted>0?`$${c._quoted.toFixed(0)}`:'—'}</div>}
-                      <span style={{fontSize:"12px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace"}}>›</span>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                        {c._jobs.length > 0 && (
+                          <span style={{fontFamily:"monospace",fontSize:"10px",color:hasActive?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>
+                            {hasActive ? `${c._active.length} active` : `${c._jobs.length} job${c._jobs.length!==1?'s':''}`}
+                          </span>
+                        )}
+                        {showQuoted && (
+                          <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)",letterSpacing:"0.5px"}}>${c._quoted.toFixed(0)}</span>
+                        )}
+                        <span style={{fontSize:"14px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace"}}>›</span>
+                      </div>
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             )}
 
