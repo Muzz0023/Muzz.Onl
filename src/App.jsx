@@ -25615,6 +25615,31 @@ ${JSON.stringify(ctx, null, 2)}`;
         const totalValue = supplierItems.reduce((sum, it) => sum + (parseFloat(it.price)||0), 0);
         const avgPrice = supplierItems.length > 0 ? totalValue / supplierItems.length : 0;
 
+        // Material log entries linked to this supplier
+        const supplierLogs = (donnyMaterialsLog||[]).filter(e => e.supplierId === supplier.id);
+        const totalSpent = supplierLogs.reduce((s,e) => s + (parseFloat(e.cost)||0), 0);
+        const jobsUsed = [...new Set(supplierLogs.map(e => e.jobId).filter(Boolean))];
+
+        // Per-item: which jobs has this item been logged on?
+        const itemJobMap = {};
+        supplierLogs.forEach(e => {
+          const key = (e.item||'').trim().toLowerCase();
+          if (!key) return;
+          if (!itemJobMap[key]) itemJobMap[key] = new Set();
+          if (e.jobId) itemJobMap[key].add(e.jobId);
+        });
+
+        // Spend per job for this supplier
+        const spendByJob = {};
+        supplierLogs.forEach(e => {
+          if (!e.jobId) return;
+          spendByJob[e.jobId] = (spendByJob[e.jobId]||0) + (parseFloat(e.cost)||0);
+        });
+        const spendByJobList = Object.entries(spendByJob).map(([jobId,cost]) => {
+          const job = donnyJobs.find(j => String(j.id) === String(jobId));
+          return { jobId, job, cost };
+        }).filter(x => x.job).sort((a,b) => b.cost - a.cost);
+
         const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
         const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
@@ -25656,6 +25681,30 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
 
             <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+
+              {/* KPI STRIP */}
+              <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"1px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>SPENT</div>
+                  <div style={{fontSize:"20px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalSpent.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{supplierLogs.length} entr{supplierLogs.length!==1?'ies':'y'}</div>
+                </div>
+                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>CATALOG</div>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{supplierItems.length}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>item{supplierItems.length!==1?'s':''}</div>
+                </div>
+                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>JOBS</div>
+                  <div style={{fontSize:"20px",color:"#f97316",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{jobsUsed.length}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>used on</div>
+                </div>
+                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>AVG PRICE</div>
+                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${avgPrice.toFixed(0)}</div>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>per item</div>
+                </div>
+              </div>
 
               {/* CONTACT INFO */}
               <div style={panel}>
@@ -25774,7 +25823,28 @@ ${JSON.stringify(ctx, null, 2)}`;
                             </>
                           ) : (
                             <>
-                              <span style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"8px"}}>{item.desc}</span>
+                              <div style={{overflow:"hidden",paddingRight:"8px",minWidth:0}}>
+                                <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.desc}</div>
+                                {(() => {
+                                  const linkedJobIds = [...(itemJobMap[(item.desc||'').trim().toLowerCase()] || [])];
+                                  if (linkedJobIds.length === 0) return null;
+                                  return (
+                                    <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginTop:"4px"}}>
+                                      {linkedJobIds.slice(0,4).map(jid => {
+                                        const job = donnyJobs.find(j => String(j.id) === String(jid));
+                                        if (!job) return null;
+                                        return (
+                                          <button key={jid} onClick={(e) => { e.stopPropagation(); navToEntity('job', job); }}
+                                            style={{fontSize:"9px",padding:"1px 6px",background:"rgba(249,115,22,0.08)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px",cursor:"pointer",fontFamily:"monospace",letterSpacing:"0.3px",fontWeight:500}}>
+                                            {job.jobNumber?`#${job.jobNumber}`:job.title.slice(0,12)}
+                                          </button>
+                                        );
+                                      })}
+                                      {linkedJobIds.length > 4 && <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>+{linkedJobIds.length-4}</span>}
+                                    </div>
+                                  );
+                                })()}
+                              </div>
                               <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>{item.unit||'—'}</span>
                               <span style={{fontSize:"12px",fontFamily:"monospace",fontWeight:500,color:"rgba(34,197,94,0.95)"}}>${parseFloat(item.price).toFixed(2)}</span>
                               <div style={{display:"flex",gap:"4px",justifyContent:"flex-end"}}>
@@ -25829,6 +25899,37 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </>
                 )}
               </div>
+
+              {/* SPEND BY JOB */}
+              {spendByJobList.length > 0 && (
+                <div style={panel}>
+                  <div style={panelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SPEND BY JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>${totalSpent.toLocaleString('en-AU',{maximumFractionDigits:0})} TOTAL</span>
+                  </div>
+                  <div>
+                    {spendByJobList.map((row,i) => {
+                      const pct = totalSpent > 0 ? (row.cost / totalSpent) * 100 : 0;
+                      return (
+                        <button key={row.jobId} onClick={() => navToEntity('job', row.job)}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"10px 16px",background:"transparent",border:"none",borderTop:i>0?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer",textAlign:"left"}}>
+                          <div style={{width:"8px",height:"8px",borderRadius:"50%",background:row.job.completed?"#22c55e":row.job.started?"#f97316":"rgba(148,163,184,0.5)",flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                              {row.job.jobNumber?`#${row.job.jobNumber} `:''}{row.job.title}
+                            </div>
+                            <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginTop:"4px"}}>
+                              <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.6)"}}/>
+                            </div>
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"rgba(34,197,94,0.95)",fontWeight:500,flexShrink:0}}>${row.cost.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
+                          <span style={{fontSize:"14px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",flexShrink:0}}>›</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* DELETE SUPPLIER */}
               <button onClick={()=>{ if(window.confirm(`Remove ${supplier.name}?`)){ saveSuppliers(donnySuppliers.filter(s=>s.id!==supplier.id)); setEditingSupplierId(null); }}}
