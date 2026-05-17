@@ -21575,31 +21575,28 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ACTIVE JOBS</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{activeJobs.length} JOB{activeJobs.length!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 90px 30px":"32px 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  {isWide ? (
-                    <><div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div>LAST</div><div></div></>
-                  ) : (
-                    <><div></div><div>JOB</div><div>HOURS</div><div></div></>
-                  )}
-                </div>
                 <div style={{maxHeight:activeJobs.length > 8 ? "440px" : "none",overflowY:activeJobs.length > 8 ? "auto" : "visible"}}>
                   {activeJobs.map((job,i) => {
                     const notes = donnyNotes[job.id]||[];
                     const tsEntries = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id));
                     const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
                     const lastActivity = [...notes, ...tsEntries].sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0))[0];
+                    const accent = '#a855f7';
+                    const hasActivity = totalHrs > 0 || notes.length > 0;
+                    const subParts = [];
+                    if (job.jobNumber) subParts.push(`#${job.jobNumber}`);
+                    if (totalHrs > 0) subParts.push(`${totalHrs.toFixed(1)}h`);
+                    if (notes.length > 0) subParts.push(`${notes.length} ${notes.length===1?'entry':'entries'}`);
+                    if (lastActivity) subParts.push(new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}));
                     return (
                       <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 90px 30px":"32px 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#f97316",fontFamily:"monospace",flexShrink:0}}>⊞</div>
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
-                          {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasActivity?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobs.length-1?"6px":"0"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasActivity?accent:`${accent}40`,boxShadow:hasActivity?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
                         </div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:totalHrs>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{totalHrs>0?`${totalHrs.toFixed(1)}h`:'—'}</div>
-                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length} entr${notes.length===1?'y':'ies'}`:'—'}</div>}
-                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>{lastActivity?new Date(lastActivity.createdAt).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>}
-                        <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                       </button>
                     );
                   })}
@@ -21614,29 +21611,25 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// COMPLETED JOBS</span>
                   <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{completedJobs.length} DONE</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 30px":"32px 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  {isWide ? (
-                    <><div></div><div>JOB</div><div>HOURS</div><div>DIARY</div><div></div></>
-                  ) : (
-                    <><div></div><div>JOB</div><div>HOURS</div><div></div></>
-                  )}
-                </div>
                 <div style={{maxHeight:completedJobs.length > 6 ? "320px" : "none",overflowY:completedJobs.length > 6 ? "auto" : "visible"}}>
                   {completedJobs.map((job,i) => {
                     const notes = donnyNotes[job.id]||[];
                     const tsEntries = donnyTimesheets.filter(e=>String(e.jobId)===String(job.id));
                     const totalHrs = tsEntries.reduce((s,e)=>s+(parseFloat(e.hours)||0),0);
+                    const accent = '#22c55e';
+                    const subParts = [];
+                    if (job.jobNumber) subParts.push(`#${job.jobNumber}`);
+                    if (totalHrs > 0) subParts.push(`${totalHrs.toFixed(1)}h`);
+                    if (notes.length > 0) subParts.push(`${notes.length} ${notes.length===1?'entry':'entries'}`);
                     return (
                       <button key={job.id} onClick={() => { setNoteJobId(job.id); setNewNoteText(''); setTsSelectedMember(null); setTsHours(''); setTsDesc(''); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 70px 70px 30px":"32px 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<completedJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px",opacity:0.7}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#22c55e",fontFamily:"monospace",flexShrink:0}}>✓</div>
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
-                          {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<completedJobs.length-1?"6px":"0",opacity:0.7}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
                         </div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:totalHrs>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.4)"}}>{totalHrs>0?`${totalHrs.toFixed(1)}h`:'—'}</div>
-                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:notes.length>0?"rgba(168,85,247,0.85)":"rgba(148,163,184,0.4)"}}>{notes.length>0?`${notes.length}`:'—'}</div>}
-                        <span style={{fontSize:"12px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>›</span>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                       </button>
                     );
                   })}
@@ -22385,44 +22378,40 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
-            {/* RECURRING TABLE */}
+            {/* RECURRING LIST */}
             {totalRecurring > 0 && (
-              <div style={recPanel}>
-                <div style={recPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RECURRING TABLE</span>
+              <div>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px"}}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// RECURRING</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalRecurring} ROW{totalRecurring!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 110px 90px 30px":"32px 1fr 80px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  {isWide ? (
-                    <><div></div><div>JOB</div><div>CLIENT</div><div>NEXT DATE</div><div>FREQ</div><div></div>
-                  </>) : (
-                    <><div></div><div>JOB</div><div>NEXT</div><div></div></>
-                  )}
-                </div>
-                <div style={{maxHeight:donnyRecurring.length > 8 ? "440px" : "none",overflowY:donnyRecurring.length > 8 ? "auto" : "visible"}}>
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {donnyRecurring.map((r,i) => {
                     const client = donnyClients.find(c => String(c.id) === String(r.clientId));
                     const fc = freqColors[r.freq]||'#f97316';
                     const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
                     const isOverdue = daysUntil !== null && daysUntil < 0;
                     const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 7;
+                    const accent = fc;
+                    const dateStr = r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
+                    const subParts = [];
+                    if (client?.name) subParts.push(client.name);
+                    if (freqLabels[r.freq]) subParts.push(freqLabels[r.freq]);
+                    if (dateStr) {
+                      let dlabel = `next ${dateStr}`;
+                      if (isOverdue) dlabel = `${dateStr} ⚠`;
+                      else if (daysUntil === 0) dlabel = `${dateStr} · TODAY`;
+                      subParts.push(dlabel);
+                    }
                     return (
                       <button key={r.id} onClick={()=>setEditingRecurringId(editingRecurringId===r.id?null:r.id)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 110px 90px 30px":"32px 1fr 80px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyRecurring.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:editingRecurringId===r.id?"rgba(249,115,22,0.04)":"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${fc}15`,border:`0.5px solid ${fc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:fc,fontFamily:"monospace",flexShrink:0}}>↻</div>
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title}</div>
-                          {!isWide && (client || r.freq) && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{[client?.name, freqLabels[r.freq]].filter(Boolean).join(' · ')}</div>}
-                          {isWide && r.notes && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.notes}</div>}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:editingRecurringId===r.id?"rgba(249,115,22,0.06)":"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isOverdue?'#ef4444':isDueSoon?'#f59e0b':accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isOverdue?'#ef4444':isDueSoon?'#f59e0b':accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title||'—'}</div>
+                          {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"rgba(239,68,68,0.85)":"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
                         </div>
-                        {isWide && <div style={{fontFamily:"monospace",fontSize:"10px",color:client?"#3b82f6":"rgba(148,163,184,0.4)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{client?.name||'—'}</div>}
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"#ef4444":isDueSoon?"#f59e0b":"rgba(148,163,184,0.6)"}}>
-                          {r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—'}
-                          {isOverdue && <span style={{marginLeft:"4px"}}>⚠</span>}
-                          {daysUntil === 0 && <span style={{marginLeft:"4px",color:"#f59e0b"}}>·TODAY</span>}
-                        </div>
-                        {isWide && <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${fc}15`,color:fc,border:`0.5px solid ${fc}30`,borderRadius:"2px",justifySelf:"start",whiteSpace:"nowrap"}}>{freqLabels[r.freq]}</div>}
-                        <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>{editingRecurringId===r.id?'⌄':'›'}</span>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>{editingRecurringId===r.id?'⌄':'›'}</span>
                       </button>
                     );
                   })}
@@ -22678,33 +22667,25 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{donnyJobs.length} JOB{donnyJobs.length!==1?'S':''}</span>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 60px 60px 60px 60px 30px":"32px 1fr 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                  {isWide ? (
-                    <><div></div><div>JOB</div><div>BEFORE</div><div>AFTER</div><div>PROG.</div><div>DEFECT</div><div></div></>
-                  ) : (
-                    <><div></div><div>JOB</div><div>PHOTOS</div><div></div></>
-                  )}
-                </div>
                 <div style={{maxHeight:donnyJobs.length > 8 ? "440px" : "none",overflowY:donnyJobs.length > 8 ? "auto" : "visible"}}>
                   {donnyJobs.map((job, i) => {
                     const photos = donnyPhotos[job.id]||[];
+                    const accent = '#a855f7';
+                    const hasPhotos = photos.length > 0;
+                    const tagCounts = ['before','after','progress','defect'].map(tag => ({tag, n:photos.filter(p=>p.tag===tag).length})).filter(t=>t.n>0);
+                    const subParts = [];
+                    if (job.jobNumber) subParts.push(`#${job.jobNumber}`);
+                    if (photos.length>0) subParts.push(`${photos.length} photo${photos.length!==1?'s':''}`);
+                    if (tagCounts.length>0) subParts.push(tagCounts.map(t=>`${t.n} ${t.tag}`).join(', '));
                     return (
                       <button key={job.id} onClick={()=>{ setPhotoJobId(job.id); setPhotoFilter('all'); }}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 60px 60px 60px 60px 30px":"32px 1fr 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<donnyJobs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#f97316",fontFamily:"monospace",flexShrink:0}}>⊞</div>
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
-                          {job.jobNumber && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace"}}>#{job.jobNumber}</div>}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasPhotos?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<donnyJobs.length-1?"6px":"0"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasPhotos?accent:`${accent}40`,boxShadow:hasPhotos?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>
                         </div>
-                        {isWide ? (
-                          ['before','after','progress','defect'].map(tag => {
-                            const count = photos.filter(p=>p.tag===tag).length;
-                            return <div key={tag} style={{fontFamily:"monospace",fontSize:"11px",color:count>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.3)",fontWeight:count>0?500:400}}>{count||'—'}</div>;
-                          })
-                        ) : (
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:photos.length>0?"rgba(249,115,22,0.85)":"rgba(148,163,184,0.3)",fontWeight:photos.length>0?500:400}}>{photos.length||'—'}</div>
-                        )}
-                        <span style={{fontSize:"12px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace"}}>›</span>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                       </button>
                     );
                   })}
@@ -22846,42 +22827,31 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Tap + NEW DOC to add SWMS, checklists, inspections, or toolbox talks</div>
                 </div>
               ) : jobDocs.length > 0 && (
-                <div style={clPanel}>
-                  <div style={clPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// DOCUMENTS</span>
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
+                    <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// DOCUMENTS</span>
                     <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{jobDocs.length} ROW{jobDocs.length!==1?'S':''}</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 70px 30px":"32px 1fr 60px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    {isWide ? (
-                      <><div></div><div>TITLE</div><div>TYPE</div><div>DONE</div><div></div></>
-                    ) : (
-                      <><div></div><div>TITLE</div><div>DONE</div><div></div></>
-                    )}
-                  </div>
-                  <div style={{maxHeight:jobDocs.length > 8 ? "440px" : "none",overflowY:jobDocs.length > 8 ? "auto" : "visible"}}>
-                    {jobDocs.map((cl,i)=>{
-                      const tc=typeColors[cl.type]||'#22c55e';
-                      const done=cl.items?.filter(x=>x.done).length||0; const total=cl.items?.length||0;
-                      const isComplete = done===total && total>0;
-                      return (
-                        <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 1fr 110px 70px 30px":"32px 1fr 60px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobDocs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                          <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>{isComplete?'✓':'◍'}</div>
-                          <div style={{minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.title}</div>
-                            {!isWide ? (
-                              <div style={{fontSize:"9px",fontFamily:"monospace",color:tc,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{typeLabels[cl.type]||cl.type}{cl.loggedBy?` · by ${cl.loggedBy}`:''}</div>
-                            ) : (
-                              cl.loggedBy && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>by {cl.loggedBy}</div>
-                            )}
-                          </div>
-                          {isWide && <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{typeLabels[cl.type]||cl.type}</div>}
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:isComplete?"rgba(34,197,94,0.95)":tc,fontWeight:500}}>{done}/{total}</div>
-                          <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  {jobDocs.map((cl,i)=>{
+                    const accent = typeColors[cl.type]||'#22c55e';
+                    const done = cl.items?.filter(x=>x.done).length||0; const total=cl.items?.length||0;
+                    const isComplete = done===total && total>0;
+                    const subParts = [];
+                    if (typeLabels[cl.type]||cl.type) subParts.push(typeLabels[cl.type]||cl.type);
+                    if (total>0) subParts.push(`${done}/${total}`);
+                    if (cl.loggedBy) subParts.push(`by ${cl.loggedBy}`);
+                    return (
+                      <button key={cl.id} onClick={()=>setSelectedChecklistId(cl.id)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isComplete?'#22c55e':accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isComplete?'#22c55e':accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.title}</div>
+                          {subParts.length>0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
+                        </div>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -23006,24 +22976,26 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
                     <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 90px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>JOB</div><div>DOCS</div><div></div>
-                  </div>
                   <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
                     {activeJobsList.map((j, i) => {
                       const docs = donnyChecklists.filter(c => String(c.jobId) === String(j.id));
                       const items = docs.reduce((s,c) => s + (c.items?.length||0), 0);
                       const done = docs.reduce((s,c) => s + (c.items?.filter(x=>x.done).length||0), 0);
+                      const accent = '#22c55e';
+                      const hasDocs = docs.length > 0;
+                      const subParts = [];
+                      if (j.jobNumber) subParts.push(`#${j.jobNumber}`);
+                      subParts.push(`${docs.length} doc${docs.length!==1?'s':''}`);
+                      if (items > 0) subParts.push(`${done}/${items} done`);
                       return (
                         <button key={j.id} onClick={() => setChecklistJobId(j.id)}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
-                          <div style={{minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
-                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasDocs?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasDocs?accent:`${accent}40`,boxShadow:hasDocs?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>
                           </div>
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:docs.length>0?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.5)"}}>{docs.length} doc{docs.length!==1?'s':''}{items>0?` · ${done}/${items}`:''}</div>
-                          <span style={{fontSize:"12px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace"}}>›</span>
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                         </button>
                       );
                     })}
@@ -23172,26 +23144,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// INCIDENTS</span>
                     <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobIncs.length} ROW{jobIncs.length!==1?'S':''}</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    {isWide ? (
-                      <><div></div><div>DATE</div><div>TYPE</div><div>WHAT</div><div></div></>
-                    ) : (
-                      <><div></div><div>DATE</div><div>WHAT</div><div></div></>
-                    )}
-                  </div>
                   {jobIncs.map((inc,i) => {
                     const tc = typeColors[inc.type]||'#ef4444';
+                    const accent = tc;
+                    const dateStr = inc.date ? new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
+                    const typeLabel = typeLabels[inc.type] || inc.type;
+                    const subtitle = [dateStr, typeLabel].filter(Boolean).join(' · ');
                     return (
                       <button key={inc.id} onClick={()=>setEditingIncidentId(editingIncidentId===inc.id?null:inc.id)}
-                        style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobIncs.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                        <div style={{width:"22px",height:"22px",borderRadius:"3px",background:`${tc}15`,border:`0.5px solid ${tc}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:tc,fontFamily:"monospace",flexShrink:0}}>⚠</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.date?new Date(inc.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
-                        {isWide && <div style={{fontSize:"9px",fontFamily:"monospace",letterSpacing:"1px",padding:"1px 6px",background:`${tc}15`,color:tc,border:`0.5px solid ${tc}30`,borderRadius:"2px",justifySelf:"start"}}>{typeLabels[inc.type]||inc.type}</div>}
-                        <div style={{minWidth:0}}>
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.description}</div>
-                          {!isWide && <div style={{fontSize:"9px",fontFamily:"monospace",color:tc,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{typeLabels[inc.type]||inc.type}</div>}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<jobIncs.length-1?"6px":"0"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{inc.description||'—'}</div>
+                          {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
                         </div>
-                        <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                       </button>
                     );
                   })}
@@ -23339,22 +23306,22 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
                     <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>JOB</div><div>INCIDENTS</div><div></div>
-                  </div>
                   <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
                     {activeJobsList.map((j, i) => {
                       const incs = donnyIncidents.filter(inc => String(inc.jobId) === String(j.id));
+                      const accent = '#ef4444';
+                      const hasIncs = incs.length > 0;
                       return (
                         <button key={j.id} onClick={() => setIncidentJobId(j.id)}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
-                          <div style={{minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
-                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasIncs?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasIncs?accent:`${accent}40`,boxShadow:hasIncs?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                              {[j.jobNumber?`#${j.jobNumber}`:null, `${incs.length} ${incs.length===1?'incident':'incidents'}`].filter(Boolean).join(' · ')}
+                            </div>
                           </div>
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:incs.length>0?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.6)"}}>{incs.length} {incs.length===1?'incident':'incidents'}</div>
-                          <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                         </button>
                       );
                     })}
@@ -23813,31 +23780,27 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Keep it that way</div>
                 </div>
               ) : jobMists.length > 0 && (
-                <div style={mPanel}>
-                  <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// MISTAKES</span>
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// MISTAKES</span>
                     <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    {isWide ? (
-                      <><div></div><div>DATE</div><div>WHO</div><div>WHAT</div><div></div></>
-                    ) : (
-                      <><div></div><div>DATE</div><div>WHAT</div><div></div></>
-                    )}
-                  </div>
-                  {jobMists.map((m,i) => (
-                    <button key={m.id} onClick={()=>setEditingMistakeId(editingMistakeId===m.id?null:m.id)}
-                      style={{width:"100%",display:"grid",gridTemplateColumns:isWide?"32px 90px 110px 1fr 30px":"32px 70px 1fr 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobMists.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                      <div style={{width:"22px",height:"22px",borderRadius:"3px",background:"rgba(239,68,68,0.15)",border:"0.5px solid rgba(239,68,68,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"11px",color:"#ef4444",fontFamily:"monospace",flexShrink:0}}>✕</div>
-                      <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.date?new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</div>
-                      {isWide && <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.who||'Unknown'}</div>}
-                      <div style={{minWidth:0}}>
-                        <div style={{fontFamily:"monospace",fontSize:isWide?"10px":"11px",color:isWide?"rgba(148,163,184,0.7)":"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.what}</div>
-                        {!isWide && m.who && <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>by {m.who}</div>}
-                      </div>
-                      <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
-                    </button>
-                  ))}
+                  {jobMists.map((m,i) => {
+                    const accent = '#ef4444';
+                    const dateStr = m.date ? new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
+                    const subtitle = [dateStr, m.who].filter(Boolean).join(' · ');
+                    return (
+                      <button key={m.id} onClick={()=>setEditingMistakeId(editingMistakeId===m.id?null:m.id)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.what||'—'}</div>
+                          {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
+                        </div>
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -23960,16 +23923,19 @@ ${JSON.stringify(ctx, null, 2)}`;
                         const ref = String(m.jobRef).toLowerCase();
                         return (j.title && ref.includes(String(j.title).toLowerCase())) || (j.jobNumber && ref.includes(String(j.jobNumber).toLowerCase()));
                       });
+                      const accent = '#ef4444';
+                      const hasMistakes = ms.length > 0;
                       return (
                         <button key={j.id} onClick={() => setMistakeJobId(j.id)}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
-                          <div style={{minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
-                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasMistakes?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasMistakes?accent:`${accent}40`,boxShadow:hasMistakes?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                              {[j.jobNumber?`#${j.jobNumber}`:null, `${ms.length} ${ms.length===1?'mistake':'mistakes'}`].filter(Boolean).join(' · ')}
+                            </div>
                           </div>
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:ms.length>0?"rgba(239,68,68,0.85)":"rgba(34,197,94,0.6)"}}>{ms.length} {ms.length===1?'mistake':'mistakes'}</div>
-                          <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                         </button>
                       );
                     })}
@@ -24243,27 +24209,25 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
                     <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"32px 1fr 90px 70px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div></div><div>JOB</div><div>RISKS</div><div>STATUS</div><div></div>
-                  </div>
                   <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
                     {activeJobsList.map((j, i) => {
                       const jr = getJobRisks(j);
                       const allMitigated = jr.length > 0 && jr.every(r => r.mitigation && r.mitigation.trim());
-                      const someMissing = jr.length > 0 && !allMitigated;
-                      const status = jr.length === 0 ? '— none' : allMitigated ? 'PLAN' : 'NO PLAN';
-                      const statusColor = jr.length === 0 ? "rgba(148,163,184,0.4)" : allMitigated ? "rgba(34,197,94,0.85)" : "rgba(245,158,11,0.85)";
+                      const accent = '#ef4444';
+                      const hasRisks = jr.length > 0;
+                      const subtitleParts = [];
+                      if (j.jobNumber) subtitleParts.push(`#${j.jobNumber}`);
+                      subtitleParts.push(`${jr.length} ${jr.length===1?'risk':'risks'}`);
+                      if (hasRisks) subtitleParts.push(allMitigated ? 'mitigated' : 'no plan');
                       return (
                         <button key={j.id} onClick={() => setRiskJobId(j.id)}
-                          style={{width:"100%",display:"grid",gridTemplateColumns:"32px 1fr 90px 70px 30px",padding:"10px 16px",alignItems:"center",borderBottom:i<activeJobsList.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",background:"none",border:"none",cursor:"pointer",textAlign:"left",gap:"8px"}}>
-                          <span style={{fontSize:"13px",color:"rgba(249,115,22,0.75)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>⊞</span>
-                          <div style={{minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
-                            {j.jobNumber && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>#{j.jobNumber}</div>}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${hasRisks?accent:`${accent}40`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",marginBottom:i<activeJobsList.length-1?"6px":"0"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasRisks?accent:`${accent}40`,boxShadow:hasRisks?`0 0 6px ${accent}80`:"none",flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitleParts.join(' · ')}</div>
                           </div>
-                          <div style={{fontFamily:"monospace",fontSize:"11px",color:jr.length>0?"rgba(239,68,68,0.85)":"rgba(148,163,184,0.5)"}}>{jr.length} {jr.length===1?'risk':'risks'}</div>
-                          <div style={{fontFamily:"monospace",fontSize:"9px",letterSpacing:"1px",padding:"2px 6px",background:`${statusColor.replace('0.85','0.1').replace('0.4','0.06')}`,color:statusColor,border:`0.5px solid ${statusColor.replace('0.85','0.3').replace('0.4','0.15')}`,borderRadius:"2px",textAlign:"center",justifySelf:"start"}}>{status}</div>
-                          <span style={{fontSize:"12px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace"}}>›</span>
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                         </button>
                       );
                     })}
