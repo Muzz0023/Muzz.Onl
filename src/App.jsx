@@ -20765,9 +20765,8 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* JOBS — task-style rows, no panel chrome */}
             <div>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.15)"}}>
+              <div style={{marginBottom:"14px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.15)"}}>
                 <span style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// JOBS</span>
-                <button onClick={() => setActiveView('donny-newjob')} style={{fontSize:"10px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",background:"none",border:"0.5px solid rgba(59,130,246,0.4)",padding:"4px 12px",cursor:"pointer",borderRadius:"3px",letterSpacing:"1.5px",fontWeight:600}}>+ NEW JOB</button>
               </div>
               {clientJobs.length === 0 ? (
                 <div style={{padding:"28px 0",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>No jobs linked yet.</div>
