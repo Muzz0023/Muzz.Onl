@@ -20789,7 +20789,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                         </div>
                         {client.billable !== false && j._hasQuote && (
                           <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                            <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)",letterSpacing:"0.5px"}}>${parseFloat(j.quotedCost).toFixed(0)}</span>
                             <span style={{fontSize:"14px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace"}}>›</span>
                           </div>
                         )}
