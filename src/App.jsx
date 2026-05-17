@@ -25741,8 +25741,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// SUPPLIERS</div>
                   <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUPPLIERS</div>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {donnySuppliers.length} supplier{donnySuppliers.length!==1?'s':''} · {totalItems} catalog item{totalItems!==1?'s':''}
-                    {totalCatalogValue > 0 && (' · $'+totalCatalogValue.toFixed(0)+' total')}
+                    {donnySuppliers.length} supplier{donnySuppliers.length!==1?'s':''}
                   </div>
                 </div>
                 <button onClick={()=>setShowAddSupplier(s=>!s)}
@@ -25799,23 +25798,16 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                 {donnySuppliers.map(s => {
                   const accent = '#22c55e';
-                  const itemCount = (s.items||[]).length;
-                  const isActive = itemCount > 0;
                   const subtitle = [s.contact, s.phone].filter(Boolean).join(' · ');
                   return (
                     <button key={s.id} onClick={() => setEditingSupplierId(s.id)}
-                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isActive?accent:`${accent}50`,boxShadow:isActive?`0 0 6px ${accent}80`:"none",flexShrink:0}} />
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}} />
                       <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
                         <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name||'Unnamed'}</div>
                         {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
                       </div>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        {itemCount > 0 && (
-                          <span style={{fontFamily:"monospace",fontSize:"10px",color:`${accent}d8`,letterSpacing:"0.5px"}}>{itemCount} item{itemCount!==1?'s':''}</span>
-                        )}
-                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
-                      </div>
+                      <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
                     </button>
                   );
                 })}
