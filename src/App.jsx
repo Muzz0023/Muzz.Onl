@@ -25682,30 +25682,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-              {/* KPI STRIP */}
-              <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"1px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
-                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>SPENT</div>
-                  <div style={{fontSize:"20px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalSpent.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{supplierLogs.length} entr{supplierLogs.length!==1?'ies':'y'}</div>
-                </div>
-                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
-                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>CATALOG</div>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{supplierItems.length}</div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>item{supplierItems.length!==1?'s':''}</div>
-                </div>
-                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
-                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>JOBS</div>
-                  <div style={{fontSize:"20px",color:"#f97316",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{jobsUsed.length}</div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>used on</div>
-                </div>
-                <div style={{padding:"14px 16px",background:"rgba(5,12,24,0.85)"}}>
-                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>AVG PRICE</div>
-                  <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${avgPrice.toFixed(0)}</div>
-                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>per item</div>
-                </div>
-              </div>
-
               {/* CONTACT INFO */}
               <div style={panel}>
                 <div style={panelHeader}>
