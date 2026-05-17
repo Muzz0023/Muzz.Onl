@@ -24319,7 +24319,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// CLIENTS</div>
                   <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>CLIENTS</div>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {billableClients.length} client{billableClients.length!==1?'s':''} · {contacts.length} contact{contacts.length!==1?'s':''} · {totalActiveJobs} active job{totalActiveJobs!==1?'s':''}
+                    {billableClients.length} client{billableClients.length!==1?'s':''} · {contacts.length} contact{contacts.length!==1?'s':''}
                   </div>
                 </div>
                 <button onClick={() => {
