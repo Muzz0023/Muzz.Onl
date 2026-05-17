@@ -20643,6 +20643,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                     {' · '}{activeClientJobs.length} active
                     {' · '}{completedClientJobs.length} done
                   </div>
+                  {/* Billable toggle — hides quote/cost/margin when client is not being billed */}
+                  <div style={{display:"flex",alignItems:"center",gap:"10px",marginTop:"12px",padding:"8px 12px",background:client.billable === false ? "rgba(148,163,184,0.06)" : "rgba(34,197,94,0.06)",border:`0.5px solid ${client.billable === false ? "rgba(148,163,184,0.25)" : "rgba(34,197,94,0.3)"}`,borderRadius:"4px",maxWidth:"360px"}}>
+                    <button onClick={() => updateClient({billable: client.billable === false ? true : false})}
+                      style={{position:"relative",width:"38px",height:"22px",background:client.billable === false ? "rgba(148,163,184,0.25)" : "rgba(34,197,94,0.55)",border:`1px solid ${client.billable === false ? "rgba(148,163,184,0.45)" : "rgba(34,197,94,0.8)"}`,borderRadius:"11px",cursor:"pointer",flexShrink:0,padding:0}}>
+                      <div style={{position:"absolute",top:"2px",left:client.billable === false ? "2px" : "18px",width:"16px",height:"16px",borderRadius:"50%",background:"#e0eaff",transition:"left 0.15s ease",boxShadow:"0 1px 2px rgba(0,0,0,0.5)"}} />
+                    </button>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:"10px",fontFamily:"monospace",letterSpacing:"1px",color:client.billable === false ? "rgba(148,163,184,0.85)" : "rgba(34,197,94,0.95)",fontWeight:600}}>
+                        {client.billable === false ? 'CONTACT ONLY' : 'BILLABLE CLIENT'}
+                      </div>
+                      <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.55)",lineHeight:1.4,marginTop:"1px"}}>
+                        {client.billable === false ? "Quote/cost/margin hidden everywhere." : "Quotes & margins tracked normally."}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -20651,6 +20666,7 @@ ${JSON.stringify(ctx, null, 2)}`;
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
             {/* REVENUE METRICS */}
+            {client.billable !== false && (
             <div style={panel}>
               <div style={panelHeader}>
                 <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// FINANCIAL OVERVIEW</span>
@@ -20719,6 +20735,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               </div>
             </div>
+            )}
 
             {/* JOBS TABLE */}
             <div style={panel}>
@@ -20731,8 +20748,12 @@ ${JSON.stringify(ctx, null, 2)}`;
               ) : (
                 <div>
                   {/* Table header */}
-                  <div style={{display:"grid",gridTemplateColumns:"60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"6px 16px",fontSize:"8px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
-                    <div>JOB #</div><div>NAME</div><div>QUOTED</div><div>COST</div><div>MARGIN</div><div>STATUS</div>
+                  <div style={{display:"grid",gridTemplateColumns:client.billable === false ? "60px 1fr 90px" : "60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"6px 16px",fontSize:"8px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
+                    {client.billable === false ? (
+                      <><div>JOB #</div><div>NAME</div><div>STATUS</div></>
+                    ) : (
+                      <><div>JOB #</div><div>NAME</div><div>QUOTED</div><div>COST</div><div>MARGIN</div><div>STATUS</div></>
+                    )}
                   </div>
                   {jobsWithMargin.sort((a,b) => (b._hasQuote?1:0) - (a._hasQuote?1:0)).map((j,i) => {
                     const status = j.completed?'DONE':j.started?'ACTIVE':'TO DO';
@@ -20740,12 +20761,16 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const marginColor = j._margin>=20?'#22c55e':j._margin>=0?'#f59e0b':'#ef4444';
                     return (
                       <div key={j.id} onClick={() => { navToEntity('job', j); }}
-                        style={{display:"grid",gridTemplateColumns:"60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobsWithMargin.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
+                        style={{display:"grid",gridTemplateColumns:client.billable === false ? "60px 1fr 90px" : "60px minmax(140px,1fr) 80px 80px 80px 90px",padding:"10px 16px",alignItems:"center",borderBottom:i<jobsWithMargin.length-1?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer"}}>
                         <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(59,130,246,0.7)"}}>{j.jobNumber?`#${j.jobNumber}`:'—'}</div>
                         <div style={{color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",paddingRight:"8px"}}>{j.title}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.6)"}}>{j._hasQuote?`$${parseFloat(j.quotedCost).toFixed(0)}`:'—'}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>${j._cost.toFixed(0)}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:j._hasQuote?marginColor:"rgba(148,163,184,0.3)"}}>{j._hasQuote?`${j._margin.toFixed(0)}%`:'—'}</div>
+                        {client.billable !== false && (
+                          <>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.6)"}}>{j._hasQuote?`$${parseFloat(j.quotedCost).toFixed(0)}`:'—'}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>${j._cost.toFixed(0)}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:j._hasQuote?marginColor:"rgba(148,163,184,0.3)"}}>{j._hasQuote?`${j._margin.toFixed(0)}%`:'—'}</div>
+                          </>
+                        )}
                         <div><span style={{fontSize:"9px",fontFamily:"monospace",fontWeight:600,padding:"2px 6px",letterSpacing:"0.5px",background:`${sc}15`,color:sc,border:`0.5px solid ${sc}30`,borderRadius:"3px"}}>{status}</span></div>
                       </div>
                     );
@@ -26266,7 +26291,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {clientsWithStats.map((c) => {
                   const initial = (c.name||'?').charAt(0).toUpperCase();
                   const hasActive = c._active.length > 0;
-                  const showQuoted = c._jobs.some(j => j.trackQuote !== false) && c._quoted > 0;
+                  const showQuoted = c.billable !== false && c._jobs.some(j => j.trackQuote !== false) && c._quoted > 0;
                   return (
                     <button key={c.id} onClick={() => navToEntity('client', c)}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(59,130,246,0.12)",borderLeft:`2px solid ${hasActive?"#3b82f6":"rgba(59,130,246,0.3)"}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",transition:"background 0.15s ease"}}>
