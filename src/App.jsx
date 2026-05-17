@@ -22547,7 +22547,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{maxHeight:donnyJobs.length > 8 ? "440px" : "none",overflowY:donnyJobs.length > 8 ? "auto" : "visible"}}>
                   {donnyJobs.map((job, i) => {
                     const photos = donnyPhotos[job.id]||[];
-                    const accent = '#a855f7';
+                    const accent = '#f97316';
                     const hasPhotos = photos.length > 0;
                     const tagCounts = ['before','after','progress','defect'].map(tag => ({tag, n:photos.filter(p=>p.tag===tag).length})).filter(t=>t.n>0);
                     const subParts = [];
@@ -23585,20 +23585,20 @@ ${JSON.stringify(ctx, null, 2)}`;
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
             <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
-            <div style={{borderBottom:"0.5px solid rgba(245,158,11,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
-                <button onClick={() => setMistakeJobId(null)} style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← MISTAKES</button>
+                <button onClick={() => setMistakeJobId(null)} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← MISTAKES</button>
                 <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                    <span style={{fontSize:"28px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
+                    <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}MISTAKES FOR JOB</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}MISTAKES FOR JOB</div>
                       <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
                       <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{jobMists.length} mistake{jobMists.length!==1?'s':''} on this job</div>
                     </div>
                   </div>
                   <button onClick={()=>{ setShowNewMistake(s=>!s); setNewMistake(p=>({...p,jobRef: job?.jobNumber?`#${job.jobNumber} ${job.title}`:job?.title||'',date:new Date().toISOString().split('T')[0]})); }}
-                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(245,158,11,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(245,158,11,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                    style={{padding:"6px 12px",background:showNewMistake?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showNewMistake?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showNewMistake?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                     {showNewMistake ? '✕ CANCEL' : '+ LOG MISTAKE'}
                   </button>
                 </div>
@@ -23610,30 +23610,30 @@ ${JSON.stringify(ctx, null, 2)}`;
               {showNewMistake && (
                 <div style={mPanel}>
                   <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MISTAKE</span>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MISTAKE</span>
                     <button onClick={()=>setShowNewMistake(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                   </div>
                   <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who-jobview"
                           className="slick-input accent-orange"/>
                         <datalist id="mistake-who-jobview">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
                       </div>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
                           className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                       <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
                         className="slick-textarea accent-orange"/>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                       <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
                         className="slick-textarea accent-orange"/>
                     </div>
@@ -23645,7 +23645,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       logAction(`job_${job?.id}`, { kind: 'create', summary: `Mistake: ${(m.what||'').slice(0,60)}` });
                       setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
                       setShowNewMistake(false);
-                    }} style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
+                    }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
                   </div>
                 </div>
               )}
@@ -23659,11 +23659,11 @@ ${JSON.stringify(ctx, null, 2)}`;
               ) : jobMists.length > 0 && (
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"4px"}}>
-                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// MISTAKES</span>
-                    <span style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// MISTAKES</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{jobMists.length} ROW{jobMists.length!==1?'S':''}</span>
                   </div>
                   {jobMists.map((m,i) => {
-                    const accent = '#f59e0b';
+                    const accent = '#ef4444';
                     const dateStr = m.date ? new Date(m.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '';
                     const subtitle = [dateStr, m.who].filter(Boolean).join(' · ');
                     return (
@@ -23695,14 +23695,14 @@ ${JSON.stringify(ctx, null, 2)}`;
           <DonnyAsk />
           <DonnyBreadcrumbs />
 
-          <div style={{borderBottom:"0.5px solid rgba(245,158,11,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-5xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                  <span style={{fontSize:"28px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
+                  <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>✕</span>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// LESSONS LEARNED</div>
+                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// LESSONS LEARNED</div>
                     <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MISTAKES</div>
                     <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
                       {totalMistakes===0 ? 'Nothing logged · keep it that way' : `${totalMistakes} logged${thisMonthMistakes>0?' · '+thisMonthMistakes+' this month':''}`}
@@ -23720,35 +23720,35 @@ ${JSON.stringify(ctx, null, 2)}`;
             {showNewMistake && (
               <div style={mPanel}>
                 <div style={mPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MISTAKE</span>
+                  <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MISTAKE</span>
                   <button onClick={()=>setShowNewMistake(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO MADE IT</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO MADE IT</div>
                       <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who"
                         className="slick-input accent-orange"/>
                       <datalist id="mistake-who">{teamNames.map(n=><option key={n} value={n}/>)}</datalist>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                       <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
                         className="slick-input accent-orange"/>
                     </div>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                     <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
                       className="slick-textarea accent-orange"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                     <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
                       className="slick-textarea accent-orange"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RELATED JOB (OPTIONAL)</div>
+                    <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RELATED JOB (OPTIONAL)</div>
                     <input value={newMistake.jobRef} onChange={e => setNewMistake(p=>({...p,jobRef:e.target.value}))} placeholder="Job name or number..." list="mistake-jobs"
                       className="slick-input accent-orange"/>
                     <datalist id="mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
@@ -23758,7 +23758,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     saveMistakes([{...newMistake, id:Date.now(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString()}, ...donnyMistakes]);
                     setNewMistake({who:'',what:'',affected:'',jobRef:'',date:new Date().toISOString().split('T')[0]});
                     setShowNewMistake(false);
-                  }} style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
+                  }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MISTAKE</button>
                 </div>
               </div>
             )}
@@ -23778,8 +23778,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               if (activeJobsList.length === 0) {
                 return (
                   <div style={{...mPanel,padding:"40px",textAlign:"center"}}>
-                    <div style={{fontSize:"28px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✕</div>
-                    <div style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                    <div style={{fontSize:"28px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>✕</div>
+                    <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
                     <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log mistakes</div>
                   </div>
                 );
@@ -23787,8 +23787,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               return (
                 <div style={mPanel}>
                   <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
-                    <span style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:"32px 1fr 100px 30px",padding:"6px 16px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",borderBottom:"0.5px solid rgba(255,255,255,0.04)"}}>
                     <div></div><div>JOB</div><div>MISTAKES</div><div></div>
@@ -23800,7 +23800,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         const ref = String(m.jobRef).toLowerCase();
                         return (j.title && ref.includes(String(j.title).toLowerCase())) || (j.jobNumber && ref.includes(String(j.jobNumber).toLowerCase()));
                       });
-                      const accent = '#f59e0b';
+                      const accent = '#ef4444';
                       const hasMistakes = ms.length > 0;
                       return (
                         <button key={j.id} onClick={() => setMistakeJobId(j.id)}
@@ -23828,37 +23828,37 @@ ${JSON.stringify(ctx, null, 2)}`;
               return (
                 <div style={mPanel}>
                   <div style={mPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// EDIT MISTAKE</span>
+                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// EDIT MISTAKE</span>
                     <div style={{display:"flex",gap:"6px"}}>
                       <button onClick={()=>setEditingMistakeId(null)} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.3)",color:"rgba(34,197,94,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DONE</button>
-                      {donnyRole !== 'worker' && <button onClick={()=>{if(window.confirm('Delete this mistake?')){saveMistakes(donnyMistakes.filter(x=>x.id!==m.id));setEditingMistakeId(null);}}} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",color:"rgba(245,158,11,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>}
+                      {donnyRole !== 'worker' && <button onClick={()=>{if(window.confirm('Delete this mistake?')){saveMistakes(donnyMistakes.filter(x=>x.id!==m.id));setEditingMistakeId(null);}}} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",color:"rgba(239,68,68,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>}
                     </div>
                   </div>
                   <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={m.who||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,who:e.target.value}:x))}
                           className="slick-input accent-orange"/>
                       </div>
                       <div>
-                        <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
+                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={m.date||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,date:e.target.value}:x))}
                           className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                       <textarea value={m.what||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,what:e.target.value}:x))} rows={2}
                         className="slick-textarea accent-orange"/>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                       <input value={m.affected||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,affected:e.target.value}:x))}
                         className="slick-input accent-orange"/>
                     </div>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB REF</div>
+                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB REF</div>
                       <input value={m.jobRef||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,jobRef:e.target.value}:x))} list="edit-mistake-jobs"
                         className="slick-input accent-orange"/>
                       <datalist id="edit-mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
@@ -23901,8 +23901,8 @@ ${JSON.stringify(ctx, null, 2)}`;
       const totalJobs = donnyJobs.length;
       const coverage = totalJobs > 0 ? Math.round((allJobsWithRisks.length / totalJobs) * 100) : 0;
 
-      const rPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(239,68,68,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(239,68,68,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const rPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(239,68,68,0.1)",borderLeft:"2px solid rgba(239,68,68,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      const rPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const rPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(245,158,11,0.1)",borderLeft:"2px solid rgba(245,158,11,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
 
       // ── JOB-SCOPED VIEW: all risks for one job ────────────
       if (riskJobId) {
@@ -23916,21 +23916,21 @@ ${JSON.stringify(ctx, null, 2)}`;
             {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
             <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
-            <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{borderBottom:"0.5px solid rgba(245,158,11,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
-                <button onClick={() => { setRiskJobId(null); setShowAddRisk(false); setEditingRiskId(null); }} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← RISK REGISTER</button>
+                <button onClick={() => { setRiskJobId(null); setShowAddRisk(false); setEditingRiskId(null); }} style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← RISK REGISTER</button>
                 <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                    <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>⚠</span>
+                    <span style={{fontSize:"28px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1}}>⚠</span>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}RISKS FOR JOB</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// {job?.jobNumber?`#${job.jobNumber} · `:''}RISKS FOR JOB</div>
                       <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px"}}>{job?.title || 'Job'}</div>
                       <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{risks.length} risk{risks.length!==1?'s':''} on this job</div>
                     </div>
                   </div>
                   {donnyRole !== 'worker' && (
                     <button onClick={()=>{ setShowAddRisk(s=>!s); setNewRiskText(''); setNewRiskAvoid(''); }}
-                      style={{padding:"6px 12px",background:showAddRisk?"rgba(148,163,184,0.06)":"rgba(239,68,68,0.1)",border:`0.5px solid ${showAddRisk?"rgba(148,163,184,0.3)":"rgba(239,68,68,0.4)"}`,borderRadius:"3px",color:showAddRisk?"rgba(148,163,184,0.85)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                      style={{padding:"6px 12px",background:showAddRisk?"rgba(148,163,184,0.06)":"rgba(245,158,11,0.1)",border:`0.5px solid ${showAddRisk?"rgba(148,163,184,0.3)":"rgba(245,158,11,0.4)"}`,borderRadius:"3px",color:showAddRisk?"rgba(148,163,184,0.85)":"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                       {showAddRisk ? '✕ CANCEL' : '+ ADD RISK'}
                     </button>
                   )}
@@ -23943,12 +23943,12 @@ ${JSON.stringify(ctx, null, 2)}`;
               {showAddRisk && (
                 <div style={rPanel}>
                   <div style={rPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW RISK</span>
+                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW RISK</span>
                     <button onClick={()=>setShowAddRisk(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
                   </div>
                   <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HAZARD / RISK</div>
+                      <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HAZARD / RISK</div>
                       <textarea value={newRiskText} onChange={e=>setNewRiskText(e.target.value)} rows={3} placeholder="e.g. Working at height — risk of falling from scaffold"
                         className="slick-textarea accent-orange"/>
                     </div>
@@ -23963,7 +23963,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       saveJobRisks(job.id, [...risks, newRisk]);
                       logAction(`job_${job.id}`, { kind: 'create', summary: `Risk added: ${newRisk.what.slice(0,60)}` });
                       setNewRiskText(''); setNewRiskAvoid(''); setShowAddRisk(false);
-                    }} style={{width:"100%",padding:"10px",background:"rgba(239,68,68,0.1)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",color:"rgba(239,68,68,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ SAVE RISK</button>
+                    }} style={{width:"100%",padding:"10px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.4)",borderRadius:"3px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ SAVE RISK</button>
                   </div>
                 </div>
               )}
@@ -23981,8 +23981,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const isEdit = editingRiskId === r.id;
                     return (
                       <div key={r.id} style={{...rPanel,borderLeft:`2px solid ${hasMit?"rgba(34,197,94,0.7)":"rgba(245,158,11,0.7)"}`}}>
-                        <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(239,68,68,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
-                          <span style={{fontSize:"10px",color:"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RISK {i+1}{!hasMit?<span style={{color:"rgba(245,158,11,0.85)",marginLeft:"6px"}}>· NO PLAN</span>:''}</span>
+                        <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(245,158,11,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                          <span style={{fontSize:"10px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// RISK {i+1}{!hasMit?<span style={{color:"rgba(245,158,11,0.85)",marginLeft:"6px"}}>· NO PLAN</span>:''}</span>
                           {donnyRole !== 'worker' && (
                             <div style={{display:"flex",gap:"6px"}}>
                               <button onClick={()=>setEditingRiskId(isEdit?null:r.id)} style={{fontSize:"10px",padding:"3px 8px",background:isEdit?"rgba(34,197,94,0.1)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isEdit?"rgba(34,197,94,0.3)":"rgba(255,255,255,0.1)"}`,color:isEdit?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.7)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>{isEdit?'DONE':'EDIT'}</button>
@@ -23992,13 +23992,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                                   logAction(`job_${job.id}`, { kind: 'delete', summary: `Risk deleted: ${r.what.slice(0,60)}` });
                                   setEditingRiskId(null);
                                 }
-                              }} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",color:"rgba(239,68,68,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>
+                              }} style={{fontSize:"10px",padding:"3px 8px",background:"rgba(245,158,11,0.06)",border:"0.5px solid rgba(245,158,11,0.3)",color:"rgba(245,158,11,0.85)",borderRadius:"3px",fontFamily:"monospace",letterSpacing:"1px",cursor:"pointer"}}>DEL</button>
                             </div>
                           )}
                         </div>
                         <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HAZARD</div>
+                            <div style={{fontSize:"9px",color:"rgba(245,158,11,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HAZARD</div>
                             {isEdit ? (
                               <textarea value={r.what||''} onChange={e=>saveJobRisks(job.id, risks.map(x => x.id===r.id?{...x,what:e.target.value}:x))} rows={3}
                                 className="slick-textarea accent-orange"/>
@@ -24041,13 +24041,13 @@ ${JSON.stringify(ctx, null, 2)}`;
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
-          <div style={{borderBottom:"0.5px solid rgba(239,68,68,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(239,68,68,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{borderBottom:"0.5px solid rgba(245,158,11,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(245,158,11,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-5xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                <span style={{fontSize:"28px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",lineHeight:1}}>⚠</span>
+                <span style={{fontSize:"28px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",lineHeight:1}}>⚠</span>
                 <div>
-                  <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// HAZARD INTEL</div>
+                  <div style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// HAZARD INTEL</div>
                   <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>RISK REGISTER</div>
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
                     {totalRisks===0 ? `${totalJobs} job${totalJobs!==1?'s':''} · no risks logged` : `${totalRisks} risk${totalRisks!==1?'s':''} across ${allJobsWithRisks.length} job${allJobsWithRisks.length!==1?'s':''} · ${coverage}% coverage`}
@@ -24063,8 +24063,8 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* EMPTY STATE — no jobs */}
             {donnyJobs.length === 0 && (
               <div style={{...rPanel,padding:"40px",textAlign:"center"}}>
-                <div style={{fontSize:"32px",color:"rgba(239,68,68,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⚠</div>
-                <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO JOBS YET</div>
+                <div style={{fontSize:"32px",color:"rgba(245,158,11,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⚠</div>
+                <div style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO JOBS YET</div>
                 <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log risks against them</div>
               </div>
             )}
@@ -24075,22 +24075,22 @@ ${JSON.stringify(ctx, null, 2)}`;
               if (activeJobsList.length === 0) {
                 return (
                   <div style={{...rPanel,padding:"40px",textAlign:"center"}}>
-                    <div style={{fontSize:"28px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⚠</div>
-                    <div style={{fontSize:"11px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO ACTIVE JOBS</div>
+                    <div style={{fontSize:"28px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⚠</div>
+                    <div style={{fontSize:"11px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>NO ACTIVE JOBS</div>
                   </div>
                 );
               }
               return (
                 <div style={rPanel}>
                   <div style={rPanelHeader}>
-                    <span style={{fontSize:"10px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
-                    <span style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
+                    <span style={{fontSize:"10px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SELECT A JOB</span>
+                    <span style={{fontSize:"9px",color:"rgba(245,158,11,0.4)",fontFamily:"monospace"}}>{activeJobsList.length} ACTIVE</span>
                   </div>
                   <div style={{maxHeight:activeJobsList.length > 8 ? "440px" : "none",overflowY:activeJobsList.length > 8 ? "auto" : "visible"}}>
                     {activeJobsList.map((j, i) => {
                       const jr = getJobRisks(j);
                       const allMitigated = jr.length > 0 && jr.every(r => r.mitigation && r.mitigation.trim());
-                      const accent = '#ef4444';
+                      const accent = '#f59e0b';
                       const hasRisks = jr.length > 0;
                       const subtitleParts = [];
                       if (j.jobNumber) subtitleParts.push(`#${j.jobNumber}`);
