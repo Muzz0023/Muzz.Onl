@@ -24281,6 +24281,160 @@ ${JSON.stringify(ctx, null, 2)}`;
     }
 
 
+    // DONNY CLIENTS — list view
+    if (activeView === 'donny-clients') {
+      const clientsWithStats = donnyClients.map(c => {
+        const cjobs = donnyJobs.filter(j => jobHasClient(j, c.id));
+        const active = cjobs.filter(j => !j.completed);
+        const totalQuoted = cjobs.reduce((s,j) => s + (parseFloat(j.quotedCost)||0), 0);
+        return { ...c, _jobs: cjobs, _active: active, _quoted: totalQuoted };
+      });
+      const billableClients = clientsWithStats.filter(c => c.billable !== false);
+      const contacts = clientsWithStats.filter(c => c.billable === false);
+      const list = clientsSubTab === 'contacts' ? contacts : billableClients;
+      const totalActiveJobs = clientsWithStats.reduce((s,c) => s + c._active.length, 0);
+
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+          <div style={{borderBottom:"0.5px solid rgba(59,130,246,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// CLIENTS</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>CLIENTS</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {billableClients.length} client{billableClients.length!==1?'s':''} · {contacts.length} contact{contacts.length!==1?'s':''} · {totalActiveJobs} active job{totalActiveJobs!==1?'s':''}
+                  </div>
+                </div>
+                <button onClick={() => {
+                  const newClient = { id: Date.now(), name: 'New client', email:'', phone:'', address:'', notes:'', billable: clientsSubTab !== 'contacts' };
+                  setDonnyClients([...donnyClients, newClient]);
+                  setSelectedDonnyClient(newClient);
+                  setActiveView('donny-clientdetail');
+                }}
+                  style={{padding:"6px 12px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.4)",borderRadius:"3px",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                  + ADD {clientsSubTab === 'contacts' ? 'CONTACT' : 'CLIENT'}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+
+            {/* TABS */}
+            <div style={{display:"flex",gap:"6px",marginBottom:"4px"}}>
+              <button onClick={() => setClientsSubTab('clients')}
+                style={{padding:"7px 14px",borderRadius:"3px",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",background:clientsSubTab==='clients'?"rgba(59,130,246,0.15)":"transparent",border:`0.5px solid ${clientsSubTab==='clients'?"rgba(59,130,246,0.5)":"rgba(148,163,184,0.15)"}`,color:clientsSubTab==='clients'?"rgba(59,130,246,0.95)":"rgba(148,163,184,0.55)"}}>
+                CLIENTS {billableClients.length}
+              </button>
+              <button onClick={() => setClientsSubTab('contacts')}
+                style={{padding:"7px 14px",borderRadius:"3px",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",background:clientsSubTab==='contacts'?"rgba(249,115,22,0.15)":"transparent",border:`0.5px solid ${clientsSubTab==='contacts'?"rgba(249,115,22,0.5)":"rgba(148,163,184,0.15)"}`,color:clientsSubTab==='contacts'?"rgba(249,115,22,0.95)":"rgba(148,163,184,0.55)"}}>
+                CONTACTS {contacts.length}
+              </button>
+            </div>
+
+            {/* LIST */}
+            {list.length === 0 ? (
+              <div style={{padding:"40px 20px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                {clientsSubTab === 'contacts' ? 'No contacts yet. Use the + ADD CONTACT button.' : 'No clients yet. Use the + ADD CLIENT button.'}
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                {list.map(c => {
+                  const accent = c.billable === false ? '#f97316' : '#3b82f6';
+                  const subtitle = [c.company, c.phone].filter(Boolean).join(' · ');
+                  return (
+                    <button key={c.id} onClick={() => { setSelectedDonnyClient(c); setActiveView('donny-clientdetail'); }}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}} />
+                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name||'Unnamed'}</div>
+                        {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
+                      </div>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                        {c._active.length > 0 && (
+                          <span style={{fontFamily:"monospace",fontSize:"10px",color:`${accent}d8`,letterSpacing:"0.5px"}}>{c._active.length} active</span>
+                        )}
+                        {c.billable !== false && c._quoted > 0 && (
+                          <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)"}}>${c._quoted.toLocaleString('en-AU',{maximumFractionDigits:0})}</span>
+                        )}
+                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // DONNY SUPPLIERS — list view
+    if (activeView === 'donny-suppliers') {
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// SUPPLIERS</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUPPLIERS</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {donnySuppliers.length} supplier{donnySuppliers.length!==1?'s':''}
+                  </div>
+                </div>
+                <button onClick={() => {
+                  const newSupplier = { id: Date.now(), name: 'New supplier', contact:'', phone:'', email:'', notes:'' };
+                  setDonnySuppliers([...donnySuppliers, newSupplier]);
+                  setEditingSupplierId(newSupplier.id);
+                }}
+                  style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                  + ADD SUPPLIER
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+            {donnySuppliers.length === 0 ? (
+              <div style={{padding:"40px 20px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                No suppliers yet. Use the + ADD SUPPLIER button.
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                {donnySuppliers.map(s => {
+                  const accent = '#22c55e';
+                  const subtitle = [s.contact, s.phone].filter(Boolean).join(' · ');
+                  return (
+                    <button key={s.id} onClick={() => setEditingSupplierId(s.id)}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}} />
+                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name||'Unnamed'}</div>
+                        {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
+                      </div>
+                      <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     // DONNY CREW PLAN — drag-drop visual planner per job (also serves as Reports)
     if (activeView === 'donny-intel' || activeView === 'donny-reports') {
       return <DonnyCrewPlan
