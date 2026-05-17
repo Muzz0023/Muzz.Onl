@@ -25881,7 +25881,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={panel}>
                   <div style={panelHeader}>
                     <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// SPEND BY JOB</span>
-                    <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>${totalSpent.toLocaleString('en-AU',{maximumFractionDigits:0})} TOTAL</span>
+                    <span style={{fontSize:"14px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:700,letterSpacing:"0.5px"}}>${totalSpent.toLocaleString('en-AU',{maximumFractionDigits:0})} TOTAL</span>
                   </div>
                   <div>
                     {spendByJobList.map((row,i) => {
@@ -25891,10 +25891,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                           style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"10px 16px",background:"transparent",border:"none",borderTop:i>0?"0.5px solid rgba(255,255,255,0.03)":"none",cursor:"pointer",textAlign:"left"}}>
                           <div style={{width:"8px",height:"8px",borderRadius:"50%",background:row.job.completed?"#22c55e":row.job.started?"#f97316":"rgba(148,163,184,0.5)",flexShrink:0}}/>
                           <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                              {row.job.jobNumber?`#${row.job.jobNumber} `:''}{row.job.title}
+                            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",marginBottom:"4px"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",minWidth:0}}>
+                                {row.job.jobNumber?`#${row.job.jobNumber} `:''}{row.job.title}
+                              </div>
+                              <div style={{fontSize:"10px",color:"rgba(34,197,94,0.75)",fontFamily:"monospace",fontWeight:600,flexShrink:0,letterSpacing:"0.5px"}}>{pct.toFixed(0)}%</div>
                             </div>
-                            <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",marginTop:"4px"}}>
+                            <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
                               <div style={{height:"100%",width:`${pct}%`,background:"rgba(34,197,94,0.6)"}}/>
                             </div>
                           </div>
