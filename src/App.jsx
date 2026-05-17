@@ -3419,7 +3419,7 @@ function MuzzApp() {
   // Donny Materials Log
   const [donnyMaterialsLog, setDonnyMaterialsLog] = useState([]);
   const [matLogJobId, setMatLogJobId] = useState(null);
-  const [newMatEntry, setNewMatEntry] = useState({ item:'', qty:'', unit:'', cost:'', note:'' });
+  const [newMatEntry, setNewMatEntry] = useState({ item:'', qty:'', unit:'', cost:'', note:'', supplierId:null });
   // Donny Checklists / SWMS
   const [donnyChecklists, setDonnyChecklists] = useState([]);
   const [checklistJobId, setChecklistJobId] = useState(null);
@@ -24050,42 +24050,72 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MATERIAL</span>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM / MATERIAL</div>
-                    <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="2C+E 2.5mm TPS Cable"
-                      list="donny-mat-suggestions"
-                      className="slick-input accent-orange"/>
-                    <datalist id="donny-mat-suggestions">
-                      {[...new Set(donnyMaterialsLog.map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}
-                    </datalist>
-                  </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
-                      <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
-                        className="slick-input accent-orange"/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
-                      <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="m, ea, kg"
-                        className="slick-input accent-orange"/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
-                      <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="120" type="number" step="0.01"
-                        className="slick-input"/>
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
-                    <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="Ran short, need more by Thursday"
-                      className="slick-input accent-orange"/>
-                  </div>
+                  {(() => {
+                    const supplierCatalog = (donnySuppliers||[]).flatMap(s =>
+                      (s.items||[]).map(it => ({ desc: it.desc||'', unit: it.unit||'', price: it.price||'', supplierId: s.id, supplierName: s.name||'Unknown supplier' }))
+                    ).filter(it => it.desc);
+                    const findCatalogMatch = (desc) => supplierCatalog.find(it => it.desc.toLowerCase() === (desc||'').trim().toLowerCase());
+                    const supName = newMatEntry.supplierId ? ((donnySuppliers||[]).find(s => s.id === newMatEntry.supplierId)||{}).name : null;
+                    return (
+                      <>
+                        <div>
+                          <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:"4px"}}>
+                            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>ITEM / MATERIAL</div>
+                            {supplierCatalog.length > 0 && <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>{supplierCatalog.length} IN CATALOG</div>}
+                          </div>
+                          <input value={newMatEntry.item}
+                            onChange={e => {
+                              const val = e.target.value;
+                              const match = findCatalogMatch(val);
+                              if (match) {
+                                setNewMatEntry(p => ({ ...p, item: match.desc, unit: p.unit || match.unit, cost: p.cost || (match.price ? String(match.price) : ''), supplierId: match.supplierId }));
+                              } else {
+                                setNewMatEntry(p => ({ ...p, item: val, supplierId: null }));
+                              }
+                            }}
+                            placeholder="e.g. GPOs"
+                            list="donny-mat-suggestions"
+                            className="slick-input accent-orange"/>
+                          <datalist id="donny-mat-suggestions">
+                            {supplierCatalog.map((it,i) => <option key={`cat-${i}`} value={it.desc}>{`${it.supplierName}${it.price?` · $${it.price}`:''}${it.unit?` /${it.unit}`:''}`}</option>)}
+                            {[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))]
+                              .filter(p => !supplierCatalog.find(c => c.desc.toLowerCase() === p.toLowerCase()))
+                              .map(name => <option key={`prev-${name}`} value={name}>previously logged</option>)}
+                          </datalist>
+                          {supName && (
+                            <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"0.5px"}}>→ from {supName}</div>
+                          )}
+                        </div>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
+                            <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
+                              className="slick-input accent-orange"/>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
+                            <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea"
+                              className="slick-input accent-orange"/>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
+                            <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="0.00" type="number" step="0.01"
+                              className="slick-input"/>
+                          </div>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
+                          <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. ran short, need more"
+                            className="slick-input accent-orange"/>
+                        </div>
+                      </>
+                    );
+                  })()}
                   <button onClick={() => {
                     if (!newMatEntry.item.trim()) return;
-                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, cost:newMatEntry.cost, note:newMatEntry.note, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
+                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, cost:newMatEntry.cost, note:newMatEntry.note, supplierId: newMatEntry.supplierId||null, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
                     saveMatLog([entry, ...donnyMaterialsLog]);
-                    setNewMatEntry({ item:'', qty:'', unit:'', cost:'', note:'' });
+                    setNewMatEntry({ item:'', qty:'', unit:'', cost:'', note:'', supplierId:null });
                     const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
                     logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
                     logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
@@ -24117,6 +24147,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                           <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",display:"flex",gap:"8px",flexWrap:"wrap"}}>
                             <span>{relTime(entry.createdAt)}</span>
                             {entry.loggedBy && <span style={{color:"rgba(249,115,22,0.5)"}}>by {entry.loggedBy}</span>}
+                            {entry.supplierId && (() => {
+                              const sup = (donnySuppliers||[]).find(s => s.id === entry.supplierId);
+                              return sup ? <span style={{color:"rgba(34,197,94,0.6)"}}>· {sup.name}</span> : null;
+                            })()}
                           </div>
                         </div>
                         {donnyRole !== 'worker' && (
