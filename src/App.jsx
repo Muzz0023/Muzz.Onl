@@ -20839,12 +20839,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <input className="slick-input accent-blue" value={client.address||''} onChange={e => updateClient({address:e.target.value})}
                     placeholder="Street, suburb"/>
                 </div>
-                <div style={{gridColumn:isWide?"1 / -1":"auto"}}>
-                  <label className="slick-label accent-blue">Notes</label>
-                  <textarea className="slick-textarea accent-blue" value={client.notes||''} onChange={e => updateClient({notes:e.target.value})}
-                    placeholder="Anything worth remembering…"
-                    rows={3}/>
-                </div>
               </div>
             </div>
 
@@ -24283,6 +24277,160 @@ ${JSON.stringify(ctx, null, 2)}`;
       );
     }
 
+
+    // DONNY SUBCONTRACTORS — list + detail
+    if (activeView === 'donny-subs') {
+      const saveSubs = (updated) => setDonnySubs(updated);
+      // Detail
+      if (editingSubId) {
+        const sub = donnySubs.find(s => s.id === editingSubId);
+        if (!sub) { setEditingSubId(null); return null; }
+        const updateSub = (patch) => saveSubs(donnySubs.map(s => s.id === sub.id ? { ...s, ...patch } : s));
+        const initial = (sub.name||'?').charAt(0).toUpperCase();
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+            <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+              <div className="max-w-5xl mx-auto">
+                <button onClick={() => setEditingSubId(null)} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← SUBCONTRACTORS</button>
+                <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
+                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",fontWeight:600,color:"#f97316",fontFamily:"monospace",flexShrink:0}}>{initial}</div>
+                  <div style={{flex:1,minWidth:"260px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px"}}>SUBCONTRACTOR</div>
+                    <input value={sub.name||''} onChange={e=>updateSub({name:e.target.value})}
+                      style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"24px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.15)",outline:"none",padding:"4px 0"}} placeholder="Name..."/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"28px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+              <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"22px 32px"}}>
+                <div>
+                  <label className="slick-label accent-orange">Company</label>
+                  <input className="slick-input accent-orange" value={sub.company||''} onChange={e=>updateSub({company:e.target.value})} placeholder="e.g. Karls Flooring"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Trade</label>
+                  <input className="slick-input accent-orange" value={sub.trade||''} onChange={e=>updateSub({trade:e.target.value})} placeholder="e.g. Vinyl, Tiling"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Phone</label>
+                  <input className="slick-input accent-orange" value={sub.phone||''} onChange={e=>updateSub({phone:e.target.value})} placeholder="04XX XXX XXX"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Email</label>
+                  <input className="slick-input accent-orange" value={sub.email||''} onChange={e=>updateSub({email:e.target.value})} placeholder="name@example.com"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">ABN</label>
+                  <input className="slick-input accent-orange" value={sub.abn||''} onChange={e=>updateSub({abn:e.target.value})} placeholder="XX XXX XXX XXX"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Licence No.</label>
+                  <input className="slick-input accent-orange" value={sub.licenceNo||''} onChange={e=>updateSub({licenceNo:e.target.value})} placeholder="—"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Rate</label>
+                  <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
+                    <input type="number" className="slick-input accent-orange" value={sub.rate||''} onChange={e=>updateSub({rate:e.target.value})} placeholder="0.00" style={{flex:"1"}}/>
+                    <select value={sub.rateType||'hr'} onChange={e=>updateSub({rateType:e.target.value})}
+                      className="slick-select accent-orange" style={{width:"110px",colorScheme:"dark"}}>
+                      <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* JOB LINKS */}
+              {donnyJobs.filter(j=>!j.completed).length > 0 && (
+                <div>
+                  <div style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(249,115,22,0.2)",fontWeight:600}}>// JOB ACCESS</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
+                    {donnyJobs.filter(j=>!j.completed).map(job => {
+                      const has = (sub.jobIds||[]).includes(job.id);
+                      return (
+                        <button key={job.id} onClick={() => updateSub({jobIds: has ? (sub.jobIds||[]).filter(id=>id!==job.id) : [...(sub.jobIds||[]), job.id]})}
+                          style={{fontSize:"11px",padding:"6px 12px",borderRadius:"4px",fontFamily:"monospace",letterSpacing:"0.5px",fontWeight:500,background:has?'rgba(249,115,22,0.15)':'rgba(255,255,255,0.03)',border:`0.5px solid ${has?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:has?'#f97316':'rgba(148,163,184,0.5)',cursor:"pointer"}}>
+                          {has?'✓ ':''}{job.jobNumber?`#${job.jobNumber} `:''}{job.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <button onClick={() => { if(window.confirm(`Remove ${sub.name}?`)) { saveSubs(donnySubs.filter(s=>s.id!==sub.id)); setEditingSubId(null); } }}
+                style={{padding:"12px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"4px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"2px",cursor:"pointer",fontWeight:600,marginTop:"6px"}}>
+                DELETE SUBCONTRACTOR
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      // List view
+      return (
+        <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+          <Sidebar /><SaveIndicator />
+          {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+          <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-5xl mx-auto">
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// SUBCONTRACTORS</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>SUBCONTRACTORS</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {donnySubs.length} sub{donnySubs.length!==1?'s':''}
+                  </div>
+                </div>
+                <button onClick={() => {
+                  const newSub = { id: Date.now(), name: 'New sub', company:'', trade:'', phone:'', email:'', abn:'', licenceNo:'', rate:'', rateType:'hr', jobIds:[] };
+                  saveSubs([...donnySubs, newSub]);
+                  setEditingSubId(newSub.id);
+                }}
+                  style={{padding:"6px 12px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                  + ADD SUB
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+            {donnySubs.length === 0 ? (
+              <div style={{padding:"40px 20px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                No subcontractors yet.
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                {donnySubs.map(s => {
+                  const accent = '#f97316';
+                  const subtitle = [s.trade, s.phone].filter(Boolean).join(' · ');
+                  return (
+                    <button key={s.id} onClick={() => setEditingSubId(s.id)}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}} />
+                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name||'Unnamed'}</div>
+                        {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
+                      </div>
+                      <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>›</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
 
     // DONNY CLIENTS — list view
     if (activeView === 'donny-clients') {
