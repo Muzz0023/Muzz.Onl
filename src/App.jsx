@@ -20818,6 +20818,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <label className="slick-label accent-blue">Company</label>
                   <input className="slick-input accent-blue" value={client.company||''} onChange={e => updateClient({company:e.target.value})}
                     placeholder="e.g. Powerlink"/>
+                  {client.company && (
+                    <div style={{display:"flex",alignItems:"center",gap:"8px",marginTop:"8px"}}>
+                      <button onClick={() => updateClient({showCompanyInList: !(client.showCompanyInList === true)})}
+                        style={{position:"relative",width:"30px",height:"18px",background:client.showCompanyInList ? "rgba(59,130,246,0.55)" : "rgba(148,163,184,0.25)",border:`1px solid ${client.showCompanyInList ? "rgba(59,130,246,0.8)" : "rgba(148,163,184,0.45)"}`,borderRadius:"9px",cursor:"pointer",flexShrink:0,padding:0}}>
+                        <div style={{position:"absolute",top:"1px",left:client.showCompanyInList ? "14px" : "1px",width:"14px",height:"14px",borderRadius:"50%",background:"#e0eaff",transition:"left 0.15s ease"}} />
+                      </button>
+                      <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(148,163,184,0.7)",letterSpacing:"0.3px"}}>Show company in list view</span>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="slick-label accent-blue">Role</label>
@@ -24350,7 +24359,10 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                 {list.map(c => {
                   const accent = c.billable === false ? '#f97316' : '#3b82f6';
-                  const subtitle = [c.role, c.phone].filter(Boolean).join(' · ');
+                  const parts = [];
+                  if (c.showCompanyInList && c.company) parts.push(c.company);
+                  if (c.role) parts.push(c.role);
+                  const subtitle = [parts.join(' '), c.phone].filter(Boolean).join(' · ');
                   return (
                     <button key={c.id} onClick={() => { setSelectedDonnyClient(c); setActiveView('donny-clientdetail'); }}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
