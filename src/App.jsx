@@ -20704,6 +20704,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         ? jobsWithMargin.filter(j => j._hasQuote && j.completed).reduce((s,j) => s + j._margin, 0) / jobsWithMargin.filter(j => j._hasQuote && j.completed).length
         : 0;
       const totalProfit = jobsWithMargin.reduce((s,j) => s + j._profit, 0);
+      const totalCost = jobsWithMargin.reduce((s,j) => s + j._cost, 0);
 
       // Photos & materials linked to client's jobs
       const clientJobIds = clientJobs.map(j => j.id);
@@ -20784,8 +20785,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalRevenue.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
                 </div>
                 <div>
-                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>EARNED</div>
-                  <div style={{fontSize:"22px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${completedRevenue.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
+                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>EXPENSES</div>
+                  <div style={{fontSize:"22px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalCost.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
                 </div>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>PROFIT</div>
