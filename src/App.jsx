@@ -24350,12 +24350,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                 {list.map(c => {
                   const accent = c.billable === false ? '#f97316' : '#3b82f6';
-                  // Combine company + role but dedupe (old data sometimes has both fields containing same string)
-                  const parts = [];
-                  if (c.company) parts.push(c.company);
-                  if (c.role && !c.company?.toLowerCase().includes(c.role.toLowerCase())) parts.push(c.role);
-                  const companyRole = parts.join(' ');
-                  const subtitle = [companyRole, c.phone].filter(Boolean).join(' · ');
+                  const subtitle = [c.role, c.phone].filter(Boolean).join(' · ');
                   return (
                     <button key={c.id} onClick={() => { setSelectedDonnyClient(c); setActiveView('donny-clientdetail'); }}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
