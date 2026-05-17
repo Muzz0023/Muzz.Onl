@@ -24575,12 +24575,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <input className="slick-input" value={supplier.email||''} onChange={e=>updateSupplier({email:e.target.value})}
                       placeholder="name@example.com"/>
                   </div>
-                  <div style={{gridColumn:isWide?"1 / -1":"auto"}}>
-                    <label className="slick-label" style={{color:"rgba(34,197,94,0.85)"}}>Notes</label>
-                    <textarea className="slick-textarea" value={supplier.notes||''} onChange={e=>updateSupplier({notes:e.target.value})}
-                      placeholder="Anything worth remembering…"
-                      rows={3}/>
-                  </div>
                 </div>
               </div>
 
