@@ -296,8 +296,24 @@ const StarryBackground = ({ children }) => {
         }
         .slick-input::placeholder,
         .slick-textarea::placeholder {
-          color: rgba(148, 163, 184, 0.28);
-          font-style: normal;
+          color: rgba(148, 163, 184, 0.22) !important;
+          font-style: italic;
+          font-weight: 300;
+          opacity: 1;
+          letter-spacing: 0.2px;
+        }
+        .slick-input::-webkit-input-placeholder,
+        .slick-textarea::-webkit-input-placeholder {
+          color: rgba(148, 163, 184, 0.22) !important;
+          font-style: italic;
+          font-weight: 300;
+        }
+        .slick-input::-moz-placeholder,
+        .slick-textarea::-moz-placeholder {
+          color: rgba(148, 163, 184, 0.22) !important;
+          font-style: italic;
+          font-weight: 300;
+          opacity: 1;
         }
         .slick-input:hover,
         .slick-textarea:hover,
