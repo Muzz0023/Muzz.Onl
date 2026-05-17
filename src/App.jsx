@@ -19470,17 +19470,17 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED HOURS</div>
                           <input type="number" value={job.quotedHours||''} onChange={e => updateJob({quotedHours:e.target.value})} placeholder="e.g. 500"
-                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                            className="slick-input accent-orange"/>
                         </div>
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QUOTED MATERIALS $</div>
                           <input type="number" value={job.quotedMaterials||''} onChange={e => updateJob({quotedMaterials:e.target.value})} placeholder="e.g. 1200"
-                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(59,130,246,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                            className="slick-input accent-blue"/>
                         </div>
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOTAL QUOTE $</div>
                           <input type="number" value={job.quotedCost||''} onChange={e => updateJob({quotedCost:e.target.value})} placeholder="e.g. 5000"
-                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px"}}/>
+                            className="slick-input"/>
                         </div>
                       </div>
                       <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"8px",letterSpacing:"0.5px"}}>Labour cost auto-calculates from logged hours × hourly rates.</div>
@@ -19675,7 +19675,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div style={{borderTop:"0.5px solid rgba(249,115,22,0.1)",paddingTop:"12px",display:"flex",flexDirection:"column",gap:"8px"}}>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MILESTONE</div>
                       <input value={inlineMilestoneLabel} onChange={e => setInlineMilestoneLabel(e.target.value)} placeholder="e.g. FAT, Site Inspection, Council Sign-off" list="milestone-suggestions"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                       <datalist id="milestone-suggestions">
                         <option value="FAT (Factory Acceptance Test)"/>
                         <option value="SAT (Site Acceptance Test)"/>
@@ -19689,7 +19689,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <option value="Handover"/>
                       </datalist>
                       <input type="date" value={inlineMilestoneDate} onChange={e => setInlineMilestoneDate(e.target.value)}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                        className="slick-input accent-orange"/>
                       <button onClick={() => {
                         if (!inlineMilestoneLabel.trim() || !inlineMilestoneDate) return;
                         const newMs = { id: Date.now(), label: inlineMilestoneLabel.trim(), date: inlineMilestoneDate, completed: false };
@@ -19725,7 +19725,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const c = donnyClients.find(x => String(x.id) === String(e.target.value));
                           logAction(`job_${job.id}`, { kind: 'edit', summary: `Client linked: ${c?.name||'?'}` });
                           setShowAddClientInline(false);
-                        }} style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        }} className="slick-select accent-orange">
                           <option value="">Select client to link...</option>
                           {donnyClients.filter(c => !jobHasClient(job, c.id)).map(c => <option key={c.id} value={c.id}>{c.name}{c.company?` · ${c.company}`:''}</option>)}
                         </select>
@@ -19735,11 +19735,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>OR CREATE NEW</div>
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <input value={inlineClientName} onChange={e => setInlineClientName(e.target.value)} placeholder="Name *"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <input value={inlineClientCompany} onChange={e => setInlineClientCompany(e.target.value)} placeholder="Company / role (e.g. engineer, builder)"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <input value={inlineClientPhone} onChange={e => setInlineClientPhone(e.target.value)} placeholder="Phone"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <button onClick={() => {
                           if (!inlineClientName.trim()) return;
                           const newClient = { id: Date.now(), name: inlineClientName.trim(), company: inlineClientCompany, phone: inlineClientPhone, email:'', address:'', notes:'', jobIds:[job.id] };
@@ -19819,7 +19819,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WORKER</div>
                           <select value={inlineWorkerId} onChange={e => setInlineWorkerId(e.target.value)}
-                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                            className="slick-select accent-orange">
                             <option value="">Select worker...</option>
                             {donnyTeam.map(m => <option key={m.id} value={m.id}>{m.name}{m.position?` (${m.position})`:''}{m.hourlyRate?` · $${m.hourlyRate}/hr`:''}</option>)}
                           </select>
@@ -19827,13 +19827,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <div>
                           <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURS</div>
                           <input type="number" step="0.25" value={inlineWorkerHrs} onChange={e => setInlineWorkerHrs(e.target.value)} placeholder="8"
-                            style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                            className="slick-input accent-orange"/>
                         </div>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT THEY DID (OPTIONAL)</div>
                         <input value={inlineWorkerDesc} onChange={e => setInlineWorkerDesc(e.target.value)} placeholder="Cable install, Level 2"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                       <button onClick={() => {
                         if (!inlineWorkerId || !inlineWorkerHrs) return;
@@ -19856,24 +19856,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
                     <input value={inlineMatItem} onChange={e => setInlineMatItem(e.target.value)} placeholder="2C+E 2.5mm Cable" list="inline-mat-suggestions-mv"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                     <datalist id="inline-mat-suggestions-mv">{[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}</datalist>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"6px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
                       <input type="number" value={inlineMatQty} onChange={e => setInlineMatQty(e.target.value)} placeholder="10"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
                       <input value={inlineMatUnit} onChange={e => setInlineMatUnit(e.target.value)} placeholder="m"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
                       <input type="number" step="0.01" value={inlineMatCost} onChange={e => setInlineMatCost(e.target.value)} placeholder="120"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input"/>
                     </div>
                   </div>
                   <button onClick={() => {
@@ -19983,7 +19983,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const sub = donnySubs.find(s => String(s.id) === String(e.target.value));
                           logAction(`job_${job.id}`, { kind: 'edit', summary: `Subcontractor linked: ${sub?.name||'?'}` });
                           setShowAddSubInline(false);
-                        }} style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        }} className="slick-select accent-orange">
                           <option value="">Select sub...</option>
                           {(donnySubs||[]).filter(s => !entityOnJob(s, job.id)).map(s => <option key={s.id} value={s.id}>{s.name}{s.trade?` · ${s.trade}`:''}</option>)}
                         </select>
@@ -19993,11 +19993,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>OR CREATE NEW</div>
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <input value={inlineSubName} onChange={e => setInlineSubName(e.target.value)} placeholder="Name *"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <input value={inlineSubTrade} onChange={e => setInlineSubTrade(e.target.value)} placeholder="Trade (electrician, plumber...)"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <input value={inlineSubPhone} onChange={e => setInlineSubPhone(e.target.value)} placeholder="Phone"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <button onClick={() => {
                           if (!inlineSubName.trim()) return;
                           const newSub = { id: Date.now(), name: inlineSubName.trim(), company:'', trade: inlineSubTrade, phone: inlineSubPhone, email:'', rate:'', rateType:'hr', abn:'', licenceNo:'', jobIds:[job.id] };
@@ -20060,7 +20060,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const sup = donnySuppliers.find(s => String(s.id) === String(e.target.value));
                           logAction(`job_${job.id}`, { kind: 'edit', summary: `Supplier linked: ${sup?.name||'?'}` });
                           setShowAddSupplierInline(false);
-                        }} style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        }} className="slick-select accent-orange">
                           <option value="">Select supplier...</option>
                           {(donnySuppliers||[]).filter(s => !entityOnJob(s, job.id)).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                         </select>
@@ -20070,11 +20070,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>OR CREATE NEW</div>
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <input value={inlineSupplierName} onChange={e => setInlineSupplierName(e.target.value)} placeholder="Name * (e.g. Lawrence & Hanson)"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <input value={inlineSupplierContact} onChange={e => setInlineSupplierContact(e.target.value)} placeholder="Contact (rep name)"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <input value={inlineSupplierPhone} onChange={e => setInlineSupplierPhone(e.target.value)} placeholder="Phone"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <button onClick={() => {
                           if (!inlineSupplierName.trim()) return;
                           const newSup = { id: Date.now(), name: inlineSupplierName.trim(), contact: inlineSupplierContact, phone: inlineSupplierPhone, email:'', items:[], jobIds:[job.id] };
@@ -20561,13 +20561,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
                   <input value={worker.position||''} onChange={e => updateWorker({position:e.target.value})}
                     placeholder="e.g. Apprentice, JM, Foreman"
-                    style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    className="slick-input accent-orange"/>
                 </div>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE</div>
                   <input type="number" value={worker.hourlyRate||''} onChange={e => updateWorker({hourlyRate:e.target.value})}
                     placeholder="0"
-                    style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    className="slick-input"/>
                 </div>
               </div>
             </div>
@@ -22085,7 +22085,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FULL NAME</div>
                     <input value={newMember.name} onChange={e => setNewMember(p=>({...p,name:e.target.value}))} placeholder="James Smith"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>ROLE</div>
@@ -22110,7 +22110,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
                       <select value={newMember.position} onChange={e => setNewMember(p=>({...p,position:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        className="slick-select accent-orange">
                         <option value="">Select...</option>
                         {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
                       </select>
@@ -22118,7 +22118,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE (AUD)</div>
                       <input value={newMember.hourlyRate} onChange={e => setNewMember(p=>({...p,hourlyRate:e.target.value}))} placeholder="45.00" type="number"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input"/>
                     </div>
                   </div>
                   {donnyJobs.length > 0 && (
@@ -22643,13 +22643,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB TITLE</div>
                     <input value={newRecurring.title} onChange={e=>setNewRecurring(p=>({...p,title:e.target.value}))} placeholder="Monthly Maintenance — Westfield"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"12px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CLIENT</div>
                       <select value={newRecurring.clientId} onChange={e=>setNewRecurring(p=>({...p,clientId:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        className="slick-select accent-orange">
                         <option value="">No client</option>
                         {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
@@ -22657,21 +22657,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FREQUENCY</div>
                       <select value={newRecurring.freq} onChange={e=>setNewRecurring(p=>({...p,freq:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        className="slick-select accent-orange">
                         {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
                       </select>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT DATE</div>
                       <input type="date" value={newRecurring.nextDate} onChange={e=>setNewRecurring(p=>({...p,nextDate:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
                     <textarea value={newRecurring.notes} onChange={e=>setNewRecurring(p=>({...p,notes:e.target.value}))} rows={4}
                       placeholder="Scope of work, access details, materials needed..."
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical",lineHeight:1.5}}/>
+                      className="slick-textarea accent-orange"/>
                   </div>
                   <button onClick={()=>{
                     if(!newRecurring.title.trim()) return;
@@ -22754,13 +22754,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB TITLE</div>
                       <input value={r.title||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,title:e.target.value}:x))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"10px"}}>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CLIENT</div>
                         <select value={r.clientId||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,clientId:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          className="slick-select accent-orange">
                           <option value="">No client</option>
                           {donnyClients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
@@ -22768,20 +22768,20 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FREQUENCY</div>
                         <select value={r.freq} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,freq:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          className="slick-select accent-orange">
                           {Object.entries(freqLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
                         </select>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT DATE</div>
                         <input type="date" value={r.nextDate||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,nextDate:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
                       <textarea value={r.notes||''} onChange={e=>saveRecurring(donnyRecurring.map(x=>x.id===r.id?{...x,notes:e.target.value}:x))} rows={4}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical",lineHeight:1.5}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                   </div>
                 </div>
@@ -23210,7 +23210,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TITLE</div>
                       <input value={newChecklist.title} onChange={e=>setNewChecklist(p=>({...p,title:e.target.value}))} placeholder="Roof access SWMS"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     {newChecklist.type==='swms' && (
                       <div>
@@ -23607,12 +23607,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={newIncident.date} onChange={e=>setNewIncident(p=>({...p,date:e.target.value}))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIME</div>
                         <input type="time" value={newIncident.time} onChange={e=>setNewIncident(p=>({...p,time:e.target.value}))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
@@ -23629,23 +23629,23 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO WAS INVOLVED</div>
                       <input value={newIncident.who} onChange={e=>setNewIncident(p=>({...p,who:e.target.value}))} placeholder="Name(s)" list="incident-who-jobview"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                       <datalist id="incident-who-jobview">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DESCRIPTION</div>
                       <textarea value={newIncident.description} onChange={e=>setNewIncident(p=>({...p,description:e.target.value}))} rows={3} placeholder="What happened? Where? How?"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INJURY / DAMAGE</div>
                       <input value={newIncident.injury} onChange={e=>setNewIncident(p=>({...p,injury:e.target.value}))} placeholder="Nature of injury or damage"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CORRECTIVE ACTION</div>
                       <input value={newIncident.action} onChange={e=>setNewIncident(p=>({...p,action:e.target.value}))} placeholder="What was done to prevent recurrence?"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <button onClick={()=>setNewIncident(p=>({...p,reported:!p.reported}))}
                       style={{display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",padding:"4px 0",fontFamily:"monospace"}}>
@@ -23860,12 +23860,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                       <input type="date" value={newIncident.date} onChange={e=>setNewIncident(p=>({...p,date:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TIME</div>
                       <input type="time" value={newIncident.time} onChange={e=>setNewIncident(p=>({...p,time:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                   </div>
                   <div>
@@ -23883,7 +23883,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB</div>
                       <select value={newIncident.jobId} onChange={e=>setNewIncident(p=>({...p,jobId:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        className="slick-select accent-orange">
                         <option value="">No job</option>
                         {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} `:''}{j.title}</option>)}
                       </select>
@@ -23891,24 +23891,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO WAS INVOLVED</div>
                       <input value={newIncident.who} onChange={e=>setNewIncident(p=>({...p,who:e.target.value}))} placeholder="Name(s)" list="incident-who"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                       <datalist id="incident-who">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
                     </div>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DESCRIPTION</div>
                     <textarea value={newIncident.description} onChange={e=>setNewIncident(p=>({...p,description:e.target.value}))} rows={3} placeholder="What happened? Where? How?"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                      className="slick-textarea accent-orange"/>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INJURY / DAMAGE</div>
                     <input value={newIncident.injury} onChange={e=>setNewIncident(p=>({...p,injury:e.target.value}))} placeholder="Nature of injury or damage"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CORRECTIVE ACTION</div>
                     <input value={newIncident.action} onChange={e=>setNewIncident(p=>({...p,action:e.target.value}))} placeholder="What was done to prevent recurrence?"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                   </div>
                   <button onClick={()=>setNewIncident(p=>({...p,reported:!p.reported}))}
                     style={{display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",padding:"4px 0",fontFamily:"monospace"}}>
@@ -23998,24 +23998,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={inc.date||''} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,date:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TYPE</div>
                         <select value={inc.type} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,type:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          className="slick-select accent-orange">
                           {Object.entries(typeLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}
                         </select>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={inc.who||''} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,who:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB</div>
                         <select value={inc.jobId||''} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,jobId:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                          className="slick-select accent-orange">
                           <option value="">No job</option>
                           {donnyJobs.map(j=><option key={j.id} value={j.id}>{j.jobNumber?`#${j.jobNumber} `:''}{j.title}</option>)}
                         </select>
@@ -24024,17 +24024,17 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DESCRIPTION</div>
                       <textarea value={inc.description||''} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,description:e.target.value}:x))} rows={3}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INJURY / DAMAGE</div>
                       <input value={inc.injury||''} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,injury:e.target.value}:x))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CORRECTIVE ACTION</div>
                       <input value={inc.action||''} onChange={e=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,action:e.target.value}:x))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <button onClick={()=>saveIncidents(donnyIncidents.map(x=>x.id===inc.id?{...x,reported:!x.reported}:x))}
                       style={{display:"flex",alignItems:"center",gap:"10px",background:"none",border:"none",cursor:"pointer",padding:"4px 0",fontFamily:"monospace"}}>
@@ -24126,7 +24126,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM / MATERIAL</div>
                     <input value={newMatEntry.item} onChange={e=>setNewMatEntry(p=>({...p,item:e.target.value}))} placeholder="2C+E 2.5mm TPS Cable"
                       list="donny-mat-suggestions"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                     <datalist id="donny-mat-suggestions">
                       {[...new Set(donnyMaterialsLog.map(e => e.item).filter(Boolean))].map(name => <option key={name} value={name}/>)}
                     </datalist>
@@ -24135,23 +24135,23 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
                       <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
                       <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="m, ea, kg"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
                       <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="120" type="number" step="0.01"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                        className="slick-input"/>
                     </div>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
                     <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="Ran short, need more by Thursday"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"7px 10px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                   </div>
                   <button onClick={() => {
                     if (!newMatEntry.item.trim()) return;
@@ -24488,24 +24488,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who-jobview"
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                         <datalist id="mistake-who-jobview">{donnyTeam.map(m=><option key={m.id} value={m.name}/>)}</datalist>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                       <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                       <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <button onClick={() => {
                       if (!newMistake.what.trim()) return;
@@ -24706,29 +24706,29 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO MADE IT</div>
                       <input value={newMistake.who} onChange={e => setNewMistake(p=>({...p,who:e.target.value}))} placeholder="Name..." list="mistake-who"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                       <datalist id="mistake-who">{teamNames.map(n=><option key={n} value={n}/>)}</datalist>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                       <input type="date" value={newMistake.date} onChange={e => setNewMistake(p=>({...p,date:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                     <textarea value={newMistake.what} onChange={e => setNewMistake(p=>({...p,what:e.target.value}))} placeholder="Describe the mistake..." rows={2}
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                      className="slick-textarea accent-orange"/>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                     <textarea value={newMistake.affected} onChange={e => setNewMistake(p=>({...p,affected:e.target.value}))} placeholder="Gear, materials, people affected..." rows={2}
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                      className="slick-textarea accent-orange"/>
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RELATED JOB (OPTIONAL)</div>
                     <input value={newMistake.jobRef} onChange={e => setNewMistake(p=>({...p,jobRef:e.target.value}))} placeholder="Job name or number..." list="mistake-jobs"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                     <datalist id="mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
                   </div>
                   <button onClick={() => {
@@ -24814,28 +24814,28 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHO</div>
                         <input value={m.who||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,who:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                       <div>
                         <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DATE</div>
                         <input type="date" value={m.date||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,date:e.target.value}:x))}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT HAPPENED</div>
                       <textarea value={m.what||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,what:e.target.value}:x))} rows={2}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>WHAT WAS AFFECTED</div>
                       <input value={m.affected||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,affected:e.target.value}:x))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB REF</div>
                       <input value={m.jobRef||''} onChange={e=>saveMistakes(donnyMistakes.map(x=>x.id===m.id?{...x,jobRef:e.target.value}:x))} list="edit-mistake-jobs"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                       <datalist id="edit-mistake-jobs">{donnyJobs.map(j=><option key={j.id} value={j.jobNumber?`#${j.jobNumber} ${j.title}`:j.title}/>)}</datalist>
                     </div>
                   </div>
@@ -24925,12 +24925,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(239,68,68,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HAZARD / RISK</div>
                       <textarea value={newRiskText} onChange={e=>setNewRiskText(e.target.value)} rows={3} placeholder="e.g. Working at height — risk of falling from scaffold"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",lineHeight:1.5,border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOW TO AVOID</div>
                       <textarea value={newRiskAvoid} onChange={e=>setNewRiskAvoid(e.target.value)} rows={3} placeholder="e.g. Full harness required, anchor points checked before start"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",lineHeight:1.5,border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                        className="slick-textarea accent-orange"/>
                     </div>
                     <button onClick={()=>{
                       if(!newRiskText.trim()) return;
@@ -24976,7 +24976,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                             <div style={{fontSize:"9px",color:"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HAZARD</div>
                             {isEdit ? (
                               <textarea value={r.what||''} onChange={e=>saveJobRisks(job.id, risks.map(x => x.id===r.id?{...x,what:e.target.value}:x))} rows={3}
-                                style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",lineHeight:1.5,border:"0.5px solid rgba(239,68,68,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px",resize:"vertical"}}/>
+                                className="slick-textarea accent-orange"/>
                             ) : (
                               <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,whiteSpace:"pre-wrap"}}>{r.what}</div>
                             )}
@@ -24985,7 +24985,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                             <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>HOW TO AVOID</div>
                             {isEdit ? (
                               <textarea value={r.mitigation||''} onChange={e=>saveJobRisks(job.id, risks.map(x => x.id===r.id?{...x,mitigation:e.target.value}:x))} rows={3} placeholder="Mitigation steps, controls, PPE..."
-                                style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",lineHeight:1.5,border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"8px 10px",borderRadius:"3px",resize:"vertical"}}/>
+                                className="slick-textarea accent-orange"/>
                             ) : hasMit ? (
                               <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,whiteSpace:"pre-wrap"}}>{r.mitigation}</div>
                             ) : (
@@ -25746,18 +25746,18 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div key={f.k}>
                         <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
                         <input value={newSub[f.k]} onChange={e=>setNewSub(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     ))}
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATE</div>
                       <input value={newSub.rate} onChange={e=>setNewSub(p=>({...p,rate:e.target.value}))} placeholder="120" type="number"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input"/>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATE TYPE</div>
                       <select value={newSub.rateType} onChange={e=>setNewSub(p=>({...p,rateType:e.target.value}))}
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(249,115,22,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",colorScheme:"dark"}}>
+                        className="slick-select accent-orange">
                         <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
                       </select>
                     </div>
@@ -25901,7 +25901,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
                       <input value={supplier[f.k]||''} onChange={e=>saveSuppliers(donnySuppliers.map(s=>s.id===supplier.id?{...s,[f.k]:e.target.value}:s))}
                         placeholder="—"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                   ))}
                 </div>
@@ -25917,17 +25917,17 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
                       <input value={supplierNewItem.desc} onChange={e=>setSupplierNewItem(p=>({...p,desc:e.target.value}))} placeholder="2.5mm TPS Cable"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
                       <input value={supplierNewItem.unit} onChange={e=>setSupplierNewItem(p=>({...p,unit:e.target.value}))} placeholder="m / ea"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PRICE ($)</div>
                       <input type="number" value={supplierNewItem.price} onChange={e=>setSupplierNewItem(p=>({...p,price:e.target.value}))} placeholder="0.00"
-                        style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                        className="slick-input"/>
                     </div>
                   </div>
                   <button onClick={()=>{
@@ -26182,7 +26182,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div key={f.k}>
                         <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.l}</div>
                         <input value={newSupplier[f.k]} onChange={e=>setNewSupplier(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(34,197,94,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     ))}
                   </div>
@@ -26352,14 +26352,14 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div key={f.key}>
                         <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{f.label}</div>
                         <input value={newClient[f.key]} onChange={e=>setNewClient(p=>({...p,[f.key]:e.target.value}))} placeholder={f.placeholder}
-                          style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                          className="slick-input accent-orange"/>
                       </div>
                     ))}
                   </div>
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ADDRESS</div>
                     <input value={newClient.address} onChange={e=>setNewClient(p=>({...p,address:e.target.value}))} placeholder="123 Main St, Brisbane QLD 4000"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                      className="slick-input accent-orange"/>
                   </div>
                   {donnyJobs.length > 0 && (
                     <div>
