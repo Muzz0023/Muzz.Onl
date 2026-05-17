@@ -20807,6 +20807,16 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",fontWeight:600}}>// CONTACT</div>
               <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"22px 32px"}}>
                 <div>
+                  <label className="slick-label accent-blue">Company</label>
+                  <input className="slick-input accent-blue" value={client.company||''} onChange={e => updateClient({company:e.target.value})}
+                    placeholder="e.g. Powerlink"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-blue">Role</label>
+                  <input className="slick-input accent-blue" value={client.role||''} onChange={e => updateClient({role:e.target.value})}
+                    placeholder="e.g. Engineer, Founder"/>
+                </div>
+                <div>
                   <label className="slick-label accent-blue">Email</label>
                   <input className="slick-input accent-blue" value={client.email||''} onChange={e => updateClient({email:e.target.value})}
                     placeholder="name@example.com"/>
@@ -20829,6 +20839,32 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               </div>
             </div>
+
+            {/* LINK TO JOBS */}
+            {donnyJobs.filter(j => !j.completed).length > 0 && (
+              <div style={{marginTop:"24px"}}>
+                <div style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(59,130,246,0.2)",fontWeight:600}}>// JOBS</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginBottom:"10px",letterSpacing:"0.5px"}}>Tap to link or unlink this {client.billable === false ? 'contact' : 'client'} from a job.</div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
+                  {donnyJobs.filter(j => !j.completed).map(job => {
+                    const linked = jobHasClient(job, client.id);
+                    return (
+                      <button key={job.id} onClick={() => {
+                        // Toggle this client on this job
+                        const currentIds = getJobClientIds(job);
+                        const newIds = linked
+                          ? currentIds.filter(id => String(id) !== String(client.id))
+                          : [...currentIds, client.id];
+                        setDonnyJobs(donnyJobs.map(j => j.id === job.id ? { ...j, clientIds: newIds, clientId: newIds[0]||null } : j));
+                      }}
+                        style={{fontSize:"11px",padding:"6px 12px",borderRadius:"4px",fontFamily:"monospace",letterSpacing:"0.5px",fontWeight:500,background:linked?'rgba(59,130,246,0.15)':'rgba(255,255,255,0.03)',border:`0.5px solid ${linked?'rgba(59,130,246,0.5)':'rgba(255,255,255,0.08)'}`,color:linked?'#3b82f6':'rgba(148,163,184,0.5)',cursor:"pointer"}}>
+                        {linked ? '✓ ' : ''}{job.jobNumber?`#${job.jobNumber} `:''}{job.title}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
 
             {/* DELETE */}
@@ -24306,7 +24342,8 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                 {list.map(c => {
                   const accent = c.billable === false ? '#f97316' : '#3b82f6';
-                  const subtitle = [c.company, c.phone].filter(Boolean).join(' · ');
+                  const companyRole = [c.company, c.role].filter(Boolean).join(' ');
+                  const subtitle = [companyRole, c.phone].filter(Boolean).join(' · ');
                   return (
                     <button key={c.id} onClick={() => { setSelectedDonnyClient(c); setActiveView('donny-clientdetail'); }}
                       style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
