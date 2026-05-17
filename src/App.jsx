@@ -20756,52 +20756,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                     {' · '}{activeClientJobs.length} active
                     {' · '}{completedClientJobs.length} done
                   </div>
-                  {/* Billable toggle — hides quote/cost/margin when client is not being billed */}
-                  <div style={{display:"flex",alignItems:"center",gap:"10px",marginTop:"12px",padding:"8px 12px",background:client.billable === false ? "rgba(148,163,184,0.06)" : "rgba(34,197,94,0.06)",border:`0.5px solid ${client.billable === false ? "rgba(148,163,184,0.25)" : "rgba(34,197,94,0.3)"}`,borderRadius:"4px",maxWidth:"360px"}}>
-                    <button onClick={() => updateClient({billable: client.billable === false ? true : false})}
-                      style={{position:"relative",width:"38px",height:"22px",background:client.billable === false ? "rgba(148,163,184,0.25)" : "rgba(34,197,94,0.55)",border:`1px solid ${client.billable === false ? "rgba(148,163,184,0.45)" : "rgba(34,197,94,0.8)"}`,borderRadius:"11px",cursor:"pointer",flexShrink:0,padding:0}}>
-                      <div style={{position:"absolute",top:"2px",left:client.billable === false ? "2px" : "18px",width:"16px",height:"16px",borderRadius:"50%",background:"#e0eaff",transition:"left 0.15s ease",boxShadow:"0 1px 2px rgba(0,0,0,0.5)"}} />
-                    </button>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:"10px",fontFamily:"monospace",letterSpacing:"1px",color:client.billable === false ? "rgba(148,163,184,0.85)" : "rgba(34,197,94,0.95)",fontWeight:600}}>
-                        {client.billable === false ? 'CONTACT ONLY' : 'BILLABLE CLIENT'}
-                      </div>
-                      <div style={{fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.55)",lineHeight:1.4,marginTop:"1px"}}>
-                        {client.billable === false ? "Quote/cost/margin hidden everywhere." : "Quotes & margins tracked normally."}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
-
-
-            {/* MONEY SUMMARY — single quiet line */}
-            {client.billable !== false && clientJobs.length > 0 && (
-              <div style={{display:"flex",alignItems:"baseline",gap:"22px",flexWrap:"wrap",padding:"14px 2px 22px",borderBottom:"0.5px solid rgba(59,130,246,0.08)"}}>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>QUOTED</div>
-                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalRevenue.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
-                </div>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>EXPENSES</div>
-                  <div style={{fontSize:"22px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${totalCost.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
-                </div>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>PROFIT</div>
-                  <div style={{fontSize:"22px",color:totalProfit>=0?"rgba(34,197,94,0.95)":"#ef4444",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{totalProfit>=0?'+':''}${totalProfit.toLocaleString('en-AU',{maximumFractionDigits:0})}</div>
-                </div>
-                {avgMargin !== 0 && (
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>MARGIN</div>
-                    <div style={{fontSize:"22px",color:avgMargin>=20?"rgba(34,197,94,0.95)":avgMargin>=10?"#f59e0b":"#ef4444",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{avgMargin.toFixed(0)}%</div>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* JOBS — task-style rows, no panel chrome */}
             <div>
@@ -24377,6 +24337,71 @@ ${JSON.stringify(ctx, null, 2)}`;
 
     // DONNY SUPPLIERS — list view
     if (activeView === 'donny-suppliers') {
+      // Supplier edit detail
+      if (editingSupplierId) {
+        const supplier = donnySuppliers.find(s => s.id === editingSupplierId);
+        if (!supplier) { setEditingSupplierId(null); return null; }
+        const updateSupplier = (patch) => setDonnySuppliers(donnySuppliers.map(s => s.id === supplier.id ? { ...s, ...patch } : s));
+        const initial = (supplier.name || '?').charAt(0).toUpperCase();
+
+        return (
+          <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
+            <Sidebar /><SaveIndicator />
+            {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
+            <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
+
+            <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px"}}>
+              <div className="max-w-5xl mx-auto">
+                <button onClick={() => setEditingSupplierId(null)} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← SUPPLIERS</button>
+                <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
+                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",fontWeight:600,color:"#22c55e",fontFamily:"monospace",flexShrink:0}}>{initial}</div>
+                  <div style={{flex:1,minWidth:"260px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px"}}>SUPPLIER</div>
+                    <input value={supplier.name||''} onChange={e=>updateSupplier({name:e.target.value})}
+                      style={{width:"100%",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"24px",fontWeight:500,letterSpacing:"1px",border:"none",borderBottom:"0.5px solid rgba(34,197,94,0.15)",outline:"none",padding:"4px 0"}} placeholder="Supplier name..."/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"24px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+              {/* CONTACT */}
+              <div>
+                <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"20px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(34,197,94,0.2)",fontWeight:600}}>// CONTACT</div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"22px 32px"}}>
+                  <div>
+                    <label className="slick-label" style={{color:"rgba(34,197,94,0.85)"}}>Contact name</label>
+                    <input className="slick-input" value={supplier.contact||''} onChange={e=>updateSupplier({contact:e.target.value})}
+                      placeholder="e.g. Grant"/>
+                  </div>
+                  <div>
+                    <label className="slick-label" style={{color:"rgba(34,197,94,0.85)"}}>Phone</label>
+                    <input className="slick-input" value={supplier.phone||''} onChange={e=>updateSupplier({phone:e.target.value})}
+                      placeholder="04XX XXX XXX"/>
+                  </div>
+                  <div>
+                    <label className="slick-label" style={{color:"rgba(34,197,94,0.85)"}}>Email</label>
+                    <input className="slick-input" value={supplier.email||''} onChange={e=>updateSupplier({email:e.target.value})}
+                      placeholder="name@example.com"/>
+                  </div>
+                  <div style={{gridColumn:isWide?"1 / -1":"auto"}}>
+                    <label className="slick-label" style={{color:"rgba(34,197,94,0.85)"}}>Notes</label>
+                    <textarea className="slick-textarea" value={supplier.notes||''} onChange={e=>updateSupplier({notes:e.target.value})}
+                      placeholder="Anything worth remembering…"
+                      rows={3}/>
+                  </div>
+                </div>
+              </div>
+
+              {/* DELETE */}
+              <button onClick={() => { if(window.confirm(`Remove supplier ${supplier.name}?`)) { setDonnySuppliers(donnySuppliers.filter(x=>x.id!==supplier.id)); setEditingSupplierId(null); } }}
+                style={{padding:"12px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"4px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"2px",cursor:"pointer",fontWeight:600,marginTop:"6px"}}>
+                DELETE SUPPLIER
+              </button>
+            </div>
+          </div>
+        );
+      }
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
