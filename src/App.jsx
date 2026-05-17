@@ -21894,113 +21894,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalMembers > 0 && (
-              <div style={{...teamPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Members", value:String(totalMembers), color:"#f97316",
-                      lineage: {
-                        title: 'Team Members',
-                        value: String(totalMembers),
-                        color: '#f97316',
-                        formula: 'COUNT(team)',
-                        breakdown: sortedTeam.map(m => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: m.position || (m.roles||[])[0] || 'worker',
-                          value: m.hourlyRate ? `$${m.hourlyRate}/hr` : '—',
-                          valueColor: m.hourlyRate ? 'rgba(34,197,94,0.95)' : 'rgba(148,163,184,0.5)',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                        note: 'Click to open worker',
-                      },
-                    },
-                    {
-                      label:"Avg Rate", value:avgRate > 0 ? `$${avgRate.toFixed(0)}/hr` : '—', color:"rgba(34,197,94,0.85)",
-                      lineage: avgRate > 0 ? {
-                        title: 'Average Hourly Rate',
-                        value: `$${avgRate.toFixed(2)}/hr`,
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'AVG(hourlyRate) WHERE rate > 0',
-                        breakdown: [...teamWithRate].sort((a,b) => (parseFloat(b.hourlyRate)||0) - (parseFloat(a.hourlyRate)||0)).map(m => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: m.position || (m.roles||[])[0] || '—',
-                          value: `$${m.hourlyRate}/hr`,
-                          valueColor: 'rgba(34,197,94,0.95)',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Total $/hr", value:totalHourlyRate > 0 ? `$${totalHourlyRate.toFixed(0)}` : '—', color:"rgba(168,85,247,0.85)",
-                      lineage: totalHourlyRate > 0 ? {
-                        title: 'Combined Hourly Cost',
-                        value: `$${totalHourlyRate.toFixed(2)}/hr`,
-                        color: 'rgba(168,85,247,0.95)',
-                        formula: 'SUM(hourlyRate) — running cost if all crew working',
-                        breakdown: teamWithRate.map(m => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: m.position || '—',
-                          value: `$${m.hourlyRate}/hr`,
-                          valueColor: 'rgba(168,85,247,0.95)',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Hours", value:totalHrsLogged > 0 ? `${totalHrsLogged.toFixed(0)}h` : '—', color:"#3b82f6",
-                      lineage: totalHrsLogged > 0 ? {
-                        title: 'Total Hours Logged',
-                        value: `${totalHrsLogged.toFixed(1)}h`,
-                        color: '#3b82f6',
-                        formula: 'SUM(timesheet.hours) per worker',
-                        breakdown: [...teamWithStats].filter(m => m._hrs > 0).sort((a,b) => b._hrs - a._hrs).map(m => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: m.position || '—',
-                          value: `${m._hrs.toFixed(1)}h`,
-                          valueColor: '#3b82f6',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Top Earner", value:topEarner && topEarner._earned > 0 ? topEarner.name : '—', color:"#a855f7", smallValue: true,
-                      lineage: topEarner && topEarner._earned > 0 ? {
-                        title: `Top Earner · ${topEarner.name}`,
-                        value: `$${topEarner._earned.toFixed(0)}`,
-                        color: '#a855f7',
-                        formula: 'MAX(hours × rate)',
-                        breakdown: [...teamWithStats].filter(m => m._earned > 0).sort((a,b) => b._earned - a._earned).map(m => ({
-                          icon: '⊢', color: '#f97316',
-                          label: m.name,
-                          sub: `${m._hrs.toFixed(1)}h × $${m.hourlyRate||0}/hr`,
-                          value: `$${m._earned.toFixed(0)}`,
-                          valueColor: '#a855f7',
-                          onClick: () => navToEntity('worker', m),
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* ADD MEMBER FORM */}
             {showAddMember && (
@@ -22435,130 +22328,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalRecurring > 0 && (
-              <div style={{...recPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Total", value:String(totalRecurring), color:"#f97316",
-                      lineage: {
-                        title: 'All Recurring Jobs',
-                        value: String(totalRecurring),
-                        color: '#f97316',
-                        formula: 'COUNT(recurring)',
-                        breakdown: donnyRecurring.map(r => {
-                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
-                          return {
-                            icon: '↻', color: freqColors[r.freq]||'#f97316',
-                            label: r.title,
-                            sub: `${c?.name||'no client'} · ${freqLabels[r.freq]||r.freq}`,
-                            value: r.nextDate ? new Date(r.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
-                            valueColor: r.nextDate && new Date(r.nextDate) < new Date() ? '#ef4444' : 'rgba(148,163,184,0.85)',
-                            onClick: () => setEditingRecurringId(r.id),
-                          };
-                        }),
-                      },
-                    },
-                    {
-                      label:"Overdue", value:String(overdue), color:overdue>0?"#ef4444":"rgba(34,197,94,0.85)",
-                      lineage: overdue > 0 ? {
-                        title: 'Overdue Jobs',
-                        value: String(overdue),
-                        color: '#ef4444',
-                        formula: 'WHERE nextDate < today',
-                        breakdown: donnyRecurring.filter(r => r.nextDate && new Date(r.nextDate) < new Date()).sort((a,b) => new Date(a.nextDate) - new Date(b.nextDate)).map(r => {
-                          const days = Math.abs(Math.ceil((new Date(r.nextDate) - new Date())/86400000));
-                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
-                          return {
-                            icon: '⚠', color: '#ef4444',
-                            label: r.title,
-                            sub: c?.name || 'no client',
-                            value: `${days}d late`,
-                            valueColor: '#ef4444',
-                            onClick: () => setEditingRecurringId(r.id),
-                          };
-                        }),
-                        note: 'Click to update next date',
-                      } : null,
-                    },
-                    {
-                      label:"Due Week", value:String(dueSoon), color:dueSoon>0?"#f59e0b":"rgba(34,197,94,0.85)",
-                      lineage: dueSoon > 0 ? {
-                        title: 'Due This Week',
-                        value: String(dueSoon),
-                        color: '#f59e0b',
-                        formula: 'WHERE nextDate within 7 days',
-                        breakdown: donnyRecurring.filter(r => {
-                          if(!r.nextDate) return false;
-                          const days = Math.ceil((new Date(r.nextDate) - new Date())/86400000);
-                          return days >= 0 && days <= 7;
-                        }).sort((a,b) => new Date(a.nextDate) - new Date(b.nextDate)).map(r => {
-                          const days = Math.ceil((new Date(r.nextDate) - new Date())/86400000);
-                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
-                          return {
-                            icon: '◷', color: '#f59e0b',
-                            label: r.title,
-                            sub: c?.name || 'no client',
-                            value: days === 0 ? 'Today' : `${days}d`,
-                            valueColor: '#f59e0b',
-                            onClick: () => setEditingRecurringId(r.id),
-                          };
-                        }),
-                      } : null,
-                    },
-                    {
-                      label:"Top Freq", value:topFreq ? freqLabels[topFreq[0]] : '—', color:topFreq ? freqColors[topFreq[0]] : "#a855f7", smallValue:true,
-                      lineage: topFreq ? {
-                        title: 'Jobs by Frequency',
-                        value: `${topFreq[1]} ${freqLabels[topFreq[0]]}`,
-                        color: freqColors[topFreq[0]],
-                        formula: 'GROUP BY freq',
-                        breakdown: Object.entries(byFreq).sort((a,b) => b[1]-a[1]).map(([freq,count]) => ({
-                          icon: '↻', color: freqColors[freq]||'#f97316',
-                          label: freqLabels[freq]||freq,
-                          sub: '',
-                          value: count,
-                          valueColor: freqColors[freq]||'#f97316',
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"With Client", value:`${withClient}/${totalRecurring}`, color:"#3b82f6",
-                      lineage: withClient > 0 ? {
-                        title: 'Linked to Clients',
-                        value: String(withClient),
-                        color: '#3b82f6',
-                        formula: 'WHERE clientId is set',
-                        breakdown: donnyRecurring.filter(r => r.clientId).map(r => {
-                          const c = donnyClients.find(c => String(c.id) === String(r.clientId));
-                          return {
-                            icon: '◇', color: '#3b82f6',
-                            label: r.title,
-                            sub: freqLabels[r.freq]||r.freq,
-                            value: c?.name || '—',
-                            valueColor: '#3b82f6',
-                            onClick: () => c && navToEntity('client', c),
-                          };
-                        }),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:k.color,opacity:0.7}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* NEW RECURRING FORM */}
             {showNewRecurring && (
@@ -22896,96 +22665,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalPhotos > 0 && (
-              <div style={{...photoPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Photos", value:String(totalPhotos), color:"#f97316",
-                      lineage: {
-                        title: 'Total Photos',
-                        value: String(totalPhotos),
-                        color: '#f97316',
-                        formula: 'COUNT(photos across all jobs)',
-                        breakdown: jobsWithPhotos.map(j => ({
-                          icon: '⊞', color: '#f97316',
-                          label: j.title,
-                          sub: j.jobNumber?`#${j.jobNumber}`:'',
-                          value: `${(donnyPhotos[j.id]||[]).length}`,
-                          valueColor: '#f97316',
-                          onClick: () => { setPhotoJobId(j.id); setPhotoFilter('all'); },
-                        })),
-                      },
-                    },
-                    {
-                      label:"Jobs", value:String(jobsWithPhotos.length), color:"#3b82f6",
-                      lineage: jobsWithPhotos.length > 0 ? {
-                        title: 'Jobs With Photos',
-                        value: String(jobsWithPhotos.length),
-                        color: '#3b82f6',
-                        formula: 'COUNT(DISTINCT jobId WHERE photos > 0)',
-                        breakdown: jobsWithPhotos.map(j => ({
-                          icon: '⊞', color: '#f97316',
-                          label: j.title,
-                          sub: `${(donnyPhotos[j.id]||[]).length} photo${(donnyPhotos[j.id]||[]).length!==1?'s':''}`,
-                          value: j.jobNumber?`#${j.jobNumber}`:'—',
-                          onClick: () => { setPhotoJobId(j.id); setPhotoFilter('all'); },
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Today", value:String(todayPhotos), color:"rgba(168,85,247,0.85)",
-                    },
-                    {
-                      label:"Top Tag", value:topTag ? topTag[0].toUpperCase() : '—', color:"rgba(34,197,94,0.85)", smallValue:true,
-                      lineage: topTag ? {
-                        title: 'Photos by Tag',
-                        value: `${topTag[1]} ${topTag[0]}`,
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'GROUP BY tag',
-                        breakdown: Object.entries(allTags).sort((a,b) => b[1]-a[1]).map(([tag,count]) => ({
-                          icon: '▦', color: '#f97316',
-                          label: tag.charAt(0).toUpperCase()+tag.slice(1),
-                          sub: '',
-                          value: count,
-                          valueColor: 'rgba(34,197,94,0.95)',
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Top Job", value:topJob ? topJob.title : '—', color:"#a855f7", smallValue:true,
-                      lineage: topJob ? {
-                        title: `Most Documented · ${topJob.title}`,
-                        value: `${(donnyPhotos[topJob.id]||[]).length} photos`,
-                        color: '#a855f7',
-                        formula: 'MAX(job.photoCount)',
-                        breakdown: jobsWithPhotos.map(j => ({
-                          icon: '⊞', color: '#f97316',
-                          label: j.title,
-                          sub: j.jobNumber?`#${j.jobNumber}`:'',
-                          value: `${(donnyPhotos[j.id]||[]).length}`,
-                          valueColor: '#a855f7',
-                          onClick: () => { setPhotoJobId(j.id); setPhotoFilter('all'); },
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* EMPTY STATE */}
             {donnyJobs.length === 0 && (
@@ -23312,115 +22991,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalChecklists > 0 && (
-              <div style={{...clPanel,borderLeft:"2px solid #22c55e"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Total", value:String(totalChecklists), color:"#22c55e",
-                      lineage: {
-                        title: 'All Safety Documents',
-                        value: String(totalChecklists),
-                        color: '#22c55e',
-                        formula: 'COUNT(checklists)',
-                        breakdown: donnyChecklists.map(c => ({
-                          icon: '✓', color: typeColors[c.type]||'#22c55e',
-                          label: c.title,
-                          sub: typeLabels[c.type]||c.type,
-                          value: `${c.items?.filter(i=>i.done).length||0}/${c.items?.length||0}`,
-                          onClick: () => setSelectedChecklistId(c.id),
-                        })),
-                      },
-                    },
-                    {
-                      label:"SWMS", value:String(swmsCount), color:"rgba(239,68,68,0.85)",
-                      lineage: swmsCount > 0 ? {
-                        title: 'SWMS Documents',
-                        value: String(swmsCount),
-                        color: 'rgba(239,68,68,0.95)',
-                        formula: 'WHERE type = swms',
-                        breakdown: donnyChecklists.filter(c => c.type === 'swms').map(c => ({
-                          icon: '⚠', color: '#ef4444',
-                          label: c.title,
-                          sub: '',
-                          value: `${c.items?.filter(i=>i.done).length||0}/${c.items?.length||0}`,
-                          onClick: () => setSelectedChecklistId(c.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Complete", value:String(completedCount), color:"rgba(34,197,94,0.95)",
-                      lineage: completedCount > 0 ? {
-                        title: 'Completed Docs',
-                        value: String(completedCount),
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'WHERE all items done',
-                        breakdown: donnyChecklists.filter(c => c.items && c.items.length > 0 && c.items.every(i => i.done)).map(c => ({
-                          icon: '✓', color: '#22c55e',
-                          label: c.title,
-                          sub: typeLabels[c.type]||c.type,
-                          value: `${c.items.length}/${c.items.length}`,
-                          valueColor: '#22c55e',
-                          onClick: () => setSelectedChecklistId(c.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"In Progress", value:String(inProgressCount), color:"#f59e0b",
-                      lineage: inProgressCount > 0 ? {
-                        title: 'In Progress',
-                        value: String(inProgressCount),
-                        color: '#f59e0b',
-                        formula: 'partial completion',
-                        breakdown: donnyChecklists.filter(c => c.items && c.items.length > 0 && c.items.some(i => i.done) && !c.items.every(i => i.done)).map(c => ({
-                          icon: '◷', color: '#f59e0b',
-                          label: c.title,
-                          sub: typeLabels[c.type]||c.type,
-                          value: `${c.items.filter(i=>i.done).length}/${c.items.length}`,
-                          valueColor: '#f59e0b',
-                          onClick: () => setSelectedChecklistId(c.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Comp Rate", value:`${compRate}%`, color:compRate>=80?"rgba(34,197,94,0.95)":compRate>=50?"#f59e0b":"rgba(239,68,68,0.85)",
-                      lineage: totalItems > 0 ? {
-                        title: 'Item Completion Rate',
-                        value: `${compRate}%`,
-                        color: compRate>=80?'rgba(34,197,94,0.95)':compRate>=50?'#f59e0b':'rgba(239,68,68,0.95)',
-                        formula: `${totalDone} / ${totalItems} items`,
-                        breakdown: Object.entries(byType).map(([type, count]) => {
-                          const docs = donnyChecklists.filter(c => c.type === type);
-                          const items = docs.reduce((s,c) => s + (c.items?.length||0), 0);
-                          const done = docs.reduce((s,c) => s + (c.items?.filter(i=>i.done).length||0), 0);
-                          const pct = items > 0 ? Math.round((done/items)*100) : 0;
-                          return {
-                            icon: '◍', color: typeColors[type]||'#22c55e',
-                            label: typeLabels[type]||type,
-                            sub: `${count} doc${count!==1?'s':''}`,
-                            value: `${pct}%`,
-                            valueColor: pct>=80?'rgba(34,197,94,0.95)':pct>=50?'#f59e0b':'rgba(239,68,68,0.95)',
-                          };
-                        }),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(34,197,94,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(34,197,94,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(34,197,94,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(34,197,94,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* JOBS PICKER */}
             {(() => {
@@ -23666,115 +23236,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalIncidents > 0 && (
-              <div style={{...incPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Total", value:String(totalIncidents), color:"#ef4444",
-                      lineage: {
-                        title: 'All Incidents',
-                        value: String(totalIncidents),
-                        color: '#ef4444',
-                        formula: 'COUNT(incidents)',
-                        breakdown: donnyIncidents.map(inc => {
-                          const job = donnyJobs.find(j => String(j.id) === String(inc.jobId));
-                          return {
-                            icon: '⚠', color: typeColors[inc.type]||'#ef4444',
-                            label: inc.description?.slice(0,40) || typeLabels[inc.type] || 'Incident',
-                            sub: `${inc.date||'—'}${job?(' · '+(job.jobNumber?'#'+job.jobNumber:job.title.slice(0,12))):''}${inc.who?(' · '+inc.who):''}`,
-                            value: typeLabels[inc.type] || inc.type,
-                            valueColor: typeColors[inc.type]||'#ef4444',
-                            onClick: () => setEditingIncidentId(inc.id),
-                          };
-                        }),
-                      },
-                    },
-                    {
-                      label:"This Month", value:String(thisMonthCount), color:thisMonthCount > 0 ? "rgba(245,158,11,0.85)" : "rgba(34,197,94,0.85)",
-                      lineage: thisMonthCount > 0 ? {
-                        title: 'Incidents This Month',
-                        value: String(thisMonthCount),
-                        color: 'rgba(245,158,11,0.95)',
-                        formula: 'WHERE date >= start of month',
-                        breakdown: donnyIncidents.filter(i => i.date && new Date(i.date) >= thisMonthStart).map(inc => ({
-                          icon: '⚠', color: typeColors[inc.type]||'#ef4444',
-                          label: inc.description?.slice(0,40) || typeLabels[inc.type],
-                          sub: inc.date,
-                          value: typeLabels[inc.type],
-                          valueColor: typeColors[inc.type]||'#ef4444',
-                          onClick: () => setEditingIncidentId(inc.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Reported", value:`${reportedCount}/${totalIncidents}`, color:"rgba(34,197,94,0.85)",
-                      lineage: reportedCount > 0 ? {
-                        title: 'Reported to Regulator',
-                        value: String(reportedCount),
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'WHERE reported = true',
-                        breakdown: donnyIncidents.filter(i => i.reported).map(inc => ({
-                          icon: '✓', color: '#22c55e',
-                          label: inc.description?.slice(0,40) || typeLabels[inc.type],
-                          sub: `${inc.date||'—'}${inc.who?' · '+inc.who:''}`,
-                          value: typeLabels[inc.type],
-                          valueColor: typeColors[inc.type]||'#ef4444',
-                          onClick: () => setEditingIncidentId(inc.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Open", value:String(openCount), color:openCount>0?"rgba(245,158,11,0.85)":"rgba(34,197,94,0.85)",
-                      lineage: openCount > 0 ? {
-                        title: 'Open (No Corrective Action)',
-                        value: String(openCount),
-                        color: 'rgba(245,158,11,0.95)',
-                        formula: 'WHERE corrective action is empty',
-                        breakdown: donnyIncidents.filter(i => !i.action || !i.action.trim()).map(inc => ({
-                          icon: '◷', color: '#f59e0b',
-                          label: inc.description?.slice(0,40) || typeLabels[inc.type],
-                          sub: `${inc.date||'—'}${inc.who?' · '+inc.who:''}`,
-                          value: typeLabels[inc.type],
-                          valueColor: typeColors[inc.type]||'#ef4444',
-                          onClick: () => setEditingIncidentId(inc.id),
-                        })),
-                        note: 'Click to add corrective action',
-                      } : null,
-                    },
-                    {
-                      label:"Top Type", value:topType ? typeLabels[topType[0]] : '—', color:"#a855f7", smallValue:true,
-                      lineage: topType ? {
-                        title: 'Incidents by Type',
-                        value: `${topType[1]} ${typeLabels[topType[0]]}`,
-                        color: '#a855f7',
-                        formula: 'GROUP BY type',
-                        breakdown: Object.entries(byType).sort((a,b) => b[1]-a[1]).map(([type,count]) => ({
-                          icon: '⚠', color: typeColors[type]||'#ef4444',
-                          label: typeLabels[type]||type,
-                          sub: '',
-                          value: count,
-                          valueColor: typeColors[type]||'#ef4444',
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(239,68,68,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(239,68,68,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(239,68,68,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* NEW INCIDENT FORM */}
             {showNewIncident && (
@@ -24050,67 +23511,50 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MATERIAL</span>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
-                  {(() => {
-                    const supplierCatalog = (donnySuppliers||[]).flatMap(s =>
-                      (s.items||[]).map(it => ({ desc: it.desc||'', unit: it.unit||'', price: it.price||'', supplierId: s.id, supplierName: s.name||'Unknown supplier' }))
-                    ).filter(it => it.desc);
-                    const findCatalogMatch = (desc) => supplierCatalog.find(it => it.desc.toLowerCase() === (desc||'').trim().toLowerCase());
-                    const supName = newMatEntry.supplierId ? ((donnySuppliers||[]).find(s => s.id === newMatEntry.supplierId)||{}).name : null;
-                    return (
-                      <>
-                        <div>
-                          <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",marginBottom:"4px"}}>
-                            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>ITEM / MATERIAL</div>
-                            {supplierCatalog.length > 0 && <div style={{fontSize:"8px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>{supplierCatalog.length} IN CATALOG</div>}
-                          </div>
-                          <input value={newMatEntry.item}
-                            onChange={e => {
-                              const val = e.target.value;
-                              const match = findCatalogMatch(val);
-                              if (match) {
-                                setNewMatEntry(p => ({ ...p, item: match.desc, unit: p.unit || match.unit, cost: p.cost || (match.price ? String(match.price) : ''), supplierId: match.supplierId }));
-                              } else {
-                                setNewMatEntry(p => ({ ...p, item: val, supplierId: null }));
-                              }
-                            }}
-                            placeholder="e.g. GPOs"
-                            list="donny-mat-suggestions"
-                            className="slick-input accent-orange"/>
-                          <datalist id="donny-mat-suggestions">
-                            {supplierCatalog.map((it,i) => <option key={`cat-${i}`} value={it.desc}>{`${it.supplierName}${it.price?` · $${it.price}`:''}${it.unit?` /${it.unit}`:''}`}</option>)}
-                            {[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))]
-                              .filter(p => !supplierCatalog.find(c => c.desc.toLowerCase() === p.toLowerCase()))
-                              .map(name => <option key={`prev-${name}`} value={name}>previously logged</option>)}
-                          </datalist>
-                          {supName && (
-                            <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"0.5px"}}>→ from {supName}</div>
-                          )}
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
-                            <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
-                              className="slick-input accent-orange"/>
-                          </div>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
-                            <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea"
-                              className="slick-input accent-orange"/>
-                          </div>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
-                            <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="0.00" type="number" step="0.01"
-                              className="slick-input"/>
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
-                          <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. ran short, need more"
-                            className="slick-input accent-orange"/>
-                        </div>
-                      </>
-                    );
-                  })()}
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM / MATERIAL</div>
+                    <input value={newMatEntry.item}
+                      onChange={e => setNewMatEntry(p => ({ ...p, item: e.target.value }))}
+                      placeholder="e.g. GPOs"
+                      list="donny-mat-suggestions"
+                      className="slick-input accent-orange"/>
+                    <datalist id="donny-mat-suggestions">
+                      {[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))]
+                        .map(name => <option key={name} value={name}/>)}
+                    </datalist>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
+                      <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
+                        className="slick-input accent-orange"/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
+                      <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea"
+                        className="slick-input accent-orange"/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
+                      <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="0.00" type="number" step="0.01"
+                        className="slick-input"/>
+                    </div>
+                  </div>
+                  {(donnySuppliers||[]).length > 0 && (
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>SUPPLIER (OPTIONAL)</div>
+                      <select value={newMatEntry.supplierId||''} onChange={e=>setNewMatEntry(p=>({...p,supplierId:e.target.value||null}))}
+                        className="slick-select" style={{colorScheme:"dark"}}>
+                        <option value="">— none —</option>
+                        {donnySuppliers.map(s => <option key={s.id} value={s.id}>{s.name||'Unnamed supplier'}</option>)}
+                      </select>
+                    </div>
+                  )}
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
+                    <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. ran short, need more"
+                      className="slick-input accent-orange"/>
+                  </div>
                   <button onClick={() => {
                     if (!newMatEntry.item.trim()) return;
                     const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, cost:newMatEntry.cost, note:newMatEntry.note, supplierId: newMatEntry.supplierId||null, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
@@ -24230,122 +23674,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalEntries > 0 && (
-              <div style={{...panel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Entries", value:String(totalEntries), color:"#f97316",
-                      lineage: {
-                        title: 'Material Log Entries',
-                        value: String(totalEntries),
-                        color: '#f97316',
-                        formula: 'COUNT(materialslog)',
-                        breakdown: [...donnyMaterialsLog].sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0)).slice(0,30).map(e => {
-                          const j = donnyJobs.find(x => x.id === e.jobId);
-                          return {
-                            icon: '◍', color: '#22c55e',
-                            label: e.item || 'unknown',
-                            sub: `${e.qty||'?'}${e.unit?' '+e.unit:''}${j?' · '+j.title:''}`,
-                            value: e.cost ? `$${parseFloat(e.cost).toFixed(0)}` : '—',
-                            valueColor: '#22c55e',
-                            onClick: e.item ? () => navToEntity('material', {name:e.item}) : null,
-                          };
-                        }),
-                        note: 'Most recent 30 entries · click to open material',
-                      },
-                    },
-                    {
-                      label:"Unique", value:String(uniqueMats), color:"#22c55e",
-                      lineage: {
-                        title: 'Unique Materials',
-                        value: String(uniqueMats),
-                        color: '#22c55e',
-                        formula: 'DISTINCT(material.item)',
-                        breakdown: catalog.map(m => ({
-                          icon: '◍', color: '#22c55e',
-                          label: m.name,
-                          sub: `${m.count} entries${m.qty>0?' · '+m.qty.toFixed(1)+(m.unit?' '+m.unit:''):''}`,
-                          value: m.cost > 0 ? `$${m.cost.toFixed(0)}` : `${m.count}×`,
-                          valueColor: '#22c55e',
-                          onClick: () => navToEntity('material', {name:m.name}),
-                        })),
-                      },
-                    },
-                    {
-                      label:"Today", value:String(todayEntries.length), color:"rgba(168,85,247,0.85)",
-                      lineage: todayEntries.length > 0 ? {
-                        title: 'Logged Today',
-                        value: String(todayEntries.length),
-                        color: 'rgba(168,85,247,0.95)',
-                        formula: 'WHERE created >= start of day',
-                        breakdown: todayEntries.map(e => {
-                          const j = donnyJobs.find(x => x.id === e.jobId);
-                          return {
-                            icon: '◍', color: '#22c55e',
-                            label: e.item || 'unknown',
-                            sub: `${e.qty||'?'}${e.unit?' '+e.unit:''}${j?' · '+j.title:''}`,
-                            value: new Date(e.createdAt).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),
-                            valueColor: 'rgba(168,85,247,0.85)',
-                            onClick: e.item ? () => navToEntity('material', {name:e.item}) : null,
-                          };
-                        }),
-                      } : null,
-                    },
-                    {
-                      label:"Top Item", value:topMaterial ? topMaterial.name : '—', color:"#a855f7",
-                      smallValue: true,
-                      lineage: topMaterial ? {
-                        title: `Top Material · ${topMaterial.name}`,
-                        value: `${topMaterial.count} entries`,
-                        color: '#a855f7',
-                        formula: 'MAX(material.entry_count)',
-                        breakdown: catalog.slice(0,10).map(m => ({
-                          icon: '◍', color: '#22c55e',
-                          label: m.name,
-                          sub: `${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}${m.cost>0?' · $'+m.cost.toFixed(0):''}`,
-                          value: `${m.count}×`,
-                          valueColor: '#a855f7',
-                          onClick: () => navToEntity('material', {name:m.name}),
-                        })),
-                        note: 'Top 10 by entry count',
-                      } : null,
-                    },
-                    {
-                      label:"Total $", value:totalCatalogCost > 0 ? `$${totalCatalogCost.toFixed(0)}` : '—', color:"rgba(34,197,94,0.85)",
-                      lineage: totalCatalogCost > 0 ? {
-                        title: 'Total Material Cost',
-                        value: `$${totalCatalogCost.toFixed(0)}`,
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'SUM(material.cost)',
-                        breakdown: [...catalog].sort((a,b) => b.cost - a.cost).filter(m => m.cost > 0).map(m => ({
-                          icon: '◍', color: '#22c55e',
-                          label: m.name,
-                          sub: `${m.count} entries · ${m.qty.toFixed(1)}${m.unit?' '+m.unit:''}`,
-                          value: `$${m.cost.toFixed(0)}`,
-                          valueColor: 'rgba(34,197,94,0.95)',
-                          onClick: () => navToEntity('material', {name:m.name}),
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      title={k.lineage ? "Click to see breakdown" : ""}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* JOBS PICKER */}
             {activeJobsList.length === 0 ? (
@@ -24551,110 +23879,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalMistakes > 0 && (
-              <div style={{...mPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Total", value:String(totalMistakes), color:"#ef4444",
-                      lineage: {
-                        title: 'All Mistakes',
-                        value: String(totalMistakes),
-                        color: '#ef4444',
-                        formula: 'COUNT(mistakes)',
-                        breakdown: donnyMistakes.map(m => ({
-                          icon: '✕', color: '#ef4444',
-                          label: (m.what||'').slice(0,40) || 'Mistake',
-                          sub: `${m.date||'—'}${m.who?(' · '+m.who):''}`,
-                          value: m.jobRef?m.jobRef.slice(0,12):'—',
-                          valueColor: 'rgba(249,115,22,0.7)',
-                          onClick: () => setEditingMistakeId(m.id),
-                        })),
-                      },
-                    },
-                    {
-                      label:"This Month", value:String(thisMonthMistakes), color:thisMonthMistakes>0?"rgba(245,158,11,0.85)":"rgba(34,197,94,0.85)",
-                      lineage: thisMonthMistakes > 0 ? {
-                        title: 'Mistakes This Month',
-                        value: String(thisMonthMistakes),
-                        color: 'rgba(245,158,11,0.95)',
-                        formula: 'WHERE date >= start of month',
-                        breakdown: donnyMistakes.filter(m => m.date && new Date(m.date) >= thisMonthStart).map(m => ({
-                          icon: '✕', color: '#ef4444',
-                          label: (m.what||'').slice(0,40),
-                          sub: `${m.date||'—'}${m.who?(' · '+m.who):''}`,
-                          value: m.jobRef?m.jobRef.slice(0,12):'—',
-                          onClick: () => setEditingMistakeId(m.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Top Person", value:topPerson ? topPerson[0] : '—', color:"#a855f7", smallValue:true,
-                      lineage: topPerson ? {
-                        title: 'Mistakes by Person',
-                        value: `${topPerson[1]} by ${topPerson[0]}`,
-                        color: '#a855f7',
-                        formula: 'GROUP BY who',
-                        breakdown: Object.entries(byPerson).sort((a,b) => b[1]-a[1]).map(([who, count]) => ({
-                          icon: '⊢', color: '#f97316',
-                          label: who,
-                          sub: '',
-                          value: count,
-                          valueColor: '#a855f7',
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"With Job", value:String(withJob), color:"rgba(249,115,22,0.85)",
-                      lineage: withJob > 0 ? {
-                        title: 'Linked to Jobs',
-                        value: String(withJob),
-                        color: 'rgba(249,115,22,0.95)',
-                        formula: 'WHERE jobRef is set',
-                        breakdown: donnyMistakes.filter(m => m.jobRef && m.jobRef.trim()).map(m => ({
-                          icon: '⊞', color: '#f97316',
-                          label: (m.what||'').slice(0,40),
-                          sub: `${m.date||'—'}${m.who?(' · '+m.who):''}`,
-                          value: m.jobRef.slice(0,16),
-                          valueColor: 'rgba(249,115,22,0.95)',
-                          onClick: () => setEditingMistakeId(m.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Documented", value:String(withAffected), color:"rgba(34,197,94,0.85)",
-                      lineage: withAffected > 0 ? {
-                        title: 'Has Impact Documented',
-                        value: String(withAffected),
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'WHERE affected is set',
-                        breakdown: donnyMistakes.filter(m => m.affected && m.affected.trim()).map(m => ({
-                          icon: '✓', color: '#22c55e',
-                          label: (m.what||'').slice(0,30),
-                          sub: m.affected.slice(0,40),
-                          value: m.who||'—',
-                          valueColor: 'rgba(168,85,247,0.95)',
-                          onClick: () => setEditingMistakeId(m.id),
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(239,68,68,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(239,68,68,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(239,68,68,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:k.smallValue?"12px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(239,68,68,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* NEW MISTAKE FORM */}
             {showNewMistake && (
@@ -24996,28 +24220,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalJobs > 0 && (
-              <div style={{...rPanel,borderLeft:"2px solid #ef4444"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {label:"Total Risks", value:String(totalRisks), color:"#ef4444"},
-                    {label:"Jobs With Risks", value:`${allJobsWithRisks.length}/${totalJobs}`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)"},
-                    {label:"No Plan", value:String(noMitigationCount), color:noMitigationCount>0?"rgba(245,158,11,0.85)":"rgba(34,197,94,0.85)"},
-                    {label:"Coverage", value:`${coverage}%`, color:coverage>=70?"rgba(34,197,94,0.85)":coverage>=30?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)"},
-                  ].map((k,i) => {
-                    const isLastInRow = isWide ? i === 3 : (i % 2) === 1;
-                    const isLastRow = isWide ? false : i >= 2;
-                    return (
-                      <div key={i} style={{padding:"14px 16px",borderRight:!isLastInRow?"0.5px solid rgba(255,255,255,0.04)":"none",borderBottom:!isWide && !isLastRow?"0.5px solid rgba(255,255,255,0.04)":"none",fontFamily:"monospace"}}>
-                        <div style={{fontSize:"9px",color:"rgba(239,68,68,0.45)",letterSpacing:"1.5px",marginBottom:"4px"}}>{k.label}</div>
-                        <div style={{fontSize:"18px",color:k.color,fontWeight:500,lineHeight:1}}>{k.value}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             {/* EMPTY STATE — no jobs */}
             {donnyJobs.length === 0 && (
