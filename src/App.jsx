@@ -25128,112 +25128,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            <div style={{...panel,borderLeft:"2px solid #f97316"}}>
-              <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                {[
-                  {
-                    label:"Active", value:String(activeJobs.length), color:"#f97316",
-                    lineage: {
-                      title: 'Active Jobs',
-                      value: String(activeJobs.length),
-                      color: '#f97316',
-                      formula: 'COUNT(jobs WHERE NOT completed AND NOT archived)',
-                      breakdown: activeJobs.map(j => ({
-                        icon: '⊞', color: '#f97316',
-                        label: j.title,
-                        sub: j.jobNumber ? `#${j.jobNumber} · ${j.started?'in progress':'not started'}` : (j.started?'in progress':'not started'),
-                        value: j.dueDate ? new Date(j.dueDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : '—',
-                        valueColor: j.dueDate && new Date(j.dueDate) < new Date() ? '#ef4444' : 'rgba(148,163,184,0.6)',
-                        onClick: () => navToEntity('job', j),
-                      })),
-                    },
-                  },
-                  {
-                    label:"Overdue", value:String(overdueJobs.length), color:overdueJobs.length>0?"rgba(239,68,68,0.95)":"rgba(34,197,94,0.85)",
-                    lineage: overdueJobs.length > 0 ? {
-                      title: 'Overdue Jobs',
-                      value: String(overdueJobs.length),
-                      color: 'rgba(239,68,68,0.95)',
-                      formula: 'WHERE dueDate < today AND NOT completed',
-                      breakdown: overdueJobs.map(j => {
-                        const days = Math.floor((new Date() - new Date(j.dueDate)) / (1000*60*60*24));
-                        return {
-                          icon: '⊞', color: '#ef4444',
-                          label: j.title,
-                          sub: j.jobNumber ? `#${j.jobNumber}` : '',
-                          value: `${days}d late`,
-                          valueColor: '#ef4444',
-                          onClick: () => navToEntity('job', j),
-                        };
-                      }),
-                    } : null,
-                  },
-                  {
-                    label:"Labour $", value:totalLabourCost > 0 ? `$${totalLabourCost.toFixed(0)}` : '—', color:"rgba(34,197,94,0.85)",
-                    lineage: totalLabourCost > 0 ? {
-                      title: 'Total Labour Cost',
-                      value: `$${totalLabourCost.toFixed(0)}`,
-                      color: 'rgba(34,197,94,0.95)',
-                      formula: 'SUM(hours × rate) per worker',
-                      breakdown: teamHours.filter(m => m._hrs > 0).sort((a,b) => b._pay - a._pay).map(m => ({
-                        icon: '⊢', color: '#f97316',
-                        label: m.name,
-                        sub: `${m._hrs.toFixed(1)}h × $${m.hourlyRate||0}/hr`,
-                        value: `$${m._pay.toFixed(0)}`,
-                        valueColor: 'rgba(34,197,94,0.95)',
-                        onClick: () => navToEntity('worker', m),
-                      })),
-                    } : null,
-                  },
-                  {
-                    label:"Revenue", value:completedRevenue > 0 ? `$${completedRevenue.toFixed(0)}` : '—', color:"#3b82f6",
-                    lineage: completedRevenue > 0 ? {
-                      title: 'Completed Revenue',
-                      value: `$${completedRevenue.toFixed(0)}`,
-                      color: '#3b82f6',
-                      formula: 'SUM(quotedCost) WHERE completed',
-                      breakdown: completedJobs.filter(j => parseFloat(j.quotedCost)||0 > 0).sort((a,b) => (parseFloat(b.quotedCost)||0) - (parseFloat(a.quotedCost)||0)).map(j => ({
-                        icon: '⊞', color: '#f97316',
-                        label: j.title,
-                        sub: j.jobNumber ? `#${j.jobNumber}` : '',
-                        value: `$${parseFloat(j.quotedCost).toFixed(0)}`,
-                        valueColor: '#3b82f6',
-                        onClick: () => navToEntity('job', j),
-                      })),
-                    } : null,
-                  },
-                  {
-                    label:"Margin", value:totalQuoted > 0 ? `${margin.toFixed(0)}%` : '—', color:margin>=20?"rgba(34,197,94,0.85)":margin>=0?"rgba(245,158,11,0.85)":"rgba(239,68,68,0.85)",
-                    lineage: totalQuoted > 0 ? {
-                      title: 'Profit Margin',
-                      value: `${margin.toFixed(1)}%`,
-                      color: margin>=20?'rgba(34,197,94,0.95)':margin>=0?'rgba(245,158,11,0.95)':'rgba(239,68,68,0.95)',
-                      formula: '(quoted − labour − materials) / quoted',
-                      breakdown: [
-                        { icon: '+', color: '#3b82f6', label: 'Total Quoted', sub: `${donnyJobs.length} jobs`, value: `$${totalQuoted.toFixed(0)}`, valueColor: '#3b82f6' },
-                        { icon: '−', color: '#f59e0b', label: 'Labour Cost', sub: `${totalLabourHrs.toFixed(0)}h tracked`, value: `$${totalLabourCost.toFixed(0)}`, valueColor: '#f59e0b' },
-                        { icon: '−', color: '#22c55e', label: 'Materials Cost', sub: `${totalMaterialEntries} entries`, value: `$${totalMaterialsCost.toFixed(0)}`, valueColor: '#22c55e' },
-                        { icon: '=', color: 'rgba(34,197,94,0.95)', label: 'Profit', sub: '', value: `${profit>=0?'+':''}$${profit.toFixed(0)}`, valueColor: profit>=0?'rgba(34,197,94,0.95)':'rgba(239,68,68,0.95)' },
-                      ],
-                    } : null,
-                  },
-                ].map((k,i) => (
-                  <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                    title={k.lineage ? "Click to see breakdown" : ""}
-                    style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                      <span>{k.label}</span>
-                      {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                    </div>
-                    <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                    <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                      <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
 
             {/* JOBS PANEL */}
             <div style={panel}>
@@ -25455,46 +25349,66 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               </div>
             </div>
-            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-              {/* Editable fields */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:"6px",borderLeft:"2px solid rgba(249,115,22,0.6)",padding:"16px"}}>
-                <div className="grid grid-cols-2 gap-4">
-                  {[{k:'name',l:'👤 NAME'},{k:'company',l:'🏢 COMPANY'},{k:'trade',l:'🔧 TRADE'},{k:'phone',l:'📞 PHONE'},{k:'email',l:'📧 EMAIL'},{k:'abn',l:'ABN'},{k:'licenceNo',l:'LICENCE NO.'}].map(f=>(
-                    <div key={f.k}>
-                      <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>{f.l}</div>
-                      <input value={sub[f.k]||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,[f.k]:e.target.value}:s))}
-                        className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
-                    </div>
-                  ))}
-                  <div>
-                    <div className="text-xs font-mono mb-1" style={{color:'rgba(148,163,184,0.5)'}}>💰 RATE</div>
-                    <input value={sub.rate||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rate:e.target.value}:s))}
-                      placeholder="0.00" type="number"
-                      className="w-full bg-transparent text-white text-sm focus:outline-none border-b pb-1 mb-2" style={{borderColor:'rgba(255,255,255,0.1)'}}/>
+            <div className="max-w-4xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"28px"}}>
+              {/* Editable fields — slick layout */}
+              <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"22px 32px"}}>
+                <div>
+                  <label className="slick-label accent-orange">Name</label>
+                  <input className="slick-input accent-orange" value={sub.name||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,name:e.target.value}:s))} placeholder="Karl"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Company</label>
+                  <input className="slick-input accent-orange" value={sub.company||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,company:e.target.value}:s))} placeholder="Karls Flooring"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Trade</label>
+                  <input className="slick-input accent-orange" value={sub.trade||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,trade:e.target.value}:s))} placeholder="Vinyl, tiling, plumbing…"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Phone</label>
+                  <input className="slick-input accent-orange" value={sub.phone||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,phone:e.target.value}:s))} placeholder="04XX XXX XXX"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Email</label>
+                  <input className="slick-input accent-orange" value={sub.email||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,email:e.target.value}:s))} placeholder="name@example.com"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">ABN</label>
+                  <input className="slick-input accent-orange" value={sub.abn||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,abn:e.target.value}:s))} placeholder="XX XXX XXX XXX"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Licence No.</label>
+                  <input className="slick-input accent-orange" value={sub.licenceNo||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,licenceNo:e.target.value}:s))} placeholder="e.g. 444 444 444"/>
+                </div>
+                <div>
+                  <label className="slick-label accent-orange">Rate</label>
+                  <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
+                    <input type="number" className="slick-input accent-orange" value={sub.rate||''} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rate:e.target.value}:s))} placeholder="0.00" style={{flex:"1"}}/>
                     <select value={sub.rateType||'hr'} onChange={e=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,rateType:e.target.value}:s))}
-                      className="w-full bg-transparent text-white text-xs focus:outline-none pb-1 border-b" style={{borderColor:'rgba(255,255,255,0.1)',colorScheme:'dark'}}>
+                      className="slick-select accent-orange" style={{width:"110px",colorScheme:"dark"}}>
                       <option value="hr">Per Hour</option><option value="day">Per Day</option><option value="job">Per Job</option>
                     </select>
                   </div>
                 </div>
               </div>
+
               {/* Job access */}
               {donnyJobs.length > 0 && (
-                <div className="rounded-2xl p-5" style={{background:'rgba(5,15,30,0.9)',border:'1px solid rgba(249,115,22,0.15)'}}>
-                  <div className="text-xs font-mono mb-3" style={{color:'rgba(249,115,22,0.6)'}}>// JOB ACCESS</div>
-                  <div className="flex flex-wrap gap-2">
+                <div>
+                  <div style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",paddingBottom:"8px",borderBottom:"0.5px solid rgba(249,115,22,0.2)",fontWeight:600}}>// JOB ACCESS</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
                     {donnyJobs.map(job=>{ const has=(sub.jobIds||[]).includes(job.id); return (
                       <button key={job.id} onClick={()=>saveSubs(donnySubs.map(s=>s.id===sub.id?{...s,jobIds:has?(s.jobIds||[]).filter(id=>id!==job.id):[...(s.jobIds||[]),job.id]}:s))}
-                        className="text-xs px-3 py-1.5 rounded-xl font-medium"
-                        style={{background:has?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)',border:has?'1px solid rgba(249,115,22,0.4)':'1px solid rgba(255,255,255,0.08)',color:has?'#f97316':'rgba(148,163,184,0.5)'}}>
-                        {job.jobNumber?`#${job.jobNumber} `:''}  {job.title}
+                        style={{fontSize:"11px",padding:"6px 12px",borderRadius:"4px",fontFamily:"monospace",letterSpacing:"0.5px",fontWeight:500,background:has?'rgba(249,115,22,0.15)':'rgba(255,255,255,0.03)',border:`0.5px solid ${has?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'}`,color:has?'#f97316':'rgba(148,163,184,0.5)',cursor:"pointer"}}>
+                        {job.jobNumber?`#${job.jobNumber} `:''}{job.title}
                       </button>
                     );})}
                   </div>
                 </div>
               )}
+
               <button onClick={()=>{ if(window.confirm(`Remove ${sub.name}?`)){ saveSubs(donnySubs.filter(s=>s.id!==sub.id)); setEditingSubId(null); }}}
-                className="w-full py-3 rounded-xl text-sm" style={{color:'rgba(239,68,68,0.6)',border:'1px solid rgba(239,68,68,0.15)'}}>Delete Subcontractor</button>
+                style={{width:"100%",padding:"12px",borderRadius:"4px",fontSize:"10px",letterSpacing:"2px",fontFamily:"monospace",fontWeight:600,color:'rgba(239,68,68,0.6)',background:"transparent",border:'0.5px solid rgba(239,68,68,0.2)',cursor:"pointer",marginTop:"6px"}}>DELETE SUBCONTRACTOR</button>
             </div>
           </div>
         );
@@ -25548,115 +25462,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* KPI STRIP */}
-            {totalSubs > 0 && (
-              <div style={{...subsPanel,borderLeft:"2px solid #f97316"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(5,1fr)":"repeat(2,1fr)"}}>
-                  {[
-                    {
-                      label:"Subs", value:String(totalSubs), color:"#f97316",
-                      lineage: {
-                        title: 'Subcontractors',
-                        value: String(totalSubs),
-                        color: '#f97316',
-                        formula: 'COUNT(subs)',
-                        breakdown: donnySubs.map(s => ({
-                          icon: '⊿', color: '#f97316',
-                          label: s.name,
-                          sub: s.trade || s.company || '—',
-                          value: s.rate ? `$${s.rate}/${s.rateType||'hr'}` : '—',
-                          valueColor: s.rate ? 'rgba(34,197,94,0.95)' : 'rgba(148,163,184,0.5)',
-                          onClick: () => setEditingSubId(s.id),
-                        })),
-                        note: 'Click to open subcontractor',
-                      },
-                    },
-                    {
-                      label:"Trades", value:String(trades.length), color:"#3b82f6",
-                      lineage: trades.length > 0 ? {
-                        title: 'Trades Covered',
-                        value: String(trades.length),
-                        color: '#3b82f6',
-                        formula: 'DISTINCT(sub.trade)',
-                        breakdown: trades.map(t => {
-                          const subsOfTrade = donnySubs.filter(s => s.trade === t);
-                          return {
-                            icon: '⊿', color: '#f97316',
-                            label: t,
-                            sub: `${subsOfTrade.length} sub${subsOfTrade.length!==1?'s':''}`,
-                            value: subsOfTrade.length,
-                            valueColor: '#3b82f6',
-                          };
-                        }),
-                      } : null,
-                    },
-                    {
-                      label:"Avg Rate", value:avgRate > 0 ? `$${avgRate.toFixed(0)}/hr` : '—', color:"rgba(34,197,94,0.85)",
-                      lineage: avgRate > 0 ? {
-                        title: 'Average Hourly Rate',
-                        value: `$${avgRate.toFixed(2)}/hr`,
-                        color: 'rgba(34,197,94,0.95)',
-                        formula: 'AVG(sub.rate) WHERE rate > 0',
-                        breakdown: [...subsWithRate].sort((a,b) => (parseFloat(b.rate)||0) - (parseFloat(a.rate)||0)).map(s => ({
-                          icon: '⊿', color: '#f97316',
-                          label: s.name,
-                          sub: s.trade || '—',
-                          value: `$${s.rate}/${s.rateType||'hr'}`,
-                          valueColor: 'rgba(34,197,94,0.95)',
-                          onClick: () => setEditingSubId(s.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"Top Rate", value:topRate > 0 ? `$${topRate}` : '—', color:"#a855f7",
-                      lineage: topRate > 0 ? {
-                        title: 'Highest Rate',
-                        value: `$${topRate}/hr`,
-                        color: '#a855f7',
-                        formula: 'MAX(sub.rate)',
-                        breakdown: subsWithRate.filter(s => parseFloat(s.rate) === topRate).map(s => ({
-                          icon: '⊿', color: '#f97316',
-                          label: s.name,
-                          sub: s.trade || s.company || '—',
-                          value: `$${s.rate}/${s.rateType||'hr'}`,
-                          valueColor: '#a855f7',
-                          onClick: () => setEditingSubId(s.id),
-                        })),
-                      } : null,
-                    },
-                    {
-                      label:"On Jobs", value:String(subsWithJobs), color:"rgba(168,85,247,0.85)",
-                      lineage: subsWithJobs > 0 ? {
-                        title: 'Subs Linked to Jobs',
-                        value: String(subsWithJobs),
-                        color: 'rgba(168,85,247,0.95)',
-                        formula: 'COUNT(subs WHERE jobIds.length > 0)',
-                        breakdown: donnySubs.filter(s => (s.jobIds||[]).length > 0).map(s => ({
-                          icon: '⊿', color: '#f97316',
-                          label: s.name,
-                          sub: s.trade || '—',
-                          value: `${(s.jobIds||[]).length} job${(s.jobIds||[]).length!==1?'s':''}`,
-                          valueColor: 'rgba(168,85,247,0.95)',
-                          onClick: () => setEditingSubId(s.id),
-                        })),
-                      } : null,
-                    },
-                  ].map((k,i) => (
-                    <button key={i} onClick={() => k.lineage && setDonnyLineage(k.lineage)}
-                      style={{padding:"10px 8px",background:"none",border:"none",borderRight:(isWide?i<4:(i%2)===0)?"0.5px solid rgba(249,115,22,0.08)":"none",borderBottom:!isWide && i<3?"0.5px solid rgba(249,115,22,0.08)":"none",cursor:k.lineage?"pointer":"default",textAlign:"left"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",display:"flex",alignItems:"center",gap:"4px"}}>
-                        <span>{k.label}</span>
-                        {k.lineage && <span style={{fontSize:"8px",color:"rgba(249,115,22,0.3)",opacity:0.7}}>ƒ</span>}
-                      </div>
-                      <div title={k.value} style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderBottom:k.lineage?"0.5px dashed rgba(249,115,22,0.2)":"0.5px solid transparent",paddingBottom:"1px",display:"block",maxWidth:"100%"}}>{k.value}</div>
-                      <div style={{marginTop:"4px",height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden"}}>
-                        <div style={{height:"100%",width:`${Math.min(60+i*10, 100)}%`,background:`${k.color}aa`}}/>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* ADD SUB FORM */}
             {showAddSub && (
@@ -25841,12 +25646,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{display:"grid",gridTemplateColumns:"1fr 80px 90px",gap:"10px",marginBottom:"10px"}}>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM</div>
-                      <input value={supplierNewItem.desc} onChange={e=>setSupplierNewItem(p=>({...p,desc:e.target.value}))} placeholder="2.5mm TPS Cable"
+                      <input value={supplierNewItem.desc} onChange={e=>setSupplierNewItem(p=>({...p,desc:e.target.value}))} placeholder="e.g. GPOs, 2.5mm TPS cable…"
                         className="slick-input accent-orange"/>
                     </div>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
-                      <input value={supplierNewItem.unit} onChange={e=>setSupplierNewItem(p=>({...p,unit:e.target.value}))} placeholder="m / ea"
+                      <input value={supplierNewItem.unit} onChange={e=>setSupplierNewItem(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea, m, kg"
                         className="slick-input accent-orange"/>
                     </div>
                     <div>
