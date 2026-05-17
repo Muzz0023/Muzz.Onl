@@ -263,6 +263,89 @@ const StarryBackground = ({ children }) => {
           position: absolute !important;
         }
 
+        /* ── SLICK INPUTS ── Palantir-meets-Apple */
+        .slick-input,
+        .slick-textarea,
+        .slick-select {
+          width: 100%;
+          box-sizing: border-box;
+          background: rgba(255, 255, 255, 0.02);
+          color: #e0eaff;
+          font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
+          font-size: 12px;
+          letter-spacing: 0.3px;
+          border: none;
+          border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+          border-radius: 0;
+          outline: none;
+          padding: 9px 4px;
+          transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+          caret-color: rgba(0, 200, 255, 0.85);
+          appearance: none;
+          -webkit-appearance: none;
+        }
+        .slick-input::placeholder,
+        .slick-textarea::placeholder {
+          color: rgba(148, 163, 184, 0.32);
+          font-style: normal;
+        }
+        .slick-input:hover,
+        .slick-textarea:hover,
+        .slick-select:hover {
+          border-bottom-color: rgba(0, 200, 255, 0.35);
+          background: rgba(255, 255, 255, 0.035);
+        }
+        .slick-input:focus,
+        .slick-textarea:focus,
+        .slick-select:focus {
+          border-bottom-color: rgba(0, 200, 255, 0.85);
+          background: rgba(0, 200, 255, 0.04);
+          box-shadow: 0 1px 0 0 rgba(0, 200, 255, 0.6);
+        }
+        .slick-textarea {
+          resize: vertical;
+          min-height: 60px;
+          line-height: 1.55;
+        }
+        /* Donny variant — orange accent */
+        .slick-input.accent-orange,
+        .slick-textarea.accent-orange,
+        .slick-select.accent-orange { caret-color: rgba(249, 115, 22, 0.85); }
+        .slick-input.accent-orange:hover,
+        .slick-textarea.accent-orange:hover,
+        .slick-select.accent-orange:hover { border-bottom-color: rgba(249, 115, 22, 0.4); }
+        .slick-input.accent-orange:focus,
+        .slick-textarea.accent-orange:focus,
+        .slick-select.accent-orange:focus {
+          border-bottom-color: rgba(249, 115, 22, 0.9);
+          background: rgba(249, 115, 22, 0.04);
+          box-shadow: 0 1px 0 0 rgba(249, 115, 22, 0.6);
+        }
+        /* Client variant — blue accent */
+        .slick-input.accent-blue,
+        .slick-textarea.accent-blue,
+        .slick-select.accent-blue { caret-color: rgba(59, 130, 246, 0.85); }
+        .slick-input.accent-blue:hover,
+        .slick-textarea.accent-blue:hover,
+        .slick-select.accent-blue:hover { border-bottom-color: rgba(59, 130, 246, 0.45); }
+        .slick-input.accent-blue:focus,
+        .slick-textarea.accent-blue:focus,
+        .slick-select.accent-blue:focus {
+          border-bottom-color: rgba(59, 130, 246, 0.9);
+          background: rgba(59, 130, 246, 0.04);
+          box-shadow: 0 1px 0 0 rgba(59, 130, 246, 0.6);
+        }
+        /* Tiny field label that pairs with .slick-input */
+        .slick-label {
+          font-size: 9px;
+          color: rgba(148, 163, 184, 0.55);
+          font-family: ui-monospace, 'SF Mono', monospace;
+          letter-spacing: 1.8px;
+          margin-bottom: 6px;
+          display: block;
+          text-transform: uppercase;
+        }
+
         /* Noise texture */
         .noise-overlay::before {
           content: '';
@@ -20787,31 +20870,27 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={panelHeader}>
                   <span style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// CONTACT</span>
                 </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+                <div style={{padding:"16px 18px 18px",display:"flex",flexDirection:"column",gap:"14px"}}>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>EMAIL</div>
-                    <input value={client.email||''} onChange={e => updateClient({email:e.target.value})}
-                      placeholder="—"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    <label className="slick-label">Email</label>
+                    <input className="slick-input accent-blue" value={client.email||''} onChange={e => updateClient({email:e.target.value})}
+                      placeholder="name@example.com"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PHONE</div>
-                    <input value={client.phone||''} onChange={e => updateClient({phone:e.target.value})}
-                      placeholder="—"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    <label className="slick-label">Phone</label>
+                    <input className="slick-input accent-blue" value={client.phone||''} onChange={e => updateClient({phone:e.target.value})}
+                      placeholder="04XX XXX XXX"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ADDRESS</div>
-                    <input value={client.address||''} onChange={e => updateClient({address:e.target.value})}
-                      placeholder="—"
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px"}}/>
+                    <label className="slick-label">Address</label>
+                    <input className="slick-input accent-blue" value={client.address||''} onChange={e => updateClient({address:e.target.value})}
+                      placeholder="Street, suburb"/>
                   </div>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
-                    <textarea value={client.notes||''} onChange={e => updateClient({notes:e.target.value})}
-                      placeholder="..."
-                      rows={3}
-                      style={{width:"100%",background:"rgba(0,0,0,0.3)",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",border:"0.5px solid rgba(59,130,246,0.2)",outline:"none",padding:"6px 8px",borderRadius:"3px",resize:"vertical"}}/>
+                    <label className="slick-label">Notes</label>
+                    <textarea className="slick-textarea accent-blue" value={client.notes||''} onChange={e => updateClient({notes:e.target.value})}
+                      placeholder="Anything worth remembering…"
+                      rows={3}/>
                   </div>
                 </div>
               </div>
