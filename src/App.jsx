@@ -1892,10 +1892,10 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
       <g key={`band_${l.id}`}>
         {/* Always-visible row band, brighter on hover */}
         <rect x={-3000} y={y} width={6000} height={ROW_H - 6} fill={isHovered ? "rgba(249,115,22,0.08)" : "rgba(249,115,22,0.015)"} stroke={isHovered ? "rgba(249,115,22,0.35)" : "rgba(249,115,22,0.08)"} strokeWidth="0.5" strokeDasharray="3 4"/>
-        {/* Tappable label */}
+        {/* Tappable label — sits ABOVE the cards, centered */}
         <g style={{cursor:"pointer"}} onClick={(e) => { e.stopPropagation(); setEditingLevelId(l.id); }}>
-          <rect x={-CARD_W/2 - 230} y={y + 6} width="160" height="28" rx="4" fill="rgba(5,12,24,0.7)" stroke={isHovered ? "rgba(249,115,22,0.55)" : "rgba(249,115,22,0.25)"} strokeWidth="0.5"/>
-          <text x={-CARD_W/2 - 215} y={y + 25} fontSize="11" fontFamily="monospace" fill={isHovered ? "rgba(249,115,22,0.95)" : "rgba(249,115,22,0.7)"} letterSpacing="2" fontWeight="600">
+          <rect x={-80} y={y + 2} width="160" height="22" rx="3" fill="rgba(5,12,24,0.85)" stroke={isHovered ? "rgba(249,115,22,0.55)" : "rgba(249,115,22,0.3)"} strokeWidth="0.5"/>
+          <text x="0" y={y + 16} fontSize="10" fontFamily="monospace" fill={isHovered ? "rgba(249,115,22,0.95)" : "rgba(249,115,22,0.7)"} letterSpacing="2" fontWeight="600" textAnchor="middle">
             {l.title.toUpperCase()}{memberCount > 0 ? ` · ${memberCount}` : ''}
           </text>
         </g>
