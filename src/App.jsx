@@ -4208,6 +4208,8 @@ function MuzzApp() {
           // Donny data
           if (d.donnyJobs) setDonnyJobs(d.donnyJobs);
           if (d.donnyTeam) setDonnyTeam(d.donnyTeam);
+          if (d.donnyOrgLevels) setDonnyOrgLevels(d.donnyOrgLevels);
+          if (d.donnyOrgBossId !== undefined) setDonnyOrgBossId(d.donnyOrgBossId);
           if (d.donnyNotes) setDonnyNotes(d.donnyNotes);
           if (d.donnyTimesheets) setDonnyTimesheets(d.donnyTimesheets);
           if (d.donnyClients) setDonnyClients(d.donnyClients);
