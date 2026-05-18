@@ -1592,165 +1592,353 @@ function FloatingChat() {
 // ============================================
 // DONNY CREW PLAN — drag/drop crew + task planner per job
 // ============================================
-function OrgChartGraph({ positions, grouped, onMemberClick, onLevelChange }) {
+function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, setBossId, pan, setPan, zoom, setZoom, onTapCard, onBackHome, isWide }) {
+  const svgRef = React.useRef(null);
   const containerRef = React.useRef(null);
-  const cardRefs = React.useRef({});
-  const [lines, setLines] = React.useState([]);
-  const [tick, setTick] = React.useState(0);
+  const [drag, setDrag] = React.useState(null); // {type:'pan'|'card', memberId?, startX, startY, startPan?}
+  const [hoverLevel, setHoverLevel] = React.useState(null);
+  const [editingLevelId, setEditingLevelId] = React.useState(null);
 
-  // Measure positions of all cards and compute lines
-  React.useEffect(() => {
-    const compute = () => {
-      const container = containerRef.current;
-      if (!container) return;
-      const cRect = container.getBoundingClientRect();
-      const allLines = [];
-      // For each pair of consecutive levels, connect each member of lower level to first member of upper level
-      for (let i = 0; i < positions.length - 1; i++) {
-        const parents = grouped[positions[i]] || [];
-        const children = grouped[positions[i+1]] || [];
-        if (parents.length === 0 || children.length === 0) continue;
-        // Each child connects to the "closest" parent horizontally
-        children.forEach(child => {
-          const childEl = cardRefs.current[child.id];
-          if (!childEl) return;
-          const childRect = childEl.getBoundingClientRect();
-          const childCenterX = childRect.left + childRect.width/2 - cRect.left;
-          const childTopY = childRect.top - cRect.top;
-          // Find the parent whose center is closest
-          let bestParent = parents[0];
-          let bestDist = Infinity;
-          parents.forEach(p => {
-            const pEl = cardRefs.current[p.id];
-            if (!pEl) return;
-            const pr = pEl.getBoundingClientRect();
-            const pcx = pr.left + pr.width/2 - cRect.left;
-            const d = Math.abs(pcx - childCenterX);
-            if (d < bestDist) { bestDist = d; bestParent = p; }
-          });
-          const parentEl = cardRefs.current[bestParent.id];
-          if (!parentEl) return;
-          const pRect = parentEl.getBoundingClientRect();
-          const parentCenterX = pRect.left + pRect.width/2 - cRect.left;
-          const parentBottomY = pRect.bottom - cRect.top;
-          allLines.push({
-            id: `${bestParent.id}_${child.id}`,
-            x1: parentCenterX, y1: parentBottomY,
-            x2: childCenterX, y2: childTopY,
-          });
-        });
-      }
-      setLines(allLines);
-    };
-    // Compute on next frame so layout is ready (fixes the "frozen until you scroll" bug)
-    const r1 = requestAnimationFrame(() => {
-      compute();
-      // Second pass after a beat for fonts/layout settling
-      const t = setTimeout(compute, 100);
-      cardRefs.current.__cleanup = t;
+  const CARD_W = 160;
+  const CARD_H = 64;
+  const ROW_H = 130;
+  const ROW_GAP = 20;
+  const BOSS_Y = 40;
+  const FIRST_ROW_Y = BOSS_Y + CARD_H + 70;
+
+  // Group team by level
+  const grouped = React.useMemo(() => {
+    const g = {};
+    levels.forEach(l => { g[l.id] = []; });
+    g['_unassigned'] = [];
+    donnyTeam.forEach(m => {
+      if (m.id === bossId) return; // boss is separate
+      if (levels.some(l => l.id === m.position)) g[m.position].push(m);
+      else g['_unassigned'].push(m);
     });
-    // Recompute on resize
-    const ro = new ResizeObserver(compute);
-    if (containerRef.current) ro.observe(containerRef.current);
-    window.addEventListener('resize', compute);
-    return () => {
-      cancelAnimationFrame(r1);
-      if (cardRefs.current.__cleanup) clearTimeout(cardRefs.current.__cleanup);
-      ro.disconnect();
-      window.removeEventListener('resize', compute);
-    };
-  }, [positions, grouped, tick]);
+    // Sort by hourly rate desc
+    Object.keys(g).forEach(k => g[k].sort((a,b) => (parseFloat(b.hourlyRate)||0) - (parseFloat(a.hourlyRate)||0)));
+    return g;
+  }, [donnyTeam, levels, bossId]);
 
-  // Force a re-measure when grouped changes
+  const boss = donnyTeam.find(m => m.id === bossId);
+
+  // Compute card positions
+  const layout = React.useMemo(() => {
+    const positions = {};
+    // Boss center top
+    if (boss) {
+      positions[boss.id] = { x: 0, y: BOSS_Y, level: '_boss' };
+    }
+    levels.forEach((l, idx) => {
+      const members = grouped[l.id] || [];
+      const rowY = FIRST_ROW_Y + idx * ROW_H;
+      const totalW = members.length * (CARD_W + 16) - 16;
+      const startX = -totalW / 2;
+      members.forEach((m, i) => {
+        positions[m.id] = { x: startX + i * (CARD_W + 16), y: rowY, level: l.id };
+      });
+    });
+    // Unassigned at the bottom
+    const unassignedY = FIRST_ROW_Y + levels.length * ROW_H + 40;
+    const ua = grouped['_unassigned'] || [];
+    const uaW = ua.length * (CARD_W + 16) - 16;
+    const uaStart = -uaW / 2;
+    ua.forEach((m, i) => {
+      positions[m.id] = { x: uaStart + i * (CARD_W + 16), y: unassignedY, level: '_unassigned' };
+    });
+    return positions;
+  }, [boss, levels, grouped]);
+
+  // Connection lines (boss → each first-row member, then row → row)
+  const connections = React.useMemo(() => {
+    const conns = [];
+    if (!boss) return conns;
+    // Boss to each first row member
+    const firstLevel = levels[0];
+    if (firstLevel) {
+      (grouped[firstLevel.id] || []).forEach(m => {
+        const from = layout[boss.id]; const to = layout[m.id];
+        if (from && to) conns.push({ id: `b_${m.id}`, from, to });
+      });
+    }
+    // Each row to nearest in next row
+    for (let i = 0; i < levels.length - 1; i++) {
+      const parents = grouped[levels[i].id] || [];
+      const children = grouped[levels[i+1].id] || [];
+      if (parents.length === 0 || children.length === 0) continue;
+      children.forEach(child => {
+        const childPos = layout[child.id];
+        if (!childPos) return;
+        let best = parents[0], bestDist = Infinity;
+        parents.forEach(p => {
+          const pp = layout[p.id];
+          if (!pp) return;
+          const d = Math.abs(pp.x - childPos.x);
+          if (d < bestDist) { bestDist = d; best = p; }
+        });
+        const from = layout[best.id]; const to = childPos;
+        if (from && to) conns.push({ id: `${best.id}_${child.id}`, from, to });
+      });
+    }
+    return conns;
+  }, [boss, levels, grouped, layout]);
+
+  // Convert client coords -> SVG coords
+  const toSvgCoords = (clientX, clientY) => {
+    if (!svgRef.current) return { x: 0, y: 0 };
+    const rect = svgRef.current.getBoundingClientRect();
+    return { x: (clientX - rect.left - rect.width/2 - pan.x) / zoom, y: (clientY - rect.top - pan.y) / zoom };
+  };
+
+  // Find which level a Y position falls into
+  const yToLevel = (y) => {
+    if (y < BOSS_Y + CARD_H + 30) return '_boss';
+    for (let i = 0; i < levels.length; i++) {
+      const rowY = FIRST_ROW_Y + i * ROW_H;
+      if (y < rowY + CARD_H + ROW_GAP) return levels[i].id;
+    }
+    return '_unassigned';
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.target.tagName === 'svg' || e.target.classList?.contains('org-canvas-bg')) {
+      setDrag({ type: 'pan', startX: e.clientX, startY: e.clientY, startPan: { ...pan } });
+    }
+  };
+
+  const handleCardMouseDown = (e, memberId) => {
+    e.stopPropagation();
+    const coords = toSvgCoords(e.clientX, e.clientY);
+    setDrag({ type: 'card', memberId, startX: e.clientX, startY: e.clientY, startCoords: coords, moved: false });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!drag) return;
+    if (drag.type === 'pan') {
+      setPan({ x: drag.startPan.x + (e.clientX - drag.startX), y: drag.startPan.y + (e.clientY - drag.startY) });
+    } else if (drag.type === 'card') {
+      const dx = e.clientX - drag.startX;
+      const dy = e.clientY - drag.startY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist > 5 && !drag.moved) setDrag({ ...drag, moved: true });
+      if (drag.moved) {
+        const coords = toSvgCoords(e.clientX, e.clientY);
+        setHoverLevel(yToLevel(coords.y));
+      }
+    }
+  };
+
+  const handleMouseUp = (e) => {
+    if (!drag) { setHoverLevel(null); return; }
+    if (drag.type === 'card') {
+      if (!drag.moved) {
+        // Click = tap
+        const member = donnyTeam.find(m => m.id === drag.memberId);
+        if (member) onTapCard(member);
+      } else {
+        // Drop into hoverLevel
+        const targetLevel = hoverLevel;
+        if (targetLevel) {
+          if (targetLevel === '_boss') {
+            // Promote to boss (demote current boss to unassigned)
+            const updated = donnyTeam.map(m => {
+              if (m.id === drag.memberId) return { ...m, position: '' };
+              if (m.id === bossId) return { ...m, position: '' };
+              return m;
+            });
+            setDonnyTeam(updated);
+            setBossId(drag.memberId);
+          } else if (targetLevel === '_unassigned') {
+            if (drag.memberId === bossId) setBossId(null);
+            setDonnyTeam(donnyTeam.map(m => m.id === drag.memberId ? { ...m, position: '' } : m));
+          } else {
+            if (drag.memberId === bossId) setBossId(null);
+            setDonnyTeam(donnyTeam.map(m => m.id === drag.memberId ? { ...m, position: targetLevel } : m));
+          }
+        }
+      }
+    }
+    setDrag(null);
+    setHoverLevel(null);
+  };
+
   React.useEffect(() => {
-    const t = setTimeout(() => setTick(x => x + 1), 50);
-    return () => clearTimeout(t);
-  }, [grouped]);
+    if (!drag) return;
+    const mm = (e) => handleMouseMove(e);
+    const mu = (e) => handleMouseUp(e);
+    window.addEventListener('mousemove', mm);
+    window.addEventListener('mouseup', mu);
+    return () => { window.removeEventListener('mousemove', mm); window.removeEventListener('mouseup', mu); };
+  });
 
-  const setCardRef = (id) => (el) => { if (el) cardRefs.current[id] = el; else delete cardRefs.current[id]; };
+  const addLevel = () => {
+    const newId = 'l' + Date.now();
+    setLevels([...levels, { id: newId, title: `Level ${levels.length + 1}` }]);
+  };
+  const removeLevel = (id) => {
+    if (!window.confirm('Remove this level? Members in it will become unassigned.')) return;
+    setDonnyTeam(donnyTeam.map(m => m.position === id ? { ...m, position: '' } : m));
+    setLevels(levels.filter(l => l.id !== id));
+  };
+  const renameLevel = (id, title) => {
+    setLevels(levels.map(l => l.id === id ? { ...l, title } : l));
+  };
 
-  const renderCard = (m, accent='#f97316') => (
-    <div key={m.id} ref={setCardRef(m.id)} draggable
-      onDragStart={(e) => { e.dataTransfer.setData('memberId', String(m.id)); e.currentTarget.style.opacity = "0.4"; }}
-      onDragEnd={(e) => { e.currentTarget.style.opacity = "1"; }}
-      onClick={() => onMemberClick(m)}
-      style={{cursor:"grab",minWidth:"140px",maxWidth:"180px",padding:"10px 12px",background:"rgba(5,12,24,0.92)",border:`0.5px solid ${accent}55`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",fontFamily:"monospace",userSelect:"none",position:"relative",zIndex:2}}>
-      <div style={{fontSize:"12px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
-      {m.role && <div style={{fontSize:"9px",color:`${accent}cc`,marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{m.role}</div>}
-      {m.hourlyRate && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",marginTop:"2px"}}>${m.hourlyRate}/hr</div>}
-    </div>
-  );
+  const addMember = () => {
+    const newMember = { id: Date.now(), name: 'New member', role: '', position: '', hourlyRate: '', phone: '', email: '' };
+    setDonnyTeam([...donnyTeam, newMember]);
+    onTapCard(newMember);
+  };
+
+  const edgePath = (from, to) => {
+    const fx = from.x + CARD_W/2; // we draw cards centered on their x; so center.x = x + CARD_W/2... actually we'll center cards on x, so use x as center
+    return null;
+  };
+
+  // Build path from one card center to another
+  const buildPath = (from, to) => {
+    const x1 = from.x + CARD_W/2; const y1 = from.y + CARD_H;
+    const x2 = to.x + CARD_W/2; const y2 = to.y;
+    const midY = (y1 + y2) / 2;
+    return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+  };
+
+  const fitView = () => {
+    setPan({ x: 0, y: 0 });
+    setZoom(1);
+  };
+
+  // Card render
+  const renderCard = (m, isBoss = false) => {
+    const pos = layout[m.id];
+    if (!pos) return null;
+    const accent = isBoss ? '#fbbf24' : '#f97316';
+    return (
+      <g key={m.id} transform={`translate(${pos.x},${pos.y})`}
+        onMouseDown={(e) => handleCardMouseDown(e, m.id)}
+        style={{ cursor: drag?.memberId === m.id ? 'grabbing' : 'grab' }}>
+        <rect width={CARD_W} height={CARD_H} rx="6"
+          fill="rgba(5,12,24,0.95)"
+          stroke={accent} strokeWidth={isBoss ? "2" : "1"}
+          style={{filter: isBoss ? `drop-shadow(0 0 8px ${accent}88)` : 'none'}}/>
+        <rect x="0" y="0" width="2.5" height={CARD_H} rx="1" fill={accent}/>
+        <text x="14" y="14" fontSize="8" fontFamily="monospace" fill={`${accent}cc`} letterSpacing="2">{isBoss ? 'BOSS' : 'WORKER'}</text>
+        <text x="14" y="32" fontSize="13" fontFamily="monospace" fill="#e0eaff" fontWeight="500">{(m.name || 'Unnamed').slice(0, 16)}</text>
+        {m.role && <text x="14" y="46" fontSize="9" fontFamily="monospace" fill={`${accent}cc`}>{m.role.slice(0, 22)}</text>}
+        {m.hourlyRate && <text x={CARD_W - 14} y="58" fontSize="9" fontFamily="monospace" fill="rgba(34,197,94,0.7)" textAnchor="end">${m.hourlyRate}/hr</text>}
+      </g>
+    );
+  };
+
+  // Level row rect (for hover highlight)
+  const renderLevelBand = (l, idx) => {
+    const y = FIRST_ROW_Y + idx * ROW_H - 30;
+    const isHovered = hoverLevel === l.id && drag?.type === 'card';
+    return (
+      <g key={`band_${l.id}`}>
+        {isHovered && (
+          <rect x={-2000} y={y} width={4000} height={ROW_H} fill="rgba(249,115,22,0.05)"/>
+        )}
+        <line x1={-2000} y1={y + ROW_H} x2={2000} y2={y + ROW_H} stroke="rgba(249,115,22,0.08)" strokeDasharray="2 4"/>
+      </g>
+    );
+  };
 
   return (
-    <div ref={containerRef} style={{position:"relative",display:"flex",flexDirection:"column",gap:"40px",padding:"20px 0"}}>
-      {/* SVG OVERLAY for connection lines */}
-      <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:1,overflow:"visible"}}>
-        {lines.map(line => {
-          const midY = (line.y1 + line.y2) / 2;
-          const pathD = `M ${line.x1} ${line.y1} C ${line.x1} ${midY}, ${line.x2} ${midY}, ${line.x2} ${line.y2}`;
-          // key includes coords so SMIL animation restarts cleanly when path changes
-          const k = `${line.id}_${Math.round(line.x1)}_${Math.round(line.y1)}_${Math.round(line.x2)}_${Math.round(line.y2)}`;
-          return (
-            <g key={k}>
-              <path d={pathD} stroke="rgba(249,115,22,0.7)" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
-              <circle r="3" fill="rgba(255,165,50,1)" style={{filter:"drop-shadow(0 0 4px rgba(249,115,22,0.9))"}}>
-                <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
-              </circle>
-            </g>
-          );
-        })}
-      </svg>
-
-      {positions.map((pos, levelIdx) => {
-        const members = grouped[pos];
-        return (
-          <div key={pos} style={{position:"relative",zIndex:2,minHeight:"80px"}}
-            onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(249,115,22,0.04)"; }}
-            onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.currentTarget.style.background = "transparent";
-              const memberId = e.dataTransfer.getData('memberId');
-              if (memberId) onLevelChange(memberId, pos);
-            }}>
-            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
-              {pos.toUpperCase()} {members.length>0 && `· ${members.length}`}
-            </div>
-            <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"12px",minHeight:"56px",alignItems:"center"}}>
-              {members.length === 0 ? (
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",fontStyle:"italic",letterSpacing:"0.5px",padding:"16px"}}>drop here to assign</div>
-              ) : members.map(m => renderCard(m))}
-            </div>
-          </div>
-        );
-      })}
-
-      {/* UNASSIGNED POOL */}
-      {grouped['_unassigned'] && grouped['_unassigned'].length > 0 && (
-        <div style={{marginTop:"12px",paddingTop:"20px",borderTop:"0.5px dashed rgba(148,163,184,0.15)",position:"relative",zIndex:2}}
-          onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(148,163,184,0.04)"; }}
-          onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-          onDrop={(e) => {
-            e.preventDefault();
-            e.currentTarget.style.background = "transparent";
-            const memberId = e.dataTransfer.getData('memberId');
-            if (memberId) onLevelChange(memberId, '_unassigned');
-          }}>
-          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.45)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
-            UNASSIGNED · {grouped['_unassigned'].length}
-          </div>
-          <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"12px"}}>
-            {grouped['_unassigned'].map(m => renderCard(m, '#94a3b8'))}
-          </div>
+    <>
+      {/* TOP BAR */}
+      <div style={{position:"sticky",top:0,zIndex:40,background:"rgba(5,12,24,0.92)",borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"12px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"10px"}}>
+        <div style={{display:"flex",alignItems:"baseline",gap:"14px",flexWrap:"wrap"}}>
+          <button onClick={onBackHome} style={{fontSize:"11px",color:"rgba(249,115,22,0.65)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← DONNY</button>
+          <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",fontFamily:"monospace",letterSpacing:"2px"}}>// TEAM ORG</div>
+          <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>{donnyTeam.length} member{donnyTeam.length!==1?'s':''}</div>
         </div>
-      )}
-
-      <div style={{marginTop:"20px",padding:"10px 16px",background:"rgba(249,115,22,0.03)",border:"0.5px dashed rgba(249,115,22,0.15)",borderRadius:"4px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",position:"relative",zIndex:2}}>
-        Drag a card up/down to change command level · tap a card to edit
+        <div style={{display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"}}>
+          <button onClick={addMember} style={{padding:"6px 10px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.45)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>+ MEMBER</button>
+          <button onClick={addLevel} style={{padding:"6px 10px",background:"rgba(249,115,22,0.05)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",color:"rgba(249,115,22,0.8)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LEVEL</button>
+          <button onClick={() => setZoom(z => Math.min(2, z + 0.15))} style={{padding:"6px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.1)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",cursor:"pointer"}}>+</button>
+          <button onClick={() => setZoom(z => Math.max(0.4, z - 0.15))} style={{padding:"6px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.1)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",cursor:"pointer"}}>−</button>
+          <button onClick={fitView} style={{padding:"6px 10px",background:"rgba(255,255,255,0.04)",border:"0.5px solid rgba(255,255,255,0.1)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer"}}>FIT</button>
+        </div>
       </div>
-    </div>
+
+      {/* LEVEL TITLE EDITORS — fixed overlay sidebar */}
+      <div style={{position:"absolute",left:isWide ? 90 : 14,top:80,zIndex:30,display:"flex",flexDirection:"column",gap:"6px",pointerEvents:"none"}}>
+        {boss && (
+          <div style={{padding:"6px 10px",background:"rgba(251,191,36,0.08)",border:"0.5px solid rgba(251,191,36,0.25)",borderRadius:"3px",fontSize:"9px",color:"rgba(251,191,36,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600,pointerEvents:"auto"}}>BOSS</div>
+        )}
+        {levels.map((l, idx) => (
+          <div key={l.id} style={{display:"flex",alignItems:"center",gap:"6px",pointerEvents:"auto"}}>
+            {editingLevelId === l.id ? (
+              <input autoFocus value={l.title} onChange={(e) => renameLevel(l.id, e.target.value)} onBlur={() => setEditingLevelId(null)} onKeyDown={(e) => { if (e.key==='Enter') setEditingLevelId(null); }}
+                style={{padding:"5px 8px",background:"rgba(5,12,24,0.9)",border:"0.5px solid rgba(249,115,22,0.5)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",width:"140px",outline:"none"}}/>
+            ) : (
+              <button onClick={() => setEditingLevelId(l.id)} style={{padding:"6px 10px",background:"rgba(249,115,22,0.05)",border:"0.5px solid rgba(249,115,22,0.18)",borderRadius:"3px",fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",textAlign:"left",minWidth:"140px"}}>{l.title.toUpperCase()}</button>
+            )}
+            <button onClick={() => removeLevel(l.id)} title="Remove level" style={{padding:"4px 6px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer"}}>✕</button>
+          </div>
+        ))}
+      </div>
+
+      {/* CANVAS */}
+      <div ref={containerRef} style={{position:"relative",width:"100%",height:"calc(100vh - 70px)",overflow:"hidden",cursor:drag?.type==='pan'?'grabbing':'default'}}>
+        <svg ref={svgRef}
+          onMouseDown={handleMouseDown}
+          style={{position:"absolute",inset:0,width:"100%",height:"100%",userSelect:"none"}}>
+          <defs>
+            <pattern id="orggrid" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform={`translate(${pan.x % (40*zoom)},${pan.y % (40*zoom)}) scale(${zoom})`}>
+              <circle cx="20" cy="20" r="1" fill="rgba(249,115,22,0.08)"/>
+            </pattern>
+          </defs>
+          <rect className="org-canvas-bg" width="100%" height="100%" fill="url(#orggrid)"/>
+
+          <g transform={`translate(${pan.x + (svgRef.current?.clientWidth||0)/2},${pan.y}) scale(${zoom})`}>
+            {/* LEVEL HOVER BANDS */}
+            {levels.map((l, idx) => renderLevelBand(l, idx))}
+
+            {/* CONNECTIONS */}
+            {connections.map(c => {
+              const pathD = buildPath(c.from, c.to);
+              return (
+                <g key={c.id}>
+                  <path d={pathD} stroke="rgba(249,115,22,0.6)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                  <circle r="3" fill="rgba(255,165,50,1)" style={{filter:"drop-shadow(0 0 4px rgba(249,115,22,0.9))"}}>
+                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
+                  </circle>
+                </g>
+              );
+            })}
+
+            {/* BOSS CARD */}
+            {boss && renderCard(boss, true)}
+
+            {/* LEVEL CARDS */}
+            {levels.map(l => (grouped[l.id] || []).map(m => renderCard(m)))}
+
+            {/* UNASSIGNED CARDS */}
+            {(grouped['_unassigned'] || []).map(m => renderCard(m))}
+
+            {/* BOSS PLACEHOLDER if no boss */}
+            {!boss && (
+              <g transform={`translate(${-CARD_W/2},${BOSS_Y})`}>
+                <rect width={CARD_W} height={CARD_H} rx="6" fill="rgba(251,191,36,0.04)" stroke="rgba(251,191,36,0.3)" strokeWidth="1" strokeDasharray="4 3"/>
+                <text x={CARD_W/2} y={CARD_H/2 - 4} fontSize="9" fontFamily="monospace" fill="rgba(251,191,36,0.5)" letterSpacing="2" textAnchor="middle">BOSS</text>
+                <text x={CARD_W/2} y={CARD_H/2 + 12} fontSize="9" fontFamily="monospace" fill="rgba(148,163,184,0.4)" textAnchor="middle">drag someone here</text>
+              </g>
+            )}
+          </g>
+        </svg>
+
+        {/* FOOTER HINT */}
+        <div style={{position:"absolute",bottom:14,left:"50%",transform:"translateX(-50%)",padding:"8px 14px",background:"rgba(5,12,24,0.85)",border:"0.5px dashed rgba(249,115,22,0.15)",borderRadius:"4px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",pointerEvents:"none"}}>
+          Drag cards between levels · drag canvas to pan · tap card to edit · tap level name to rename
+        </div>
+      </div>
+    </>
   );
 }
+
 
 function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView }) {
   // graph is { [jobId]: { nodes, edges } } — keyed by job id
@@ -3353,6 +3541,16 @@ function MuzzApp() {
   const [donnyTab, setDonnyTab] = useState('jobs');
   const [donnyJobs, setDonnyJobs] = useState([]);
   const [donnyTeam, setDonnyTeam] = useState([]);
+  const [donnyOrgLevels, setDonnyOrgLevels] = useState([
+    { id: 'l1', title: '1st in Command' },
+    { id: 'l2', title: '2nd in Command' },
+    { id: 'l3', title: '3rd in Command' },
+    { id: 'l4', title: '4th in Command' },
+    { id: 'l5', title: '5th in Command' },
+  ]);
+  const [donnyOrgBossId, setDonnyOrgBossId] = useState(null);
+  const [orgPan, setOrgPan] = useState({ x: 0, y: 0 });
+  const [orgZoom, setOrgZoom] = useState(1);
   const [donnyMistakes, setDonnyMistakes] = useState([]);
   const [mistakeJobId, setMistakeJobId] = useState(null);
   const [selectedDonnyJob, setSelectedDonnyJob] = useState(null);
@@ -21853,78 +22051,31 @@ ${JSON.stringify(ctx, null, 2)}`;
     // TEAM
     if (activeView === 'donny-team') {
       const saveTeam = (updated) => { setDonnyTeam(updated) };
-      const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
-      const totalMembers = donnyTeam.length;
-
-      // Group team by position (level). Unassigned go to a pool.
-      const grouped = {};
-      POSITIONS.forEach(p => { grouped[p] = []; });
-      grouped['_unassigned'] = [];
-      donnyTeam.forEach(m => {
-        if (POSITIONS.includes(m.position)) grouped[m.position].push(m);
-        else grouped['_unassigned'].push(m);
-      });
-      // Sort within each row by hourly rate (highest paid first)
-      Object.keys(grouped).forEach(k => {
-        grouped[k].sort((a,b) => (parseFloat(b.hourlyRate)||0) - (parseFloat(a.hourlyRate)||0));
-      });
-
-      // Move member to a different level
-      const setMemberLevel = (memberId, newPos) => {
-        saveTeam(donnyTeam.map(m => String(m.id) === String(memberId) ? { ...m, position: newPos === '_unassigned' ? '' : newPos } : m));
-      };
-
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
           <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
-            <div className="max-w-6xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// TEAM</div>
-                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TEAM</div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                    {totalMembers} member{totalMembers!==1?'s':''}
-                  </div>
-                </div>
-                <button onClick={() => {
-                  const newMember = { id: Date.now(), name: 'New member', role: '', position: '', hourlyRate: '', phone: '', email: '', orderIndex: Date.now() };
-                  saveTeam([...donnyTeam, newMember]);
-                  setSelectedDonnyWorker(newMember);
-                  setActiveView('donny-workerdetail');
-                }}
-                  style={{padding:"6px 12px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
-                  + ADD MEMBER
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="max-w-6xl mx-auto py-5" style={{paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
-            {totalMembers === 0 ? (
-              <div style={{padding:"40px 20px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
-                No team members yet. Add one to get started.
-              </div>
-            ) : (
-              <OrgChartGraph
-                positions={POSITIONS}
-                grouped={grouped}
-                onMemberClick={(m) => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
-                onLevelChange={setMemberLevel}
-              />
-            )}
-          </div>
+          <OrgChartCanvas
+            donnyTeam={donnyTeam}
+            setDonnyTeam={setDonnyTeam}
+            levels={donnyOrgLevels}
+            setLevels={setDonnyOrgLevels}
+            bossId={donnyOrgBossId}
+            setBossId={setDonnyOrgBossId}
+            pan={orgPan}
+            setPan={setOrgPan}
+            zoom={orgZoom}
+            setZoom={setOrgZoom}
+            onTapCard={(m) => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+            onBackHome={() => setActiveView('donny')}
+            isWide={isWide}
+          />
         </div>
       );
     }
 
-
-    // ── MATERIALS LOG ─────────────────────────────────────────────────
-    // ── SCHEDULER ────────────────────────────────────────────────────────────
     if (activeView === 'donny-scheduler') {
       const saveSched = (updated) => { setDonnySchedule(updated) };
       const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
