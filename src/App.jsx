@@ -1138,7 +1138,7 @@ const DONNY_PRESETS = {
   },
 };
 
-const VIP_EMAILS = ['muzz.onl@outlook.com'];
+const VIP_EMAILS = ['muzz.onl@outlook.com', 'greg@jameselec.com.au'];
 
 // Elite limits
 const FREE_AI_LIMIT = 10;
