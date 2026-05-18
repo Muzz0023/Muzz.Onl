@@ -3487,6 +3487,8 @@ function MuzzApp() {
     if(d.auditLog) setAuditLog(d.auditLog);
     if(d.donnyJobs) setDonnyJobs(d.donnyJobs);
     if(d.donnyTeam) setDonnyTeam(d.donnyTeam);
+    if(d.donnyOrgLevels) setDonnyOrgLevels(d.donnyOrgLevels);
+    if(d.donnyOrgBossId !== undefined) setDonnyOrgBossId(d.donnyOrgBossId);
     if(d.donnyNotes) setDonnyNotes(d.donnyNotes);
     if(d.donnyTimesheets) setDonnyTimesheets(d.donnyTimesheets);
     if(d.donnyClients) setDonnyClients(d.donnyClients);
@@ -4376,7 +4378,9 @@ function MuzzApp() {
           donnyPreset,
           donnyWorkerAccess,
           donnyRole,
-          donnyBossUserId
+          donnyBossUserId,
+          donnyOrgLevels,
+          donnyOrgBossId
         };
         await supabase.saveUserData(userId, allData);
         setSaveStatus('saved');
@@ -4390,7 +4394,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, donnyOrgLevels, donnyOrgBossId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
