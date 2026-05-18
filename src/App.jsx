@@ -21751,18 +21751,35 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             ) : (
               <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"28px",padding:"20px 0"}}>
-                {/* CONNECTING LINES BETWEEN ROWS */}
-                <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
+                {/* CONNECTING LINES BETWEEN ROWS — flowing curves */}
+                <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0,overflow:"visible"}}>
+                  <defs>
+                    <linearGradient id="orgFlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(249,115,22,0.7)"/>
+                      <stop offset="100%" stopColor="rgba(249,115,22,0.2)"/>
+                    </linearGradient>
+                  </defs>
+                  <style>{`
+                    @keyframes orgflow { to { stroke-dashoffset: -20; } }
+                    .org-line { animation: orgflow 1.8s linear infinite; }
+                  `}</style>
                   {POSITIONS.slice(0, -1).map((pos, i) => {
                     const hasCurrent = grouped[pos].length > 0;
                     const hasNext = grouped[POSITIONS[i+1]].length > 0;
                     if (!hasCurrent || !hasNext) return null;
-                    // Approx row spacing: 28px gap + ~100px row height
+                    // Each row in SVG viewBox terms: 128 svg-units per row
                     const rowH = 128;
-                    const y1 = i * rowH + 76;
-                    const y2 = (i+1) * rowH + 48;
+                    const y1 = i * rowH + 82;
+                    const y2 = (i+1) * rowH + 46;
+                    const cx = 500;
+                    const wobble = i % 2 === 0 ? 50 : -50;
+                    const cy1 = y1 + (y2 - y1) * 0.35;
+                    const cy2 = y1 + (y2 - y1) * 0.65;
                     return (
-                      <line key={pos} x1="50%" y1={y1} x2="50%" y2={y2} stroke="rgba(249,115,22,0.25)" strokeWidth="1" strokeDasharray="4 3"/>
+                      <path key={pos}
+                        d={`M ${cx} ${y1} C ${cx + wobble} ${cy1}, ${cx - wobble} ${cy2}, ${cx} ${y2}`}
+                        stroke="url(#orgFlow)" strokeWidth="2" fill="none"
+                        strokeDasharray="6 5" className="org-line" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
                     );
                   })}
                 </svg>
