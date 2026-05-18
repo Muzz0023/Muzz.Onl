@@ -1830,37 +1830,49 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
     const contentH = maxY - minY;
     const viewW = svgRef.current.clientWidth;
     const viewH = svgRef.current.clientHeight;
-    // Leave margin for left-side level overlay (~200px) on wide screens
-    const leftPad = isWide ? 220 : 30;
-    const usableW = viewW - leftPad - 30;
-    const usableH = viewH - 60;
+    // Symmetric padding so content sits centered on screen
+    const pad = 40;
+    const usableW = viewW - pad * 2;
+    const usableH = viewH - 80;
     const zX = usableW / contentW;
     const zY = usableH / contentH;
     const newZoom = Math.min(1, zX, zY); // never zoom > 1, just fit if needed
-    // Center vertically; center horizontally inside the usable region (skipping left pad)
     const centerX = (minX + maxX) / 2;
-    const centerY = (minY + maxY) / 2;
-    const usableCenterX = leftPad + usableW / 2; // pixel target from svg left edge
-    // pan.x is offset added on top of viewW/2; we want centerX * zoom + pan.x = usableCenterX - viewW/2 from coord origin? Simpler: solve for pan.x given inner transform `translate(viewW/2 + pan.x, pan.y) scale(zoom)` and we want content centerX -> usableCenterX
-    // usableCenterX = viewW/2 + pan.x + centerX*zoom  =>  pan.x = usableCenterX - viewW/2 - centerX*zoom
-    const newPanX = usableCenterX - viewW/2 - centerX * newZoom;
-    const newPanY = 30 - minY * newZoom; // top margin = 30
+    // Inner transform: translate(viewW/2 + pan.x, pan.y) scale(zoom)
+    // We want centerX (in svg-coords) to land at viewW/2 (pixel-center of svg)
+    //   viewW/2 = viewW/2 + pan.x + centerX*zoom  →  pan.x = -centerX*zoom
+    const newPanX = -centerX * newZoom;
+    const newPanY = 40 - minY * newZoom; // top margin 40px
     setZoom(newZoom);
     setPan({ x: newPanX, y: newPanY });
-  }, [layout, boss, isWide]);
+  }, [layout, boss]);
 
-  // Auto-fit on mount (and any time layout meaningfully changes)
+  // Auto-fit on mount + whenever svg size first becomes known
   const didInitialFit = React.useRef(false);
   React.useEffect(() => {
     if (donnyTeam.length === 0) return;
-    // Always refit when mounting — solves the "jolts left after coming back from worker detail" issue
-    const t = setTimeout(() => {
+    didInitialFit.current = false;
+    const tryFit = () => {
+      if (!svgRef.current) return;
+      if (svgRef.current.clientWidth < 100) return; // not laid out yet
       fitView();
       didInitialFit.current = true;
-    }, 80);
-    return () => clearTimeout(t);
+    };
+    // First attempts via raf + delays
+    requestAnimationFrame(() => requestAnimationFrame(tryFit));
+    const t1 = setTimeout(tryFit, 50);
+    const t2 = setTimeout(tryFit, 200);
+    // Also via ResizeObserver
+    let ro;
+    if (svgRef.current) {
+      ro = new ResizeObserver(() => {
+        if (!didInitialFit.current) tryFit();
+      });
+      ro.observe(svgRef.current);
+    }
+    return () => { clearTimeout(t1); clearTimeout(t2); if (ro) ro.disconnect(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // mount only
+  }, []);
 
   // Card render
   const renderCard = (m, isBoss = false) => {
