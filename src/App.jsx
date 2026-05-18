@@ -20869,114 +20869,35 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             </div>
 
-            {/* 4-WEEK SPARKLINE */}
+            {/* JOBS WORKED */}
             <div style={panel}>
               <div style={panelHeader}>
-                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// HOURS · 4 WEEKS</span>
+                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS WORKED</span>
+                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{workerJobs.length}</span>
               </div>
-              <div style={{padding:"14px 16px"}}>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"8px",height:"60px",alignItems:"flex-end"}}>
-                  {weeklyHrs.map((h,i) => {
-                    const isLatest = i === 3;
-                    const heightPct = (h/maxWeekHrs)*100;
+              {workerJobs.length === 0 ? (
+                <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO JOBS YET</div>
+              ) : (
+                <div>
+                  {workerJobs.slice(0,8).map((j,i) => {
+                    const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
                     return (
-                      <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
-                        <div style={{flex:1,width:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end",position:"relative"}}>
-                          {h > 0 && <div style={{position:"absolute",top:`${100-heightPct-14}%`,left:"50%",transform:"translateX(-50%)",fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",whiteSpace:"nowrap"}}>{h.toFixed(0)}h</div>}
-                          <div style={{width:"100%",height:`${heightPct}%`,background:isLatest?"linear-gradient(180deg, rgba(249,115,22,0.85), rgba(249,115,22,0.4))":"linear-gradient(180deg, rgba(249,115,22,0.4), rgba(249,115,22,0.1))",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px 2px 0 0",minHeight:h>0?"2px":"0"}}/>
+                      <button key={j.id} onClick={() => { navToEntity('job', j); }}
+                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(workerJobs.length,8)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                          <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
+                          <div style={{minWidth:0,flex:1}}>
+                            <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.completed?'DONE':j.started?'ACTIVE':'TO DO'}</div>
+                          </div>
                         </div>
-                        <div style={{fontSize:"8px",color:isLatest?"#f97316":"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{weeks4[i].label}</div>
-                      </div>
+                        <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",flexShrink:0}}>{j._hrs.toFixed(1)}h</span>
+                      </button>
                     );
                   })}
                 </div>
-              </div>
+              )}
             </div>
-
-            {/* JOBS + LINKED RECORDS — side by side on desktop, stacked on mobile */}
-            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
-              {/* JOBS WORKED */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS WORKED</span>
-                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{workerJobs.length}</span>
-                </div>
-                {workerJobs.length === 0 ? (
-                  <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO JOBS YET</div>
-                ) : (
-                  <div>
-                    {workerJobs.slice(0,8).map((j,i) => {
-                      const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
-                      return (
-                        <button key={j.id} onClick={() => { navToEntity('job', j); }}
-                          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(workerJobs.length,8)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
-                            <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
-                            <div style={{minWidth:0,flex:1}}>
-                              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.completed?'DONE':j.started?'ACTIVE':'TO DO'}</div>
-                            </div>
-                          </div>
-                          <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",flexShrink:0}}>{j._hrs.toFixed(1)}h</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* LINKED RECORDS */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LINKED RECORDS</span>
-                </div>
-                <div style={{padding:"10px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
-                  {[
-                    {label:"TIMESHEETS", count:workerTs.length, view:'donny-dailyreport', color:"#f97316"},
-                    {label:"ACTIVE JOBS", count:activeWorkerJobs.length, view:'donny-masterview', color:"#22c55e"},
-                    {label:"MISTAKES", count:workerMistakes.length, view:'donny-mistakes', color:workerMistakes.length>0?"#f59e0b":"#94a3b8"},
-                    {label:"INCIDENTS", count:workerIncidents.length, view:'donny-incidents', color:workerIncidents.length>0?"#ef4444":"#94a3b8"},
-                  ].map(t => (
-                    <button key={t.label} onClick={() => setActiveView(t.view)} style={{padding:"10px 12px",background:`${t.color}08`,border:`0.5px solid ${t.color}25`,borderLeft:`2px solid ${t.color}50`,borderRadius:"3px",cursor:"pointer",textAlign:"left",fontFamily:"monospace"}}>
-                      <div style={{fontSize:"8px",color:`${t.color}99`,letterSpacing:"1.5px",marginBottom:"3px"}}>{t.label}</div>
-                      <div style={{fontSize:"16px",color:t.color,fontWeight:500}}>{t.count}</div>
-                    </button>
-                  ))}
-                </div>
-                {wagesToRev > 0 && (
-                  <div style={{padding:"10px 14px",borderTop:"0.5px solid rgba(249,115,22,0.05)"}}>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>WAGES / REVENUE</div>
-                    <div style={{display:"flex",alignItems:"baseline",gap:"6px"}}>
-                      <span style={{fontSize:"16px",color:wagesToRev<=40?"rgba(34,197,94,0.9)":wagesToRev<=60?"#f59e0b":"#ef4444",fontFamily:"monospace",fontWeight:500}}>{wagesToRev.toFixed(0)}%</span>
-                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>${totalEarned.toFixed(0)} / ${revenueFromJobs.toFixed(0)}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* CONNECTIONS */}
-            {(() => {
-              const clientIds = [...new Set(workerJobs.flatMap(j => getJobClientIds(j)))];
-              const linkedClients = clientIds.map(id => donnyClients.find(c => c.id === id)).filter(Boolean);
-              return (
-                <ConnectionsPanel
-                  accent="#f97316"
-                  sections={[
-                    {
-                      label: `Active Jobs · ${activeWorkerJobs.length}`,
-                      entities: activeWorkerJobs.slice(0,8).map(j => ({ type:'job', ref:j, label:j.title, sub:j.jobNumber?`#${j.jobNumber}`:undefined, color:'#f97316', icon:'⊞' })),
-                      emptyText: 'No active jobs assigned'
-                    },
-                    {
-                      label: `Clients Worked For · ${linkedClients.length}`,
-                      entities: linkedClients.map(c => ({ type:'client', ref:c, label:c.name, sub:c.company||'', color:'#3b82f6', icon:'◇' })),
-                      emptyText: 'No clients linked'
-                    },
-                  ]}
-                />
-              );
-            })()}
 
             {/* PROFILE EDIT */}
             <div style={panel}>
@@ -20986,9 +20907,14 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
-                  <input value={worker.position||''} onChange={e => updateWorker({position:e.target.value})}
-                    placeholder="e.g. Apprentice, JM, Foreman"
-                    className="slick-input accent-orange"/>
+                  <select value={worker.position||''} onChange={e => updateWorker({position:e.target.value})}
+                    className="slick-select accent-orange"
+                    style={{colorScheme:"dark"}}>
+                    <option value="">— Unassigned —</option>
+                    {donnyOrgLevels.map(l => (
+                      <option key={l.id} value={l.id}>{l.title}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE</div>
@@ -20998,22 +20924,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               </div>
             </div>
-
-            {/* ACTIONS */}
-            <ActionsMenu accent="#f97316" actions={[
-              {
-                label: worker.archived ? 'UNARCHIVE' : 'ARCHIVE',
-                sub: worker.archived ? 'restore' : 'hide from views',
-                color: '#94a3b8',
-                disabled: donnyRole === 'worker',
-                onClick: () => {
-                  const updated = donnyTeam.map(m => m.id === worker.id ? {...m, archived: !worker.archived} : m);
-                  setDonnyTeam(updated);
-                  setSelectedDonnyWorker(prev => prev ? {...prev, archived: !worker.archived} : prev);
-                  logAction(`worker_${worker.id}`, { kind: 'action', summary: worker.archived ? 'Worker unarchived' : 'Worker archived' });
-                }
-              },
-            ]} />
 
             {/* AUDIT TRAIL */}
             <AuditTrail entityId={`worker_${worker.id}`} accent="#f97316" />
