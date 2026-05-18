@@ -1642,12 +1642,23 @@ function OrgChartGraph({ positions, grouped, onMemberClick, onLevelChange }) {
       }
       setLines(allLines);
     };
-    compute();
+    // Compute on next frame so layout is ready (fixes the "frozen until you scroll" bug)
+    const r1 = requestAnimationFrame(() => {
+      compute();
+      // Second pass after a beat for fonts/layout settling
+      const t = setTimeout(compute, 100);
+      cardRefs.current.__cleanup = t;
+    });
     // Recompute on resize
     const ro = new ResizeObserver(compute);
     if (containerRef.current) ro.observe(containerRef.current);
     window.addEventListener('resize', compute);
-    return () => { ro.disconnect(); window.removeEventListener('resize', compute); };
+    return () => {
+      cancelAnimationFrame(r1);
+      if (cardRefs.current.__cleanup) clearTimeout(cardRefs.current.__cleanup);
+      ro.disconnect();
+      window.removeEventListener('resize', compute);
+    };
   }, [positions, grouped, tick]);
 
   // Force a re-measure when grouped changes
@@ -1677,8 +1688,10 @@ function OrgChartGraph({ positions, grouped, onMemberClick, onLevelChange }) {
         {lines.map(line => {
           const midY = (line.y1 + line.y2) / 2;
           const pathD = `M ${line.x1} ${line.y1} C ${line.x1} ${midY}, ${line.x2} ${midY}, ${line.x2} ${line.y2}`;
+          // key includes coords so SMIL animation restarts cleanly when path changes
+          const k = `${line.id}_${Math.round(line.x1)}_${Math.round(line.y1)}_${Math.round(line.x2)}_${Math.round(line.y2)}`;
           return (
-            <g key={line.id}>
+            <g key={k}>
               <path d={pathD} stroke="rgba(249,115,22,0.7)" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
               <circle r="3" fill="rgba(255,165,50,1)" style={{filter:"drop-shadow(0 0 4px rgba(249,115,22,0.9))"}}>
                 <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
