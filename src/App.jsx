@@ -1592,6 +1592,153 @@ function FloatingChat() {
 // ============================================
 // DONNY CREW PLAN — drag/drop crew + task planner per job
 // ============================================
+function OrgChartGraph({ positions, grouped, onMemberClick, onLevelChange }) {
+  const containerRef = React.useRef(null);
+  const cardRefs = React.useRef({});
+  const [lines, setLines] = React.useState([]);
+  const [tick, setTick] = React.useState(0);
+
+  // Measure positions of all cards and compute lines
+  React.useEffect(() => {
+    const compute = () => {
+      const container = containerRef.current;
+      if (!container) return;
+      const cRect = container.getBoundingClientRect();
+      const allLines = [];
+      // For each pair of consecutive levels, connect each member of lower level to first member of upper level
+      for (let i = 0; i < positions.length - 1; i++) {
+        const parents = grouped[positions[i]] || [];
+        const children = grouped[positions[i+1]] || [];
+        if (parents.length === 0 || children.length === 0) continue;
+        // Each child connects to the "closest" parent horizontally
+        children.forEach(child => {
+          const childEl = cardRefs.current[child.id];
+          if (!childEl) return;
+          const childRect = childEl.getBoundingClientRect();
+          const childCenterX = childRect.left + childRect.width/2 - cRect.left;
+          const childTopY = childRect.top - cRect.top;
+          // Find the parent whose center is closest
+          let bestParent = parents[0];
+          let bestDist = Infinity;
+          parents.forEach(p => {
+            const pEl = cardRefs.current[p.id];
+            if (!pEl) return;
+            const pr = pEl.getBoundingClientRect();
+            const pcx = pr.left + pr.width/2 - cRect.left;
+            const d = Math.abs(pcx - childCenterX);
+            if (d < bestDist) { bestDist = d; bestParent = p; }
+          });
+          const parentEl = cardRefs.current[bestParent.id];
+          if (!parentEl) return;
+          const pRect = parentEl.getBoundingClientRect();
+          const parentCenterX = pRect.left + pRect.width/2 - cRect.left;
+          const parentBottomY = pRect.bottom - cRect.top;
+          allLines.push({
+            id: `${bestParent.id}_${child.id}`,
+            x1: parentCenterX, y1: parentBottomY,
+            x2: childCenterX, y2: childTopY,
+          });
+        });
+      }
+      setLines(allLines);
+    };
+    compute();
+    // Recompute on resize
+    const ro = new ResizeObserver(compute);
+    if (containerRef.current) ro.observe(containerRef.current);
+    window.addEventListener('resize', compute);
+    return () => { ro.disconnect(); window.removeEventListener('resize', compute); };
+  }, [positions, grouped, tick]);
+
+  // Force a re-measure when grouped changes
+  React.useEffect(() => {
+    const t = setTimeout(() => setTick(x => x + 1), 50);
+    return () => clearTimeout(t);
+  }, [grouped]);
+
+  const setCardRef = (id) => (el) => { if (el) cardRefs.current[id] = el; else delete cardRefs.current[id]; };
+
+  const renderCard = (m, accent='#f97316') => (
+    <div key={m.id} ref={setCardRef(m.id)} draggable
+      onDragStart={(e) => { e.dataTransfer.setData('memberId', String(m.id)); e.currentTarget.style.opacity = "0.4"; }}
+      onDragEnd={(e) => { e.currentTarget.style.opacity = "1"; }}
+      onClick={() => onMemberClick(m)}
+      style={{cursor:"grab",minWidth:"140px",maxWidth:"180px",padding:"10px 12px",background:"rgba(5,12,24,0.92)",border:`0.5px solid ${accent}55`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",fontFamily:"monospace",userSelect:"none",position:"relative",zIndex:2}}>
+      <div style={{fontSize:"12px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
+      {m.role && <div style={{fontSize:"9px",color:`${accent}cc`,marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{m.role}</div>}
+      {m.hourlyRate && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",marginTop:"2px"}}>${m.hourlyRate}/hr</div>}
+    </div>
+  );
+
+  return (
+    <div ref={containerRef} style={{position:"relative",display:"flex",flexDirection:"column",gap:"40px",padding:"20px 0"}}>
+      {/* SVG OVERLAY for connection lines */}
+      <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:1,overflow:"visible"}}>
+        {lines.map(line => {
+          const midY = (line.y1 + line.y2) / 2;
+          const pathD = `M ${line.x1} ${line.y1} C ${line.x1} ${midY}, ${line.x2} ${midY}, ${line.x2} ${line.y2}`;
+          return (
+            <g key={line.id}>
+              <path d={pathD} stroke="rgba(249,115,22,0.7)" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+              <circle r="3" fill="rgba(255,165,50,1)" style={{filter:"drop-shadow(0 0 4px rgba(249,115,22,0.9))"}}>
+                <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
+              </circle>
+            </g>
+          );
+        })}
+      </svg>
+
+      {positions.map((pos, levelIdx) => {
+        const members = grouped[pos];
+        return (
+          <div key={pos} style={{position:"relative",zIndex:2,minHeight:"80px"}}
+            onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(249,115,22,0.04)"; }}
+            onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.currentTarget.style.background = "transparent";
+              const memberId = e.dataTransfer.getData('memberId');
+              if (memberId) onLevelChange(memberId, pos);
+            }}>
+            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
+              {pos.toUpperCase()} {members.length>0 && `· ${members.length}`}
+            </div>
+            <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"12px",minHeight:"56px",alignItems:"center"}}>
+              {members.length === 0 ? (
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",fontStyle:"italic",letterSpacing:"0.5px",padding:"16px"}}>drop here to assign</div>
+              ) : members.map(m => renderCard(m))}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* UNASSIGNED POOL */}
+      {grouped['_unassigned'] && grouped['_unassigned'].length > 0 && (
+        <div style={{marginTop:"12px",paddingTop:"20px",borderTop:"0.5px dashed rgba(148,163,184,0.15)",position:"relative",zIndex:2}}
+          onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(148,163,184,0.04)"; }}
+          onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.currentTarget.style.background = "transparent";
+            const memberId = e.dataTransfer.getData('memberId');
+            if (memberId) onLevelChange(memberId, '_unassigned');
+          }}>
+          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.45)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
+            UNASSIGNED · {grouped['_unassigned'].length}
+          </div>
+          <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"12px"}}>
+            {grouped['_unassigned'].map(m => renderCard(m, '#94a3b8'))}
+          </div>
+        </div>
+      )}
+
+      <div style={{marginTop:"20px",padding:"10px 16px",background:"rgba(249,115,22,0.03)",border:"0.5px dashed rgba(249,115,22,0.15)",borderRadius:"4px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center",position:"relative",zIndex:2}}>
+        Drag a card up/down to change command level · tap a card to edit
+      </div>
+    </div>
+  );
+}
+
 function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView }) {
   // graph is { [jobId]: { nodes, edges } } — keyed by job id
   const jobs = donnyJobs || [];
@@ -21750,100 +21897,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                 No team members yet. Add one to get started.
               </div>
             ) : (
-              <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"28px",padding:"20px 0"}}>
-                {/* CONNECTING LINES BETWEEN ROWS — clean bezier with traveling dot */}
-                <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0,overflow:"visible"}}>
-                  {POSITIONS.slice(0, -1).map((pos, i) => {
-                    const hasCurrent = grouped[pos].length > 0;
-                    const hasNext = grouped[POSITIONS[i+1]].length > 0;
-                    if (!hasCurrent || !hasNext) return null;
-                    const rowH = 128;
-                    const y1 = i * rowH + 82;
-                    const y2 = (i+1) * rowH + 46;
-                    const cx = 500;
-                    // Subtle horizontal-style bezier — control points pulled apart horizontally
-                    const dy = (y2 - y1) * 0.5;
-                    const wobble = i % 2 === 0 ? 40 : -40;
-                    const pathD = `M ${cx} ${y1} C ${cx + wobble} ${y1 + dy}, ${cx - wobble} ${y2 - dy}, ${cx} ${y2}`;
-                    return (
-                      <g key={pos}>
-                        <path d={pathD} stroke="rgba(249,115,22,0.7)" strokeWidth="2" fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
-                        <circle r="3" fill="rgba(255,165,50,1)" style={{filter:"drop-shadow(0 0 4px rgba(249,115,22,0.9))"}}>
-                          <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
-                        </circle>
-                      </g>
-                    );
-                  })}
-                </svg>
-
-                {POSITIONS.map((pos, levelIdx) => {
-                  const members = grouped[pos];
-                  return (
-                    <div key={pos} style={{position:"relative",zIndex:1,minHeight:"96px"}}
-                      onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(249,115,22,0.04)"; }}
-                      onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.currentTarget.style.background = "transparent";
-                        const memberId = e.dataTransfer.getData('memberId');
-                        if (memberId) setMemberLevel(memberId, pos);
-                      }}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
-                        {pos.toUpperCase()} {members.length>0 && `· ${members.length}`}
-                      </div>
-                      <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"10px",minHeight:"56px",alignItems:"center"}}>
-                        {members.length === 0 ? (
-                          <div style={{fontSize:"10px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",fontStyle:"italic",letterSpacing:"0.5px",padding:"16px"}}>drop here to assign</div>
-                        ) : members.map(m => (
-                          <div key={m.id} draggable
-                            onDragStart={(e) => { e.dataTransfer.setData('memberId', String(m.id)); e.currentTarget.style.opacity = "0.4"; }}
-                            onDragEnd={(e) => { e.currentTarget.style.opacity = "1"; }}
-                            onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
-                            style={{cursor:"grab",minWidth:"140px",maxWidth:"180px",padding:"10px 12px",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.35)",borderLeft:"2px solid rgba(249,115,22,0.8)",borderRadius:"4px",fontFamily:"monospace",userSelect:"none"}}>
-                            <div style={{fontSize:"12px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
-                            {m.role && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{m.role}</div>}
-                            {m.hourlyRate && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",marginTop:"2px"}}>${m.hourlyRate}/hr</div>}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* UNASSIGNED POOL */}
-                {grouped['_unassigned'].length > 0 && (
-                  <div style={{marginTop:"12px",paddingTop:"20px",borderTop:"0.5px dashed rgba(148,163,184,0.15)",position:"relative",zIndex:1}}
-                    onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(148,163,184,0.04)"; }}
-                    onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      e.currentTarget.style.background = "transparent";
-                      const memberId = e.dataTransfer.getData('memberId');
-                      if (memberId) setMemberLevel(memberId, '_unassigned');
-                    }}>
-                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.45)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
-                      UNASSIGNED · {grouped['_unassigned'].length}
-                    </div>
-                    <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"10px"}}>
-                      {grouped['_unassigned'].map(m => (
-                        <div key={m.id} draggable
-                          onDragStart={(e) => { e.dataTransfer.setData('memberId', String(m.id)); e.currentTarget.style.opacity = "0.4"; }}
-                          onDragEnd={(e) => { e.currentTarget.style.opacity = "1"; }}
-                          onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
-                          style={{cursor:"grab",minWidth:"140px",maxWidth:"180px",padding:"10px 12px",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(148,163,184,0.25)",borderLeft:"2px solid rgba(148,163,184,0.5)",borderRadius:"4px",fontFamily:"monospace",userSelect:"none"}}>
-                          <div style={{fontSize:"12px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
-                          {m.role && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{m.role}</div>}
-                          {m.hourlyRate && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",marginTop:"2px"}}>${m.hourlyRate}/hr</div>}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div style={{marginTop:"20px",padding:"10px 16px",background:"rgba(249,115,22,0.03)",border:"0.5px dashed rgba(249,115,22,0.15)",borderRadius:"4px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center"}}>
-                  Drag a card up/down to change command level · tap a card to edit
-                </div>
-              </div>
+              <OrgChartGraph
+                positions={POSITIONS}
+                grouped={grouped}
+                onMemberClick={(m) => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+                onLevelChange={setMemberLevel}
+              />
             )}
           </div>
         </div>
