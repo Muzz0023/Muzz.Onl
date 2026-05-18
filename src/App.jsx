@@ -1628,7 +1628,7 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
     const positions = {};
     // Boss center top
     if (boss) {
-      positions[boss.id] = { x: 0, y: BOSS_Y, level: '_boss' };
+      positions[boss.id] = { x: -CARD_W/2, y: BOSS_Y, level: '_boss' };
     }
     levels.forEach((l, idx) => {
       const members = grouped[l.id] || [];
@@ -1883,16 +1883,22 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
     );
   };
 
-  // Level row rect (for hover highlight)
+  // Level row rect (for hover highlight) + on-canvas row label
   const renderLevelBand = (l, idx) => {
     const y = FIRST_ROW_Y + idx * ROW_H - 30;
     const isHovered = hoverLevel === l.id && drag?.type === 'card';
+    const memberCount = (grouped[l.id] || []).length;
     return (
       <g key={`band_${l.id}`}>
-        {isHovered && (
-          <rect x={-2000} y={y} width={4000} height={ROW_H} fill="rgba(249,115,22,0.05)"/>
-        )}
-        <line x1={-2000} y1={y + ROW_H} x2={2000} y2={y + ROW_H} stroke="rgba(249,115,22,0.08)" strokeDasharray="2 4"/>
+        {/* Always-visible row band, brighter on hover */}
+        <rect x={-3000} y={y} width={6000} height={ROW_H - 6} fill={isHovered ? "rgba(249,115,22,0.08)" : "rgba(249,115,22,0.015)"} stroke={isHovered ? "rgba(249,115,22,0.35)" : "rgba(249,115,22,0.08)"} strokeWidth="0.5" strokeDasharray="3 4"/>
+        {/* Tappable label */}
+        <g style={{cursor:"pointer"}} onClick={(e) => { e.stopPropagation(); setEditingLevelId(l.id); }}>
+          <rect x={-CARD_W/2 - 230} y={y + 6} width="160" height="28" rx="4" fill="rgba(5,12,24,0.7)" stroke={isHovered ? "rgba(249,115,22,0.55)" : "rgba(249,115,22,0.25)"} strokeWidth="0.5"/>
+          <text x={-CARD_W/2 - 215} y={y + 25} fontSize="11" fontFamily="monospace" fill={isHovered ? "rgba(249,115,22,0.95)" : "rgba(249,115,22,0.7)"} letterSpacing="2" fontWeight="600">
+            {l.title.toUpperCase()}{memberCount > 0 ? ` · ${memberCount}` : ''}
+          </text>
+        </g>
       </g>
     );
   };
@@ -1915,23 +1921,25 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
         </div>
       </div>
 
-      {/* LEVEL TITLE EDITORS — fixed overlay sidebar */}
-      <div style={{position:"absolute",left:isWide ? 90 : 14,top:80,zIndex:30,display:"flex",flexDirection:"column",gap:"6px",pointerEvents:"none"}}>
-        {boss && (
-          <div style={{padding:"6px 10px",background:"rgba(251,191,36,0.08)",border:"0.5px solid rgba(251,191,36,0.25)",borderRadius:"3px",fontSize:"9px",color:"rgba(251,191,36,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600,pointerEvents:"auto"}}>BOSS</div>
-        )}
-        {levels.map((l, idx) => (
-          <div key={l.id} style={{display:"flex",alignItems:"center",gap:"6px",pointerEvents:"auto"}}>
-            {editingLevelId === l.id ? (
-              <input autoFocus value={l.title} onChange={(e) => renameLevel(l.id, e.target.value)} onBlur={() => setEditingLevelId(null)} onKeyDown={(e) => { if (e.key==='Enter') setEditingLevelId(null); }}
-                style={{padding:"5px 8px",background:"rgba(5,12,24,0.9)",border:"0.5px solid rgba(249,115,22,0.5)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"10px",width:"140px",outline:"none"}}/>
-            ) : (
-              <button onClick={() => setEditingLevelId(l.id)} style={{padding:"6px 10px",background:"rgba(249,115,22,0.05)",border:"0.5px solid rgba(249,115,22,0.18)",borderRadius:"3px",fontSize:"9px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer",textAlign:"left",minWidth:"140px"}}>{l.title.toUpperCase()}</button>
-            )}
-            <button onClick={() => removeLevel(l.id)} title="Remove level" style={{padding:"4px 6px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",cursor:"pointer"}}>✕</button>
+      {/* LEVEL EDIT MODAL */}
+      {editingLevelId && (
+        <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(5,12,24,0.85)",zIndex:100,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={() => setEditingLevelId(null)}>
+          <div onClick={(e) => e.stopPropagation()} style={{background:"rgba(5,12,24,0.95)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"6px",padding:"24px",minWidth:"320px"}}>
+            <div style={{fontSize:"9px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// EDIT LEVEL</div>
+            <input autoFocus value={(levels.find(l=>l.id===editingLevelId)||{}).title || ''}
+              onChange={(e) => renameLevel(editingLevelId, e.target.value)}
+              onKeyDown={(e) => { if (e.key==='Enter') setEditingLevelId(null); }}
+              placeholder="Level title..."
+              style={{width:"100%",padding:"10px 12px",background:"transparent",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",border:"none",borderBottom:"0.5px solid rgba(249,115,22,0.3)",outline:"none"}}/>
+            <div style={{display:"flex",gap:"8px",marginTop:"20px",justifyContent:"space-between"}}>
+              <button onClick={() => { removeLevel(editingLevelId); setEditingLevelId(null); }}
+                style={{padding:"8px 14px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.3)",borderRadius:"3px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>DELETE</button>
+              <button onClick={() => setEditingLevelId(null)}
+                style={{padding:"8px 14px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>DONE</button>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
       {/* CANVAS */}
       <div ref={containerRef} style={{position:"relative",width:"100%",height:"calc(100vh - 70px)",overflow:"hidden",cursor:drag?.type==='pan'?'grabbing':'default'}}>
