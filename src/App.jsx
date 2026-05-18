@@ -1702,9 +1702,8 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
   };
 
   const handleMouseDown = (e) => {
-    if (e.target.tagName === 'svg' || e.target.classList?.contains('org-canvas-bg')) {
-      setDrag({ type: 'pan', startX: e.clientX, startY: e.clientY, startPan: { ...pan } });
-    }
+    // Pan if we click anywhere that isn't a card or label (those stopPropagation themselves)
+    setDrag({ type: 'pan', startX: e.clientX, startY: e.clientY, startPan: { ...pan } });
   };
 
   const handleCardMouseDown = (e, memberId) => {
@@ -1890,12 +1889,12 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
     const memberCount = (grouped[l.id] || []).length;
     return (
       <g key={`band_${l.id}`}>
-        {/* Always-visible row band, brighter on hover */}
-        <rect x={-3000} y={y} width={6000} height={ROW_H - 6} fill={isHovered ? "rgba(249,115,22,0.08)" : "rgba(249,115,22,0.015)"} stroke={isHovered ? "rgba(249,115,22,0.35)" : "rgba(249,115,22,0.08)"} strokeWidth="0.5" strokeDasharray="3 4"/>
-        {/* Tappable label — sits ABOVE the cards, centered */}
-        <g style={{cursor:"pointer"}} onClick={(e) => { e.stopPropagation(); setEditingLevelId(l.id); }}>
-          <rect x={-80} y={y + 2} width="160" height="22" rx="3" fill="rgba(5,12,24,0.85)" stroke={isHovered ? "rgba(249,115,22,0.55)" : "rgba(249,115,22,0.3)"} strokeWidth="0.5"/>
-          <text x="0" y={y + 16} fontSize="10" fontFamily="monospace" fill={isHovered ? "rgba(249,115,22,0.95)" : "rgba(249,115,22,0.7)"} letterSpacing="2" fontWeight="600" textAnchor="middle">
+        {/* Hover band — pointer-events:none so drags pass through */}
+        <rect x={-3000} y={y} width={6000} height={ROW_H - 6} fill={isHovered ? "rgba(249,115,22,0.08)" : "rgba(249,115,22,0.015)"} stroke={isHovered ? "rgba(249,115,22,0.35)" : "rgba(249,115,22,0.06)"} strokeWidth="0.5" strokeDasharray="3 4" style={{pointerEvents:"none"}}/>
+        {/* Tappable label — sits ABOVE the cards, centered. Bright pill style for visibility */}
+        <g style={{cursor:"pointer"}} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setEditingLevelId(l.id); }}>
+          <rect x={-90} y={y + 2} width="180" height="24" rx="12" fill="rgba(249,115,22,0.18)" stroke="rgba(249,115,22,0.7)" strokeWidth="1"/>
+          <text x="0" y={y + 17} fontSize="10" fontFamily="monospace" fill="#fbbf24" letterSpacing="2" fontWeight="700" textAnchor="middle">
             {l.title.toUpperCase()}{memberCount > 0 ? ` · ${memberCount}` : ''}
           </text>
         </g>
@@ -1958,6 +1957,7 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
             {levels.map((l, idx) => renderLevelBand(l, idx))}
 
             {/* CONNECTIONS */}
+            <g style={{pointerEvents:"none"}}>
             {connections.map(c => {
               const pathD = buildPath(c.from, c.to);
               return (
@@ -1969,6 +1969,7 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
                 </g>
               );
             })}
+            </g>
 
             {/* BOSS CARD */}
             {boss && renderCard(boss, true)}
