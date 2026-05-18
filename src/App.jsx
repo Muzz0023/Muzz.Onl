@@ -1804,10 +1804,62 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
     return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
   };
 
-  const fitView = () => {
-    setPan({ x: 0, y: 0 });
-    setZoom(1);
-  };
+  const fitView = React.useCallback(() => {
+    if (!svgRef.current) return;
+    // Compute bounding box of all positioned items in svg-coords
+    const items = Object.values(layout);
+    if (items.length === 0 && !boss) {
+      setPan({ x: 0, y: 0 });
+      setZoom(1);
+      return;
+    }
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    // Include boss area
+    minX = Math.min(minX, -CARD_W/2 - 20);
+    maxX = Math.max(maxX, CARD_W/2 + 20);
+    minY = Math.min(minY, BOSS_Y - 30);
+    maxY = Math.max(maxY, BOSS_Y + CARD_H + 30);
+    items.forEach(p => {
+      minX = Math.min(minX, p.x - 20);
+      maxX = Math.max(maxX, p.x + CARD_W + 20);
+      minY = Math.min(minY, p.y - 20);
+      maxY = Math.max(maxY, p.y + CARD_H + 30);
+    });
+    const contentW = maxX - minX;
+    const contentH = maxY - minY;
+    const viewW = svgRef.current.clientWidth;
+    const viewH = svgRef.current.clientHeight;
+    // Leave margin for left-side level overlay (~200px) on wide screens
+    const leftPad = isWide ? 220 : 30;
+    const usableW = viewW - leftPad - 30;
+    const usableH = viewH - 60;
+    const zX = usableW / contentW;
+    const zY = usableH / contentH;
+    const newZoom = Math.min(1, zX, zY); // never zoom > 1, just fit if needed
+    // Center vertically; center horizontally inside the usable region (skipping left pad)
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const usableCenterX = leftPad + usableW / 2; // pixel target from svg left edge
+    // pan.x is offset added on top of viewW/2; we want centerX * zoom + pan.x = usableCenterX - viewW/2 from coord origin? Simpler: solve for pan.x given inner transform `translate(viewW/2 + pan.x, pan.y) scale(zoom)` and we want content centerX -> usableCenterX
+    // usableCenterX = viewW/2 + pan.x + centerX*zoom  =>  pan.x = usableCenterX - viewW/2 - centerX*zoom
+    const newPanX = usableCenterX - viewW/2 - centerX * newZoom;
+    const newPanY = 30 - minY * newZoom; // top margin = 30
+    setZoom(newZoom);
+    setPan({ x: newPanX, y: newPanY });
+  }, [layout, boss, isWide]);
+
+  // Auto-fit on first mount (and any time layout meaningfully changes from empty -> populated)
+  const didInitialFit = React.useRef(false);
+  React.useEffect(() => {
+    if (didInitialFit.current) return;
+    if (donnyTeam.length === 0) return;
+    // Wait a frame so svg has measured itself
+    const t = setTimeout(() => {
+      fitView();
+      didInitialFit.current = true;
+    }, 50);
+    return () => clearTimeout(t);
+  }, [donnyTeam.length, fitView]);
 
   // Card render
   const renderCard = (m, isBoss = false) => {
