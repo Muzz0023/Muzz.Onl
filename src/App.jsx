@@ -21751,35 +21751,27 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             ) : (
               <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"28px",padding:"20px 0"}}>
-                {/* CONNECTING LINES BETWEEN ROWS — flowing curves */}
+                {/* CONNECTING LINES BETWEEN ROWS — clean bezier with traveling dot */}
                 <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0,overflow:"visible"}}>
-                  <defs>
-                    <linearGradient id="orgFlow" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="rgba(249,115,22,0.7)"/>
-                      <stop offset="100%" stopColor="rgba(249,115,22,0.2)"/>
-                    </linearGradient>
-                  </defs>
-                  <style>{`
-                    @keyframes orgflow { to { stroke-dashoffset: -20; } }
-                    .org-line { animation: orgflow 1.8s linear infinite; }
-                  `}</style>
                   {POSITIONS.slice(0, -1).map((pos, i) => {
                     const hasCurrent = grouped[pos].length > 0;
                     const hasNext = grouped[POSITIONS[i+1]].length > 0;
                     if (!hasCurrent || !hasNext) return null;
-                    // Each row in SVG viewBox terms: 128 svg-units per row
                     const rowH = 128;
                     const y1 = i * rowH + 82;
                     const y2 = (i+1) * rowH + 46;
                     const cx = 500;
-                    const wobble = i % 2 === 0 ? 50 : -50;
-                    const cy1 = y1 + (y2 - y1) * 0.35;
-                    const cy2 = y1 + (y2 - y1) * 0.65;
+                    // Subtle horizontal-style bezier — control points pulled apart horizontally
+                    const dy = (y2 - y1) * 0.5;
+                    const wobble = i % 2 === 0 ? 40 : -40;
+                    const pathD = `M ${cx} ${y1} C ${cx + wobble} ${y1 + dy}, ${cx - wobble} ${y2 - dy}, ${cx} ${y2}`;
                     return (
-                      <path key={pos}
-                        d={`M ${cx} ${y1} C ${cx + wobble} ${cy1}, ${cx - wobble} ${cy2}, ${cx} ${y2}`}
-                        stroke="url(#orgFlow)" strokeWidth="2" fill="none"
-                        strokeDasharray="6 5" className="org-line" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+                      <g key={pos}>
+                        <path d={pathD} stroke="rgba(249,115,22,0.7)" strokeWidth="2" fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+                        <circle r="3" fill="rgba(255,165,50,1)" style={{filter:"drop-shadow(0 0 4px rgba(249,115,22,0.9))"}}>
+                          <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
+                        </circle>
+                      </g>
                     );
                   })}
                 </svg>
