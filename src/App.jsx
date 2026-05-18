@@ -21693,194 +21693,154 @@ ${JSON.stringify(ctx, null, 2)}`;
     // TEAM
     if (activeView === 'donny-team') {
       const saveTeam = (updated) => { setDonnyTeam(updated) };
-      const ROLES = [
-        { group:'LEADERSHIP', options:['Boss','CEO','CFO','COO','Director','Manager','Supervisor','Foreman'] },
-        { group:'OFFICE', options:['Project Manager','Site Manager','Estimator','Admin','Accounts','HR','Safety Officer'] },
-        { group:'TRADE', options:['Electrician','Plumber','Carpenter','Concreter','Painter','Welder','Mechanic','HVAC Tech'] },
-        { group:'FIELD', options:['Leading Hand','1st Year','2nd Year','3rd Year','4th Year','Tradesperson','Traffic Controller','Rigger','Dogman'] },
-        { group:'ENTRY', options:['Apprentice','Intern','Labourer','Trainee'] },
-      ];
       const POSITIONS = ['1st in Command','2nd in Command','3rd in Command','4th in Command','5th in Command'];
-      const allRoleOptions = ROLES.flatMap(g => g.options);
-
-      // ─── DERIVED STATS ─────────────────────────────────────────────
-      const teamWithStats = donnyTeam.map(m => {
-        const ts = donnyTimesheets.filter(e => String(e.memberId) === String(m.id));
-        const hrs = ts.reduce((s,e) => s + (parseFloat(e.hours)||0), 0);
-        const earned = hrs * (parseFloat(m.hourlyRate)||0);
-        return { ...m, _hrs: hrs, _earned: earned };
-      });
-      const sortedTeam = [...teamWithStats].sort((a,b) => { const pi=POSITIONS.indexOf(a.position); const pj=POSITIONS.indexOf(b.position); return (pi===-1?99:pi)-(pj===-1?99:pj); });
-
       const totalMembers = donnyTeam.length;
-      const totalHourlyRate = donnyTeam.reduce((s,m) => s + (parseFloat(m.hourlyRate)||0), 0);
-      const totalHrsLogged = teamWithStats.reduce((s,m) => s + m._hrs, 0);
-      const totalEarned = teamWithStats.reduce((s,m) => s + m._earned, 0);
-      const teamWithRate = donnyTeam.filter(m => parseFloat(m.hourlyRate)||0 > 0);
-      const avgRate = teamWithRate.length > 0 ? teamWithRate.reduce((s,m) => s + (parseFloat(m.hourlyRate)||0), 0) / teamWithRate.length : 0;
-      const topEarner = [...teamWithStats].sort((a,b) => b._earned - a._earned)[0];
 
-      const teamPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const teamPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
+      // Group team by position (level). Unassigned go to a pool.
+      const grouped = {};
+      POSITIONS.forEach(p => { grouped[p] = []; });
+      grouped['_unassigned'] = [];
+      donnyTeam.forEach(m => {
+        if (POSITIONS.includes(m.position)) grouped[m.position].push(m);
+        else grouped['_unassigned'].push(m);
+      });
+      // Sort within each row by an optional orderIndex
+      Object.keys(grouped).forEach(k => {
+        grouped[k].sort((a,b) => (a.orderIndex||0) - (b.orderIndex||0));
+      });
+
+      // Move member to a different level
+      const setMemberLevel = (memberId, newPos) => {
+        saveTeam(donnyTeam.map(m => String(m.id) === String(memberId) ? { ...m, position: newPos === '_unassigned' ? '' : newPos } : m));
+      };
 
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
           <Sidebar /><SaveIndicator />
           {isWide && <DonnyLeftRail activeView={activeView} setActiveView={setActiveView} donnyRole={donnyRole} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
-          <DonnySearch />
-          <LineagePopup />
-          <DonnyAlertConfig />
-          <DonnyAsk />
-          <DonnyBreadcrumbs />
+          <DonnySearch /><LineagePopup /><DonnyAlertConfig /><DonnyAsk /><DonnyBreadcrumbs />
 
-          {/* HEADER */}
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-            <div className="max-w-5xl mx-auto">
+          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px"}}>
+            <div className="max-w-6xl mx-auto">
               <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                  <span style={{fontSize:"28px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>⊢</span>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// CREW REGISTRY</div>
-                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TEAM</div>
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
-                      {totalMembers} member{totalMembers!==1?'s':''}
-                      {totalHourlyRate > 0 && (' · $'+totalHourlyRate.toFixed(0)+'/hr combined')}
-                      {totalHrsLogged > 0 && (' · '+totalHrsLogged.toFixed(0)+'h logged')}
-                    </div>
+                <div>
+                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// TEAM</div>
+                  <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>TEAM</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    {totalMembers} member{totalMembers!==1?'s':''}
                   </div>
                 </div>
-                <button onClick={() => { setShowAddMember(s=>!s); setEditingMemberId(null); }}
-                  style={{padding:"6px 12px",background:showAddMember?"rgba(239,68,68,0.06)":"rgba(249,115,22,0.1)",border:`0.5px solid ${showAddMember?"rgba(239,68,68,0.3)":"rgba(249,115,22,0.4)"}`,borderRadius:"3px",color:showAddMember?"rgba(239,68,68,0.85)":"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
-                  {showAddMember ? '✕ CANCEL' : '+ ADD MEMBER'}
+                <button onClick={() => {
+                  const newMember = { id: Date.now(), name: 'New member', role: '', position: '', hourlyRate: '', phone: '', email: '', orderIndex: Date.now() };
+                  saveTeam([...donnyTeam, newMember]);
+                  setSelectedDonnyWorker(newMember);
+                  setActiveView('donny-workerdetail');
+                }}
+                  style={{padding:"6px 12px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                  + ADD MEMBER
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+          <div className="max-w-6xl mx-auto py-5" style={{paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+            {totalMembers === 0 ? (
+              <div style={{padding:"40px 20px",textAlign:"center",fontSize:"11px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                No team members yet. Add one to get started.
+              </div>
+            ) : (
+              <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"28px",padding:"20px 0"}}>
+                {/* CONNECTING LINES BETWEEN ROWS */}
+                <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
+                  {POSITIONS.slice(0, -1).map((pos, i) => {
+                    const hasCurrent = grouped[pos].length > 0;
+                    const hasNext = grouped[POSITIONS[i+1]].length > 0;
+                    if (!hasCurrent || !hasNext) return null;
+                    // Approx row spacing: 28px gap + ~100px row height
+                    const rowH = 128;
+                    const y1 = i * rowH + 76;
+                    const y2 = (i+1) * rowH + 48;
+                    return (
+                      <line key={pos} x1="50%" y1={y1} x2="50%" y2={y2} stroke="rgba(249,115,22,0.25)" strokeWidth="1" strokeDasharray="4 3"/>
+                    );
+                  })}
+                </svg>
 
-
-            {/* ADD MEMBER FORM */}
-            {showAddMember && (
-              <div style={teamPanel}>
-                <div style={teamPanelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// NEW MEMBER</span>
-                  <button onClick={()=>setShowAddMember(false)} style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",background:"none",border:"none",cursor:"pointer",fontFamily:"monospace"}}>✕</button>
-                </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FULL NAME</div>
-                    <input value={newMember.name} onChange={e => setNewMember(p=>({...p,name:e.target.value}))} placeholder="James Smith"
-                      className="slick-input accent-orange"/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>ROLE</div>
-                    {ROLES.map(group => (
-                      <div key={group.group} style={{marginBottom:"8px"}}>
-                        <div style={{fontSize:"8px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>{group.group}</div>
-                        <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
-                          {group.options.map(opt => {
-                            const active = (newMember.roles||[]).includes(opt);
-                            return (
-                              <button key={opt} onClick={() => setNewMember(p=>({...p,roles:active?(p.roles||[]).filter(r=>r!==opt):[...(p.roles||[]),opt]}))}
-                                style={{fontSize:"10px",padding:"3px 8px",fontFamily:"monospace",background:active?"rgba(249,115,22,0.15)":"rgba(255,255,255,0.03)",border:`0.5px solid ${active?"rgba(249,115,22,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:active?"rgba(249,115,22,0.95)":"rgba(148,163,184,0.5)",cursor:"pointer"}}>
-                                {opt}
-                              </button>
-                            );
-                          })}
-                        </div>
+                {POSITIONS.map((pos, levelIdx) => {
+                  const members = grouped[pos];
+                  return (
+                    <div key={pos} style={{position:"relative",zIndex:1,minHeight:"96px"}}
+                      onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(249,115,22,0.04)"; }}
+                      onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.style.background = "transparent";
+                        const memberId = e.dataTransfer.getData('memberId');
+                        if (memberId) setMemberLevel(memberId, pos);
+                      }}>
+                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
+                        {pos.toUpperCase()} {members.length>0 && `· ${members.length}`}
                       </div>
-                    ))}
-                  </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
-                      <select value={newMember.position} onChange={e => setNewMember(p=>({...p,position:e.target.value}))}
-                        className="slick-select accent-orange">
-                        <option value="">Select...</option>
-                        {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE (AUD)</div>
-                      <input value={newMember.hourlyRate} onChange={e => setNewMember(p=>({...p,hourlyRate:e.target.value}))} placeholder="45.00" type="number"
-                        className="slick-input"/>
-                    </div>
-                  </div>
-                  {donnyJobs.length > 0 && (
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>JOB ACCESS</div>
-                      <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
-                        {donnyJobs.map(job => (
-                          <button key={job.id} onClick={() => setNewMember(p=>({...p,jobAccess:p.jobAccess.includes(job.id)?p.jobAccess.filter(id=>id!==job.id):[...p.jobAccess,job.id]}))}
-                            style={{fontSize:"10px",padding:"3px 8px",fontFamily:"monospace",background:newMember.jobAccess.includes(job.id)?"rgba(34,197,94,0.15)":"rgba(255,255,255,0.03)",border:`0.5px solid ${newMember.jobAccess.includes(job.id)?"rgba(34,197,94,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"3px",color:newMember.jobAccess.includes(job.id)?"rgba(34,197,94,0.95)":"rgba(148,163,184,0.5)",cursor:"pointer"}}>
-                            {job.jobNumber?`#${job.jobNumber} `:''}{job.title}
-                          </button>
+                      <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"10px",minHeight:"56px",alignItems:"center"}}>
+                        {members.length === 0 ? (
+                          <div style={{fontSize:"10px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",fontStyle:"italic",letterSpacing:"0.5px",padding:"16px"}}>drop here to assign</div>
+                        ) : members.map(m => (
+                          <div key={m.id} draggable
+                            onDragStart={(e) => { e.dataTransfer.setData('memberId', String(m.id)); e.currentTarget.style.opacity = "0.4"; }}
+                            onDragEnd={(e) => { e.currentTarget.style.opacity = "1"; }}
+                            onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+                            style={{cursor:"grab",minWidth:"140px",maxWidth:"180px",padding:"10px 12px",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.35)",borderLeft:"2px solid rgba(249,115,22,0.8)",borderRadius:"4px",fontFamily:"monospace",userSelect:"none"}}>
+                            <div style={{fontSize:"12px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
+                            {m.role && <div style={{fontSize:"9px",color:"rgba(249,115,22,0.7)",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{m.role}</div>}
+                            {m.hourlyRate && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",marginTop:"2px"}}>${m.hourlyRate}/hr</div>}
+                          </div>
                         ))}
                       </div>
                     </div>
-                  )}
-                  <button onClick={() => {
-                    if (!newMember.name.trim()) return;
-                    saveTeam([...donnyTeam, {...newMember, id:Date.now()}]);
-                    setNewMember({name:'',roles:[],position:'',hourlyRate:'',jobAccess:[]});
-                    setShowAddMember(false);
-                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ ADD MEMBER</button>
+                  );
+                })}
+
+                {/* UNASSIGNED POOL */}
+                {grouped['_unassigned'].length > 0 && (
+                  <div style={{marginTop:"12px",paddingTop:"20px",borderTop:"0.5px dashed rgba(148,163,184,0.15)",position:"relative",zIndex:1}}
+                    onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.background = "rgba(148,163,184,0.04)"; }}
+                    onDragLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.style.background = "transparent";
+                      const memberId = e.dataTransfer.getData('memberId');
+                      if (memberId) setMemberLevel(memberId, '_unassigned');
+                    }}>
+                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.45)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px",textAlign:"center"}}>
+                      UNASSIGNED · {grouped['_unassigned'].length}
+                    </div>
+                    <div style={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:"10px"}}>
+                      {grouped['_unassigned'].map(m => (
+                        <div key={m.id} draggable
+                          onDragStart={(e) => { e.dataTransfer.setData('memberId', String(m.id)); e.currentTarget.style.opacity = "0.4"; }}
+                          onDragEnd={(e) => { e.currentTarget.style.opacity = "1"; }}
+                          onClick={() => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
+                          style={{cursor:"grab",minWidth:"140px",maxWidth:"180px",padding:"10px 12px",background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(148,163,184,0.25)",borderLeft:"2px solid rgba(148,163,184,0.5)",borderRadius:"4px",fontFamily:"monospace",userSelect:"none"}}>
+                          <div style={{fontSize:"12px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
+                          {m.role && <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{m.role}</div>}
+                          {m.hourlyRate && <div style={{fontSize:"9px",color:"rgba(34,197,94,0.7)",marginTop:"2px"}}>${m.hourlyRate}/hr</div>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div style={{marginTop:"20px",padding:"10px 16px",background:"rgba(249,115,22,0.03)",border:"0.5px dashed rgba(249,115,22,0.15)",borderRadius:"4px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",textAlign:"center"}}>
+                  Drag a card up/down to change command level · tap a card to edit
                 </div>
               </div>
             )}
-
-            {/* EMPTY STATE */}
-            {totalMembers === 0 && !showAddMember && (
-              <div style={{...teamPanel,padding:"40px",textAlign:"center"}}>
-                <div style={{fontSize:"32px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>⊢</div>
-                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO TEAM MEMBERS YET</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add your crew above</div>
-              </div>
-            )}
-
-            {/* TEAM LIST — task-style rows */}
-            {totalMembers > 0 && (
-              <>
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  {sortedTeam.map(m => {
-                    const accent = '#f97316';
-                    const isActive = m._hrs > 0;
-                    const roles = (m.roles||[m.role]).filter(Boolean).join(', ');
-                    const subtitle = [m.position, roles].filter(Boolean).join(' · ');
-                    return (
-                      <button key={m.id} onClick={() => navToEntity('worker', m)}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isActive?accent:`${accent}50`,boxShadow:isActive?`0 0 6px ${accent}80`:"none",flexShrink:0}} />
-                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.name||'Unnamed'}</div>
-                          {subtitle && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subtitle}</div>}
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                          {m._hrs > 0 && (
-                            <span style={{fontFamily:"monospace",fontSize:"10px",color:"#3b82f6",letterSpacing:"0.5px"}}>{m._hrs.toFixed(1)}h</span>
-                          )}
-                          {m.hourlyRate && (
-                            <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(34,197,94,0.85)",letterSpacing:"0.5px"}}>${m.hourlyRate}/hr</span>
-                          )}
-                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",marginTop:"6px",border:"0.5px solid rgba(249,115,22,0.2)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",background:"rgba(249,115,22,0.04)",fontFamily:"monospace"}}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",letterSpacing:"1.5px"}}>TOTAL HOURLY COST</span>
-                  <span style={{fontSize:"14px",color:"rgba(34,197,94,0.95)",fontWeight:500}}>${totalHourlyRate.toFixed(2)}<span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",marginLeft:"4px"}}>/hr</span></span>
-                </div>
-              </>
-            )}
-
           </div>
         </div>
       );
     }
+
 
     // ── MATERIALS LOG ─────────────────────────────────────────────────
     // ── SCHEDULER ────────────────────────────────────────────────────────────
