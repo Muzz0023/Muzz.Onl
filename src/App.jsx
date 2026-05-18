@@ -1592,9 +1592,11 @@ function FloatingChat() {
 // ============================================
 // DONNY CREW PLAN — drag/drop crew + task planner per job
 // ============================================
-function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, setBossId, pan, setPan, zoom, setZoom, onTapCard, onBackHome, isWide }) {
+function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, setBossId, onTapCard, onBackHome, isWide }) {
   const svgRef = React.useRef(null);
   const containerRef = React.useRef(null);
+  const [pan, setPan] = React.useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = React.useState(1);
   const [drag, setDrag] = React.useState(null); // {type:'pan'|'card', memberId?, startX, startY, startPan?}
   const [hoverLevel, setHoverLevel] = React.useState(null);
   const [editingLevelId, setEditingLevelId] = React.useState(null);
@@ -1847,18 +1849,18 @@ function OrgChartCanvas({ donnyTeam, setDonnyTeam, levels, setLevels, bossId, se
     setPan({ x: newPanX, y: newPanY });
   }, [layout, boss, isWide]);
 
-  // Auto-fit on first mount (and any time layout meaningfully changes from empty -> populated)
+  // Auto-fit on mount (and any time layout meaningfully changes)
   const didInitialFit = React.useRef(false);
   React.useEffect(() => {
-    if (didInitialFit.current) return;
     if (donnyTeam.length === 0) return;
-    // Wait a frame so svg has measured itself
+    // Always refit when mounting — solves the "jolts left after coming back from worker detail" issue
     const t = setTimeout(() => {
       fitView();
       didInitialFit.current = true;
-    }, 50);
+    }, 80);
     return () => clearTimeout(t);
-  }, [donnyTeam.length, fitView]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // mount only
 
   // Card render
   const renderCard = (m, isBoss = false) => {
@@ -22041,10 +22043,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             setLevels={setDonnyOrgLevels}
             bossId={donnyOrgBossId}
             setBossId={setDonnyOrgBossId}
-            pan={orgPan}
-            setPan={setOrgPan}
-            zoom={orgZoom}
-            setZoom={setOrgZoom}
             onTapCard={(m) => { setSelectedDonnyWorker(m); setActiveView('donny-workerdetail'); }}
             onBackHome={() => setActiveView('donny')}
             isWide={isWide}
