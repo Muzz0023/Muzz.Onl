@@ -21704,9 +21704,9 @@ ${JSON.stringify(ctx, null, 2)}`;
         if (POSITIONS.includes(m.position)) grouped[m.position].push(m);
         else grouped['_unassigned'].push(m);
       });
-      // Sort within each row by an optional orderIndex
+      // Sort within each row by hourly rate (highest paid first)
       Object.keys(grouped).forEach(k => {
-        grouped[k].sort((a,b) => (a.orderIndex||0) - (b.orderIndex||0));
+        grouped[k].sort((a,b) => (parseFloat(b.hourlyRate)||0) - (parseFloat(a.hourlyRate)||0));
       });
 
       // Move member to a different level
