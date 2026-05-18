@@ -20909,9 +20909,26 @@ ${JSON.stringify(ctx, null, 2)}`;
               <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
                 <div>
                   <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
-                  <select value={worker.position||''} onChange={e => updateWorker({position:e.target.value})}
+                  <select
+                    value={worker.id === donnyOrgBossId ? '__boss__' : (worker.position||'')}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === '__boss__') {
+                        // Promote this worker; demote old boss (if any) to unassigned
+                        if (donnyOrgBossId && donnyOrgBossId !== worker.id) {
+                          setDonnyTeam(donnyTeam.map(m => m.id === donnyOrgBossId ? { ...m, position: '' } : m));
+                        }
+                        setDonnyOrgBossId(worker.id);
+                        updateWorker({position: ''});
+                      } else {
+                        // If this worker was boss, vacate boss slot
+                        if (worker.id === donnyOrgBossId) setDonnyOrgBossId(null);
+                        updateWorker({position: val});
+                      }
+                    }}
                     className="slick-select accent-orange"
                     style={{colorScheme:"dark"}}>
+                    <option value="__boss__">⚑ Boss</option>
                     <option value="">— Unassigned —</option>
                     {donnyOrgLevels.map(l => (
                       <option key={l.id} value={l.id}>{l.title}</option>
