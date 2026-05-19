@@ -23546,7 +23546,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <label className="slick-label accent-green">Item</label>
                   <input value={newMatEntry.item}
                     onChange={e => setNewMatEntry(p => ({ ...p, item: e.target.value }))}
-                    placeholder="e.g. GPOs, Cable ties, Powerpoints"
+                    placeholder="e.g. GPOs, Cable ties, Light fittings"
                     list="donny-mat-suggestions"
                     className="slick-input accent-green"/>
                   <datalist id="donny-mat-suggestions">
