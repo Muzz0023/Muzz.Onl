@@ -23735,36 +23735,70 @@ ${JSON.stringify(ctx, null, 2)}`;
               });
               jobStats.sort((a,b) => b.cost - a.cost);
               const maxCost = Math.max(...jobStats.map(s => s.cost), 1);
+              const jobsWithCost = jobStats.filter(s => s.cost > 0);
+              const totalCost = jobStats.reduce((s,j) => s + j.cost, 0);
 
               return (
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  {jobStats.map(({ job, entries, cost }) => {
-                    const accent = '#22c55e';
-                    const isActive = entries.length > 0;
-                    const barPct = cost > 0 ? (cost / maxCost) * 100 : 0;
-                    return (
-                      <button key={job.id} onClick={() => setMatLogJobId(job.id)}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",position:"relative",overflow:"hidden"}}>
-                        {/* Background bar — fills based on cost */}
-                        {barPct > 0 && (
-                          <div style={{position:"absolute",top:0,left:0,height:"100%",width:`${barPct}%`,background:`linear-gradient(90deg, rgba(34,197,94,0.12), rgba(34,197,94,0.02))`,pointerEvents:"none",transition:"width 0.4s ease"}}/>
-                        )}
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isActive?accent:`${accent}50`,boxShadow:isActive?`0 0 6px ${accent}80`:"none",flexShrink:0,position:"relative",zIndex:1}} />
-                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",position:"relative",zIndex:1}}>
-                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
-                          {job.jobNumber && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>#{job.jobNumber}</div>}
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:"12px",flexShrink:0,position:"relative",zIndex:1}}>
-                          {cost > 0 && (
-                            <span style={{fontFamily:"monospace",fontSize:"12px",color:accent,fontWeight:600,letterSpacing:"0.5px"}}>${cost.toFixed(0)}</span>
+                <>
+                  {/* COST RANKING CHART */}
+                  {jobsWithCost.length > 0 && (
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"6px",padding:"16px 18px",marginBottom:"6px"}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"16px"}}>
+                        <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// COST BY JOB</span>
+                        <span style={{fontSize:"10px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",fontWeight:600}}>${totalCost.toFixed(0)} total</span>
+                      </div>
+                      {/* Vertical bar chart */}
+                      <div style={{display:"flex",alignItems:"flex-end",gap:"10px",height:"140px",paddingBottom:"24px",position:"relative"}}>
+                        {jobsWithCost.slice(0, 10).map(({ job, cost }, i) => {
+                          const hPct = (cost / maxCost) * 100;
+                          const pctOfTotal = totalCost > 0 ? (cost / totalCost) * 100 : 0;
+                          const isTop = i === 0;
+                          return (
+                            <div key={job.id} onClick={() => setMatLogJobId(job.id)}
+                              style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"6px",cursor:"pointer",height:"100%",justifyContent:"flex-end",position:"relative"}}>
+                              {/* Value on top */}
+                              <div style={{fontSize:"10px",fontFamily:"monospace",color:isTop?"#22c55e":"rgba(34,197,94,0.7)",fontWeight:isTop?600:500,whiteSpace:"nowrap"}}>${cost.toFixed(0)}</div>
+                              {/* The bar */}
+                              <div style={{width:"100%",height:`${hPct}%`,minHeight:"4px",background:isTop?"linear-gradient(180deg, rgba(34,197,94,0.95), rgba(34,197,94,0.35))":"linear-gradient(180deg, rgba(34,197,94,0.55), rgba(34,197,94,0.15))",border:`0.5px solid rgba(34,197,94,${isTop?0.7:0.35})`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isTop?"0 0 12px rgba(34,197,94,0.3)":"none"}}/>
+                              {/* Label below bar */}
+                              <div style={{position:"absolute",bottom:"-22px",left:0,right:0,fontSize:"9px",fontFamily:"monospace",color:isTop?"rgba(34,197,94,0.85)":"rgba(148,163,184,0.55)",textAlign:"center",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"0.3px"}}>{(job.title||'').slice(0,12)}{job.title && job.title.length>12?'…':''}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* JOBS LIST */}
+                  <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                    {jobStats.map(({ job, entries, cost }) => {
+                      const accent = '#22c55e';
+                      const isActive = entries.length > 0;
+                      const barPct = cost > 0 ? (cost / maxCost) * 100 : 0;
+                      return (
+                        <button key={job.id} onClick={() => setMatLogJobId(job.id)}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",position:"relative",overflow:"hidden"}}>
+                          {/* Background bar — fills based on cost */}
+                          {barPct > 0 && (
+                            <div style={{position:"absolute",top:0,left:0,height:"100%",width:`${barPct}%`,background:`linear-gradient(90deg, rgba(34,197,94,0.12), rgba(34,197,94,0.02))`,pointerEvents:"none",transition:"width 0.4s ease"}}/>
                           )}
-                          <span style={{fontFamily:"monospace",fontSize:"10px",color:isActive?`${accent}d8`:"rgba(148,163,184,0.5)",letterSpacing:"0.5px",minWidth:"50px",textAlign:"right"}}>{entries.length} item{entries.length!==1?'s':''}</span>
-                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isActive?accent:`${accent}50`,boxShadow:isActive?`0 0 6px ${accent}80`:"none",flexShrink:0,position:"relative",zIndex:1}} />
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",position:"relative",zIndex:1}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                            {job.jobNumber && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>#{job.jobNumber}</div>}
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:"12px",flexShrink:0,position:"relative",zIndex:1}}>
+                            {cost > 0 && (
+                              <span style={{fontFamily:"monospace",fontSize:"12px",color:accent,fontWeight:600,letterSpacing:"0.5px"}}>${cost.toFixed(0)}</span>
+                            )}
+                            <span style={{fontFamily:"monospace",fontSize:"10px",color:isActive?`${accent}d8`:"rgba(148,163,184,0.5)",letterSpacing:"0.5px",minWidth:"50px",textAlign:"right"}}>{entries.length} item{entries.length!==1?'s':''}</span>
+                            <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
               );
             })()}
           </div>
