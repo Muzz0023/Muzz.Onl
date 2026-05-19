@@ -22332,6 +22332,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       const saveRecurring = (updated) => { setDonnyRecurring(updated) };
       const freqLabels = { daily:'Daily', weekly:'Weekly', fortnightly:'Fortnightly', monthly:'Monthly', quarterly:'Quarterly', yearly:'Yearly' };
       const freqColors = { daily:'#ef4444', weekly:'#f97316', fortnightly:'#f59e0b', monthly:'#22c55e', quarterly:'#3b82f6', yearly:'#a855f7' };
+      const freqDays  = { daily:1, weekly:7, fortnightly:14, monthly:30, quarterly:91, yearly:365 };
 
       // ─── DERIVED ─────────────────────────────────────────────────
       const totalRecurring = donnyRecurring.length;
@@ -22345,6 +22346,12 @@ ${JSON.stringify(ctx, null, 2)}`;
       const byFreq = donnyRecurring.reduce((acc,r) => { acc[r.freq]=(acc[r.freq]||0)+1; return acc; }, {});
       const topFreq = Object.entries(byFreq).sort((a,b) => b[1]-a[1])[0];
       const withClient = donnyRecurring.filter(r => r.clientId).length;
+
+      // Find the most urgent / next-up recurring job for the summary panel
+      const upcoming = donnyRecurring
+        .filter(r => r.nextDate)
+        .map(r => ({ ...r, _days: Math.ceil((new Date(r.nextDate) - new Date())/86400000) }))
+        .sort((a,b) => a._days - b._days)[0];
 
       const recPanel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
       const recPanelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between"};
@@ -22435,6 +22442,56 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             )}
 
+            {/* NEXT-DUE SUMMARY PANEL */}
+            {upcoming && (
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${upcoming._days < 0 ? 'rgba(239,68,68,0.4)' : upcoming._days <= 7 ? 'rgba(245,158,11,0.4)' : 'rgba(34,197,94,0.35)'}`,borderLeft:`2px solid ${upcoming._days < 0 ? 'rgba(239,68,68,0.85)' : upcoming._days <= 7 ? 'rgba(245,158,11,0.85)' : 'rgba(34,197,94,0.75)'}`,borderRadius:"6px",padding:"18px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// NEXT UP</span>
+                  <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                    {overdue > 0 && <span style={{color:"rgba(239,68,68,0.9)"}}>{overdue} OVERDUE · </span>}
+                    {dueSoon > 0 && <span style={{color:"rgba(245,158,11,0.9)"}}>{dueSoon} DUE SOON</span>}
+                  </span>
+                </div>
+                <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:"14px",flexWrap:"wrap",marginBottom:"14px"}}>
+                  <div style={{minWidth:0,flex:1}}>
+                    <div style={{fontFamily:"monospace",fontSize:"16px",color:"#e0eaff",fontWeight:500,marginBottom:"4px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{upcoming.title||'—'}</div>
+                    <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                      {(() => {
+                        const c = donnyClients.find(c => String(c.id) === String(upcoming.clientId));
+                        const parts = [];
+                        if (c?.name) parts.push(c.name);
+                        if (freqLabels[upcoming.freq]) parts.push(freqLabels[upcoming.freq]);
+                        if (upcoming.nextDate) parts.push(new Date(upcoming.nextDate+'T12:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}));
+                        return parts.join(' · ');
+                      })()}
+                    </div>
+                  </div>
+                  <div style={{textAlign:"right",flexShrink:0}}>
+                    <div style={{fontSize:"38px",lineHeight:1,fontFamily:"monospace",fontWeight:600,color:upcoming._days < 0 ? '#ef4444' : upcoming._days === 0 ? '#f59e0b' : upcoming._days <= 7 ? '#f59e0b' : '#22c55e'}}>
+                      {upcoming._days < 0 ? Math.abs(upcoming._days) : upcoming._days}
+                    </div>
+                    <div style={{fontSize:"9px",letterSpacing:"2px",fontFamily:"monospace",color:upcoming._days < 0 ? 'rgba(239,68,68,0.85)' : upcoming._days === 0 ? 'rgba(245,158,11,0.85)' : 'rgba(148,163,184,0.5)',marginTop:"2px",fontWeight:600}}>
+                      {upcoming._days < 0 ? `DAY${Math.abs(upcoming._days)===1?'':'S'} OVERDUE` : upcoming._days === 0 ? 'TODAY' : `DAY${upcoming._days===1?'':'S'} TO GO`}
+                    </div>
+                  </div>
+                </div>
+                {/* Progress bar */}
+                {(() => {
+                  const period = freqDays[upcoming.freq] || 30;
+                  let pct;
+                  if (upcoming._days < 0) pct = 100;
+                  else if (upcoming._days >= period) pct = 0;
+                  else pct = ((period - upcoming._days) / period) * 100;
+                  const barColor = upcoming._days < 0 ? '#ef4444' : upcoming._days <= 7 ? '#f59e0b' : '#22c55e';
+                  return (
+                    <div style={{height:"8px",background:"rgba(255,255,255,0.04)",borderRadius:"4px",overflow:"hidden",position:"relative"}}>
+                      <div style={{height:"100%",width:`${Math.min(pct,100)}%`,background:`linear-gradient(90deg, ${barColor}aa, ${barColor})`,borderRadius:"4px",boxShadow:`0 0 8px ${barColor}80`,transition:"width 0.5s ease"}}/>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
             {/* EMPTY STATE */}
             {totalRecurring === 0 && !showNewRecurring && (
               <div style={{...recPanel,padding:"40px",textAlign:"center"}}>
@@ -22471,13 +22528,39 @@ ${JSON.stringify(ctx, null, 2)}`;
                     }
                     return (
                       <button key={r.id} onClick={()=>setEditingRecurringId(editingRecurringId===r.id?null:r.id)}
-                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:editingRecurringId===r.id?"rgba(249,115,22,0.06)":"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
-                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
-                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title||'—'}</div>
-                          {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"rgba(239,68,68,0.85)":"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
+                        style={{width:"100%",display:"flex",flexDirection:"column",gap:"8px",padding:"12px 14px",background:editingRecurringId===r.id?"rgba(249,115,22,0.06)":"rgba(5,12,24,0.4)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"12px"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{r.title||'—'}</div>
+                            {subParts.length > 0 && <div style={{fontFamily:"monospace",fontSize:"10px",color:isOverdue?"rgba(239,68,68,0.85)":"rgba(148,163,184,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{subParts.join(' · ')}</div>}
+                          </div>
+                          {daysUntil !== null && (
+                            <div style={{flexShrink:0,textAlign:"right",minWidth:"60px"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"15px",fontWeight:600,lineHeight:1,color:isOverdue?'#ef4444':daysUntil===0?'#f59e0b':isDueSoon?'#f59e0b':'#22c55e'}}>
+                                {isOverdue ? Math.abs(daysUntil) : daysUntil}
+                              </div>
+                              <div style={{fontFamily:"monospace",fontSize:"8px",letterSpacing:"1px",color:"rgba(148,163,184,0.5)",marginTop:"2px"}}>
+                                {isOverdue ? 'OVERDUE' : daysUntil===0 ? 'TODAY' : 'DAYS'}
+                              </div>
+                            </div>
+                          )}
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>{editingRecurringId===r.id?'⌄':'›'}</span>
                         </div>
-                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace",flexShrink:0}}>{editingRecurringId===r.id?'⌄':'›'}</span>
+                        {/* Per-row progress bar */}
+                        {daysUntil !== null && (() => {
+                          const period = freqDays[r.freq] || 30;
+                          let pct;
+                          if (isOverdue) pct = 100;
+                          else if (daysUntil >= period) pct = 0;
+                          else pct = ((period - daysUntil) / period) * 100;
+                          const barColor = isOverdue ? '#ef4444' : isDueSoon ? '#f59e0b' : '#22c55e';
+                          return (
+                            <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden",marginLeft:"22px"}}>
+                              <div style={{height:"100%",width:`${Math.min(pct,100)}%`,background:`linear-gradient(90deg, ${barColor}99, ${barColor})`,borderRadius:"2px",transition:"width 0.4s ease"}}/>
+                            </div>
+                          );
+                        })()}
                       </button>
                     );
                   })}
