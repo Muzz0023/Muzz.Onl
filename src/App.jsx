@@ -20974,7 +20974,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* DELETE — minimal, bottom corner */}
             <div style={{display:"flex",justifyContent:"flex-end",marginTop:"20px"}}>
               <button onClick={() => { if(window.confirm(`Delete ${worker.name}? This will not delete their hours or attributions.`)) { setDonnyTeam(donnyTeam.filter(m=>m.id!==worker.id)); setSelectedDonnyWorker(null); setActiveView('donny-team'); } }}
-                style={{padding:"6px 12px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.15)",borderRadius:"3px",color:"rgba(239,68,68,0.45)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                style={{padding:"12px 24px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.35)",borderRadius:"4px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                 REMOVE WORKER
               </button>
             </div>
