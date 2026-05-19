@@ -22562,7 +22562,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           if (isOverdue) pct = 100;
                           else if (daysUntil >= period) pct = 0;
                           else pct = ((period - daysUntil) / period) * 100;
-                          const barColor = isOverdue ? '#ef4444' : isDueSoon ? '#f59e0b' : '#22c55e';
+                          const barColor = '#f97316'; // always orange for per-row bars
                           return (
                             <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"2px",overflow:"hidden",marginLeft:"22px"}}>
                               <div style={{height:"100%",width:`${Math.min(pct,100)}%`,background:`linear-gradient(90deg, ${barColor}99, ${barColor})`,borderRadius:"2px",transition:"width 0.4s ease"}}/>
