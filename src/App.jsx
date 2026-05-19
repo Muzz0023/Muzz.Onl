@@ -20810,164 +20810,141 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
+          <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"14px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
-            {/* METRICS — THIS WEEK / MONTH / ALL TIME */}
-            <div style={panel}>
-              <div style={panelHeader}>
-                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// PERFORMANCE</span>
-                {capacity > 0 && (
-                  <span style={{fontSize:"9px",fontFamily:"monospace",color:`rgba(${utilColor},0.85)`}}>
-                    {utilPct.toFixed(0)}% UTIL · {weekHours.toFixed(1)}/{capacity}H
-                  </span>
-                )}
-              </div>
-              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr",gap:"14px"}}>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>THIS WEEK</div>
-                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{weekHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
-                  <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",margin:"6px 0"}}>
-                    <div style={{height:"100%",width:`${Math.min(utilPct,100)}%`,background:`rgba(${utilColor},0.7)`,transition:"width 0.3s"}}/>
+            {/* STATS — clean tile row, no panel chrome */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr 1fr",gap:"10px"}}>
+              {[
+                {label:"THIS WEEK", hrs:weekHours, earned:weekEarned, bar:Math.min(utilPct,100), barColor:`rgba(${utilColor},0.7)`, badge:`${utilPct.toFixed(0)}% UTIL`},
+                {label:"THIS MONTH", hrs:monthHours, earned:monthEarned, bar:0, badge:null},
+                {label:"ALL TIME", hrs:totalHours, earned:totalEarned, bar:0, badge:null, allTime:true},
+              ].map(s => (
+                <div key={s.label} style={{padding:"14px",background:"rgba(5,12,24,0.7)",border:"0.5px solid rgba(249,115,22,0.15)",borderLeft:"2px solid rgba(249,115,22,0.6)",borderRadius:"4px"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}}>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.55)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>{s.label}</div>
+                    {s.badge && <div style={{fontSize:"8px",fontFamily:"monospace",color:`rgba(${utilColor},0.85)`,letterSpacing:"1px"}}>{s.badge}</div>}
                   </div>
-                  <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>${weekEarned.toFixed(0)}</div>
+                  {s.allTime ? (
+                    <LineageNumber
+                      value={<>{s.hrs.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></>}
+                      color="#e0eaff"
+                      style={{fontSize:"24px",fontFamily:"monospace",fontWeight:500,lineHeight:1,display:"inline-block"}}
+                      lineage={{
+                        title: `${worker.name} · all-time hours`,
+                        value: `${s.hrs.toFixed(1)}h`,
+                        color: '#f97316',
+                        formula: 'SUM(timesheet.hours WHERE memberId) grouped by job',
+                        breakdown: workerJobs.map(j => ({
+                          icon: '⊞', color: '#f97316',
+                          label: j.title,
+                          sub: j.jobNumber ? `#${j.jobNumber}` : '',
+                          value: `${j._hrs.toFixed(1)}h`,
+                          valueColor: '#f97316',
+                          onClick: () => navToEntity('job', j),
+                        })),
+                      }}
+                    />
+                  ) : (
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>
+                      {s.hrs.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span>
+                    </div>
+                  )}
+                  {s.bar > 0 && (
+                    <div style={{height:"3px",background:"rgba(255,255,255,0.04)",borderRadius:"1px",overflow:"hidden",margin:"8px 0 6px"}}>
+                      <div style={{height:"100%",width:`${s.bar}%`,background:s.barColor,transition:"width 0.3s"}}/>
+                    </div>
+                  )}
+                  {s.earned > 0 ? (
+                    <div style={{fontSize:"11px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",marginTop:s.bar>0?0:"8px"}}>${s.earned.toFixed(0)}</div>
+                  ) : (
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.25)",fontFamily:"monospace",marginTop:s.bar>0?0:"8px"}}>—</div>
+                  )}
                 </div>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>THIS MONTH</div>
-                  <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{monthHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></div>
-                  <div style={{height:"3px",background:"transparent",margin:"6px 0"}}/>
-                  <div style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace"}}>${monthEarned.toFixed(0)}</div>
-                </div>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>ALL TIME</div>
-                  <LineageNumber
-                    value={<>{totalHours.toFixed(1)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.4)",marginLeft:"4px"}}>h</span></>}
-                    color="#e0eaff"
-                    style={{fontSize:"22px",fontFamily:"monospace",fontWeight:500,lineHeight:1,display:"inline-block"}}
-                    lineage={{
-                      title: `${worker.name} · all-time hours`,
-                      value: `${totalHours.toFixed(1)}h`,
-                      color: '#f97316',
-                      formula: 'SUM(timesheet.hours WHERE memberId) grouped by job',
-                      breakdown: workerJobs.map(j => ({
-                        icon: '⊞', color: '#f97316',
-                        label: j.title,
-                        sub: j.jobNumber ? `#${j.jobNumber} · ${j.completed?'done':j.started?'active':'to do'}` : (j.completed?'done':j.started?'active':'to do'),
-                        value: `${j._hrs.toFixed(1)}h`,
-                        valueColor: '#f97316',
-                        onClick: () => navToEntity('job', j),
-                      })),
-                      note: 'Hours broken down per job · click to open',
-                    }}
-                  />
-                  <div style={{height:"3px",background:"transparent",margin:"6px 0"}}/>
-                  <LineageNumber
-                    value={`$${totalEarned.toFixed(0)}`}
-                    color="rgba(34,197,94,0.7)"
-                    style={{fontSize:"10px",fontFamily:"monospace",display:"inline-block"}}
-                    lineage={{
-                      title: `${worker.name} · all-time earnings`,
-                      value: `$${totalEarned.toFixed(0)}`,
-                      color: 'rgba(34,197,94,0.95)',
-                      formula: `${totalHours.toFixed(1)}h × $${rate}/hr`,
-                      breakdown: workerJobs.map(j => ({
-                        icon: '⊞', color: '#f97316',
-                        label: j.title,
-                        sub: `${j._hrs.toFixed(1)}h × $${rate}/hr`,
-                        value: `$${(j._hrs * rate).toFixed(0)}`,
-                        valueColor: 'rgba(34,197,94,0.95)',
-                        onClick: () => navToEntity('job', j),
-                      })),
-                    }}
-                  />
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* JOBS WORKED */}
-            <div style={panel}>
-              <div style={panelHeader}>
-                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS WORKED</span>
-                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{workerJobs.length}</span>
+            {/* PROFILE + JOBS side-by-side */}
+            <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px"}}>
+              {/* PROFILE EDIT */}
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// PROFILE</span>
+                </div>
+                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"14px"}}>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
+                    <select
+                      value={worker.id === donnyOrgBossId ? '__boss__' : (worker.position||'')}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === '__boss__') {
+                          if (donnyOrgBossId && donnyOrgBossId !== worker.id) {
+                            setDonnyTeam(donnyTeam.map(m => m.id === donnyOrgBossId ? { ...m, position: '' } : m));
+                          }
+                          setDonnyOrgBossId(worker.id);
+                          updateWorker({position: ''});
+                        } else {
+                          if (worker.id === donnyOrgBossId) setDonnyOrgBossId(null);
+                          updateWorker({position: val});
+                        }
+                      }}
+                      className="slick-select accent-orange"
+                      style={{colorScheme:"dark"}}>
+                      <option value="__boss__">⚑ Boss</option>
+                      <option value="">— Unassigned —</option>
+                      {donnyOrgLevels.map(l => (
+                        <option key={l.id} value={l.id}>{l.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE</div>
+                    <input type="number" value={worker.hourlyRate||''} onChange={e => updateWorker({hourlyRate:e.target.value})}
+                      placeholder="0"
+                      className="slick-input"/>
+                  </div>
+                </div>
               </div>
-              {workerJobs.length === 0 ? (
-                <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO JOBS YET</div>
-              ) : (
-                <div>
-                  {workerJobs.slice(0,8).map((j,i) => {
-                    const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
-                    return (
-                      <button key={j.id} onClick={() => { navToEntity('job', j); }}
-                        style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(workerJobs.length,8)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
-                          <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
-                          <div style={{minWidth:0,flex:1}}>
-                            <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.completed?'DONE':j.started?'ACTIVE':'TO DO'}</div>
+
+              {/* JOBS WORKED — only render if there's data */}
+              {workerJobs.length > 0 && (
+                <div style={panel}>
+                  <div style={panelHeader}>
+                    <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// JOBS WORKED</span>
+                    <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{workerJobs.length}</span>
+                  </div>
+                  <div>
+                    {workerJobs.slice(0,8).map((j,i) => {
+                      const sc = j.completed?"#22c55e":j.started?"#f97316":"#94a3b8";
+                      return (
+                        <button key={j.id} onClick={() => { navToEntity('job', j); }}
+                          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",background:"none",border:"none",cursor:"pointer",borderBottom:i<Math.min(workerJobs.length,8)-1?"0.5px solid rgba(249,115,22,0.05)":"none",textAlign:"left"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px",minWidth:0,flex:1}}>
+                            <div style={{width:"5px",height:"5px",borderRadius:"50%",background:sc,flexShrink:0,boxShadow:`0 0 4px ${sc}80`}}/>
+                            <div style={{minWidth:0,flex:1}}>
+                              <div style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{j.title}</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{j.jobNumber?`#${j.jobNumber} · `:''}{j.completed?'DONE':j.started?'ACTIVE':'TO DO'}</div>
+                            </div>
                           </div>
-                        </div>
-                        <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",flexShrink:0}}>{j._hrs.toFixed(1)}h</span>
-                      </button>
-                    );
-                  })}
+                          <span style={{fontSize:"10px",color:"rgba(249,115,22,0.7)",fontFamily:"monospace",flexShrink:0}}>{j._hrs.toFixed(1)}h</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
-            </div>
-
-            {/* PROFILE EDIT */}
-            <div style={panel}>
-              <div style={panelHeader}>
-                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// PROFILE</span>
-              </div>
-              <div style={{padding:"14px 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>POSITION</div>
-                  <select
-                    value={worker.id === donnyOrgBossId ? '__boss__' : (worker.position||'')}
-                    onChange={e => {
-                      const val = e.target.value;
-                      if (val === '__boss__') {
-                        // Promote this worker; demote old boss (if any) to unassigned
-                        if (donnyOrgBossId && donnyOrgBossId !== worker.id) {
-                          setDonnyTeam(donnyTeam.map(m => m.id === donnyOrgBossId ? { ...m, position: '' } : m));
-                        }
-                        setDonnyOrgBossId(worker.id);
-                        updateWorker({position: ''});
-                      } else {
-                        // If this worker was boss, vacate boss slot
-                        if (worker.id === donnyOrgBossId) setDonnyOrgBossId(null);
-                        updateWorker({position: val});
-                      }
-                    }}
-                    className="slick-select accent-orange"
-                    style={{colorScheme:"dark"}}>
-                    <option value="__boss__">⚑ Boss</option>
-                    <option value="">— Unassigned —</option>
-                    {donnyOrgLevels.map(l => (
-                      <option key={l.id} value={l.id}>{l.title}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOURLY RATE</div>
-                  <input type="number" value={worker.hourlyRate||''} onChange={e => updateWorker({hourlyRate:e.target.value})}
-                    placeholder="0"
-                    className="slick-input"/>
-                </div>
-              </div>
             </div>
 
             {/* AUDIT TRAIL */}
             <AuditTrail entityId={`worker_${worker.id}`} accent="#f97316" />
 
-            {/* TIMELINE */}
-            <div style={panel}>
-              <div style={panelHeader}>
-                <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ATTRIBUTION TIMELINE</span>
-                <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{timeline.length} EVENTS</span>
-              </div>
-              {timeline.length === 0 ? (
-                <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"1px"}}>NO ACTIVITY YET</div>
-              ) : (
+            {/* TIMELINE — only render if there's activity */}
+            {timeline.length > 0 && (
+              <div style={panel}>
+                <div style={panelHeader}>
+                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// ATTRIBUTION TIMELINE</span>
+                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{timeline.length} EVENTS</span>
+                </div>
                 <div style={{padding:"6px 0",maxHeight:"380px",overflowY:"auto"}}>
                   {timeline.slice(0,30).map((evt,i) => {
                     const colorMap = {hours:"#f97316",mistake:"#f59e0b",incident:"#ef4444"};
@@ -20991,14 +20968,16 @@ ${JSON.stringify(ctx, null, 2)}`;
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* DELETE */}
-            <button onClick={() => { if(window.confirm(`Delete ${worker.name}? This will not delete their hours or attributions.`)) { setDonnyTeam(donnyTeam.filter(m=>m.id!==worker.id)); setSelectedDonnyWorker(null); setActiveView('donny-team'); } }}
-              style={{padding:"10px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"3px",color:"rgba(239,68,68,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",marginTop:"6px"}}>
-              REMOVE WORKER
-            </button>
+            {/* DELETE — minimal, bottom corner */}
+            <div style={{display:"flex",justifyContent:"flex-end",marginTop:"20px"}}>
+              <button onClick={() => { if(window.confirm(`Delete ${worker.name}? This will not delete their hours or attributions.`)) { setDonnyTeam(donnyTeam.filter(m=>m.id!==worker.id)); setSelectedDonnyWorker(null); setActiveView('donny-team'); } }}
+                style={{padding:"6px 12px",background:"transparent",border:"0.5px solid rgba(239,68,68,0.15)",borderRadius:"3px",color:"rgba(239,68,68,0.45)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",cursor:"pointer"}}>
+                REMOVE WORKER
+              </button>
+            </div>
           </div>
         </div>
       );
