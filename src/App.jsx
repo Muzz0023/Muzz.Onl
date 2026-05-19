@@ -23677,7 +23677,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div>
                     <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// MATERIALS</div>
                     <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MATERIALS</div>
-                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.3px",maxWidth:"600px",lineHeight:1.5}}>
+                      Track added materials or extras on each job — quick logging for variations and on-site adds.
+                    </div>
+                    <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"8px",letterSpacing:"0.5px"}}>
                       {totalEntries} entr{totalEntries!==1?'ies':'y'} · {uniqueMats} unique item{uniqueMats!==1?'s':''}
                       {totalCatalogCost > 0 && (' · $'+totalCatalogCost.toFixed(0)+' total')}
                     </div>
