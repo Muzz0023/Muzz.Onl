@@ -22509,7 +22509,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{totalRecurring} ROW{totalRecurring!==1?'S':''}</span>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  {donnyRecurring.map((r,i) => {
+                  {[...donnyRecurring].sort((a,b) => {
+                    // Sort: overdue first (most overdue), then upcoming (closest first), no-date last
+                    const aHas = !!a.nextDate;
+                    const bHas = !!b.nextDate;
+                    if (!aHas && !bHas) return 0;
+                    if (!aHas) return 1;
+                    if (!bHas) return -1;
+                    return new Date(a.nextDate) - new Date(b.nextDate);
+                  }).map((r,i) => {
                     const client = donnyClients.find(c => String(c.id) === String(r.clientId));
                     const fc = freqColors[r.freq]||'#f97316';
                     const daysUntil = r.nextDate ? Math.ceil((new Date(r.nextDate)-new Date())/86400000) : null;
