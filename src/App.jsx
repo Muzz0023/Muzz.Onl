@@ -374,6 +374,20 @@ const StarryBackground = ({ children }) => {
         }
         .slick-label.accent-blue { color: rgba(59, 130, 246, 0.85); }
         .slick-label.accent-orange { color: rgba(249, 115, 22, 0.85); }
+        .slick-label.accent-green { color: rgba(34, 197, 94, 0.85); }
+        /* Materials variant — green accent */
+        .slick-input.accent-green,
+        .slick-textarea.accent-green,
+        .slick-select.accent-green { caret-color: rgba(34, 197, 94, 0.85); }
+        .slick-input.accent-green:hover,
+        .slick-textarea.accent-green:hover,
+        .slick-select.accent-green:hover { border-bottom-color: rgba(34, 197, 94, 0.5); }
+        .slick-input.accent-green:focus,
+        .slick-textarea.accent-green:focus,
+        .slick-select.accent-green:focus {
+          border-bottom-color: rgba(34, 197, 94, 0.95);
+          box-shadow: 0 1px 0 0 rgba(34, 197, 94, 0.6);
+        }
 
         /* Noise texture */
         .noise-overlay::before {
@@ -23468,8 +23482,8 @@ ${JSON.stringify(ctx, null, 2)}`;
         const totalCost = jobEntries.reduce((s,e) => s + (parseFloat(e.cost)||0), 0);
         const uniqueItems = [...new Set(jobEntries.map(e => (e.item||'').trim().toLowerCase()))].length;
 
-        const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
+        const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+        const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
         const relTime = (d) => {
           if (!d) return '';
@@ -23493,21 +23507,21 @@ ${JSON.stringify(ctx, null, 2)}`;
             <DonnyBreadcrumbs />
 
             {/* HEADER */}
-            <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(34,197,94,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div className="max-w-5xl mx-auto">
                 <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
-                  <button onClick={() => setMatLogJobId(null)} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← MATERIALS</button>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.3)",fontFamily:"monospace"}}>·</span>
-                  <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
+                  <button onClick={() => setMatLogJobId(null)} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>← MATERIALS</button>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.3)",fontFamily:"monospace"}}>·</span>
+                  <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer"}}>DASHBOARD</button>
                 </div>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"16px",flexWrap:"wrap"}}>
-                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(249,115,22,0.12)",border:"0.5px solid rgba(249,115,22,0.3)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"22px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</div>
+                  <div style={{width:"72px",height:"72px",borderRadius:"6px",background:"rgba(34,197,94,0.12)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"22px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",lineHeight:1,flexShrink:0}}>◍</div>
                   <div style={{flex:1,minWidth:"260px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>MATERIALS</div>
-                      <button onClick={() => navToEntity('job', job)} style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.85)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"3px",letterSpacing:"1px",cursor:"pointer"}}>OPEN JOB →</button>
+                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>MATERIALS</div>
+                      <button onClick={() => navToEntity('job', job)} style={{fontSize:"9px",fontFamily:"monospace",padding:"2px 8px",background:"rgba(34,197,94,0.1)",color:"rgba(34,197,94,0.85)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"3px",letterSpacing:"1px",cursor:"pointer"}}>OPEN JOB →</button>
                     </div>
-                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",padding:"4px 0",borderBottom:"0.5px solid rgba(249,115,22,0.15)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?.title}</div>
+                    <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",padding:"4px 0",borderBottom:"0.5px solid rgba(34,197,94,0.15)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job?.title}</div>
                     <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
                       {job?.jobNumber?`#${job.jobNumber} · `:''}{jobEntries.length} entr{jobEntries.length!==1?'ies':'y'}
                       {uniqueItems > 0 && (' · '+uniqueItems+' unique item'+(uniqueItems!==1?'s':''))}
@@ -23521,91 +23535,103 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div className="max-w-5xl mx-auto py-5" style={{display:"flex",flexDirection:"column",gap:"12px",paddingLeft:isWide?"24px":"10px",paddingRight:isWide?"24px":"10px"}}>
 
               {/* LOG NEW MATERIAL */}
-              <div style={panel}>
-                <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG MATERIAL</span>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"6px",padding:"16px 18px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px"}}>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// LOG MATERIAL</span>
+                  <span style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Quick add</span>
                 </div>
-                <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
+
+                {/* Row 1: Item (full width) */}
+                <div style={{marginBottom:"14px"}}>
+                  <label className="slick-label accent-green">Item</label>
+                  <input value={newMatEntry.item}
+                    onChange={e => setNewMatEntry(p => ({ ...p, item: e.target.value }))}
+                    placeholder="e.g. GPOs, Cable ties, Powerpoints"
+                    list="donny-mat-suggestions"
+                    className="slick-input accent-green"/>
+                  <datalist id="donny-mat-suggestions">
+                    {[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))]
+                      .map(name => <option key={name} value={name}/>)}
+                  </datalist>
+                </div>
+
+                {/* Row 2: Qty / Unit / Cost — compact inline */}
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1.3fr",gap:"14px",marginBottom:"14px"}}>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ITEM / MATERIAL</div>
-                    <input value={newMatEntry.item}
-                      onChange={e => setNewMatEntry(p => ({ ...p, item: e.target.value }))}
-                      placeholder="e.g. GPOs"
-                      list="donny-mat-suggestions"
-                      className="slick-input accent-orange"/>
-                    <datalist id="donny-mat-suggestions">
-                      {[...new Set((donnyMaterialsLog||[]).map(e => e.item).filter(Boolean))]
-                        .map(name => <option key={name} value={name}/>)}
-                    </datalist>
+                    <label className="slick-label accent-green">Qty</label>
+                    <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="10" type="number"
+                      className="slick-input accent-green"/>
                   </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>QTY</div>
-                      <input value={newMatEntry.qty} onChange={e=>setNewMatEntry(p=>({...p,qty:e.target.value}))} placeholder="e.g. 10" type="number"
-                        className="slick-input accent-orange"/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>UNIT</div>
-                      <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="e.g. ea"
-                        className="slick-input accent-orange"/>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
-                      <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="0.00" type="number" step="0.01"
-                        className="slick-input"/>
-                    </div>
+                  <div>
+                    <label className="slick-label accent-green">Unit</label>
+                    <input value={newMatEntry.unit} onChange={e=>setNewMatEntry(p=>({...p,unit:e.target.value}))} placeholder="ea / m / kg"
+                      className="slick-input accent-green"/>
                   </div>
+                  <div>
+                    <label className="slick-label accent-green">Cost $</label>
+                    <input value={newMatEntry.cost} onChange={e=>setNewMatEntry(p=>({...p,cost:e.target.value}))} placeholder="0.00" type="number" step="0.01"
+                      className="slick-input accent-green"/>
+                  </div>
+                </div>
+
+                {/* Row 3: Supplier + Note inline on wide */}
+                <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 2fr":"1fr",gap:"14px",marginBottom:"16px"}}>
                   {(donnySuppliers||[]).length > 0 && (
                     <div>
-                      <div style={{fontSize:"9px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>SUPPLIER (OPTIONAL)</div>
+                      <label className="slick-label accent-green">Supplier</label>
                       <select value={newMatEntry.supplierId||''} onChange={e=>setNewMatEntry(p=>({...p,supplierId:e.target.value||null}))}
-                        className="slick-select" style={{colorScheme:"dark"}}>
+                        className="slick-select accent-green" style={{colorScheme:"dark"}}>
                         <option value="">— none —</option>
                         {donnySuppliers.map(s => <option key={s.id} value={s.id}>{s.name||'Unnamed supplier'}</option>)}
                       </select>
                     </div>
                   )}
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTE FOR BOSS</div>
+                    <label className="slick-label accent-green">Note</label>
                     <input value={newMatEntry.note} onChange={e=>setNewMatEntry(p=>({...p,note:e.target.value}))} placeholder="e.g. ran short, need more"
-                      className="slick-input accent-orange"/>
+                      className="slick-input accent-green"/>
                   </div>
-                  <button onClick={() => {
-                    if (!newMatEntry.item.trim()) return;
-                    const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, cost:newMatEntry.cost, note:newMatEntry.note, supplierId: newMatEntry.supplierId||null, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
-                    saveMatLog([entry, ...donnyMaterialsLog]);
-                    setNewMatEntry({ item:'', qty:'', unit:'', cost:'', note:'', supplierId:null });
-                    const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
-                    logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
-                    logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
-                  }} style={{width:"100%",padding:"10px",background:"rgba(249,115,22,0.1)",border:"0.5px solid rgba(249,115,22,0.4)",borderRadius:"3px",color:"rgba(249,115,22,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}>+ LOG MATERIAL</button>
                 </div>
+
+                <button onClick={() => {
+                  if (!newMatEntry.item.trim()) return;
+                  const entry = { id:Date.now(), jobId:matLogJobId, item:newMatEntry.item, qty:newMatEntry.qty, unit:newMatEntry.unit, cost:newMatEntry.cost, note:newMatEntry.note, supplierId: newMatEntry.supplierId||null, date:today, createdAt:new Date().toISOString(), loggedBy:eliteName||userEmail, loggedAt:new Date().toISOString() };
+                  saveMatLog([entry, ...donnyMaterialsLog]);
+                  setNewMatEntry({ item:'', qty:'', unit:'', cost:'', note:'', supplierId:null });
+                  const matKey = entry.item.toLowerCase().replace(/\s/g,'_');
+                  logAction(`material_${matKey}`, { kind: 'create', summary: `${entry.qty||'?'}${entry.unit?' '+entry.unit:''} logged${entry.note?' · '+entry.note:''}` });
+                  logAction(`job_${matLogJobId}`, { kind: 'create', summary: `Material logged: ${entry.item} · ${entry.qty||'?'}${entry.unit?' '+entry.unit:''}` });
+                }}
+                  disabled={!newMatEntry.item.trim()}
+                  style={{width:"100%",padding:"12px",background:newMatEntry.item.trim()?"rgba(34,197,94,0.18)":"rgba(34,197,94,0.04)",border:`0.5px solid ${newMatEntry.item.trim()?"rgba(34,197,94,0.55)":"rgba(34,197,94,0.15)"}`,borderRadius:"4px",color:newMatEntry.item.trim()?"#22c55e":"rgba(148,163,184,0.3)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"2px",fontWeight:600,cursor:newMatEntry.item.trim()?"pointer":"not-allowed",transition:"all 0.15s"}}>
+                  + LOG MATERIAL
+                </button>
               </div>
 
               {/* JOB ENTRIES TIMELINE */}
               <div style={panel}>
                 <div style={panelHeader}>
-                  <span style={{fontSize:"10px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG ENTRIES</span>
-                  <span style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace"}}>{jobEntries.length} ENTR{jobEntries.length!==1?'IES':'Y'}</span>
+                  <span style={{fontSize:"10px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>// LOG ENTRIES</span>
+                  <span style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace"}}>{jobEntries.length} ENTR{jobEntries.length!==1?'IES':'Y'}</span>
                 </div>
                 {jobEntries.length === 0 ? (
-                  <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(249,115,22,0.2)",fontFamily:"monospace",letterSpacing:"2px"}}>NO MATERIALS LOGGED YET</div>
+                  <div style={{padding:"30px",textAlign:"center",fontSize:"10px",color:"rgba(34,197,94,0.2)",fontFamily:"monospace",letterSpacing:"2px"}}>NO MATERIALS LOGGED YET</div>
                 ) : (
                   <div style={{maxHeight:"500px",overflowY:"auto"}}>
                     {jobEntries.map((entry,i) => (
-                      <div key={entry.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 14px",borderBottom:i<jobEntries.length-1?"0.5px solid rgba(249,115,22,0.05)":"none"}}>
+                      <div key={entry.id} style={{display:"flex",alignItems:"flex-start",gap:"10px",padding:"10px 14px",borderBottom:i<jobEntries.length-1?"0.5px solid rgba(34,197,94,0.05)":"none"}}>
                         <span style={{fontSize:"15px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",lineHeight:1,flexShrink:0,marginTop:"2px"}}>◍</span>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap",marginBottom:"3px"}}>
                             <button onClick={() => navToEntity('material', {name:entry.item})}
                               style={{background:"none",border:"none",padding:0,cursor:"pointer",fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"0.3px",textAlign:"left"}}>{entry.item}</button>
-                            {(entry.qty||entry.unit) && <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:"rgba(249,115,22,0.1)",color:"rgba(249,115,22,0.95)",border:"0.5px solid rgba(249,115,22,0.3)",borderRadius:"2px",letterSpacing:"0.5px"}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
+                            {(entry.qty||entry.unit) && <span style={{fontSize:"9px",fontFamily:"monospace",padding:"1px 6px",background:"rgba(34,197,94,0.1)",color:"rgba(34,197,94,0.95)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:"2px",letterSpacing:"0.5px"}}>{entry.qty}{entry.unit?` ${entry.unit}`:''}</span>}
                             {entry.cost && parseFloat(entry.cost) > 0 && <span style={{fontSize:"10px",fontFamily:"monospace",color:"rgba(34,197,94,0.85)"}}>${parseFloat(entry.cost).toFixed(0)}</span>}
                           </div>
                           {entry.note && <div style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",marginBottom:"3px",letterSpacing:"0.3px"}}>↳ {entry.note}</div>}
                           <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",display:"flex",gap:"8px",flexWrap:"wrap"}}>
                             <span>{relTime(entry.createdAt)}</span>
-                            {entry.loggedBy && <span style={{color:"rgba(249,115,22,0.5)"}}>by {entry.loggedBy}</span>}
+                            {entry.loggedBy && <span style={{color:"rgba(34,197,94,0.5)"}}>by {entry.loggedBy}</span>}
                             {entry.supplierId && (() => {
                               const sup = (donnySuppliers||[]).find(s => s.id === entry.supplierId);
                               return sup ? <span style={{color:"rgba(34,197,94,0.6)"}}>· {sup.name}</span> : null;
@@ -23654,8 +23680,8 @@ ${JSON.stringify(ctx, null, 2)}`;
 
       const activeJobsList = donnyJobs.filter(j=>!j.completed);
 
-      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(249,115,22,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
-      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(249,115,22,0.1)",borderLeft:"2px solid rgba(249,115,22,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
+      const panel = {background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.15)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"};
+      const panelHeader = {padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",borderLeft:"2px solid rgba(34,197,94,0.7)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"6px"};
 
       return (
         <div className="min-h-screen bg-transparent pb-24" style={{paddingLeft: isWide && !leftRailHidden ? "76px" : 0, transition: "padding 0.22s ease"}}>
@@ -23668,14 +23694,14 @@ ${JSON.stringify(ctx, null, 2)}`;
           <DonnyBreadcrumbs />
 
           {/* HEADER */}
-          <div style={{borderBottom:"0.5px solid rgba(249,115,22,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(249,115,22,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+          <div style={{borderBottom:"0.5px solid rgba(34,197,94,0.2)",padding:"56px 24px 16px",backgroundImage:"radial-gradient(rgba(34,197,94,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
             <div className="max-w-5xl mx-auto">
-              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+              <button onClick={() => setActiveView('donny')} style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"12px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
-                  <span style={{fontSize:"22px",color:"rgba(249,115,22,0.85)",fontFamily:"monospace",lineHeight:1}}>◍</span>
+                  <span style={{fontSize:"22px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",lineHeight:1}}>◍</span>
                   <div>
-                    <div style={{fontSize:"9px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// MATERIALS</div>
+                    <div style={{fontSize:"9px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>// MATERIALS</div>
                     <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>MATERIALS</div>
                     <div style={{fontSize:"11px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.3px",maxWidth:"600px",lineHeight:1.5}}>
                       Track added materials or extras on each job — quick logging for variations and on-site adds.
@@ -23696,14 +23722,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             {/* JOBS PICKER */}
             {activeJobsList.length === 0 ? (
               <div style={{...panel,padding:"40px",textAlign:"center"}}>
-                <div style={{fontSize:"28px",color:"rgba(249,115,22,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>◍</div>
-                <div style={{fontSize:"11px",color:"rgba(249,115,22,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
+                <div style={{fontSize:"28px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",marginBottom:"12px",lineHeight:1}}>◍</div>
+                <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
                 <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log materials</div>
               </div>
             ) : (
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                 {activeJobsList.map(job => {
-                  const accent = '#f97316';
+                  const accent = '#22c55e';
                   const entries = donnyMaterialsLog.filter(e=>String(e.jobId)===String(job.id));
                   const isActive = entries.length > 0;
                   return (
