@@ -23726,29 +23726,47 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{fontSize:"11px",color:"rgba(34,197,94,0.6)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>NO ACTIVE JOBS</div>
                 <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Add jobs first to log materials</div>
               </div>
-            ) : (
-              <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                {activeJobsList.map(job => {
-                  const accent = '#22c55e';
-                  const entries = donnyMaterialsLog.filter(e=>String(e.jobId)===String(job.id));
-                  const isActive = entries.length > 0;
-                  return (
-                    <button key={job.id} onClick={() => setMatLogJobId(job.id)}
-                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left"}}>
-                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isActive?accent:`${accent}50`,boxShadow:isActive?`0 0 6px ${accent}80`:"none",flexShrink:0}} />
-                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
-                        {job.jobNumber && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>#{job.jobNumber}</div>}
-                      </div>
-                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                        <span style={{fontFamily:"monospace",fontSize:"10px",color:isActive?`${accent}d8`:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>{entries.length} item{entries.length!==1?'s':''}</span>
-                        <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            ) : (() => {
+              // Compute cost per job, then sort desc
+              const jobStats = activeJobsList.map(job => {
+                const entries = donnyMaterialsLog.filter(e=>String(e.jobId)===String(job.id));
+                const cost = entries.reduce((s,e) => s + (parseFloat(e.cost)||0), 0);
+                return { job, entries, cost };
+              });
+              jobStats.sort((a,b) => b.cost - a.cost);
+              const maxCost = Math.max(...jobStats.map(s => s.cost), 1);
+
+              return (
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                  {jobStats.map(({ job, entries, cost }) => {
+                    const accent = '#22c55e';
+                    const isActive = entries.length > 0;
+                    const barPct = cost > 0 ? (cost / maxCost) * 100 : 0;
+                    return (
+                      <button key={job.id} onClick={() => setMatLogJobId(job.id)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}20`,borderLeft:`2px solid ${isActive ? accent : `${accent}50`}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",position:"relative",overflow:"hidden"}}>
+                        {/* Background bar — fills based on cost */}
+                        {barPct > 0 && (
+                          <div style={{position:"absolute",top:0,left:0,height:"100%",width:`${barPct}%`,background:`linear-gradient(90deg, rgba(34,197,94,0.12), rgba(34,197,94,0.02))`,pointerEvents:"none",transition:"width 0.4s ease"}}/>
+                        )}
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isActive?accent:`${accent}50`,boxShadow:isActive?`0 0 6px ${accent}80`:"none",flexShrink:0,position:"relative",zIndex:1}} />
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px",position:"relative",zIndex:1}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{job.title}</div>
+                          {job.jobNumber && <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>#{job.jobNumber}</div>}
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:"12px",flexShrink:0,position:"relative",zIndex:1}}>
+                          {cost > 0 && (
+                            <span style={{fontFamily:"monospace",fontSize:"12px",color:accent,fontWeight:600,letterSpacing:"0.5px"}}>${cost.toFixed(0)}</span>
+                          )}
+                          <span style={{fontFamily:"monospace",fontSize:"10px",color:isActive?`${accent}d8`:"rgba(148,163,184,0.5)",letterSpacing:"0.5px",minWidth:"50px",textAlign:"right"}}>{entries.length} item{entries.length!==1?'s':''}</span>
+                          <span style={{fontSize:"14px",color:`${accent}80`,fontFamily:"monospace"}}>›</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         </div>
       );
