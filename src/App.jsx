@@ -19446,7 +19446,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* SWITCH TO MUZZ */}
               {donnyRole !== 'worker' && (
                 <button onClick={() => { setAppMode('muzz'); setActiveView('home'); }}
-                  style={{width:"100%",padding:"14px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.35)",borderLeft:"3px solid rgba(0,200,255,0.85)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px",cursor:"pointer",fontWeight:600,marginBottom:"20px",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",transition:"all 0.15s"}}
+                  style={{width:"100%",padding:"14px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.35)",borderLeft:"3px solid rgba(0,200,255,0.85)",borderRadius:"6px",color:"#00c8ff",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px",cursor:"pointer",fontWeight:600,marginBottom:"20px",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",transition:"all 0.15s"}}
                   onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.15)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.08)"; }}>
                   <span>→ SWITCH TO MUZZ</span>
@@ -19484,12 +19484,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                       return (
                         <div key={sec}>
                           <div style={{fontSize:"9px",color,letterSpacing:"2px",fontFamily:"monospace",marginBottom:"6px",paddingLeft:"8px",borderLeft:`2px solid ${color}`,fontWeight:600}}>// {sec}</div>
-                          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"6px"}}>
+                          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px"}}>
                             {items.map(item => (
                               <button key={item.id} onClick={() => setActiveView(item.id)}
-                                style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${color.replace('0.85','0.18').replace('0.95','0.2')}`,borderLeft:`2px solid ${color.replace('0.85','0.5').replace('0.95','0.55')}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px",transition:"all 0.15s"}}
-                                onMouseEnter={(e) => { e.currentTarget.style.background = color.replace('0.85','0.08').replace('0.95','0.08'); e.currentTarget.style.borderLeftColor = color; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderLeftColor = color.replace('0.85','0.5').replace('0.95','0.55'); }}>
+                                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${color.replace('0.85','0.22').replace('0.95','0.25')}`,borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px",transition:"all 0.15s"}}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = color.replace('0.85','0.08').replace('0.95','0.08'); e.currentTarget.style.borderColor = color; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderColor = color.replace('0.85','0.22').replace('0.95','0.25'); }}>
                                 {item.label}
                               </button>
                             ))}
@@ -19504,20 +19504,20 @@ ${JSON.stringify(ctx, null, 2)}`;
               {/* ACCOUNT */}
               <div style={{marginTop:"20px"}}>
                 <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px",fontWeight:600}}>// ACCOUNT</div>
-                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"6px"}}>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px"}}>
                   <button onClick={() => { setAppMode('muzz'); setActiveView('upgrade'); }}
-                    style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                    style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                     {isElite ? '⚡ Elite Status' : '⚡ Upgrade'}
                   </button>
                   <button onClick={() => { setAppMode('muzz'); setActiveView('feedback'); }}
-                    style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                    style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                     ✎ Feedback
                   </button>
                   <button onClick={doExport}
-                    style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                    style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                     ↓ Export Data
                   </button>
-                  <label style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
+                  <label style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
                     ↑ Import Data
                     <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
                   </label>
@@ -19526,7 +19526,7 @@ ${JSON.stringify(ctx, null, 2)}`;
 
               {/* SIGN OUT */}
               <button onClick={signOut}
-                style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"4px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600,marginTop:"20px"}}>
+                style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"6px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600,marginTop:"20px"}}>
                 ⊗ SIGN OUT
               </button>
 
