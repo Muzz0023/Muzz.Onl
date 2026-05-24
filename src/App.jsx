@@ -22342,8 +22342,6 @@ ${JSON.stringify(ctx, null, 2)}`;
       { label:'HABIT CHECK-INS', value:totalHabitDays, sub:'ALL TIME', color:'#f97316' },
       { label:'THIS MONTH', value:thisMonthHabits, sub:'HABIT COMPLETIONS', color:'#f59e0b' },
       { label:'TASKS TODAY', value:`${completedTasks}/${totalTasks}`, sub:'COMPLETED', color:'#3b82f6' },
-      { label:'AVG SLEEP', value:`${avgSleep}h`, sub:`${sleepEntries.length} NIGHTS TRACKED`, color:'#6366f1' },
-      { label:'AVG MOOD', value:avgMood, sub:`${moodEntries.length} DAYS TRACKED`, color:'#ec4899' },
       { label:'ASSETS', value:assets.length, sub:'TRACKED ASSETS', color:'#14b8a6' },
       { label:'HABITS', value:habits.length, sub:'ACTIVE HABITS', color:'#a855f7' },
       { label:'COUNTDOWNS', value:countdowns.length, sub:'UPCOMING EVENTS', color:'#f43f5e' },
