@@ -6834,8 +6834,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               setCustomTaskLists(prev => [...prev, newList]);
               setTasksSubTab(newList.id);
             }} style={{padding:"8px 16px",background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(148,163,184,0.4)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>+ ADD</button>
-            {/* ROTATION — always at the end */}
-            <button onClick={() => setTasksSubTab('rotation')} style={{padding:"8px 16px",background:tasksSubTab==='rotation'?"rgba(251,191,36,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${tasksSubTab==='rotation'?"rgba(251,191,36,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:tasksSubTab==='rotation'?"rgba(251,191,36,0.95)":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>ROTATION</button>
           </div>
 
           {/* CHECKLIST EDITOR */}
@@ -7025,83 +7023,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             );
           })()}
 
-          {/* DAILY ROTATION */}
-          {tasksSubTab === 'rotation' && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",borderLeft:"2px solid rgba(251,191,36,0.8)",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:"10px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DAILY ROTATION — SCHEDULE</span>
-                <button onClick={() => setDailyRotation([
-                  {time:'6am',activity:'-'},{time:'7am',activity:'-'},{time:'8am',activity:'-'},{time:'9am',activity:'-'},
-                  {time:'10am',activity:'-'},{time:'11am',activity:'-'},{time:'12pm',activity:'-'},{time:'1pm',activity:'-'},
-                  {time:'2pm',activity:'-'},{time:'3pm',activity:'-'},{time:'4pm',activity:'-'},{time:'5pm',activity:'-'},
-                  {time:'6pm',activity:'-'},{time:'7pm',activity:'-'},{time:'8pm',activity:'-'},{time:'9pm',activity:'-'},
-                  {time:'10pm',activity:'-'},{time:'11pm',activity:'-'},{time:'12am',activity:'-'},
-                ])} style={{fontSize:"10px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(251,191,36,0.2)",padding:"3px 10px",cursor:"pointer",borderRadius:"3px"}}>RESET</button>
-              </div>
-              <div>
-                {dailyRotation.length === 0 && (() => {
-                  const useTemplate = () => setDailyRotation([
-                    {time:'6am',activity:'Wake + water'},
-                    {time:'7am',activity:'Gym'},
-                    {time:'8am',activity:'Breakfast + shower'},
-                    {time:'9am',activity:'Deep work'},
-                    {time:'10am',activity:'Deep work'},
-                    {time:'11am',activity:'Emails + admin'},
-                    {time:'12pm',activity:'Lunch + walk'},
-                    {time:'1pm',activity:'Meetings'},
-                    {time:'2pm',activity:'Focused project'},
-                    {time:'3pm',activity:'Focused project'},
-                    {time:'4pm',activity:'Wrap up + planning'},
-                    {time:'5pm',activity:'Errands'},
-                    {time:'6pm',activity:'Dinner'},
-                    {time:'7pm',activity:'Family / friends'},
-                    {time:'8pm',activity:'Reading'},
-                    {time:'9pm',activity:'Wind down'},
-                    {time:'10pm',activity:'Sleep'},
-                    {time:'11pm',activity:'-'},
-                    {time:'12am',activity:'-'},
-                  ]);
-                  const startFresh = () => setDailyRotation([
-                    {time:'6am',activity:'-'},{time:'7am',activity:'-'},{time:'8am',activity:'-'},{time:'9am',activity:'-'},
-                    {time:'10am',activity:'-'},{time:'11am',activity:'-'},{time:'12pm',activity:'-'},{time:'1pm',activity:'-'},
-                    {time:'2pm',activity:'-'},{time:'3pm',activity:'-'},{time:'4pm',activity:'-'},{time:'5pm',activity:'-'},
-                    {time:'6pm',activity:'-'},{time:'7pm',activity:'-'},{time:'8pm',activity:'-'},{time:'9pm',activity:'-'},
-                    {time:'10pm',activity:'-'},{time:'11pm',activity:'-'},{time:'12am',activity:'-'},
-                  ]);
-                  return (
-                    <div style={{padding:"14px",margin:"12px",border:"1px solid rgba(251,191,36,0.4)",borderLeft:"2px solid rgba(251,191,36,0.9)",borderRadius:"6px",background:"rgba(251,191,36,0.05)"}}>
-                      <div style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.8}}>// PREVIEW · SAMPLE DAY</div>
-                      <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Map out your ideal day, hour by hour.</div>
-                      <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Build a routine you can stick to. Each hour gets an activity.</div>
-                      <div style={{display:"flex",flexDirection:"column",gap:"3px",marginBottom:"12px",opacity:0.9}}>
-                        {[['6am','Wake + water'],['9am','Deep work'],['12pm','Lunch + walk'],['3pm','Focused project'],['6pm','Dinner'],['10pm','Sleep']].map(([t,a],i) => (
-                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"6px 10px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(251,191,36,0.15)",borderRadius:"3px"}}>
-                            <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(251,191,36,0.7)",minWidth:"36px"}}>{t}</span>
-                            <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{a}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                        <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(251,191,36,0.18)",border:"1px solid rgba(251,191,36,0.7)",borderRadius:"4px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
-                        <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH (BLANK ROTATION)</button>
-                      </div>
-                    </div>
-                  );
-                })()}
-                {dailyRotation.map((slot, index) => (
-                  <div key={index} style={{display:"flex",alignItems:"center",gap:"12px",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
-                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",fontFamily:"monospace",minWidth:"40px",letterSpacing:"0.5px"}}>{slot.time}</span>
-                    <input
-                      type="text"
-                      value={slot.activity}
-                      onChange={(e) => setDailyRotation(prev => prev.map((s,i) => i===index ? {...s, activity: e.target.value} : s))}
-                      style={{flex:1,background:"transparent",border:"none",outline:"none",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"13px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",paddingBottom:"2px"}}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
         </div>
       </div>
