@@ -4612,7 +4612,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
-    ...customCategories.slice(0, 1).map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: false })),
     { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
     { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
   ];
@@ -10418,7 +10417,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, donny: true },
                 { feature: 'Reminders & Birthdays', free: true, elite: true, donny: true },
                 { feature: 'Diet (Groceries, Meals, Water)', free: true, elite: true, donny: true },
-                { feature: 'Custom Category', free: true, elite: true, donny: true },
                 { feature: 'Work & Timesheet', free: false, elite: true, donny: true },
                 { feature: 'Bills & Debt Tracker', free: false, elite: true, donny: true },
                 { feature: 'Assets Management', free: false, elite: true, donny: true },
