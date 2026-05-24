@@ -4980,6 +4980,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // LeftRail — Bridge-style workspace nav (desktop only)
   // ============================================
   const LeftRail = ({ activeView, setActiveView, isElite, hidden, onToggle }) => {
+    return null; // LeftRail disabled — nav now via bottom of dashboards
+    // eslint-disable-next-line no-unreachable
     const sections = [
       { id:"home", label:"DASH", icon:"◈" },
       { id:"varied", label:"BILLS", icon:"$", elite:true },
