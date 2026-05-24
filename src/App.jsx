@@ -4612,7 +4612,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
-    ...customCategories.map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: i > 0 })),
+    ...customCategories.slice(0, 1).map((c, i) => ({ id: c.id, label: c.name, icon: Star, eliteOnly: false })),
     { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
     { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
   ];
@@ -11117,16 +11117,16 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* SECTIONS */}
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// SECTIONS</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"8px",marginBottom:"20px"}}>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
                 const Icon = item.icon;
                 return (
                   <button key={item.id} onClick={() => setActiveView(item.id)}
-                    style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",transition:"all 0.15s"}}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.06)"; e.currentTarget.style.borderLeftColor = "rgba(0,200,255,0.9)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderLeftColor = "rgba(0,200,255,0.5)"; }}>
-                    <Icon size={14} style={{color:"rgba(0,200,255,0.7)",flexShrink:0}}/>
-                    <span style={{fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>{item.label}</span>
+                    style={{display:"flex",alignItems:"center",gap:"12px",padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",transition:"all 0.15s"}}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.06)"; e.currentTarget.style.borderColor = "rgba(0,200,255,0.55)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderColor = "rgba(0,200,255,0.18)"; }}>
+                    <Icon size={16} style={{color:"rgba(0,200,255,0.7)",flexShrink:0}}/>
+                    <span style={{fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>{item.label}</span>
                   </button>
                 );
               })}
@@ -11134,36 +11134,36 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* ACCOUNT */}
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// ACCOUNT</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"8px",marginBottom:"20px"}}>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"10px",marginBottom:"20px"}}>
               <button onClick={() => setActiveView('upgrade')}
-                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 {isElite ? '⚡ Elite Status' : '⚡ Upgrade to Elite'}
               </button>
               <button onClick={() => setActiveView('statsinsights')}
-                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 ⌬ Stats & Insights
               </button>
               <button onClick={() => setActiveView('feedback')}
-                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 ✎ Feedback & Support
               </button>
               <button onClick={doExport}
-                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px"}}>
                 ↓ Export Data
               </button>
-              <label style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
+              <label style={{padding:"18px 20px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
                 ↑ Import Data
                 <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
               </label>
               <button onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }}
-                style={{padding:"12px 14px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.18)",borderLeft:"2px solid rgba(239,68,68,0.45)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"rgba(239,68,68,0.85)",letterSpacing:"0.5px"}}>
+                style={{padding:"18px 20px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.18)",borderRadius:"6px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"14px",color:"rgba(239,68,68,0.85)",letterSpacing:"0.5px"}}>
                 ⊘ Delete Account
               </button>
             </div>
 
             {/* SIGN OUT */}
             <button onClick={signOut}
-              style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"4px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600}}>
+              style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"6px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600}}>
               ⊗ SIGN OUT
             </button>
 
@@ -13022,7 +13022,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Health & Sleep Tracker','Work & Timesheet','Bills & Debt Tracker','Assets Management','Investment Portfolio','Unlimited Custom Categories','Elite Badge & Name'].map((f,i) => (
+                  {['Health & Sleep Tracker','Work & Timesheet','Bills & Debt Tracker','Assets Management','Investment Portfolio','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -13100,13 +13100,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, donny: true },
                 { feature: 'Reminders & Birthdays', free: true, elite: true, donny: true },
                 { feature: 'Diet (Groceries, Meals, Water)', free: true, elite: true, donny: true },
-                { feature: '1 Custom Category', free: true, elite: true, donny: true },
+                { feature: 'Custom Category', free: true, elite: true, donny: true },
                 { feature: 'Health & Sleep Tracker', free: false, elite: true, donny: true },
                 { feature: 'Work & Timesheet', free: false, elite: true, donny: true },
                 { feature: 'Bills & Debt Tracker', free: false, elite: true, donny: true },
                 { feature: 'Assets Management', free: false, elite: true, donny: true },
                 { feature: 'Investment Portfolio', free: false, elite: true, donny: true },
-                { feature: 'Unlimited Custom Categories', free: false, elite: true, donny: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true, donny: true },
                 { feature: 'Donny Job Tracking', free: false, elite: false, donny: true },
                 { feature: 'Donny Team Management', free: false, elite: false, donny: true },
