@@ -10419,7 +10419,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 { feature: 'Work & Timesheet', free: false, elite: true, donny: true },
                 { feature: 'Bills & Debt Tracker', free: false, elite: true, donny: true },
                 { feature: 'Assets Management', free: false, elite: true, donny: true },
-                { feature: 'Investment Portfolio', free: false, elite: true, donny: true },
+                { feature: 'Investment Management', free: false, elite: true, donny: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true, donny: true },
                 { feature: 'Donny Job Tracking', free: false, elite: false, donny: true },
                 { feature: 'Donny Team Management', free: false, elite: false, donny: true },
