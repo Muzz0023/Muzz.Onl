@@ -10706,41 +10706,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           })()}
           </div>
 
-          {/* TODAY SUMMARY — always populated */}
-          <div style={palantirPanel}>
-            <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{...palantirLabel,marginBottom:0}}>Financial Intel</span>
-              <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                <span style={{width:"5px",height:"5px",borderRadius:"50%",background:"#00c8ff",display:"inline-block",boxShadow:"0 0 4px #00c8ff",animation:"blink 2s infinite"}}></span>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>LIVE</span>
-              </div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"0"}}>
-              {[
-                {label:"Annual Income", value:salaryNum>0?`$${(salaryNum*12).toLocaleString()}`:"NOT SET", view:"work", color:"rgba(34,197,94,0.7)"},
-                {label:"Annual Savings", value:salaryNum>0?`$${Math.max(0,(salaryNum-totalMonthly)*12).toLocaleString()}`:"NOT SET", view:"varied", color:"rgba(0,200,255,0.7)"},
-                {label:"Total Debt", value:`$${debts.reduce((s,d)=>s+(parseFloat(d.total)||0),0).toLocaleString()}`, view:"varied", color:"rgba(239,68,68,0.7)"},
-                {label:"Next Monthly Bill", value:(() => {
-                  const now = new Date();
-                  const upcoming = subscriptions.filter(s=>s.dueDate&&s.name&&s.monthly>0).map(s=>{
-                    const day = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
-                    if (!day) return null;
-                    let next = new Date(now.getFullYear(), now.getMonth(), day);
-                    if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
-                    const days = Math.ceil((next - now) / 86400000);
-                    return {name:s.name, days};
-                  }).filter(Boolean).sort((a,b)=>a.days-b.days);
-                  return upcoming[0] ? `${upcoming[0].name} (${upcoming[0].days}d)` : "—";
-                })(), view:"varied", color:"rgba(251,191,36,0.7)"},
-              ].map((item,i) => (
-                <button key={i} onClick={() => setActiveView(item.view)} style={{padding:"12px 14px",textAlign:"left",background:"transparent",border:"none",borderRight:i%2===0?"0.5px solid rgba(0,200,255,0.08)":"none",borderBottom:i<2?"0.5px solid rgba(0,200,255,0.08)":"none",cursor:"pointer"}}>
-                  <div style={{...palantirLabel,color:item.color,fontSize:"9px"}}>{item.label}</div>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace"}}>{item.value}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* DENSE ENTITY TABLE — UPCOMING BILLS */}
           {billsDueSoon.length > 0 && (
             <div style={palantirPanel}>
