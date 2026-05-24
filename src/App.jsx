@@ -22339,8 +22339,6 @@ ${JSON.stringify(ctx, null, 2)}`;
       { label:'SAVINGS RATE', value:`${savingsRateNum}%`, sub:'OF MONTHLY INCOME', color:'#22c55e' },
       { label:'PORTFOLIO', value:`$${totalStocks.toLocaleString()}`, sub:`${stocks.length} HOLDINGS`, color:'#8b5cf6' },
       { label:'MONTHLY BILLS', value:`$${totalMonthly.toFixed(0)}`, sub:'PER MONTH', color:'#ef4444' },
-      { label:'HABIT CHECK-INS', value:totalHabitDays, sub:'ALL TIME', color:'#f97316' },
-      { label:'THIS MONTH', value:thisMonthHabits, sub:'HABIT COMPLETIONS', color:'#f59e0b' },
       { label:'TASKS TODAY', value:`${completedTasks}/${totalTasks}`, sub:'COMPLETED', color:'#3b82f6' },
       { label:'ASSETS', value:assets.length, sub:'TRACKED ASSETS', color:'#14b8a6' },
       { label:'HABITS', value:habits.length, sub:'ACTIVE HABITS', color:'#a855f7' },
