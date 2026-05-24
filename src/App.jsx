@@ -2908,13 +2908,8 @@ function MuzzApp() {
   }, []);
 
   // Left rail collapse state (desktop only) — persisted across sessions
-  const [leftRailHidden, setLeftRailHidden] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('muzz_left_rail_hidden') === '1';
-  });
-  useEffect(() => {
-    try { localStorage.setItem('muzz_left_rail_hidden', leftRailHidden ? '1' : '0'); } catch(e) {}
-  }, [leftRailHidden]);
+  const [leftRailHidden, setLeftRailHidden] = useState(true); // Left rail killed — always hidden
+  // (setter exists for back-compat with views that import it)
 
   // Object Inspector — selected entity for right-panel deep dive
   const [inspectorEntity, setInspectorEntity] = useState(null); // { type, id, label, ... }
@@ -5081,6 +5076,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
   // DonnyLeftRail — same vibe, orange + Donny views
   // ============================================
   const DonnyLeftRail = ({ activeView, setActiveView, donnyRole, hidden, onToggle }) => {
+    return null; // Left rail disabled — nav now via bottom of dashboards
+    // eslint-disable-next-line no-unreachable
     const sections = [
       { id:"donny",              label:"DASH",  icon:"◈",  workerOk:true  },
       { id:"donny-masterview",   label:"JOBS",  icon:"⊞",  workerOk:false },
@@ -6303,6 +6300,8 @@ ${JSON.stringify(ctx, null, 2)}`;
       </button>
     );
 
+    return null; // Sidebar disabled — nav now via bottom of dashboards
+    // eslint-disable-next-line no-unreachable
     return (
       <>
         <button onClick={() => setSidebarOpen(true)} className="fixed w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl" style={{top:appMode==='donny'?"36px":"40px",left:"16px",zIndex:60,background:"rgba(3,8,18,0.95)",border:`0.5px solid ${appMode==='donny'?"rgba(249,115,22,0.35)":"rgba(0,200,255,0.25)"}`,backdropFilter:"blur(10px)"}}>
@@ -11104,8 +11103,19 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* QUICK-LAUNCH BOTTOM NAV — replaces hamburger as primary navigation */}
           <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+
+            {/* SWITCH TO DONNY */}
+            <button onClick={() => { setAppMode('donny'); setActiveView('donny'); }}
+              style={{width:"100%",padding:"14px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.35)",borderLeft:"3px solid rgba(249,115,22,0.85)",borderRadius:"4px",color:"#f97316",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px",cursor:"pointer",fontWeight:600,marginBottom:"20px",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",transition:"all 0.15s"}}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(249,115,22,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(249,115,22,0.08)"; }}>
+              <span>→ SWITCH TO DONNY</span>
+              <span style={{fontSize:"10px",color:"rgba(249,115,22,0.65)",letterSpacing:"1px"}}>Trades & Business</span>
+            </button>
+
+            {/* SECTIONS */}
             <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// SECTIONS</div>
-            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"8px"}}>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"8px",marginBottom:"20px"}}>
               {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
                 const Icon = item.icon;
                 return (
@@ -11119,6 +11129,42 @@ ${JSON.stringify(ctx, null, 2)}`;
                 );
               })}
             </div>
+
+            {/* ACCOUNT */}
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// ACCOUNT</div>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"8px",marginBottom:"20px"}}>
+              <button onClick={() => setActiveView('upgrade')}
+                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                {isElite ? '⚡ Elite Status' : '⚡ Upgrade to Elite'}
+              </button>
+              <button onClick={() => setActiveView('statsinsights')}
+                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                ⌬ Stats & Insights
+              </button>
+              <button onClick={() => setActiveView('feedback')}
+                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                ✎ Feedback & Support
+              </button>
+              <button onClick={doExport}
+                style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                ↓ Export Data
+              </button>
+              <label style={{padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
+                ↑ Import Data
+                <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
+              </label>
+              <button onClick={async () => { const c=window.confirm('Are you sure you want to delete your account? This cannot be undone.'); if(c){try{await supabase.deleteUserData(userId);}catch(e){}finally{await signOut();}} }}
+                style={{padding:"12px 14px",background:"rgba(239,68,68,0.04)",border:"0.5px solid rgba(239,68,68,0.18)",borderLeft:"2px solid rgba(239,68,68,0.45)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"12px",color:"rgba(239,68,68,0.85)",letterSpacing:"0.5px"}}>
+                ⊘ Delete Account
+              </button>
+            </div>
+
+            {/* SIGN OUT */}
+            <button onClick={signOut}
+              style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"4px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600}}>
+              ⊗ SIGN OUT
+            </button>
+
           </div>
 
         </div>
@@ -19395,6 +19441,18 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             {/* QUICK-LAUNCH SECTION BAR — replaces hamburger as primary navigation */}
             <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"0.5px solid rgba(249,115,22,0.1)"}}>
+
+              {/* SWITCH TO MUZZ */}
+              {donnyRole !== 'worker' && (
+                <button onClick={() => { setAppMode('muzz'); setActiveView('home'); }}
+                  style={{width:"100%",padding:"14px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.35)",borderLeft:"3px solid rgba(0,200,255,0.85)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"13px",letterSpacing:"2px",cursor:"pointer",fontWeight:600,marginBottom:"20px",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",transition:"all 0.15s"}}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.15)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.08)"; }}>
+                  <span>→ SWITCH TO MUZZ</span>
+                  <span style={{fontSize:"10px",color:"rgba(0,200,255,0.65)",letterSpacing:"1px"}}>Life & Finance</span>
+                </button>
+              )}
+
               <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// SECTIONS</div>
               {(() => {
                 const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', CREW:'rgba(168,85,247,0.95)' };
@@ -19441,6 +19499,36 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 );
               })()}
+
+              {/* ACCOUNT */}
+              <div style={{marginTop:"20px"}}>
+                <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"10px",fontWeight:600}}>// ACCOUNT</div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"6px"}}>
+                  <button onClick={() => { setAppMode('muzz'); setActiveView('upgrade'); }}
+                    style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                    {isElite ? '⚡ Elite Status' : '⚡ Upgrade'}
+                  </button>
+                  <button onClick={() => { setAppMode('muzz'); setActiveView('feedback'); }}
+                    style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                    ✎ Feedback
+                  </button>
+                  <button onClick={doExport}
+                    style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px"}}>
+                    ↓ Export Data
+                  </button>
+                  <label style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(249,115,22,0.18)",borderLeft:"2px solid rgba(249,115,22,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px",display:"block"}}>
+                    ↑ Import Data
+                    <input type="file" accept=".json" style={{display:"none"}} onChange={doImport}/>
+                  </label>
+                </div>
+              </div>
+
+              {/* SIGN OUT */}
+              <button onClick={signOut}
+                style={{width:"100%",padding:"12px",background:"rgba(239,68,68,0.05)",border:"0.5px solid rgba(239,68,68,0.25)",borderRadius:"4px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"2.5px",cursor:"pointer",fontWeight:600,marginTop:"20px"}}>
+                ⊗ SIGN OUT
+              </button>
+
             </div>
 
           </div>
