@@ -10339,7 +10339,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Work & Timesheet','Bills & Debt Tracker','Assets Management','Investment Portfolio','Elite Badge & Name'].map((f,i) => (
+                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -10417,7 +10417,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, donny: true },
                 { feature: 'Reminders & Birthdays', free: true, elite: true, donny: true },
                 { feature: 'Work & Timesheet', free: false, elite: true, donny: true },
-                { feature: 'Bills & Debt Tracker', free: false, elite: true, donny: true },
+                { feature: 'Bills & Debt Management', free: false, elite: true, donny: true },
                 { feature: 'Assets Management', free: false, elite: true, donny: true },
                 { feature: 'Investment Management', free: false, elite: true, donny: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true, donny: true },
