@@ -10715,6 +10715,90 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
+
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
+            {/* ACHIEVEMENTS — Palantir style */}
+            <div style={palantirPanel}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{...palantirLabel,marginBottom:0}}>Achievements</span>
+                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{[...new Set([netWorth>=1000,netWorth>=5000,netWorth>=10000,netWorth>=25000,netWorth>=50000,netWorth>=100000,savingsRate>=10,savingsRate>=20,savingsRate>=50,stocks.length>=1,stocks.length>=5,assets.length>=1])].filter(Boolean).length}/20 COMPLETE</span>
+              </div>
+              <div style={{maxHeight:"280px",overflowY:"auto"}}>
+                {(() => {
+                  const achievementData = [
+                    { id:"first_1k", title:"First $1K", current:netWorth, target:1000, unit:"$" },
+                    { id:"5k_club", title:"$5K Club", current:netWorth, target:5000, unit:"$" },
+                    { id:"10k_club", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
+                    { id:"25k_club", title:"$25K Club", current:netWorth, target:25000, unit:"$" },
+                    { id:"50k_club", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
+                    { id:"100k_club", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
+                    { id:"250k_club", title:"$250K Club", current:netWorth, target:250000, unit:"$" },
+                    { id:"500k_club", title:"$500K Club", current:netWorth, target:500000, unit:"$" },
+                    { id:"1m_club", title:"Millionaire", current:netWorth, target:1000000, unit:"$" },
+                    { id:"saver_10", title:"Baby Saver", current:savingsRate, target:10, unit:"%" },
+                    { id:"saver_20", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
+                    { id:"super_saver", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
+                    { id:"mega_saver", title:"Mega Saver", current:savingsRate, target:70, unit:"%" },
+                    { id:"first_stock", title:"First Investment", current:stocks.length, target:1, unit:" stocks" },
+                    { id:"diversified", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
+                    { id:"portfolio_pro", title:"Portfolio Pro", current:stocks.length, target:10, unit:" stocks" },
+                    { id:"asset_owner", title:"Asset Owner", current:assets.length, target:1, unit:" assets" },
+                    { id:"asset_collector", title:"Asset Collector", current:assets.length, target:5, unit:" assets" },
+                  ];
+                  const sorted = [...achievementData].sort((a,b) => {
+                    const ap = Math.min((a.current/a.target)*100,100);
+                    const bp = Math.min((b.current/b.target)*100,100);
+                    if(ap>=100&&bp<100) return 1;
+                    if(ap<100&&bp>=100) return -1;
+                    return bp-ap;
+                  });
+                  return sorted.map(a => {
+                    const progress = Math.min((a.current/a.target)*100,100);
+                    const isComplete = progress >= 100;
+                    const status = isComplete ? "COMPLETE" : progress > 0 ? "IN PROGRESS" : "LOCKED";
+                    const statusColor = isComplete ? "#00c8ff" : progress > 0 ? "rgba(251,191,36,0.8)" : "rgba(148,163,184,0.2)";
+                    return (
+                      <div key={a.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
+                        <span style={{fontSize:"11px",color:isComplete?"#e0eaff":progress>0?"rgba(224,234,255,0.6)":"rgba(148,163,184,0.3)",fontFamily:"monospace",flex:1}}>{a.title}</span>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                          {!isComplete && <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{progress.toFixed(0)}%</span>}
+                          <span style={{fontSize:"9px",color:statusColor,fontFamily:"monospace",letterSpacing:"1px",border:`0.5px solid ${statusColor}`,padding:"1px 5px"}}>{status}</span>
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+
+            {/* UPCOMING EVENTS */}
+            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.15)",borderLeft:"2px solid rgba(251,191,36,0.8)"}}>
+                <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Upcoming Events</span>
+              </div>
+              {(() => {
+                const thisYear = new Date().getFullYear();
+                const bdayEvents = (birthdays||[]).map(b => {
+                  if (!b.date) return null;
+                  const parts = b.date.split("-");
+                  let next = `${thisYear}-${parts[1]}-${parts[2]}`;
+                  if (next < today) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
+                  return { id:"b"+b.id, title:`${b.name}'s Birthday`, days:Math.ceil((new Date(next)-new Date())/86400000) };
+                }).filter(Boolean);
+                const cdEvents = (countdowns||[]).filter(c=>c.date>=today && (c.name||c.title)).map(c=>({
+                  id:c.id, title:c.name||c.title||'Untitled', days:Math.ceil((new Date(c.date)-new Date())/86400000)
+                }));
+                const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
+                if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:"monospace",letterSpacing:"1px"}}>NO EVENTS SCHEDULED</div>;
+                return all.map(ev => (
+                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.06)"}}>
+                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace"}}>{ev.title}</span>
+                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",border:"0.5px solid rgba(251,191,36,0.3)",padding:"1px 6px"}}>{ev.days}D</span>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
           {/* WEALTH MILESTONES + STOCK FEED ROW */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
 
@@ -10835,90 +10919,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
             );
           })()}
-          </div>
-
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
-            {/* ACHIEVEMENTS — Palantir style */}
-            <div style={palantirPanel}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{...palantirLabel,marginBottom:0}}>Achievements</span>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{[...new Set([netWorth>=1000,netWorth>=5000,netWorth>=10000,netWorth>=25000,netWorth>=50000,netWorth>=100000,savingsRate>=10,savingsRate>=20,savingsRate>=50,stocks.length>=1,stocks.length>=5,assets.length>=1])].filter(Boolean).length}/20 COMPLETE</span>
-              </div>
-              <div style={{maxHeight:"280px",overflowY:"auto"}}>
-                {(() => {
-                  const achievementData = [
-                    { id:"first_1k", title:"First $1K", current:netWorth, target:1000, unit:"$" },
-                    { id:"5k_club", title:"$5K Club", current:netWorth, target:5000, unit:"$" },
-                    { id:"10k_club", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
-                    { id:"25k_club", title:"$25K Club", current:netWorth, target:25000, unit:"$" },
-                    { id:"50k_club", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
-                    { id:"100k_club", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
-                    { id:"250k_club", title:"$250K Club", current:netWorth, target:250000, unit:"$" },
-                    { id:"500k_club", title:"$500K Club", current:netWorth, target:500000, unit:"$" },
-                    { id:"1m_club", title:"Millionaire", current:netWorth, target:1000000, unit:"$" },
-                    { id:"saver_10", title:"Baby Saver", current:savingsRate, target:10, unit:"%" },
-                    { id:"saver_20", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
-                    { id:"super_saver", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
-                    { id:"mega_saver", title:"Mega Saver", current:savingsRate, target:70, unit:"%" },
-                    { id:"first_stock", title:"First Investment", current:stocks.length, target:1, unit:" stocks" },
-                    { id:"diversified", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
-                    { id:"portfolio_pro", title:"Portfolio Pro", current:stocks.length, target:10, unit:" stocks" },
-                    { id:"asset_owner", title:"Asset Owner", current:assets.length, target:1, unit:" assets" },
-                    { id:"asset_collector", title:"Asset Collector", current:assets.length, target:5, unit:" assets" },
-                  ];
-                  const sorted = [...achievementData].sort((a,b) => {
-                    const ap = Math.min((a.current/a.target)*100,100);
-                    const bp = Math.min((b.current/b.target)*100,100);
-                    if(ap>=100&&bp<100) return 1;
-                    if(ap<100&&bp>=100) return -1;
-                    return bp-ap;
-                  });
-                  return sorted.map(a => {
-                    const progress = Math.min((a.current/a.target)*100,100);
-                    const isComplete = progress >= 100;
-                    const status = isComplete ? "COMPLETE" : progress > 0 ? "IN PROGRESS" : "LOCKED";
-                    const statusColor = isComplete ? "#00c8ff" : progress > 0 ? "rgba(251,191,36,0.8)" : "rgba(148,163,184,0.2)";
-                    return (
-                      <div key={a.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
-                        <span style={{fontSize:"11px",color:isComplete?"#e0eaff":progress>0?"rgba(224,234,255,0.6)":"rgba(148,163,184,0.3)",fontFamily:"monospace",flex:1}}>{a.title}</span>
-                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                          {!isComplete && <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{progress.toFixed(0)}%</span>}
-                          <span style={{fontSize:"9px",color:statusColor,fontFamily:"monospace",letterSpacing:"1px",border:`0.5px solid ${statusColor}`,padding:"1px 5px"}}>{status}</span>
-                        </div>
-                      </div>
-                    );
-                  });
-                })()}
-              </div>
-            </div>
-
-            {/* UPCOMING EVENTS */}
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.15)",borderLeft:"2px solid rgba(251,191,36,0.8)"}}>
-                <span style={{fontSize:"11px",color:"rgba(251,191,36,0.6)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Upcoming Events</span>
-              </div>
-              {(() => {
-                const thisYear = new Date().getFullYear();
-                const bdayEvents = (birthdays||[]).map(b => {
-                  if (!b.date) return null;
-                  const parts = b.date.split("-");
-                  let next = `${thisYear}-${parts[1]}-${parts[2]}`;
-                  if (next < today) next = `${thisYear+1}-${parts[1]}-${parts[2]}`;
-                  return { id:"b"+b.id, title:`${b.name}'s Birthday`, days:Math.ceil((new Date(next)-new Date())/86400000) };
-                }).filter(Boolean);
-                const cdEvents = (countdowns||[]).filter(c=>c.date>=today && (c.name||c.title)).map(c=>({
-                  id:c.id, title:c.name||c.title||'Untitled', days:Math.ceil((new Date(c.date)-new Date())/86400000)
-                }));
-                const all = [...bdayEvents,...cdEvents].sort((a,b)=>a.days-b.days).slice(0,8);
-                if (all.length===0) return <div style={{padding:"14px",fontSize:"11px",color:"rgba(251,191,36,0.2)",textAlign:"center",fontFamily:"monospace",letterSpacing:"1px"}}>NO EVENTS SCHEDULED</div>;
-                return all.map(ev => (
-                  <div key={ev.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.06)"}}>
-                    <span style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace"}}>{ev.title}</span>
-                    <span style={{fontSize:"11px",color:"rgba(251,191,36,0.7)",fontFamily:"monospace",border:"0.5px solid rgba(251,191,36,0.3)",padding:"1px 6px"}}>{ev.days}D</span>
-                  </div>
-                ));
-              })()}
-            </div>
           </div>
 
           {/* FINANCIAL HEALTH SCORE */}
