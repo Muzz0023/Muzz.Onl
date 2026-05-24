@@ -10416,7 +10416,6 @@ ${JSON.stringify(ctx, null, 2)}`;
               {[
                 { feature: 'Tasks & Daily Planner', free: true, elite: true, donny: true },
                 { feature: 'Reminders & Birthdays', free: true, elite: true, donny: true },
-                { feature: 'Diet (Groceries, Meals, Water)', free: true, elite: true, donny: true },
                 { feature: 'Work & Timesheet', free: false, elite: true, donny: true },
                 { feature: 'Bills & Debt Tracker', free: false, elite: true, donny: true },
                 { feature: 'Assets Management', free: false, elite: true, donny: true },
