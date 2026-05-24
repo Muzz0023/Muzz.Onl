@@ -10548,39 +10548,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
         <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"} style={{padding:isWide?"12px 20px 36px":"20px 24px 36px",display:"flex",flexDirection:"column",gap:isWide?"6px":"12px"}}>
 
-          {/* KPI STRIP */}
-          {(() => {
-            const billsPct = salaryNum > 0 ? (totalMonthly/salaryNum)*100 : 0;
-            // Synthetic mini-series for each KPI (uses nwSeries shape as a proxy for "trending data")
-            const mkSeries = (target, end) => {
-              if (!nwSeries || nwSeries.length < 2) return [end*0.9, end];
-              const factor = end / (nwSeries[nwSeries.length-1] || 1);
-              return nwSeries.map(v => v * factor);
-            };
-            const kpis = [
-              {label:"Ann. Bills", value:`$${totalMonthly.toFixed(0)}`, ok:billsPct<50||salaryNum===0, warn:billsPct>=50&&salaryNum>0, series:mkSeries(0,totalMonthly), color:"rgba(239,68,68,0.7)"},
-              {label:"Bills/Inc", value:salaryNum>0?`${billsPct.toFixed(1)}%`:"—", ok:salaryNum===0||billsPct<50, warn:salaryNum>0&&billsPct>=50, series:mkSeries(0,billsPct||1), color:"rgba(251,191,36,0.7)"},
-              {label:"Wk Hours", value:weeklyWorkHours>0?`${weeklyWorkHours.toFixed(0)}h`:"—", ok:weeklyWorkHours>0, warn:false, series:mkSeries(0,weeklyWorkHours||1), color:"#00c8ff"},
-              {label:"Stocks", value:`${stocks.length}`, ok:stocks.length>0, warn:false, series:mkSeries(0,Math.max(stocks.length,1)), color:"rgba(168,85,247,0.7)"},
-              {label:"Assets", value:`${assets.length}`, ok:assets.length>0, warn:false, series:mkSeries(0,Math.max(assets.length,1)), color:"rgba(34,197,94,0.7)"},
-            ];
-            return (
-          <div style={{...palantirPanel,borderLeft:"2px solid #00c8ff"}}>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)"}}>
-              {kpis.map((k,i) => (
-                <div key={i} style={{padding:"10px 8px",borderRight:i<4?"0.5px solid rgba(0,200,255,0.08)":"none"}}>
-                  <div style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",letterSpacing:"1px",textTransform:"uppercase",fontFamily:"monospace",marginBottom:"4px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{k.label}</div>
-                  <div style={{fontSize:"16px",color:k.warn?"rgba(239,68,68,0.9)":k.ok?"#e0eaff":"rgba(148,163,184,0.5)",fontFamily:"monospace",fontWeight:500,whiteSpace:"nowrap"}}>{k.value}</div>
-                  <div style={{marginTop:"4px",height:"14px"}}>
-                    <Sparkline data={k.series} w={56} h={14} color={k.color} fillOpacity={0.1} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-            );
-          })()}
-
           {/* CHARTS ROW — stacks on mobile */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
           {/* FINANCIAL BAR CHART */}
