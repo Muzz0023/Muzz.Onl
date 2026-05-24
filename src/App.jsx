@@ -11102,6 +11102,25 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
+          {/* QUICK-LAUNCH BOTTOM NAV — replaces hamburger as primary navigation */}
+          <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+            <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// SECTIONS</div>
+            <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"8px"}}>
+              {navItems.filter(item => !['home','feedback','upgrade'].includes(item.id) && (!item.eliteOnly || isElite)).map(item => {
+                const Icon = item.icon;
+                return (
+                  <button key={item.id} onClick={() => setActiveView(item.id)}
+                    style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 14px",background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.5)",borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",transition:"all 0.15s"}}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,255,0.06)"; e.currentTarget.style.borderLeftColor = "rgba(0,200,255,0.9)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderLeftColor = "rgba(0,200,255,0.5)"; }}>
+                    <Icon size={14} style={{color:"rgba(0,200,255,0.7)",flexShrink:0}}/>
+                    <span style={{fontSize:"12px",color:"#e0eaff",letterSpacing:"0.5px"}}>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
 
         {/* OBJECT INSPECTOR — right side panel on wide, bottom sheet on mobile */}
@@ -19372,6 +19391,56 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* QUICK-LAUNCH SECTION BAR — replaces hamburger as primary navigation */}
+            <div style={{marginTop:"24px",paddingTop:"20px",borderTop:"0.5px solid rgba(249,115,22,0.1)"}}>
+              <div style={{fontSize:"9px",color:"rgba(249,115,22,0.45)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"14px",fontWeight:600}}>// SECTIONS</div>
+              {(() => {
+                const donnyColors = { JOBS:'rgba(249,115,22,0.85)', TEAM:'rgba(249,115,22,0.85)', CLIENTS:'rgba(59,130,246,0.85)', SITE:'rgba(239,68,68,0.85)', COSTS:'rgba(34,197,94,0.85)', CREW:'rgba(168,85,247,0.95)' };
+                const donnyItems = [
+                  { section:'JOBS', id:'donny-masterview', label:'Masterview', workerOk:false },
+                  { section:'JOBS', id:'donny-scheduler', label:'Scheduler', workerOk:false },
+                  { section:'JOBS', id:'donny-dailyreport', label:'Hour Logger', workerOk:true },
+                  { section:'JOBS', id:'donny-recurring', label:'Recurring', workerOk:false },
+                  { section:'TEAM', id:'donny-team', label:'Team', workerOk:false },
+                  { section:'TEAM', id:'donny-subs', label:'Subcontractors', workerOk:false },
+                  { section:'CLIENTS', id:'donny-clients', label:'Clients', workerOk:false },
+                  { section:'SITE', id:'donny-photos', label:'Photos', workerOk:true },
+                  { section:'SITE', id:'donny-checklists', label:'SWMS', workerOk:true },
+                  { section:'SITE', id:'donny-incidents', label:'Incidents', workerOk:true },
+                  { section:'SITE', id:'donny-safety', label:'Risk Register', workerOk:true },
+                  { section:'SITE', id:'donny-mistakes', label:'Mistakes', workerOk:true },
+                  { section:'COSTS', id:'donny-materialslog', label:'Materials', workerOk:true },
+                  { section:'COSTS', id:'donny-suppliers', label:'Suppliers', workerOk:false },
+                  { section:'CREW', id:'donny-reports', label:'Crew Plan', workerOk:false },
+                ];
+                const sections = ['JOBS','TEAM','SITE','COSTS','CLIENTS','CREW'];
+                return (
+                  <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+                    {sections.map(sec => {
+                      const items = donnyItems.filter(i => i.section === sec && (donnyRole !== 'worker' || i.workerOk));
+                      if (items.length === 0) return null;
+                      const color = donnyColors[sec];
+                      return (
+                        <div key={sec}>
+                          <div style={{fontSize:"9px",color,letterSpacing:"2px",fontFamily:"monospace",marginBottom:"6px",paddingLeft:"8px",borderLeft:`2px solid ${color}`,fontWeight:600}}>// {sec}</div>
+                          <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4, 1fr)":"repeat(2, 1fr)",gap:"6px"}}>
+                            {items.map(item => (
+                              <button key={item.id} onClick={() => setActiveView(item.id)}
+                                style={{padding:"10px 12px",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${color.replace('0.85','0.18').replace('0.95','0.2')}`,borderLeft:`2px solid ${color.replace('0.85','0.5').replace('0.95','0.55')}`,borderRadius:"4px",cursor:"pointer",textAlign:"left",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",letterSpacing:"0.5px",transition:"all 0.15s"}}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = color.replace('0.85','0.08').replace('0.95','0.08'); e.currentTarget.style.borderLeftColor = color; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(5,12,24,0.6)"; e.currentTarget.style.borderLeftColor = color.replace('0.85','0.5').replace('0.95','0.55'); }}>
+                                {item.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
 
           </div>
