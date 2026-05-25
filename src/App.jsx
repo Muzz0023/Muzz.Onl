@@ -9731,13 +9731,27 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {billsSubTab === 'calendar' && (
             <>
+              {/* Bucket switcher — mirrors the BILLS tab */}
+              <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
+                {buckets.map(b => {
+                  const isActive = b.id === activeBucketId;
+                  const c = b.color || '#00c8ff';
+                  return (
+                    <button key={b.id} onClick={() => setActiveBucketId(b.id)}
+                      style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:isActive?c:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+                      {b.name.toUpperCase()}
+                    </button>
+                  );
+                })}
+              </div>
+
               {/* Calendar View - Mobile Optimized */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:`2px solid ${activeBucket?.color || '#00c8ff'}`}}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Bills Calendar</h2>
-                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Track when bills are due</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket?.name || 'Bills'} Calendar</h2>
+                      <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Showing bills from {activeBucket?.name || 'this bucket'}</p>
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                       <button
@@ -9783,7 +9797,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                       const dayBills = calendarBills[dateKey] || [];
                       // Auto-include bills from all buckets that recur on this day (based on freq + due dates)
-                      const allBucketBills = (billBuckets||[]).flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: b })));
+                      const allBucketBills = activeBucket ? (activeBucket.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: activeBucket })) : [];
                       const recurringBills = allBucketBills.filter(s => {
                         const freq = s.freq || 'monthly';
                         if (freq === 'monthly') {
@@ -9901,7 +9915,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       const selDate = new Date(selectedCalendarDate + 'T00:00:00');
                       const selDay = selDate.getDate();
                       const selMonth = selDate.getMonth() + 1;
-                      const allBucketBills = (billBuckets||[]).flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: b })));
+                      const allBucketBills = activeBucket ? (activeBucket.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: activeBucket })) : [];
                       return allBucketBills.filter(s => {
                         const freq = s.freq || 'monthly';
                         if (freq === 'monthly') {
