@@ -9575,7 +9575,14 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* ─── FORECAST — 12-month cashflow projection ─── */}
           {billsSubTab === 'forecast' && (() => {
-            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0));
+            // Active bucket only — use the same bucket selector as BILLS
+            if (!activeBucket) {
+              return (
+                <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO BUCKET SELECTED · Switch to BILLS tab to set one up</div>
+              );
+            }
+            const forecastBills = (activeBucket.bills||[]).filter(x => x?.name && x.monthly > 0);
+            const forecastAccent = activeBucket.color || '#00c8ff';
             // Calculate expected monthly outflow for each of the next 12 months
             const now = new Date();
             now.setHours(0,0,0,0);
@@ -9585,7 +9592,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               const monthEnd = new Date(now.getFullYear(), now.getMonth() + i + 1, 1);
               let total = 0;
               const breakdown = {};
-              allBills.forEach(s => {
+              forecastBills.forEach(s => {
                 const freq = s.freq || 'monthly';
                 const amt = parseFloat(s.monthly) || 0;
                 let occurrencesThisMonth = 0;
@@ -9637,12 +9644,29 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"14px"}}>// 12-MONTH CASHFLOW PROJECTION</div>
+                {/* Bucket switcher — mirrors the BILLS tab */}
+                <div style={{display:"flex",gap:"6px",alignItems:"center",overflowX:"auto",paddingBottom:"4px",WebkitOverflowScrolling:"touch"}}>
+                  {buckets.map(b => {
+                    const isActive = b.id === activeBucketId;
+                    const c = b.color || '#00c8ff';
+                    return (
+                      <button key={b.id} onClick={() => setActiveBucketId(b.id)}
+                        style={{padding:"8px 14px",background:isActive?`${c}1f`:"rgba(255,255,255,0.04)",border:`1px solid ${isActive?c:"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:isActive?c:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+                        {b.name.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"6px",padding:"16px 18px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",gap:"8px",flexWrap:"wrap"}}>
+                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {activeBucket.name.toUpperCase()} · 12-MONTH PROJECTION</span>
+                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{forecastBills.length} BILL{forecastBills.length!==1?'S':''}</span>
+                  </div>
                   <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px",marginBottom:"20px"}}>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT 12 MONTHS</div>
-                      <div style={{fontSize:"22px",color:"#00c8ff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${grandTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                      <div style={{fontSize:"22px",color:`${forecastAccent}`,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${grandTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
                     </div>
                     <div>
                       <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>AVG PER MONTH</div>
@@ -9658,16 +9682,16 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
 
                   {/* Bar chart */}
-                  <div style={{display:"flex",alignItems:"flex-end",gap:"6px",height:"180px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"22px",position:"relative"}}>
+                  <div style={{display:"flex",alignItems:"flex-end",gap:"6px",height:"180px",borderBottom:`0.5px solid ${forecastAccent}1a`,paddingBottom:"22px",position:"relative"}}>
                     {months.map((m, i) => {
                       const heightPct = (m.total / maxTotal) * 100;
                       const isMax = m.total === maxTotal;
                       const isCurrent = i === 0;
                       return (
                         <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",height:"100%",justifyContent:"flex-end",position:"relative"}}>
-                          <div style={{fontSize:"9px",fontFamily:"monospace",color:isMax?"#f59e0b":isCurrent?"#00c8ff":"rgba(148,163,184,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
-                          <div style={{width:"100%",height:`${heightPct}%`,minHeight:"4px",background:isMax?"linear-gradient(180deg, rgba(245,158,11,0.95), rgba(245,158,11,0.35))":isCurrent?"linear-gradient(180deg, rgba(0,200,255,0.95), rgba(0,200,255,0.35))":"linear-gradient(180deg, rgba(0,200,255,0.5), rgba(0,200,255,0.15))",border:`0.5px solid ${isMax?"rgba(245,158,11,0.6)":isCurrent?"rgba(0,200,255,0.7)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isMax?"0 0 12px rgba(245,158,11,0.3)":isCurrent?"0 0 12px rgba(0,200,255,0.25)":"none"}}/>
-                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:"monospace",color:isMax?"rgba(245,158,11,0.85)":isCurrent?"rgba(0,200,255,0.85)":"rgba(148,163,184,0.55)",textAlign:"center",letterSpacing:"0.3px"}}>{m.label}</div>
+                          <div style={{fontSize:"9px",fontFamily:"monospace",color:isMax?"#f59e0b":isCurrent?`${forecastAccent}`:"rgba(148,163,184,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
+                          <div style={{width:"100%",height:`${heightPct}%`,minHeight:"4px",background:isMax?"linear-gradient(180deg, rgba(245,158,11,0.95), rgba(245,158,11,0.35))":isCurrent?`linear-gradient(180deg, ${forecastAccent}f2, ${forecastAccent}59)`:`linear-gradient(180deg, ${forecastAccent}80, ${forecastAccent}26)`,border:`0.5px solid ${isMax?"rgba(245,158,11,0.6)":isCurrent?`${forecastAccent}cc`:`${forecastAccent}4d`}`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isMax?"0 0 12px rgba(245,158,11,0.3)":isCurrent?`0 0 12px ${forecastAccent}40`:"none"}}/>
+                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:"monospace",color:isMax?"rgba(245,158,11,0.85)":isCurrent?`${forecastAccent}d8`:"rgba(148,163,184,0.55)",textAlign:"center",letterSpacing:"0.3px"}}>{m.label}</div>
                         </div>
                       );
                     })}
@@ -9675,17 +9699,17 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
 
                 {/* Per-month breakdown */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.18)",borderLeft:"2px solid #00c8ff",borderRadius:"6px"}}>
-                  <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MONTH-BY-MONTH BREAKDOWN</span>
+                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${forecastAccent}30`,borderLeft:`2px solid ${forecastAccent}`,borderRadius:"6px"}}>
+                  <div style={{padding:"10px 14px",borderBottom:`0.5px solid ${forecastAccent}15`}}>
+                    <span style={{fontSize:"10px",color:`${forecastAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MONTH-BY-MONTH BREAKDOWN</span>
                   </div>
                   {months.map((m, i) => {
                     const items = Object.entries(m.breakdown).sort((a,b) => b[1] - a[1]);
                     return (
-                      <details key={i} style={{borderBottom:i<11?"0.5px solid rgba(0,200,255,0.05)":"none"}}>
+                      <details key={i} style={{borderBottom:i<11?`0.5px solid ${forecastAccent}10`:"none"}}>
                         <summary style={{padding:"10px 14px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",listStyle:"none"}}>
                           <span style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff"}}>{m.label}</span>
-                          <span style={{fontFamily:"monospace",fontSize:"12px",color:"#00c8ff",fontWeight:600}}>${m.total.toFixed(2)}</span>
+                          <span style={{fontFamily:"monospace",fontSize:"12px",color:`${forecastAccent}`,fontWeight:600}}>${m.total.toFixed(2)}</span>
                         </summary>
                         <div style={{padding:"4px 14px 12px"}}>
                           {items.length === 0 ? (
