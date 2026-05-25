@@ -9422,7 +9422,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {/* Bucket node — root */}
                   <div style={{display:"flex",justifyContent:"center",marginBottom:"6px"}}>
                     <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"10px 18px",background:`linear-gradient(180deg, ${accent}25, ${accent}10)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 16px ${accent}40`,minWidth:"140px"}}>
-                      <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"2px",fontWeight:600}}>{bucket.icon || '●'} {bucket.name.toUpperCase()}</span>
+                      <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"2px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
                       <span style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",marginLeft:"4px"}}>/mo</span></span>
                       <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"1px"}}>{sortedBills.length} BILL{sortedBills.length!==1?'S':''}</span>
                     </div>
