@@ -9553,12 +9553,22 @@ ${JSON.stringify(ctx, null, 2)}`;
                     for (let day = 1; day <= daysInMonth; day++) {
                       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                       const dayBills = calendarBills[dateKey] || [];
-                      // Auto-include recurring bills from subscriptions that have this day as due date
-                      const recurringBills = subscriptions.filter(s => {
-                        if (!s.name || !s.dueDate) return false;
-                        const dueDayNum = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
-                        return dueDayNum === day;
-                      }).map(s => ({ name: s.name, amount: String(s.monthly||0), recurring: true }));
+                      // Auto-include bills from all buckets that recur on this day (based on freq + due dates)
+                      const allBucketBills = (billBuckets||[]).flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: b })));
+                      const recurringBills = allBucketBills.filter(s => {
+                        const freq = s.freq || 'monthly';
+                        if (freq === 'monthly') {
+                          const dueDayNum = s.dueDate ? parseInt(String(s.dueDate).replace(/[^0-9]/g,'')) : null;
+                          return dueDayNum === day;
+                        }
+                        // Non-monthly: match DD-MM dates against this calendar date
+                        const dates = (s.dueDates && s.dueDates.length > 0) ? s.dueDates : (s.dueDate ? [s.dueDate] : []);
+                        return dates.some(d => {
+                          const m = String(d).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
+                          if (!m) return false;
+                          return parseInt(m[1]) === day && parseInt(m[2]) === (month + 1);
+                        });
+                      }).map(s => ({ name: s.name, amount: String(s.monthly||0), recurring: true, freq: s.freq || 'monthly' }));
                       const allDayBills = [...dayBills, ...recurringBills];
                       const totalForDay = allDayBills.reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0);
                       const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
@@ -9637,21 +9647,38 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                     
                     {/* Bills for selected day */}
-                    {/* Show recurring bills from subscriptions for this date */}
-                    {selectedCalendarDate && subscriptions.filter(s => {
-                      if (!s.name || !s.dueDate) return false;
-                      const day = new Date(selectedCalendarDate + 'T00:00:00').getDate();
-                      const dueDayNum = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
-                      return dueDayNum === day;
-                    }).map((s, i) => (
-                      <div key={`rec-${i}`} className="flex items-center justify-between py-2 px-3 rounded-xl mb-2" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)'}}>
-                        <div>
-                          <span className="text-sm text-white font-medium">{s.name}</span>
-                          <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.8)'}}>🔁 Recurring</span>
+                    {/* Show recurring bills from all buckets for this date */}
+                    {selectedCalendarDate && (() => {
+                      const selDate = new Date(selectedCalendarDate + 'T00:00:00');
+                      const selDay = selDate.getDate();
+                      const selMonth = selDate.getMonth() + 1;
+                      const allBucketBills = (billBuckets||[]).flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: b })));
+                      return allBucketBills.filter(s => {
+                        const freq = s.freq || 'monthly';
+                        if (freq === 'monthly') {
+                          const dueDayNum = s.dueDate ? parseInt(String(s.dueDate).replace(/[^0-9]/g,'')) : null;
+                          return dueDayNum === selDay;
+                        }
+                        const dates = (s.dueDates && s.dueDates.length > 0) ? s.dueDates : (s.dueDate ? [s.dueDate] : []);
+                        return dates.some(d => {
+                          const m = String(d).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
+                          if (!m) return false;
+                          return parseInt(m[1]) === selDay && parseInt(m[2]) === selMonth;
+                        });
+                      });
+                    })().map((s, i) => {
+                      const freq = s.freq || 'monthly';
+                      const freqLabel = freq === 'monthly' ? 'Monthly' : freq === 'quarterly' ? 'Quarterly' : freq === 'halfyear' ? '6-Monthly' : 'Annual';
+                      return (
+                        <div key={`rec-${i}`} className="flex items-center justify-between py-2 px-3 rounded-xl mb-2" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)'}}>
+                          <div>
+                            <span className="text-sm text-white font-medium">{s.name}</span>
+                            <span className="text-xs ml-2 px-1.5 py-0.5 rounded" style={{background:'rgba(249,115,22,0.15)',color:'rgba(249,115,22,0.8)'}}>🔁 {freqLabel}</span>
+                          </div>
+                          <span className="text-sm font-bold" style={{color:'#ef4444'}}>-${s.monthly}</span>
                         </div>
-                        <span className="text-sm font-bold" style={{color:'#ef4444'}}>-${s.monthly}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                     {(calendarBills[selectedCalendarDate] || []).length > 0 && (
                       <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                         <h3 className="text-sm font-semibold text-gray-600">Bills on this day:</h3>
