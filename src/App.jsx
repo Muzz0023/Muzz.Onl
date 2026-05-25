@@ -9403,6 +9403,100 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
+          {/* Branch Graph — visual tree of all buckets and bills, collapsible */}
+          {(buckets||[]).some(b => (b.bills||[]).some(x => x?.name && x.monthly > 0)) && (
+            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BILL TREE · VISUAL BRANCH GRAPH</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              </summary>
+              <div style={{padding:"16px 12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                {buckets.map((bucket, bi) => {
+                  const bills = (bucket.bills || []).filter(x => x?.name && x.monthly > 0);
+                  if (bills.length === 0) return null;
+                  const accent = bucket.color || '#00c8ff';
+                  const sortedBills = [...bills].map(s => ({ s, nd: computeNextDue(s), mEq: monthlyEquivalent(s) }))
+                    .sort((a,b) => b.mEq - a.mEq);
+                  const bucketTotal = sortedBills.reduce((sum, {mEq}) => sum + mEq, 0);
+                  const maxBillEq = Math.max(...sortedBills.map(b => b.mEq), 1);
+                  return (
+                    <div key={bucket.id} style={{marginBottom:bi<buckets.length-1?"24px":"0"}}>
+                      {/* Bucket node — root */}
+                      <div style={{display:"flex",justifyContent:"center",marginBottom:"6px"}}>
+                        <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"10px 18px",background:`linear-gradient(180deg, ${accent}25, ${accent}10)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 16px ${accent}40`,minWidth:"140px"}}>
+                          <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"2px",fontWeight:600}}>{bucket.icon || '●'} {bucket.name.toUpperCase()}</span>
+                          <span style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",marginLeft:"4px"}}>/mo</span></span>
+                          <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"1px"}}>{sortedBills.length} BILL{sortedBills.length!==1?'S':''}</span>
+                        </div>
+                      </div>
+
+                      {/* Vertical trunk line */}
+                      <div style={{display:"flex",justifyContent:"center"}}>
+                        <div style={{width:"1px",height:"20px",background:`linear-gradient(180deg, ${accent}, ${accent}30)`}}/>
+                      </div>
+
+                      {/* Horizontal connector + branches */}
+                      <div style={{position:"relative",padding:"0 8px"}}>
+                        {/* Horizontal line connecting all bills */}
+                        {sortedBills.length > 1 && (
+                          <div style={{position:"absolute",top:"0",left:`calc(${100/sortedBills.length/2}% + 8px)`,right:`calc(${100/sortedBills.length/2}% + 8px)`,height:"1px",background:`${accent}50`}}/>
+                        )}
+                        <div style={{display:"grid",gridTemplateColumns:isWide?`repeat(${Math.min(sortedBills.length,4)},1fr)`:"repeat(2,1fr)",gap:"10px",rowGap:"16px"}}>
+                          {sortedBills.map(({s, nd, mEq}, idx) => {
+                            const freq = s.freq || 'monthly';
+                            const widthPct = (mEq / maxBillEq) * 100;
+                            const isToday = nd && nd.daysAway === 0;
+                            const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
+                            const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
+                            return (
+                              <details key={s.id || idx} style={{position:"relative",borderRadius:"4px",overflow:"hidden"}}>
+                                {/* Mini drop line from horizontal connector */}
+                                <div style={{position:"absolute",top:"-16px",left:"50%",width:"1px",height:"16px",background:`${accent}50`,pointerEvents:"none"}}/>
+                                <summary style={{padding:"8px 10px",cursor:"pointer",listStyle:"none",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}35`,borderLeft:`2px solid ${dotColor}`,borderRadius:"4px",position:"relative",overflow:"hidden"}}>
+                                  {/* Bar showing relative size */}
+                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                                  <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
+                                    <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                                      <div style={{width:"6px",height:"6px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 4px ${dotColor}80`,flexShrink:0}}/>
+                                      <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
+                                    </div>
+                                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"12px"}}>
+                                      <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{FREQ_LABEL[freq]}</span>
+                                      <span style={{fontFamily:"monospace",fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                    </div>
+                                  </div>
+                                </summary>
+                                {/* Expanded detail */}
+                                <div style={{padding:"10px 12px",background:`${accent}05`,border:`0.5px solid ${accent}25`,borderTop:"none",borderRadius:"0 0 4px 4px",fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.85)",lineHeight:1.7}}>
+                                  <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:"rgba(148,163,184,0.55)"}}>Frequency</span><span>{FREQ_LABEL[freq]}</span></div>
+                                  <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:"rgba(148,163,184,0.55)"}}>Cost</span><span>${parseFloat(s.monthly).toFixed(2)}{FREQ_SHORT[freq]}</span></div>
+                                  {freq !== 'monthly' && (
+                                    <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:"rgba(148,163,184,0.55)"}}>Monthly equiv</span><span style={{color:accent}}>${mEq.toFixed(2)}/mo</span></div>
+                                  )}
+                                  <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:"rgba(148,163,184,0.55)"}}>Annual</span><span>${(mEq*12).toFixed(0)}/yr</span></div>
+                                  {nd && (
+                                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                                      <span style={{color:"rgba(148,163,184,0.55)"}}>Next due</span>
+                                      <span style={{color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(224,234,255,0.85)"}}>{nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})} · {nd.daysAway===0?'TODAY':nd.daysAway===1?'TMRW':`${nd.daysAway}D`}</span>
+                                    </div>
+                                  )}
+                                  <div style={{display:"flex",justifyContent:"space-between",paddingTop:"4px",marginTop:"4px",borderTop:`0.5px solid ${accent}20`}}>
+                                    <span style={{color:"rgba(148,163,184,0.55)"}}>% of {bucket.name}</span>
+                                    <span style={{color:accent,fontWeight:600}}>{bucketTotal>0?((mEq/bucketTotal)*100).toFixed(1):'0'}%</span>
+                                  </div>
+                                </div>
+                              </details>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </details>
+          )}
+
           {/* Bills vs Salary Comparison — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
             <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
