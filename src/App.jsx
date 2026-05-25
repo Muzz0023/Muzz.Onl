@@ -11206,7 +11206,12 @@ ${JSON.stringify(ctx, null, 2)}`;
               )}
 
               {/* Assets Input */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                 <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Assets</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Property, super, cash, vehicles, etc.</p>
@@ -11355,7 +11360,96 @@ ${JSON.stringify(ctx, null, 2)}`;
                 + Add Asset
               </button>
             </div>
-          </div>
+            </div>
+          </details>
+
+          {/* Type Breakdown — collapsible */}
+          {filledAssets.length > 0 && (
+            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BREAKDOWN BY TYPE</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              </summary>
+              <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Breakdown by Type</h2>
+                <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
+              </div>
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
+                  <thead>
+                    <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                      <th 
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
+                        }}
+                      >
+                        Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
+                        }}
+                      >
+                        Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th 
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        onClick={() => {
+                          if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                          else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
+                        }}
+                      >
+                        % of Total {assetsSortBy === 'percent' && (assetsSortDir === 'asc' ? '↑' : '↓')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {assetCategories
+                      .map(cat => ({
+                        ...cat,
+                        total: filledAssets.filter(a => a.category === cat.id).reduce((sum, a) => sum + a.value, 0)
+                      }))
+                      .filter(cat => cat.total > 0)
+                      .sort((a, b) => {
+                        let comparison = 0;
+                        switch (assetsSortBy) {
+                          case 'type':
+                            comparison = a.name.localeCompare(b.name);
+                            break;
+                          case 'value':
+                          case 'percent':
+                            comparison = a.total - b.total;
+                            break;
+                          default:
+                            comparison = a.total - b.total;
+                        }
+                        return assetsSortDir === 'asc' ? comparison : -comparison;
+                      })
+                      .map((cat, idx) => (
+                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                          <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>{cat.emoji} {cat.name}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${cat.total.toLocaleString()}</td>
+                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                  <tfoot>
+                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
+                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${totalAssets.toLocaleString()}</td>
+                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>100%</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              </div>
+            </details>
+          )}
 
           {/* Asset Constellation — radial branch graph, collapsible */}
           {filledAssets.length > 0 && (() => {
@@ -11489,91 +11583,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             );
           })()}
 
-          {/* Type Breakdown */}
+          {/* Assets Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Breakdown by Type</h2>
-                <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
-              </div>
-              <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
-                  <thead>
-                    <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                      <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
-                        }}
-                      >
-                        Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
-                        }}
-                      >
-                        Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                      <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                        onClick={() => {
-                          if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                          else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
-                        }}
-                      >
-                        % of Total {assetsSortBy === 'percent' && (assetsSortDir === 'asc' ? '↑' : '↓')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {assetCategories
-                      .map(cat => ({
-                        ...cat,
-                        total: filledAssets.filter(a => a.category === cat.id).reduce((sum, a) => sum + a.value, 0)
-                      }))
-                      .filter(cat => cat.total > 0)
-                      .sort((a, b) => {
-                        let comparison = 0;
-                        switch (assetsSortBy) {
-                          case 'type':
-                            comparison = a.name.localeCompare(b.name);
-                            break;
-                          case 'value':
-                          case 'percent':
-                            comparison = a.total - b.total;
-                            break;
-                          default:
-                            comparison = a.total - b.total;
-                        }
-                        return assetsSortDir === 'asc' ? comparison : -comparison;
-                      })
-                      .map((cat, idx) => (
-                        <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                          <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>{cat.emoji} {cat.name}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${cat.total.toLocaleString()}</td>
-                          <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.7)"}}>{((cat.total / totalAssets) * 100).toFixed(1)}%</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                  <tfoot>
-                    <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
-                      <td style={{padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>Total</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>${totalAssets.toLocaleString()}</td>
-                      <td style={{padding:"10px 12px",textAlign:"right",fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>100%</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Assets Breakdown */}
-          {filledAssets.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS BREAKDOWN</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              </summary>
+              <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Assets Breakdown</h2>
               </div>
@@ -11673,7 +11690,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </tfoot>
                 </table>
               </div>
-            </div>
+              </div>
+            </details>
           )}
             </>
           )}
