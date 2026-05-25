@@ -3297,6 +3297,7 @@ function MuzzApp() {
   const [remindersSubTab, setRemindersSubTab] = useState('reminders');
   const [editingReminderId, setEditingReminderId] = useState(null);
   const [editingBdayId, setEditingBdayId] = useState(null);
+  const [editingBillIdx, setEditingBillIdx] = useState(null);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -8589,8 +8590,9 @@ ${JSON.stringify(ctx, null, 2)}`;
 
     const addBillToBucket = (bucketId) => {
       const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
-      const newBills = [...(b.bills||[]), { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '', dateAdded: new Date().toISOString() }];
+      const newBills = [...(b.bills||[]), { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '', freq: 'monthly', dateAdded: new Date().toISOString() }];
       updateBucketBills(bucketId, newBills);
+      setEditingBillIdx(newBills.length - 1);
     };
     const updateBillInBucket = (bucketId, idx, field, value) => {
       const b = (billBuckets||[]).find(x => x.id === bucketId); if (!b) return;
@@ -8599,6 +8601,8 @@ ${JSON.stringify(ctx, null, 2)}`;
       if (field === 'name') bills[idx] = { ...bills[idx], name: value };
       else if (field === 'cost') bills[idx] = { ...bills[idx], monthly: parseFloat(value) || 0, monthlyStr: value };
       else if (field === 'dueDate') bills[idx] = { ...bills[idx], dueDate: value };
+      else if (field === 'freq') bills[idx] = { ...bills[idx], freq: value };
+      else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
       updateBucketBills(bucketId, bills);
     };
     const removeBillFromBucket = (bucketId, idx) => {
@@ -8617,7 +8621,12 @@ ${JSON.stringify(ctx, null, 2)}`;
     // Active bucket derived values (replace legacy currentSubs/totalMonthly/salaryNum)
     const currentSubs = activeBucket ? (activeBucket.bills || []) : [];
     const filledSubs = currentSubs.filter(s => s && s.monthly > 0);
-    const totalMonthly = filledSubs.reduce((sum, s) => sum + s.monthly, 0);
+    // Convert any frequency to monthly equivalent (for totals)
+    const FREQ_MULT = { monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
+    const FREQ_LABEL = { monthly: 'Monthly', quarterly: 'Quarterly', halfyear: '6-Monthly', annual: 'Annual' };
+    const FREQ_SHORT = { monthly: '/mo', quarterly: '/qtr', halfyear: '/6mo', annual: '/yr' };
+    const monthlyEquivalent = (s) => (parseFloat(s.monthly) || 0) * (FREQ_MULT[s.freq || 'monthly'] || 1);
+    const totalMonthly = filledSubs.reduce((sum, s) => sum + monthlyEquivalent(s), 0);
     const salaryNum = activeBucket ? (parseFloat(activeBucket.incomeStr) || 0) : 0;
     const handleSalaryChange = (value) => activeBucket && updateBucketIncome(activeBucket.id, value);
 
@@ -8815,43 +8824,161 @@ ${JSON.stringify(ctx, null, 2)}`;
                 );
               })()}
               <div style={{overflowX:'auto'}}>
-              <div style={{display:"flex",flexDirection:"column",gap:"6px",minWidth:"420px"}}>
-                {currentSubs.map((sub, index) => (
-                  <div key={sub?.id || index} className="flex items-center gap-3 py-2 border-b border-gray-100">
-                    <span className="w-8 text-right text-gray-400 text-sm">{index + 1}.</span>
-                    <input
-                      type="text"
-                      value={sub?.name || ''}
-                      onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
-                      placeholder="Bill name"
-                      className="w-40 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-500"
-                    />
-                    <div className="flex items-center gap-1">
-                      <span className="text-gray-400 text-sm">$</span>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        value={sub?.monthlyStr ?? sub?.monthly ?? ''}
-                        onChange={(e) => updateBillInBucket(activeBucket.id, index, 'cost', e.target.value)}
-                        placeholder="0"
-                        className="w-20 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-500"
-                      />
-                      <span className="text-gray-400 text-sm">/mo</span>
+              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+
+                {/* SUMMARY PANEL — only show if there are bills */}
+                {filledSubs.length > 0 && (() => {
+                  const annualTotal = totalMonthly * 12;
+                  // Find next due bill (by day of month)
+                  const todayDay = new Date().getDate();
+                  let nextDue = null;
+                  filledSubs.forEach(s => {
+                    if (!s.dueDate) return;
+                    const day = parseInt(String(s.dueDate).replace(/[^0-9]/g,''));
+                    if (!day) return;
+                    let daysAway = day - todayDay;
+                    if (daysAway < 0) daysAway += 30;
+                    if (!nextDue || daysAway < nextDue.daysAway) nextDue = { sub: s, daysAway, day };
+                  });
+                  return (
+                    <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}30`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"6px",padding:"16px 18px",marginBottom:"6px"}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px"}}>
+                        <span style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {activeBucket.name.toUpperCase()} OVERVIEW</span>
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{filledSubs.length} BILL{filledSubs.length!==1?'S':''}</span>
+                      </div>
+                      <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3, 1fr)":"repeat(2, 1fr)",gap:"14px"}}>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>MONTHLY</div>
+                          <div style={{fontSize:"22px",color:bucketAccent,fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${totalMonthly.toFixed(0)}</div>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ANNUAL</div>
+                          <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${annualTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                        </div>
+                        {nextDue && (
+                          <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT DUE</div>
+                            <div style={{fontFamily:"monospace",lineHeight:1.2}}>
+                              <span style={{fontSize:"14px",color:"#e0eaff",fontWeight:500}}>{nextDue.sub.name||'Bill'}</span>
+                              <span style={{fontSize:"11px",color:nextDue.daysAway<=3?"#ef4444":nextDue.daysAway<=7?"#f59e0b":"rgba(148,163,184,0.7)",marginLeft:"8px"}}>
+                                {nextDue.daysAway===0?'TODAY':nextDue.daysAway===1?'TMRW':`IN ${nextDue.daysAway}D`}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <input
-                        type="text"
-                        value={sub?.dueDate || ''}
-                        onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
-                        placeholder="23rd"
-                        className="w-16 px-2 py-2 border rounded-lg text-sm text-center focus:outline-none focus:border-blue-500"
-                      />
+                  );
+                })()}
+
+                {currentSubs.map((sub, index) => {
+                  const isEditing = editingBillIdx === index;
+                  const freq = sub?.freq || 'monthly';
+                  const monthlyEq = monthlyEquivalent(sub);
+                  const dueDay = sub?.dueDate ? parseInt(String(sub.dueDate).replace(/[^0-9]/g,'')) : null;
+                  const todayDay = new Date().getDate();
+                  let daysAway = null;
+                  if (dueDay) { daysAway = dueDay - todayDay; if (daysAway < 0) daysAway += 30; }
+                  const isSoon = daysAway !== null && daysAway <= 7;
+                  const isToday = daysAway === 0;
+                  return (
+                    <div key={sub?.id || index} style={{background:isEditing?`${bucketAccent}0d`:"rgba(5,12,24,0.6)",border:`0.5px solid ${bucketAccent}25`,borderLeft:`2px solid ${isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent}`,borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                      {/* Compact row */}
+                      <button onClick={() => setEditingBillIdx(isEditing ? null : index)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent,boxShadow:`0 0 6px ${isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent}80`,flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {sub?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed bill</span>}
+                          </div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                            {FREQ_LABEL[freq]}{dueDay?` · Due ${dueDay}${dueDay===1?'st':dueDay===2?'nd':dueDay===3?'rd':'th'}`:''}
+                            {freq !== 'monthly' && sub?.monthly > 0 && (
+                              <span style={{color:`${bucketAccent}aa`,marginLeft:"6px"}}>· ${monthlyEq.toFixed(2)}/mo equiv</span>
+                            )}
+                          </div>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                          {sub?.monthly > 0 && (
+                            <div style={{textAlign:"right"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",color:bucketAccent,fontWeight:600}}>${parseFloat(sub.monthly).toFixed(2)}</div>
+                              <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"0.5px"}}>{FREQ_SHORT[freq]}</div>
+                            </div>
+                          )}
+                          {daysAway !== null && (
+                            <span style={{fontSize:"9px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",padding:"3px 7px",border:`0.5px solid ${isToday?"rgba(239,68,68,0.4)":isSoon?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.2)"}`,borderRadius:"3px",fontWeight:600}}>
+                              {isToday?'TODAY':daysAway===1?'TMRW':`${daysAway}D`}
+                            </span>
+                          )}
+                          <span style={{fontSize:"14px",color:`${bucketAccent}80`,fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
+                        </div>
+                      </button>
+
+                      {/* Expanded edit panel */}
+                      {isEditing && (
+                        <div style={{padding:"14px 16px 16px",borderTop:`0.5px solid ${bucketAccent}25`,background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>BILL NAME</div>
+                            <input
+                              type="text"
+                              value={sub?.name || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateBillInBucket(activeBucket.id, index, 'name', e.target.value)}
+                              placeholder="e.g. Electricity, Netflix, Rent"
+                              className="slick-input"
+                              style={{fontSize:"13px"}}
+                            />
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr 1fr":"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>COST $</div>
+                              <input
+                                type="text"
+                                inputMode="decimal"
+                                value={sub?.monthlyStr ?? sub?.monthly ?? ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'cost', e.target.value)}
+                                placeholder="0.00"
+                                className="slick-input"
+                              />
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FREQUENCY</div>
+                              <select
+                                value={freq}
+                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)}
+                                className="slick-select"
+                                style={{colorScheme:"dark"}}>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="halfyear">Every 6 months</option>
+                                <option value="annual">Annually</option>
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE DAY</div>
+                              <input
+                                type="text"
+                                value={sub?.dueDate || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
+                                placeholder="e.g. 23"
+                                className="slick-input"
+                              />
+                            </div>
+                          </div>
+                          {freq !== 'monthly' && sub?.monthly > 0 && (
+                            <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:"monospace",padding:"8px 10px",background:`${bucketAccent}10`,border:`0.5px solid ${bucketAccent}30`,borderRadius:"3px"}}>
+                              ≈ ${monthlyEq.toFixed(2)}/mo · ${(monthlyEq*12).toFixed(0)}/yr equivalent
+                            </div>
+                          )}
+                          <button onClick={() => { removeBillFromBucket(activeBucket.id, index); setEditingBillIdx(null); }}
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
+                        </div>
+                      )}
                     </div>
-                    <button onClick={() => removeBillFromBucket(activeBucket.id, index)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               </div>{/* end scroll */}
               <button
