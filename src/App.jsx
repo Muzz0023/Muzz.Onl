@@ -8731,7 +8731,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
+              {[{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'}].map(tab => (
                 <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
@@ -9392,104 +9392,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
-          {/* Muzz Money Tips - Personal Only */}
-          {isPersonal && filledSubs.length > 0 && (() => {
-            const tips = [];
-            
-            // Streaming services
-            const streamingServices = filledSubs.filter(s => 
-              ['netflix', 'disney', 'disney+', 'stan', 'binge', 'paramount', 'amazon prime', 'prime video', 'hulu', 'hbo', 'apple tv', 'youtube premium', 'spotify', 'apple music'].some(str => s.name.toLowerCase().includes(str))
-            );
-            if (streamingServices.length > 1) {
-              const names = streamingServices.slice(0, 2).map(s => s.name).join(' or ');
-              const totalStreaming = streamingServices.reduce((sum, s) => sum + s.monthly, 0);
-              tips.push(`Yo, you've got ${streamingServices.length} streaming services costing $${totalStreaming.toFixed(0)}/mo! Maybe ditch ${names} and rotate between them instead? 📺`);
-              tips.push("Or split it with a mate - you pay for Netflix, they pay for Disney+, and share the logins. Everyone wins! 🤝");
-            }
-            
-            // Food/Groceries
-            const foodSubs = filledSubs.filter(s => 
-              ['food', 'grocery', 'groceries', 'woolworths', 'coles', 'aldi', 'uber eats', 'doordash', 'menulog', 'deliveroo'].some(str => s.name.toLowerCase().includes(str))
-            );
-            if (foodSubs.length > 0) {
-              tips.push("For groceries, check out Costco for bulk buys, hit up your local fruit & veg shop, or try Silly Solly's for discounted food items - all way cheaper than the big supermarkets! 🥕");
-            }
-            
-            // Gym
-            const gymSubs = filledSubs.filter(s => 
-              ['gym', 'fitness', 'f45', 'anytime', 'goodlife', 'plus fitness'].some(str => s.name.toLowerCase().includes(str))
-            );
-            if (gymSubs.length > 0 && gymSubs[0].monthly > 50) {
-              tips.push("That gym membership's a bit pricey mate. Council gyms or outdoor fitness parks are free! Or try a cheaper 24/7 gym 💪");
-            }
-            
-            // Phone/Internet
-            const phoneSubs = filledSubs.filter(s => 
-              ['phone', 'mobile', 'telstra', 'optus', 'vodafone', 'internet', 'nbn', 'wifi'].some(str => s.name.toLowerCase().includes(str))
-            );
-            if (phoneSubs.length > 0) {
-              tips.push("Check out MVNOs like Boost, Belong, or Felix for cheaper phone plans - same network, less cash! 📱");
-            }
-            
-            // Insurance
-            const insuranceSubs = filledSubs.filter(s => 
-              ['insurance', 'health insurance', 'car insurance', 'home insurance'].some(str => s.name.toLowerCase().includes(str))
-            );
-            if (insuranceSubs.length > 0) {
-              tips.push("Shop around for insurance every year mate - use comparison sites to find better deals! 🛡️");
-            }
-            
-            // High bills warning
-            if (salaryNum > 0 && (totalMonthly / salaryNum) > 0.5) {
-              tips.push("Crikey! Your bills are eating more than half your income. Time to have a proper look at what you can cut! 🔪");
-            }
-            
-            // Add a general savings tip
-            if (filledSubs.length > 5) {
-              tips.push("Pro tip: Try the 'subscription audit' - cancel everything for a month and only re-subscribe to what you actually miss! 🧠");
-            }
-            
-            // General tips if nothing specific
-            if (tips.length === 0) {
-              tips.push("Looking good legend! Keep tracking those expenses and you'll be sweet as 🤙");
-            }
-            
-            const tipIndex = currentTipIndex % tips.length;
-            
-            return (
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderLeft:"2px solid rgba(59,130,246,0.7)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"14px 16px"}}>
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px"}}>
-                    <div style={{fontSize:"9px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"2px"}}>// MUZZ'S MONEY TIPS</div>
-                    {tips.length > 1 && (
-                      <span style={{fontSize:"9px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1px"}}>{tipIndex + 1} / {tips.length}</span>
-                    )}
-                  </div>
-                  <div style={{minHeight:"60px",display:"flex",alignItems:"center"}}>
-                    <p key={tipIndex} style={{display:"flex",alignItems:"flex-start",gap:"8px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",fontSize:"11px",lineHeight:1.6}}>
-                      <span style={{color:"rgba(234,179,8,0.95)"}}>▸</span>
-                      <span>{tips[tipIndex]}</span>
-                    </p>
-                  </div>
-                  {tips.length > 1 && (
-                    <div style={{display:"flex",gap:"4px",marginTop:"12px"}}>
-                      {tips.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrentTipIndex(idx)}
-                          style={idx === tipIndex ? {width:"16px",height:"6px",borderRadius:"3px",background:"#00c8ff",transition:"all 0.3s",border:"none",cursor:"pointer"} : {width:"6px",height:"6px",borderRadius:"50%",background:"rgba(0,200,255,0.3)",transition:"all 0.3s",border:"none",cursor:"pointer"}}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Bills vs Salary Comparison */}
+          {/* Bills vs Salary Comparison — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BILLS VS INCOME</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              </summary>
+              <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Bills vs Income</h2>
               </div>
@@ -9567,7 +9477,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </div>
               </div>
-            </div>
+              </div>
+            </details>
           )}
           </>)}{/* end activeBucket wrapper */}
             </>
@@ -10606,8 +10517,8 @@ ${JSON.stringify(ctx, null, 2)}`;
             );
           })()}
 
-          {/* Debt Payoff Calculator */}
-          {billsSubTab === 'debtCalc' && (() => {
+          {/* Debt Payoff Calculator — shown at the bottom of the DEBTS tab */}
+          {billsSubTab === 'debts' && (() => {
             const sortedDebts = [...debts].filter(d => d.name && ((parseFloat(d.total) || 0) - (parseFloat(d.paid) || 0)) > 0).sort((a, b) => {
               const balA = (parseFloat(a.total) || 0) - (parseFloat(a.paid) || 0);
               const balB = (parseFloat(b.total) || 0) - (parseFloat(b.paid) || 0);
