@@ -11174,37 +11174,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${totalAssets.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
               </div>
 
-              {/* Muzz Asset Comments */}
-              {totalAssets > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.3)",borderLeft:"2px solid rgba(245,158,11,0.7)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"14px 16px"}}>
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"14px"}}>
-                      <div className="flex-1">
-                        <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",marginBottom:"8px"}}>Muzz's Thoughts</h2>
-                        <p style={{color:"rgba(245,158,11,0.7)",fontFamily:"monospace",fontSize:"11px"}}>
-                          {totalAssets >= 1000000000000 ? "okay you can stop adding zero's now 💀" :
-                           totalAssets >= 100000000000 ? "Nah this is actually Elon 😭😭" :
-                           totalAssets >= 10000000000 ? "Yo if you just give me 1% I'll be happy 🙏" :
-                           totalAssets >= 1000000000 ? "Elon Musk? 😭😭" :
-                           totalAssets >= 100000000 ? "You know how we have been friends for a while can I maybe..... have 10 Mill 🥺😭" :
-                           totalAssets >= 10000000 ? "I reckon we chuck a mill on black 😂 (kidding ofc)" :
-                           totalAssets >= 5000000 ? "Gawd 5M+, Well at least I know who I'll be calling to come out clubbing 😂" :
-                           totalAssets >= 2000000 ? "🏆 $2 Mill+ club! You could buy a house in Sydney... well, maybe a parking spot. But still, massive flex! 🅿️" :
-                           totalAssets >= 1000000 ? "🎉 A MILLIONAIRE! Pop the champagne! 🍾 Wait, with $1 Mill+ like this, you're probably drinking the fancy stuff already!" :
-                           totalAssets >= 500000 ? "😎 $500K+! You're officially doing better than most. Time to start practicing your 'I'm not a millionaire YET' humble brag." :
-                           totalAssets >= 250000 ? "🚀 Yooo W in the chattt, my boy is 1/2 way to $500,000 🔥" :
-                           totalAssets >= 100000 ? "🎆 $100K+!!! Congrats Bro Six figures is no joke. You've got more assets than most people's lifetime savings. Proud of ya!" :
-                           totalAssets >= 50000 ? "$50K+! That's a decent car, a chunk of a house deposit, or 50,000 $1 scratchy tickets (don't do that) 😏" :
-                           totalAssets >= 10000 ? "Dammm $10K+ in assets. Remember Rome wasn't built in a day, and neither is wealth. Keep at it! 🧱" :
-                           totalAssets >= 1000 ? "$1K+ is no small feat! You're planting the seeds for your money tree to grow! 🌳💸" :
-                           "The fact you're tracking your assets bro means you're already ahead of most people. Keen to see the come up 😄"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Assets Input */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
