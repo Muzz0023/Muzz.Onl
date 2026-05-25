@@ -8609,23 +8609,13 @@ ${JSON.stringify(ctx, null, 2)}`;
       const bills = [...(b.bills||[])];
       if (!bills[idx]) bills[idx] = { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '' };
       if (field === 'name') bills[idx] = { ...bills[idx], name: value };
-      else if (field === 'cost') {
-        const oldAmount = parseFloat(bills[idx].monthly) || 0;
-        const newAmount = parseFloat(value) || 0;
-        const priceHistory = bills[idx].priceHistory || [];
-        // Auto-log only when value meaningfully changed AND old was non-zero (skip initial entry)
-        if (oldAmount > 0 && newAmount > 0 && Math.abs(oldAmount - newAmount) > 0.005) {
-          priceHistory.push({ at: new Date().toISOString(), from: oldAmount, to: newAmount, freq: bills[idx].freq || 'monthly' });
-        }
-        bills[idx] = { ...bills[idx], monthly: newAmount, monthlyStr: value, priceHistory };
-      }
+      else if (field === 'cost') bills[idx] = { ...bills[idx], monthly: parseFloat(value) || 0, monthlyStr: value };
       else if (field === 'dueDate') bills[idx] = { ...bills[idx], dueDate: value };
       else if (field === 'dueDates') bills[idx] = { ...bills[idx], dueDates: value };
       else if (field === 'freq') bills[idx] = { ...bills[idx], freq: value };
       else if (field === 'weekday') bills[idx] = { ...bills[idx], weekday: value };
       else if (field === 'fortnightAnchor') bills[idx] = { ...bills[idx], fortnightAnchor: value };
       else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
-      else if (field === 'provider') bills[idx] = { ...bills[idx], provider: value };
       else if (field === 'payments') bills[idx] = { ...bills[idx], payments: value };
       updateBucketBills(bucketId, bills);
     };
@@ -8742,7 +8732,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'bills',label:'BILLS'},{id:'payments',label:'PAYMENTS'},{id:'forecast',label:'FORECAST'},{id:'priceLog',label:'PRICE LOG'},{id:'providers',label:'PROVIDERS'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
+              {[{id:'bills',label:'BILLS'},{id:'payments',label:'PAYMENTS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
                 <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
@@ -9839,132 +9829,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                     );
                   })}
                 </div>
-              </div>
-            );
-          })()}
-
-          {/* ─── PRICE LOG — track when bills go up/down ─── */}
-          {billsSubTab === 'priceLog' && (() => {
-            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name && (x.priceHistory||[]).length > 0).map(x => ({ ...x, _bucket: b })));
-            const allEvents = allBills.flatMap(s => (s.priceHistory||[]).map(p => ({...p, _sub:s})))
-              .sort((a,b) => new Date(b.at) - new Date(a.at));
-            const increases = allEvents.filter(e => e.to > e.from);
-            const decreases = allEvents.filter(e => e.to < e.from);
-            const totalIncrease = increases.reduce((s,e) => s + (e.to - e.from) * (FREQ_MULT[e.freq||'monthly']||1) * 12, 0);
-
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"14px"}}>// PRICE CHANGE LOG</div>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INCREASES</div>
-                      <div style={{fontSize:"22px",color:"#ef4444",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{increases.length}</div>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DECREASES</div>
-                      <div style={{fontSize:"22px",color:"#22c55e",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{decreases.length}</div>
-                    </div>
-                    <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ANNUAL IMPACT</div>
-                      <div style={{fontSize:"22px",color:totalIncrease>0?"#ef4444":"#22c55e",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{totalIncrease>=0?'+':''}${totalIncrease.toFixed(0)}/yr</div>
-                    </div>
-                  </div>
-                </div>
-
-                {allEvents.length === 0 ? (
-                  <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO PRICE CHANGES LOGGED YET · Edit any bill's cost to start tracking</div>
-                ) : (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",overflow:"hidden"}}>
-                    {allEvents.map((e, i) => {
-                      const diff = e.to - e.from;
-                      const pct = e.from > 0 ? ((diff / e.from) * 100) : 0;
-                      const up = diff > 0;
-                      const c = up ? '#ef4444' : '#22c55e';
-                      return (
-                        <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",borderBottom:i<allEvents.length-1?"0.5px solid rgba(0,200,255,0.05)":"none",borderLeft:`2px solid ${c}55`}}>
-                          <div style={{width:"24px",height:"24px",borderRadius:"50%",background:`${c}15`,border:`0.5px solid ${c}50`,display:"flex",alignItems:"center",justifyContent:"center",color:c,fontSize:"14px",fontWeight:600,flexShrink:0}}>
-                            {up?'↑':'↓'}
-                          </div>
-                          <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e._sub.name}</div>
-                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
-                              {new Date(e.at).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {e._sub._bucket.name}
-                            </div>
-                          </div>
-                          <div style={{textAlign:"right",flexShrink:0,fontFamily:"monospace"}}>
-                            <div style={{fontSize:"12px",color:"rgba(148,163,184,0.6)"}}>
-                              ${e.from.toFixed(2)} → <span style={{color:c,fontWeight:600}}>${e.to.toFixed(2)}</span>
-                            </div>
-                            <div style={{fontSize:"10px",color:c,fontWeight:600,letterSpacing:"0.5px"}}>
-                              {up?'+':''}${diff.toFixed(2)} ({up?'+':''}{pct.toFixed(1)}%)
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-
-          {/* ─── PROVIDERS — account #, login, contact per bill ─── */}
-          {billsSubTab === 'providers' && (() => {
-            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name).map(x => ({ ...x, _bucket: b })));
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// PROVIDER DETAILS</div>
-                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",lineHeight:1.5}}>
-                    Store account numbers, login URLs and contact info for each bill. Useful for managing accounts, disputing charges or swapping providers.
-                  </div>
-                </div>
-
-                {allBills.length === 0 ? (
-                  <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO BILLS YET · Add bills in the BILLS tab</div>
-                ) : allBills.map(s => {
-                  const provider = s.provider || {};
-                  const bucketId = s._bucket.id;
-                  const idx = (s._bucket.bills || []).findIndex(x => x.id === s.id);
-                  const updateProvider = (patch) => updateBillInBucket(bucketId, idx, 'provider', { ...provider, ...patch });
-                  return (
-                    <div key={`${bucketId}-${s.id}`} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px 16px"}}>
-                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}}>
-                        <div style={{fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",fontWeight:600}}>{s.name}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>{s._bucket.name}</div>
-                      </div>
-                      <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ACCOUNT NUMBER</div>
-                          <input value={provider.accountNumber||''} onChange={e => updateProvider({accountNumber:e.target.value})} placeholder="e.g. 1234567" className="slick-input" onFocus={scrollInputIntoView}/>
-                        </div>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LOGIN URL</div>
-                          <input value={provider.loginUrl||''} onChange={e => updateProvider({loginUrl:e.target.value})} placeholder="https://..." className="slick-input" onFocus={scrollInputIntoView}/>
-                        </div>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CONTACT PHONE</div>
-                          <input value={provider.contactPhone||''} onChange={e => updateProvider({contactPhone:e.target.value})} placeholder="13 XX XX" className="slick-input" onFocus={scrollInputIntoView}/>
-                        </div>
-                        <div>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CONTACT EMAIL</div>
-                          <input value={provider.contactEmail||''} onChange={e => updateProvider({contactEmail:e.target.value})} placeholder="support@..." className="slick-input" onFocus={scrollInputIntoView}/>
-                        </div>
-                        <div style={{gridColumn:isWide?"1 / -1":"auto"}}>
-                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
-                          <textarea value={provider.notes||''} onChange={e => updateProvider({notes:e.target.value})} placeholder="Plan details, contract end date, anything to remember..." className="slick-textarea" rows={2} onFocus={scrollInputIntoView}/>
-                        </div>
-                      </div>
-                      {provider.loginUrl && (
-                        <a href={provider.loginUrl.startsWith('http')?provider.loginUrl:`https://${provider.loginUrl}`} target="_blank" rel="noopener noreferrer"
-                          style={{display:"inline-block",marginTop:"10px",padding:"6px 14px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.35)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",textDecoration:"none",fontWeight:600}}>
-                          → OPEN LOGIN
-                        </a>
-                      )}
-                    </div>
-                  );
-                })}
               </div>
             );
           })()}
