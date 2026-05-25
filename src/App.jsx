@@ -8603,6 +8603,8 @@ ${JSON.stringify(ctx, null, 2)}`;
       else if (field === 'dueDate') bills[idx] = { ...bills[idx], dueDate: value };
       else if (field === 'dueDates') bills[idx] = { ...bills[idx], dueDates: value };
       else if (field === 'freq') bills[idx] = { ...bills[idx], freq: value };
+      else if (field === 'weekday') bills[idx] = { ...bills[idx], weekday: value };
+      else if (field === 'fortnightAnchor') bills[idx] = { ...bills[idx], fortnightAnchor: value };
       else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
       updateBucketBills(bucketId, bills);
     };
@@ -8623,9 +8625,10 @@ ${JSON.stringify(ctx, null, 2)}`;
     const currentSubs = activeBucket ? (activeBucket.bills || []) : [];
     const filledSubs = currentSubs.filter(s => s && s.monthly > 0);
     // Convert any frequency to monthly equivalent (for totals)
-    const FREQ_MULT = { monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
-    const FREQ_LABEL = { monthly: 'Monthly', quarterly: 'Quarterly', halfyear: '6-Monthly', annual: 'Annual' };
-    const FREQ_SHORT = { monthly: '/mo', quarterly: '/qtr', halfyear: '/6mo', annual: '/yr' };
+    const FREQ_MULT = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
+    const FREQ_LABEL = { weekly: 'Weekly', fortnightly: 'Fortnightly', monthly: 'Monthly', quarterly: 'Quarterly', halfyear: '6-Monthly', annual: 'Annual' };
+    const FREQ_SHORT = { weekly: '/wk', fortnightly: '/2wk', monthly: '/mo', quarterly: '/qtr', halfyear: '/6mo', annual: '/yr' };
+    const WEEKDAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const monthlyEquivalent = (s) => (parseFloat(s.monthly) || 0) * (FREQ_MULT[s.freq || 'monthly'] || 1);
     const totalMonthly = filledSubs.reduce((sum, s) => sum + monthlyEquivalent(s), 0);
 
@@ -8634,6 +8637,33 @@ ${JSON.stringify(ctx, null, 2)}`;
       const freq = sub?.freq || 'monthly';
       const now = new Date();
       now.setHours(0,0,0,0);
+
+      if (freq === 'weekly' || freq === 'fortnightly') {
+        // weekday is 0=Mon..6=Sun. Map to JS getDay() (0=Sun..6=Sat) via (jsDay+6)%7
+        const wd = sub?.weekday;
+        if (wd === undefined || wd === null || wd === '') return null;
+        const targetIso = parseInt(wd); // 0-6 where 0=Mon
+        if (isNaN(targetIso)) return null;
+        const todayIso = (now.getDay() + 6) % 7; // convert JS Sun-based to Mon-based
+        let daysToAdd = (targetIso - todayIso + 7) % 7;
+        let next = new Date(now); next.setDate(now.getDate() + daysToAdd);
+
+        if (freq === 'fortnightly') {
+          // Use fortnightAnchor (a YYYY-MM-DD date) to decide which week is "on"
+          if (sub?.fortnightAnchor) {
+            const anchor = new Date(sub.fortnightAnchor + 'T00:00:00');
+            if (!isNaN(anchor.getTime())) {
+              const diffDays = Math.round((next - anchor) / 86400000);
+              if (diffDays % 14 !== 0) {
+                // Wrong week — push by 7 days
+                next.setDate(next.getDate() + 7);
+              }
+            }
+          }
+        }
+        const daysAway = Math.round((next - now) / 86400000);
+        return { date: next, daysAway };
+      }
 
       if (freq === 'monthly') {
         // Single day-of-month from dueDate
@@ -8645,7 +8675,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         return { date: next, daysAway };
       }
 
-      // For non-monthly, look at dueDates array of "DD-MM" strings
+      // For non-monthly (quarterly/halfyear/annual), look at dueDates array of "DD-MM" strings
       const dates = (sub?.dueDates && sub.dueDates.length > 0) ? sub.dueDates : (sub?.dueDate ? [sub.dueDate] : []);
       if (dates.length === 0) return null;
 
@@ -8989,6 +9019,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 onChange={(e) => updateBillInBucket(activeBucket.id, index, 'freq', e.target.value)}
                                 className="slick-select"
                                 style={{colorScheme:"dark"}}>
+                                <option value="weekly">Weekly</option>
+                                <option value="fortnightly">Fortnightly</option>
                                 <option value="monthly">Monthly</option>
                                 <option value="quarterly">Quarterly</option>
                                 <option value="halfyear">Every 6 months</option>
@@ -9008,10 +9040,41 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 />
                               </div>
                             )}
+                            {(freq === 'weekly' || freq === 'fortnightly') && (
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DAY OF WEEK</div>
+                                <select
+                                  value={sub?.weekday ?? ''}
+                                  onChange={(e) => updateBillInBucket(activeBucket.id, index, 'weekday', e.target.value)}
+                                  className="slick-select"
+                                  style={{colorScheme:"dark"}}>
+                                  <option value="">— pick day —</option>
+                                  {WEEKDAYS.map((d, i) => <option key={i} value={i}>{d}</option>)}
+                                </select>
+                              </div>
+                            )}
                           </div>
 
-                          {/* MULTI-DATE picker for non-monthly */}
-                          {freq !== 'monthly' && (() => {
+                          {/* FORTNIGHTLY anchor date — which "Friday" is the first */}
+                          {freq === 'fortnightly' && sub?.weekday !== undefined && sub?.weekday !== '' && (
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>FIRST OCCURRENCE (which {WEEKDAYS[parseInt(sub.weekday)]} starts the cycle)</div>
+                              <input
+                                type="date"
+                                value={sub?.fortnightAnchor || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'fortnightAnchor', e.target.value)}
+                                className="slick-input"
+                                style={{colorScheme:"dark"}}
+                              />
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>
+                                Pick any {WEEKDAYS[parseInt(sub.weekday)]} — the bill will recur every 2 weeks from there.
+                              </div>
+                            </div>
+                          )}
+
+                          {/* MULTI-DATE picker for quarterly/halfyear/annual */}
+                          {(freq === 'quarterly' || freq === 'halfyear' || freq === 'annual') && (() => {
                             const required = freq === 'quarterly' ? 4 : freq === 'halfyear' ? 2 : 1;
                             const existing = (sub?.dueDates && sub.dueDates.length > 0) ? sub.dueDates : (sub?.dueDate ? [sub.dueDate] : []);
                             // Pad to required length so user always sees the slots
@@ -9561,6 +9624,26 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const dueDayNum = s.dueDate ? parseInt(String(s.dueDate).replace(/[^0-9]/g,'')) : null;
                           return dueDayNum === day;
                         }
+                        if (freq === 'weekly' || freq === 'fortnightly') {
+                          const wd = s.weekday;
+                          if (wd === undefined || wd === null || wd === '') return false;
+                          const targetIso = parseInt(wd);
+                          if (isNaN(targetIso)) return false;
+                          // This calendar day's weekday in ISO (Mon=0..Sun=6)
+                          const cellDate = new Date(year, month, day);
+                          const cellIso = (cellDate.getDay() + 6) % 7;
+                          if (cellIso !== targetIso) return false;
+                          if (freq === 'weekly') return true;
+                          // fortnightly: check anchor parity
+                          if (s.fortnightAnchor) {
+                            const anchor = new Date(s.fortnightAnchor + 'T00:00:00');
+                            if (!isNaN(anchor.getTime())) {
+                              const diffDays = Math.round((cellDate - anchor) / 86400000);
+                              return diffDays % 14 === 0;
+                            }
+                          }
+                          return true; // no anchor set, show every matching weekday
+                        }
                         // Non-monthly: match DD-MM dates against this calendar date
                         const dates = (s.dueDates && s.dueDates.length > 0) ? s.dueDates : (s.dueDate ? [s.dueDate] : []);
                         return dates.some(d => {
@@ -9659,6 +9742,23 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const dueDayNum = s.dueDate ? parseInt(String(s.dueDate).replace(/[^0-9]/g,'')) : null;
                           return dueDayNum === selDay;
                         }
+                        if (freq === 'weekly' || freq === 'fortnightly') {
+                          const wd = s.weekday;
+                          if (wd === undefined || wd === null || wd === '') return false;
+                          const targetIso = parseInt(wd);
+                          if (isNaN(targetIso)) return false;
+                          const cellIso = (selDate.getDay() + 6) % 7;
+                          if (cellIso !== targetIso) return false;
+                          if (freq === 'weekly') return true;
+                          if (s.fortnightAnchor) {
+                            const anchor = new Date(s.fortnightAnchor + 'T00:00:00');
+                            if (!isNaN(anchor.getTime())) {
+                              const diffDays = Math.round((selDate - anchor) / 86400000);
+                              return diffDays % 14 === 0;
+                            }
+                          }
+                          return true;
+                        }
                         const dates = (s.dueDates && s.dueDates.length > 0) ? s.dueDates : (s.dueDate ? [s.dueDate] : []);
                         return dates.some(d => {
                           const m = String(d).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
@@ -9668,7 +9768,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       });
                     })().map((s, i) => {
                       const freq = s.freq || 'monthly';
-                      const freqLabel = freq === 'monthly' ? 'Monthly' : freq === 'quarterly' ? 'Quarterly' : freq === 'halfyear' ? '6-Monthly' : 'Annual';
+                      const freqLabel = freq === 'weekly' ? 'Weekly' : freq === 'fortnightly' ? 'Fortnightly' : freq === 'monthly' ? 'Monthly' : freq === 'quarterly' ? 'Quarterly' : freq === 'halfyear' ? '6-Monthly' : 'Annual';
                       return (
                         <div key={`rec-${i}`} className="flex items-center justify-between py-2 px-3 rounded-xl mb-2" style={{background:'rgba(249,115,22,0.08)',border:'1px solid rgba(249,115,22,0.2)'}}>
                           <div>
