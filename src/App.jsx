@@ -8609,13 +8609,24 @@ ${JSON.stringify(ctx, null, 2)}`;
       const bills = [...(b.bills||[])];
       if (!bills[idx]) bills[idx] = { id: Date.now()+Math.random(), name: '', monthly: 0, monthlyStr: '', dueDate: '' };
       if (field === 'name') bills[idx] = { ...bills[idx], name: value };
-      else if (field === 'cost') bills[idx] = { ...bills[idx], monthly: parseFloat(value) || 0, monthlyStr: value };
+      else if (field === 'cost') {
+        const oldAmount = parseFloat(bills[idx].monthly) || 0;
+        const newAmount = parseFloat(value) || 0;
+        const priceHistory = bills[idx].priceHistory || [];
+        // Auto-log only when value meaningfully changed AND old was non-zero (skip initial entry)
+        if (oldAmount > 0 && newAmount > 0 && Math.abs(oldAmount - newAmount) > 0.005) {
+          priceHistory.push({ at: new Date().toISOString(), from: oldAmount, to: newAmount, freq: bills[idx].freq || 'monthly' });
+        }
+        bills[idx] = { ...bills[idx], monthly: newAmount, monthlyStr: value, priceHistory };
+      }
       else if (field === 'dueDate') bills[idx] = { ...bills[idx], dueDate: value };
       else if (field === 'dueDates') bills[idx] = { ...bills[idx], dueDates: value };
       else if (field === 'freq') bills[idx] = { ...bills[idx], freq: value };
       else if (field === 'weekday') bills[idx] = { ...bills[idx], weekday: value };
       else if (field === 'fortnightAnchor') bills[idx] = { ...bills[idx], fortnightAnchor: value };
       else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
+      else if (field === 'provider') bills[idx] = { ...bills[idx], provider: value };
+      else if (field === 'payments') bills[idx] = { ...bills[idx], payments: value };
       updateBucketBills(bucketId, bills);
     };
     const removeBillFromBucket = (bucketId, idx) => {
@@ -8731,7 +8742,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'bills',label:'BILLS'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
+              {[{id:'bills',label:'BILLS'},{id:'payments',label:'PAYMENTS'},{id:'forecast',label:'FORECAST'},{id:'priceLog',label:'PRICE LOG'},{id:'providers',label:'PROVIDERS'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
                 <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
@@ -9572,6 +9583,391 @@ ${JSON.stringify(ctx, null, 2)}`;
           </>)}{/* end activeBucket wrapper */}
             </>
           )}
+
+          {/* ─── PAYMENTS — mark paid/unpaid per period ─── */}
+          {billsSubTab === 'payments' && (() => {
+            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: b })));
+            const sortedBills = [...allBills].map(s => ({ s, nd: computeNextDue(s) }))
+              .sort((a,b) => {
+                if (a.nd && !b.nd) return -1;
+                if (!a.nd && b.nd) return 1;
+                if (a.nd && b.nd) return a.nd.daysAway - b.nd.daysAway;
+                return 0;
+              });
+
+            // For monthly bills, the "current period" is YYYY-MM. For others, use the next due date as period key.
+            const periodKey = (sub) => {
+              const freq = sub.freq || 'monthly';
+              const nd = computeNextDue(sub);
+              if (!nd) return null;
+              if (freq === 'monthly' || freq === 'weekly' || freq === 'fortnightly') {
+                return `${nd.date.getFullYear()}-${String(nd.date.getMonth()+1).padStart(2,'0')}-${String(nd.date.getDate()).padStart(2,'0')}`;
+              }
+              return nd.date.toISOString().split('T')[0];
+            };
+
+            const isPaid = (sub) => {
+              const pk = periodKey(sub);
+              if (!pk) return false;
+              return (sub.payments || []).some(p => p.period === pk);
+            };
+
+            const markPaid = (sub, paid) => {
+              const bucketId = sub._bucket.id;
+              const idx = (sub._bucket.bills || []).findIndex(x => x.id === sub.id);
+              if (idx === -1) return;
+              const pk = periodKey(sub);
+              if (!pk) return;
+              let payments = sub.payments || [];
+              if (paid) {
+                if (!payments.some(p => p.period === pk)) {
+                  payments = [...payments, { period: pk, paidAt: new Date().toISOString(), amount: parseFloat(sub.monthly) || 0 }];
+                }
+              } else {
+                payments = payments.filter(p => p.period !== pk);
+              }
+              updateBillInBucket(bucketId, idx, 'payments', payments);
+            };
+
+            const dueCount = sortedBills.filter(({s}) => !isPaid(s)).length;
+            const paidCount = sortedBills.length - dueCount;
+            const dueTotal = sortedBills.filter(({s}) => !isPaid(s)).reduce((sum, {s}) => sum + monthlyEquivalent(s), 0);
+
+            return (
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                {/* Summary */}
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"14px"}}>// PAYMENT STATUS</div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>OUTSTANDING</div>
+                      <div style={{fontSize:"22px",color:"#ef4444",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{dueCount}</div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PAID</div>
+                      <div style={{fontSize:"22px",color:"#22c55e",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{paidCount}</div>
+                    </div>
+                    <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE TOTAL</div>
+                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${dueTotal.toFixed(0)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",marginLeft:"4px"}}>/mo equiv</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bills list with paid toggle */}
+                {sortedBills.length === 0 ? (
+                  <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO BILLS TO TRACK · Add bills in the BILLS tab</div>
+                ) : sortedBills.map(({s, nd}) => {
+                  const paid = isPaid(s);
+                  const freq = s.freq || 'monthly';
+                  return (
+                    <div key={`${s._bucket.id}-${s.id}`} style={{background:paid?"rgba(34,197,94,0.05)":"rgba(5,12,24,0.6)",border:`0.5px solid ${paid?"rgba(34,197,94,0.3)":"rgba(0,200,255,0.18)"}`,borderLeft:`2px solid ${paid?"#22c55e":(nd && nd.daysAway<=3)?"#ef4444":(nd && nd.daysAway<=7)?"#f59e0b":"#00c8ff"}`,borderRadius:"4px",padding:"12px 14px",display:"flex",alignItems:"center",gap:"12px"}}>
+                      <button onClick={() => markPaid(s, !paid)}
+                        style={{width:"24px",height:"24px",borderRadius:"4px",background:paid?"rgba(34,197,94,0.25)":"transparent",border:`1px solid ${paid?"#22c55e":"rgba(148,163,184,0.4)"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px",color:paid?"#22c55e":"transparent",flexShrink:0}}>
+                        ✓
+                      </button>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:paid?"rgba(148,163,184,0.6)":"#e0eaff",fontWeight:500,textDecoration:paid?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                          {s._bucket.name} · {FREQ_LABEL[freq]}{nd ? ` · Due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
+                        </div>
+                      </div>
+                      <div style={{textAlign:"right",flexShrink:0}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:paid?"rgba(34,197,94,0.7)":"#00c8ff",fontWeight:600}}>${parseFloat(s.monthly).toFixed(2)}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)"}}>{FREQ_SHORT[freq]}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Payment history log */}
+                {(() => {
+                  const allPayments = allBills.flatMap(s => (s.payments||[]).map(p => ({...p, _sub:s})))
+                    .sort((a,b) => new Date(b.paidAt) - new Date(a.paidAt))
+                    .slice(0, 50);
+                  if (allPayments.length === 0) return null;
+                  return (
+                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.18)",borderLeft:"2px solid #22c55e",borderRadius:"6px",marginTop:"10px"}}>
+                      <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",justifyContent:"space-between"}}>
+                        <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PAYMENT HISTORY</span>
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>LAST {allPayments.length}</span>
+                      </div>
+                      <div style={{maxHeight:"320px",overflowY:"auto"}}>
+                        {allPayments.map((p, i) => (
+                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 14px",borderBottom:i<allPayments.length-1?"0.5px solid rgba(34,197,94,0.05)":"none"}}>
+                            <div style={{width:"5px",height:"5px",borderRadius:"50%",background:"#22c55e",boxShadow:"0 0 4px rgba(34,197,94,0.6)",flexShrink:0}}/>
+                            <div style={{flex:1,minWidth:0}}>
+                              <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p._sub.name}</div>
+                              <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{new Date(p.paidAt).toLocaleString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'})} · period {p.period}</div>
+                            </div>
+                            <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.85)",fontWeight:600}}>${parseFloat(p.amount||0).toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            );
+          })()}
+
+          {/* ─── FORECAST — 12-month cashflow projection ─── */}
+          {billsSubTab === 'forecast' && (() => {
+            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0));
+            // Calculate expected monthly outflow for each of the next 12 months
+            const now = new Date();
+            now.setHours(0,0,0,0);
+            const months = [];
+            for (let i = 0; i < 12; i++) {
+              const monthStart = new Date(now.getFullYear(), now.getMonth() + i, 1);
+              const monthEnd = new Date(now.getFullYear(), now.getMonth() + i + 1, 1);
+              let total = 0;
+              const breakdown = {};
+              allBills.forEach(s => {
+                const freq = s.freq || 'monthly';
+                const amt = parseFloat(s.monthly) || 0;
+                let occurrencesThisMonth = 0;
+                if (freq === 'monthly') {
+                  occurrencesThisMonth = s.dueDate ? 1 : 0;
+                } else if (freq === 'weekly') {
+                  if (s.weekday !== undefined && s.weekday !== '') {
+                    const targetIso = parseInt(s.weekday);
+                    let d = new Date(monthStart);
+                    while (d < monthEnd) {
+                      if ((d.getDay()+6)%7 === targetIso) occurrencesThisMonth++;
+                      d.setDate(d.getDate()+1);
+                    }
+                  }
+                } else if (freq === 'fortnightly') {
+                  if (s.weekday !== undefined && s.weekday !== '' && s.fortnightAnchor) {
+                    const anchor = new Date(s.fortnightAnchor + 'T00:00:00');
+                    const targetIso = parseInt(s.weekday);
+                    let d = new Date(monthStart);
+                    while (d < monthEnd) {
+                      if ((d.getDay()+6)%7 === targetIso) {
+                        const diffDays = Math.round((d - anchor) / 86400000);
+                        if (diffDays % 14 === 0) occurrencesThisMonth++;
+                      }
+                      d.setDate(d.getDate()+1);
+                    }
+                  }
+                } else {
+                  // quarterly/halfyear/annual: check DD-MM dates
+                  const dates = (s.dueDates && s.dueDates.length > 0) ? s.dueDates : (s.dueDate ? [s.dueDate] : []);
+                  dates.forEach(dstr => {
+                    const m = String(dstr).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
+                    if (!m) return;
+                    if (parseInt(m[2]) === monthStart.getMonth()+1) occurrencesThisMonth++;
+                  });
+                }
+                const sub = occurrencesThisMonth * amt;
+                total += sub;
+                if (sub > 0) breakdown[s.name] = (breakdown[s.name] || 0) + sub;
+              });
+              months.push({
+                label: monthStart.toLocaleDateString('en-AU',{month:'short',year:'2-digit'}),
+                total, breakdown,
+              });
+            }
+            const maxTotal = Math.max(...months.map(m => m.total), 1);
+            const grandTotal = months.reduce((s,m) => s + m.total, 0);
+            const avgPerMonth = grandTotal / 12;
+
+            return (
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"14px"}}>// 12-MONTH CASHFLOW PROJECTION</div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px",marginBottom:"20px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NEXT 12 MONTHS</div>
+                      <div style={{fontSize:"22px",color:"#00c8ff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>${grandTotal.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>AVG PER MONTH</div>
+                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${avgPerMonth.toFixed(0)}</div>
+                    </div>
+                    <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HIGHEST MONTH</div>
+                      <div style={{fontFamily:"monospace",lineHeight:1.2}}>
+                        <span style={{fontSize:"18px",color:"#f59e0b",fontWeight:600}}>${maxTotal.toFixed(0)}</span>
+                        <span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",marginLeft:"8px"}}>{months.find(m => m.total === maxTotal)?.label}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bar chart */}
+                  <div style={{display:"flex",alignItems:"flex-end",gap:"6px",height:"180px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",paddingBottom:"22px",position:"relative"}}>
+                    {months.map((m, i) => {
+                      const heightPct = (m.total / maxTotal) * 100;
+                      const isMax = m.total === maxTotal;
+                      const isCurrent = i === 0;
+                      return (
+                        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",height:"100%",justifyContent:"flex-end",position:"relative"}}>
+                          <div style={{fontSize:"9px",fontFamily:"monospace",color:isMax?"#f59e0b":isCurrent?"#00c8ff":"rgba(148,163,184,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
+                          <div style={{width:"100%",height:`${heightPct}%`,minHeight:"4px",background:isMax?"linear-gradient(180deg, rgba(245,158,11,0.95), rgba(245,158,11,0.35))":isCurrent?"linear-gradient(180deg, rgba(0,200,255,0.95), rgba(0,200,255,0.35))":"linear-gradient(180deg, rgba(0,200,255,0.5), rgba(0,200,255,0.15))",border:`0.5px solid ${isMax?"rgba(245,158,11,0.6)":isCurrent?"rgba(0,200,255,0.7)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isMax?"0 0 12px rgba(245,158,11,0.3)":isCurrent?"0 0 12px rgba(0,200,255,0.25)":"none"}}/>
+                          <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:"monospace",color:isMax?"rgba(245,158,11,0.85)":isCurrent?"rgba(0,200,255,0.85)":"rgba(148,163,184,0.55)",textAlign:"center",letterSpacing:"0.3px"}}>{m.label}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Per-month breakdown */}
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.18)",borderLeft:"2px solid #00c8ff",borderRadius:"6px"}}>
+                  <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MONTH-BY-MONTH BREAKDOWN</span>
+                  </div>
+                  {months.map((m, i) => {
+                    const items = Object.entries(m.breakdown).sort((a,b) => b[1] - a[1]);
+                    return (
+                      <details key={i} style={{borderBottom:i<11?"0.5px solid rgba(0,200,255,0.05)":"none"}}>
+                        <summary style={{padding:"10px 14px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",listStyle:"none"}}>
+                          <span style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff"}}>{m.label}</span>
+                          <span style={{fontFamily:"monospace",fontSize:"12px",color:"#00c8ff",fontWeight:600}}>${m.total.toFixed(2)}</span>
+                        </summary>
+                        <div style={{padding:"4px 14px 12px"}}>
+                          {items.length === 0 ? (
+                            <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>No bills due this month</div>
+                          ) : items.map(([name, amt], j) => (
+                            <div key={j} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:j<items.length-1?"0.5px solid rgba(148,163,184,0.05)":"none"}}>
+                              <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)"}}>{name}</span>
+                              <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(148,163,184,0.75)"}}>${amt.toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ─── PRICE LOG — track when bills go up/down ─── */}
+          {billsSubTab === 'priceLog' && (() => {
+            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name && (x.priceHistory||[]).length > 0).map(x => ({ ...x, _bucket: b })));
+            const allEvents = allBills.flatMap(s => (s.priceHistory||[]).map(p => ({...p, _sub:s})))
+              .sort((a,b) => new Date(b.at) - new Date(a.at));
+            const increases = allEvents.filter(e => e.to > e.from);
+            const decreases = allEvents.filter(e => e.to < e.from);
+            const totalIncrease = increases.reduce((s,e) => s + (e.to - e.from) * (FREQ_MULT[e.freq||'monthly']||1) * 12, 0);
+
+            return (
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"14px"}}>// PRICE CHANGE LOG</div>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px"}}>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INCREASES</div>
+                      <div style={{fontSize:"22px",color:"#ef4444",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{increases.length}</div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DECREASES</div>
+                      <div style={{fontSize:"22px",color:"#22c55e",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{decreases.length}</div>
+                    </div>
+                    <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ANNUAL IMPACT</div>
+                      <div style={{fontSize:"22px",color:totalIncrease>0?"#ef4444":"#22c55e",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{totalIncrease>=0?'+':''}${totalIncrease.toFixed(0)}/yr</div>
+                    </div>
+                  </div>
+                </div>
+
+                {allEvents.length === 0 ? (
+                  <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO PRICE CHANGES LOGGED YET · Edit any bill's cost to start tracking</div>
+                ) : (
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.18)",borderRadius:"6px",overflow:"hidden"}}>
+                    {allEvents.map((e, i) => {
+                      const diff = e.to - e.from;
+                      const pct = e.from > 0 ? ((diff / e.from) * 100) : 0;
+                      const up = diff > 0;
+                      const c = up ? '#ef4444' : '#22c55e';
+                      return (
+                        <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",borderBottom:i<allEvents.length-1?"0.5px solid rgba(0,200,255,0.05)":"none",borderLeft:`2px solid ${c}55`}}>
+                          <div style={{width:"24px",height:"24px",borderRadius:"50%",background:`${c}15`,border:`0.5px solid ${c}50`,display:"flex",alignItems:"center",justifyContent:"center",color:c,fontSize:"14px",fontWeight:600,flexShrink:0}}>
+                            {up?'↑':'↓'}
+                          </div>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{e._sub.name}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                              {new Date(e.at).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})} · {e._sub._bucket.name}
+                            </div>
+                          </div>
+                          <div style={{textAlign:"right",flexShrink:0,fontFamily:"monospace"}}>
+                            <div style={{fontSize:"12px",color:"rgba(148,163,184,0.6)"}}>
+                              ${e.from.toFixed(2)} → <span style={{color:c,fontWeight:600}}>${e.to.toFixed(2)}</span>
+                            </div>
+                            <div style={{fontSize:"10px",color:c,fontWeight:600,letterSpacing:"0.5px"}}>
+                              {up?'+':''}${diff.toFixed(2)} ({up?'+':''}{pct.toFixed(1)}%)
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ─── PROVIDERS — account #, login, contact per bill ─── */}
+          {billsSubTab === 'providers' && (() => {
+            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name).map(x => ({ ...x, _bucket: b })));
+            return (
+              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// PROVIDER DETAILS</div>
+                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",lineHeight:1.5}}>
+                    Store account numbers, login URLs and contact info for each bill. Useful for managing accounts, disputing charges or swapping providers.
+                  </div>
+                </div>
+
+                {allBills.length === 0 ? (
+                  <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO BILLS YET · Add bills in the BILLS tab</div>
+                ) : allBills.map(s => {
+                  const provider = s.provider || {};
+                  const bucketId = s._bucket.id;
+                  const idx = (s._bucket.bills || []).findIndex(x => x.id === s.id);
+                  const updateProvider = (patch) => updateBillInBucket(bucketId, idx, 'provider', { ...provider, ...patch });
+                  return (
+                    <div key={`${bucketId}-${s.id}`} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.18)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px 16px"}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"14px",color:"#e0eaff",fontWeight:600}}>{s.name}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>{s._bucket.name}</div>
+                      </div>
+                      <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ACCOUNT NUMBER</div>
+                          <input value={provider.accountNumber||''} onChange={e => updateProvider({accountNumber:e.target.value})} placeholder="e.g. 1234567" className="slick-input" onFocus={scrollInputIntoView}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LOGIN URL</div>
+                          <input value={provider.loginUrl||''} onChange={e => updateProvider({loginUrl:e.target.value})} placeholder="https://..." className="slick-input" onFocus={scrollInputIntoView}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CONTACT PHONE</div>
+                          <input value={provider.contactPhone||''} onChange={e => updateProvider({contactPhone:e.target.value})} placeholder="13 XX XX" className="slick-input" onFocus={scrollInputIntoView}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CONTACT EMAIL</div>
+                          <input value={provider.contactEmail||''} onChange={e => updateProvider({contactEmail:e.target.value})} placeholder="support@..." className="slick-input" onFocus={scrollInputIntoView}/>
+                        </div>
+                        <div style={{gridColumn:isWide?"1 / -1":"auto"}}>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
+                          <textarea value={provider.notes||''} onChange={e => updateProvider({notes:e.target.value})} placeholder="Plan details, contract end date, anything to remember..." className="slick-textarea" rows={2} onFocus={scrollInputIntoView}/>
+                        </div>
+                      </div>
+                      {provider.loginUrl && (
+                        <a href={provider.loginUrl.startsWith('http')?provider.loginUrl:`https://${provider.loginUrl}`} target="_blank" rel="noopener noreferrer"
+                          style={{display:"inline-block",marginTop:"10px",padding:"6px 14px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.35)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",textDecoration:"none",fontWeight:600}}>
+                          → OPEN LOGIN
+                        </a>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
 
           {billsSubTab === 'calendar' && (
             <>
