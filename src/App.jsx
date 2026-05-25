@@ -9990,64 +9990,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               )}
 
-              {/* Bills List for Current Month */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                  <h2 className="text-lg font-semibold">Bills This Month</h2>
-                  <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>
-                    Total: ${Object.entries(calendarBills)
-                      .filter(([date]) => {
-                        const d = new Date(date);
-                        return d.getMonth() === calendarMonth.getMonth() && d.getFullYear() === calendarMonth.getFullYear();
-                      })
-                      .reduce((sum, [, bills]) => sum + bills.reduce((s, b) => s + (parseFloat(b.amount) || 0), 0), 0)
-                      .toFixed(2)}
-                  </p>
-                </div>
-                <div className="divide-y">
-                  {Object.entries(calendarBills)
-                    .filter(([date]) => {
-                      const d = new Date(date);
-                      return d.getMonth() === calendarMonth.getMonth() && d.getFullYear() === calendarMonth.getFullYear();
-                    })
-                    .sort(([a], [b]) => new Date(a) - new Date(b))
-                    .map(([date, bills]) => (
-                      bills.map((bill, idx) => (
-                        <div key={`${date}-${idx}`} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"3px"}}>
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className="text-xs text-gray-500 w-14 flex-shrink-0">
-                              {new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
-                            </div>
-                            <div className="font-medium truncate">{bill.name}</div>
-                          </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <span className="font-semibold text-red-600">${parseFloat(bill.amount || 0).toFixed(2)}</span>
-                            <button
-                              onClick={() => {
-                                setCalendarBills(prev => {
-                                  const updated = { ...prev };
-                                  updated[date] = updated[date].filter((_, i) => i !== idx);
-                                  if (updated[date].length === 0) delete updated[date];
-                                  return updated;
-                                });
-                              }}
-                              style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                            </button>
-                          </div>
-                        </div>
-                      ))
-                    ))}
-                  {Object.entries(calendarBills).filter(([date]) => {
-                    const d = new Date(date);
-                    return d.getMonth() === calendarMonth.getMonth() && d.getFullYear() === calendarMonth.getFullYear();
-                  }).length === 0 && (
-                    <div className="p-6 text-center text-gray-500">
-                      No bills scheduled. Tap a day above to add one!
-                    </div>
-                  )}
-                </div>
-              </div>
             </>
           )}
 
