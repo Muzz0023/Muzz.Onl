@@ -9403,7 +9403,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
-          {/* Branch Graph — visual tree of active bucket's bills, collapsible */}
+          {/* Branch Graph — Palantir-style flowing SVG tree, collapsible */}
           {activeBucket && (activeBucket.bills || []).some(x => x?.name && x.monthly > 0) && (() => {
             const bucket = activeBucket;
             const bills = (bucket.bills || []).filter(x => x?.name && x.monthly > 0);
@@ -9412,33 +9412,98 @@ ${JSON.stringify(ctx, null, 2)}`;
               .sort((a,b) => b.mEq - a.mEq);
             const bucketTotal = sortedBills.reduce((sum, {mEq}) => sum + mEq, 0);
             const maxBillEq = Math.max(...sortedBills.map(b => b.mEq), 1);
+            const cols = isWide ? Math.min(sortedBills.length, 4) : 2;
+            const rows = Math.ceil(sortedBills.length / cols);
+            // SVG viewBox: 1000 wide × variable height (we use 100 per row)
+            const vbW = 1000;
+            const trunkH = 80;
+            const rowH = 140;
+            const vbH = trunkH + rows * rowH;
+            const bucketX = vbW / 2;
+            const bucketY = 30;
+            // Compute bill node centres
+            const nodes = sortedBills.map((b, i) => {
+              const r = Math.floor(i / cols);
+              const c = i % cols;
+              const colCount = (r === rows - 1 && sortedBills.length % cols !== 0) ? sortedBills.length % cols : cols;
+              const colWidth = vbW / colCount;
+              const x = colWidth * c + colWidth / 2;
+              const y = trunkH + r * rowH + 50;
+              return { ...b, x, y, r, c };
+            });
             return (
               <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
                   <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {bucket.name.toUpperCase()} TREE · BRANCH GRAPH</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
                 </summary>
-                <div style={{padding:"16px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-                  {/* Bucket node — root */}
-                  <div style={{display:"flex",justifyContent:"center",marginBottom:"6px"}}>
-                    <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"10px 18px",background:`linear-gradient(180deg, ${accent}25, ${accent}10)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 16px ${accent}40`,minWidth:"140px"}}>
-                      <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"2px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
-                      <span style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",marginLeft:"4px"}}>/mo</span></span>
-                      <span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"1px"}}>{sortedBills.length} BILL{sortedBills.length!==1?'S':''}</span>
+                <div style={{padding:"20px 12px 16px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",position:"relative"}}>
+                  {/* SVG overlay — flowing branch paths */}
+                  <svg viewBox={`0 0 ${vbW} ${vbH}`} preserveAspectRatio="none" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
+                    <defs>
+                      <linearGradient id={`branch-grad-${bucket.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor={accent} stopOpacity="0.9"/>
+                        <stop offset="100%" stopColor={accent} stopOpacity="0.2"/>
+                      </linearGradient>
+                      <filter id={`glow-${bucket.id}`} x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    {/* Curved paths from bucket node to each bill */}
+                    {nodes.map((n, i) => {
+                      // Cubic Bezier flowing down and out
+                      const midY = (bucketY + n.y) / 2;
+                      const d = `M ${bucketX} ${bucketY + 18} C ${bucketX} ${midY}, ${n.x} ${midY}, ${n.x} ${n.y - 22}`;
+                      return (
+                        <g key={i}>
+                          {/* Glow underlay */}
+                          <path d={d} stroke={accent} strokeWidth="3" fill="none" opacity="0.15" filter={`url(#glow-${bucket.id})`}/>
+                          {/* Main path */}
+                          <path d={d} stroke={`url(#branch-grad-${bucket.id})`} strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.85"/>
+                          {/* Junction dot at bill */}
+                          <circle cx={n.x} cy={n.y - 22} r="3" fill={accent} opacity="0.9"/>
+                          <circle cx={n.x} cy={n.y - 22} r="6" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.5"/>
+                        </g>
+                      );
+                    })}
+                    {/* Bucket exit dot */}
+                    <circle cx={bucketX} cy={bucketY + 18} r="3" fill={accent} opacity="0.95"/>
+                    <circle cx={bucketX} cy={bucketY + 18} r="7" fill="none" stroke={accent} strokeWidth="0.5" opacity="0.4"/>
+                    {/* Animated pulse — small dot traveling along each path */}
+                    {nodes.map((n, i) => {
+                      const midY = (bucketY + n.y) / 2;
+                      const d = `M ${bucketX} ${bucketY + 18} C ${bucketX} ${midY}, ${n.x} ${midY}, ${n.x} ${n.y - 22}`;
+                      return (
+                        <circle key={`p-${i}`} r="2.5" fill={accent} opacity="0.9">
+                          <animateMotion dur={`${3 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.3}s`} path={d}/>
+                          <animate attributeName="opacity" values="0;1;1;0" dur={`${3 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.3}s`}/>
+                        </circle>
+                      );
+                    })}
+                  </svg>
+
+                  {/* HTML grid layer — bucket + bill cards */}
+                  <div style={{position:"relative",zIndex:1}}>
+                    {/* Bucket node — root */}
+                    <div style={{display:"flex",justifyContent:"center",marginBottom:`${trunkH - 20}px`}}>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"10px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 24px ${accent}50, inset 0 1px 0 ${accent}40`,minWidth:"160px",position:"relative"}}>
+                        {/* Corner ticks */}
+                        <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
+                        <span style={{fontSize:"17px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
+                        <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{sortedBills.length} BILL{sortedBills.length!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Vertical trunk line */}
-                  <div style={{display:"flex",justifyContent:"center"}}>
-                    <div style={{width:"1px",height:"20px",background:`linear-gradient(180deg, ${accent}, ${accent}30)`}}/>
-                  </div>
-
-                  {/* Horizontal connector + branches */}
-                  <div style={{position:"relative",padding:"0 8px"}}>
-                    {sortedBills.length > 1 && (
-                      <div style={{position:"absolute",top:"0",left:`calc(${100/Math.min(sortedBills.length, isWide?4:2)/2}% + 8px)`,right:`calc(${100/Math.min(sortedBills.length, isWide?4:2)/2}% + 8px)`,height:"1px",background:`${accent}50`}}/>
-                    )}
-                    <div style={{display:"grid",gridTemplateColumns:isWide?`repeat(${Math.min(sortedBills.length,4)},1fr)`:"repeat(2,1fr)",gap:"10px",rowGap:"16px"}}>
+                    {/* Bill grid */}
+                    <div style={{display:"grid",gridTemplateColumns:`repeat(${cols},1fr)`,gap:"10px",rowGap:"24px"}}>
                       {sortedBills.map(({s, nd, mEq}, idx) => {
                         const freq = s.freq || 'monthly';
                         const widthPct = (mEq / maxBillEq) * 100;
@@ -9446,22 +9511,32 @@ ${JSON.stringify(ctx, null, 2)}`;
                         const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
                         const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
                         return (
-                          <details key={s.id || idx} style={{position:"relative",borderRadius:"4px",overflow:"hidden"}}>
-                            <div style={{position:"absolute",top:"-16px",left:"50%",width:"1px",height:"16px",background:`${accent}50`,pointerEvents:"none"}}/>
-                            <summary style={{padding:"8px 10px",cursor:"pointer",listStyle:"none",background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}35`,borderLeft:`2px solid ${dotColor}`,borderRadius:"4px",position:"relative",overflow:"hidden"}}>
-                              <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
-                              <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <details key={s.id || idx} style={{position:"relative",borderRadius:"4px"}}>
+                            <summary style={{padding:"10px 12px",cursor:"pointer",listStyle:"none",background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}40`,borderLeft:`2px solid ${dotColor}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}15`}}>
+                              {/* Corner ticks */}
+                              <div style={{position:"absolute",top:"0",left:"0",width:"5px",height:"5px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
+                              <div style={{position:"absolute",top:"0",right:"0",width:"5px",height:"5px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
+                              {/* Bar showing relative size */}
+                              <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}25, ${accent}05)`,pointerEvents:"none"}}/>
+                              <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"3px"}}>
                                 <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                                  <div style={{width:"6px",height:"6px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 4px ${dotColor}80`,flexShrink:0}}/>
-                                  <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
+                                  <div style={{width:"6px",height:"6px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 6px ${dotColor}`,flexShrink:0}}/>
+                                  <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0,letterSpacing:"0.3px"}}>{s.name}</span>
                                 </div>
                                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"12px"}}>
-                                  <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{FREQ_LABEL[freq]}</span>
-                                  <span style={{fontFamily:"monospace",fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                  <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.3px"}}>{FREQ_LABEL[freq]}</span>
+                                  <span style={{fontFamily:"monospace",fontSize:"12px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
                                 </div>
+                                {nd && (
+                                  <div style={{paddingLeft:"12px"}}>
+                                    <span style={{fontFamily:"monospace",fontSize:"8px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.4)",letterSpacing:"0.5px",fontWeight:600}}>
+                                      {nd.daysAway===0?'TODAY':nd.daysAway===1?'DUE TMRW':`IN ${nd.daysAway}D`}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                             </summary>
-                            <div style={{padding:"10px 12px",background:`${accent}05`,border:`0.5px solid ${accent}25`,borderTop:"none",borderRadius:"0 0 4px 4px",fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.85)",lineHeight:1.7}}>
+                            <div style={{padding:"10px 12px",background:`${accent}08`,border:`0.5px solid ${accent}30`,borderTop:"none",borderRadius:"0 0 4px 4px",fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.85)",lineHeight:1.7}}>
                               <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:"rgba(148,163,184,0.55)"}}>Frequency</span><span>{FREQ_LABEL[freq]}</span></div>
                               <div style={{display:"flex",justifyContent:"space-between"}}><span style={{color:"rgba(148,163,184,0.55)"}}>Cost</span><span>${parseFloat(s.monthly).toFixed(2)}{FREQ_SHORT[freq]}</span></div>
                               {freq !== 'monthly' && (
@@ -9488,6 +9563,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               </details>
             );
           })()}
+
 
           {/* Bills vs Salary Comparison — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
