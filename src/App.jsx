@@ -8601,6 +8601,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       if (field === 'name') bills[idx] = { ...bills[idx], name: value };
       else if (field === 'cost') bills[idx] = { ...bills[idx], monthly: parseFloat(value) || 0, monthlyStr: value };
       else if (field === 'dueDate') bills[idx] = { ...bills[idx], dueDate: value };
+      else if (field === 'dueDates') bills[idx] = { ...bills[idx], dueDates: value };
       else if (field === 'freq') bills[idx] = { ...bills[idx], freq: value };
       else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
       updateBucketBills(bucketId, bills);
@@ -8627,6 +8628,42 @@ ${JSON.stringify(ctx, null, 2)}`;
     const FREQ_SHORT = { monthly: '/mo', quarterly: '/qtr', halfyear: '/6mo', annual: '/yr' };
     const monthlyEquivalent = (s) => (parseFloat(s.monthly) || 0) * (FREQ_MULT[s.freq || 'monthly'] || 1);
     const totalMonthly = filledSubs.reduce((sum, s) => sum + monthlyEquivalent(s), 0);
+
+    // Compute next due date for any bill — returns {date: Date, daysAway: number} or null
+    const computeNextDue = (sub) => {
+      const freq = sub?.freq || 'monthly';
+      const now = new Date();
+      now.setHours(0,0,0,0);
+
+      if (freq === 'monthly') {
+        // Single day-of-month from dueDate
+        const day = sub?.dueDate ? parseInt(String(sub.dueDate).replace(/[^0-9]/g,'')) : null;
+        if (!day) return null;
+        let next = new Date(now.getFullYear(), now.getMonth(), day);
+        if (next < now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
+        const daysAway = Math.round((next - now) / 86400000);
+        return { date: next, daysAway };
+      }
+
+      // For non-monthly, look at dueDates array of "DD-MM" strings
+      const dates = (sub?.dueDates && sub.dueDates.length > 0) ? sub.dueDates : (sub?.dueDate ? [sub.dueDate] : []);
+      if (dates.length === 0) return null;
+
+      let nextDate = null;
+      let nextDaysAway = Infinity;
+      dates.forEach(s => {
+        const m = String(s).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
+        if (!m) return;
+        const day = parseInt(m[1]);
+        const month = parseInt(m[2]) - 1;
+        if (!day || month < 0 || month > 11) return;
+        let cand = new Date(now.getFullYear(), month, day);
+        if (cand < now) cand = new Date(now.getFullYear()+1, month, day);
+        const daysAway = Math.round((cand - now) / 86400000);
+        if (daysAway < nextDaysAway) { nextDaysAway = daysAway; nextDate = cand; }
+      });
+      return nextDate ? { date: nextDate, daysAway: nextDaysAway } : null;
+    };
     const salaryNum = activeBucket ? (parseFloat(activeBucket.incomeStr) || 0) : 0;
     const handleSalaryChange = (value) => activeBucket && updateBucketIncome(activeBucket.id, value);
 
@@ -8829,16 +8866,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {/* SUMMARY PANEL — only show if there are bills */}
                 {filledSubs.length > 0 && (() => {
                   const annualTotal = totalMonthly * 12;
-                  // Find next due bill (by day of month)
-                  const todayDay = new Date().getDate();
+                  // Find next due bill across all bills
                   let nextDue = null;
                   filledSubs.forEach(s => {
-                    if (!s.dueDate) return;
-                    const day = parseInt(String(s.dueDate).replace(/[^0-9]/g,''));
-                    if (!day) return;
-                    let daysAway = day - todayDay;
-                    if (daysAway < 0) daysAway += 30;
-                    if (!nextDue || daysAway < nextDue.daysAway) nextDue = { sub: s, daysAway, day };
+                    const nd = computeNextDue(s);
+                    if (nd && (!nextDue || nd.daysAway < nextDue.daysAway)) {
+                      nextDue = { sub: s, ...nd };
+                    }
                   });
                   return (
                     <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}30`,borderLeft:`2px solid ${bucketAccent}`,borderRadius:"6px",padding:"16px 18px",marginBottom:"6px"}}>
@@ -8871,16 +8905,22 @@ ${JSON.stringify(ctx, null, 2)}`;
                   );
                 })()}
 
-                {currentSubs.map((sub, index) => {
+                {currentSubs.map((sub, origIndex) => ({ sub, origIndex, nd: computeNextDue(sub) }))
+                  .sort((a, b) => {
+                    // Bills with dates first (ascending by days away), then bills with no date
+                    if (a.nd && !b.nd) return -1;
+                    if (!a.nd && b.nd) return 1;
+                    if (a.nd && b.nd) return a.nd.daysAway - b.nd.daysAway;
+                    return 0;
+                  })
+                  .map(({ sub, origIndex: index, nd }) => {
                   const isEditing = editingBillIdx === index;
                   const freq = sub?.freq || 'monthly';
                   const monthlyEq = monthlyEquivalent(sub);
-                  const dueDay = sub?.dueDate ? parseInt(String(sub.dueDate).replace(/[^0-9]/g,'')) : null;
-                  const todayDay = new Date().getDate();
-                  let daysAway = null;
-                  if (dueDay) { daysAway = dueDay - todayDay; if (daysAway < 0) daysAway += 30; }
+                  const daysAway = nd ? nd.daysAway : null;
                   const isSoon = daysAway !== null && daysAway <= 7;
                   const isToday = daysAway === 0;
+                  const dueDay = nd ? nd.date.getDate() : null;
                   return (
                     <div key={sub?.id || index} style={{background:isEditing?`${bucketAccent}0d`:"rgba(5,12,24,0.6)",border:`0.5px solid ${bucketAccent}25`,borderLeft:`2px solid ${isToday?'#ef4444':isSoon?'#f59e0b':bucketAccent}`,borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
                       {/* Compact row */}
@@ -8892,7 +8932,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                             {sub?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed bill</span>}
                           </div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
-                            {FREQ_LABEL[freq]}{dueDay?` · Due ${dueDay}${dueDay===1?'st':dueDay===2?'nd':dueDay===3?'rd':'th'}`:''}
+                            {FREQ_LABEL[freq]}{nd ? ` · Due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
                             {freq !== 'monthly' && sub?.monthly > 0 && (
                               <span style={{color:`${bucketAccent}aa`,marginLeft:"6px"}}>· ${monthlyEq.toFixed(2)}/mo equiv</span>
                             )}
@@ -8955,18 +8995,56 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 <option value="annual">Annually</option>
                               </select>
                             </div>
-                            <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE DAY</div>
-                              <input
-                                type="text"
-                                value={sub?.dueDate || ''}
-                                onFocus={scrollInputIntoView}
-                                onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
-                                placeholder="e.g. 23"
-                                className="slick-input"
-                              />
-                            </div>
+                            {freq === 'monthly' && (
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE DAY</div>
+                                <input
+                                  type="text"
+                                  value={sub?.dueDate || ''}
+                                  onFocus={scrollInputIntoView}
+                                  onChange={(e) => updateBillInBucket(activeBucket.id, index, 'dueDate', e.target.value)}
+                                  placeholder="e.g. 23"
+                                  className="slick-input"
+                                />
+                              </div>
+                            )}
                           </div>
+
+                          {/* MULTI-DATE picker for non-monthly */}
+                          {freq !== 'monthly' && (() => {
+                            const required = freq === 'quarterly' ? 4 : freq === 'halfyear' ? 2 : 1;
+                            const existing = (sub?.dueDates && sub.dueDates.length > 0) ? sub.dueDates : (sub?.dueDate ? [sub.dueDate] : []);
+                            // Pad to required length so user always sees the slots
+                            const slots = [...existing];
+                            while (slots.length < required) slots.push('');
+                            const trimmed = slots.slice(0, required);
+                            return (
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>
+                                  DUE DATES · {required} per year (DD-MM)
+                                </div>
+                                <div style={{display:"grid",gridTemplateColumns:isWide?`repeat(${required}, 1fr)`:"repeat(2, 1fr)",gap:"8px"}}>
+                                  {trimmed.map((val, i) => (
+                                    <input key={i}
+                                      type="text"
+                                      value={val}
+                                      onFocus={scrollInputIntoView}
+                                      onChange={(e) => {
+                                        const newDates = [...trimmed];
+                                        newDates[i] = e.target.value;
+                                        updateBillInBucket(activeBucket.id, index, 'dueDates', newDates);
+                                      }}
+                                      placeholder={i===0?"01-04":i===1?"01-07":i===2?"01-10":"01-01"}
+                                      className="slick-input"
+                                    />
+                                  ))}
+                                </div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>
+                                  Enter as day-month (e.g. 01-04 for April 1st). Bill will recur on these dates each year.
+                                </div>
+                              </div>
+                            );
+                          })()}
                           {freq !== 'monthly' && sub?.monthly > 0 && (
                             <div style={{fontSize:"10px",color:`${bucketAccent}cc`,fontFamily:"monospace",padding:"8px 10px",background:`${bucketAccent}10`,border:`0.5px solid ${bucketAccent}30`,borderRadius:"3px"}}>
                               ≈ ${monthlyEq.toFixed(2)}/mo · ${(monthlyEq*12).toFixed(0)}/yr equivalent
