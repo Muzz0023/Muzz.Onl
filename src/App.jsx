@@ -8616,7 +8616,6 @@ ${JSON.stringify(ctx, null, 2)}`;
       else if (field === 'weekday') bills[idx] = { ...bills[idx], weekday: value };
       else if (field === 'fortnightAnchor') bills[idx] = { ...bills[idx], fortnightAnchor: value };
       else if (field === 'notes') bills[idx] = { ...bills[idx], notes: value };
-      else if (field === 'payments') bills[idx] = { ...bills[idx], payments: value };
       updateBucketBills(bucketId, bills);
     };
     const removeBillFromBucket = (bucketId, idx) => {
@@ -8732,7 +8731,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             {/* Main tabs */}
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-              {[{id:'bills',label:'BILLS'},{id:'payments',label:'PAYMENTS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
+              {[{id:'bills',label:'BILLS'},{id:'forecast',label:'FORECAST'},{id:'calendar',label:'CALENDAR'},{id:'goals',label:'GOALS'},{id:'debts',label:'DEBTS'},{id:'debtCalc',label:'DEBT CALC'}].map(tab => (
                 <button key={tab.id} onClick={() => setBillsSubTab(tab.id)} style={{padding:"8px 16px",background:billsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`1px solid ${billsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.15)"}`,borderRadius:"4px",color:billsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
                 </button>
@@ -9573,133 +9572,6 @@ ${JSON.stringify(ctx, null, 2)}`;
           </>)}{/* end activeBucket wrapper */}
             </>
           )}
-
-          {/* ─── PAYMENTS — mark paid/unpaid per period ─── */}
-          {billsSubTab === 'payments' && (() => {
-            const allBills = buckets.flatMap(b => (b.bills||[]).filter(x => x?.name && x.monthly > 0).map(x => ({ ...x, _bucket: b })));
-            const sortedBills = [...allBills].map(s => ({ s, nd: computeNextDue(s) }))
-              .sort((a,b) => {
-                if (a.nd && !b.nd) return -1;
-                if (!a.nd && b.nd) return 1;
-                if (a.nd && b.nd) return a.nd.daysAway - b.nd.daysAway;
-                return 0;
-              });
-
-            // For monthly bills, the "current period" is YYYY-MM. For others, use the next due date as period key.
-            const periodKey = (sub) => {
-              const freq = sub.freq || 'monthly';
-              const nd = computeNextDue(sub);
-              if (!nd) return null;
-              if (freq === 'monthly' || freq === 'weekly' || freq === 'fortnightly') {
-                return `${nd.date.getFullYear()}-${String(nd.date.getMonth()+1).padStart(2,'0')}-${String(nd.date.getDate()).padStart(2,'0')}`;
-              }
-              return nd.date.toISOString().split('T')[0];
-            };
-
-            const isPaid = (sub) => {
-              const pk = periodKey(sub);
-              if (!pk) return false;
-              return (sub.payments || []).some(p => p.period === pk);
-            };
-
-            const markPaid = (sub, paid) => {
-              const bucketId = sub._bucket.id;
-              const idx = (sub._bucket.bills || []).findIndex(x => x.id === sub.id);
-              if (idx === -1) return;
-              const pk = periodKey(sub);
-              if (!pk) return;
-              let payments = sub.payments || [];
-              if (paid) {
-                if (!payments.some(p => p.period === pk)) {
-                  payments = [...payments, { period: pk, paidAt: new Date().toISOString(), amount: parseFloat(sub.monthly) || 0 }];
-                }
-              } else {
-                payments = payments.filter(p => p.period !== pk);
-              }
-              updateBillInBucket(bucketId, idx, 'payments', payments);
-            };
-
-            const dueCount = sortedBills.filter(({s}) => !isPaid(s)).length;
-            const paidCount = sortedBills.length - dueCount;
-            const dueTotal = sortedBills.filter(({s}) => !isPaid(s)).reduce((sum, {s}) => sum + monthlyEquivalent(s), 0);
-
-            return (
-              <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                {/* Summary */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"16px 18px"}}>
-                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"14px"}}>// PAYMENT STATUS</div>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(3,1fr)":"repeat(2,1fr)",gap:"14px"}}>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>OUTSTANDING</div>
-                      <div style={{fontSize:"22px",color:"#ef4444",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{dueCount}</div>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PAID</div>
-                      <div style={{fontSize:"22px",color:"#22c55e",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{paidCount}</div>
-                    </div>
-                    <div style={{gridColumn:isWide?"auto":"1 / -1"}}>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>DUE TOTAL</div>
-                      <div style={{fontSize:"22px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${dueTotal.toFixed(0)}<span style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",marginLeft:"4px"}}>/mo equiv</span></div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bills list with paid toggle */}
-                {sortedBills.length === 0 ? (
-                  <div style={{padding:"40px",textAlign:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>NO BILLS TO TRACK · Add bills in the BILLS tab</div>
-                ) : sortedBills.map(({s, nd}) => {
-                  const paid = isPaid(s);
-                  const freq = s.freq || 'monthly';
-                  return (
-                    <div key={`${s._bucket.id}-${s.id}`} style={{background:paid?"rgba(34,197,94,0.05)":"rgba(5,12,24,0.6)",border:`0.5px solid ${paid?"rgba(34,197,94,0.3)":"rgba(0,200,255,0.18)"}`,borderLeft:`2px solid ${paid?"#22c55e":(nd && nd.daysAway<=3)?"#ef4444":(nd && nd.daysAway<=7)?"#f59e0b":"#00c8ff"}`,borderRadius:"4px",padding:"12px 14px",display:"flex",alignItems:"center",gap:"12px"}}>
-                      <button onClick={() => markPaid(s, !paid)}
-                        style={{width:"24px",height:"24px",borderRadius:"4px",background:paid?"rgba(34,197,94,0.25)":"transparent",border:`1px solid ${paid?"#22c55e":"rgba(148,163,184,0.4)"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"13px",color:paid?"#22c55e":"transparent",flexShrink:0}}>
-                        ✓
-                      </button>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontFamily:"monospace",fontSize:"13px",color:paid?"rgba(148,163,184,0.6)":"#e0eaff",fontWeight:500,textDecoration:paid?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
-                          {s._bucket.name} · {FREQ_LABEL[freq]}{nd ? ` · Due ${nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}` : ''}
-                        </div>
-                      </div>
-                      <div style={{textAlign:"right",flexShrink:0}}>
-                        <div style={{fontFamily:"monospace",fontSize:"13px",color:paid?"rgba(34,197,94,0.7)":"#00c8ff",fontWeight:600}}>${parseFloat(s.monthly).toFixed(2)}</div>
-                        <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)"}}>{FREQ_SHORT[freq]}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* Payment history log */}
-                {(() => {
-                  const allPayments = allBills.flatMap(s => (s.payments||[]).map(p => ({...p, _sub:s})))
-                    .sort((a,b) => new Date(b.paidAt) - new Date(a.paidAt))
-                    .slice(0, 50);
-                  if (allPayments.length === 0) return null;
-                  return (
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.18)",borderLeft:"2px solid #22c55e",borderRadius:"6px",marginTop:"10px"}}>
-                      <div style={{padding:"10px 14px",borderBottom:"0.5px solid rgba(34,197,94,0.1)",display:"flex",justifyContent:"space-between"}}>
-                        <span style={{fontSize:"10px",color:"rgba(34,197,94,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PAYMENT HISTORY</span>
-                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>LAST {allPayments.length}</span>
-                      </div>
-                      <div style={{maxHeight:"320px",overflowY:"auto"}}>
-                        {allPayments.map((p, i) => (
-                          <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 14px",borderBottom:i<allPayments.length-1?"0.5px solid rgba(34,197,94,0.05)":"none"}}>
-                            <div style={{width:"5px",height:"5px",borderRadius:"50%",background:"#22c55e",boxShadow:"0 0 4px rgba(34,197,94,0.6)",flexShrink:0}}/>
-                            <div style={{flex:1,minWidth:0}}>
-                              <div style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p._sub.name}</div>
-                              <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{new Date(p.paidAt).toLocaleString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'})} · period {p.period}</div>
-                            </div>
-                            <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(34,197,94,0.85)",fontWeight:600}}>${parseFloat(p.amount||0).toFixed(2)}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            );
-          })()}
 
           {/* ─── FORECAST — 12-month cashflow projection ─── */}
           {billsSubTab === 'forecast' && (() => {
