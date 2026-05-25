@@ -3298,6 +3298,7 @@ function MuzzApp() {
   const [editingReminderId, setEditingReminderId] = useState(null);
   const [editingBdayId, setEditingBdayId] = useState(null);
   const [editingBillIdx, setEditingBillIdx] = useState(null);
+  const [editingAssetIdx, setEditingAssetIdx] = useState(null);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -11259,82 +11260,234 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 );
               })()}
-              {assets.map((asset, index) => (
-                <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
-                  {/* Row 1: Name + Delete */}
-                  <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                    <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
-                    <input
-                      type="text"
-                      value={asset?.name || ''}
-                      onFocus={scrollInputIntoView}
-                      onChange={(e) => updateAsset(index, 'name', e.target.value)}
-                      placeholder="Asset name (e.g. House)"
-                      style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"7px 10px",outline:"none"}}
-                    />
-                    <button
-                      onClick={() => setAssets(prev => prev.filter((_, i) => i !== index))}
-                      style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                    </button>
-                  </div>
-                  
-                  {/* Row 2: Type */}
-                  <div style={{marginBottom:"10px"}}>
-                    <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Type</label>
-                    <select
-                      value={asset?.category || ''}
-                      onFocus={scrollInputIntoView}
-                      onChange={(e) => updateAsset(index, 'category', e.target.value)}
-                      style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                    >
-                      {assetCategories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  {/* Row 3: Value + Owned For */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Value</label>
-                      <div className="flex items-center">
-                        <span style={{color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"11px",marginRight:"4px"}}>$</span>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={asset?.valueStr || ''}
-                          onFocus={scrollInputIntoView}
-                          onChange={(e) => updateAsset(index, 'value', e.target.value)}
-                          placeholder="0"
-                          style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                        />
+              {assets.map((asset, index) => {
+                const isEditing = editingAssetIdx === index;
+                const cat = assetCategories.find(c => c.id === (asset?.category || '')) || assetCategories[0];
+                const val = parseFloat(asset?.value) || 0;
+                return (
+                  <div key={index} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                    {/* Compact row */}
+                    <button onClick={() => setEditingAssetIdx(isEditing ? null : index)}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{asset?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed asset</span>}</div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                          {cat?.name || 'No type'}{asset?.ownedFor ? ` · ${asset.ownedFor}` : ''}
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Owned For</label>
-                      <input
-                        type="text"
-                        value={asset?.ownedFor || ''}
-                        onFocus={scrollInputIntoView}
-                        onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
-                        placeholder="e.g. 1y 5m"
-                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                      />
-                    </div>
+                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                        {val > 0 && (
+                          <div style={{textAlign:"right"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${val.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                          </div>
+                        )}
+                        <span style={{fontSize:"14px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
+                      </div>
+                    </button>
+
+                    {/* Expanded edit panel */}
+                    {isEditing && (
+                      <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>ASSET NAME</div>
+                          <input
+                            type="text"
+                            value={asset?.name || ''}
+                            onFocus={scrollInputIntoView}
+                            onChange={(e) => updateAsset(index, 'name', e.target.value)}
+                            placeholder="e.g. House, Tesla, Super, Bitcoin"
+                            className="slick-input"
+                            style={{fontSize:"13px"}}
+                          />
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TYPE</div>
+                          <select
+                            value={asset?.category || ''}
+                            onFocus={scrollInputIntoView}
+                            onChange={(e) => updateAsset(index, 'category', e.target.value)}
+                            className="slick-select"
+                            style={{colorScheme:"dark"}}>
+                            {assetCategories.map(c => (
+                              <option key={c.id} value={c.id}>{c.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>VALUE $</div>
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              value={asset?.valueStr || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateAsset(index, 'value', e.target.value)}
+                              placeholder="0"
+                              className="slick-input"
+                            />
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>OWNED FOR</div>
+                            <input
+                              type="text"
+                              value={asset?.ownedFor || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateAsset(index, 'ownedFor', e.target.value)}
+                              placeholder="e.g. 1y 5m"
+                              className="slick-input"
+                            />
+                          </div>
+                        </div>
+                        <button onClick={() => { setAssets(prev => prev.filter((_, i) => i !== index)); setEditingAssetIdx(null); }}
+                          style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
               <button
-                onClick={() => setAssets(prev => [...prev, { name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }])}
+                onClick={() => { const id = Date.now(); setAssets(prev => [...prev, { id, name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]); setEditingAssetIdx(assets.length); }}
                 style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
               >
                 + Add Asset
               </button>
             </div>
           </div>
+
+          {/* Asset Constellation — radial branch graph, collapsible */}
+          {filledAssets.length > 0 && (() => {
+            const accent = '#00c8ff';
+            const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
+            const sortedAssetsRaw = [...filledAssets].sort((a,b) => b.value - a.value);
+            const totalNW = sortedAssetsRaw.reduce((s,a) => s + a.value, 0);
+            const maxVal = Math.max(...sortedAssetsRaw.map(a => a.value), 1);
+            const N = sortedAssetsRaw.length;
+            const canvasSize = isWide ? Math.min(820, 460 + N * 30) : 360;
+            const cx = canvasSize / 2;
+            const cy = canvasSize / 2;
+            const bucketRadius = isWide ? 90 : 70;
+            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 70;
+            const cardW = isWide ? 150 : 110;
+            const cardH = isWide ? 70 : 60;
+            const nodes = sortedAssetsRaw.map((a, i) => {
+              const angle = (-Math.PI / 2) + (i / N) * Math.PI * 2;
+              const x = cx + Math.cos(angle) * ringRadius;
+              const y = cy + Math.sin(angle) * ringRadius;
+              const pathR = ringRadius - cardH / 2;
+              const px = cx + Math.cos(angle) * pathR;
+              const py = cy + Math.sin(angle) * pathR;
+              const bx = cx + Math.cos(angle) * bucketRadius;
+              const by = cy + Math.sin(angle) * bucketRadius;
+              const cat = assetCategories.find(c => c.id === (a.category||'')) || assetCategories[0];
+              return { ...a, angle, x, y, px, py, bx, by, catName: cat?.name || 'Other' };
+            });
+            return (
+              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
+                  <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} CONSTELLATION · ASSET GRAPH</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                </summary>
+                <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+                  <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
+                    <svg viewBox={`0 0 ${canvasSize} ${canvasSize}`} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
+                      <defs>
+                        <radialGradient id="asset-bg-glow" cx="50%" cy="50%" r="50%">
+                          <stop offset="0%" stopColor={accent} stopOpacity="0.08"/>
+                          <stop offset="70%" stopColor={accent} stopOpacity="0.02"/>
+                          <stop offset="100%" stopColor={accent} stopOpacity="0"/>
+                        </radialGradient>
+                        <filter id="asset-glow" x="-50%" y="-50%" width="200%" height="200%">
+                          <feGaussianBlur stdDeviation="2.5" result="b"/>
+                          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                      </defs>
+                      <circle cx={cx} cy={cy} r={ringRadius + 30} fill="url(#asset-bg-glow)"/>
+                      <circle cx={cx} cy={cy} r={ringRadius} fill="none" stroke={accent} strokeWidth="0.4" strokeDasharray="2 6" opacity="0.18"/>
+                      {nodes.map((n, i) => (
+                        <g key={i}>
+                          <line x1={n.bx} y1={n.by} x2={n.px} y2={n.py} stroke={accent} strokeWidth="3" opacity="0.12" filter="url(#asset-glow)"/>
+                          <line x1={n.bx} y1={n.by} x2={n.px} y2={n.py} stroke={accent} strokeWidth="1" opacity="0.6"/>
+                          <circle cx={n.px} cy={n.py} r="3" fill={accent} opacity="0.95"/>
+                          <circle cx={n.px} cy={n.py} r="6" fill="none" stroke={accent} strokeWidth="0.4" opacity="0.5"/>
+                        </g>
+                      ))}
+                      {nodes.map((n, i) => (
+                        <circle key={`p-${i}`} r="2.5" fill={accent} opacity="0">
+                          <animate attributeName="cx" from={n.bx} to={n.px} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
+                          <animate attributeName="cy" from={n.by} to={n.py} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
+                          <animate attributeName="opacity" values="0;1;1;0" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
+                        </circle>
+                      ))}
+                    </svg>
+
+                    {/* Root node — user's name in centre */}
+                    <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:isWide?"12px 22px":"10px 16px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:isWide?"150px":"120px",position:"relative"}}>
+                        <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <span style={{fontSize:isWide?"9px":"8px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
+                        <span style={{fontSize:isWide?"18px":"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                        <span style={{fontSize:isWide?"8px":"7px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
+                      </div>
+                    </div>
+
+                    {/* Asset nodes around the ring */}
+                    {nodes.map((a, idx) => {
+                      const widthPct = (a.value / maxVal) * 100;
+                      return (
+                        <div key={a.id || idx} style={{position:"absolute",left:a.x,top:a.y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1}}>
+                          <div style={{padding:isWide?"8px 10px":"6px 8px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                            <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
+                            <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
+                            <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                            <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
+                              <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
+                                <span style={{fontFamily:"monospace",fontSize:isWide?"10px":"9px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
+                              </div>
+                              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
+                                <span style={{fontFamily:"monospace",fontSize:"8px",color:"rgba(148,163,184,0.55)"}}>{a.catName}</span>
+                                <span style={{fontFamily:"monospace",fontSize:isWide?"11px":"10px",color:accent,fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
+                              </div>
+                              <div style={{paddingLeft:"10px"}}>
+                                <span style={{fontFamily:"monospace",fontSize:"7px",color:`${accent}99`,letterSpacing:"0.5px",fontWeight:600}}>
+                                  {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% OF NW
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Detail list below */}
+                  <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
+                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px"}}>// ASSET DETAILS</div>
+                    <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(2,1fr)":"1fr",gap:"6px"}}>
+                      {nodes.map((a, idx) => (
+                        <div key={a.id || idx} style={{padding:"8px 10px",background:`${accent}05`,border:`0.5px solid ${accent}20`,borderRadius:"3px",fontFamily:"monospace",fontSize:"10px"}}>
+                          <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
+                            <span style={{color:"#e0eaff",fontWeight:600}}>{a.name}</span>
+                            <span style={{color:accent,fontWeight:600}}>${a.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                          </div>
+                          <div style={{display:"flex",justifyContent:"space-between",color:"rgba(148,163,184,0.55)",fontSize:"9px"}}>
+                            <span>{a.catName}{a.ownedFor?` · ${a.ownedFor}`:''}</span>
+                            <span>{totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% of NW</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </details>
+            );
+          })()}
 
           {/* Type Breakdown */}
           {filledAssets.length > 0 && (
