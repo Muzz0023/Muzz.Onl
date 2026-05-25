@@ -8777,12 +8777,13 @@ ${JSON.stringify(ctx, null, 2)}`;
           )}
 
           {activeBucket && (<>
-          {/* Income Input */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-            <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
-              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.incomeLabel || 'Monthly Income'} — {activeBucket.name}</h2>
-            </div>
-            <div style={{padding:"12px"}}>
+          {/* Income Input — collapsible */}
+          <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
+            <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
+              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeBucket.incomeLabel || 'MONTHLY INCOME').toUpperCase()} — {activeBucket.name.toUpperCase()}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+            </summary>
+            <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                 <span className="text-xl text-gray-400">$</span>
                 <input
@@ -8796,7 +8797,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>/month</span>
               </div>
             </div>
-          </div>
+          </details>
 
           {/* Salary Breakdown — collapsible */}
           {salaryNum > 0 && (
