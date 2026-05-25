@@ -8540,13 +8540,23 @@ ${JSON.stringify(ctx, null, 2)}`;
       setSubscriptions(prev => prev.filter((_, i) => i !== index));
     };
 
-    const calcCost = (monthly, period) => {
-      if (!monthly) return '0.00';
-      const val = period === 'daily' ? monthly / 30 :
-                  period === 'weekly' ? monthly / 4 :
+    // Frequency multipliers and labels (used in calcCost + bill rows)
+    const FREQ_MULT = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
+    const FREQ_LABEL = { weekly: 'Weekly', fortnightly: 'Fortnightly', monthly: 'Monthly', quarterly: 'Quarterly', halfyear: '6-Monthly', annual: 'Annual' };
+    const FREQ_SHORT = { weekly: '/wk', fortnightly: '/2wk', monthly: '/mo', quarterly: '/qtr', halfyear: '/6mo', annual: '/yr' };
+    const WEEKDAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    // Accurate period math — based on 365.25 days / 12 months / 52 weeks per year
+    const calcCost = (amount, period, fromFreq = 'monthly') => {
+      if (!amount) return '0.00';
+      // First normalise input to monthly equivalent based on its source frequency
+      const monthly = (parseFloat(amount) || 0) * (FREQ_MULT[fromFreq] || 1);
+      const val = period === 'daily'     ? monthly * 12 / 365.25 :
+                  period === 'weekly'    ? monthly * 12 / 52 :
+                  period === 'monthly'   ? monthly :
                   period === 'quarterly' ? monthly * 3 :
-                  period === 'halfyear' ? monthly * 6 :
-                  period === 'annually' ? monthly * 12 : monthly;
+                  period === 'halfyear'  ? monthly * 6 :
+                  period === 'annually'  ? monthly * 12 : monthly;
       return val.toFixed(2);
     };
 
@@ -8625,10 +8635,6 @@ ${JSON.stringify(ctx, null, 2)}`;
     const currentSubs = activeBucket ? (activeBucket.bills || []) : [];
     const filledSubs = currentSubs.filter(s => s && s.monthly > 0);
     // Convert any frequency to monthly equivalent (for totals)
-    const FREQ_MULT = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
-    const FREQ_LABEL = { weekly: 'Weekly', fortnightly: 'Fortnightly', monthly: 'Monthly', quarterly: 'Quarterly', halfyear: '6-Monthly', annual: 'Annual' };
-    const FREQ_SHORT = { weekly: '/wk', fortnightly: '/2wk', monthly: '/mo', quarterly: '/qtr', halfyear: '/6mo', annual: '/yr' };
-    const WEEKDAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const monthlyEquivalent = (s) => (parseFloat(s.monthly) || 0) * (FREQ_MULT[s.freq || 'monthly'] || 1);
     const totalMonthly = filledSubs.reduce((sum, s) => sum + monthlyEquivalent(s), 0);
 
@@ -9330,14 +9336,18 @@ ${JSON.stringify(ctx, null, 2)}`;
                           {sub.name}
                         </td>
                         <td className="py-3 px-3 text-center text-gray-500">
-                          {sub.dueDate || '-'}
+                          {(() => {
+                            const nd = computeNextDue(sub);
+                            if (nd) return nd.date.toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+                            return sub.dueDate || '-';
+                          })()}
                         </td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'daily')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'weekly')}</td>
-                        <td className="py-3 px-3 text-right font-semibold">${calcCost(sub.monthly, 'monthly')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'quarterly')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'halfyear')}</td>
-                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'annually')}</td>
+                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'daily', sub.freq||'monthly')}</td>
+                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'weekly', sub.freq||'monthly')}</td>
+                        <td className="py-3 px-3 text-right font-semibold">${calcCost(sub.monthly, 'monthly', sub.freq||'monthly')}</td>
+                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'quarterly', sub.freq||'monthly')}</td>
+                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'halfyear', sub.freq||'monthly')}</td>
+                        <td className="py-3 px-3 text-right text-gray-600">${calcCost(sub.monthly, 'annually', sub.freq||'monthly')}</td>
                       </tr>
                     ))}
                   </tbody>
