@@ -8798,13 +8798,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           </div>
 
-          {/* Salary Breakdown */}
+          {/* Salary Breakdown — collapsible */}
           {salaryNum > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${bucketAccent}1a`,borderLeft:`2px solid ${bucketAccent}`}}>
-                <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.incomeLabel || 'Income'}</h2>
-              </div>
-              <div style={{overflowX:"auto"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
+                <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeBucket.incomeLabel || 'INCOME').toUpperCase()} BREAKDOWN</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              </summary>
+              <div style={{overflowX:"auto",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                 <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
                   <thead>
                     <tr style={{background:`${bucketAccent}08`,borderBottom:`0.5px solid ${bucketAccent}1a`}}>
@@ -8830,14 +8831,16 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </tbody>
                 </table>
               </div>
-            </div>
+            </details>
           )}
 
-          {/* Bills List - active bucket */}
-          <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-            <div style={{padding:"12px 16px",borderBottom:`0.5px solid ${bucketAccent}20`,background:`${bucketAccent}08`}}>
-              <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>{activeBucket.name} Bills</h2>
-            </div>
+          {/* Bills List - active bucket — collapsible */}
+          <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
+            <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`,background:`${bucketAccent}08`}}>
+              <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {activeBucket.name.toUpperCase()} BILLS{filledSubs.length>0?` · ${filledSubs.length}`:''}</span>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+            </summary>
+            <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
             <div style={{padding:"12px"}}>
               {currentSubs.length === 0 && (() => {
                 // Sample bills tailored to bucket type
@@ -9135,11 +9138,17 @@ ${JSON.stringify(ctx, null, 2)}`;
                 + Add {activeBucket.name} Bill
               </button>
             </div>
-          </div>
+            </div>
+          </details>
 
-          {/* Breakdown Table */}
+          {/* Breakdown Table — collapsible */}
           {filledSubs.length > 0 && (
-            <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// COST BREAKDOWN</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              </summary>
+              <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Cost Breakdown</h2>
               </div>
@@ -9365,7 +9374,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </tfoot>
                 </table>
               </div>
-            </div>
+              </div>
+            </details>
           )}
 
           {/* Muzz Advice Categories Info - Personal Only */}
