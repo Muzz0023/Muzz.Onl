@@ -2899,6 +2899,13 @@ function MuzzApp() {
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
+  // Scroll to top whenever activeView changes (so opening Bills/Assets/etc. doesn't land mid-page)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [activeView]);
+
   // Viewport tracking — Bridge layout activates on wide screens
   const [isWide, setIsWide] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
   useEffect(() => {
