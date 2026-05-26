@@ -9448,7 +9448,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-                  {/* Canvas — fixed dimensions so SVG and HTML perfectly align */}
+                  {isWide ? (
+                  /* DESKTOP — Radial canvas */
                   <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
                     {/* SVG layer — flowing paths from bucket to each bill */}
                     <svg viewBox={`0 0 ${canvasSize} ${canvasSize}`} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
@@ -9540,6 +9541,69 @@ ${JSON.stringify(ctx, null, 2)}`;
                       );
                     })}
                   </div>
+                  ) : (
+                  /* MOBILE — Vertical spine layout: bucket at top, bills alternating left-right */
+                  (() => {
+                    const billsForSpine = sortedBills;
+                    return (
+                      <div style={{position:"relative",maxWidth:"100%"}}>
+                        {/* Bucket node — top centre */}
+                        <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
+                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
+                            <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                            <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                            <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                            <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{bucket.name.toUpperCase()}</span>
+                            <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${bucketTotal.toFixed(0)}<span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",marginLeft:"4px",fontWeight:400}}>/mo</span></span>
+                            <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{billsForSpine.length} BILL{billsForSpine.length!==1?'S':''} · ${(bucketTotal*12).toFixed(0)}/YR</span>
+                          </div>
+                        </div>
+
+                        {/* Vertical spine container */}
+                        <div style={{position:"relative",paddingTop:"4px"}}>
+                          <div style={{position:"absolute",left:"50%",top:0,bottom:"20px",width:"1px",background:`linear-gradient(180deg, ${accent}, ${accent}30 90%, transparent)`,transform:"translateX(-50%)",zIndex:0}}/>
+                          {billsForSpine.map(({s, nd, mEq}, idx) => {
+                            const freq = s.freq || 'monthly';
+                            const widthPct = (mEq / maxBillEq) * 100;
+                            const isToday = nd && nd.daysAway === 0;
+                            const isSoon = nd && nd.daysAway > 0 && nd.daysAway <= 7;
+                            const dotColor = isToday ? '#ef4444' : isSoon ? '#f59e0b' : accent;
+                            const left = idx % 2 === 0;
+                            return (
+                              <div key={s.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
+                                <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
+                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
+                                <div style={{width:"46%",padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${dotColor}`:undefined,borderRight:left?undefined:`2px solid ${dotColor}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
+                                  <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
+                                  <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
+                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                                  <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
+                                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:dotColor,boxShadow:`0 0 6px ${dotColor}`,flexShrink:0}}/>
+                                      <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{s.name}</span>
+                                    </div>
+                                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
+                                      <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{FREQ_LABEL[freq]}</span>
+                                      <span style={{fontFamily:"monospace",fontSize:"11px",color:accent,fontWeight:600}}>${parseFloat(s.monthly).toFixed(0)}<span style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",marginLeft:"2px"}}>{FREQ_SHORT[freq]}</span></span>
+                                    </div>
+                                    {nd && (
+                                      <div style={{paddingLeft:"10px"}}>
+                                        <span style={{fontFamily:"monospace",fontSize:"8px",color:isToday?"#ef4444":isSoon?"#f59e0b":"rgba(148,163,184,0.45)",letterSpacing:"0.5px",fontWeight:600}}>
+                                          {nd.daysAway===0?'TODAY':nd.daysAway===1?'DUE TMRW':`IN ${nd.daysAway}D`}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()
+                  )}
 
                   {/* Detail list below — full bill data, since absolute-positioned cards can't expand cleanly */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
@@ -11458,6 +11522,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+                  {isWide ? (
+                  /* DESKTOP — Radial canvas */
                   <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
                     <svg viewBox={`0 0 ${canvasSize} ${canvasSize}`} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
                       <defs>
@@ -11532,6 +11598,62 @@ ${JSON.stringify(ctx, null, 2)}`;
                       );
                     })}
                   </div>
+                  ) : (
+                  /* MOBILE — Vertical spine layout for assets */
+                  (() => {
+                    return (
+                      <div style={{position:"relative",maxWidth:"100%"}}>
+                        {/* Root node — top centre */}
+                        <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
+                          <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
+                            <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                            <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                            <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                            <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                            <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
+                            <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalNW.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                            <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{N} ASSET{N!==1?'S':''} · NET WORTH</span>
+                          </div>
+                        </div>
+
+                        {/* Vertical spine */}
+                        <div style={{position:"relative",paddingTop:"4px"}}>
+                          <div style={{position:"absolute",left:"50%",top:0,bottom:"20px",width:"1px",background:`linear-gradient(180deg, ${accent}, ${accent}30 90%, transparent)`,transform:"translateX(-50%)",zIndex:0}}/>
+                          {nodes.map((a, idx) => {
+                            const widthPct = (a.value / maxVal) * 100;
+                            const left = idx % 2 === 0;
+                            return (
+                              <div key={a.id || idx} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1}}>
+                                <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
+                                <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
+                                <div style={{width:"46%",padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${accent}`:undefined,borderRight:left?undefined:`2px solid ${accent}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
+                                  <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
+                                  <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
+                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${accent}20, ${accent}05)`,pointerEvents:"none"}}/>
+                                  <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
+                                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
+                                      <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{a.name}</span>
+                                    </div>
+                                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
+                                      <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)"}}>{a.catName}</span>
+                                      <span style={{fontFamily:"monospace",fontSize:"11px",color:accent,fontWeight:600}}>${a.value>=1000?`${(a.value/1000).toFixed(a.value>=10000?0:1)}k`:a.value.toFixed(0)}</span>
+                                    </div>
+                                    <div style={{paddingLeft:"10px"}}>
+                                      <span style={{fontFamily:"monospace",fontSize:"8px",color:`${accent}99`,letterSpacing:"0.5px",fontWeight:600}}>
+                                        {totalNW>0?((a.value/totalNW)*100).toFixed(1):'0'}% OF NW
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()
+                  )}
 
                   {/* Detail list below */}
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px"}}>
