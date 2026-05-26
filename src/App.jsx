@@ -3324,6 +3324,9 @@ function MuzzApp() {
   const [editingBdayId, setEditingBdayId] = useState(null);
   const [editingBillIdx, setEditingBillIdx] = useState(null);
   const [editingAssetIdx, setEditingAssetIdx] = useState(null);
+  const [editingStockIdx, setEditingStockIdx] = useState(null);
+  const [editingResearchIdx, setEditingResearchIdx] = useState(null);
+  const [editingFutureResearchIdx, setEditingFutureResearchIdx] = useState(null);
   const [editingShiftDate, setEditingShiftDate] = useState(null);
   const [editingJobName, setEditingJobName] = useState(false);
 
@@ -12973,103 +12976,113 @@ ${JSON.stringify(ctx, null, 2)}`;
                     );
                   })()}
                   {stocks.map((stock, index) => {
+                    const isEditing = editingStockIdx === index;
                     const gainLoss = (stock?.currentValue || 0) - (stock?.invested || 0);
                     const gainLossPercent = stock?.invested > 0 ? ((gainLoss / stock.invested) * 100) : 0;
+                    const cur = parseFloat(stock?.currentValue) || 0;
                     return (
-                      <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
-                        {/* Row 1: Name + Delete */}
-                        <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                          <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
-                          <input
-                            type="text"
-                            value={stock?.name || ''}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateStock(index, 'name', e.target.value)}
-                            placeholder="Stock/ETF name (e.g. VAS)"
-                            style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"7px 10px",outline:"none"}}
-                          />
-                          <button
-                            onClick={() => setStocks(prev => prev.filter((_, i) => i !== index))}
-                            style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                          </button>
-                        </div>
-                        
-                        {/* Row 2: Industry */}
-                        <div style={{marginBottom:"10px"}}>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
-                          <select
-                            value={stock?.industry || ''}
-                            onFocus={scrollInputIntoView}
-                            onChange={(e) => updateStock(index, 'industry', e.target.value)}
-                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          >
-                            {industries.map(ind => (
-                              <option key={ind.id} value={ind.id}>{ind.name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        
-                        {/* Row 3: Invested + Current Value */}
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                          <div>
-                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Invested</label>
-                            <div className="flex items-center">
-                              <span style={{color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"11px",marginRight:"4px"}}>$</span>
+                      <div key={index} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                        {/* Compact row */}
+                        <button onClick={() => setEditingStockIdx(isEditing ? null : index)}
+                          style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                          <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                          <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{stock?.name || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed stock</span>}</div>
+                            <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                              {stock?.industry || 'No industry'}{stock?.heldFor ? ` · ${stock.heldFor}` : ''}{stock?.invested > 0 ? ` · ${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : ''}
+                            </div>
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                            {cur > 0 && (
+                              <div style={{textAlign:"right"}}>
+                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${cur.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                              </div>
+                            )}
+                            <span style={{fontSize:"14px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
+                          </div>
+                        </button>
+
+                        {/* Expanded edit panel */}
+                        {isEditing && (
+                          <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>STOCK / ETF NAME</div>
                               <input
                                 type="text"
-                                inputMode="decimal"
-                                value={stock?.investedStr || ''}
+                                value={stock?.name || ''}
                                 onFocus={scrollInputIntoView}
-                                onChange={(e) => updateStock(index, 'invested', e.target.value)}
-                                placeholder="0"
-                                style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                                onChange={(e) => updateStock(index, 'name', e.target.value)}
+                                placeholder="e.g. VAS, HSY, BRK"
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"8px 10px",outline:"none"}}
                               />
                             </div>
-                          </div>
-                          <div>
-                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Current Value</label>
-                            <div className="flex items-center">
-                              <span style={{color:"rgba(0,200,255,0.5)",fontFamily:"monospace",fontSize:"11px",marginRight:"4px"}}>$</span>
-                              <input
-                                type="text"
-                                inputMode="decimal"
-                                value={stock?.currentValueStr || ''}
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INDUSTRY</div>
+                              <select
+                                value={stock?.industry || ''}
                                 onFocus={scrollInputIntoView}
-                                onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
-                                placeholder="0"
-                                style={{flex:1,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                              />
+                                onChange={(e) => updateStock(index, 'industry', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                {industries.map(ind => (
+                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
+                                ))}
+                              </select>
                             </div>
-                          </div>
-                        </div>
-                        
-                        {/* Row 4: Gain/Loss + Held For */}
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                          <div>
-                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Gain/Loss</label>
-                            <div style={{padding:"6px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"11px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
-                              {stock?.invested > 0 ? `${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : '—'}
+                            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INVESTED $</div>
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={stock?.investedStr || ''}
+                                  onFocus={scrollInputIntoView}
+                                  onChange={(e) => updateStock(index, 'invested', e.target.value)}
+                                  placeholder="0"
+                                  style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                />
+                              </div>
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CURRENT VALUE $</div>
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={stock?.currentValueStr || ''}
+                                  onFocus={scrollInputIntoView}
+                                  onChange={(e) => updateStock(index, 'currentValue', e.target.value)}
+                                  placeholder="0"
+                                  style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                />
+                              </div>
                             </div>
+                            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>GAIN / LOSS</div>
+                                <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
+                                  {stock?.invested > 0 ? `${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%` : '—'}
+                                </div>
+                              </div>
+                              <div>
+                                <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HELD FOR</div>
+                                <input
+                                  type="text"
+                                  value={stock?.heldFor || ''}
+                                  onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
+                                  placeholder="e.g. 2y 3m"
+                                  style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                />
+                              </div>
+                            </div>
+                            <button onClick={() => { setStocks(prev => prev.filter((_, i) => i !== index)); setEditingStockIdx(null); }}
+                              style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
                           </div>
-                          <div>
-                            <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Held For</label>
-                            <input
-                              type="text"
-                              value={stock?.heldFor || ''}
-                              onChange={(e) => updateStock(index, 'heldFor', e.target.value)}
-                              placeholder="e.g. 2y 3m"
-                              style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                            />
-                          </div>
-                        </div>
+                        )}
                       </div>
                     );
                   })}
                 </div>
                 <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
-                    onClick={() => setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }])}
+                    onClick={() => { setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', industry: '', dateAdded: new Date().toISOString() }]); setEditingStockIdx(stocks.length); }}
                     style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Stock
@@ -13609,184 +13622,164 @@ ${JSON.stringify(ctx, null, 2)}`;
                       </div>
                     );
                   })()}
-                  {futureResearch.map((holding, index) => (
-                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
-                      {/* Row 1: Ticker + Delete */}
-                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
-                        <input
-                          type="text"
-                          value={holding?.ticker || ''}
-                          onChange={(e) => {
-                            setFutureResearch(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], ticker: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          placeholder="Ticker (e.g. AAPL)"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-blue-500"
-                        />
-                        <button
-                          onClick={() => setFutureResearch(prev => prev.filter((_, i) => i !== index))}
-                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}
-                        >
-                          <Trash2 style={{width:"16px",height:"16px"}} />
-                        </button>
-                      </div>
-                      
-                      {/* Row 2: Toll Booth + Planned Amount */}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Toll Booth Economics?</label>
-                          <select
-                            value={holding?.tollBooth || ''}
-                            onChange={(e) => {
-                              setFutureResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], tollBooth: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          >
-                            <option value="">Select</option>
-                            <option value="Yes">YES</option>
-                            <option value="No">NO</option>
-                          </select>
+                  {futureResearch.map((holding, index) => {
+                    const isEditing = editingFutureResearchIdx === index;
+                    const updateF = (field, val) => {
+                      setFutureResearch(prev => {
+                        const u = [...prev];
+                        if (!u[index]) u[index] = {};
+                        u[index] = { ...u[index], [field]: val };
+                        return u;
+                      });
+                    };
+                    const planned = parseFloat(holding?.plannedAmount) || 0;
+                    return (
+                    <div key={index} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                      {/* Compact row */}
+                      <button onClick={() => setEditingFutureResearchIdx(isEditing ? null : index)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                            {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}
+                          </div>
                         </div>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Planned Investment $</label>
-                          <input
-                            type="text"
-                            value={holding?.plannedAmountStr || ''}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/[^0-9.]/g, '');
-                              setFutureResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
-                                return updated;
-                              });
-                            }}
-                            placeholder="$0"
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          />
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                          {planned > 0 && (
+                            <div style={{textAlign:"right"}}>
+                              <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${planned.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                            </div>
+                          )}
+                          <span style={{fontSize:"14px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
                         </div>
-                      </div>
+                      </button>
 
-                      {/* Row 3: Capital Intensity + Growth */}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Capital Intensity</label>
-                          <select
-                            value={holding?.capitalIntensity || ''}
-                            onChange={(e) => {
-                              setFutureResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], capitalIntensity: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          >
-                            <option value="">Select</option>
-                            <option value="Toll-Like">Toll-Like</option>
-                            <option value="Lean">Lean</option>
-                            <option value="Heavy">Heavy</option>
-                          </select>
+                      {/* Expanded edit panel */}
+                      {isEditing && (
+                        <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
+                            <input
+                              type="text"
+                              value={holding?.ticker || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateF('ticker', e.target.value)}
+                              placeholder="e.g. AAPL, BRK"
+                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,padding:"8px 10px",outline:"none"}}
+                            />
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOLL BOOTH ECONOMICS?</div>
+                              <select
+                                value={holding?.tollBooth || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('tollBooth', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Yes">YES</option>
+                                <option value="No">NO</option>
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PLANNED INVESTMENT $</div>
+                              <input
+                                type="text"
+                                inputMode="decimal"
+                                value={holding?.plannedAmountStr || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => {
+                                  const val = e.target.value.replace(/[^0-9.]/g, '');
+                                  setFutureResearch(prev => {
+                                    const u = [...prev];
+                                    if (!u[index]) u[index] = {};
+                                    u[index] = { ...u[index], plannedAmount: parseFloat(val) || 0, plannedAmountStr: val };
+                                    return u;
+                                  });
+                                }}
+                                placeholder="0"
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                              />
+                            </div>
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CAPITAL INTENSITY</div>
+                              <select
+                                value={holding?.capitalIntensity || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('capitalIntensity', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Toll-Like">Toll-Like</option>
+                                <option value="Lean">Lean</option>
+                                <option value="Heavy">Heavy</option>
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>GROWTH PROSPECTS</div>
+                              <select
+                                value={holding?.growthProspects || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('growthProspects', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Very Low Growth">Very Low</option>
+                                <option value="Low Growth">Low</option>
+                                <option value="Medium Growth">Medium</option>
+                                <option value="High Growth">High</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INDUSTRY</div>
+                              <select
+                                value={holding?.industry || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('industry', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                {industries.map(ind => (
+                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>STATUS</div>
+                              <select
+                                value={holding?.status || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateF('status', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select Status</option>
+                                <option value="Old">Old</option>
+                                <option value="New">New</option>
+                                <option value="Reserve">Reserve</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RESEARCH NOTES</div>
+                            <textarea
+                              value={holding?.notes || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateF('notes', e.target.value)}
+                              placeholder="Your research notes..."
+                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",minHeight:"80px",resize:"vertical"}}
+                            />
+                          </div>
+                          <button onClick={() => { setFutureResearch(prev => prev.filter((_, i) => i !== index)); setEditingFutureResearchIdx(null); }}
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
                         </div>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Growth Prospects</label>
-                          <select
-                            value={holding?.growthProspects || ''}
-                            onChange={(e) => {
-                              setFutureResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], growthProspects: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          >
-                            <option value="">Select</option>
-                            <option value="Very Low Growth">Very Low</option>
-                            <option value="Low Growth">Low</option>
-                            <option value="Medium Growth">Medium</option>
-                            <option value="High Growth">High</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Row 4: Industry + Status */}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
-                          <select
-                            value={holding?.industry || ''}
-                            onChange={(e) => {
-                              setFutureResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], industry: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          >
-                            {industries.map(ind => (
-                              <option key={ind.id} value={ind.id}>{ind.name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Status</label>
-                          <select
-                            value={holding?.status || ''}
-                            onChange={(e) => {
-                              setFutureResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], status: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                          >
-                            <option value="">Select Status</option>
-                            <option value="Old">Old</option>
-                            <option value="New">New</option>
-                            <option value="Reserve">Reserve</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Row 5: Notes */}
-                      <div>
-                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Research Notes</label>
-                        <textarea
-                          value={holding?.notes || ''}
-                          onChange={(e) => {
-                            setFutureResearch(prev => {
-                              const updated = [...prev];
-                              if (!updated[index]) updated[index] = {};
-                              updated[index] = { ...updated[index], notes: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          placeholder="Your research notes..."
-                          className="w-full px-3 py-2 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500 min-h-[80px]"
-                        />
-                      </div>
+                      )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
                 <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
-                    onClick={() => setFutureResearch(prev => [...prev, { ticker: '' }])}
+                    onClick={() => { setFutureResearch(prev => [...prev, { ticker: '' }]); setEditingFutureResearchIdx(futureResearch.length); }}
                     className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
                   >
                     + Add Research Entry
@@ -14419,170 +14412,137 @@ ${JSON.stringify(ctx, null, 2)}`;
                       </div>
                     );
                   })()}
-                  {holdingsResearch.map((holding, index) => (
-                    <div key={index} style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px",padding:"12px"}}>
-                      {/* Row 1: Ticker + Delete */}
-                      <div style={{display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"10px"}}>
-                        <span style={{color:"rgba(0,200,255,0.4)",fontFamily:"monospace",fontSize:"10px",marginTop:"6px"}}>{index + 1}.</span>
-                        <input
-                          type="text"
-                          value={holding?.ticker || ''}
-                          onChange={(e) => {
-                            setHoldingsResearch(prev => {
-                              const updated = [...prev];
-                              updated[index] = { ...updated[index], ticker: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          placeholder="Ticker (e.g. BRK)"
-                          className="flex-1 px-3 py-2 border-2 rounded-xl text-base font-bold focus:outline-none focus:border-green-500"
-                        />
-                        <button
-                          onClick={() => setHoldingsResearch(prev => prev.filter((_, i) => i !== index))}
-                          style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}>
-                        <Trash2 style={{width:"16px",height:"16px"}} />
-                        </button>
-                      </div>
-                      
-                      {/* Row 2: Toll Booth */}
-                      <div style={{marginBottom:"10px"}}>
-                        <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Toll Booth Economics?</label>
-                        <select
-                          value={holding?.tollBooth || ''}
-                          onChange={(e) => {
-                            setHoldingsResearch(prev => {
-                              const updated = [...prev];
-                              if (!updated[index]) updated[index] = {};
-                              updated[index] = { ...updated[index], tollBooth: e.target.value };
-                              return updated;
-                            });
-                          }}
-                          style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                        >
-                          <option value="">Select</option>
-                          <option value="Yes">YES</option>
-                          <option value="No">NO</option>
-                        </select>
-                      </div>
-                      
-                      {/* Row 3: Capital + Growth */}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Capital Intensity</label>
-                          <select
-                            value={holding?.capitalIntensity || ''}
-                            onChange={(e) => {
-                              setHoldingsResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], capitalIntensity: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          >
-                            <option value="">Select</option>
-                            <option value="Toll-Like Capital Intensity">Toll-Like</option>
-                            <option value="Lean Capital Intensity">Lean</option>
-                            <option value="Heavy Capital Intensity">Heavy</option>
-                          </select>
+                  {holdingsResearch.map((holding, index) => {
+                    const isEditing = editingResearchIdx === index;
+                    const updateH = (field, val) => {
+                      setHoldingsResearch(prev => {
+                        const u = [...prev];
+                        if (!u[index]) u[index] = {};
+                        u[index] = { ...u[index], [field]: val };
+                        return u;
+                      });
+                    };
+                    return (
+                    <div key={index} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                      {/* Compact row */}
+                      <button onClick={() => setEditingResearchIdx(isEditing ? null : index)}
+                        style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                        <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                        <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                            {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}{holding?.tollBooth ? ` · Toll: ${holding.tollBooth}` : ''}
+                          </div>
                         </div>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Growth Prospects</label>
-                          <select
-                            value={holding?.growthProspects || ''}
-                            onChange={(e) => {
-                              setHoldingsResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], growthProspects: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          >
-                            <option value="">Select</option>
-                            <option value="Very Low Growth">Very Low</option>
-                            <option value="Low Growth">Low</option>
-                            <option value="Medium Growth">Medium</option>
-                            <option value="High Growth">High</option>
-                          </select>
-                        </div>
-                      </div>
-                      
-                      {/* Row 4: Industry + Status */}
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Industry</label>
-                          <select
-                            value={holding?.industry || ''}
-                            onChange={(e) => {
-                              setHoldingsResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], industry: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          >
-                            {industries.map(ind => (
-                              <option key={ind.id} value={ind.id}>{ind.name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>Holding Status</label>
-                          <select
-                            value={holding?.status || ''}
-                            onChange={(e) => {
-                              setHoldingsResearch(prev => {
-                                const updated = [...prev];
-                                if (!updated[index]) updated[index] = {};
-                                updated[index] = { ...updated[index], status: e.target.value };
-                                return updated;
-                              });
-                            }}
-                            style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
-                          >
-                            <option value="">Select</option>
-                            <option value="New">New</option>
-                            <option value="Old">Old</option>
-                            <option value="Reserve">Reserve</option>
-                          </select>
-                        </div>
-                      </div>
-                      
-                      {/* Custom Columns */}
-                      {researchColumns.length > 0 && (
-                        <div className="space-y-3 pt-3 border-t">
-                          {researchColumns.map(col => (
+                        <span style={{fontSize:"14px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace",flexShrink:0}}>{isEditing?'⌄':'›'}</span>
+                      </button>
+
+                      {/* Expanded edit panel */}
+                      {isEditing && (
+                        <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
+                            <input
+                              type="text"
+                              value={holding?.ticker || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateH('ticker', e.target.value)}
+                              placeholder="e.g. BRK, AAPL"
+                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,padding:"8px 10px",outline:"none"}}
+                            />
+                          </div>
+                          <div>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOLL BOOTH ECONOMICS?</div>
+                            <select
+                              value={holding?.tollBooth || ''}
+                              onFocus={scrollInputIntoView}
+                              onChange={(e) => updateH('tollBooth', e.target.value)}
+                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                              <option value="">Select</option>
+                              <option value="Yes">YES</option>
+                              <option value="No">NO</option>
+                            </select>
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CAPITAL INTENSITY</div>
+                              <select
+                                value={holding?.capitalIntensity || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateH('capitalIntensity', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Toll-Like Capital Intensity">Toll-Like</option>
+                                <option value="Lean Capital Intensity">Lean</option>
+                                <option value="Heavy Capital Intensity">Heavy</option>
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>GROWTH PROSPECTS</div>
+                              <select
+                                value={holding?.growthProspects || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateH('growthProspects', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="Very Low Growth">Very Low</option>
+                                <option value="Low Growth">Low</option>
+                                <option value="Medium Growth">Medium</option>
+                                <option value="High Growth">High</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INDUSTRY</div>
+                              <select
+                                value={holding?.industry || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateH('industry', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                {industries.map(ind => (
+                                  <option key={ind.id} value={ind.id}>{ind.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOLDING STATUS</div>
+                              <select
+                                value={holding?.status || ''}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateH('status', e.target.value)}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
+                                <option value="">Select</option>
+                                <option value="New">New</option>
+                                <option value="Old">Old</option>
+                                <option value="Reserve">Reserve</option>
+                              </select>
+                            </div>
+                          </div>
+                          {researchColumns.length > 0 && researchColumns.map(col => (
                             <div key={col.id}>
-                              <label style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",display:"block",textTransform:"uppercase"}}>{col.name}</label>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>{col.name}</div>
                               <input
                                 type="text"
                                 value={holding?.[col.id] || ''}
-                                onChange={(e) => {
-                                  setHoldingsResearch(prev => {
-                                    const updated = [...prev];
-                                    if (!updated[index]) updated[index] = {};
-                                    updated[index] = { ...updated[index], [col.id]: e.target.value };
-                                    return updated;
-                                  });
-                                }}
+                                onFocus={scrollInputIntoView}
+                                onChange={(e) => updateH(col.id, e.target.value)}
                                 placeholder="-"
-                                style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                                style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
                               />
                             </div>
                           ))}
+                          <button onClick={() => { setHoldingsResearch(prev => prev.filter((_, i) => i !== index)); setEditingResearchIdx(null); }}
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
                         </div>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
                 <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
                   <button
-                    onClick={() => setHoldingsResearch(prev => [...prev, {}])}
+                    onClick={() => { setHoldingsResearch(prev => [...prev, {}]); setEditingResearchIdx(holdingsResearch.length); }}
                     style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Research Entry
