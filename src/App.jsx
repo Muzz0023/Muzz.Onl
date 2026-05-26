@@ -9417,13 +9417,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             // Radial geometry — bucket at center, bills around it
             const N = sortedBills.length;
             // Canvas size scales with bill count
-            const canvasSize = isWide ? Math.min(820, 460 + N * 30) : 360;
+            // Mobile: bigger canvas that scales hard with bill count to prevent overlap
+            const canvasSize = isWide ? Math.min(820, 460 + N * 30) : Math.min(560, 320 + N * 22);
             const cx = canvasSize / 2;
             const cy = canvasSize / 2;
-            const bucketRadius = isWide ? 90 : 70;        // bucket node radius (used for path start)
-            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 70;
-            const cardW = isWide ? 150 : 110;
-            const cardH = isWide ? 70 : 60;
+            const bucketRadius = isWide ? 90 : 60;
+            const cardW = isWide ? 150 : 95;
+            const cardH = isWide ? 70 : 56;
+            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 55;
 
             // Position each bill on the ring — start from top (-90deg), distribute evenly
             const nodes = sortedBills.map((b, i) => {
@@ -9773,14 +9774,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
 
-                  {/* Bar chart */}
-                  <div style={{display:"flex",alignItems:"flex-end",gap:"6px",height:"180px",borderBottom:`0.5px solid ${forecastAccent}1a`,paddingBottom:"22px",position:"relative"}}>
+                  {/* Bar chart — horizontally scrollable on mobile */}
+                  <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch",margin:"0 -4px"}}>
+                  <div style={{display:"flex",alignItems:"flex-end",gap:"6px",height:"180px",borderBottom:`0.5px solid ${forecastAccent}1a`,paddingBottom:"22px",position:"relative",minWidth:isWide?"100%":"560px",padding:"0 4px"}}>
                     {months.map((m, i) => {
                       const heightPct = (m.total / maxTotal) * 100;
                       const isMax = m.total === maxTotal;
                       const isCurrent = i === 0;
                       return (
-                        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",height:"100%",justifyContent:"flex-end",position:"relative"}}>
+                        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",height:"100%",justifyContent:"flex-end",position:"relative",minWidth:"36px"}}>
                           <div style={{fontSize:"9px",fontFamily:"monospace",color:isMax?"#f59e0b":isCurrent?`${forecastAccent}`:"rgba(148,163,184,0.6)",fontWeight:isMax?600:500,marginBottom:"4px",whiteSpace:"nowrap"}}>${m.total.toFixed(0)}</div>
                           <div style={{width:"100%",height:`${heightPct}%`,minHeight:"4px",background:isMax?"linear-gradient(180deg, rgba(245,158,11,0.95), rgba(245,158,11,0.35))":isCurrent?`linear-gradient(180deg, ${forecastAccent}f2, ${forecastAccent}59)`:`linear-gradient(180deg, ${forecastAccent}80, ${forecastAccent}26)`,border:`0.5px solid ${isMax?"rgba(245,158,11,0.6)":isCurrent?`${forecastAccent}cc`:`${forecastAccent}4d`}`,borderRadius:"3px 3px 0 0",transition:"height 0.4s ease",boxShadow:isMax?"0 0 12px rgba(245,158,11,0.3)":isCurrent?`0 0 12px ${forecastAccent}40`:"none"}}/>
                           <div style={{position:"absolute",bottom:"-20px",left:0,right:0,fontSize:"9px",fontFamily:"monospace",color:isMax?"rgba(245,158,11,0.85)":isCurrent?`${forecastAccent}d8`:"rgba(148,163,184,0.55)",textAlign:"center",letterSpacing:"0.3px"}}>{m.label}</div>
@@ -9788,6 +9790,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       );
                     })}
                   </div>
+                  </div>{/* end scroll */}
                 </div>
 
                 {/* Per-month breakdown */}
@@ -10198,7 +10201,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                             />
                           </div>
                           {target > 0 && (
-                            <span className={`text-sm font-medium ${progress >= 100 ? 'text-green-600' : 'text-blue-600'}`}>
+                            <span style={{gridColumn:"1 / -1",fontFamily:"monospace",fontSize:"11px",color:progress>=100?"#22c55e":"#3b82f6",fontWeight:600}}>
                               {progress.toFixed(0)}%
                             </span>
                           )}
@@ -10336,7 +10339,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                             />
                           </div>
                           {target > 0 && (
-                            <span className={`text-sm font-medium ${progress >= 100 ? 'text-green-600' : 'text-blue-600'}`}>
+                            <span style={{gridColumn:"1 / -1",fontFamily:"monospace",fontSize:"11px",color:progress>=100?"#22c55e":"#3b82f6",fontWeight:600}}>
                               {progress.toFixed(0)}%
                             </span>
                           )}
@@ -11428,13 +11431,14 @@ ${JSON.stringify(ctx, null, 2)}`;
             const totalNW = sortedAssetsRaw.reduce((s,a) => s + a.value, 0);
             const maxVal = Math.max(...sortedAssetsRaw.map(a => a.value), 1);
             const N = sortedAssetsRaw.length;
-            const canvasSize = isWide ? Math.min(820, 460 + N * 30) : 360;
+            // Mobile: bigger canvas that scales hard with bill count to prevent overlap
+            const canvasSize = isWide ? Math.min(820, 460 + N * 30) : Math.min(560, 320 + N * 22);
             const cx = canvasSize / 2;
             const cy = canvasSize / 2;
-            const bucketRadius = isWide ? 90 : 70;
-            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 70;
-            const cardW = isWide ? 150 : 110;
-            const cardH = isWide ? 70 : 60;
+            const bucketRadius = isWide ? 90 : 60;
+            const cardW = isWide ? 150 : 95;
+            const cardH = isWide ? 70 : 56;
+            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 55;
             const nodes = sortedAssetsRaw.map((a, i) => {
               const angle = (-Math.PI / 2) + (i / N) * Math.PI * 2;
               const x = cx + Math.cos(angle) * ringRadius;
@@ -11701,8 +11705,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
-                        <div className="flex items-center gap-4 pl-6">
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",paddingLeft:"24px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
@@ -11717,10 +11721,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
@@ -11735,11 +11739,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"96px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
-                            <span className={`text-sm font-medium ${progress >= 100 ? 'text-green-600' : 'text-blue-600'}`}>
+                            <span style={{gridColumn:"1 / -1",fontFamily:"monospace",fontSize:"11px",color:progress>=100?"#22c55e":"#3b82f6",fontWeight:600}}>
                               {progress.toFixed(0)}%
                             </span>
                           )}
@@ -11800,8 +11804,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <Trash2 style={{width:"16px",height:"16px"}} />
                           </button>
                         </div>
-                        <div className="flex items-center gap-4 pl-6">
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",paddingLeft:"24px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Target:</span>
                             <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
@@ -11816,10 +11820,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"112px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px",minWidth:0}}>
                             <span className="text-xs" style={{color:"rgba(148,163,184,0.8)"}}>Saved:</span>
                             <span style={{color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"10px"}}>$</span>
                             <input
@@ -11834,11 +11838,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 });
                               }}
                               placeholder="0"
-                              style={{width:"112px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
+                              style={{flex:1,minWidth:0,width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",padding:"6px 8px",outline:"none"}}
                             />
                           </div>
                           {target > 0 && (
-                            <span className={`text-sm font-medium ${progress >= 100 ? 'text-green-600' : 'text-indigo-600'}`}>
+                            <span style={{gridColumn:"1 / -1",fontFamily:"monospace",fontSize:"11px",color:progress>=100?"#22c55e":"#00c8ff",fontWeight:600}}>
                               {progress.toFixed(0)}%
                             </span>
                           )}
