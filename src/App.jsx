@@ -8779,10 +8779,10 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {activeBucket && (<>
           {/* Income Input — collapsible */}
-          <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
+          <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
             <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
               <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeBucket.incomeLabel || 'MONTHLY INCOME').toUpperCase()} — {activeBucket.name.toUpperCase()}{salaryNum>0?` · $${salaryNum.toLocaleString()}`:''}</span>
-              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
             </summary>
             <div style={{backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px",padding:"12px"}}>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
@@ -8802,10 +8802,10 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Salary Breakdown — collapsible */}
           {salaryNum > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
+            <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${bucketAccent}25`,borderRadius:"6px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${bucketAccent}`}}>
                 <span style={{fontSize:"11px",color:`${bucketAccent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeBucket.incomeLabel || 'INCOME').toUpperCase()} BREAKDOWN</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{overflowX:"auto",backgroundImage:`radial-gradient(${bucketAccent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                 <table style={{width:"100%",fontFamily:"monospace",fontSize:"11px"}}>
@@ -9145,10 +9145,10 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Breakdown Table — collapsible */}
           {filledSubs.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+            <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
                 <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// COST BREAKDOWN</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
@@ -9441,10 +9441,10 @@ ${JSON.stringify(ctx, null, 2)}`;
             });
 
             return (
-              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
                   <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {bucket.name.toUpperCase()} CONSTELLATION · BRANCH GRAPH</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                   {/* Canvas — fixed dimensions so SVG and HTML perfectly align */}
@@ -9575,10 +9575,10 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Bills vs Salary Comparison — collapsible */}
           {filledSubs.length > 0 && salaryNum > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+            <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
                 <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BILLS VS INCOME</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{background:"rgba(5,12,24,0.6)",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
@@ -11334,10 +11334,10 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+            <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
                 <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BREAKDOWN BY TYPE</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
@@ -11448,10 +11448,10 @@ ${JSON.stringify(ctx, null, 2)}`;
               return { ...a, angle, x, y, px, py, bx, by, catName: cat?.name || 'Other' };
             });
             return (
-              <details style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${accent}`}}>
                   <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} CONSTELLATION · ASSET GRAPH</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
                   <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
@@ -11554,10 +11554,10 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Assets Breakdown — collapsible */}
           {filledAssets.length > 0 && (
-            <details style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
+            <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
               <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
                 <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS BREAKDOWN</span>
-                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to expand</span>
+                <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
