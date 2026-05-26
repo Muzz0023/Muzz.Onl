@@ -12618,18 +12618,25 @@ ${JSON.stringify(ctx, null, 2)}`;
               const existingCount = (currentGraph.nodes || []).length;
               if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[constellationMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
 
-              // Centre origin chosen so nodes appear in visible area of the SVG viewport on load
-              // (matches the seedTemplate layout coordinates used by Asset Map)
-              const cx = 400, cy = 280;
+              // Horizontal tree layout: root on the left, holdings stacked vertically on the right.
+              // Matches the Asset Map seedTemplate coordinate space so nodes appear in the visible viewport.
               const N = source.length;
-              const radius = Math.max(180, 90 + N * 22);
+              const NODE_H = 56;        // matches NODE_H in AssetMapGraph
+              const V_GAP = 36;         // vertical gap between stacked holdings
+              const ROW = NODE_H + V_GAP;
+              const rootX = 80;
+              const branchX = 420;      // horizontal offset of holdings from root
+              // Vertically centre the stack around y=280 so it sits in the visible area
+              const stackHeight = (N - 1) * ROW;
+              const startY = 280 - stackHeight / 2;
+              // Root sits at the vertical middle of the stack
+              const rootY = 280;
               const rootId = `root-${Date.now()}`;
-              const rootNode = { id: rootId, label: rootName, type: 'person', x: cx, y: cy, value: '', notes: '' };
+              const rootNode = { id: rootId, label: rootName, type: 'person', x: rootX, y: rootY, value: '', notes: '' };
 
               const stockNodes = source.map((s, i) => {
-                const angle = (-Math.PI/2) + (i / N) * Math.PI * 2;
-                const x = cx + Math.cos(angle) * radius;
-                const y = cy + Math.sin(angle) * radius;
+                const x = branchX;
+                const y = startY + i * ROW;
                 const isCur = constellationMode === 'current';
                 const cur = parseFloat(s.currentValue) || 0;
                 const inv = parseFloat(s.invested) || 0;
