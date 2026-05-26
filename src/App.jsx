@@ -2544,7 +2544,7 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
 // ============================================
 // ASSET MAP GRAPH — drag/drop personal wealth structure
 // ============================================
-function AssetMapGraph({ graph, setGraph }) {
+function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition }) {
   const safeGraph = (graph && typeof graph === 'object' && !Array.isArray(graph)) ? graph : { nodes: [], edges: [], types: [] };
   const nodes = Array.isArray(safeGraph.nodes) ? safeGraph.nodes : [];
   const edges = Array.isArray(safeGraph.edges) ? safeGraph.edges : [];
@@ -2763,11 +2763,15 @@ function AssetMapGraph({ graph, setGraph }) {
     <div style={{ position: 'relative', height: '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '10px 14px', borderBottom: '0.5px solid rgba(0,200,255,0.15)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
         <div>
-          <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.55)', fontFamily: 'monospace', letterSpacing: '2px' }}>// ASSET MAP</div>
-          <div style={{ fontSize: '13px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1px' }}>NET POSITION: <span style={{ color: totalValue >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' }}>{totalValue >= 0 ? '+' : ''}{formatMoney(totalValue) || '$0'}</span></div>
+          <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.55)', fontFamily: 'monospace', letterSpacing: '2px' }}>// {title || 'ASSET MAP'}</div>
+          {!hideNetPosition && (
+            <div style={{ fontSize: '13px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, letterSpacing: '1px' }}>NET POSITION: <span style={{ color: totalValue >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' }}>{totalValue >= 0 ? '+' : ''}{formatMoney(totalValue) || '$0'}</span></div>
+          )}
         </div>
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          <button onClick={() => { setShowPalette(p => !p); setShowTypeEditor(false); }} style={{ padding: '7px 12px', background: showPalette ? 'rgba(0,200,255,0.18)' : 'rgba(0,200,255,0.08)', border: '1px solid rgba(0,200,255,0.5)', borderRadius: '4px', color: 'rgba(0,200,255,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ NODE</button>
+          {!hideAddNode && (
+            <button onClick={() => { setShowPalette(p => !p); setShowTypeEditor(false); }} style={{ padding: '7px 12px', background: showPalette ? 'rgba(0,200,255,0.18)' : 'rgba(0,200,255,0.08)', border: '1px solid rgba(0,200,255,0.5)', borderRadius: '4px', color: 'rgba(0,200,255,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>+ NODE</button>
+          )}
           <button onClick={() => { setShowTypeEditor(t => !t); setShowPalette(false); }} style={{ padding: '7px 12px', background: showTypeEditor ? 'rgba(168,85,247,0.18)' : 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.5)', borderRadius: '4px', color: 'rgba(168,85,247,0.95)', fontFamily: 'monospace', fontSize: '10px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>TYPES</button>
           <button onClick={() => setZoom(z => Math.min(z * 1.2, 3))} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>+</button>
           <button onClick={() => setZoom(z => Math.max(z / 1.2, 0.3))} style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>−</button>
@@ -12696,7 +12700,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div style={{padding:"12px 12px 16px"}}>
-                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} />
+                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition />
                   </div>
                 </div>
 
