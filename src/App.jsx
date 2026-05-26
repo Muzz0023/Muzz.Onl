@@ -3205,9 +3205,14 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('constellation');
-  // Investment Constellation — master view state
-  const [constellationMode, setConstellationMode] = useState('current'); // current | future | research | all
-  const [selectedStock, setSelectedStock] = useState(null); // {type: 'current'|'future', index: number} or null
+  // Investment Map — free-form graph state (one per mode)
+  const [investmentMapGraph, setInvestmentMapGraph] = useState({
+    current: { nodes: [], edges: [], types: [] },
+    future: { nodes: [], edges: [], types: [] },
+    research: { nodes: [], edges: [], types: [] },
+  });
+  const [constellationMode, setConstellationMode] = useState('current'); // current | future | research
+  const [selectedStock, setSelectedStock] = useState(null);
   const [perfTicker, setPerfTicker] = useState('');
   const [perfData, setPerfData] = useState(null);
   const [perfLoading, setPerfLoading] = useState(false);
@@ -4243,6 +4248,7 @@ function MuzzApp() {
           if (d.bucketList) setBucketList(d.bucketList);
           if (d.assetMapNodes) setAssetMapNodes(d.assetMapNodes);
           if (d.assetMapGraph) setAssetMapGraph(d.assetMapGraph);
+          if (d.investmentMapGraph) setInvestmentMapGraph(d.investmentMapGraph);
           if (d.mapPins) setMapPins(d.mapPins);
           // Donny data
           if (d.donnyJobs) setDonnyJobs(d.donnyJobs);
@@ -4395,6 +4401,7 @@ function MuzzApp() {
           bucketList,
           assetMapNodes,
           assetMapGraph,
+          investmentMapGraph,
           mapPins,
           netWorthHistory,
           savedViews,
@@ -4435,7 +4442,7 @@ function MuzzApp() {
     
     const timeoutId = setTimeout(saveData, 1000); // Debounce saves
     return () => clearTimeout(timeoutId);
-  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, donnyOrgLevels, donnyOrgBossId, userId, dataLoaded]);
+  }, [subscriptions, businessSubscriptions, billBuckets, activeBucketId, muzzPersonality, funnyGreetings, customDiets, trackedStocks, monthlySalary, monthlySalaryStr, assets, stocks, investmentSettings, smallGoals, bigGoals, holdingsResearch, futureStocks, futureResearch, futureResearchColumns, investmentSmallGoals, investmentBigGoals, investmentNotes, declinedCompanies, companyEconomics, economicsColumns, researchColumns, biggestRisks, risksColumns, billSmallGoals, billBigGoals, debts, calendarBills, tasks, dailyTasks, weeklyTasks, generalTasks, customTaskLists, dailyNote, weeklyNote, generalNote, dailyRotation, birthdays, reminders, groceries, shoppingLists, dailyMeals, waterIntake, dailySteps, workoutPlan, sleepData, mentalHealthData, timesheetData, customCategories, eliteName, timetableBlocks, habits, habitLog, journalEntries, countdowns, bucketList, assetMapNodes, assetMapGraph, investmentMapGraph, mapPins, donnyJobs, donnyTeam, donnyNotes, donnyTimesheets, donnyClients, donnySubs, donnySuppliers, donnyMaterialsLog, donnyMistakes, donnyIncidents, donnyChecklists, donnyPhotos, donnySchedule, donnyRecurring, donnyCosts, donnyIntelGraph, donnyWorkspaceCode, donnyPreset, donnyWorkerAccess, donnyRole, donnyBossUserId, donnyOrgLevels, donnyOrgBossId, userId, dataLoaded]);
 
   // Tip rotation
   useEffect(() => {
@@ -12561,133 +12568,55 @@ ${JSON.stringify(ctx, null, 2)}`;
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* === CONSTELLATION MAP === */}
+          {/* === INVESTMENT MAP — Free-form node graph (like Asset Map) === */}
           {investmentsSubTab === 'constellation' && (() => {
             const accent = '#00c8ff';
             const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
 
-            // Build node lists per mode
-            const currentList = stocks.filter(s => s && s.name && (s.invested > 0 || s.currentValue > 0)).map((s, i) => ({
-              ...s,
-              _type: 'current',
-              _idx: stocks.indexOf(s),
-              _value: parseFloat(s.currentValue) || 0,
-              _invested: parseFloat(s.invested) || 0,
-              _returnPct: (parseFloat(s.invested)||0) > 0 ? (((parseFloat(s.currentValue)||0) - (parseFloat(s.invested)||0)) / (parseFloat(s.invested)||0)) * 100 : 0,
-            }));
-            const futureList = futureStocks.filter(s => s && (s.ticker || s.name)).map((s, i) => ({
-              ...s,
-              _type: 'future',
-              _idx: futureStocks.indexOf(s),
-              _value: 0,
-              _invested: 0,
-              _returnPct: 0,
-              name: s.name || s.ticker,
-            }));
-            const researchList = holdingsResearch.filter(s => s && s.ticker).map((s, i) => ({
-              ...s,
-              _type: 'research',
-              _idx: holdingsResearch.indexOf(s),
-              _value: 0,
-              _invested: 0,
-              _returnPct: 0,
-              name: s.ticker,
-              industry: s.industry || '',
-            }));
-
-            let nodes = [];
-            if (constellationMode === 'current') nodes = currentList;
-            else if (constellationMode === 'future') nodes = futureList;
-            else if (constellationMode === 'research') nodes = researchList;
-            else nodes = [...currentList, ...futureList, ...researchList];
-
-            // Group by industry
-            const grouped = {};
-            nodes.forEach(n => {
-              const key = (n.industry || 'Other').trim() || 'Other';
-              if (!grouped[key]) grouped[key] = [];
-              grouped[key].push(n);
-            });
-            const industryKeys = Object.keys(grouped).sort((a,b) => grouped[b].length - grouped[a].length);
-
-            const totalPortValue = currentList.reduce((s,n) => s + n._value, 0);
-            const totalPortInvested = currentList.reduce((s,n) => s + n._invested, 0);
+            // Quick stats for header card
+            const currentList = stocks.filter(s => s && s.name && (s.invested > 0 || s.currentValue > 0));
+            const futureList = futureStocks.filter(s => s && (s.ticker || s.name));
+            const researchList = holdingsResearch.filter(s => s && s.ticker);
+            const totalPortValue = currentList.reduce((sum, s) => sum + (parseFloat(s.currentValue)||0), 0);
+            const totalPortInvested = currentList.reduce((sum, s) => sum + (parseFloat(s.invested)||0), 0);
             const totalPortReturn = totalPortValue - totalPortInvested;
             const totalPortReturnPct = totalPortInvested > 0 ? (totalPortReturn / totalPortInvested) * 100 : 0;
-            const maxValue = Math.max(...currentList.map(n => n._value), 1);
 
-            // Node sizing by $ value (current mode), equal otherwise
-            const nodeSize = (n) => {
-              if (constellationMode !== 'current' && constellationMode !== 'all') return { w: 110, h: 56, font: 11 };
-              if (n._type !== 'current') return { w: 110, h: 56, font: 11 };
-              const ratio = n._value / maxValue;
-              const w = 100 + ratio * 60; // 100-160
-              const h = 50 + ratio * 24; // 50-74
-              const font = 10 + ratio * 3; // 10-13
-              return { w, h, font };
-            };
-
-            // Node colour by % return
-            const nodeColor = (n) => {
-              if (n._type !== 'current') return accent;
-              if (n._invested === 0) return accent;
-              if (n._returnPct > 0.5) return '#22c55e';
-              if (n._returnPct < -0.5) return '#ef4444';
-              return accent;
-            };
-
-            // Geometry — radial on desktop, vertical-spine grouped on mobile
-            const canvasSize = isWide ? Math.min(900, 520 + nodes.length * 15) : 0;
-            const cx = canvasSize / 2;
-            const cy = canvasSize / 2;
-            const rootRadius = isWide ? 90 : 0;
-            const ringRadius = isWide ? Math.min(canvasSize/2 - 100, 340) : 0;
-
-            // Position each industry cluster on its own angle, then nodes within cluster
-            const clusters = industryKeys.map((key, ki) => {
-              const items = grouped[key];
-              const clusterAngle = (-Math.PI/2) + (ki / industryKeys.length) * Math.PI * 2;
-              const positions = items.map((n, ni) => {
-                // Spread items within cluster on a small arc around clusterAngle
-                const spread = Math.min(0.25, 0.06 * items.length); // total arc width
-                const angle = clusterAngle - spread/2 + (items.length === 1 ? spread/2 : (ni / (items.length-1)) * spread);
-                const r = ringRadius + (ni % 2 === 1 ? 50 : 0); // alternate ring depth so they don't overlap
-                const x = cx + Math.cos(angle) * r;
-                const y = cy + Math.sin(angle) * r;
-                const pathR = r - 35;
-                const px = cx + Math.cos(angle) * pathR;
-                const py = cy + Math.sin(angle) * pathR;
-                const bx = cx + Math.cos(angle) * rootRadius;
-                const by = cy + Math.sin(angle) * rootRadius;
-                return { node: n, angle, x, y, px, py, bx, by };
+            const currentGraph = (investmentMapGraph && investmentMapGraph[constellationMode]) || { nodes: [], edges: [], types: [] };
+            const setCurrentGraph = (next) => {
+              setInvestmentMapGraph(prev => {
+                const nextVal = typeof next === 'function' ? next(prev[constellationMode] || { nodes:[], edges:[], types:[] }) : next;
+                return { ...prev, [constellationMode]: nextVal };
               });
-              return { key, items: positions, clusterAngle };
-            });
+            };
 
-            const openModal = (n) => setSelectedStock({ type: n._type, index: n._idx });
+            const modeMeta = {
+              current: { label: 'CURRENT PORTFOLIO', count: currentList.length, accent: '#00c8ff' },
+              future:  { label: 'FUTURE / WATCHLIST', count: futureList.length, accent: '#3b82f6' },
+              research:{ label: 'RESEARCH', count: researchList.length, accent: '#a855f7' },
+            };
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Mode switcher */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"10px 14px",borderLeft:`2px solid ${accent}`}}>
-                  <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// VIEW MODE</div>
+                  <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// GRAPH MODE</div>
                   <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-                    {[
-                      {id:'current',label:`CURRENT · ${currentList.length}`},
-                      {id:'future',label:`FUTURE · ${futureList.length}`},
-                      {id:'research',label:`RESEARCH · ${researchList.length}`},
-                      {id:'all',label:`ALL · ${currentList.length + futureList.length + researchList.length}`},
-                    ].map(m => (
-                      <button key={m.id} onClick={() => setConstellationMode(m.id)}
-                        style={{padding:"6px 12px",background:constellationMode===m.id?`${accent}1f`:"rgba(255,255,255,0.04)",border:`0.5px solid ${constellationMode===m.id?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:constellationMode===m.id?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
-                        {m.label}
-                      </button>
-                    ))}
+                    {['current','future','research'].map(m => {
+                      const meta = modeMeta[m];
+                      const active = constellationMode === m;
+                      return (
+                        <button key={m} onClick={() => setConstellationMode(m)}
+                          style={{padding:"7px 14px",background:active?`${meta.accent}1f`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?meta.accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?meta.accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,boxShadow:active?`0 0 12px ${meta.accent}30`:"none"}}>
+                          {meta.label} · {meta.count}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Portfolio summary card (only show in current/all mode and if there's data) */}
-                {(constellationMode==='current'||constellationMode==='all') && currentList.length > 0 && (
+                {/* Portfolio summary — only in current mode */}
+                {constellationMode==='current' && currentList.length > 0 && (
                   <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"6px",padding:"14px 16px",display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"10px"}}>
                     <div>
                       <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>VALUE</div>
@@ -12708,377 +12637,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 )}
 
-                {/* Graph card */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderLeft:`2px solid ${accent}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {constellationMode.toUpperCase()}</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{nodes.length} NODE{nodes.length!==1?'S':''}</span>
+                {/* The map itself — same component as Asset Map */}
+                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+                  <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}</span>
+                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
                   </div>
-
-                  {nodes.length === 0 ? (
-                    <div style={{padding:"60px 20px",textAlign:"center",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-                      <div style={{fontSize:"12px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>NO {constellationMode.toUpperCase()} NODES YET</div>
-                      <div style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>Add via PORTFOLIO, FUTURE, or RESEARCH tab</div>
-                    </div>
-                  ) : (
-                    <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
-                      {isWide ? (
-                        /* DESKTOP: radial cluster graph */
-                        <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
-                          <svg viewBox={`0 0 ${canvasSize} ${canvasSize}`} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
-                            <defs>
-                              <radialGradient id="inv-bg-glow" cx="50%" cy="50%" r="50%">
-                                <stop offset="0%" stopColor={accent} stopOpacity="0.08"/>
-                                <stop offset="70%" stopColor={accent} stopOpacity="0.02"/>
-                                <stop offset="100%" stopColor={accent} stopOpacity="0"/>
-                              </radialGradient>
-                              <filter id="inv-glow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="2.5" result="b"/>
-                                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                              </filter>
-                            </defs>
-                            <circle cx={cx} cy={cy} r={ringRadius + 50} fill="url(#inv-bg-glow)"/>
-                            <circle cx={cx} cy={cy} r={ringRadius} fill="none" stroke={accent} strokeWidth="0.4" strokeDasharray="2 6" opacity="0.15"/>
-                            {/* Industry cluster labels */}
-                            {clusters.map((c, ci) => {
-                              const labelR = ringRadius + 75;
-                              const lx = cx + Math.cos(c.clusterAngle) * labelR;
-                              const ly = cy + Math.sin(c.clusterAngle) * labelR;
-                              return (
-                                <text key={ci} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
-                                  style={{fontFamily:"monospace",fontSize:"9px",fill:`${accent}80`,letterSpacing:"1px",fontWeight:600}}>
-                                  {c.key.toUpperCase()}
-                                </text>
-                              );
-                            })}
-                            {/* Connection lines */}
-                            {clusters.flatMap(c => c.items).map((p, i) => {
-                              const col = nodeColor(p.node);
-                              return (
-                                <g key={i}>
-                                  <line x1={p.bx} y1={p.by} x2={p.px} y2={p.py} stroke={col} strokeWidth="3" opacity="0.1" filter="url(#inv-glow)"/>
-                                  <line x1={p.bx} y1={p.by} x2={p.px} y2={p.py} stroke={col} strokeWidth="1" opacity="0.5"/>
-                                  <circle cx={p.px} cy={p.py} r="3" fill={col} opacity="0.9"/>
-                                </g>
-                              );
-                            })}
-                            {/* Animated pulses */}
-                            {clusters.flatMap(c => c.items).slice(0, 12).map((p, i) => (
-                              <circle key={`p-${i}`} r="2.5" fill={nodeColor(p.node)} opacity="0">
-                                <animate attributeName="cx" from={p.bx} to={p.px} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
-                                <animate attributeName="cy" from={p.by} to={p.py} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
-                                <animate attributeName="opacity" values="0;1;1;0" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
-                              </circle>
-                            ))}
-                          </svg>
-
-                          {/* Root node */}
-                          <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
-                            <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"14px 24px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 32px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:"170px",position:"relative"}}>
-                              <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                              <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                              <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                              <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                              <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
-                              {(constellationMode==='current'||constellationMode==='all') && currentList.length > 0 ? (
-                                <>
-                                  <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                                  <span style={{fontSize:"9px",color:totalPortReturnPct>=0?"#22c55e":"#ef4444",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px",fontWeight:600}}>{totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%</span>
-                                </>
-                              ) : (
-                                <span style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{nodes.length} TARGETS</span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Stock nodes */}
-                          {clusters.flatMap(c => c.items).map((p, i) => {
-                            const n = p.node;
-                            const col = nodeColor(n);
-                            const sz = nodeSize(n);
-                            const widthPct = (constellationMode==='current'||constellationMode==='all') && n._type==='current' && maxValue>0 ? (n._value / maxValue) * 100 : 50;
-                            return (
-                              <button key={i} onClick={() => openModal(n)}
-                                style={{position:"absolute",left:p.x,top:p.y,transform:"translate(-50%,-50%)",width:`${sz.w}px`,zIndex:1,padding:0,background:"none",border:"none",cursor:"pointer"}}>
-                                <div style={{padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${col}60`,borderLeft:`2px solid ${col}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 14px ${col}30`,minHeight:`${sz.h}px`,display:"flex",flexDirection:"column",justifyContent:"center",textAlign:"left",transition:"all 0.15s"}}>
-                                  <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${col}`,borderLeft:`0.5px solid ${col}`}}/>
-                                  <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${col}`,borderRight:`0.5px solid ${col}`}}/>
-                                  <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${col}20, ${col}05)`,pointerEvents:"none"}}/>
-                                  <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"2px"}}>
-                                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                      <div style={{width:"5px",height:"5px",borderRadius:"50%",background:col,boxShadow:`0 0 6px ${col}`,flexShrink:0}}/>
-                                      <span style={{fontFamily:"monospace",fontSize:`${sz.font}px`,color:"#e0eaff",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{n.name || n.ticker || '?'}</span>
-                                    </div>
-                                    {n._type === 'current' && n._value > 0 && (
-                                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                        <span style={{fontFamily:"monospace",fontSize:"9px",color:col,fontWeight:600}}>${n._value>=1000?`${(n._value/1000).toFixed(n._value>=10000?0:1)}k`:n._value.toFixed(0)}</span>
-                                        {n._invested > 0 && (
-                                          <span style={{fontFamily:"monospace",fontSize:"8px",color:n._returnPct>=0?"#22c55e":"#ef4444",fontWeight:600}}>{n._returnPct>=0?'+':''}{n._returnPct.toFixed(1)}%</span>
-                                        )}
-                                      </div>
-                                    )}
-                                    {n._type !== 'current' && (
-                                      <div style={{paddingLeft:"10px"}}>
-                                        <span style={{fontFamily:"monospace",fontSize:"8px",color:`${accent}99`,letterSpacing:"0.5px",fontWeight:600}}>{n._type === 'future' ? 'WATCHLIST' : 'RESEARCH'}</span>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        /* MOBILE: grouped vertical lists */
-                        <div style={{position:"relative",maxWidth:"100%"}}>
-                          {/* Root header */}
-                          <div style={{display:"flex",justifyContent:"center",marginBottom:"14px"}}>
-                            <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 24px ${accent}50`,minWidth:"180px",position:"relative"}}>
-                              <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                              <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                              <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
-                              <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
-                              <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{rootName}</span>
-                              {(constellationMode==='current'||constellationMode==='all') && currentList.length > 0 ? (
-                                <>
-                                  <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                                  <span style={{fontSize:"9px",color:totalPortReturnPct>=0?"#22c55e":"#ef4444",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px",fontWeight:600}}>{totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%</span>
-                                </>
-                              ) : (
-                                <span style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{nodes.length} TARGETS</span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Industry clusters as collapsible groups */}
-                          {industryKeys.map(key => (
-                            <div key={key} style={{marginBottom:"14px",position:"relative"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px",paddingLeft:"4px"}}>
-                                <div style={{width:"4px",height:"4px",borderRadius:"50%",background:accent,boxShadow:`0 0 4px ${accent}`}}/>
-                                <span style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>// {key.toUpperCase()} · {grouped[key].length}</span>
-                                <div style={{flex:1,height:"0.5px",background:`${accent}20`}}/>
-                              </div>
-                              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
-                                {grouped[key].map((n, ni) => {
-                                  const col = nodeColor(n);
-                                  const widthPct = (constellationMode==='current'||constellationMode==='all') && n._type==='current' && maxValue>0 ? (n._value / maxValue) * 100 : 50;
-                                  return (
-                                    <button key={ni} onClick={() => openModal(n)}
-                                      style={{padding:"10px 12px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${col}55`,borderLeft:`2px solid ${col}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 8px ${col}25`,textAlign:"left",cursor:"pointer"}}>
-                                      <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${col}`,borderLeft:`0.5px solid ${col}`}}/>
-                                      <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${col}`,borderRight:`0.5px solid ${col}`}}/>
-                                      <div style={{position:"absolute",top:0,left:0,bottom:0,width:`${widthPct}%`,background:`linear-gradient(90deg, ${col}20, ${col}05)`,pointerEvents:"none"}}/>
-                                      <div style={{position:"relative",display:"flex",flexDirection:"column",gap:"3px"}}>
-                                        <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
-                                          <div style={{width:"5px",height:"5px",borderRadius:"50%",background:col,boxShadow:`0 0 6px ${col}`,flexShrink:0}}/>
-                                          <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{n.name || n.ticker || '?'}</span>
-                                        </div>
-                                        {n._type === 'current' && n._value > 0 ? (
-                                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",paddingLeft:"10px"}}>
-                                            <span style={{fontFamily:"monospace",fontSize:"10px",color:col,fontWeight:600}}>${n._value>=1000?`${(n._value/1000).toFixed(n._value>=10000?0:1)}k`:n._value.toFixed(0)}</span>
-                                            {n._invested > 0 && (
-                                              <span style={{fontFamily:"monospace",fontSize:"9px",color:n._returnPct>=0?"#22c55e":"#ef4444",fontWeight:600}}>{n._returnPct>=0?'+':''}{n._returnPct.toFixed(1)}%</span>
-                                            )}
-                                          </div>
-                                        ) : (
-                                          <div style={{paddingLeft:"10px"}}>
-                                            <span style={{fontFamily:"monospace",fontSize:"8px",color:`${accent}99`,letterSpacing:"0.5px",fontWeight:600}}>{n._type === 'future' ? 'WATCHLIST' : 'RESEARCH'}</span>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <div style={{padding:"12px 12px 16px"}}>
+                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} />
+                  </div>
                 </div>
 
-                {/* Legend */}
-                <div style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.12)",borderRadius:"6px",padding:"10px 14px",display:"flex",flexWrap:"wrap",gap:"14px",fontSize:"9px",fontFamily:"monospace",color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:"6px"}}><div style={{width:"8px",height:"8px",borderRadius:"50%",background:"#22c55e",boxShadow:"0 0 6px #22c55e"}}/>WINNING</div>
-                  <div style={{display:"flex",alignItems:"center",gap:"6px"}}><div style={{width:"8px",height:"8px",borderRadius:"50%",background:"#ef4444",boxShadow:"0 0 6px #ef4444"}}/>LOSING</div>
-                  <div style={{display:"flex",alignItems:"center",gap:"6px"}}><div style={{width:"8px",height:"8px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>NEUTRAL · WATCHLIST · RESEARCH</div>
-                  <div style={{display:"flex",alignItems:"center",gap:"6px",marginLeft:"auto",color:"rgba(148,163,184,0.5)"}}>TAP NODE TO OPEN DETAILS</div>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* === STOCK DETAIL MODAL === */}
-          {selectedStock && (() => {
-            const { type, index } = selectedStock;
-            const list = type === 'current' ? stocks : type === 'future' ? futureStocks : holdingsResearch;
-            const setter = type === 'current' ? setStocks : type === 'future' ? setFutureStocks : setHoldingsResearch;
-            const stock = list[index];
-            if (!stock) { setSelectedStock(null); return null; }
-
-            const updateField = (field, value) => {
-              setter(prev => {
-                const copy = [...prev];
-                copy[index] = { ...copy[index], [field]: value };
-                return copy;
-              });
-            };
-            const updateNumberField = (field, value, strField) => {
-              setter(prev => {
-                const copy = [...prev];
-                copy[index] = { ...copy[index], [field]: parseFloat(value)||0, [strField]: value };
-                return copy;
-              });
-            };
-
-            const accent = '#00c8ff';
-            const isCur = type === 'current';
-            const cur = parseFloat(stock.currentValue)||0;
-            const inv = parseFloat(stock.invested)||0;
-            const returnAbs = cur - inv;
-            const returnPct = inv > 0 ? (returnAbs / inv) * 100 : 0;
-            const nodeCol = isCur ? (inv > 0 && returnPct > 0.5 ? '#22c55e' : inv > 0 && returnPct < -0.5 ? '#ef4444' : accent) : accent;
-
-            return (
-              <div onClick={() => setSelectedStock(null)}
-                style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",backdropFilter:"blur(8px)",zIndex:9999,overflowY:"auto",padding:isWide?"40px 20px":"0",WebkitOverflowScrolling:"touch"}}>
-                <div onClick={(e) => e.stopPropagation()}
-                  style={{maxWidth:"720px",margin:"0 auto",background:"rgba(5,12,24,0.98)",border:`0.5px solid ${nodeCol}40`,borderLeft:`2px solid ${nodeCol}`,borderRadius:isWide?"6px":"0",overflow:"hidden",boxShadow:`0 0 50px ${nodeCol}30`,backgroundImage:`radial-gradient(${nodeCol}05 1px,transparent 1px)`,backgroundSize:"24px 24px",minHeight:isWide?"auto":"100vh"}}>
-                  {/* Header */}
-                  <div style={{padding:"16px 20px",borderBottom:`0.5px solid ${nodeCol}25`,display:"flex",alignItems:"center",justifyContent:"space-between",background:`linear-gradient(180deg, ${nodeCol}12, transparent)`}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px",flex:1,minWidth:0}}>
-                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:nodeCol,boxShadow:`0 0 10px ${nodeCol}`,flexShrink:0}}/>
-                      <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontSize:"9px",color:`${nodeCol}99`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"2px"}}>// {type==='current'?'HOLDING':type==='future'?'WATCHLIST TARGET':'RESEARCH'}</div>
-                        <div style={{fontSize:"17px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{stock.name || stock.ticker || 'Unnamed'}</div>
-                      </div>
-                    </div>
-                    <button onClick={() => setSelectedStock(null)}
-                      style={{background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.3)",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,flexShrink:0}}>CLOSE ✕</button>
-                  </div>
-
-                  <div style={{padding:"18px 20px 24px",display:"flex",flexDirection:"column",gap:"18px"}}>
-                    {/* CORE FIELDS — name/ticker, industry */}
-                    <div style={{display:"grid",gridTemplateColumns:isWide?"2fr 1fr":"1fr",gap:"10px"}}>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>{isCur ? 'COMPANY' : 'TICKER / NAME'}</div>
-                        <input type="text" value={stock.name || stock.ticker || ''} onFocus={scrollInputIntoView}
-                          onChange={(e) => updateField(isCur ? 'name' : (stock.ticker !== undefined ? 'ticker' : 'name'), e.target.value)}
-                          placeholder={isCur ? "e.g. Berkshire Hathaway" : "e.g. BRK.B"}
-                          className="slick-input" style={{fontSize:"13px"}}/>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>INDUSTRY</div>
-                        <select value={stock.industry || ''} onChange={(e) => updateField('industry', e.target.value)}
-                          className="slick-select" style={{colorScheme:"dark"}}>
-                          {industries.map(ind => (
-                            <option key={ind.id} value={ind.id}>{ind.name}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* MONEY FIELDS — only for current holdings */}
-                    {isCur && (
-                      <>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>INVESTED $</div>
-                            <input type="text" inputMode="decimal" value={stock.investedStr || ''} onFocus={scrollInputIntoView}
-                              onChange={(e) => updateNumberField('invested', e.target.value, 'investedStr')}
-                              placeholder="0" className="slick-input"/>
-                          </div>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>CURRENT VALUE $</div>
-                            <input type="text" inputMode="decimal" value={stock.currentValueStr || ''} onFocus={scrollInputIntoView}
-                              onChange={(e) => updateNumberField('currentValue', e.target.value, 'currentValueStr')}
-                              placeholder="0" className="slick-input"/>
-                          </div>
-                        </div>
-
-                        {/* Performance stats */}
-                        {(inv > 0 || cur > 0) && (
-                          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
-                            <div style={{padding:"10px 8px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"4px",textAlign:"center"}}>
-                              <div style={{fontSize:"8px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>VALUE</div>
-                              <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>${cur.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                            </div>
-                            <div style={{padding:"10px 8px",background:returnAbs>=0?"rgba(34,197,94,0.06)":"rgba(239,68,68,0.06)",border:`0.5px solid ${returnAbs>=0?"rgba(34,197,94,0.25)":"rgba(239,68,68,0.25)"}`,borderRadius:"4px",textAlign:"center"}}>
-                              <div style={{fontSize:"8px",color:returnAbs>=0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>RETURN</div>
-                              <div style={{fontSize:"15px",color:returnAbs>=0?"#22c55e":"#ef4444",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{returnAbs>=0?'+':''}${returnAbs.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                            </div>
-                            <div style={{padding:"10px 8px",background:returnPct>=0?"rgba(34,197,94,0.06)":"rgba(239,68,68,0.06)",border:`0.5px solid ${returnPct>=0?"rgba(34,197,94,0.25)":"rgba(239,68,68,0.25)"}`,borderRadius:"4px",textAlign:"center"}}>
-                              <div style={{fontSize:"8px",color:returnPct>=0?"rgba(34,197,94,0.7)":"rgba(239,68,68,0.7)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600}}>%</div>
-                              <div style={{fontSize:"15px",color:returnPct>=0?"#22c55e":"#ef4444",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{returnPct>=0?'+':''}{returnPct.toFixed(1)}%</div>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    {/* RESEARCH FIELDS — for future/research, or as bonus info for current */}
-                    <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"10px"}}>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>TOLL BOOTH / MOAT</div>
-                        <input type="text" value={stock.tollBooth || ''} onFocus={scrollInputIntoView}
-                          onChange={(e) => updateField('tollBooth', e.target.value)}
-                          placeholder="e.g. Network effect, brand, switching costs" className="slick-input" style={{fontSize:"12px"}}/>
-                      </div>
-                      <div>
-                        <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>GROWTH DRIVERS</div>
-                        <input type="text" value={stock.growth || ''} onFocus={scrollInputIntoView}
-                          onChange={(e) => updateField('growth', e.target.value)}
-                          placeholder="e.g. International expansion, AI" className="slick-input" style={{fontSize:"12px"}}/>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>STATUS / THESIS</div>
-                      <input type="text" value={stock.status || ''} onFocus={scrollInputIntoView}
-                        onChange={(e) => updateField('status', e.target.value)}
-                        placeholder={isCur ? "e.g. Long-term hold, dollar-cost averaging" : "e.g. Watching for pullback under $X"}
-                        className="slick-input" style={{fontSize:"12px"}}/>
-                    </div>
-
-                    <div>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>NOTES</div>
-                      <textarea value={stock.notes || ''} onFocus={scrollInputIntoView}
-                        onChange={(e) => updateField('notes', e.target.value)}
-                        placeholder="Research notes, observations, questions..."
-                        rows={5}
-                        style={{width:"100%",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"10px 12px",outline:"none",resize:"vertical",lineHeight:1.5}}/>
-                    </div>
-
-                    {/* Move between lists */}
-                    <div style={{borderTop:`0.5px solid ${nodeCol}20`,paddingTop:"14px"}}>
-                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"8px",fontWeight:600}}>// ACTIONS</div>
-                      <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-                        {type !== 'current' && (
-                          <button onClick={() => {
-                            const newHolding = { id: Date.now(), name: stock.name || stock.ticker || '', industry: stock.industry || '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', tollBooth: stock.tollBooth || '', growth: stock.growth || '', status: stock.status || '', notes: stock.notes || '' };
-                            setStocks(prev => [...prev, newHolding]);
-                            setter(prev => prev.filter((_, i) => i !== index));
-                            setSelectedStock(null);
-                          }} style={{fontSize:"10px",color:"#22c55e",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.4)",padding:"7px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>→ MOVE TO PORTFOLIO</button>
-                        )}
-                        {type === 'current' && (
-                          <button onClick={() => {
-                            const newWatch = { id: Date.now(), name: stock.name, ticker: stock.name, industry: stock.industry || '', tollBooth: stock.tollBooth || '', growth: stock.growth || '', status: stock.status || '', notes: stock.notes || '' };
-                            setFutureStocks(prev => [...prev, newWatch]);
-                            setter(prev => prev.filter((_, i) => i !== index));
-                            setSelectedStock(null);
-                          }} style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1px",background:`${accent}10`,border:`0.5px solid ${accent}50`,padding:"7px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>→ MOVE TO WATCHLIST</button>
-                        )}
-                        <button onClick={() => {
-                          if (confirm(`Delete ${stock.name || stock.ticker || 'this'}?`)) {
-                            setter(prev => prev.filter((_, i) => i !== index));
-                            setSelectedStock(null);
-                          }
-                        }} style={{fontSize:"10px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.4)",padding:"7px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600,marginLeft:"auto"}}>DELETE</button>
-                      </div>
-                    </div>
-                  </div>
+                {/* Hint card */}
+                <div style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.12)",borderRadius:"6px",padding:"12px 14px",fontSize:"10px",fontFamily:"monospace",color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
+                  <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"1.5px",marginBottom:"6px"}}>// HOW TO USE</div>
+                  Tap <span style={{color:accent,fontWeight:600}}>+ NODE</span> to add a company. Drag nodes anywhere. Tap two nodes to connect. Tap a node to edit name, value, notes. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.
                 </div>
               </div>
             );
