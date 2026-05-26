@@ -3307,6 +3307,7 @@ function MuzzApp() {
   const [editingBillIdx, setEditingBillIdx] = useState(null);
   const [editingAssetIdx, setEditingAssetIdx] = useState(null);
   const [editingShiftDate, setEditingShiftDate] = useState(null);
+  const [editingJobName, setEditingJobName] = useState(false);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -7380,9 +7381,31 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               {/* Job Header — collapsible Palantir card */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #3b82f6"}}>
-                  <span style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeJob.name || 'JOB').toUpperCase()} · OVERVIEW</span>
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #3b82f6",gap:"10px"}}>
+                  {editingJobName ? (
+                    <div style={{display:"flex",alignItems:"center",gap:"8px",flex:1,minWidth:0}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                      <span style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,flexShrink:0}}>//</span>
+                      <input
+                        type="text"
+                        autoFocus
+                        value={activeJob.name}
+                        onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
+                        onBlur={() => setEditingJobName(false)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); setEditingJobName(false); } }}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{flex:1,minWidth:0,background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",fontWeight:600,padding:"3px 8px",outline:"none",textTransform:"uppercase"}}
+                      />
+                    </div>
+                  ) : (
+                    <span
+                      onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditingJobName(true); }}
+                      style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,flex:1,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}
+                      title="Double-click to rename"
+                    >
+                      // {(activeJob.name || 'JOB').toUpperCase()} · OVERVIEW
+                    </span>
+                  )}
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",flexShrink:0}}>{editingJobName ? 'editing…' : 'tap to collapse'}</span>
                 </summary>
                 <div style={{padding:"14px 16px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   {/* Job name + Reset button row */}
