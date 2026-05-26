@@ -23432,29 +23432,29 @@ ${JSON.stringify(ctx, null, 2)}`;
                     <span style={{fontSize:"9px",color:"rgba(251,191,36,0.8)",fontFamily:"monospace",letterSpacing:"1px"}}>STREAK AT RISK — {streak} DAY STREAK</span>
                   </div>
                 )}
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"10px"}}>
+                <div style={{padding:"18px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.08)",display:"flex",alignItems:"center",gap:"14px"}}>
                   <input
                     type="text"
                     value={habit.icon}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, icon: e.target.value.slice(0, 2) } : h))}
-                    style={{width:"32px",height:"32px",textAlign:"center",fontSize:"18px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",flexShrink:0}}
+                    style={{width:"46px",height:"46px",textAlign:"center",fontSize:"24px",background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",flexShrink:0,outline:"none"}}
                   />
                   <input
                     type="text"
                     value={habit.name}
                     onChange={(e) => setHabits(prev => prev.map(h => h.id === habit.id ? { ...h, name: e.target.value } : h))}
                     placeholder="Habit name..."
-                    style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",letterSpacing:"0.5px"}}
+                    style={{flex:1,minWidth:0,background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",letterSpacing:"0.5px",fontWeight:500}}
                   />
                   <button
                     onClick={() => toggleHabit(habit.id, today)}
-                    style={{width:"36px",height:"36px",borderRadius:"4px",fontSize:"16px",background:completedToday?"#00c8ff":"rgba(0,200,255,0.08)",border:`0.5px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(0,200,255,0.6)",cursor:"pointer",fontWeight:500,flexShrink:0}}
+                    style={{width:"52px",height:"52px",borderRadius:"6px",fontSize:"22px",background:completedToday?"#00c8ff":"rgba(0,200,255,0.08)",border:`0.5px solid ${completedToday?"#00c8ff":"rgba(0,200,255,0.3)"}`,color:completedToday?"#0a0e1a":"rgba(0,200,255,0.6)",cursor:"pointer",fontWeight:600,flexShrink:0,boxShadow:completedToday?"0 0 14px rgba(0,200,255,0.4)":"none",transition:"all 0.15s"}}
                   >
                     {completedToday ? '✓' : '○'}
                   </button>
                   <button
                     onClick={() => setHabits(prev => prev.filter(h => h.id !== habit.id))}
-                    style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"16px",flexShrink:0}}
+                    style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"20px",flexShrink:0,padding:"4px 8px"}}
                   >×</button>
                 </div>
 
@@ -23465,23 +23465,23 @@ ${JSON.stringify(ctx, null, 2)}`;
                     {label:"BEST",value:`${bestStreak} days`,color:"rgba(0,200,255,0.6)"},
                     {label:"31-DAY",value:`${completionRate}%`,color:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
                   ].map((stat,i) => (
-                    <div key={i} style={{padding:"8px 12px",textAlign:"center",borderRight:i<2?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
-                      <div style={{fontSize:"7px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"2px"}}>{stat.label}</div>
-                      <div style={{fontSize:"14px",color:stat.color,fontFamily:"monospace",fontWeight:600}}>{stat.value}</div>
+                    <div key={i} style={{padding:"14px 12px",textAlign:"center",borderRight:i<2?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
+                      <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>{stat.label}</div>
+                      <div style={{fontSize:"18px",color:stat.color,fontFamily:"monospace",fontWeight:600}}>{stat.value}</div>
                     </div>
                   ))}
                 </div>
 
                 {/* Completion rate bar */}
-                <div style={{padding:"6px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px"}}>
-                    <div style={{height:"2px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"1px",transition:"width 0.3s"}} />
+                <div style={{padding:"10px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                  <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px"}}>
+                    <div style={{height:"3px",width:`${completionRate}%`,background:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)",borderRadius:"2px",transition:"width 0.3s"}} />
                   </div>
                 </div>
 
                 {/* Heatmap */}
-                <div style={{padding:"10px 16px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(28px, 1fr))":"repeat(auto-fill, minmax(40px, 1fr))",gap:isWide?"4px":"6px"}}>
+                <div style={{padding:"14px 20px 16px"}}>
+                  <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(auto-fill, minmax(36px, 1fr))":"repeat(auto-fill, minmax(48px, 1fr))",gap:isWide?"6px":"7px"}}>
                     {last31.map(date => {
                       const done = !!habitLog[`${habit.id}:${date}`];
                       const isToday = date === today;
@@ -23489,12 +23489,12 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <div
                           key={date}
                           onClick={() => toggleHabit(habit.id, date)}
-                          style={{aspectRatio:"1",borderRadius:"4px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 6px rgba(0,200,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
+                          style={{aspectRatio:"1",borderRadius:"5px",cursor:"pointer",background:done?"#00c8ff":isToday?"rgba(0,200,255,0.15)":"rgba(255,255,255,0.04)",border:isToday&&!done?"1px solid rgba(0,200,255,0.5)":done?"none":"0.5px solid rgba(255,255,255,0.05)",boxShadow:done?"0 0 8px rgba(0,200,255,0.55)":"none",userSelect:"none",WebkitTapHighlightColor:"transparent"}}
                         />
                       );
                     })}
                   </div>
-                  <div style={{fontSize:"9px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"8px"}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
+                  <div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"12px",fontWeight:500}}>LAST 31 DAYS — TAP ANY DAY TO TOGGLE</div>
                 </div>
               </div>
             );
