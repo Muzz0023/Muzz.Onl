@@ -12639,9 +12639,61 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                 {/* The map itself — same component as Asset Map */}
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
                     <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
+                    <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
+                      <button onClick={() => {
+                        // Build the source list for the active mode
+                        const source = constellationMode === 'current' ? currentList
+                          : constellationMode === 'future' ? futureList
+                          : researchList;
+                        if (source.length === 0) {
+                          alert(`No ${modeMeta[constellationMode].label.toLowerCase()} items to map. Add some in the relevant tab first.`);
+                          return;
+                        }
+                        const existingCount = (currentGraph.nodes || []).length;
+                        if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[constellationMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
+
+                        // Centre origin and radial layout
+                        const cx = 0, cy = 0;
+                        const N = source.length;
+                        const radius = Math.max(180, 90 + N * 22);
+                        const rootId = `root-${Date.now()}`;
+                        const rootNode = { id: rootId, label: rootName, type: 'person', x: cx, y: cy, value: '', notes: '' };
+
+                        const stockNodes = source.map((s, i) => {
+                          const angle = (-Math.PI/2) + (i / N) * Math.PI * 2;
+                          const x = cx + Math.cos(angle) * radius;
+                          const y = cy + Math.sin(angle) * radius;
+                          const isCur = constellationMode === 'current';
+                          const cur = parseFloat(s.currentValue) || 0;
+                          const inv = parseFloat(s.invested) || 0;
+                          const ret = inv > 0 ? ((cur - inv) / inv) * 100 : 0;
+                          const label = s.name || s.ticker || `Stock ${i+1}`;
+                          // Node type: shares for current, entity for future/research
+                          const type = isCur ? 'shares' : constellationMode === 'future' ? 'entity' : 'entity';
+                          const value = isCur && cur > 0 ? `$${cur.toLocaleString(undefined,{maximumFractionDigits:0})}` : '';
+                          const notesParts = [];
+                          if (s.industry) notesParts.push(`Industry: ${s.industry}`);
+                          if (isCur && inv > 0) notesParts.push(`Invested: $${inv.toLocaleString(undefined,{maximumFractionDigits:0})}`);
+                          if (isCur && inv > 0) notesParts.push(`Return: ${ret>=0?'+':''}${ret.toFixed(1)}%`);
+                          if (s.tollBooth) notesParts.push(`Moat: ${s.tollBooth}`);
+                          if (s.growth) notesParts.push(`Growth: ${s.growth}`);
+                          if (s.status) notesParts.push(`Status: ${s.status}`);
+                          if (s.notes) notesParts.push(s.notes);
+                          return { id: `node-${Date.now()}-${i}`, label, type, x, y, value, notes: notesParts.join(' · ') };
+                        });
+
+                        // Edges from root to every stock
+                        const edges = stockNodes.map(n => ({ id: `edge-${n.id}`, from: rootId, to: n.id, label: '' }));
+
+                        setCurrentGraph({ nodes: [rootNode, ...stockNodes], edges, types: currentGraph.types || [] });
+                      }}
+                        style={{fontSize:"10px",color:modeMeta[constellationMode].accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${modeMeta[constellationMode].accent}12`,border:`0.5px solid ${modeMeta[constellationMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,boxShadow:`0 0 10px ${modeMeta[constellationMode].accent}20`}}>
+                        ⚡ GENERATE MAP
+                      </button>
+                    </div>
                   </div>
                   <div style={{padding:"12px 12px 16px"}}>
                     <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} />
@@ -12651,7 +12703,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {/* Hint card */}
                 <div style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.12)",borderRadius:"6px",padding:"12px 14px",fontSize:"10px",fontFamily:"monospace",color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
                   <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"1.5px",marginBottom:"6px"}}>// HOW TO USE</div>
-                  Tap <span style={{color:accent,fontWeight:600}}>+ NODE</span> to add a company. Drag nodes anywhere. Tap two nodes to connect. Tap a node to edit name, value, notes. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.
+                  Hit <span style={{color:modeMeta[constellationMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.
                 </div>
               </div>
             );
