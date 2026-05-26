@@ -12559,7 +12559,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               {[
                 {id:'constellation',label:'MAP'},
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
-                {id:'futurePortfolio',label:'FUTURE'},
+                {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
                 {id:'knowledge',label:'GUIDE'},
                 {id:'accounting',label:'ACCOUNTING'},
@@ -12615,48 +12615,89 @@ ${JSON.stringify(ctx, null, 2)}`;
               const existingCount = (currentGraph.nodes || []).length;
               if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[constellationMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
 
-              // Horizontal tree layout: root on the left, holdings stacked vertically on the right.
-              // Matches the Asset Map seedTemplate coordinate space so nodes appear in the visible viewport.
-              const N = source.length;
+              // Industry-grouped hierarchical tree:
+              //   Col 1 (root) → Col 2 (industry hubs) → Col 3 (individual stocks)
+              // Stocks with no industry land under an "OTHER" hub.
               const NODE_H = 56;        // matches NODE_H in AssetMapGraph
-              const V_GAP = 36;         // vertical gap between stacked holdings
+              const V_GAP = 28;         // vertical gap between stocks within an industry
+              const GROUP_GAP = 56;     // extra gap between different industry groups
               const ROW = NODE_H + V_GAP;
               const rootX = 80;
-              const branchX = 420;      // horizontal offset of holdings from root
-              // Vertically centre the stack around y=280 so it sits in the visible area
-              const stackHeight = (N - 1) * ROW;
-              const startY = 280 - stackHeight / 2;
-              // Root sits at the vertical middle of the stack
-              const rootY = 280;
-              const rootId = `root-${Date.now()}`;
-              const rootNode = { id: rootId, label: rootName, type: 'person', x: rootX, y: rootY, value: '', notes: '' };
+              const hubX = 460;
+              const stockX = 840;
+              const centerY = 320;
 
-              const stockNodes = source.map((s, i) => {
-                const x = branchX;
-                const y = startY + i * ROW;
-                const isCur = constellationMode === 'current';
-                const cur = parseFloat(s.currentValue) || 0;
-                const inv = parseFloat(s.invested) || 0;
-                const ret = inv > 0 ? ((cur - inv) / inv) * 100 : 0;
-                const label = s.name || s.ticker || `Stock ${i+1}`;
-                // Node type: shares for current, entity for future/research
-                const type = isCur ? 'shares' : constellationMode === 'future' ? 'entity' : 'entity';
-                const value = isCur && cur > 0 ? `$${cur.toLocaleString(undefined,{maximumFractionDigits:0})}` : '';
-                const notesParts = [];
-                if (s.industry) notesParts.push(`Industry: ${s.industry}`);
-                if (isCur && inv > 0) notesParts.push(`Invested: $${inv.toLocaleString(undefined,{maximumFractionDigits:0})}`);
-                if (isCur && inv > 0) notesParts.push(`Return: ${ret>=0?'+':''}${ret.toFixed(1)}%`);
-                if (s.tollBooth) notesParts.push(`Moat: ${s.tollBooth}`);
-                if (s.growth) notesParts.push(`Growth: ${s.growth}`);
-                if (s.status) notesParts.push(`Status: ${s.status}`);
-                if (s.notes) notesParts.push(s.notes);
-                return { id: `node-${Date.now()}-${i}`, label, type, x, y, value, notes: notesParts.join(' · ') };
+              const isCur = constellationMode === 'current';
+
+              // Bucket stocks by industry, preserving first-seen order for stable layout
+              const industryOrder = [];
+              const byIndustry = {};
+              source.forEach(s => {
+                const key = (s.industry && String(s.industry).trim()) ? String(s.industry).trim() : 'Other';
+                if (!byIndustry[key]) { byIndustry[key] = []; industryOrder.push(key); }
+                byIndustry[key].push(s);
               });
 
-              // Edges from root to every stock
-              const edges = stockNodes.map(n => ({ id: `edge-${n.id}`, from: rootId, to: n.id, label: '' }));
+              // Compute total vertical span so we can centre the whole tree around centerY
+              const totalStocks = source.length;
+              const numGroups = industryOrder.length;
+              const totalHeight = totalStocks * ROW + Math.max(0, numGroups - 1) * GROUP_GAP;
+              let cursorY = centerY - totalHeight / 2;
 
-              setCurrentGraph({ nodes: [rootNode, ...stockNodes], edges, types: currentGraph.types || [] });
+              const baseId = Date.now();
+              const rootId = `root-${baseId}`;
+              const allNodes = [];
+              const allEdges = [];
+
+              // Root node: y is the top of the node box, so subtract half height to centre it on centerY
+              allNodes.push({ id: rootId, label: rootName, type: 'person', x: rootX, y: centerY - NODE_H/2, value: '', notes: '' });
+
+              let stockCounter = 0;
+              industryOrder.forEach((industryKey, gi) => {
+                const stocksInGroup = byIndustry[industryKey];
+                const groupHeight = stocksInGroup.length * ROW - V_GAP; // last stock has no trailing gap
+                const groupTopY = cursorY;                                // top of this group's vertical band
+                const groupCenterY = groupTopY + groupHeight / 2;          // vertical centre of the group
+
+                // Industry hub node — type 'entity' to visually differ from shares
+                const hubId = `hub-${baseId}-${gi}`;
+                allNodes.push({
+                  id: hubId,
+                  label: industryKey.toUpperCase(),
+                  type: 'entity',
+                  x: hubX,
+                  y: groupCenterY - NODE_H/2,
+                  value: '',
+                  notes: `${stocksInGroup.length} holding${stocksInGroup.length !== 1 ? 's' : ''}`,
+                });
+                allEdges.push({ id: `edge-${rootId}-${hubId}`, from: rootId, to: hubId, label: '' });
+
+                // Stock nodes for this industry
+                stocksInGroup.forEach((s, si) => {
+                  const yTop = groupTopY + si * ROW;
+                  const cur = parseFloat(s.currentValue) || 0;
+                  const inv = parseFloat(s.invested) || 0;
+                  const ret = inv > 0 ? ((cur - inv) / inv) * 100 : 0;
+                  const label = s.name || s.ticker || `Stock ${stockCounter + 1}`;
+                  const type = isCur ? 'shares' : 'entity';
+                  const value = isCur && cur > 0 ? `$${cur.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '';
+                  const notesParts = [];
+                  if (isCur && inv > 0) notesParts.push(`Invested: $${inv.toLocaleString(undefined, { maximumFractionDigits: 0 })}`);
+                  if (isCur && inv > 0) notesParts.push(`Return: ${ret >= 0 ? '+' : ''}${ret.toFixed(1)}%`);
+                  if (s.tollBooth) notesParts.push(`Moat: ${s.tollBooth}`);
+                  if (s.growth) notesParts.push(`Growth: ${s.growth}`);
+                  if (s.status) notesParts.push(`Status: ${s.status}`);
+                  if (s.notes) notesParts.push(s.notes);
+                  const stockId = `node-${baseId}-${stockCounter}`;
+                  allNodes.push({ id: stockId, label, type, x: stockX, y: yTop, value, notes: notesParts.join(' · ') });
+                  allEdges.push({ id: `edge-${hubId}-${stockId}`, from: hubId, to: stockId, label: '' });
+                  stockCounter++;
+                });
+
+                cursorY = groupTopY + groupHeight + GROUP_GAP;
+              });
+
+              setCurrentGraph({ nodes: allNodes, edges: allEdges, types: currentGraph.types || [] });
             };
 
             return (
