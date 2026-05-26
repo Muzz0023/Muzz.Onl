@@ -2544,7 +2544,7 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
 // ============================================
 // ASSET MAP GRAPH — drag/drop personal wealth structure
 // ============================================
-function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition }) {
+function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, customEmptyState }) {
   const safeGraph = (graph && typeof graph === 'object' && !Array.isArray(graph)) ? graph : { nodes: [], edges: [], types: [] };
   const nodes = Array.isArray(safeGraph.nodes) ? safeGraph.nodes : [];
   const edges = Array.isArray(safeGraph.edges) ? safeGraph.edges : [];
@@ -2834,15 +2834,21 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition })
       })()}
 
       {nodes.length === 0 && (
-        <div style={{ position: 'absolute', top: '52%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '92%', width: '460px' }}>
-          <div style={{ fontSize: '10px', color: 'rgba(0,200,255,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px' }}>// EMPTY MAP</div>
-          <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your wealth structure.</div>
-          <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>Visualise where your assets sit. You at the top, trusts and companies below, then property, shares, super, cash etc. Each node holds a dollar value.</div>
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={seedTemplate} style={{ padding: '11px 16px', background: 'rgba(0,200,255,0.18)', border: '1px solid rgba(0,200,255,0.7)', borderRadius: '4px', color: 'rgba(0,200,255,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>USE THIS TEMPLATE</button>
-            <button onClick={() => addNode('person')} style={{ padding: '11px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>START FRESH</button>
+        customEmptyState ? (
+          <div style={{ position: 'absolute', top: '52%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '92%', width: '460px' }}>
+            {customEmptyState}
           </div>
-        </div>
+        ) : (
+          <div style={{ position: 'absolute', top: '52%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', zIndex: 5, maxWidth: '92%', width: '460px' }}>
+            <div style={{ fontSize: '10px', color: 'rgba(0,200,255,0.6)', fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px' }}>// EMPTY MAP</div>
+            <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your wealth structure.</div>
+            <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>Visualise where your assets sit. You at the top, trusts and companies below, then property, shares, super, cash etc. Each node holds a dollar value.</div>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button onClick={seedTemplate} style={{ padding: '11px 16px', background: 'rgba(0,200,255,0.18)', border: '1px solid rgba(0,200,255,0.7)', borderRadius: '4px', color: 'rgba(0,200,255,0.95)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>USE THIS TEMPLATE</button>
+              <button onClick={() => addNode('person')} style={{ padding: '11px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}>START FRESH</button>
+            </div>
+          </div>
+        )
       )}
 
       <svg ref={svgRef} onMouseDown={handlePointerDownCanvas} onTouchStart={touchHandlers(handlePointerDownCanvas)} width="100%" height="100%" style={{ display: 'block', cursor: panning ? 'grabbing' : 'grab', touchAction: 'none' }}>
@@ -12600,6 +12606,55 @@ ${JSON.stringify(ctx, null, 2)}`;
               research:{ label: 'RESEARCH', count: researchList.length, accent: '#a855f7' },
             };
 
+            const generateMap = () => {
+              // Build the source list for the active mode
+              const source = constellationMode === 'current' ? currentList
+                : constellationMode === 'future' ? futureList
+                : researchList;
+              if (source.length === 0) {
+                alert(`No ${modeMeta[constellationMode].label.toLowerCase()} items to map. Add some in the relevant tab first.`);
+                return;
+              }
+              const existingCount = (currentGraph.nodes || []).length;
+              if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[constellationMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
+
+              // Centre origin chosen so nodes appear in visible area of the SVG viewport on load
+              // (matches the seedTemplate layout coordinates used by Asset Map)
+              const cx = 400, cy = 280;
+              const N = source.length;
+              const radius = Math.max(180, 90 + N * 22);
+              const rootId = `root-${Date.now()}`;
+              const rootNode = { id: rootId, label: rootName, type: 'person', x: cx, y: cy, value: '', notes: '' };
+
+              const stockNodes = source.map((s, i) => {
+                const angle = (-Math.PI/2) + (i / N) * Math.PI * 2;
+                const x = cx + Math.cos(angle) * radius;
+                const y = cy + Math.sin(angle) * radius;
+                const isCur = constellationMode === 'current';
+                const cur = parseFloat(s.currentValue) || 0;
+                const inv = parseFloat(s.invested) || 0;
+                const ret = inv > 0 ? ((cur - inv) / inv) * 100 : 0;
+                const label = s.name || s.ticker || `Stock ${i+1}`;
+                // Node type: shares for current, entity for future/research
+                const type = isCur ? 'shares' : constellationMode === 'future' ? 'entity' : 'entity';
+                const value = isCur && cur > 0 ? `$${cur.toLocaleString(undefined,{maximumFractionDigits:0})}` : '';
+                const notesParts = [];
+                if (s.industry) notesParts.push(`Industry: ${s.industry}`);
+                if (isCur && inv > 0) notesParts.push(`Invested: $${inv.toLocaleString(undefined,{maximumFractionDigits:0})}`);
+                if (isCur && inv > 0) notesParts.push(`Return: ${ret>=0?'+':''}${ret.toFixed(1)}%`);
+                if (s.tollBooth) notesParts.push(`Moat: ${s.tollBooth}`);
+                if (s.growth) notesParts.push(`Growth: ${s.growth}`);
+                if (s.status) notesParts.push(`Status: ${s.status}`);
+                if (s.notes) notesParts.push(s.notes);
+                return { id: `node-${Date.now()}-${i}`, label, type, x, y, value, notes: notesParts.join(' · ') };
+              });
+
+              // Edges from root to every stock
+              const edges = stockNodes.map(n => ({ id: `edge-${n.id}`, from: rootId, to: n.id, label: '' }));
+
+              setCurrentGraph({ nodes: [rootNode, ...stockNodes], edges, types: currentGraph.types || [] });
+            };
+
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                 {/* Mode switcher */}
@@ -12645,69 +12700,32 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
                     <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}</span>
-                    <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
-                      <button onClick={() => {
-                        // Build the source list for the active mode
-                        const source = constellationMode === 'current' ? currentList
-                          : constellationMode === 'future' ? futureList
-                          : researchList;
-                        if (source.length === 0) {
-                          alert(`No ${modeMeta[constellationMode].label.toLowerCase()} items to map. Add some in the relevant tab first.`);
-                          return;
-                        }
-                        const existingCount = (currentGraph.nodes || []).length;
-                        if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[constellationMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
-
-                        // Centre origin and radial layout
-                        const cx = 0, cy = 0;
-                        const N = source.length;
-                        const radius = Math.max(180, 90 + N * 22);
-                        const rootId = `root-${Date.now()}`;
-                        const rootNode = { id: rootId, label: rootName, type: 'person', x: cx, y: cy, value: '', notes: '' };
-
-                        const stockNodes = source.map((s, i) => {
-                          const angle = (-Math.PI/2) + (i / N) * Math.PI * 2;
-                          const x = cx + Math.cos(angle) * radius;
-                          const y = cy + Math.sin(angle) * radius;
-                          const isCur = constellationMode === 'current';
-                          const cur = parseFloat(s.currentValue) || 0;
-                          const inv = parseFloat(s.invested) || 0;
-                          const ret = inv > 0 ? ((cur - inv) / inv) * 100 : 0;
-                          const label = s.name || s.ticker || `Stock ${i+1}`;
-                          // Node type: shares for current, entity for future/research
-                          const type = isCur ? 'shares' : constellationMode === 'future' ? 'entity' : 'entity';
-                          const value = isCur && cur > 0 ? `$${cur.toLocaleString(undefined,{maximumFractionDigits:0})}` : '';
-                          const notesParts = [];
-                          if (s.industry) notesParts.push(`Industry: ${s.industry}`);
-                          if (isCur && inv > 0) notesParts.push(`Invested: $${inv.toLocaleString(undefined,{maximumFractionDigits:0})}`);
-                          if (isCur && inv > 0) notesParts.push(`Return: ${ret>=0?'+':''}${ret.toFixed(1)}%`);
-                          if (s.tollBooth) notesParts.push(`Moat: ${s.tollBooth}`);
-                          if (s.growth) notesParts.push(`Growth: ${s.growth}`);
-                          if (s.status) notesParts.push(`Status: ${s.status}`);
-                          if (s.notes) notesParts.push(s.notes);
-                          return { id: `node-${Date.now()}-${i}`, label, type, x, y, value, notes: notesParts.join(' · ') };
-                        });
-
-                        // Edges from root to every stock
-                        const edges = stockNodes.map(n => ({ id: `edge-${n.id}`, from: rootId, to: n.id, label: '' }));
-
-                        setCurrentGraph({ nodes: [rootNode, ...stockNodes], edges, types: currentGraph.types || [] });
-                      }}
-                        style={{fontSize:"10px",color:modeMeta[constellationMode].accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${modeMeta[constellationMode].accent}12`,border:`0.5px solid ${modeMeta[constellationMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,boxShadow:`0 0 10px ${modeMeta[constellationMode].accent}20`}}>
-                        ⚡ GENERATE MAP
-                      </button>
-                    </div>
+                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
                   </div>
                   <div style={{padding:"12px 12px 16px"}}>
-                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition />
+                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition customEmptyState={(
+                      <>
+                        <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
+                        <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[constellationMode].label.toLowerCase()}.</div>
+                        <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
+                          Auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[constellationMode].accent}26`, border: `1px solid ${modeMeta[constellationMode].accent}b3`, borderRadius: '4px', color: modeMeta[constellationMode].accent, fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[constellationMode].accent}26` }}>⚡ GENERATE MAP</button>
+                        </div>
+                      </>
+                    )} />
                   </div>
                 </div>
 
                 {/* Hint card */}
                 <div style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.12)",borderRadius:"6px",padding:"12px 14px",fontSize:"10px",fontFamily:"monospace",color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
                   <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"1.5px",marginBottom:"6px"}}>// HOW TO USE</div>
-                  Hit <span style={{color:modeMeta[constellationMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.
+                  {(currentGraph.nodes || []).length === 0 ? (
+                    <>Hit <span style={{color:modeMeta[constellationMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.</>
+                  ) : (
+                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[constellationMode].accent,fontFamily:"monospace",fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
+                  )}
                 </div>
               </div>
             );
