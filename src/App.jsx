@@ -12915,10 +12915,15 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
 
               {/* Stocks Input */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                  <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// STOCKS & ETFS</div>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// STOCKS & ETFS{stocks.length>0?` · ${stocks.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Stocks & ETFs</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
                 </div>
 
                 {/* Stocks Cards */}
@@ -13070,7 +13075,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     + Add Stock
                   </button>
                 </div>
-              </div>
+                </div>
+              </details>
 
               {/* Live Stock Prices */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -13293,10 +13299,12 @@ ${JSON.stringify(ctx, null, 2)}`;
 
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PORTFOLIO BY NAME</h2>
-                  </div>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY NAME</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                  </summary>
+                  <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
                     <div className="relative">
@@ -13369,15 +13377,18 @@ ${JSON.stringify(ctx, null, 2)}`;
                       })()}
                     </div>
                   </div>
-                </div>
+                  </div>
+                </details>
               )}
 
               {/* Portfolio by Industry Pie Chart */}
               {stocksByIndustry.length > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PORTFOLIO BY INDUSTRY</h2>
-                  </div>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY INDUSTRY · CHART</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                  </summary>
+                  <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                     {/* Pie Chart */}
                     <div className="relative">
@@ -13448,15 +13459,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                       })()}
                     </div>
                   </div>
-                </div>
+                  </div>
+                </details>
               )}
 
               {/* Portfolio by Industry */}
               {stocksByIndustry.length > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY INDUSTRY · TABLE</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                  </summary>
+                  <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PORTFOLIO BY INDUSTRY</h2>
-                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Portfolio by Industry</h2>
+                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
                   </div>
                   <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
@@ -13537,7 +13554,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                       </tfoot>
                     </table>
                   </div>
-                </div>
+                  </div>
+                </details>
               )}
             </>
           )}
@@ -13552,10 +13570,15 @@ ${JSON.stringify(ctx, null, 2)}`;
               </div>
 
               {/* Future Holdings Research - Same format as Current */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                  <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// FUTURE HOLDINGS RESEARCH</div>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Research stocks you're considering for your portfolio</p>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE HOLDINGS RESEARCH{futureResearch.length>0?` · ${futureResearch.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Holdings Research</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Research stocks you're considering for your portfolio</p>
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {futureResearch.length === 0 && (() => {
@@ -13769,7 +13792,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     + Add Research Entry
                   </button>
                 </div>
-              </div>
+                </div>
+              </details>
 
               {/* Future Portfolio Summary Table */}
               {(() => {
@@ -13811,10 +13835,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                 });
                 
                 return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                      <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// FUTURE PORTFOLIO SUMMARY</div>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • Your planned investments at a glance</p>
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE PORTFOLIO SUMMARY</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                    </summary>
+                    <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Portfolio Summary</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • Your planned investments at a glance</p>
                     </div>
                     <div style={{overflowX:"auto"}}>
                       <table className="w-full text-sm">
@@ -13906,7 +13935,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                         </tfoot>
                       </table>
                     </div>
-                  </div>
+                    </div>
+                  </details>
                 );
               })()}
 
@@ -13921,10 +13951,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                 let currentAngle = 0;
                 
                 return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO COMPANY WEIGHTING</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                    </summary>
+                    <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                     <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>️ PORTFOLIO COMPANY WEIGHTING</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Weight of each company in your future portfolio</p>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Portfolio Company Weighting</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Weight of each company in your future portfolio</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       <svg width="200" height="200" viewBox="0 0 200 200">
@@ -13963,7 +13998,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                         })}
                       </div>
                     </div>
-                  </div>
+                    </div>
+                  </details>
                 );
               })()}
 
@@ -14110,10 +14146,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                 let currentAngle = 0;
                 
                 return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                      <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// RESEARCH BY INDUSTRY</div>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your research picks broken down by sector</p>
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH BY INDUSTRY</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                    </summary>
+                    <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Research by Industry</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your research picks broken down by sector</p>
                     </div>
                     <div className="p-6 flex flex-col md:flex-row items-center gap-6">
                       {/* Pie Chart */}
@@ -14154,16 +14195,22 @@ ${JSON.stringify(ctx, null, 2)}`;
                         })}
                       </div>
                     </div>
-                  </div>
+                    </div>
+                  </details>
                 );
               })()}
 
               {/* Master Research Table */}
               {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
-                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MASTER RESEARCH SUMMARY</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                  </summary>
+                  <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>MASTER RESEARCH SUMMARY</h2>
-                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • All your research picks at a glance</p>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Master Research Summary</h2>
+                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • All your research picks at a glance</p>
                   </div>
                   <div style={{overflowX:"auto"}}>
                     <table className="w-full text-sm">
@@ -14285,15 +14332,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                       </tfoot>
                     </table>
                   </div>
-                </div>
+                  </div>
+                </details>
               )}
 
               {/* Holdings Research */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"10px"}}>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// HOLDINGS RESEARCH{holdingsResearch.length>0?` · ${holdingsResearch.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"10px"}}>
                   <div>
-                    <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// HOLDINGS RESEARCH</div>
-                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Deep-dive research on each holding</p>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Holdings Research</h2>
+                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Deep-dive research on each holding</p>
                   </div>
                   <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
                     {showResearchColInput ? (
@@ -14535,7 +14588,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     + Add Research Entry
                   </button>
                 </div>
-              </div>
+                </div>
+              </details>
             </>
           )}
 
@@ -14863,10 +14917,15 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {investmentsSubTab === 'declined' && (
             <>
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                  <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// DECLINED COMPANIES</div>
-                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Track companies you've passed on and why</p>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES{declinedCompanies.length>0?` · ${declinedCompanies.length}`:''}</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Declined Companies</h2>
+                  <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Track companies you've passed on and why</p>
                 </div>
 
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
@@ -14978,7 +15037,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                     + Add Company
                   </button>
                 </div>
-              </div>
+                </div>
+              </details>
 
               {/* Declined Pie Chart */}
               {(() => {
@@ -14998,10 +15058,12 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                 return (
                   <>
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                      <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                        <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED BY INDUSTRY</div>
-                      </div>
+                    <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                        <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED BY INDUSTRY</span>
+                        <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                      </summary>
+                      <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                       <div className="p-6 flex flex-col md:flex-row items-center justify-center gap-8">
                         {/* Pie Chart */}
                         <div className="relative">
@@ -15072,13 +15134,16 @@ ${JSON.stringify(ctx, null, 2)}`;
                           })()}
                         </div>
                       </div>
-                    </div>
+                      </div>
+                    </details>
 
                     {/* Breakdown Table */}
-                    <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                      <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"2px solid #00c8ff"}}>
-                        <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES BREAKDOWN</div>
-                      </div>
+                    <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                        <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES BREAKDOWN</span>
+                        <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                      </summary>
+                      <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                       <div style={{overflowX:"auto"}}>
                         <table className="w-full text-sm">
                           <thead>
@@ -15106,7 +15171,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                           </tfoot>
                         </table>
                       </div>
-                    </div>
+                      </div>
+                    </details>
                   </>
                 );
               })()}
