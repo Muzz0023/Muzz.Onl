@@ -3306,6 +3306,7 @@ function MuzzApp() {
   const [editingBdayId, setEditingBdayId] = useState(null);
   const [editingBillIdx, setEditingBillIdx] = useState(null);
   const [editingAssetIdx, setEditingAssetIdx] = useState(null);
+  const [editingShiftDate, setEditingShiftDate] = useState(null);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -7377,97 +7378,108 @@ ${JSON.stringify(ctx, null, 2)}`;
           {/* Individual Job Timesheet Tab */}
           {workSubTab === 'timesheet' && (
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {/* Job Header */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.3)",borderRadius:"6px",borderLeft:"2px solid rgba(59,130,246,0.7)",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                    <input
-                      type="text"
-                      value={activeJob.name}
-                      onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
-                      style={{background:"transparent",border:"none",borderBottom:"0.5px solid rgba(59,130,246,0.4)",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:500,letterSpacing:"1px"}}
-                    />
+              {/* Job Header — collapsible Palantir card */}
+              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.25)",borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #3b82f6"}}>
+                  <span style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeJob.name || 'JOB').toUpperCase()} · OVERVIEW</span>
+                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                </summary>
+                <div style={{padding:"14px 16px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  {/* Job name + Reset button row */}
+                  <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"14px"}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>JOB NAME</div>
+                      <input
+                        type="text"
+                        value={activeJob.name}
+                        onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
+                        className="slick-input"
+                        style={{fontSize:"13px"}}
+                      />
+                    </div>
+                    <div>
+                      <div style={{fontSize:"9px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATE $/HR</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={activeJob.hourlyRateStr || ''}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9.]/g, '');
+                          updateJob(activeJobId, 'hourlyRateStr', val);
+                          updateJob(activeJobId, 'hourlyRate', parseFloat(val) || 0);
+                        }}
+                        placeholder="0.00"
+                        className="slick-input"
+                        style={{width:"90px",fontSize:"13px",textAlign:"center"}}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Weekly Stats — 4 tiles */}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"6px",marginBottom:"14px"}}>
+                    <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                      <div style={{fontSize:"20px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeJobTotals.hours.toFixed(1)}</div>
+                      <div style={{fontSize:"8px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>HOURS</div>
+                    </div>
+                    <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                      <div style={{fontSize:"20px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${activeJobTotals.pay.toFixed(0)}</div>
+                      <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>PRE-TAX</div>
+                    </div>
+                    <div style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                      <div style={{fontSize:"20px",color:"rgba(0,200,255,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeDaysWorked}</div>
+                      <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>DAYS</div>
+                    </div>
+                    <div style={{background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
+                      <div style={{fontSize:"20px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeAvgShift > 0 ? activeAvgShift.toFixed(1) : '—'}</div>
+                      <div style={{fontSize:"8px",color:"rgba(251,191,36,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>AVG SHIFT</div>
+                    </div>
+                  </div>
+
+                  {/* Rate Distribution Bar */}
+                  {activeJobTotals.hours > 0 && (
+                    <div style={{marginBottom:"10px"}}>
+                      <div style={{fontSize:"8px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>RATE DISTRIBUTION</div>
+                      <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"3px",overflow:"hidden",display:"flex"}}>
+                        {[
+                          {h:activeJobRates.normal.h,color:"rgba(59,130,246,0.8)"},
+                          {h:activeJobRates.timeHalf.h,color:"rgba(251,191,36,0.8)"},
+                          {h:activeJobRates.double.h,color:"rgba(251,146,60,0.8)"},
+                          {h:activeJobRates.doubleHalf.h,color:"rgba(239,68,68,0.8)"},
+                        ].map((s,si) => s.h > 0 && <div key={si} style={{flex:s.h, background:s.color}}/>)}
+                      </div>
+                      <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",fontSize:"8px",fontFamily:"monospace",letterSpacing:"0.5px"}}>
+                        {[
+                          {l:"1x",h:activeJobRates.normal.h,c:"rgba(59,130,246,0.8)"},
+                          {l:"1.5x",h:activeJobRates.timeHalf.h,c:"rgba(251,191,36,0.8)"},
+                          {l:"2x",h:activeJobRates.double.h,c:"rgba(251,146,60,0.8)"},
+                          {l:"2.5x",h:activeJobRates.doubleHalf.h,c:"rgba(239,68,68,0.8)"},
+                        ].map((leg,li) => (
+                          <span key={li} style={{color:leg.h>0?leg.c:"rgba(148,163,184,0.3)"}}>{leg.l} <span style={{color:leg.h>0?"#e0eaff":"rgba(148,163,184,0.3)"}}>{leg.h.toFixed(1)}h</span></span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action row: reset week + delete job */}
+                  <div style={{display:"flex",gap:"8px",justifyContent:"flex-end",borderTop:"0.5px solid rgba(59,130,246,0.1)",paddingTop:"10px"}}>
+                    <button
+                      onClick={() => {
+                        if (confirm('Reset all shifts for this week?')) {
+                          const newShifts = { ...activeJob.shifts };
+                          weekDays.forEach(day => { delete newShifts[day.date]; });
+                          updateJob(activeJobId, 'shifts', newShifts);
+                        }
+                      }}
+                      style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}
+                    >RESET WEEK</button>
                     {jobs.length > 1 && (
-                      <button onClick={() => deleteJob(activeJobId)} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)",fontSize:"14px"}}>×</button>
+                      <button onClick={() => deleteJob(activeJobId)} style={{fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE JOB</button>
                     )}
                   </div>
-                  <button
-                    onClick={() => {
-                      if (confirm('Reset all shifts for this week?')) {
-                        const newShifts = { ...activeJob.shifts };
-                        weekDays.forEach(day => { delete newShifts[day.date]; });
-                        updateJob(activeJobId, 'shifts', newShifts);
-                      }
-                    }}
-                    style={{fontSize:"10px",color:"rgba(59,130,246,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"0.5px solid rgba(59,130,246,0.3)",padding:"4px 10px",cursor:"pointer",borderRadius:"3px"}}
-                  >RESET WEEK</button>
                 </div>
+              </details>
 
-                {/* Hourly Rate */}
-                <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"12px"}}>
-                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>HOURLY RATE</span>
-                  <span style={{color:"rgba(59,130,246,0.7)",fontFamily:"monospace"}}>$</span>
-                  <input
-                    type="text"
-                    value={activeJob.hourlyRateStr || ''}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/[^0-9.]/g, '');
-                      updateJob(activeJobId, 'hourlyRateStr', val);
-                      updateJob(activeJobId, 'hourlyRate', parseFloat(val) || 0);
-                    }}
-                    placeholder="0.00"
-                    style={{width:"70px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",padding:"3px 8px",outline:"none",textAlign:"center"}}
-                  />
-                  <span style={{fontSize:"10px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace"}}>/hr</span>
-                </div>
-
-                {/* Weekly Stats */}
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"6px"}}>
-                  <div style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
-                    <div style={{fontSize:"22px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeJobTotals.hours.toFixed(1)}</div>
-                    <div style={{fontSize:"8px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>HOURS</div>
-                  </div>
-                  <div style={{background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
-                    <div style={{fontSize:"22px",color:"rgba(34,197,94,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>${activeJobTotals.pay.toFixed(0)}</div>
-                    <div style={{fontSize:"8px",color:"rgba(34,197,94,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>PRE-TAX</div>
-                  </div>
-                  <div style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
-                    <div style={{fontSize:"22px",color:"rgba(0,200,255,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeDaysWorked}</div>
-                    <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>DAYS</div>
-                  </div>
-                  <div style={{background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"4px",padding:"10px 6px",textAlign:"center"}}>
-                    <div style={{fontSize:"22px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{activeAvgShift > 0 ? activeAvgShift.toFixed(1) : '—'}</div>
-                    <div style={{fontSize:"8px",color:"rgba(251,191,36,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"4px"}}>AVG SHIFT</div>
-                  </div>
-                </div>
-
-                {/* Rate Distribution Bar */}
-                {activeJobTotals.hours > 0 && (
-                  <div style={{marginTop:"12px"}}>
-                    <div style={{fontSize:"8px",color:"rgba(59,130,246,0.4)",fontFamily:"monospace",letterSpacing:"1px",marginBottom:"6px"}}>RATE DISTRIBUTION</div>
-                    <div style={{height:"6px",background:"rgba(255,255,255,0.04)",borderRadius:"3px",overflow:"hidden",display:"flex"}}>
-                      {[
-                        {h:activeJobRates.normal.h,color:"rgba(59,130,246,0.8)"},
-                        {h:activeJobRates.timeHalf.h,color:"rgba(251,191,36,0.8)"},
-                        {h:activeJobRates.double.h,color:"rgba(251,146,60,0.8)"},
-                        {h:activeJobRates.doubleHalf.h,color:"rgba(239,68,68,0.8)"},
-                      ].map((s,si) => s.h > 0 && <div key={si} style={{flex:s.h, background:s.color}}/>)}
-                    </div>
-                    <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",fontSize:"8px",fontFamily:"monospace",letterSpacing:"0.5px"}}>
-                      {[
-                        {l:"1x",h:activeJobRates.normal.h,c:"rgba(59,130,246,0.8)"},
-                        {l:"1.5x",h:activeJobRates.timeHalf.h,c:"rgba(251,191,36,0.8)"},
-                        {l:"2x",h:activeJobRates.double.h,c:"rgba(251,146,60,0.8)"},
-                        {l:"2.5x",h:activeJobRates.doubleHalf.h,c:"rgba(239,68,68,0.8)"},
-                      ].map((leg,li) => (
-                        <span key={li} style={{color:leg.h>0?leg.c:"rgba(148,163,184,0.3)"}}>{leg.l} <span style={{color:leg.h>0?"#e0eaff":"rgba(148,163,184,0.3)"}}>{leg.h.toFixed(1)}h</span></span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Daily Shift Cards */}
+              {/* Daily Shift Cards — compact rows with expand-to-edit */}
               {weekDays.map(day => {
                 const shift = activeJob.shifts?.[day.date] || {};
                 const normalHrs = parseFloat(shift.normalHours) || 0;
@@ -7477,42 +7489,64 @@ ${JSON.stringify(ctx, null, 2)}`;
                 const totalHours = normalHrs + timeHalfHrs + doubleHrs + doubleHalfHrs;
                 const hourlyRate = activeJob.hourlyRate || 0;
                 const dayPay = (normalHrs * hourlyRate) + (timeHalfHrs * hourlyRate * 1.5) + (doubleHrs * hourlyRate * 2) + (doubleHalfHrs * hourlyRate * 2.5);
+                const isEditing = editingShiftDate === day.date;
+                const hasShift = totalHours > 0;
+                const accent = day.isToday ? '#3b82f6' : hasShift ? '#22c55e' : 'rgba(0,200,255,0.4)';
                 return (
-                  <div key={day.date} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${day.isToday?"rgba(59,130,246,0.4)":totalHours>0?"rgba(34,197,94,0.25)":"rgba(0,200,255,0.12)"}`,borderRadius:"6px",borderLeft:`2px solid ${day.isToday?"rgba(59,130,246,0.8)":totalHours>0?"rgba(34,197,94,0.6)":"rgba(0,200,255,0.2)"}`,overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                        <span style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>{day.dayName}</span>
-                        {day.isToday && <span style={{fontSize:"9px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"1px",border:"0.5px solid rgba(59,130,246,0.4)",padding:"1px 5px"}}>TODAY</span>}
+                  <div key={day.date} style={{background:isEditing?"rgba(59,130,246,0.06)":"rgba(5,12,24,0.6)",border:`0.5px solid ${day.isToday?"rgba(59,130,246,0.35)":hasShift?"rgba(34,197,94,0.25)":"rgba(0,200,255,0.15)"}`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                    {/* Compact row */}
+                    <button onClick={() => setEditingShiftDate(isEditing ? null : day.date)}
+                      style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                      <div style={{width:"10px",height:"10px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}80`,flexShrink:0}}/>
+                      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                        <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,display:"flex",alignItems:"center",gap:"8px"}}>
+                          {day.dayName}
+                          {day.isToday && <span style={{fontSize:"8px",color:"rgba(59,130,246,0.9)",fontFamily:"monospace",letterSpacing:"1px",border:"0.5px solid rgba(59,130,246,0.4)",padding:"1px 5px",borderRadius:"2px",fontWeight:600}}>TODAY</span>}
+                        </div>
+                        <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                          {hasShift ? (shift.notes || `${totalHours.toFixed(1)}h shift`) : 'No shift logged'}
+                        </div>
                       </div>
-                      <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                        {totalHours > 0 && (
+                      <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                        {hasShift && (
                           <>
-                            <span style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",border:"0.5px solid rgba(59,130,246,0.3)",padding:"2px 6px",borderRadius:"3px"}}>{totalHours.toFixed(1)}h</span>
-                            <span style={{fontSize:"11px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",border:"0.5px solid rgba(34,197,94,0.3)",padding:"2px 6px",borderRadius:"3px"}}>${dayPay.toFixed(2)}</span>
+                            <span style={{fontSize:"11px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",border:"0.5px solid rgba(59,130,246,0.3)",padding:"3px 7px",borderRadius:"3px",fontWeight:600}}>{totalHours.toFixed(1)}h</span>
+                            <span style={{fontSize:"11px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",border:"0.5px solid rgba(34,197,94,0.3)",padding:"3px 7px",borderRadius:"3px",fontWeight:600}}>${dayPay.toFixed(0)}</span>
                           </>
                         )}
-                        <button onClick={() => { const newShifts={...activeJob.shifts}; delete newShifts[day.date]; updateJob(activeJobId,'shifts',newShifts); }} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.3)",fontSize:"14px"}}>×</button>
+                        <span style={{fontSize:"14px",color:`${accent}cc`,fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
                       </div>
-                    </div>
-                    <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"8px"}}>
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
-                        {[
-                          {label:"1x NORMAL",field:"normalHours",color:"rgba(59,130,246,0.7)"},
-                          {label:"1.5x TIME & HALF",field:"timeHalfHours",color:"rgba(251,191,36,0.7)"},
-                          {label:"2x DOUBLE",field:"doubleHours",color:"rgba(251,146,60,0.7)"},
-                          {label:"2.5x DOUBLE & HALF",field:"doubleHalfHours",color:"rgba(239,68,68,0.7)"},
-                        ].map(({label,field,color}) => (
-                          <div key={field} style={{background:"rgba(255,255,255,0.02)",border:`0.5px solid ${color}30`,borderRadius:"4px",padding:"8px"}}>
-                            <div style={{fontSize:"9px",color,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px"}}>{label}</div>
-                            <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                              <input type="number" step="0.5" value={shift[field]||''} onChange={(e) => updateShift(day.date,field,e.target.value)} placeholder="0" style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:500,textAlign:"center"}} />
-                              <span style={{fontSize:"10px",color,fontFamily:"monospace"}}>hrs</span>
+                    </button>
+
+                    {/* Expanded edit panel */}
+                    {isEditing && (
+                      <div style={{padding:"14px 16px 16px",borderTop:`0.5px solid ${accent}30`,background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+                          {[
+                            {label:"1x NORMAL",field:"normalHours",color:"rgba(59,130,246,0.85)"},
+                            {label:"1.5x TIME & HALF",field:"timeHalfHours",color:"rgba(251,191,36,0.85)"},
+                            {label:"2x DOUBLE",field:"doubleHours",color:"rgba(251,146,60,0.85)"},
+                            {label:"2.5x DOUBLE & HALF",field:"doubleHalfHours",color:"rgba(239,68,68,0.85)"},
+                          ].map(({label,field,color}) => (
+                            <div key={field} style={{background:"rgba(255,255,255,0.02)",border:`0.5px solid ${color}40`,borderRadius:"4px",padding:"8px 10px"}}>
+                              <div style={{fontSize:"9px",color,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"4px",fontWeight:600}}>{label}</div>
+                              <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                                <input type="number" step="0.5" value={shift[field]||''} onFocus={scrollInputIntoView} onChange={(e) => updateShift(day.date,field,e.target.value)} placeholder="0" style={{width:"100%",background:"transparent",border:"none",outline:"none",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:500,textAlign:"center"}} />
+                                <span style={{fontSize:"10px",color,fontFamily:"monospace"}}>hrs</span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                        <div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>NOTES</div>
+                          <input type="text" value={shift.notes||''} onFocus={scrollInputIntoView} onChange={(e) => updateShift(day.date,'notes',e.target.value)} placeholder="What did you work on?" className="slick-input" style={{fontSize:"12px"}} />
+                        </div>
+                        {hasShift && (
+                          <button onClick={() => { const newShifts={...activeJob.shifts}; delete newShifts[day.date]; updateJob(activeJobId,'shifts',newShifts); setEditingShiftDate(null); }}
+                            style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>CLEAR SHIFT</button>
+                        )}
                       </div>
-                      <input type="text" value={shift.notes||''} onChange={(e) => updateShift(day.date,'notes',e.target.value)} placeholder="Notes..." style={{background:"transparent",border:"none",borderTop:"0.5px solid rgba(0,200,255,0.06)",color:"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"11px",padding:"6px 0",outline:"none",width:"100%"}} />
-                    </div>
+                    )}
                   </div>
                 );
               })}
