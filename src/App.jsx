@@ -12558,7 +12558,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
               {[
                 {id:'constellation',label:'MAP'},
-                {id:'portfolio',label:'PORTFOLIO'},
+                {id:'portfolio',label:'CURRENT PORTFOLIO'},
                 {id:'futurePortfolio',label:'FUTURE'},
                 {id:'research',label:'RESEARCH'},
                 {id:'goals',label:'GOALS'},
