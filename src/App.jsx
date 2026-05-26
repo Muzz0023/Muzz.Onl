@@ -7392,20 +7392,27 @@ ${JSON.stringify(ctx, null, 2)}`;
                         onChange={(e) => updateJob(activeJobId, 'name', e.target.value)}
                         onBlur={() => setEditingJobName(false)}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); setEditingJobName(false); } }}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         style={{flex:1,minWidth:0,background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.5)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",fontWeight:600,padding:"3px 8px",outline:"none",textTransform:"uppercase"}}
                       />
+                      <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditingJobName(false); }}
+                        style={{fontSize:"9px",color:"rgba(34,197,94,0.85)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",padding:"4px 8px",cursor:"pointer",borderRadius:"3px",fontWeight:600,flexShrink:0}}
+                      >SAVE</button>
                     </div>
                   ) : (
-                    <span
-                      onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditingJobName(true); }}
-                      style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,flex:1,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}
-                      title="Double-click to rename"
-                    >
-                      // {(activeJob.name || 'JOB').toUpperCase()} · OVERVIEW
-                    </span>
+                    <div style={{display:"flex",alignItems:"center",gap:"8px",flex:1,minWidth:0}}>
+                      <span style={{fontSize:"11px",color:"rgba(59,130,246,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                        // {(activeJob.name || 'JOB').toUpperCase()} · OVERVIEW
+                      </span>
+                      <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditingJobName(true); }}
+                        title="Rename job"
+                        style={{fontSize:"10px",color:"rgba(59,130,246,0.7)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.3)",padding:"3px 8px",cursor:"pointer",borderRadius:"3px",fontWeight:600,flexShrink:0}}
+                      >✎ RENAME</button>
+                    </div>
                   )}
-                  <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",flexShrink:0}}>{editingJobName ? 'editing…' : 'tap to collapse'}</span>
+                  {!editingJobName && <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",flexShrink:0}}>tap to collapse</span>}
                 </summary>
                 <div style={{padding:"14px 16px 16px",backgroundImage:"radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
                   {/* Job name + Reset button row */}
