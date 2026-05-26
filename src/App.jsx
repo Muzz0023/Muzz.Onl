@@ -12561,9 +12561,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
                 {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
-                {id:'knowledge',label:'GUIDE'},
-                {id:'accounting',label:'ACCOUNTING'},
                 {id:'performance',label:'PERFORMANCE'},
+                {id:'accounting',label:'ACCOUNTING'},
+                {id:'knowledge',label:'GUIDE'},
                 {id:'sp500',label:'S&P 500'},
               ].map(tab => (
                 <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:investmentsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${investmentsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:investmentsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
