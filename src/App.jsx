@@ -12539,16 +12539,18 @@ ${JSON.stringify(ctx, null, 2)}`;
         } else if (field === 'shares') {
           const sharesNum = parseFloat(value) || 0;
           const avgCostNum = parseFloat(updated[index].avgCost) || 0;
-          const newInvested = (sharesNum > 0 && avgCostNum > 0) ? sharesNum * avgCostNum : updated[index].invested;
-          // Recompute current value from live price if available
+          // Invested = shares × avgCost. If either is zero, invested is zero.
+          const newInvested = sharesNum * avgCostNum;
+          // Current value = shares × live price (if available); else clear to 0 when shares cleared
           const lp = livePriceFor(updated[index].name);
-          const newCV = (sharesNum > 0 && lp > 0) ? sharesNum * lp : updated[index].currentValue;
-          updated[index] = { ...updated[index], shares: sharesNum, sharesStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : updated[index].investedStr, currentValue: newCV, currentValueStr: newCV ? newCV.toFixed(2) : updated[index].currentValueStr };
+          const newCV = (sharesNum > 0 && lp > 0) ? sharesNum * lp : (sharesNum === 0 ? 0 : updated[index].currentValue);
+          updated[index] = { ...updated[index], shares: sharesNum, sharesStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : '', currentValue: newCV, currentValueStr: newCV ? newCV.toFixed(2) : '' };
         } else if (field === 'avgCost') {
           const avgCostNum = parseFloat(value) || 0;
           const sharesNum = parseFloat(updated[index].shares) || 0;
-          const newInvested = (sharesNum > 0 && avgCostNum > 0) ? sharesNum * avgCostNum : updated[index].invested;
-          updated[index] = { ...updated[index], avgCost: avgCostNum, avgCostStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : updated[index].investedStr };
+          // Invested = shares × avgCost. If either is zero, invested is zero.
+          const newInvested = sharesNum * avgCostNum;
+          updated[index] = { ...updated[index], avgCost: avgCostNum, avgCostStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : '' };
         } else if (field === 'name') {
           // Ticker changed — recompute current value from new ticker's live price if shares exist
           const sharesNum = parseFloat(updated[index].shares) || 0;
