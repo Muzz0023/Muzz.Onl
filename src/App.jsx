@@ -12922,28 +12922,29 @@ ${JSON.stringify(ctx, null, 2)}`;
                 const quoteIndex = daysDiff % quotes.length;
                 const todayQuote = quotes[quoteIndex];
                 return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(148,163,184,0.2)",borderLeft:"2px solid rgba(148,163,184,0.4)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(148,163,184,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"14px"}}>
-                      <div style={{fontSize:"22px",opacity:0.4,color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>"</div>
-                      <div className="flex-1">
-                        <p style={{fontSize:"13px",fontStyle:"italic",color:"#e0eaff",fontFamily:"monospace",lineHeight:1.6,marginBottom:"8px"}}>{todayQuote.quote}</p>
-                        <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>— {todayQuote.author}</p>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(168,85,247,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",gap:"10px",flexWrap:"wrap"}}>
+                      <div style={{fontSize:"11px",color:"rgba(168,85,247,0.9)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// QUOTE OF THE DAY</div>
+                      <div style={{fontSize:"9px",color:"rgba(168,85,247,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>DAY {(quoteIndex + 1)} / {quotes.length}</div>
+                    </div>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px"}}>
+                      <div style={{fontSize:"28px",lineHeight:"1",color:"rgba(168,85,247,0.45)",fontFamily:"Georgia, serif",fontWeight:700,marginTop:"-4px"}}>"</div>
+                      <div style={{flex:1}}>
+                        <p style={{fontSize:"15px",fontStyle:"italic",color:"#f1f5ff",fontFamily:"monospace",lineHeight:1.55,marginBottom:"8px",fontWeight:500}}>{todayQuote.quote}</p>
+                        <p style={{fontSize:"11px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>— {todayQuote.author}</p>
                       </div>
                     </div>
-                    <p style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"10px",textAlign:"right"}}>Quote of the Day • Day {(quoteIndex + 1)} of {quotes.length}</p>
                   </div>
                 );
               })()}
 
               {/* Portfolio Summary */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.3)",borderLeft:"2px solid rgba(34,197,94,0.7)",borderRadius:"6px",padding:"16px 20px",backgroundImage:"radial-gradient(rgba(34,197,94,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <p className="text-sm opacity-75 mb-1">Portfolio Value</p>
-                <p style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalStocksValue.toLocaleString('en-AU', { minimumFractionDigits: 2 })}</p>
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px 20px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"8px"}}>// PORTFOLIO VALUE</div>
+                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"1px"}}>${totalStocksValue.toLocaleString('en-AU', { minimumFractionDigits: 2 })}</div>
                 {totalStocksInvested > 0 && (
-                  <div style={{marginTop:"8px"}}>
-                    <span className={`text-lg font-semibold ${totalGainLoss >= 0 ? 'text-green-200' : 'text-red-200'}`}>
-                      {totalGainLoss >= 0 ? '+' : ''}${totalGainLoss.toLocaleString()} ({totalGainLossPercent.toFixed(1)}%)
-                    </span>
+                  <div style={{marginTop:"6px",fontSize:"13px",fontFamily:"monospace",fontWeight:600,color:totalGainLoss >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>
+                    {totalGainLoss >= 0 ? '+' : ''}${totalGainLoss.toLocaleString()} ({totalGainLossPercent >= 0 ? '+' : ''}{totalGainLossPercent.toFixed(1)}%)
                   </div>
                 )}
               </div>
