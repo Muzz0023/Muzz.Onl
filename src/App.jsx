@@ -2631,17 +2631,22 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
   const NODE_W = 180;
   const NODE_H = 56;
 
-  const formatMoney = (v) => {
+  const formatMoney = (v, opts) => {
     const n = parseFloat(v) || 0;
     if (n === 0) return '';
-    if (Math.abs(n) >= 1000000) return `$${(n/1000000).toFixed(2)}M`;
-    if (Math.abs(n) >= 1000) return `$${(n/1000).toFixed(1)}k`;
-    return `$${n.toFixed(0)}`;
+    const sym = (opts && opts.symbol) ? opts.symbol : '$';
+    const suffix = (opts && opts.code) ? ` ${opts.code}` : '';
+    if (Math.abs(n) >= 1000000) return `${sym}${(n/1000000).toFixed(2)}M${suffix}`;
+    if (Math.abs(n) >= 1000) return `${sym}${(n/1000).toFixed(1)}k${suffix}`;
+    return `${sym}${n.toFixed(0)}${suffix}`;
   };
 
   const totalValue = nodes.reduce((s, n) => {
-    const liveVal = liveValueByLabel ? liveValueByLabel(n.label) : null;
-    const v = (liveVal !== null && liveVal !== undefined) ? (parseFloat(liveVal) || 0) : (parseFloat(n.value) || 0);
+    const live = liveValueByLabel ? liveValueByLabel(n.label) : null;
+    let v;
+    if (live && typeof live === 'object' && 'value' in live) v = parseFloat(live.value) || 0;
+    else if (live !== null && live !== undefined) v = parseFloat(live) || 0;
+    else v = parseFloat(n.value) || 0;
     const t = typeMap[n.type];
     const isLiab = (t && t.label && t.label.toUpperCase().indexOf('LIAB') >= 0) || n.type === 'liability';
     return s + (isLiab ? -v : v);
@@ -2931,9 +2936,16 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
           {nodes.map(node => {
             const t = typeMap[node.type] || allTypes[0];
             const isSelected = selectedNode === node.id;
-            // Prefer live-linked value if a lookup function was provided and matches by label
-            const liveVal = liveValueByLabel ? liveValueByLabel(node.label) : null;
-            const moneyStr = (liveVal !== null && liveVal !== undefined) ? formatMoney(liveVal) : formatMoney(node.value);
+            // Live lookup may return either a raw number (legacy) or { value, currency, symbol } (new)
+            const live = liveValueByLabel ? liveValueByLabel(node.label) : null;
+            let moneyStr;
+            if (live && typeof live === 'object' && 'value' in live) {
+              moneyStr = formatMoney(live.value, { symbol: live.symbol || '$', code: live.currency || '' });
+            } else if (live !== null && live !== undefined) {
+              moneyStr = formatMoney(live);
+            } else {
+              moneyStr = formatMoney(node.value);
+            }
             return (
               <g key={node.id} data-node-id={node.id} transform={`translate(${node.x},${node.y})`} style={{ cursor: drag && drag.nodeId === node.id ? 'grabbing' : 'grab' }}>
                 <rect onMouseDown={(e) => handlePointerDownNode(e, node)} onTouchStart={touchHandlers((ev) => handlePointerDownNode(ev, node))} width={NODE_W} height={NODE_H} rx="4" fill={`${t.color}26`} stroke={isSelected ? t.color : `${t.color}99`} strokeWidth={isSelected ? 1.5 : 0.75} />
@@ -13118,8 +13130,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                 notes: s.notes || '',
               }));
             const researchList = holdingsResearch.filter(s => s && s.ticker);
-            const totalPortValue = currentList.reduce((sum, s) => sum + (parseFloat(s.currentValue)||0), 0);
-            const totalPortInvested = currentList.reduce((sum, s) => sum + (parseFloat(s.invested)||0), 0);
+            const totalPortValue = currentList.reduce((sum, s) => sum + convertToDisplay(s.currentValue, s.currency || 'USD'), 0);
+            const totalPortInvested = currentList.reduce((sum, s) => sum + convertToDisplay(s.invested, s.currency || 'USD'), 0);
             const totalPortReturn = totalPortValue - totalPortInvested;
             const totalPortReturnPct = totalPortInvested > 0 ? (totalPortReturn / totalPortInvested) * 100 : 0;
 
@@ -13259,23 +13271,43 @@ ${JSON.stringify(ctx, null, 2)}`;
 
                 {/* Portfolio summary — only in current mode */}
                 {constellationMode==='current' && currentList.length > 0 && (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"6px",padding:"14px 16px",display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"10px"}}>
-                    <div>
-                      <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>VALUE</div>
-                      <div style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>${totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"6px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
+                      <div style={{fontSize:"10px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO TOTALS · {displayCurrency}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DISPLAY:</span>
+                        <select
+                          value={displayCurrency}
+                          onChange={(e) => setDisplayCurrency(e.target.value)}
+                          style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",fontWeight:600,letterSpacing:"1px",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
+                        >
+                          {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                    <div>
-                      <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>INVESTED</div>
-                      <div style={{fontSize:"18px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>${totalPortInvested.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                    <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"10px"}}>
+                      <div>
+                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>VALUE</div>
+                        <div style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortValue.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>INVESTED</div>
+                        <div style={{fontSize:"18px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{displaySym}{totalPortInvested.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>RETURN</div>
+                        <div style={{fontSize:"18px",color:totalPortReturn>=0?"#22c55e":"#ef4444",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{totalPortReturn>=0?'+':''}{displaySym}{Math.abs(totalPortReturn).toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                      </div>
+                      <div>
+                        <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>%</div>
+                        <div style={{fontSize:"18px",color:totalPortReturnPct>=0?"#22c55e":"#ef4444",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%</div>
+                      </div>
                     </div>
-                    <div>
-                      <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>RETURN</div>
-                      <div style={{fontSize:"18px",color:totalPortReturn>=0?"#22c55e":"#ef4444",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{totalPortReturn>=0?'+':''}${totalPortReturn.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-                    </div>
-                    <div>
-                      <div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>%</div>
-                      <div style={{fontSize:"18px",color:totalPortReturnPct>=0?"#22c55e":"#ef4444",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{totalPortReturnPct>=0?'+':''}{totalPortReturnPct.toFixed(1)}%</div>
-                    </div>
+                    {fxLastUpdated && (
+                      <div style={{fontSize:"8px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>FX rates updated {new Date(fxLastUpdated * 1000).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</div>
+                    )}
                   </div>
                 )}
 
@@ -13309,21 +13341,28 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
                     <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
                       liveValueByLabel={(label) => {
-                        // Map a node label (typically a ticker) back to the live $ value.
-                        // CURRENT mode → look up the holding in stocks[] and return its currentValue.
-                        // FUTURE mode  → look up the planned deposit amount from futureResearch.
+                        // Map a node label (typically a ticker) back to the live $ value + currency.
+                        // Returns { value, currency, symbol } so node display can tag with currency code.
+                        // CURRENT mode → look up the holding in stocks[] and return its currentValue + native currency.
+                        // FUTURE mode  → look up the planned deposit amount from futureResearch (currency unknown → display currency).
                         // RESEARCH mode→ no native $ amount; return null so manual node.value wins.
                         if (!label) return null;
                         const key = String(label).trim().toUpperCase();
                         if (constellationMode === 'current') {
                           const hit = (stocks || []).find(s => String(s?.name || '').trim().toUpperCase() === key);
-                          const v = hit ? (parseFloat(hit.currentValue) || 0) : 0;
-                          return v > 0 ? v : null;
+                          if (!hit) return null;
+                          const v = parseFloat(hit.currentValue) || 0;
+                          if (v <= 0) return null;
+                          const cur = hit.currency || 'USD';
+                          return { value: v, currency: cur, symbol: currencySymbol(cur) };
                         }
                         if (constellationMode === 'future') {
                           const hit = (futureResearch || []).find(s => String(s?.ticker || '').trim().toUpperCase() === key);
-                          const v = hit ? (parseFloat(hit.plannedAmount) || 0) : 0;
-                          return v > 0 ? v : null;
+                          if (!hit) return null;
+                          const v = parseFloat(hit.plannedAmount) || 0;
+                          if (v <= 0) return null;
+                          // Planned amounts don't carry a currency, so treat them as in the user's display currency
+                          return { value: v, currency: displayCurrency, symbol: currencySymbol(displayCurrency) };
                         }
                         return null;
                       }}
@@ -13482,37 +13521,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 );
               })()}
-
-              {/* Portfolio Summary */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px 20px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginBottom:"8px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO VALUE · {displayCurrency}</div>
-                  <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DISPLAY:</span>
-                    <select
-                      value={displayCurrency}
-                      onChange={(e) => setDisplayCurrency(e.target.value)}
-                      style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",fontWeight:600,letterSpacing:"1px",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
-                    >
-                      {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"1px"}}>{displaySym}{totalStocksValueFx.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                {totalStocksInvestedFx > 0 && (
-                  <div style={{marginTop:"6px",fontSize:"13px",fontFamily:"monospace",fontWeight:600,color:totalGainLossFx >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>
-                    {totalGainLossFx >= 0 ? '+' : ''}{displaySym}{Math.abs(totalGainLossFx).toLocaleString(undefined, { maximumFractionDigits: 0 })} ({totalGainLossPercentFx >= 0 ? '+' : ''}{totalGainLossPercentFx.toFixed(1)}%)
-                  </div>
-                )}
-                {Object.keys(fxRates).length === 0 && filledStocks.some(s => (s.currency || 'USD') !== displayCurrency) && (
-                  <div style={{marginTop:"8px",fontSize:"9px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>↻ Loading FX rates… mixed currencies are showing raw values until conversion is ready.</div>
-                )}
-                {fxLastUpdated && (
-                  <div style={{marginTop:"8px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>FX rates updated {new Date(fxLastUpdated * 1000).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</div>
-                )}
-              </div>
 
               {/* Stocks Input */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
