@@ -3334,6 +3334,7 @@ function MuzzApp() {
     research: { nodes: [], edges: [], types: [] },
   });
   const [constellationMode, setConstellationMode] = useState('current'); // current | future | research
+  const [mapExpanded, setMapExpanded] = useState(false); // expand investment/asset maps to 90vh
   const [selectedStock, setSelectedStock] = useState(null);
   const [perfTicker, setPerfTicker] = useState('');
   const [perfData, setPerfData] = useState(null);
@@ -3452,6 +3453,7 @@ function MuzzApp() {
   ]);
   // Asset Map Graph — drag/drop wealth structure
   const [assetMapGraph, setAssetMapGraph] = useState({ nodes: [], edges: [], types: [] });
+  const [assetMapExpanded, setAssetMapExpanded] = useState(false);
   const [showMapControls, setShowMapControls] = useState(true);
   const [mapPins, setMapPins] = useState([]);
   const [editingPinId, setEditingPinId] = useState(null);
@@ -12347,9 +12349,15 @@ ${JSON.stringify(ctx, null, 2)}`;
           {/* Asset Map — drag/drop wealth structure */}
           {assetsSubTab === 'assetMap' && (
             <div style={{padding:"12px 16px"}}>
-              <ExpandToggle accent="#00c8ff">
-                {(expanded) => <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} expanded={expanded} />}
-              </ExpandToggle>
+              <div style={{marginBottom:"10px",display:"flex",justifyContent:"flex-end"}}>
+                <button
+                  onClick={() => setAssetMapExpanded(v => !v)}
+                  style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,200,255,0.15)",border:"0.5px solid rgba(0,200,255,0.6)",padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}
+                >
+                  {assetMapExpanded ? '⊟ COLLAPSE MAP' : '⊞ EXPAND MAP'}
+                </button>
+              </div>
+              <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} expanded={assetMapExpanded} />
             </div>
           )}
 
@@ -12918,8 +12926,14 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
                     <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}</span>
-                    <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
+                      <button
+                        onClick={() => setMapExpanded(v => !v)}
+                        style={{fontSize:"10px",color:modeMeta[constellationMode].accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${modeMeta[constellationMode].accent}15`,border:`0.5px solid ${modeMeta[constellationMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
+                      >
+                        {mapExpanded ? '⊟ COLLAPSE' : '⊞ EXPAND'}
+                      </button>
                       {(currentGraph.nodes || []).length > 0 && (
                         <button
                           onClick={() => {
@@ -12936,22 +12950,18 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div style={{padding:"12px 12px 16px"}}>
-                    <ExpandToggle accent={modeMeta[constellationMode].accent}>
-                      {(expanded) => (
-                        <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={expanded} customEmptyState={(
-                          <>
-                            <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
-                            <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[constellationMode].label.toLowerCase()}.</div>
-                            <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
-                              Auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                              <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[constellationMode].accent}26`, border: `1px solid ${modeMeta[constellationMode].accent}b3`, borderRadius: '4px', color: modeMeta[constellationMode].accent, fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[constellationMode].accent}26` }}>⚡ GENERATE MAP</button>
-                            </div>
-                          </>
-                        )} />
-                      )}
-                    </ExpandToggle>
+                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded} customEmptyState={(
+                      <>
+                        <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
+                        <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[constellationMode].label.toLowerCase()}.</div>
+                        <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
+                          Auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[constellationMode].accent}26`, border: `1px solid ${modeMeta[constellationMode].accent}b3`, borderRadius: '4px', color: modeMeta[constellationMode].accent, fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[constellationMode].accent}26` }}>⚡ GENERATE MAP</button>
+                        </div>
+                      </>
+                    )} />
                   </div>
                 </div>
 
