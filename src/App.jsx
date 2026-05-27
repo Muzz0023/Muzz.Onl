@@ -12566,6 +12566,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
                 {id:'performance',label:'PERFORMANCE'},
+                {id:'livePrices',label:'LIVE PRICES'},
                 {id:'accounting',label:'ACCOUNTING'},
                 {id:'knowledge',label:'GUIDE'},
                 {id:'sp500',label:'S&P 500'},
@@ -13121,246 +13122,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
               </details>
 
-              {/* Live Stock Prices */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"8px"}}>// Live Stock Prices</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track US stocks with real-time prices & profit/loss</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {pricesLastUpdated && (
-                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>Updated: {pricesLastUpdated}</span>
-                      )}
-                    <button
-                      onClick={async () => {
-                        const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
-                        if (tickers.length === 0) return;
-                        setPricesLoading(true);
-                        try {
-                          const response = await fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) });
-                          if (!response.ok) throw new Error('API error');
-                          const data = await response.json();
-                          if (data.prices) { setLivePrices(data.prices); setPricesLastUpdated(new Date().toLocaleTimeString()); }
-                        } catch (err) { console.error('Failed to fetch prices:', err); }
-                        setPricesLoading(false);
-                      }}
-                      disabled={pricesLoading || trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').length === 0}
-                      style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
-                    >
-                      {pricesLoading ? 'LOADING...' : 'REFRESH PRICES'}
-                    </button>
-                  </div>
-                </div>
-                </div>
-                <div style={{padding:"14px 16px"}}>
-                  {trackedStocks.length === 0 ? (
-                    <div style={{padding:"32px 16px",textAlign:"center"}}><div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>NO STOCKS TRACKED YET</div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ADD A US STOCK BELOW, THEN HIT REFRESH PRICES</div></div>
-                  ) : (
-                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                      {/* Summary Banner */}
-                      {Object.keys(livePrices).length > 0 && (() => {
-                        let totalInvested = 0;
-                        let totalCurrent = 0;
-                        trackedStocks.forEach(s => {
-                          const ticker = s.ticker?.toUpperCase() || '';
-                          const price = (ticker && livePrices[ticker]?.c) || 0;
-                          const shares = parseFloat(s.shares) || 0;
-                          const avg = parseFloat(s.avgCost) || 0;
-                          if (price > 0 && shares > 0) {
-                            totalInvested += avg * shares;
-                            totalCurrent += price * shares;
-                          }
-                        });
-                        const totalPL = totalCurrent - totalInvested;
-                        const totalPLPct = totalInvested > 0 ? ((totalPL / totalInvested) * 100) : 0;
-                        return totalInvested > 0 ? (
-                          <div style={{padding:"12px 16px",borderRadius:"4px",border:`0.5px solid ${totalPL >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,borderLeft:`2px solid ${totalPL >= 0 ? "rgba(34,197,94,0.7)" : "rgba(239,68,68,0.7)"}`,marginBottom:"10px",background:"rgba(5,12,24,0.6)"}}>
-                            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",textAlign:"center"}}>
-                              <div>
-                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total Cost</div>
-                                <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                              </div>
-                              <div>
-                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Market Value</div>
-                                <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                              </div>
-                              <div>
-                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total P/L</div>
-                                <div style={{fontSize:"16px",fontFamily:"monospace",fontWeight:600,color:totalPL >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
-                                  {totalPL >= 0 ? '+' : ''}${totalPL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                  <span className="text-xs sm:text-sm ml-1">({totalPL >= 0 ? '+' : ''}{totalPLPct.toFixed(2)}%)</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ) : null;
-                      })()}
-
-                      {/* Stock Cards */}
-                      {trackedStocks.map((stock) => {
-                        const isEditing = editingTrackedStockId === stock.id;
-                        const ticker = stock.ticker?.toUpperCase() || '';
-                        const priceData = ticker ? livePrices[ticker] : null;
-                        const currentPrice = priceData?.c || 0;
-                        const shares = parseFloat(stock.shares) || 0;
-                        const avgCost = parseFloat(stock.avgCost) || 0;
-                        const costBasis = shares * avgCost;
-                        const marketValue = shares * currentPrice;
-                        const pl = marketValue - costBasis;
-                        const plPercent = costBasis > 0 ? ((pl / costBasis) * 100) : 0;
-                        const dailyChange = (priceData && priceData.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
-
-                        return (
-                          <div key={stock.id} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
-                            {/* Compact row */}
-                            <button onClick={() => setEditingTrackedStockId(isEditing ? null : stock.id)}
-                              style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
-                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
-                              <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:600,letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{ticker || <span style={{color:"rgba(148,163,184,0.4)",fontWeight:500,letterSpacing:"0"}}>Unset ticker</span>}</div>
-                                <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
-                                  {shares > 0 ? `${shares} share${shares!==1?'s':''}` : 'No shares'}{avgCost > 0 ? ` @ $${avgCost.toFixed(2)}` : ''}{currentPrice > 0 ? ` · ${dailyChange >= 0 ? '▲' : '▼'} ${Math.abs(dailyChange).toFixed(2)}%` : ''}
-                                </div>
-                              </div>
-                              <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
-                                {currentPrice > 0 && (
-                                  <div style={{textAlign:"right"}}>
-                                    <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${currentPrice.toFixed(2)}</div>
-                                    {costBasis > 0 && (
-                                      <div style={{fontFamily:"monospace",fontSize:"10px",color:pl >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)",fontWeight:600}}>{pl >= 0 ? '+' : ''}{plPercent.toFixed(1)}%</div>
-                                    )}
-                                  </div>
-                                )}
-                                <span style={{fontSize:"14px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
-                              </div>
-                            </button>
-
-                            {/* Expanded edit panel */}
-                            {isEditing && (
-                              <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                                <div>
-                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER (US STOCKS)</div>
-                                  <input
-                                    type="text"
-                                    value={stock.ticker}
-                                    onFocus={scrollInputIntoView}
-                                    onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, ticker: e.target.value.toUpperCase() } : s))}
-                                    placeholder="AAPL"
-                                    style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,letterSpacing:"1px",padding:"8px 10px",outline:"none",textTransform:"uppercase"}}
-                                  />
-                                </div>
-                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>SHARES</div>
-                                    <input
-                                      type="text"
-                                      inputMode="decimal"
-                                      value={stock.shares}
-                                      onFocus={scrollInputIntoView}
-                                      onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
-                                      placeholder="0"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
-                                    />
-                                  </div>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>AVG COST $</div>
-                                    <input
-                                      type="text"
-                                      inputMode="decimal"
-                                      value={stock.avgCost}
-                                      onFocus={scrollInputIntoView}
-                                      onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
-                                      placeholder="0.00"
-                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
-                                    />
-                                  </div>
-                                </div>
-                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LIVE PRICE</div>
-                                    {currentPrice > 0 ? (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff"}}>
-                                        <div style={{fontWeight:700}}>${currentPrice.toFixed(2)}</div>
-                                        <div style={{fontSize:"10px",fontWeight:600,color:dailyChange >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
-                                          {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"12px",color:"rgba(148,163,184,0.5)"}}>—</div>
-                                    )}
-                                  </div>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PROFIT / LOSS</div>
-                                    {currentPrice > 0 && costBasis > 0 ? (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:pl >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${pl >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:pl >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
-                                        <div style={{fontWeight:700}}>{pl >= 0 ? '+' : ''}${pl.toFixed(2)}</div>
-                                        <div style={{fontSize:"10px"}}>{plPercent >= 0 ? '+' : ''}{plPercent.toFixed(2)}%</div>
-                                      </div>
-                                    ) : (
-                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"12px",color:"rgba(148,163,184,0.5)"}}>—</div>
-                                    )}
-                                  </div>
-                                </div>
-                                <button onClick={() => { setTrackedStocks(prev => prev.filter(s => s.id !== stock.id)); setEditingTrackedStockId(null); }}
-                                  style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Add Tracked Stock Button */}
-                  <div style={{marginTop:"12px"}}>
-                    <button
-                      onClick={() => { const id = Date.now(); setTrackedStocks(prev => [...prev, { id, ticker: '', shares: '', avgCost: '' }]); setEditingTrackedStockId(id); }}
-                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
-                    >
-                      + Add Tracked Stock
-                    </button>
-                  </div>
-
-                  {/* Popular Tickers */}
-                  <div className="mt-4 pt-4 border-t">
-                    <p className="text-xs text-gray-400 font-medium mb-2">Quick Add Popular Tickers:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { ticker: 'SPY', name: 'S&P 500' },
-                        { ticker: 'QQQ', name: 'Nasdaq' },
-                        { ticker: 'DIA', name: 'Dow Jones' },
-                        { ticker: 'VOO', name: 'Vanguard S&P' },
-                        { ticker: 'AAPL', name: 'Apple' },
-                        { ticker: 'MSFT', name: 'Microsoft' },
-                        { ticker: 'GOOGL', name: 'Google' },
-                        { ticker: 'AMZN', name: 'Amazon' },
-                        { ticker: 'TSLA', name: 'Tesla' },
-                        { ticker: 'NVDA', name: 'Nvidia' },
-                        { ticker: 'META', name: 'Meta' },
-                        { ticker: 'BRK.B', name: 'Berkshire' }
-                      ].map((s, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            if (!trackedStocks.find(t => t.ticker?.toUpperCase() === s.ticker)) {
-                              setTrackedStocks(prev => [...prev, { id: Date.now() + i, ticker: s.ticker, shares: '', avgCost: '' }]);
-                            }
-                          }}
-                          style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"0.5px",cursor:"pointer"}}
-                        >
-                          <span className="font-bold text-green-600">{s.ticker}</span>
-                          <span className="text-gray-400">{s.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <p className="text-[10px] text-gray-400 mt-3">Prices from Finnhub • May be up to 15 min delayed • US stocks only</p>
-                </div>
-              </div>
-
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
                 <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
@@ -13621,6 +13382,250 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </details>
               )}
+            </>
+          )}
+          {/* LIVE PRICES TAB */}
+          {investmentsSubTab === 'livePrices' && (
+            <>
+              {/* Live Stock Prices */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                <div style={{padding:"12px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"8px"}}>// Live Stock Prices</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track US stocks with real-time prices & profit/loss</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {pricesLastUpdated && (
+                        <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>Updated: {pricesLastUpdated}</span>
+                      )}
+                    <button
+                      onClick={async () => {
+                        const tickers = trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').map(s => s.ticker.toUpperCase());
+                        if (tickers.length === 0) return;
+                        setPricesLoading(true);
+                        try {
+                          const response = await fetch(api('/api/stocks'), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tickers}) });
+                          if (!response.ok) throw new Error('API error');
+                          const data = await response.json();
+                          if (data.prices) { setLivePrices(data.prices); setPricesLastUpdated(new Date().toLocaleTimeString()); }
+                        } catch (err) { console.error('Failed to fetch prices:', err); }
+                        setPricesLoading(false);
+                      }}
+                      disabled={pricesLoading || trackedStocks.filter(s => s.ticker && s.ticker.trim() !== '').length === 0}
+                      style={{padding:"6px 12px",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.4)",borderRadius:"3px",color:"rgba(34,197,94,0.95)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",fontWeight:600,cursor:"pointer"}}
+                    >
+                      {pricesLoading ? 'LOADING...' : 'REFRESH PRICES'}
+                    </button>
+                  </div>
+                </div>
+                </div>
+                <div style={{padding:"14px 16px"}}>
+                  {trackedStocks.length === 0 ? (
+                    <div style={{padding:"32px 16px",textAlign:"center"}}><div style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px"}}>NO STOCKS TRACKED YET</div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>ADD A US STOCK BELOW, THEN HIT REFRESH PRICES</div></div>
+                  ) : (
+                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                      {/* Summary Banner */}
+                      {Object.keys(livePrices).length > 0 && (() => {
+                        let totalInvested = 0;
+                        let totalCurrent = 0;
+                        trackedStocks.forEach(s => {
+                          const ticker = s.ticker?.toUpperCase() || '';
+                          const price = (ticker && livePrices[ticker]?.c) || 0;
+                          const shares = parseFloat(s.shares) || 0;
+                          const avg = parseFloat(s.avgCost) || 0;
+                          if (price > 0 && shares > 0) {
+                            totalInvested += avg * shares;
+                            totalCurrent += price * shares;
+                          }
+                        });
+                        const totalPL = totalCurrent - totalInvested;
+                        const totalPLPct = totalInvested > 0 ? ((totalPL / totalInvested) * 100) : 0;
+                        return totalInvested > 0 ? (
+                          <div style={{padding:"12px 16px",borderRadius:"4px",border:`0.5px solid ${totalPL >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,borderLeft:`2px solid ${totalPL >= 0 ? "rgba(34,197,94,0.7)" : "rgba(239,68,68,0.7)"}`,marginBottom:"10px",background:"rgba(5,12,24,0.6)"}}>
+                            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"8px",textAlign:"center"}}>
+                              <div>
+                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total Cost</div>
+                                <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalInvested.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                              </div>
+                              <div>
+                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Market Value</div>
+                                <div style={{fontSize:"16px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>${totalCurrent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                              </div>
+                              <div>
+                                <div style={{fontSize:"8px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total P/L</div>
+                                <div style={{fontSize:"16px",fontFamily:"monospace",fontWeight:600,color:totalPL >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
+                                  {totalPL >= 0 ? '+' : ''}${totalPL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                  <span className="text-xs sm:text-sm ml-1">({totalPL >= 0 ? '+' : ''}{totalPLPct.toFixed(2)}%)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null;
+                      })()}
+
+                      {/* Stock Cards */}
+                      {trackedStocks.map((stock) => {
+                        const isEditing = editingTrackedStockId === stock.id;
+                        const ticker = stock.ticker?.toUpperCase() || '';
+                        const priceData = ticker ? livePrices[ticker] : null;
+                        const currentPrice = priceData?.c || 0;
+                        const shares = parseFloat(stock.shares) || 0;
+                        const avgCost = parseFloat(stock.avgCost) || 0;
+                        const costBasis = shares * avgCost;
+                        const marketValue = shares * currentPrice;
+                        const pl = marketValue - costBasis;
+                        const plPercent = costBasis > 0 ? ((pl / costBasis) * 100) : 0;
+                        const dailyChange = (priceData && priceData.pc && priceData.pc > 0) ? ((priceData.c - priceData.pc) / priceData.pc * 100) : 0;
+
+                        return (
+                          <div key={stock.id} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
+                            {/* Compact row */}
+                            <button onClick={() => setEditingTrackedStockId(isEditing ? null : stock.id)}
+                              style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+                              <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
+                              <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
+                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:600,letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{ticker || <span style={{color:"rgba(148,163,184,0.4)",fontWeight:500,letterSpacing:"0"}}>Unset ticker</span>}</div>
+                                <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
+                                  {shares > 0 ? `${shares} share${shares!==1?'s':''}` : 'No shares'}{avgCost > 0 ? ` @ $${avgCost.toFixed(2)}` : ''}{currentPrice > 0 ? ` · ${dailyChange >= 0 ? '▲' : '▼'} ${Math.abs(dailyChange).toFixed(2)}%` : ''}
+                                </div>
+                              </div>
+                              <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                                {currentPrice > 0 && (
+                                  <div style={{textAlign:"right"}}>
+                                    <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${currentPrice.toFixed(2)}</div>
+                                    {costBasis > 0 && (
+                                      <div style={{fontFamily:"monospace",fontSize:"10px",color:pl >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)",fontWeight:600}}>{pl >= 0 ? '+' : ''}{plPercent.toFixed(1)}%</div>
+                                    )}
+                                  </div>
+                                )}
+                                <span style={{fontSize:"14px",color:"rgba(0,200,255,0.55)",fontFamily:"monospace"}}>{isEditing?'⌄':'›'}</span>
+                              </div>
+                            </button>
+
+                            {/* Expanded edit panel */}
+                            {isEditing && (
+                              <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                                <div>
+                                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER (US STOCKS)</div>
+                                  <input
+                                    type="text"
+                                    value={stock.ticker}
+                                    onFocus={scrollInputIntoView}
+                                    onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, ticker: e.target.value.toUpperCase() } : s))}
+                                    placeholder="AAPL"
+                                    style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,letterSpacing:"1px",padding:"8px 10px",outline:"none",textTransform:"uppercase"}}
+                                  />
+                                </div>
+                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>SHARES</div>
+                                    <input
+                                      type="text"
+                                      inputMode="decimal"
+                                      value={stock.shares}
+                                      onFocus={scrollInputIntoView}
+                                      onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, shares: e.target.value } : s))}
+                                      placeholder="0"
+                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                    />
+                                  </div>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>AVG COST $</div>
+                                    <input
+                                      type="text"
+                                      inputMode="decimal"
+                                      value={stock.avgCost}
+                                      onFocus={scrollInputIntoView}
+                                      onChange={(e) => setTrackedStocks(prev => prev.map(s => s.id === stock.id ? { ...s, avgCost: e.target.value } : s))}
+                                      placeholder="0.00"
+                                      style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none"}}
+                                    />
+                                  </div>
+                                </div>
+                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LIVE PRICE</div>
+                                    {currentPrice > 0 ? (
+                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"12px",color:"#e0eaff"}}>
+                                        <div style={{fontWeight:700}}>${currentPrice.toFixed(2)}</div>
+                                        <div style={{fontSize:"10px",fontWeight:600,color:dailyChange >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
+                                          {dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"12px",color:"rgba(148,163,184,0.5)"}}>—</div>
+                                    )}
+                                  </div>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>PROFIT / LOSS</div>
+                                    {currentPrice > 0 && costBasis > 0 ? (
+                                      <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:pl >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${pl >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:pl >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
+                                        <div style={{fontWeight:700}}>{pl >= 0 ? '+' : ''}${pl.toFixed(2)}</div>
+                                        <div style={{fontSize:"10px"}}>{plPercent >= 0 ? '+' : ''}{plPercent.toFixed(2)}%</div>
+                                      </div>
+                                    ) : (
+                                      <div style={{padding:"8px 10px",borderRadius:"3px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",fontFamily:"monospace",fontSize:"12px",color:"rgba(148,163,184,0.5)"}}>—</div>
+                                    )}
+                                  </div>
+                                </div>
+                                <button onClick={() => { setTrackedStocks(prev => prev.filter(s => s.id !== stock.id)); setEditingTrackedStockId(null); }}
+                                  style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Add Tracked Stock Button */}
+                  <div style={{marginTop:"12px"}}>
+                    <button
+                      onClick={() => { const id = Date.now(); setTrackedStocks(prev => [...prev, { id, ticker: '', shares: '', avgCost: '' }]); setEditingTrackedStockId(id); }}
+                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    >
+                      + Add Tracked Stock
+                    </button>
+                  </div>
+
+                  {/* Popular Tickers */}
+                  <div className="mt-4 pt-4 border-t">
+                    <p className="text-xs text-gray-400 font-medium mb-2">Quick Add Popular Tickers:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { ticker: 'SPY', name: 'S&P 500' },
+                        { ticker: 'QQQ', name: 'Nasdaq' },
+                        { ticker: 'DIA', name: 'Dow Jones' },
+                        { ticker: 'VOO', name: 'Vanguard S&P' },
+                        { ticker: 'AAPL', name: 'Apple' },
+                        { ticker: 'MSFT', name: 'Microsoft' },
+                        { ticker: 'GOOGL', name: 'Google' },
+                        { ticker: 'AMZN', name: 'Amazon' },
+                        { ticker: 'TSLA', name: 'Tesla' },
+                        { ticker: 'NVDA', name: 'Nvidia' },
+                        { ticker: 'META', name: 'Meta' },
+                        { ticker: 'BRK.B', name: 'Berkshire' }
+                      ].map((s, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            if (!trackedStocks.find(t => t.ticker?.toUpperCase() === s.ticker)) {
+                              setTrackedStocks(prev => [...prev, { id: Date.now() + i, ticker: s.ticker, shares: '', avgCost: '' }]);
+                            }
+                          }}
+                          style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"0.5px",cursor:"pointer"}}
+                        >
+                          <span className="font-bold text-green-600">{s.ticker}</span>
+                          <span className="text-gray-400">{s.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] text-gray-400 mt-3">Prices from Finnhub • May be up to 15 min delayed • US stocks only</p>
+                </div>
+              </div>
             </>
           )}
 
