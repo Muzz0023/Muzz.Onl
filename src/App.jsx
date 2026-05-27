@@ -12586,7 +12586,21 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             // Quick stats for header card
             const currentList = stocks.filter(s => s && s.name && (s.invested > 0 || s.currentValue > 0));
-            const futureList = futureStocks.filter(s => s && (s.ticker || s.name));
+            // Future map sources from the Future Portfolio tab (futureResearch). Normalize field names
+            // (ticker -> name, plannedAmount -> currentValue) so the generator can treat them like stocks.
+            const futureList = futureResearch
+              .filter(s => s && s.ticker)
+              .map(s => ({
+                name: s.ticker,
+                ticker: s.ticker,
+                industry: s.industry || '',
+                invested: 0,
+                currentValue: parseFloat(s.plannedAmount) || 0,
+                tollBooth: s.tollBooth || '',
+                growth: s.growthProspects || '',
+                status: s.status || '',
+                notes: s.notes || '',
+              }));
             const researchList = holdingsResearch.filter(s => s && s.ticker);
             const totalPortValue = currentList.reduce((sum, s) => sum + (parseFloat(s.currentValue)||0), 0);
             const totalPortInvested = currentList.reduce((sum, s) => sum + (parseFloat(s.invested)||0), 0);
