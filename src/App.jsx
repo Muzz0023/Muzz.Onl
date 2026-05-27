@@ -2810,7 +2810,7 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
   }
 
   return (
-    <div style={{ position: 'relative', height: expanded ? '90vh' : '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', height: expanded ? '100%' : '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '10px 14px', borderBottom: '0.5px solid rgba(0,200,255,0.15)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
         <div>
           <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.55)', fontFamily: 'monospace', letterSpacing: '2px' }}>// {title || 'ASSET MAP'}</div>
@@ -3334,7 +3334,20 @@ function MuzzApp() {
     research: { nodes: [], edges: [], types: [] },
   });
   const [constellationMode, setConstellationMode] = useState('current'); // current | future | research
-  const [mapExpanded, setMapExpanded] = useState(false); // expand investment/asset maps to 90vh
+  const [mapExpanded, setMapExpanded] = useState(false); // expand investment map fullscreen
+
+  // Lock body scroll & ESC-to-collapse when any map is fullscreen
+  useEffect(() => {
+    if (!mapExpanded) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setMapExpanded(false); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [mapExpanded]);
   const [selectedStock, setSelectedStock] = useState(null);
   const [perfTicker, setPerfTicker] = useState('');
   const [perfData, setPerfData] = useState(null);
@@ -3454,6 +3467,17 @@ function MuzzApp() {
   // Asset Map Graph — drag/drop wealth structure
   const [assetMapGraph, setAssetMapGraph] = useState({ nodes: [], edges: [], types: [] });
   const [assetMapExpanded, setAssetMapExpanded] = useState(false);
+  useEffect(() => {
+    if (!assetMapExpanded) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setAssetMapExpanded(false); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [assetMapExpanded]);
   const [showMapControls, setShowMapControls] = useState(true);
   const [mapPins, setMapPins] = useState([]);
   const [editingPinId, setEditingPinId] = useState(null);
@@ -12348,16 +12372,21 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {/* Asset Map — drag/drop wealth structure */}
           {assetsSubTab === 'assetMap' && (
-            <div style={{padding:"12px 16px"}}>
-              <div style={{marginBottom:"10px",display:"flex",justifyContent:"flex-end"}}>
+            <div style={assetMapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {padding:"12px 16px"}}>
+              <div style={{marginBottom:"10px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",flexShrink:0}}>
+                {assetMapExpanded && (
+                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSET MAP · FULLSCREEN</span>
+                )}
                 <button
                   onClick={() => setAssetMapExpanded(v => !v)}
-                  style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,200,255,0.15)",border:"0.5px solid rgba(0,200,255,0.6)",padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}
+                  style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,200,255,0.15)",border:"0.5px solid rgba(0,200,255,0.6)",padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,marginLeft:"auto"}}
                 >
                   {assetMapExpanded ? '⊟ COLLAPSE MAP' : '⊞ EXPAND MAP'}
                 </button>
               </div>
-              <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} expanded={assetMapExpanded} />
+              <div style={assetMapExpanded ? {flex:1,minHeight:0} : {}}>
+                <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} expanded={assetMapExpanded} />
+              </div>
             </div>
           )}
 
@@ -12923,9 +12952,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                 )}
 
                 {/* The map itself — same component as Asset Map */}
-                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
-                    <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}</span>
+                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+                  <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
+                    <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
                       <button
@@ -12949,7 +12978,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       )}
                     </div>
                   </div>
-                  <div style={{padding:"12px 12px 16px"}}>
+                  <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
                     <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded} customEmptyState={(
                       <>
                         <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
