@@ -2909,29 +2909,6 @@ function MuzzApp() {
   const [liveTime, setLiveTime] = useState(() => new Date());
   useEffect(() => { const t = setInterval(() => setLiveTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
-  // When live prices update, recompute each stock's currentValue from shares × livePrice.
-  // Only runs for stocks that have a name (used as ticker) AND shares > 0 — otherwise leaves manual value untouched.
-  useEffect(() => {
-    if (!livePrices || Object.keys(livePrices).length === 0) return;
-    setStocks(prev => {
-      let changed = false;
-      const next = prev.map(s => {
-        if (!s || !s.name) return s;
-        const ticker = String(s.name).trim().toUpperCase();
-        const sharesNum = parseFloat(s.shares) || 0;
-        if (sharesNum <= 0) return s;
-        const livePrice = livePrices[ticker]?.c;
-        if (!livePrice || livePrice <= 0) return s;
-        const newCV = sharesNum * livePrice;
-        // Only update if meaningfully different (avoid render thrash)
-        if (Math.abs((s.currentValue || 0) - newCV) < 0.005) return s;
-        changed = true;
-        return { ...s, currentValue: newCV, currentValueStr: newCV.toFixed(2) };
-      });
-      return changed ? next : prev;
-    });
-  }, [livePrices]);
-
   // Scroll to top whenever activeView changes (so opening Bills/Assets/etc. doesn't land mid-page)
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -3223,6 +3200,28 @@ function MuzzApp() {
   const [livePrices, setLivePrices] = useState({});
   const [pricesLoading, setPricesLoading] = useState(false);
   const [pricesLastUpdated, setPricesLastUpdated] = useState(null);
+
+  // When live prices update, recompute each stock's currentValue from shares × livePrice.
+  // Only runs for stocks with a name (used as ticker) AND shares > 0 — leaves manual values untouched.
+  useEffect(() => {
+    if (!livePrices || Object.keys(livePrices).length === 0) return;
+    setStocks(prev => {
+      let changed = false;
+      const next = prev.map(s => {
+        if (!s || !s.name) return s;
+        const ticker = String(s.name).trim().toUpperCase();
+        const sharesNum = parseFloat(s.shares) || 0;
+        if (sharesNum <= 0) return s;
+        const livePrice = livePrices[ticker]?.c;
+        if (!livePrice || livePrice <= 0) return s;
+        const newCV = sharesNum * livePrice;
+        if (Math.abs((s.currentValue || 0) - newCV) < 0.005) return s;
+        changed = true;
+        return { ...s, currentValue: newCV, currentValueStr: newCV.toFixed(2) };
+      });
+      return changed ? next : prev;
+    });
+  }, [livePrices]);
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
