@@ -12763,7 +12763,22 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
                   <div style={{padding:"12px 16px",borderLeft:`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
                     <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}</span>
-                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
+                    <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                      <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
+                      {(currentGraph.nodes || []).length > 0 && (
+                        <button
+                          onClick={() => {
+                            const count = (currentGraph.nodes || []).length;
+                            if (confirm(`Delete the entire ${modeMeta[constellationMode].label.toLowerCase()} map (${count} node${count!==1?'s':''})? This can't be undone.`)) {
+                              setCurrentGraph({ nodes: [], edges: [], types: currentGraph.types || [] });
+                            }
+                          }}
+                          style={{fontSize:"9px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",padding:"5px 10px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}
+                        >
+                          🗑 CLEAR MAP
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div style={{padding:"12px 12px 16px"}}>
                     <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition customEmptyState={(
