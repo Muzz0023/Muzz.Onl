@@ -3451,7 +3451,7 @@ function MuzzApp() {
   const [editingBillIdx, setEditingBillIdx] = useState(null);
   const [editingAssetIdx, setEditingAssetIdx] = useState(null);
   const [editingStockIdx, setEditingStockIdx] = useState(null);
-  const [detailStockIdx, setDetailStockIdx] = useState(null); // which stock is in deep-dive view (full page)
+  const [detailTicker, setDetailTicker] = useState(null); // ticker string (e.g. 'HSY') of stock in deep-dive view
   const [detailFundamentals, setDetailFundamentals] = useState(null); // fetched on open
   const [detailNews, setDetailNews] = useState([]);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -3466,14 +3466,12 @@ function MuzzApp() {
 
   // Fetch fundamentals + news when a stock detail view opens
   useEffect(() => {
-    if (detailStockIdx === null || !Array.isArray(stocks) || !stocks[detailStockIdx]) {
+    const ticker = String(detailTicker || '').trim().toUpperCase();
+    if (!ticker) {
       setDetailFundamentals(null);
       setDetailNews([]);
       return;
     }
-    const stock = stocks[detailStockIdx];
-    const ticker = String(stock?.name || '').trim().toUpperCase();
-    if (!ticker) return;
     let cancelled = false;
     setDetailLoading(true);
     fetch(api(`/api/stock-fundamentals?ticker=${encodeURIComponent(ticker)}`))
@@ -3486,20 +3484,17 @@ function MuzzApp() {
       .catch(err => { if (!cancelled) console.error('Fundamentals fetch failed:', err); })
       .finally(() => { if (!cancelled) setDetailLoading(false); });
     return () => { cancelled = true; };
-  }, [detailStockIdx]);
+  }, [detailTicker]);
 
   // Fetch chart data when detail view is open and timeframe changes
   useEffect(() => {
-    if (detailStockIdx === null || !Array.isArray(stocks) || !stocks[detailStockIdx]) {
+    const ticker = String(detailTicker || '').trim().toUpperCase();
+    if (!ticker) {
       setDetailChart(null);
       return;
     }
-    const stock = stocks[detailStockIdx];
-    const ticker = String(stock?.name || '').trim().toUpperCase();
-    if (!ticker) return;
     let cancelled = false;
     setDetailChartLoading(true);
-    // Map UI ranges to Yahoo (interval, range) pairs
     const rangeMap = {
       '1d':  { interval: '5m',  range: '1d'  },
       '5d':  { interval: '15m', range: '5d'  },
@@ -3520,15 +3515,15 @@ function MuzzApp() {
       .catch(err => { if (!cancelled) console.error('Chart fetch failed:', err); })
       .finally(() => { if (!cancelled) setDetailChartLoading(false); });
     return () => { cancelled = true; };
-  }, [detailStockIdx, detailChartRange]);
+  }, [detailTicker, detailChartRange]);
 
   // ESC closes the detail view
   useEffect(() => {
-    if (detailStockIdx === null) return;
-    const onKey = (e) => { if (e.key === 'Escape') setDetailStockIdx(null); };
+    if (!detailTicker) return;
+    const onKey = (e) => { if (e.key === 'Escape') setDetailTicker(null); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [detailStockIdx]);
+  }, [detailTicker]);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -12810,10 +12805,11 @@ ${JSON.stringify(ctx, null, 2)}`;
         <SaveIndicator />
 
         {/* STOCK DETAIL VIEW — full-page overlay when a stock is opened */}
-        {detailStockIdx !== null && stocks[detailStockIdx] && (() => {
-          const stock = stocks[detailStockIdx];
+        {detailTicker && (() => {
+          const tickerKey = String(detailTicker || '').trim().toUpperCase();
+          // If this ticker is in the portfolio, pull position info; otherwise show fundamentals only.
+          const stock = (Array.isArray(stocks) ? stocks : []).find(s => String(s?.name || '').trim().toUpperCase() === tickerKey) || {};
           const f = detailFundamentals || {};
-          const tickerKey = String(stock?.name || '').trim().toUpperCase();
           const stockCurrency = f.currency || stock?.currency || 'USD';
           const sym = currencySymbol(stockCurrency);
           const sharesNum = parseFloat(stock?.shares) || 0;
@@ -12872,7 +12868,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             <div style={{position:"fixed",inset:0,zIndex:900,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(12px)",overflow:"auto"}}>
               <div style={{maxWidth:"1100px",margin:"0 auto",padding:"24px 20px 40px"}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"20px",gap:"12px",flexWrap:"wrap"}}>
-                  <button onClick={() => setDetailStockIdx(null)} style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.4)",padding:"7px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>← BACK TO PORTFOLIO</button>
+                  <button onClick={() => setDetailTicker(null)} style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.4)",padding:"7px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>← BACK</button>
                   <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{detailLoading ? 'LOADING DATA…' : 'PRESS ESC TO CLOSE'}</div>
                 </div>
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"20px 24px",marginBottom:"16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -13540,16 +13536,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                         {/* Expanded edit panel */}
                         {isEditing && (
                           <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                            {/* Open detail view button */}
-                            {stock?.name && (
-                              <button
-                                onClick={() => setDetailStockIdx(index)}
-                                style={{padding:"10px 14px",background:"linear-gradient(135deg, rgba(0,200,255,0.18), rgba(0,200,255,0.08))",border:"0.5px solid rgba(0,200,255,0.6)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}
-                              >
-                                <span>📊 OPEN FULL ANALYSIS</span>
-                                <span style={{fontSize:"14px"}}>→</span>
-                              </button>
-                            )}
                             <div>
                               <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER / NAME</div>
                               <input
@@ -14306,6 +14292,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                       {/* Expanded edit panel */}
                       {isEditing && (
                         <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          {holding?.ticker && (
+                            <button
+                              onClick={() => setDetailTicker(String(holding.ticker).trim().toUpperCase())}
+                              style={{padding:"10px 14px",background:"linear-gradient(135deg, rgba(0,200,255,0.18), rgba(0,200,255,0.08))",border:"0.5px solid rgba(0,200,255,0.6)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}
+                            >
+                              <span>📊 OPEN FULL ANALYSIS</span>
+                              <span style={{fontSize:"14px"}}>→</span>
+                            </button>
+                          )}
                           <div>
                             <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
                             <input
@@ -15088,6 +15083,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                       {/* Expanded edit panel */}
                       {isEditing && (
                         <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                          {holding?.ticker && (
+                            <button
+                              onClick={() => setDetailTicker(String(holding.ticker).trim().toUpperCase())}
+                              style={{padding:"10px 14px",background:"linear-gradient(135deg, rgba(0,200,255,0.18), rgba(0,200,255,0.08))",border:"0.5px solid rgba(0,200,255,0.6)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}
+                            >
+                              <span>📊 OPEN FULL ANALYSIS</span>
+                              <span style={{fontSize:"14px"}}>→</span>
+                            </button>
+                          )}
                           <div>
                             <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
                             <input
