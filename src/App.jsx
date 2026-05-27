@@ -2991,6 +2991,19 @@ function MuzzApp() {
     }, 300);
   };
 
+  // Currency symbol lookup for stock prices (Yahoo Finance returns currency in ISO 4217)
+  const currencySymbol = (code) => {
+    const map = { USD:'$', AUD:'A$', CAD:'C$', NZD:'NZ$', SGD:'S$', HKD:'HK$', GBP:'£', GBp:'p', EUR:'€', JPY:'¥', CNY:'¥', INR:'₹', CHF:'CHF ', SEK:'kr', NOK:'kr', DKK:'kr' };
+    return map[code] || (code ? `${code} ` : '$');
+  };
+  // Format a price value with its currency symbol
+  const fmtPrice = (val, code, opts = {}) => {
+    const sym = currencySymbol(code);
+    const n = Number(val) || 0;
+    const formatted = n.toLocaleString(undefined, { minimumFractionDigits: opts.dp ?? 2, maximumFractionDigits: opts.dp ?? 2 });
+    return `${sym}${formatted}`;
+  };
+
   // Auth & Elite status (must be before AI limits)
   const { user: authUser, signOut } = useAuth();
   const userId = authUser?.id;
@@ -3202,7 +3215,7 @@ function MuzzApp() {
   const [pricesLastUpdated, setPricesLastUpdated] = useState(null);
 
   // When live prices update OR new stocks are loaded, recompute each stock's currentValue from shares × livePrice.
-  // Only runs for stocks with a name (used as ticker) AND shares > 0 — leaves manual values untouched.
+  // Also save the currency code from Yahoo so we can display the right symbol (A$, $, £, €, etc.).
   useEffect(() => {
     if (!livePrices || Object.keys(livePrices).length === 0) return;
     setStocks(prev => {
@@ -3210,14 +3223,21 @@ function MuzzApp() {
       const next = prev.map(s => {
         if (!s || !s.name || s.manualMode) return s;
         const ticker = String(s.name).trim().toUpperCase();
-        const sharesNum = parseFloat(s.shares) || 0;
-        if (sharesNum <= 0) return s;
-        const livePrice = livePrices[ticker]?.c;
+        const priceData = livePrices[ticker];
+        if (!priceData) return s;
+        const livePrice = priceData.c;
         if (!livePrice || livePrice <= 0) return s;
+        const sharesNum = parseFloat(s.shares) || 0;
+        const currency = priceData.currency || s.currency || 'USD';
+        const currencyChanged = s.currency !== currency;
+        if (sharesNum <= 0) {
+          // No shares yet but we still want to learn the currency for display
+          return currencyChanged ? (changed = true, { ...s, currency }) : s;
+        }
         const newCV = sharesNum * livePrice;
-        if (Math.abs((s.currentValue || 0) - newCV) < 0.005) return s;
+        if (!currencyChanged && Math.abs((s.currentValue || 0) - newCV) < 0.005) return s;
         changed = true;
-        return { ...s, currentValue: newCV, currentValueStr: newCV.toFixed(2) };
+        return { ...s, currentValue: newCV, currentValueStr: newCV.toFixed(2), currency };
       });
       return changed ? next : prev;
     });
@@ -13111,6 +13131,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                     const cur = parseFloat(stock?.currentValue) || 0;
                     const sharesNum = parseFloat(stock?.shares) || 0;
                     const avgCostNum = parseFloat(stock?.avgCost) || 0;
+                    // Currency: from live price feed, or persisted on the stock, or default USD
+                    const stockCurrency = (tickerKey && livePrices[tickerKey]?.currency) || stock?.currency || 'USD';
+                    const sym = currencySymbol(stockCurrency);
                     return (
                       <div key={index} style={{background:isEditing?"rgba(0,200,255,0.06)":"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.2)",borderLeft:"2px solid #00c8ff",borderRadius:"4px",overflow:"hidden",transition:"all 0.15s"}}>
                         {/* Compact row */}
@@ -13126,7 +13149,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                           <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
                             {cur > 0 && (
                               <div style={{textAlign:"right"}}>
-                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>${cur.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#00c8ff",fontWeight:600}}>{sym}{cur.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+                                <div style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontWeight:500,letterSpacing:"0.5px"}}>{stockCurrency}</div>
                                 {livePrice > 0 && sharesNum > 0 && (
                                   <div style={{fontFamily:"monospace",fontSize:"9px",color:dailyChange >= 0 ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)",fontWeight:600}}>{dailyChange >= 0 ? '▲' : '▼'} {Math.abs(dailyChange).toFixed(2)}%</div>
                                 )}
@@ -13248,13 +13272,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                                   <div>
                                     <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INVESTED (AUTO)</div>
                                     <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",color:stock?.invested > 0 ? "#e0eaff" : "rgba(148,163,184,0.5)"}}>
-                                      {stock?.invested > 0 ? `$${stock.invested.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—'}
+                                      {stock?.invested > 0 ? `${sym}${stock.invested.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—'}
                                     </div>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LIVE PRICE</div>
+                                    <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>LIVE PRICE {stockCurrency && livePrice > 0 ? `· ${stockCurrency}` : ''}</div>
                                     <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",color:livePrice > 0 ? "#e0eaff" : "rgba(148,163,184,0.5)"}}>
-                                      {livePrice > 0 ? `$${livePrice.toFixed(2)}` : (tickerKey ? 'Hit refresh →' : '—')}
+                                      {livePrice > 0 ? `${sym}${livePrice.toFixed(2)}` : (tickerKey ? 'Hit refresh →' : '—')}
                                     </div>
                                   </div>
                                 </div>
@@ -13262,13 +13286,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                                   <div>
                                     <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CURRENT VALUE (AUTO)</div>
                                     <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.1)",color:cur > 0 ? "#00c8ff" : "rgba(148,163,184,0.5)"}}>
-                                      {cur > 0 ? `$${cur.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—'}
+                                      {cur > 0 ? `${sym}${cur.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—'}
                                     </div>
                                   </div>
                                   <div>
                                     <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>GAIN / LOSS</div>
                                     <div style={{padding:"8px 10px",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",fontWeight:600,background:gainLoss >= 0 ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",border:`0.5px solid ${gainLoss >= 0 ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,color:gainLoss >= 0 ? "rgba(34,197,94,0.9)" : "rgba(239,68,68,0.9)"}}>
-                                      {stock?.invested > 0 && cur > 0 ? `${gainLoss >= 0 ? '+' : ''}$${Math.abs(gainLoss).toFixed(2)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)` : '—'}
+                                      {stock?.invested > 0 && cur > 0 ? `${gainLoss >= 0 ? '+' : ''}${sym}${Math.abs(gainLoss).toFixed(2)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)` : '—'}
                                     </div>
                                   </div>
                                 </div>
