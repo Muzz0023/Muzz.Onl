@@ -13047,9 +13047,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{margin:"12px 16px 0",padding:"10px 12px",background:"rgba(168,85,247,0.06)",border:"0.5px solid rgba(168,85,247,0.25)",borderLeft:"2px solid rgba(168,85,247,0.6)",borderRadius:"3px",display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <div style={{fontSize:"14px",lineHeight:"1.2",color:"rgba(168,85,247,0.8)"}}>ⓘ</div>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600,marginBottom:"3px"}}>LIVE PRICES — US STOCKS ONLY</div>
+                    <div style={{fontSize:"10px",color:"rgba(168,85,247,0.95)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:600,marginBottom:"3px"}}>LIVE PRICES — GLOBAL COVERAGE</div>
                     <div style={{fontSize:"10px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",lineHeight:1.5}}>
-                      Auto-pricing works for US-listed tickers (HSY, AAPL, GOOG, BRK, etc.). For ASX, LSE, or other non-US stocks (REH, CBA, VAS, etc.), tap the stock to open it and hit <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>SWITCH TO MANUAL</span> to enter invested and current value yourself.
+                      Auto-pricing works for stocks worldwide. Type the US ticker (HSY, AAPL, GOOG) or ASX (REH, CBA, VAS — auto-resolved). For LSE add <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>.L</span>, TSX add <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>.TO</span>, Tokyo <span style={{color:"rgba(168,85,247,0.95)",fontWeight:600}}>.T</span>. If a ticker can't be found, hit SWITCH TO MANUAL.
                     </div>
                   </div>
                 </div>
@@ -13149,7 +13149,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                                 placeholder="e.g. HSY, AAPL, BRK"
                                 style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600,letterSpacing:"1px",padding:"8px 10px",outline:"none",textTransform:"uppercase"}}
                               />
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{stock?.manualMode ? 'Manual mode — enter invested and current value directly' : 'Auto mode — uses live US price × shares. Switch to manual for non-US stocks (e.g. ASX).'}</div>
+                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",marginTop:"4px"}}>{stock?.manualMode ? 'Manual mode — enter invested and current value directly' : 'Auto mode — uses live price × shares. ASX tickers auto-resolve (REH → REH.AX). For others, add suffix (.L, .TO, etc.).'}</div>
                             </div>
                             <div>
                               <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INDUSTRY</div>
@@ -13574,7 +13574,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
                       <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"8px"}}>// Live Stock Prices</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track US stocks with real-time prices & profit/loss</p>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track stocks worldwide with real-time prices & profit/loss</p>
                     </div>
                     <div className="flex items-center gap-3">
                       {pricesLastUpdated && (
@@ -13804,7 +13804,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
 
-                  <p className="text-[10px] text-gray-400 mt-3">Prices from Finnhub • May be up to 15 min delayed • US stocks only</p>
+                  <p className="text-[10px] text-gray-400 mt-3">Prices from Yahoo Finance • May be up to 15 min delayed • Global coverage: US, ASX (.AX), LSE (.L), TSX (.TO), etc.</p>
                 </div>
               </div>
             </>
