@@ -12840,7 +12840,8 @@ ${JSON.stringify(ctx, null, 2)}`;
       .filter(ind => ind.id)
       .map(ind => ({
         name: ind.name,
-        total: filledStocks.filter(s => s.industry === ind.id).reduce((sum, s) => sum + s.currentValue, 0),
+        // total is in displayCurrency: each stock's native value gets converted before summing
+        total: filledStocks.filter(s => s.industry === ind.id).reduce((sum, s) => sum + convertToDisplay(s.currentValue, s.currency || 'USD'), 0),
         stocks: filledStocks.filter(s => s.industry === ind.id)
       }))
       .filter(ind => ind.total > 0)
@@ -13396,131 +13397,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {investmentsSubTab === 'portfolio' && (
             <>
-              {/* Daily Investment Quote */}
-              {(() => {
-                const quotes = [
-                  { author: "Warren Buffett", quote: "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1." },
-                  { author: "Benjamin Graham", quote: "Price is what you pay. Value is what you get." },
-                  { author: "John Bogle", quote: "Don't look for the needle in the haystack. Just buy the haystack." },
-                  { author: "Charlie Munger", quote: "The big money is not in the buying and the selling, but in the waiting." },
-                  { author: "Peter Lynch", quote: "Know what you own, and know why you own it." },
-                  { author: "Sir John Templeton", quote: "The four most dangerous words in investing are: 'This time it's different.'" },
-                  { author: "Baron Rothschild", quote: "Buy when there's blood in the streets, even if the blood is your own." },
-                  { author: "Seth Klarman", quote: "The single greatest edge an investor can have is a long-term orientation." },
-                  { author: "Warren Buffett", quote: "Our favorite holding period is forever." },
-                  { author: "Benjamin Franklin", quote: "An investment in knowledge pays the best interest." },
-                  { author: "Naval Ravikant", quote: "Compound interest is one of the most powerful forces in the universe." },
-                  { author: "Howard Marks", quote: "You can't do the same things others do and expect to outperform." },
-                  { author: "Peter Lynch", quote: "In this business, if you're good, you're right six times out of ten." },
-                  { author: "George Soros", quote: "It's not whether you're right or wrong, but how much money you make when you're right." },
-                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
-                  { author: "Charlie Munger", quote: "Invert, always invert." },
-                  { author: "Benjamin Graham", quote: "The investor's chief problem—and even his worst enemy—is likely to be himself." },
-                  { author: "Jack Bogle", quote: "Time is your friend; impulse is your enemy." },
-                  { author: "Ray Dalio", quote: "He who lives by the crystal ball soon learns to eat ground glass." },
-                  { author: "Peter Lynch", quote: "The person who turns over the most rocks wins the game." },
-                  { author: "Warren Buffett", quote: "Be fearful when others are greedy and greedy when others are fearful." },
-                  { author: "Shelby Davis", quote: "History is a vast library of mistakes and errors that needn't be repeated." },
-                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
-                  { author: "Jesse Livermore", quote: "The market is never wrong; opinions often are." },
-                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
-                  { author: "Warren Buffett", quote: "It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." },
-                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
-                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
-                  { author: "Nassim Taleb", quote: "Invest in preparation, not in prediction." },
-                  { author: "Peter Lynch", quote: "Go for a business any idiot can run—because sooner or later, any idiot is probably going to run it." },
-                  { author: "Warren Buffett", quote: "Someone is sitting in the shade today because someone planted a tree a long time ago." },
-                  { author: "Charlie Munger", quote: "Deserve what you want. The world is not yet a crazy enough place to reward a whole bunch of undeserving people." },
-                  { author: "Benjamin Graham", quote: "The intelligent investor is a realist who sells to optimists and buys from pessimists." },
-                  { author: "John Maynard Keynes", quote: "The market can remain irrational longer than you can remain solvent." },
-                  { author: "Warren Buffett", quote: "Only when the tide goes out do you discover who's been swimming naked." },
-                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
-                  { author: "Burton Malkiel", quote: "A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts." },
-                  { author: "Peter Lynch", quote: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes." },
-                  { author: "Warren Buffett", quote: "Never invest in a business you cannot understand." },
-                  { author: "Thomas Phelps", quote: "Fortunes are made by buying low and selling high, but even more so by buying right and sitting tight." },
-                  { author: "Paul Samuelson", quote: "Investing should be more like watching paint dry or watching grass grow." },
-                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
-                  { author: "Ron Conway", quote: "Any time is a good time to start a company." },
-                  { author: "Warren Buffett", quote: "Wide diversification is only required when investors do not understand what they are doing." },
-                  { author: "Joel Greenblatt", quote: "The secret to successful investing is to figure out what something is worth and then pay a lot less for it." },
-                  { author: "Nick Murray", quote: "The timing of the market is a fool's game, whereas time in the market is your greatest natural advantage." },
-                  { author: "Peter Lynch", quote: "The real key to making money in stocks is not to get scared out of them." },
-                  { author: "Warren Buffett", quote: "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway." },
-                  { author: "Guy Spier", quote: "Check your ego at the door. The market doesn't care about your feelings." },
-                  { author: "Charlie Munger", quote: "Take a simple idea and take it seriously." },
-                  { author: "Morgan Housel", quote: "Wealth is what you don't see." },
-                  { author: "John Bogle", quote: "The stock market is a giant distraction from the business of investing." },
-                  { author: "Ray Dalio", quote: "He who lives by the crystal ball will eat shattered glass." },
-                  { author: "Li Lu", quote: "The biggest investment risk is not the volatility of prices, but whether you will suffer a permanent loss of capital." },
-                  { author: "Warren Buffett", quote: "The rear-view mirror is always clearer than the windshield." },
-                  { author: "Jim Rohn", quote: "Formal education will make you a living; self-education will make you a fortune." },
-                  { author: "Howard Marks", quote: "You can't predict. You can prepare." },
-                  { author: "Peter Lynch", quote: "A share of stock is not a lottery ticket. It's part-ownership of a business." },
-                  { author: "Shelby M.C. Davis", quote: "Invest for the long haul. Don't get too greedy and don't get too scared." },
-                  { author: "Nathan W. Morris", quote: "Every time you borrow money, you're robbing your future self." },
-                  { author: "Bernard Baruch", quote: "Don't try to buy at the bottom and sell at the top. It can't be done except by liars." },
-                  { author: "John Maynard Keynes", quote: "When the facts change, I change my mind. What do you do, sir?" },
-                  { author: "Morgan Housel", quote: "Having no FOMO might be the most important investing skill." },
-                  { author: "George Soros", quote: "If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring." },
-                  { author: "Rene Rivkin", quote: "When buying shares, ask yourself: would you buy the whole company?" },
-                  { author: "Morgan Housel", quote: "Saving money is the gap between your ego and your income." },
-                  { author: "Jason Zweig", quote: "To be an investor, you must be a believer in a better tomorrow." },
-                  { author: "Warren Buffett", quote: "It's only when the tide goes out that you learn who has been swimming naked." },
-                  { author: "Peter Lynch", quote: "Far more money has been lost by investors preparing for corrections than has been lost in corrections themselves." },
-                  { author: "Charlie Munger", quote: "The first rule of compounding: Never interrupt it unnecessarily." },
-                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
-                  { author: "Benjamin Graham", quote: "The individual investor should act consistently as an investor and not as a speculator." },
-                  { author: "Paul Tudor Jones", quote: "The secret to being successful from a trading perspective is to have an indefatigable and unquenchable thirst for knowledge." },
-                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
-                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
-                  { author: "Warren Buffett", quote: "Forecasts may tell you a great deal about the forecaster; they tell you nothing about the future." },
-                  { author: "Morgan Housel", quote: "Doing well with money has a little to do with how smart you are and a lot to do with how you behave." },
-                  { author: "Sir John Templeton", quote: "The time of maximum pessimism is the best time to buy, and the time of maximum optimism is the best time to sell." },
-                  { author: "Jeff Bezos", quote: "Given a 10% chance of a 100 times payoff, you should take that bet every time." },
-                  { author: "Howard Marks", quote: "Look for bargains while others retreat." },
-                  { author: "Cathie Wood", quote: "Innovation is the catalyst for long-term growth." },
-                  { author: "Robert Kiyosaki", quote: "The single most powerful asset we all have is our mind. If it is trained well, it can create enormous wealth." },
-                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
-                  { author: "John Bogle", quote: "Time is your friend; impulse is your enemy." },
-                  { author: "Jesse Livermore", quote: "There is a time to go long, a time to go short, and a time to go fishing." },
-                  { author: "Shelby Davis", quote: "You make most of your money in a bear market, you just don't realize it at the time." },
-                  { author: "Jack Schwager", quote: "The goal of a successful trader is to make the best trades. Money is secondary." },
-                  { author: "Igor Arapov", quote: "The difference between gambling and trading is risk management." },
-                  { author: "Ed Seykota", quote: "The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses." },
-                  { author: "Ray Dalio", quote: "Principles are ways of successfully dealing with reality to get what you want out of life." },
-                  { author: "Peter Lynch", quote: "Behind every stock is a company. Find out what it's doing." },
-                  { author: "Andrew Carnegie", quote: "Put all your eggs in one basket and then watch that basket." },
-                  { author: "Morgan Housel", quote: "The hardest financial skill is getting the goalpost to stop moving." },
-                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
-                  { author: "Benjamin Franklin", quote: "Beware of little expenses. A small leak will sink a great ship." },
-                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
-                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
-                  { author: "John Kenneth Galbraith", quote: "The function of economic forecasting is to make astrology look respectable." },
-                  { author: "Christopher Davis", quote: "Miss just the 30 best days in the market over 20 years, and your returns are cut by over 80%." },
-                  { author: "Warren Buffett", quote: "Take a simple idea and take it seriously." },
-                ];
-                const startDate = new Date('2025-01-01');
-                const today = new Date();
-                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-                const quoteIndex = daysDiff % quotes.length;
-                const todayQuote = quotes[quoteIndex];
-                return (
-                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(168,85,247,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",gap:"10px",flexWrap:"wrap"}}>
-                      <div style={{fontSize:"11px",color:"rgba(168,85,247,0.9)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// QUOTE OF THE DAY</div>
-                      <div style={{fontSize:"9px",color:"rgba(168,85,247,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>DAY {(quoteIndex + 1)} / {quotes.length}</div>
-                    </div>
-                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px"}}>
-                      <div style={{fontSize:"28px",lineHeight:"1",color:"rgba(168,85,247,0.45)",fontFamily:"Georgia, serif",fontWeight:700,marginTop:"-4px"}}>"</div>
-                      <div style={{flex:1}}>
-                        <p style={{fontSize:"15px",fontStyle:"italic",color:"#f1f5ff",fontFamily:"monospace",lineHeight:1.55,marginBottom:"8px",fontWeight:500}}>{todayQuote.quote}</p>
-                        <p style={{fontSize:"11px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>— {todayQuote.author}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
 
               {/* Stocks Input */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
@@ -13816,10 +13692,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                             '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16',
                             '#06B6D4', '#A855F7', '#F43F5E', '#22C55E', '#EAB308'
                           ];
-                          const sortedStocks = [...filledStocks].sort((a, b) => b.currentValue - a.currentValue);
+                          const sortedStocks = [...filledStocks].sort((a, b) => convertToDisplay(b.currentValue, b.currency || 'USD') - convertToDisplay(a.currentValue, a.currency || 'USD'));
                           let cumulativePercent = 0;
                           return sortedStocks.map((stock, i) => {
-                            const percent = (stock.currentValue / totalStocksValue) * 100;
+                            const stockFxValue = convertToDisplay(stock.currentValue, stock.currency || 'USD');
+                            const percent = totalStocksValueFx > 0 ? (stockFxValue / totalStocksValueFx) * 100 : 0;
                             const startAngle = cumulativePercent * 3.6 * (Math.PI / 180);
                             cumulativePercent += percent;
                             const endAngle = cumulativePercent * 3.6 * (Math.PI / 180);
@@ -13864,17 +13741,21 @@ ${JSON.stringify(ctx, null, 2)}`;
                           '#6366F1', '#EF4444', '#14B8A6', '#F97316', '#84CC16',
                           '#06B6D4', '#A855F7', '#F43F5E', '#22C55E', '#EAB308'
                         ];
-                        const sortedStocks = [...filledStocks].sort((a, b) => b.currentValue - a.currentValue);
-                        return sortedStocks.map((stock, i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <div 
-                              className="w-3 h-3 rounded-full flex-shrink-0" 
-                              style={{ backgroundColor: colors[i % colors.length] }}
-                            />
-                            <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{stock.name}</span>
-                            <span className="text-sm font-medium">{((stock.currentValue / totalStocksValue) * 100).toFixed(1)}%</span>
-                          </div>
-                        ));
+                        const sortedStocks = [...filledStocks].sort((a, b) => convertToDisplay(b.currentValue, b.currency || 'USD') - convertToDisplay(a.currentValue, a.currency || 'USD'));
+                        return sortedStocks.map((stock, i) => {
+                          const stockFxValue = convertToDisplay(stock.currentValue, stock.currency || 'USD');
+                          const pct = totalStocksValueFx > 0 ? (stockFxValue / totalStocksValueFx) * 100 : 0;
+                          return (
+                            <div key={i} className="flex items-center gap-2">
+                              <div 
+                                className="w-3 h-3 rounded-full flex-shrink-0" 
+                                style={{ backgroundColor: colors[i % colors.length] }}
+                              />
+                              <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{stock.name}</span>
+                              <span className="text-sm font-medium">{pct.toFixed(1)}%</span>
+                            </div>
+                          );
+                        });
                       })()}
                     </div>
                   </div>
@@ -13902,7 +13783,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           ];
                           let cumulativePercent = 0;
                           return stocksByIndustry.map((ind, i) => {
-                            const percent = (ind.total / totalStocksValue) * 100;
+                            const percent = (ind.total / totalStocksValueFx) * 100;
                             const startAngle = cumulativePercent * 3.6 * (Math.PI / 180);
                             cumulativePercent += percent;
                             const endAngle = cumulativePercent * 3.6 * (Math.PI / 180);
@@ -13954,7 +13835,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                               style={{ backgroundColor: colors[i % colors.length] }}
                             />
                             <span className="text-sm" style={{color:"rgba(148,163,184,0.9)"}}>{ind.name}</span>
-                            <span className="text-sm font-medium">{((ind.total / totalStocksValue) * 100).toFixed(1)}%</span>
+                            <span className="text-sm font-medium">{((ind.total / totalStocksValueFx) * 100).toFixed(1)}%</span>
                           </div>
                         ));
                       })()}
@@ -14040,8 +13921,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                           <tr key={ind.name} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                             <td className="py-3 px-4 font-medium">{ind.name}</td>
                             <td className="py-3 px-4 text-center text-gray-600">{ind.stocks.length}</td>
-                            <td className="py-3 px-4 text-right">${ind.total.toLocaleString()}</td>
-                            <td className="py-3 px-4 text-right text-gray-600">{((ind.total / totalStocksValue) * 100).toFixed(1)}%</td>
+                            <td className="py-3 px-4 text-right">{displaySym}{ind.total.toLocaleString(undefined, { maximumFractionDigits: 0 })} {displayCurrency}</td>
+                            <td className="py-3 px-4 text-right text-gray-600">{totalStocksValueFx > 0 ? ((ind.total / totalStocksValueFx) * 100).toFixed(1) : '0.0'}%</td>
                           </tr>
                         ))}
                       </tbody>
@@ -14049,7 +13930,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <tr style={{background:"rgba(99,102,241,0.06)",borderTop:"0.5px solid rgba(99,102,241,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(99,102,241,0.95)"}}>
                           <td className="py-3 px-4">Total</td>
                           <td className="py-3 px-4 text-center">{filledStocks.length}</td>
-                          <td className="py-3 px-4 text-right">${totalStocksValue.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right">{displaySym}{totalStocksValueFx.toLocaleString(undefined, { maximumFractionDigits: 0 })} {displayCurrency}</td>
                           <td className="py-3 px-4 text-right">100%</td>
                         </tr>
                       </tfoot>
@@ -14058,6 +13939,131 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                 </details>
               )}
+              {/* Daily Investment Quote */}
+              {(() => {
+                const quotes = [
+                  { author: "Warren Buffett", quote: "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1." },
+                  { author: "Benjamin Graham", quote: "Price is what you pay. Value is what you get." },
+                  { author: "John Bogle", quote: "Don't look for the needle in the haystack. Just buy the haystack." },
+                  { author: "Charlie Munger", quote: "The big money is not in the buying and the selling, but in the waiting." },
+                  { author: "Peter Lynch", quote: "Know what you own, and know why you own it." },
+                  { author: "Sir John Templeton", quote: "The four most dangerous words in investing are: 'This time it's different.'" },
+                  { author: "Baron Rothschild", quote: "Buy when there's blood in the streets, even if the blood is your own." },
+                  { author: "Seth Klarman", quote: "The single greatest edge an investor can have is a long-term orientation." },
+                  { author: "Warren Buffett", quote: "Our favorite holding period is forever." },
+                  { author: "Benjamin Franklin", quote: "An investment in knowledge pays the best interest." },
+                  { author: "Naval Ravikant", quote: "Compound interest is one of the most powerful forces in the universe." },
+                  { author: "Howard Marks", quote: "You can't do the same things others do and expect to outperform." },
+                  { author: "Peter Lynch", quote: "In this business, if you're good, you're right six times out of ten." },
+                  { author: "George Soros", quote: "It's not whether you're right or wrong, but how much money you make when you're right." },
+                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
+                  { author: "Charlie Munger", quote: "Invert, always invert." },
+                  { author: "Benjamin Graham", quote: "The investor's chief problem—and even his worst enemy—is likely to be himself." },
+                  { author: "Jack Bogle", quote: "Time is your friend; impulse is your enemy." },
+                  { author: "Ray Dalio", quote: "He who lives by the crystal ball soon learns to eat ground glass." },
+                  { author: "Peter Lynch", quote: "The person who turns over the most rocks wins the game." },
+                  { author: "Warren Buffett", quote: "Be fearful when others are greedy and greedy when others are fearful." },
+                  { author: "Shelby Davis", quote: "History is a vast library of mistakes and errors that needn't be repeated." },
+                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
+                  { author: "Jesse Livermore", quote: "The market is never wrong; opinions often are." },
+                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
+                  { author: "Warren Buffett", quote: "It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." },
+                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
+                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
+                  { author: "Nassim Taleb", quote: "Invest in preparation, not in prediction." },
+                  { author: "Peter Lynch", quote: "Go for a business any idiot can run—because sooner or later, any idiot is probably going to run it." },
+                  { author: "Warren Buffett", quote: "Someone is sitting in the shade today because someone planted a tree a long time ago." },
+                  { author: "Charlie Munger", quote: "Deserve what you want. The world is not yet a crazy enough place to reward a whole bunch of undeserving people." },
+                  { author: "Benjamin Graham", quote: "The intelligent investor is a realist who sells to optimists and buys from pessimists." },
+                  { author: "John Maynard Keynes", quote: "The market can remain irrational longer than you can remain solvent." },
+                  { author: "Warren Buffett", quote: "Only when the tide goes out do you discover who's been swimming naked." },
+                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
+                  { author: "Burton Malkiel", quote: "A blindfolded monkey throwing darts at a newspaper's financial pages could select a portfolio that would do just as well as one carefully selected by experts." },
+                  { author: "Peter Lynch", quote: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes." },
+                  { author: "Warren Buffett", quote: "Never invest in a business you cannot understand." },
+                  { author: "Thomas Phelps", quote: "Fortunes are made by buying low and selling high, but even more so by buying right and sitting tight." },
+                  { author: "Paul Samuelson", quote: "Investing should be more like watching paint dry or watching grass grow." },
+                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
+                  { author: "Ron Conway", quote: "Any time is a good time to start a company." },
+                  { author: "Warren Buffett", quote: "Wide diversification is only required when investors do not understand what they are doing." },
+                  { author: "Joel Greenblatt", quote: "The secret to successful investing is to figure out what something is worth and then pay a lot less for it." },
+                  { author: "Nick Murray", quote: "The timing of the market is a fool's game, whereas time in the market is your greatest natural advantage." },
+                  { author: "Peter Lynch", quote: "The real key to making money in stocks is not to get scared out of them." },
+                  { author: "Warren Buffett", quote: "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway." },
+                  { author: "Guy Spier", quote: "Check your ego at the door. The market doesn't care about your feelings." },
+                  { author: "Charlie Munger", quote: "Take a simple idea and take it seriously." },
+                  { author: "Morgan Housel", quote: "Wealth is what you don't see." },
+                  { author: "John Bogle", quote: "The stock market is a giant distraction from the business of investing." },
+                  { author: "Ray Dalio", quote: "He who lives by the crystal ball will eat shattered glass." },
+                  { author: "Li Lu", quote: "The biggest investment risk is not the volatility of prices, but whether you will suffer a permanent loss of capital." },
+                  { author: "Warren Buffett", quote: "The rear-view mirror is always clearer than the windshield." },
+                  { author: "Jim Rohn", quote: "Formal education will make you a living; self-education will make you a fortune." },
+                  { author: "Howard Marks", quote: "You can't predict. You can prepare." },
+                  { author: "Peter Lynch", quote: "A share of stock is not a lottery ticket. It's part-ownership of a business." },
+                  { author: "Shelby M.C. Davis", quote: "Invest for the long haul. Don't get too greedy and don't get too scared." },
+                  { author: "Nathan W. Morris", quote: "Every time you borrow money, you're robbing your future self." },
+                  { author: "Bernard Baruch", quote: "Don't try to buy at the bottom and sell at the top. It can't be done except by liars." },
+                  { author: "John Maynard Keynes", quote: "When the facts change, I change my mind. What do you do, sir?" },
+                  { author: "Morgan Housel", quote: "Having no FOMO might be the most important investing skill." },
+                  { author: "George Soros", quote: "If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring." },
+                  { author: "Rene Rivkin", quote: "When buying shares, ask yourself: would you buy the whole company?" },
+                  { author: "Morgan Housel", quote: "Saving money is the gap between your ego and your income." },
+                  { author: "Jason Zweig", quote: "To be an investor, you must be a believer in a better tomorrow." },
+                  { author: "Warren Buffett", quote: "It's only when the tide goes out that you learn who has been swimming naked." },
+                  { author: "Peter Lynch", quote: "Far more money has been lost by investors preparing for corrections than has been lost in corrections themselves." },
+                  { author: "Charlie Munger", quote: "The first rule of compounding: Never interrupt it unnecessarily." },
+                  { author: "Bill Miller", quote: "In investing, what is comfortable is rarely profitable." },
+                  { author: "Benjamin Graham", quote: "The individual investor should act consistently as an investor and not as a speculator." },
+                  { author: "Paul Tudor Jones", quote: "The secret to being successful from a trading perspective is to have an indefatigable and unquenchable thirst for knowledge." },
+                  { author: "Seth Klarman", quote: "Value investing is at its core the marriage of a contrarian streak and a calculator." },
+                  { author: "Jim Rogers", quote: "I just wait until there is money lying in the corner, and all I have to do is go over there and pick it up." },
+                  { author: "Warren Buffett", quote: "Forecasts may tell you a great deal about the forecaster; they tell you nothing about the future." },
+                  { author: "Morgan Housel", quote: "Doing well with money has a little to do with how smart you are and a lot to do with how you behave." },
+                  { author: "Sir John Templeton", quote: "The time of maximum pessimism is the best time to buy, and the time of maximum optimism is the best time to sell." },
+                  { author: "Jeff Bezos", quote: "Given a 10% chance of a 100 times payoff, you should take that bet every time." },
+                  { author: "Howard Marks", quote: "Look for bargains while others retreat." },
+                  { author: "Cathie Wood", quote: "Innovation is the catalyst for long-term growth." },
+                  { author: "Robert Kiyosaki", quote: "The single most powerful asset we all have is our mind. If it is trained well, it can create enormous wealth." },
+                  { author: "Philip Fisher", quote: "The stock market is filled with individuals who know the price of everything, but the value of nothing." },
+                  { author: "John Bogle", quote: "Time is your friend; impulse is your enemy." },
+                  { author: "Jesse Livermore", quote: "There is a time to go long, a time to go short, and a time to go fishing." },
+                  { author: "Shelby Davis", quote: "You make most of your money in a bear market, you just don't realize it at the time." },
+                  { author: "Jack Schwager", quote: "The goal of a successful trader is to make the best trades. Money is secondary." },
+                  { author: "Igor Arapov", quote: "The difference between gambling and trading is risk management." },
+                  { author: "Ed Seykota", quote: "The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses." },
+                  { author: "Ray Dalio", quote: "Principles are ways of successfully dealing with reality to get what you want out of life." },
+                  { author: "Peter Lynch", quote: "Behind every stock is a company. Find out what it's doing." },
+                  { author: "Andrew Carnegie", quote: "Put all your eggs in one basket and then watch that basket." },
+                  { author: "Morgan Housel", quote: "The hardest financial skill is getting the goalpost to stop moving." },
+                  { author: "Warren Buffett", quote: "Risk comes from not knowing what you're doing." },
+                  { author: "Benjamin Franklin", quote: "Beware of little expenses. A small leak will sink a great ship." },
+                  { author: "Charlie Munger", quote: "Acknowledging what you don't know is the dawning of wisdom." },
+                  { author: "Mellody Hobson", quote: "The biggest risk is not taking one." },
+                  { author: "John Kenneth Galbraith", quote: "The function of economic forecasting is to make astrology look respectable." },
+                  { author: "Christopher Davis", quote: "Miss just the 30 best days in the market over 20 years, and your returns are cut by over 80%." },
+                  { author: "Warren Buffett", quote: "Take a simple idea and take it seriously." },
+                ];
+                const startDate = new Date('2025-01-01');
+                const today = new Date();
+                const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                const quoteIndex = daysDiff % quotes.length;
+                const todayQuote = quotes[quoteIndex];
+                return (
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.3)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"6px",padding:"14px 18px",backgroundImage:"radial-gradient(rgba(168,85,247,0.04) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",gap:"10px",flexWrap:"wrap"}}>
+                      <div style={{fontSize:"11px",color:"rgba(168,85,247,0.9)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// QUOTE OF THE DAY</div>
+                      <div style={{fontSize:"9px",color:"rgba(168,85,247,0.6)",fontFamily:"monospace",letterSpacing:"1px"}}>DAY {(quoteIndex + 1)} / {quotes.length}</div>
+                    </div>
+                    <div style={{display:"flex",alignItems:"flex-start",gap:"12px"}}>
+                      <div style={{fontSize:"28px",lineHeight:"1",color:"rgba(168,85,247,0.45)",fontFamily:"Georgia, serif",fontWeight:700,marginTop:"-4px"}}>"</div>
+                      <div style={{flex:1}}>
+                        <p style={{fontSize:"15px",fontStyle:"italic",color:"#f1f5ff",fontFamily:"monospace",lineHeight:1.55,marginBottom:"8px",fontWeight:500}}>{todayQuote.quote}</p>
+                        <p style={{fontSize:"11px",color:"rgba(168,85,247,0.8)",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>— {todayQuote.author}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </>
           )}
           {/* LIVE PRICES TAB */}
