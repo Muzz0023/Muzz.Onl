@@ -3201,7 +3201,7 @@ function MuzzApp() {
   const [pricesLoading, setPricesLoading] = useState(false);
   const [pricesLastUpdated, setPricesLastUpdated] = useState(null);
 
-  // When live prices update, recompute each stock's currentValue from shares × livePrice.
+  // When live prices update OR new stocks are loaded, recompute each stock's currentValue from shares × livePrice.
   // Only runs for stocks with a name (used as ticker) AND shares > 0 — leaves manual values untouched.
   useEffect(() => {
     if (!livePrices || Object.keys(livePrices).length === 0) return;
@@ -3221,7 +3221,7 @@ function MuzzApp() {
       });
       return changed ? next : prev;
     });
-  }, [livePrices]);
+  }, [livePrices, stocks.length]);
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
@@ -12526,6 +12526,12 @@ ${JSON.stringify(ctx, null, 2)}`;
         if (!updated[index]) {
           updated[index] = { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', shares: 0, sharesStr: '', avgCost: 0, avgCostStr: '', industry: '' };
         }
+        // Helper: look up live price for a given stock name (ticker)
+        const livePriceFor = (name) => {
+          if (!name) return 0;
+          const t = String(name).trim().toUpperCase();
+          return (livePrices[t]?.c) || 0;
+        };
         if (field === 'invested') {
           updated[index] = { ...updated[index], invested: parseFloat(value) || 0, investedStr: value };
         } else if (field === 'currentValue') {
@@ -12533,14 +12539,22 @@ ${JSON.stringify(ctx, null, 2)}`;
         } else if (field === 'shares') {
           const sharesNum = parseFloat(value) || 0;
           const avgCostNum = parseFloat(updated[index].avgCost) || 0;
-          // Auto-compute invested when both shares and avgCost are present
           const newInvested = (sharesNum > 0 && avgCostNum > 0) ? sharesNum * avgCostNum : updated[index].invested;
-          updated[index] = { ...updated[index], shares: sharesNum, sharesStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : updated[index].investedStr };
+          // Recompute current value from live price if available
+          const lp = livePriceFor(updated[index].name);
+          const newCV = (sharesNum > 0 && lp > 0) ? sharesNum * lp : updated[index].currentValue;
+          updated[index] = { ...updated[index], shares: sharesNum, sharesStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : updated[index].investedStr, currentValue: newCV, currentValueStr: newCV ? newCV.toFixed(2) : updated[index].currentValueStr };
         } else if (field === 'avgCost') {
           const avgCostNum = parseFloat(value) || 0;
           const sharesNum = parseFloat(updated[index].shares) || 0;
           const newInvested = (sharesNum > 0 && avgCostNum > 0) ? sharesNum * avgCostNum : updated[index].invested;
           updated[index] = { ...updated[index], avgCost: avgCostNum, avgCostStr: value, invested: newInvested, investedStr: newInvested ? String(newInvested) : updated[index].investedStr };
+        } else if (field === 'name') {
+          // Ticker changed — recompute current value from new ticker's live price if shares exist
+          const sharesNum = parseFloat(updated[index].shares) || 0;
+          const lp = livePriceFor(value);
+          const newCV = (sharesNum > 0 && lp > 0) ? sharesNum * lp : updated[index].currentValue;
+          updated[index] = { ...updated[index], name: value, currentValue: newCV, currentValueStr: newCV ? newCV.toFixed(2) : updated[index].currentValueStr };
         } else {
           updated[index] = { ...updated[index], [field]: value };
         }
