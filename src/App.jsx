@@ -3267,6 +3267,41 @@ function MuzzApp() {
   const [pricesLoading, setPricesLoading] = useState(false);
   const [pricesLastUpdated, setPricesLastUpdated] = useState(null);
 
+  // Display currency + FX rates for multi-currency portfolio totals.
+  // Stocks may be priced in USD, AUD, GBP, EUR, etc. — this lets us sum them in ONE chosen currency.
+  const [displayCurrency, setDisplayCurrency] = useState('AUD'); // default AUD since user is based in QLD
+  const [fxRates, setFxRates] = useState({}); // { USD: 0.66, EUR: 0.60, ... } — rates to convert FROM base TO {key}
+  const [fxBase, setFxBase] = useState('AUD'); // base that the rates table is keyed against
+  const [fxLastUpdated, setFxLastUpdated] = useState(null);
+
+  // Fetch FX rates whenever the user changes display currency.
+  useEffect(() => {
+    let cancelled = false;
+    fetch(api(`/api/fx-rates?base=${encodeURIComponent(displayCurrency)}`))
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (cancelled || !data || !data.rates) return;
+        setFxRates(data.rates);
+        setFxBase(data.base || displayCurrency);
+        setFxLastUpdated(data.timestamp || Math.floor(Date.now() / 1000));
+      })
+      .catch(err => { if (!cancelled) console.error('FX fetch failed:', err); });
+    return () => { cancelled = true; };
+  }, [displayCurrency]);
+
+  // Convert an amount from `fromCurrency` into the current displayCurrency.
+  // Rates are keyed as "1 base = X target", so:
+  //   amount (in fromCurrency) → amount / rates[fromCurrency] → value in base (= displayCurrency)
+  const convertToDisplay = (amount, fromCurrency) => {
+    const n = parseFloat(amount) || 0;
+    if (n === 0) return 0;
+    const from = String(fromCurrency || 'USD').toUpperCase();
+    if (from === displayCurrency) return n;
+    const rate = fxRates[from];
+    if (!rate || rate === 0) return n; // no rate yet → return raw to avoid wiping value
+    return n / rate;
+  };
+
   // When live prices update OR new stocks are loaded, recompute each stock's currentValue from shares × livePrice.
   // Also save the currency code from Yahoo so we can display the right symbol (A$, $, £, €, etc.).
   useEffect(() => {
@@ -12781,6 +12816,14 @@ ${JSON.stringify(ctx, null, 2)}`;
     const totalGainLoss = totalStocksValue - totalStocksInvested;
     const totalGainLossPercent = totalStocksInvested > 0 ? ((totalGainLoss / totalStocksInvested) * 100) : 0;
 
+    // FX-converted totals — each stock's value is converted from its native currency
+    // to the display currency before summing. Use this for headline portfolio numbers.
+    const totalStocksValueFx = filledStocks.reduce((sum, s) => sum + convertToDisplay(s.currentValue, s.currency || 'USD'), 0);
+    const totalStocksInvestedFx = filledStocks.reduce((sum, s) => sum + convertToDisplay(s.invested, s.currency || 'USD'), 0);
+    const totalGainLossFx = totalStocksValueFx - totalStocksInvestedFx;
+    const totalGainLossPercentFx = totalStocksInvestedFx > 0 ? ((totalGainLossFx / totalStocksInvestedFx) * 100) : 0;
+    const displaySym = currencySymbol(displayCurrency);
+
     const stocksByIndustry = industries
       .filter(ind => ind.id)
       .map(ind => ({
@@ -12830,7 +12873,7 @@ ${JSON.stringify(ctx, null, 2)}`;
             if (Math.abs(n) >= 1e3)  return `${(n / 1e3).toFixed(2)}K`;
             return n.toFixed(0);
           };
-          const fmtMoney = (n) => (typeof n === 'number' && !isNaN(n)) ? `${sym}${fmtBig(n)}` : '—';
+          const fmtMoney = (n) => (typeof n === 'number' && !isNaN(n)) ? `${sym}${fmtBig(n)} ${stockCurrency}` : '—';
           const fmtDate = (ts) => {
             if (!ts || typeof ts !== 'number') return '—';
             return new Date(ts * 1000).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
@@ -12925,9 +12968,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                   {chartPoints.length > 0 && (
                     <div style={{display:"flex",justifyContent:"space-between",marginTop:"8px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>
-                      <span>HIGH: {sym}{chartMax.toFixed(2)}</span>
+                      <span>HIGH: {sym}{chartMax.toFixed(2)} {stockCurrency}</span>
                       <span style={{color:chartUp?"rgba(34,197,94,0.85)":"rgba(239,68,68,0.85)",fontWeight:600}}>{chartUp?'▲':'▼'} {sym}{Math.abs(chartLast-chartFirst).toFixed(2)} ({chartFirst>0?(((chartLast-chartFirst)/chartFirst)*100).toFixed(2):'—'}%)</span>
-                      <span>LOW: {sym}{chartMin.toFixed(2)}</span>
+                      <span>LOW: {sym}{chartMin.toFixed(2)} {stockCurrency}</span>
                     </div>
                   )}
                 </div>
@@ -13027,8 +13070,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"2px"}}>INVESTMENTS</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:totalGainLoss>=0?"rgba(34,197,94,0.5)":"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>PORTFOLIO VALUE</div>
-                <div style={{fontSize:"24px",color:totalGainLoss>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>${totalStocksValue.toLocaleString()}</div>
+                <div style={{fontSize:"9px",color:totalGainLossFx>=0?"rgba(34,197,94,0.5)":"rgba(239,68,68,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>PORTFOLIO VALUE · {displayCurrency}</div>
+                <div style={{fontSize:"24px",color:totalGainLossFx>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.8)",fontFamily:"monospace",fontWeight:500}}>{displaySym}{totalStocksValueFx.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
               </div>
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
@@ -13442,12 +13485,32 @@ ${JSON.stringify(ctx, null, 2)}`;
 
               {/* Portfolio Summary */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px 20px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"8px"}}>// PORTFOLIO VALUE</div>
-                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"1px"}}>${totalStocksValue.toLocaleString('en-AU', { minimumFractionDigits: 2 })}</div>
-                {totalStocksInvested > 0 && (
-                  <div style={{marginTop:"6px",fontSize:"13px",fontFamily:"monospace",fontWeight:600,color:totalGainLoss >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>
-                    {totalGainLoss >= 0 ? '+' : ''}${totalGainLoss.toLocaleString()} ({totalGainLossPercent >= 0 ? '+' : ''}{totalGainLossPercent.toFixed(1)}%)
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginBottom:"8px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"11px",color:"rgba(0,200,255,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO VALUE · {displayCurrency}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                    <span style={{fontSize:"9px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1.5px"}}>DISPLAY:</span>
+                    <select
+                      value={displayCurrency}
+                      onChange={(e) => setDisplayCurrency(e.target.value)}
+                      style={{background:"rgba(0,200,255,0.06)",border:"0.5px solid rgba(0,200,255,0.4)",borderRadius:"3px",color:"#00c8ff",fontFamily:"monospace",fontSize:"10px",fontWeight:600,letterSpacing:"1px",padding:"4px 8px",outline:"none",colorScheme:"dark",cursor:"pointer"}}
+                    >
+                      {['AUD','USD','EUR','GBP','NZD','CAD','JPY','SGD','HKD','CHF'].map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
                   </div>
+                </div>
+                <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"1px"}}>{displaySym}{totalStocksValueFx.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                {totalStocksInvestedFx > 0 && (
+                  <div style={{marginTop:"6px",fontSize:"13px",fontFamily:"monospace",fontWeight:600,color:totalGainLossFx >= 0 ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)"}}>
+                    {totalGainLossFx >= 0 ? '+' : ''}{displaySym}{Math.abs(totalGainLossFx).toLocaleString(undefined, { maximumFractionDigits: 0 })} ({totalGainLossPercentFx >= 0 ? '+' : ''}{totalGainLossPercentFx.toFixed(1)}%)
+                  </div>
+                )}
+                {Object.keys(fxRates).length === 0 && filledStocks.some(s => (s.currency || 'USD') !== displayCurrency) && (
+                  <div style={{marginTop:"8px",fontSize:"9px",color:"rgba(245,158,11,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>↻ Loading FX rates… mixed currencies are showing raw values until conversion is ready.</div>
+                )}
+                {fxLastUpdated && (
+                  <div style={{marginTop:"8px",fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>FX rates updated {new Date(fxLastUpdated * 1000).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</div>
                 )}
               </div>
 
@@ -13781,7 +13844,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         })()}
                         <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
                         <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{filledStocks.length} stocks</text>
-                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>${(totalStocksValue / 1000).toFixed(0)}k</text>
+                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>{displaySym}{(totalStocksValueFx / 1000).toFixed(0)}k</text>
                       </svg>
                     </div>
                     
@@ -13864,7 +13927,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         })()}
                         <circle cx="125" cy="125" r="50" fill="rgba(5,12,24,0.95)" stroke="rgba(0,200,255,0.2)" strokeWidth="0.5" />
                         <text x="125" y="120" textAnchor="middle" style={{fontSize:"9px",fill:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Total</text>
-                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>${(totalStocksValue / 1000).toFixed(0)}k</text>
+                        <text x="125" y="140" textAnchor="middle" style={{fontSize:"18px",fontWeight:600,fill:"#e0eaff",fontFamily:"monospace"}}>{displaySym}{(totalStocksValueFx / 1000).toFixed(0)}k</text>
                       </svg>
                     </div>
                     
