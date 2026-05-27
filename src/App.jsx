@@ -2542,6 +2542,125 @@ function DonnyCrewPlan({ graph, setGraph, donnyTeam, donnyJobs, setActiveView })
 
 
 // ============================================
+// FULLSCREEN WRAP — adds expand/minimize toggle to any chart/widget.
+// Wrap any chart or graph: <FullscreenWrap label="// MAP"> ...content... </FullscreenWrap>
+// When fullscreen, renders as a fixed overlay covering the viewport. Child content
+// expands to fill the available space; SVG/canvas children with width=100% will scale.
+// ============================================
+function FullscreenWrap({ children, label, accent = '#00c8ff' }) {
+  const [isFull, setIsFull] = React.useState(false);
+
+  // Lock body scroll while fullscreen, and allow Esc to exit
+  React.useEffect(() => {
+    if (!isFull) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setIsFull(false); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isFull]);
+
+  const btn = (
+    <button
+      onClick={(e) => { e.stopPropagation(); setIsFull(v => !v); }}
+      title={isFull ? 'Minimize (Esc)' : 'Fullscreen'}
+      style={{
+        position: 'absolute',
+        top: '8px',
+        right: '8px',
+        zIndex: 5,
+        background: `rgba(5,12,24,0.85)`,
+        border: `0.5px solid ${accent}50`,
+        borderRadius: '3px',
+        color: accent,
+        fontFamily: 'monospace',
+        fontSize: '10px',
+        letterSpacing: '1px',
+        fontWeight: 600,
+        padding: '5px 9px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '5px',
+      }}
+    >
+      {isFull ? (
+        <>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v4a1 1 0 0 1-1 1H3"/><path d="M21 8h-4a1 1 0 0 1-1-1V3"/><path d="M3 16h4a1 1 0 0 1 1 1v4"/><path d="M16 21v-4a1 1 0 0 1 1-1h4"/></svg>
+          MINIMIZE
+        </>
+      ) : (
+        <>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7V4a1 1 0 0 1 1-1h3"/><path d="M21 7V4a1 1 0 0 0-1-1h-3"/><path d="M3 17v3a1 1 0 0 0 1 1h3"/><path d="M21 17v3a1 1 0 0 1-1 1h-3"/></svg>
+          FULLSCREEN
+        </>
+      )}
+    </button>
+  );
+
+  if (isFull) {
+    return (
+      <>
+        {/* Empty placeholder so siblings don't shift around when we mount the overlay */}
+        <div style={{ position: 'relative', minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(5,12,24,0.4)', border: `0.5px dashed ${accent}30`, borderRadius: '6px', padding: '20px' }}>
+          <div style={{ fontSize: '11px', color: `${accent}99`, fontFamily: 'monospace', letterSpacing: '2px', fontWeight: 600 }}>// VIEWING IN FULLSCREEN</div>
+        </div>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 1000,
+            background: 'rgba(2, 6, 16, 0.98)',
+            backdropFilter: 'blur(8px)',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+          }}
+        >
+          {label && (
+            <div style={{ flexShrink: 0, padding: '4px 8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+              <div style={{ fontSize: '12px', color: `${accent}cc`, fontFamily: 'monospace', letterSpacing: '2px', fontWeight: 600 }}>{label} · FULLSCREEN</div>
+              <button
+                onClick={() => setIsFull(false)}
+                style={{
+                  background: `rgba(5,12,24,0.85)`,
+                  border: `0.5px solid ${accent}50`,
+                  borderRadius: '3px',
+                  color: accent,
+                  fontFamily: 'monospace',
+                  fontSize: '10px',
+                  letterSpacing: '1px',
+                  fontWeight: 600,
+                  padding: '6px 12px',
+                  cursor: 'pointer',
+                }}
+              >
+                ✕ MINIMIZE (ESC)
+              </button>
+            </div>
+          )}
+          <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
+            {children}
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <div style={{ position: 'relative' }}>
+      {btn}
+      {children}
+    </div>
+  );
+}
+
+
+// ============================================
 // ASSET MAP GRAPH — drag/drop personal wealth structure
 // ============================================
 function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, customEmptyState }) {
@@ -2760,7 +2879,7 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
   }
 
   return (
-    <div style={{ position: 'relative', height: '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', height: '100%', minHeight: '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '10px 14px', borderBottom: '0.5px solid rgba(0,200,255,0.15)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
         <div>
           <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.55)', fontFamily: 'monospace', letterSpacing: '2px' }}>// {title || 'ASSET MAP'}</div>
@@ -12297,7 +12416,9 @@ ${JSON.stringify(ctx, null, 2)}`;
           {/* Asset Map — drag/drop wealth structure */}
           {assetsSubTab === 'assetMap' && (
             <div style={{padding:"12px 16px"}}>
-              <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} />
+              <FullscreenWrap label="// ASSET MAP" accent="#00c8ff">
+                <AssetMapGraph graph={assetMapGraph} setGraph={setAssetMapGraph} />
+              </FullscreenWrap>
             </div>
           )}
 
@@ -12884,6 +13005,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div style={{padding:"12px 12px 16px"}}>
+                    <FullscreenWrap label={`// INVESTMENT MAP · ${modeMeta[constellationMode].label}`} accent={modeMeta[constellationMode].accent}>
                     <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition customEmptyState={(
                       <>
                         <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
@@ -12896,6 +13018,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         </div>
                       </>
                     )} />
+                    </FullscreenWrap>
                   </div>
                 </div>
 
