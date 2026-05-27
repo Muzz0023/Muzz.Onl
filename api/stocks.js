@@ -13,6 +13,17 @@ const ASX_TICKERS = new Set([
   'NXT', 'XRO', 'WTC', 'CAR', 'REA', 'SEK', 'ALL', 'COH', 'RMD', 'SHL',
 ]);
 
+// Amsterdam Euronext — auto-append .AS
+const AMS_TICKERS = new Set([
+  'UMG', 'ASML', 'AD', 'INGA', 'PHIA', 'HEIA', 'RAND', 'AKZA', 'DSM', 'KPN',
+]);
+
+// London Stock Exchange — auto-append .L (only for tickers that wouldn't collide with US)
+const LSE_TICKERS = new Set([
+  'HSBA', 'LLOY', 'BARC', 'RIO', 'SHEL', 'BP', 'AZN', 'GSK', 'ULVR', 'DGE',
+  'VOD', 'PRU', 'BATS', 'TSCO', 'NWG', 'STAN',
+]);
+
 // Normalize a user-typed ticker to its full Yahoo Finance symbol.
 //   HSY      -> HSY        (US, no suffix needed)
 //   REH      -> REH.AX     (known ASX ticker, auto-append)
@@ -25,6 +36,10 @@ function normalizeTicker(rawTicker) {
   if (t.includes('.')) return t;
   // Known ASX ticker → append .AX
   if (ASX_TICKERS.has(t)) return `${t}.AX`;
+  // Known Amsterdam Euronext ticker → append .AS
+  if (AMS_TICKERS.has(t)) return `${t}.AS`;
+  // Known LSE ticker → append .L
+  if (LSE_TICKERS.has(t)) return `${t}.L`;
   // Default: assume US
   return t;
 }
@@ -63,6 +78,9 @@ async function fetchYahooQuote(symbol) {
     o: (typeof opens[lastIdx] === 'number' ? opens[lastIdx] : meta.regularMarketOpen) || c,
     pc: meta.chartPreviousClose || meta.previousClose || c,
     t: meta.regularMarketTime || Math.floor(Date.now() / 1000),
+    currency: meta.currency || 'USD',         // ISO 4217 code, e.g. AUD, USD, GBP, EUR, JPY
+    exchange: meta.exchangeName || meta.fullExchangeName || '',
+    symbol: meta.symbol || '',                 // Fully qualified symbol Yahoo resolved to
   };
 }
 
