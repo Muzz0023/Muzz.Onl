@@ -2594,7 +2594,7 @@ function ExpandToggle({ children, accent = '#00c8ff' }) {
 // ============================================
 // ASSET MAP GRAPH — drag/drop personal wealth structure
 // ============================================
-function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, customEmptyState, expanded }) {
+function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, customEmptyState, expanded, liveValueByLabel }) {
   const safeGraph = (graph && typeof graph === 'object' && !Array.isArray(graph)) ? graph : { nodes: [], edges: [], types: [] };
   const nodes = Array.isArray(safeGraph.nodes) ? safeGraph.nodes : [];
   const edges = Array.isArray(safeGraph.edges) ? safeGraph.edges : [];
@@ -2640,7 +2640,8 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
   };
 
   const totalValue = nodes.reduce((s, n) => {
-    const v = parseFloat(n.value) || 0;
+    const liveVal = liveValueByLabel ? liveValueByLabel(n.label) : null;
+    const v = (liveVal !== null && liveVal !== undefined) ? (parseFloat(liveVal) || 0) : (parseFloat(n.value) || 0);
     const t = typeMap[n.type];
     const isLiab = (t && t.label && t.label.toUpperCase().indexOf('LIAB') >= 0) || n.type === 'liability';
     return s + (isLiab ? -v : v);
@@ -2930,7 +2931,9 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
           {nodes.map(node => {
             const t = typeMap[node.type] || allTypes[0];
             const isSelected = selectedNode === node.id;
-            const moneyStr = formatMoney(node.value);
+            // Prefer live-linked value if a lookup function was provided and matches by label
+            const liveVal = liveValueByLabel ? liveValueByLabel(node.label) : null;
+            const moneyStr = (liveVal !== null && liveVal !== undefined) ? formatMoney(liveVal) : formatMoney(node.value);
             return (
               <g key={node.id} data-node-id={node.id} transform={`translate(${node.x},${node.y})`} style={{ cursor: drag && drag.nodeId === node.id ? 'grabbing' : 'grab' }}>
                 <rect onMouseDown={(e) => handlePointerDownNode(e, node)} onTouchStart={touchHandlers((ev) => handlePointerDownNode(ev, node))} width={NODE_W} height={NODE_H} rx="4" fill={`${t.color}26`} stroke={isSelected ? t.color : `${t.color}99`} strokeWidth={isSelected ? 1.5 : 0.75} />
@@ -13168,7 +13171,11 @@ ${JSON.stringify(ctx, null, 2)}`;
                   const ret = inv > 0 ? ((cur - inv) / inv) * 100 : 0;
                   const label = s.name || s.ticker || `Stock ${stockCounter + 1}`;
                   const type = isCur ? 'shares' : 'entity';
-                  const value = isCur && cur > 0 ? `$${cur.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '';
+                  // Show the dollar value on every mode:
+                  // - current → current value of the holding (from Stocks & ETFs)
+                  // - future  → planned deposit amount (from Future Research)
+                  // - research → no native value field, so leave blank
+                  const value = cur > 0 ? `$${cur.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '';
                   const notesParts = [];
                   if (isCur && inv > 0) notesParts.push(`Invested: $${inv.toLocaleString(undefined, { maximumFractionDigits: 0 })}`);
                   if (isCur && inv > 0) notesParts.push(`Return: ${ret >= 0 ? '+' : ''}${ret.toFixed(1)}%`);
@@ -13257,7 +13264,27 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
-                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded} customEmptyState={(
+                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
+                      liveValueByLabel={(label) => {
+                        // Map a node label (typically a ticker) back to the live $ value.
+                        // CURRENT mode → look up the holding in stocks[] and return its currentValue.
+                        // FUTURE mode  → look up the planned deposit amount from futureResearch.
+                        // RESEARCH mode→ no native $ amount; return null so manual node.value wins.
+                        if (!label) return null;
+                        const key = String(label).trim().toUpperCase();
+                        if (constellationMode === 'current') {
+                          const hit = (stocks || []).find(s => String(s?.name || '').trim().toUpperCase() === key);
+                          const v = hit ? (parseFloat(hit.currentValue) || 0) : 0;
+                          return v > 0 ? v : null;
+                        }
+                        if (constellationMode === 'future') {
+                          const hit = (futureResearch || []).find(s => String(s?.ticker || '').trim().toUpperCase() === key);
+                          const v = hit ? (parseFloat(hit.plannedAmount) || 0) : 0;
+                          return v > 0 ? v : null;
+                        }
+                        return null;
+                      }}
+                      customEmptyState={(
                       <>
                         <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
                         <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[constellationMode].label.toLowerCase()}.</div>
