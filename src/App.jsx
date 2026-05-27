@@ -3451,11 +3451,84 @@ function MuzzApp() {
   const [editingBillIdx, setEditingBillIdx] = useState(null);
   const [editingAssetIdx, setEditingAssetIdx] = useState(null);
   const [editingStockIdx, setEditingStockIdx] = useState(null);
+  const [detailStockIdx, setDetailStockIdx] = useState(null); // which stock is in deep-dive view (full page)
+  const [detailFundamentals, setDetailFundamentals] = useState(null); // fetched on open
+  const [detailNews, setDetailNews] = useState([]);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailChart, setDetailChart] = useState(null); // raw Yahoo chart data
+  const [detailChartRange, setDetailChartRange] = useState('1mo'); // 1d 5d 1mo 3mo 6mo 1y 5y max
+  const [detailChartLoading, setDetailChartLoading] = useState(false);
   const [editingResearchIdx, setEditingResearchIdx] = useState(null);
   const [editingFutureResearchIdx, setEditingFutureResearchIdx] = useState(null);
   const [editingTrackedStockId, setEditingTrackedStockId] = useState(null);
   const [editingShiftDate, setEditingShiftDate] = useState(null);
   const [editingJobName, setEditingJobName] = useState(false);
+
+  // Fetch fundamentals + news when a stock detail view opens
+  useEffect(() => {
+    if (detailStockIdx === null || !Array.isArray(stocks) || !stocks[detailStockIdx]) {
+      setDetailFundamentals(null);
+      setDetailNews([]);
+      return;
+    }
+    const stock = stocks[detailStockIdx];
+    const ticker = String(stock?.name || '').trim().toUpperCase();
+    if (!ticker) return;
+    let cancelled = false;
+    setDetailLoading(true);
+    fetch(api(`/api/stock-fundamentals?ticker=${encodeURIComponent(ticker)}`))
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (cancelled || !data) return;
+        setDetailFundamentals(data.fundamentals || null);
+        setDetailNews(Array.isArray(data.news) ? data.news : []);
+      })
+      .catch(err => { if (!cancelled) console.error('Fundamentals fetch failed:', err); })
+      .finally(() => { if (!cancelled) setDetailLoading(false); });
+    return () => { cancelled = true; };
+  }, [detailStockIdx]);
+
+  // Fetch chart data when detail view is open and timeframe changes
+  useEffect(() => {
+    if (detailStockIdx === null || !Array.isArray(stocks) || !stocks[detailStockIdx]) {
+      setDetailChart(null);
+      return;
+    }
+    const stock = stocks[detailStockIdx];
+    const ticker = String(stock?.name || '').trim().toUpperCase();
+    if (!ticker) return;
+    let cancelled = false;
+    setDetailChartLoading(true);
+    // Map UI ranges to Yahoo (interval, range) pairs
+    const rangeMap = {
+      '1d':  { interval: '5m',  range: '1d'  },
+      '5d':  { interval: '15m', range: '5d'  },
+      '1mo': { interval: '1d',  range: '1mo' },
+      '3mo': { interval: '1d',  range: '3mo' },
+      '6mo': { interval: '1d',  range: '6mo' },
+      '1y':  { interval: '1d',  range: '1y'  },
+      '5y':  { interval: '1wk', range: '5y'  },
+      'max': { interval: '1mo', range: 'max' },
+    };
+    const cfg = rangeMap[detailChartRange] || rangeMap['1mo'];
+    fetch(api(`/api/stock?ticker=${encodeURIComponent(ticker)}&interval=${cfg.interval}&range=${cfg.range}`))
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (cancelled) return;
+        setDetailChart(data || null);
+      })
+      .catch(err => { if (!cancelled) console.error('Chart fetch failed:', err); })
+      .finally(() => { if (!cancelled) setDetailChartLoading(false); });
+    return () => { cancelled = true; };
+  }, [detailStockIdx, detailChartRange]);
+
+  // ESC closes the detail view
+  useEffect(() => {
+    if (detailStockIdx === null) return;
+    const onKey = (e) => { if (e.key === 'Escape') setDetailStockIdx(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [detailStockIdx]);
 
   // Bucket List
   const [bucketList, setBucketList] = useState([]);
@@ -12736,6 +12809,215 @@ ${JSON.stringify(ctx, null, 2)}`;
         <Sidebar />
         <SaveIndicator />
 
+        {/* STOCK DETAIL VIEW — full-page overlay when a stock is opened */}
+        {detailStockIdx !== null && stocks[detailStockIdx] && (() => {
+          const stock = stocks[detailStockIdx];
+          const f = detailFundamentals || {};
+          const tickerKey = String(stock?.name || '').trim().toUpperCase();
+          const stockCurrency = f.currency || stock?.currency || 'USD';
+          const sym = currencySymbol(stockCurrency);
+          const sharesNum = parseFloat(stock?.shares) || 0;
+          const cur = parseFloat(stock?.currentValue) || 0;
+          const inv = parseFloat(stock?.invested) || 0;
+          const pl = cur - inv;
+          const plPct = inv > 0 ? (pl / inv) * 100 : 0;
+          const fmtNum = (n, dp = 2) => (typeof n === 'number' && !isNaN(n)) ? n.toLocaleString(undefined, { minimumFractionDigits: dp, maximumFractionDigits: dp }) : '—';
+          const fmtPct = (n, dp = 2) => (typeof n === 'number' && !isNaN(n)) ? `${(n * 100).toFixed(dp)}%` : '—';
+          const fmtBig = (n) => {
+            if (typeof n !== 'number' || isNaN(n)) return '—';
+            if (Math.abs(n) >= 1e12) return `${(n / 1e12).toFixed(2)}T`;
+            if (Math.abs(n) >= 1e9)  return `${(n / 1e9).toFixed(2)}B`;
+            if (Math.abs(n) >= 1e6)  return `${(n / 1e6).toFixed(2)}M`;
+            if (Math.abs(n) >= 1e3)  return `${(n / 1e3).toFixed(2)}K`;
+            return n.toFixed(0);
+          };
+          const fmtMoney = (n) => (typeof n === 'number' && !isNaN(n)) ? `${sym}${fmtBig(n)}` : '—';
+          const fmtDate = (ts) => {
+            if (!ts || typeof ts !== 'number') return '—';
+            return new Date(ts * 1000).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+          };
+          const dayChange = f.regularMarketChange || 0;
+          const dayChangePct = (typeof f.regularMarketChangePercent === 'number') ? f.regularMarketChangePercent * 100 : 0;
+          const isUp = dayChange >= 0;
+          const chartResult = detailChart?.chart?.result?.[0];
+          const timestamps = chartResult?.timestamp || [];
+          const closes = chartResult?.indicators?.quote?.[0]?.close || [];
+          const chartPoints = [];
+          for (let i = 0; i < timestamps.length; i++) {
+            if (typeof closes[i] === 'number') chartPoints.push({ t: timestamps[i], c: closes[i] });
+          }
+          const chartMin = chartPoints.length ? Math.min(...chartPoints.map(p => p.c)) : 0;
+          const chartMax = chartPoints.length ? Math.max(...chartPoints.map(p => p.c)) : 1;
+          const chartRange = chartMax - chartMin || 1;
+          const chartW = 800;
+          const chartH = 260;
+          const chartPath = chartPoints.map((p, i) => {
+            const x = (i / Math.max(1, chartPoints.length - 1)) * chartW;
+            const y = chartH - ((p.c - chartMin) / chartRange) * chartH;
+            return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`;
+          }).join(' ');
+          const chartArea = chartPath ? `${chartPath} L${chartW},${chartH} L0,${chartH} Z` : '';
+          const chartFirst = chartPoints[0]?.c || 0;
+          const chartLast = chartPoints[chartPoints.length - 1]?.c || 0;
+          const chartUp = chartLast >= chartFirst;
+          const lineColor = chartUp ? '#22c55e' : '#ef4444';
+          const areaColor = chartUp ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)';
+          const ranges = [
+            { id: '1d',  label: '1D' }, { id: '5d',  label: '5D' },
+            { id: '1mo', label: '1M' }, { id: '3mo', label: '3M' },
+            { id: '6mo', label: '6M' }, { id: '1y',  label: '1Y' },
+            { id: '5y',  label: '5Y' }, { id: 'max', label: 'MAX' },
+          ];
+          return (
+            <div style={{position:"fixed",inset:0,zIndex:900,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(12px)",overflow:"auto"}}>
+              <div style={{maxWidth:"1100px",margin:"0 auto",padding:"24px 20px 40px"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"20px",gap:"12px",flexWrap:"wrap"}}>
+                  <button onClick={() => setDetailStockIdx(null)} style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,200,255,0.08)",border:"0.5px solid rgba(0,200,255,0.4)",padding:"7px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>← BACK TO PORTFOLIO</button>
+                  <div style={{fontSize:"9px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{detailLoading ? 'LOADING DATA…' : 'PRESS ESC TO CLOSE'}</div>
+                </div>
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"20px 24px",marginBottom:"16px",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"20px",flexWrap:"wrap"}}>
+                    <div style={{flex:1,minWidth:"260px"}}>
+                      <div style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// {f.symbol || tickerKey} · {f.exchange || ''}</div>
+                      <div style={{fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"1px",marginBottom:"2px"}}>{tickerKey || 'Unnamed'}</div>
+                      <div style={{fontSize:"12px",color:"rgba(224,234,255,0.6)",fontFamily:"monospace"}}>{f.longName || ''}</div>
+                      {(f.sector || f.industry) && (
+                        <div style={{fontSize:"10px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",marginTop:"6px",letterSpacing:"0.5px"}}>{f.sector}{f.sector && f.industry ? ' · ' : ''}{f.industry}</div>
+                      )}
+                    </div>
+                    <div style={{textAlign:"right"}}>
+                      <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"2px"}}>LIVE PRICE · {stockCurrency}</div>
+                      <div style={{fontSize:"32px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"1px"}}>{sym}{fmtNum(f.regularMarketPrice, 2)}</div>
+                      <div style={{fontSize:"13px",color:isUp ? "rgba(34,197,94,0.95)" : "rgba(239,68,68,0.95)",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{isUp ? '▲' : '▼'} {sym}{fmtNum(Math.abs(dayChange), 2)} ({isUp ? '+' : ''}{dayChangePct.toFixed(2)}%)</div>
+                    </div>
+                  </div>
+                </div>
+                {(sharesNum > 0 || inv > 0 || cur > 0) && (
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(168,85,247,0.25)",borderLeft:"2px solid rgba(168,85,247,0.7)",borderRadius:"6px",padding:"16px 20px",marginBottom:"16px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(168,85,247,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// YOUR POSITION</div>
+                    <div style={{display:"grid",gridTemplateColumns:isWide?"repeat(4,1fr)":"repeat(2,1fr)",gap:"12px"}}>
+                      <div><div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>SHARES</div><div style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{sharesNum || '—'}</div></div>
+                      <div><div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>INVESTED</div><div style={{fontSize:"18px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{inv > 0 ? `${sym}${fmtNum(inv, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>CURRENT VALUE</div><div style={{fontSize:"18px",color:"#00c8ff",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{cur > 0 ? `${sym}${fmtNum(cur, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"8px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>GAIN / LOSS</div><div style={{fontSize:"18px",color:pl>=0?"rgba(34,197,94,0.95)":"rgba(239,68,68,0.95)",fontFamily:"monospace",fontWeight:600,marginTop:"2px"}}>{inv > 0 && cur > 0 ? `${pl>=0?'+':''}${sym}${fmtNum(Math.abs(pl),2)} (${pl>=0?'+':''}${plPct.toFixed(1)}%)` : '—'}</div></div>
+                    </div>
+                  </div>
+                )}
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"16px 20px",marginBottom:"16px"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",gap:"10px",flexWrap:"wrap"}}>
+                    <div style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PRICE CHART</div>
+                    <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
+                      {ranges.map(r => (
+                        <button key={r.id} onClick={() => setDetailChartRange(r.id)} style={{padding:"5px 10px",background:detailChartRange===r.id?"rgba(0,200,255,0.2)":"rgba(255,255,255,0.04)",border:`0.5px solid ${detailChartRange===r.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:detailChartRange===r.id?"#00c8ff":"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",fontWeight:600}}>{r.label}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{position:"relative",width:"100%",height:`${chartH}px`,background:"rgba(0,0,0,0.2)",border:"0.5px solid rgba(0,200,255,0.08)",borderRadius:"3px"}}>
+                    {detailChartLoading ? (
+                      <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px"}}>LOADING CHART…</div>
+                    ) : chartPoints.length === 0 ? (
+                      <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"2px"}}>NO CHART DATA</div>
+                    ) : (
+                      <svg viewBox={`0 0 ${chartW} ${chartH}`} preserveAspectRatio="none" style={{width:"100%",height:"100%",display:"block"}}>
+                        <path d={chartArea} fill={areaColor} />
+                        <path d={chartPath} fill="none" stroke={lineColor} strokeWidth="2" />
+                      </svg>
+                    )}
+                  </div>
+                  {chartPoints.length > 0 && (
+                    <div style={{display:"flex",justifyContent:"space-between",marginTop:"8px",fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>
+                      <span>HIGH: {sym}{chartMax.toFixed(2)}</span>
+                      <span style={{color:chartUp?"rgba(34,197,94,0.85)":"rgba(239,68,68,0.85)",fontWeight:600}}>{chartUp?'▲':'▼'} {sym}{Math.abs(chartLast-chartFirst).toFixed(2)} ({chartFirst>0?(((chartLast-chartFirst)/chartFirst)*100).toFixed(2):'—'}%)</span>
+                      <span>LOW: {sym}{chartMin.toFixed(2)}</span>
+                    </div>
+                  )}
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px",marginBottom:"16px"}}>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"14px 18px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// VALUATION</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",rowGap:"10px",columnGap:"16px",fontFamily:"monospace"}}>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>MARKET CAP</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.marketCap)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>ENTERPRISE VAL</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.enterpriseValue)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>P / E (TRAILING)</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.trailingPE, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>P / E (FORWARD)</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.forwardPE, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>P / B</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.priceToBook, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>P / S</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.priceToSalesTrailing12Months, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>PEG</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.pegRatio, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>EV / EBITDA</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.enterpriseToEbitda, 2)}</div></div>
+                    </div>
+                  </div>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:"6px",padding:"14px 18px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(34,197,94,0.8)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// PROFITABILITY</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",rowGap:"10px",columnGap:"16px",fontFamily:"monospace"}}>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>ROE</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.returnOnEquity)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>ROA</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.returnOnAssets)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>PROFIT MARGIN</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.profitMargins)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>OPERATING MARGIN</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.operatingMargins)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>GROSS MARGIN</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.grossMargins)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>EARNINGS GROWTH</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.earningsGrowth)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>REVENUE GROWTH</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.revenueGrowth)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>EPS (TRAILING)</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.trailingEps, 2)}</div></div>
+                    </div>
+                  </div>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(245,158,11,0.2)",borderRadius:"6px",padding:"14px 18px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(245,158,11,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// BALANCE SHEET</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",rowGap:"10px",columnGap:"16px",fontFamily:"monospace"}}>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>TOTAL CASH</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.totalCash)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>TOTAL DEBT</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.totalDebt)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>DEBT / EQUITY</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.debtToEquity, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>CURRENT RATIO</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtNum(f.currentRatio, 2)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>BOOK VALUE</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{f.bookValue ? `${sym}${fmtNum(f.bookValue, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>OP CASHFLOW</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.operatingCashflow)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>FREE CASHFLOW</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.freeCashflow)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>REVENUE TTM</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.totalRevenue)}</div></div>
+                    </div>
+                  </div>
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:"6px",padding:"14px 18px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(59,130,246,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// TRADING & DIVIDENDS</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",rowGap:"10px",columnGap:"16px",fontFamily:"monospace"}}>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>52W HIGH</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{f.fiftyTwoWeekHigh ? `${sym}${fmtNum(f.fiftyTwoWeekHigh, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>52W LOW</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{f.fiftyTwoWeekLow ? `${sym}${fmtNum(f.fiftyTwoWeekLow, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>50D AVG</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{f.fiftyDayAverage ? `${sym}${fmtNum(f.fiftyDayAverage, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>200D AVG</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{f.twoHundredDayAverage ? `${sym}${fmtNum(f.twoHundredDayAverage, 2)}` : '—'}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>DIV YIELD</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.dividendYield)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>PAYOUT RATIO</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtPct(f.payoutRatio)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>NEXT EARNINGS</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtDate(f.earningsDate)}</div></div>
+                      <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>ANALYST TGT</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{f.targetMeanPrice ? `${sym}${fmtNum(f.targetMeanPrice, 2)}` : '—'}</div></div>
+                    </div>
+                  </div>
+                </div>
+                {f.businessSummary && (
+                  <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"14px 18px",marginBottom:"16px"}}>
+                    <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// BUSINESS</div>
+                    <div style={{fontSize:"12px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace",lineHeight:1.65}}>{f.businessSummary}</div>
+                    {f.website && (
+                      <div style={{marginTop:"10px"}}>
+                        <a href={f.website} target="_blank" rel="noopener noreferrer" style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"1px",textDecoration:"none"}}>↗ {f.website.replace(/^https?:\/\//, '')}</a>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(239,68,68,0.2)",borderRadius:"6px",padding:"14px 18px",marginBottom:"16px"}}>
+                  <div style={{fontSize:"10px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// NEWS · LATEST</div>
+                  {detailNews.length === 0 ? (
+                    <div style={{fontSize:"11px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>{detailLoading ? 'Loading…' : 'No recent news.'}</div>
+                  ) : (
+                    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                      {detailNews.map(n => (
+                        <a key={n.uuid} href={n.link} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",display:"block",padding:"10px 12px",background:"rgba(0,0,0,0.2)",border:"0.5px solid rgba(239,68,68,0.1)",borderRadius:"3px"}}>
+                          <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1.4}}>{n.title}</div>
+                          <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"4px",letterSpacing:"0.5px"}}>{n.publisher}{n.providerPublishTime ? ` · ${new Date(n.providerPublishTime * 1000).toLocaleDateString()}` : ''}</div>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+
         {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
@@ -13258,6 +13540,16 @@ ${JSON.stringify(ctx, null, 2)}`;
                         {/* Expanded edit panel */}
                         {isEditing && (
                           <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
+                            {/* Open detail view button */}
+                            {stock?.name && (
+                              <button
+                                onClick={() => setDetailStockIdx(index)}
+                                style={{padding:"10px 14px",background:"linear-gradient(135deg, rgba(0,200,255,0.18), rgba(0,200,255,0.08))",border:"0.5px solid rgba(0,200,255,0.6)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}
+                              >
+                                <span>📊 OPEN FULL ANALYSIS</span>
+                                <span style={{fontSize:"14px"}}>→</span>
+                              </button>
+                            )}
                             <div>
                               <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER / NAME</div>
                               <input
