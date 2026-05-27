@@ -2604,8 +2604,8 @@ function FullscreenWrap({ children, label, accent = '#00c8ff' }) {
   if (isFull) {
     return (
       <>
-        {/* Empty placeholder so siblings don't shift around when we mount the overlay */}
-        <div style={{ position: 'relative', minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(5,12,24,0.4)', border: `0.5px dashed ${accent}30`, borderRadius: '6px', padding: '20px' }}>
+        {/* Small placeholder so siblings don't shift around when we mount the overlay */}
+        <div style={{ position: 'relative', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(5,12,24,0.4)', border: `0.5px dashed ${accent}30`, borderRadius: '6px', padding: '20px' }}>
           <div style={{ fontSize: '11px', color: `${accent}99`, fontFamily: 'monospace', letterSpacing: '2px', fontWeight: 600 }}>// VIEWING IN FULLSCREEN</div>
         </div>
         <div
@@ -2879,7 +2879,7 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
   }
 
   return (
-    <div style={{ position: 'relative', height: '100%', minHeight: '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', height: '600px', background: 'rgba(5,12,24,0.4)', border: '0.5px solid rgba(0,200,255,0.15)', borderLeft: '2px solid rgba(0,200,255,0.5)', borderRadius: '6px', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: '10px 14px', borderBottom: '0.5px solid rgba(0,200,255,0.15)', background: 'rgba(5,12,24,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
         <div>
           <div style={{ fontSize: '9px', color: 'rgba(0,200,255,0.55)', fontFamily: 'monospace', letterSpacing: '2px' }}>// {title || 'ASSET MAP'}</div>
