@@ -13104,7 +13104,11 @@ ${JSON.stringify(ctx, null, 2)}`;
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {/* === INVESTMENT MAP — Free-form node graph (like Asset Map) === */}
-          {investmentsSubTab === 'constellation' && (() => {
+          {(investmentsSubTab === 'constellation' || investmentsSubTab === 'researchMap') && (() => {
+            const isResearchMapTab = investmentsSubTab === 'researchMap';
+            // When on the dedicated Research Map sub-tab, force research mode and hide the switcher.
+            // On the main MAP tab, only current/future are valid — fall back to current if mode is stale 'research'.
+            const effectiveMode = isResearchMapTab ? 'research' : (constellationMode === 'research' ? 'current' : constellationMode);
             const accent = '#00c8ff';
             const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
 
@@ -13131,11 +13135,11 @@ ${JSON.stringify(ctx, null, 2)}`;
             const totalPortReturn = totalPortValue - totalPortInvested;
             const totalPortReturnPct = totalPortInvested > 0 ? (totalPortReturn / totalPortInvested) * 100 : 0;
 
-            const currentGraph = (investmentMapGraph && investmentMapGraph[constellationMode]) || { nodes: [], edges: [], types: [] };
+            const currentGraph = (investmentMapGraph && investmentMapGraph[effectiveMode]) || { nodes: [], edges: [], types: [] };
             const setCurrentGraph = (next) => {
               setInvestmentMapGraph(prev => {
-                const nextVal = typeof next === 'function' ? next(prev[constellationMode] || { nodes:[], edges:[], types:[] }) : next;
-                return { ...prev, [constellationMode]: nextVal };
+                const nextVal = typeof next === 'function' ? next(prev[effectiveMode] || { nodes:[], edges:[], types:[] }) : next;
+                return { ...prev, [effectiveMode]: nextVal };
               });
             };
 
@@ -13147,15 +13151,15 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             const generateMap = () => {
               // Build the source list for the active mode
-              const source = constellationMode === 'current' ? currentList
-                : constellationMode === 'future' ? futureList
+              const source = effectiveMode === 'current' ? currentList
+                : effectiveMode === 'future' ? futureList
                 : researchList;
               if (source.length === 0) {
-                alert(`No ${modeMeta[constellationMode].label.toLowerCase()} items to map. Add some in the relevant tab first.`);
+                alert(`No ${modeMeta[effectiveMode].label.toLowerCase()} items to map. Add some in the relevant tab first.`);
                 return;
               }
               const existingCount = (currentGraph.nodes || []).length;
-              if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[constellationMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
+              if (existingCount > 0 && !confirm(`This will replace your current ${modeMeta[effectiveMode].label.toLowerCase()} map (${existingCount} node${existingCount!==1?'s':''}). Continue?`)) return;
 
               // Industry-grouped hierarchical tree:
               //   Col 1 (root) → Col 2 (industry hubs) → Col 3 (individual stocks)
@@ -13169,7 +13173,7 @@ ${JSON.stringify(ctx, null, 2)}`;
               const stockX = 840;
               const centerY = 320;
 
-              const isCur = constellationMode === 'current';
+              const isCur = effectiveMode === 'current';
 
               // Bucket stocks by industry, preserving first-seen order for stable layout
               const industryOrder = [];
@@ -13248,11 +13252,12 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                {/* Mode switcher */}
+                {/* Mode switcher — hidden on the dedicated Research Map sub-tab (it's locked to research mode) */}
+                {!isResearchMapTab && (
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"10px 14px",borderLeft:`2px solid ${accent}`}}>
                   <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// GRAPH MODE</div>
                   <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
-                    {['current','future','research'].map(m => {
+                    {['current','future'].map(m => {
                       const meta = modeMeta[m];
                       const active = constellationMode === m;
                       return (
@@ -13264,9 +13269,10 @@ ${JSON.stringify(ctx, null, 2)}`;
                     })}
                   </div>
                 </div>
+                )}
 
                 {/* Portfolio summary — only in current mode */}
-                {constellationMode==='current' && currentList.length > 0 && (
+                {effectiveMode==='current' && currentList.length > 0 && (
                   <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderLeft:`2px solid ${accent}`,borderRadius:"6px",padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
                       <div style={{fontSize:"10px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO TOTALS · {displayCurrency}</div>
@@ -13308,14 +13314,14 @@ ${JSON.stringify(ctx, null, 2)}`;
                 )}
 
                 {/* The map itself — same component as Asset Map */}
-                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[constellationMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
-                  <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[constellationMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
-                    <span style={{fontSize:"11px",color:`${modeMeta[constellationMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[constellationMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
+                <div style={mapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {background:"rgba(5,12,24,0.85)",border:`0.5px solid ${modeMeta[effectiveMode].accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+                  <div style={{padding:"12px 16px",borderLeft:mapExpanded?"none":`2px solid ${modeMeta[effectiveMode].accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap",flexShrink:0}}>
+                    <span style={{fontSize:"11px",color:`${modeMeta[effectiveMode].accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {rootName} INVESTMENT MAP · {modeMeta[effectiveMode].label}{mapExpanded ? ' · FULLSCREEN' : ''}</span>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
                       <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1px"}}>{(currentGraph.nodes || []).length} NODE{(currentGraph.nodes || []).length !== 1 ? 'S' : ''}</span>
                       <button
                         onClick={() => setMapExpanded(v => !v)}
-                        style={{fontSize:"10px",color:modeMeta[constellationMode].accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${modeMeta[constellationMode].accent}15`,border:`0.5px solid ${modeMeta[constellationMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
+                        style={{fontSize:"10px",color:modeMeta[effectiveMode].accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${modeMeta[effectiveMode].accent}15`,border:`0.5px solid ${modeMeta[effectiveMode].accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}
                       >
                         {mapExpanded ? '⊟ COLLAPSE' : '⊞ EXPAND'}
                       </button>
@@ -13323,7 +13329,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <button
                           onClick={() => {
                             const count = (currentGraph.nodes || []).length;
-                            if (confirm(`Delete the entire ${modeMeta[constellationMode].label.toLowerCase()} map (${count} node${count!==1?'s':''})? This can't be undone.`)) {
+                            if (confirm(`Delete the entire ${modeMeta[effectiveMode].label.toLowerCase()} map (${count} node${count!==1?'s':''})? This can't be undone.`)) {
                               setCurrentGraph({ nodes: [], edges: [], types: currentGraph.types || [] });
                             }
                           }}
@@ -13335,7 +13341,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   </div>
                   <div style={mapExpanded ? {flex:1,minHeight:0,padding:"0"} : {padding:"12px 12px 16px"}}>
-                    <AssetMapGraph key={constellationMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[constellationMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
+                    <AssetMapGraph key={effectiveMode} graph={currentGraph} setGraph={setCurrentGraph} title={`INVESTMENT MAP · ${modeMeta[effectiveMode].label}`} hideAddNode hideNetPosition expanded={mapExpanded}
                       liveValueByLabel={(label) => {
                         // Map a node label (typically a ticker) back to the live $ value + currency.
                         // Returns { value, currency, symbol } so node display can tag with currency code.
@@ -13344,7 +13350,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         // RESEARCH mode→ no native $ amount; return null so manual node.value wins.
                         if (!label) return null;
                         const key = String(label).trim().toUpperCase();
-                        if (constellationMode === 'current') {
+                        if (effectiveMode === 'current') {
                           const hit = (stocks || []).find(s => String(s?.name || '').trim().toUpperCase() === key);
                           if (!hit) return null;
                           const v = parseFloat(hit.currentValue) || 0;
@@ -13352,7 +13358,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                           const cur = hit.currency || 'USD';
                           return { value: v, currency: cur, symbol: currencySymbol(cur) };
                         }
-                        if (constellationMode === 'future') {
+                        if (effectiveMode === 'future') {
                           const hit = (futureResearch || []).find(s => String(s?.ticker || '').trim().toUpperCase() === key);
                           if (!hit) return null;
                           const v = parseFloat(hit.plannedAmount) || 0;
@@ -13364,13 +13370,13 @@ ${JSON.stringify(ctx, null, 2)}`;
                       }}
                       customEmptyState={(
                       <>
-                        <div style={{ fontSize: '10px', color: `${modeMeta[constellationMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
-                        <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[constellationMode].label.toLowerCase()}.</div>
+                        <div style={{ fontSize: '10px', color: `${modeMeta[effectiveMode].accent}99`, fontFamily: 'monospace', letterSpacing: '2.5px', marginBottom: '10px', fontWeight: 600 }}>// EMPTY MAP</div>
+                        <div style={{ fontSize: '15px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 500, marginBottom: '6px' }}>Map your {modeMeta[effectiveMode].label.toLowerCase()}.</div>
                         <div style={{ fontSize: '11px', color: 'rgba(148,163,184,0.65)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '14px', padding: '0 20px' }}>
-                          Auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
+                          Auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list — you at the centre, each holding branching out. Then drag, connect, edit nodes to make it yours.
                         </div>
                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[constellationMode].accent}26`, border: `1px solid ${modeMeta[constellationMode].accent}b3`, borderRadius: '4px', color: modeMeta[constellationMode].accent, fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[constellationMode].accent}26` }}>⚡ GENERATE MAP</button>
+                          <button onClick={generateMap} style={{ padding: '11px 18px', background: `${modeMeta[effectiveMode].accent}26`, border: `1px solid ${modeMeta[effectiveMode].accent}b3`, borderRadius: '4px', color: modeMeta[effectiveMode].accent, fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600, boxShadow: `0 0 14px ${modeMeta[effectiveMode].accent}26` }}>⚡ GENERATE MAP</button>
                         </div>
                       </>
                     )} />
@@ -13381,9 +13387,9 @@ ${JSON.stringify(ctx, null, 2)}`;
                 <div style={{background:"rgba(5,12,24,0.6)",border:"0.5px solid rgba(0,200,255,0.12)",borderRadius:"6px",padding:"12px 14px",fontSize:"10px",fontFamily:"monospace",color:"rgba(148,163,184,0.7)",letterSpacing:"0.5px",lineHeight:1.6}}>
                   <div style={{color:`${accent}99`,fontWeight:600,letterSpacing:"1.5px",marginBottom:"6px"}}>// HOW TO USE</div>
                   {(currentGraph.nodes || []).length === 0 ? (
-                    <>Hit <span style={{color:modeMeta[constellationMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[constellationMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.</>
+                    <>Hit <span style={{color:modeMeta[effectiveMode].accent,fontWeight:600}}>⚡ GENERATE MAP</span> to auto-build the graph from your {modeMeta[effectiveMode].label.toLowerCase()} list. Then drag, connect, edit nodes to make it yours. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map.</>
                   ) : (
-                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[constellationMode].accent,fontFamily:"monospace",fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
+                    <>Drag nodes to rearrange. Click a node's right circle and drag to another to connect. Click a node to edit its label or value. Each mode (<span style={{color:"#00c8ff"}}>CURRENT</span> / <span style={{color:"#3b82f6"}}>FUTURE</span> / <span style={{color:"#a855f7"}}>RESEARCH</span>) has its own separate map. <button onClick={generateMap} style={{background:"none",border:"none",color:modeMeta[effectiveMode].accent,fontFamily:"monospace",fontSize:"10px",letterSpacing:"0.5px",cursor:"pointer",padding:0,textDecoration:"underline",fontWeight:600}}>↻ Regenerate from list</button></>
                   )}
                 </div>
               </div>
@@ -14061,11 +14067,12 @@ ${JSON.stringify(ctx, null, 2)}`;
               })()}
             </>
           )}
-          {(investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
+          {(investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
             <>
               {/* Inner tabs for Research sub-sections */}
               <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
                 {[
+                  {id:'researchMap',label:'MAP'},
                   {id:'research',label:'HOLDINGS'},
                   {id:'livePrices',label:'LIVE PRICES'},
                   {id:'performance',label:'PERFORMANCE'},
