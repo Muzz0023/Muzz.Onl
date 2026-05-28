@@ -14115,7 +14115,8 @@ ${JSON.stringify(ctx, null, 2)}`;
                 name: 'The Hershey Company',
                 industry: 'Food & Beverage',
                 country: 'United States',
-                marketCap: 38000000000, // ~$38B, used for sorting
+                marketCap: 40000000000, // ~$40B
+                marketCapDate: '28 May 2026', // date the market cap figure was captured
                 verdict: 'BUY',
                 oneLiner: 'Dominant North American confectionery brand with pricing power and a wide consumer moat.',
                 breakdown: null, // full breakdown built later
@@ -14193,7 +14194,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div style={{textAlign:'right'}}>
                         <div style={{fontSize:'9px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',marginBottom:'4px'}}>VERDICT</div>
                         <div style={{display:'inline-block',padding:'5px 14px',borderRadius:'4px',background:`${verdictColor(selected.verdict)}1f`,border:`0.5px solid ${verdictColor(selected.verdict)}`,color:verdictColor(selected.verdict),fontFamily:'monospace',fontSize:'13px',fontWeight:700,letterSpacing:'1.5px'}}>{selected.verdict}</div>
-                        {selected.marketCap ? <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',marginTop:'8px'}}>MKT CAP {fmtCap(selected.marketCap)}</div> : null}
+                        {selected.marketCap ? <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',marginTop:'8px'}}>MKT CAP {fmtCap(selected.marketCap)}{selected.marketCapDate ? <span style={{color:'rgba(148,163,184,0.4)'}}> · as of {selected.marketCapDate}</span> : null}</div> : null}
                       </div>
                     </div>
                     <div style={{marginTop:'14px',fontSize:'13px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6}}>{selected.oneLiner}</div>
@@ -14316,7 +14317,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                         <div>
                           <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{c.ticker} <span style={{fontSize:'11px',color:'rgba(148,163,184,0.6)',fontWeight:400}}>· {c.name}</span></div>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{c.oneLiner}</div>
-                          {c.marketCap ? <div style={{fontSize:'9px',color:'rgba(148,163,184,0.45)',fontFamily:'monospace',marginTop:'4px',letterSpacing:'1px'}}>MKT CAP {fmtCap(c.marketCap)}</div> : null}
+                          {c.marketCap ? <div style={{fontSize:'9px',color:'rgba(148,163,184,0.45)',fontFamily:'monospace',marginTop:'4px',letterSpacing:'1px'}}>MKT CAP {fmtCap(c.marketCap)}{c.marketCapDate ? ` · as of ${c.marketCapDate}` : ''}</div> : null}
                         </div>
                         <div style={{display:'inline-block',padding:'4px 10px',borderRadius:'3px',background:`${verdictColor(c.verdict)}1f`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',flexShrink:0}}>{c.verdict}</div>
                       </button>
