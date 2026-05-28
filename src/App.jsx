@@ -13093,11 +13093,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
                 {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
-                {id:'performance',label:'PERFORMANCE'},
-                {id:'livePrices',label:'LIVE PRICES'},
-                {id:'accounting',label:'ACCOUNTING'},
-                {id:'knowledge',label:'GUIDE'},
-                {id:'sp500',label:'S&P 500'},
               ].map(tab => (
                 <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:investmentsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${investmentsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:investmentsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
@@ -14814,50 +14809,29 @@ ${JSON.stringify(ctx, null, 2)}`;
             </>
           )}
 
-          {(investmentsSubTab === 'research' || investmentsSubTab === 'declined' || investmentsSubTab === 'economics' || investmentsSubTab === 'risks') && (
+          {(investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
             <>
               {/* Inner tabs for Research sub-sections */}
-              <div className="flex gap-2 mb-6 flex-wrap">
-                <button
-                  onClick={() => setInvestmentsSubTab('research')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    investmentsSubTab === 'research'
-                      ? 'text-white cyber-tab-active'
-                      : 'text-slate-400 hover:text-slate-200 transition-colors'
-                  }`}
-                >
-                  Research
-                </button>
-                <button
-                  onClick={() => setInvestmentsSubTab('economics')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    investmentsSubTab === 'economics'
-                      ? 'text-white cyber-tab-active'
-                      : 'text-slate-400 hover:text-slate-200 transition-colors'
-                  }`}
-                >
-                  Company Economics
-                </button>
-                <button
-                  onClick={() => setInvestmentsSubTab('risks')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    investmentsSubTab === 'risks'
-                      ? 'text-white cyber-tab-active'
-                      : 'text-slate-400 hover:text-slate-200 transition-colors'
-                  }`}
-                >
-                  Biggest Risks
-                </button>
-                <button
-                  onClick={() => setInvestmentsSubTab('declined')}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    investmentsSubTab === 'declined'
-                      ? 'text-white cyber-tab-active'
-                      : 'text-slate-400 hover:text-slate-200 transition-colors'
-                  }`}
-                >
-                  Declined Companies
-                </button>
+              <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
+                {[
+                  {id:'research',label:'HOLDINGS'},
+                  {id:'livePrices',label:'LIVE PRICES'},
+                  {id:'performance',label:'PERFORMANCE'},
+                  {id:'accounting',label:'ACCOUNTING'},
+                  {id:'knowledge',label:'INVESTING GUIDE'},
+                  {id:'sp500',label:'S&P 500'},
+                ].map(sub => {
+                  const active = investmentsSubTab === sub.id || (sub.id === 'knowledge' && investmentsSubTab === 'books');
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => setInvestmentsSubTab(sub.id)}
+                      style={{padding:"6px 14px",background:active?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
+                    >
+                      {sub.label}
+                    </button>
+                  );
+                })}
               </div>
             </>
           )}
