@@ -14194,7 +14194,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                       <div style={{textAlign:'right'}}>
                         <div style={{fontSize:'9px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',marginBottom:'4px'}}>VERDICT</div>
                         <div style={{display:'inline-block',padding:'5px 14px',borderRadius:'4px',background:`${verdictColor(selected.verdict)}1f`,border:`0.5px solid ${verdictColor(selected.verdict)}`,color:verdictColor(selected.verdict),fontFamily:'monospace',fontSize:'13px',fontWeight:700,letterSpacing:'1.5px'}}>{selected.verdict}</div>
-                        {selected.marketCap ? <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',marginTop:'8px'}}>MKT CAP {fmtCap(selected.marketCap)}{selected.marketCapDate ? <span style={{color:'rgba(148,163,184,0.4)'}}> · as of {selected.marketCapDate}</span> : null}</div> : null}
+                        {selected.marketCap ? <div style={{marginTop:'8px',display:'flex',alignItems:'center',justifyContent:'flex-end',gap:'8px',flexWrap:'wrap'}}><span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'4px 10px'}}><span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span><span style={{fontSize:'14px',color:'#4ade80',fontFamily:'monospace',fontWeight:700}}>{fmtCap(selected.marketCap)}</span></span>{selected.marketCapDate ? <span style={{fontSize:'9px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace'}}>as of {selected.marketCapDate}</span> : null}</div> : null}
                       </div>
                     </div>
                     <div style={{marginTop:'14px',fontSize:'13px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6}}>{selected.oneLiner}</div>
@@ -14225,12 +14225,24 @@ ${JSON.stringify(ctx, null, 2)}`;
                   {searchResults.length === 0 ? (
                     <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies match "{coverageSearch}".</div>
                   ) : searchResults.map(c => (
-                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageSearch(''); }} style={cardBtn}>
-                      <div>
-                        <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{c.ticker} <span style={{fontSize:'11px',color:'rgba(148,163,184,0.6)',fontWeight:400}}>· {c.name}</span></div>
-                        <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{c.industry} · {c.country}</div>
+                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageSearch(''); }}
+                      style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:`2px solid ${verdictColor(c.verdict)}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
+                      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'12px'}}>
+                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                          <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
+                          <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
+                        </div>
+                        <div style={{display:'inline-block',padding:'5px 12px',borderRadius:'4px',background:`${verdictColor(c.verdict)}26`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'11px',fontWeight:700,letterSpacing:'1.5px',flexShrink:0}}>{c.verdict}</div>
                       </div>
-                      <div style={{display:'inline-block',padding:'4px 10px',borderRadius:'3px',background:`${verdictColor(c.verdict)}1f`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',flexShrink:0}}>{c.verdict}</div>
+                      <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
+                        <span style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'1px'}}>{c.industry} · {c.country}</span>
+                        {c.marketCap ? (
+                          <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'3px 9px'}}>
+                            <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
+                            <span style={{fontSize:'12px',color:'#4ade80',fontFamily:'monospace',fontWeight:700}}>{fmtCap(c.marketCap)}</span>
+                          </span>
+                        ) : null}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -14313,13 +14325,28 @@ ${JSON.stringify(ctx, null, 2)}`;
                   <>
                     <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
                     {companiesInScope.map(c => (
-                      <button key={c.ticker} onClick={() => setCoverageCompany(c.ticker)} style={cardBtn}>
-                        <div>
-                          <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{c.ticker} <span style={{fontSize:'11px',color:'rgba(148,163,184,0.6)',fontWeight:400}}>· {c.name}</span></div>
-                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{c.oneLiner}</div>
-                          {c.marketCap ? <div style={{fontSize:'9px',color:'rgba(148,163,184,0.45)',fontFamily:'monospace',marginTop:'4px',letterSpacing:'1px'}}>MKT CAP {fmtCap(c.marketCap)}{c.marketCapDate ? ` · as of ${c.marketCapDate}` : ''}</div> : null}
+                      <button key={c.ticker} onClick={() => setCoverageCompany(c.ticker)}
+                        style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:`2px solid ${verdictColor(c.verdict)}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
+                        {/* Top row: ticker + verdict */}
+                        <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'12px'}}>
+                          <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                            <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
+                            <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
+                          </div>
+                          <div style={{display:'inline-block',padding:'5px 12px',borderRadius:'4px',background:`${verdictColor(c.verdict)}26`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'11px',fontWeight:700,letterSpacing:'1.5px',flexShrink:0}}>{c.verdict}</div>
                         </div>
-                        <div style={{display:'inline-block',padding:'4px 10px',borderRadius:'3px',background:`${verdictColor(c.verdict)}1f`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',flexShrink:0}}>{c.verdict}</div>
+                        {/* Description */}
+                        <div style={{fontSize:'12px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5}}>{c.oneLiner}</div>
+                        {/* Market cap stat chip */}
+                        {c.marketCap ? (
+                          <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
+                            <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'4px 10px'}}>
+                              <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
+                              <span style={{fontSize:'13px',color:'#4ade80',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{fmtCap(c.marketCap)}</span>
+                            </span>
+                            {c.marketCapDate ? <span style={{fontSize:'9px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'0.5px'}}>as of {c.marketCapDate}</span> : null}
+                          </div>
+                        ) : null}
                       </button>
                     ))}
                   </>
