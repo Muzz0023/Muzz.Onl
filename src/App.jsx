@@ -15098,218 +15098,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
           {investmentsSubTab === 'research' && (
             <>
-              {/* Research Industry Pie Chart */}
-              {(() => {
-                const researchByIndustry = holdingsResearch
-                  .filter(h => h && h.ticker && h.industry)
-                  .reduce((acc, h) => {
-                    if (!acc[h.industry]) acc[h.industry] = [];
-                    acc[h.industry].push(h);
-                    return acc;
-                  }, {});
-                
-                const industryData = Object.entries(researchByIndustry)
-                  .map(([industry, stocks]) => ({ name: industry, count: stocks.length }))
-                  .sort((a, b) => b.count - a.count);
-                
-                const totalCount = industryData.reduce((sum, i) => sum + i.count, 0);
-                
-                if (industryData.length === 0) return null;
-                
-                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
-                let currentAngle = 0;
-                
-                return (
-                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH BY INDUSTRY</span>
-                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
-                    </summary>
-                    <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Research by Industry</h2>
-                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your research picks broken down by sector</p>
-                    </div>
-                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
-                      {/* Pie Chart */}
-                      <svg width="200" height="200" viewBox="0 0 200 200">
-                        {industryData.map((ind, idx) => {
-                          const percentage = (ind.count / totalCount) * 100;
-                          const angle = (percentage / 100) * 360;
-                          const startAngle = currentAngle;
-                          currentAngle += angle;
-                          
-                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
-                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
-                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
-                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
-                          const largeArc = angle > 180 ? 1 : 0;
-                          
-                          return (
-                            <path
-                              key={idx}
-                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                              fill={colors[idx % colors.length]}
-                            />
-                          );
-                        })}
-                      </svg>
-                      {/* Legend */}
-                      <div className="flex-1 space-y-2">
-                        {industryData.map((ind, idx) => {
-                          const percentage = (ind.count / totalCount) * 100;
-                          return (
-                            <div key={idx} className="flex items-center gap-3">
-                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
-                              <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
-                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{ind.count} picks</span>
-                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    </div>
-                  </details>
-                );
-              })()}
-
-              {/* Master Research Table */}
-              {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MASTER RESEARCH SUMMARY</span>
-                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
-                  </summary>
-                  <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
-                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Master Research Summary</h2>
-                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • All your research picks at a glance</p>
-                  </div>
-                  <div style={{overflowX:"auto"}}>
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
-                          <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                            onClick={() => {
-                              if (researchSortBy === 'ticker') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                              else { setResearchSortBy('ticker'); setResearchSortDir('asc'); }
-                            }}
-                          >
-                            Ticker {researchSortBy === 'ticker' && (researchSortDir === 'asc' ? '↑' : '↓')}
-                          </th>
-                          <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                            onClick={() => {
-                              if (researchSortBy === 'industry') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                              else { setResearchSortBy('industry'); setResearchSortDir('asc'); }
-                            }}
-                          >
-                            Industry {researchSortBy === 'industry' && (researchSortDir === 'asc' ? '↑' : '↓')}
-                          </th>
-                          <th 
-                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                            onClick={() => {
-                              if (researchSortBy === 'tollBooth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                              else { setResearchSortBy('tollBooth'); setResearchSortDir('asc'); }
-                            }}
-                          >
-                            Toll Booth? {researchSortBy === 'tollBooth' && (researchSortDir === 'asc' ? '↑' : '↓')}
-                          </th>
-                          <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                            onClick={() => {
-                              if (researchSortBy === 'growth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                              else { setResearchSortBy('growth'); setResearchSortDir('asc'); }
-                            }}
-                          >
-                            Growth {researchSortBy === 'growth' && (researchSortDir === 'asc' ? '↑' : '↓')}
-                          </th>
-                          <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
-                            onClick={() => {
-                              if (researchSortBy === 'status') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
-                              else { setResearchSortBy('status'); setResearchSortDir('asc'); }
-                            }}
-                          >
-                            Status {researchSortBy === 'status' && (researchSortDir === 'asc' ? '↑' : '↓')}
-                          </th>
-                          {researchColumns.map(col => (
-                            <th key={col.id} style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>
-                              <div className="flex items-center gap-2">
-                                {col.name}
-                                <button
-                                  onClick={() => setResearchColumns(prev => prev.filter(c => c.id !== col.id))}
-                                  style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}
-                                >
-                                  <Trash2 style={{width:"14px",height:"14px"}} />
-                                </button>
-                              </div>
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {(() => {
-                          const growthOrder = { 'High Growth': 4, 'Medium Growth': 3, 'Low Growth': 2, 'Very Low Growth': 1 };
-                          const statusOrder = { 'New': 3, 'Old': 2, 'Reserve': 1 };
-                          
-                          return holdingsResearch
-                            .filter(h => h && h.ticker)
-                            .sort((a, b) => {
-                              let comparison = 0;
-                              switch (researchSortBy) {
-                                case 'ticker':
-                                  comparison = (a.ticker || '').localeCompare(b.ticker || '');
-                                  break;
-                                case 'industry':
-                                  comparison = (a.industry || '').localeCompare(b.industry || '');
-                                  break;
-                                case 'tollBooth':
-                                  const aVal = a.tollBooth?.toLowerCase() === 'yes' ? 1 : 0;
-                                  const bVal = b.tollBooth?.toLowerCase() === 'yes' ? 1 : 0;
-                                  comparison = bVal - aVal;
-                                  break;
-                                case 'growth':
-                                  comparison = (growthOrder[a.growthProspects] || 0) - (growthOrder[b.growthProspects] || 0);
-                                  break;
-                                case 'status':
-                                  comparison = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
-                                  break;
-                                default:
-                                  comparison = 0;
-                              }
-                              return researchSortDir === 'asc' ? comparison : -comparison;
-                            })
-                            .map((holding, idx) => (
-                              <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                                <td className="py-3 px-4 font-bold">{holding.ticker}</td>
-                                <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
-                                <td className="py-3 px-4 text-center">
-                                  {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? <span style={{color:'rgba(34,197,94,0.9)'}}>●</span> : <span style={{color:'rgba(239,68,68,0.7)'}}>○</span>}
-                                </td>
-                                <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
-                                <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
-                                {researchColumns.map(col => (
-                                  <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
-                                ))}
-                              </tr>
-                            ));
-                        })()}
-                      </tbody>
-                      <tfoot>
-                        <tr style={{background:"rgba(168,85,247,0.06)",borderTop:"0.5px solid rgba(168,85,247,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(168,85,247,0.95)"}}>
-                          <td className="py-3 px-4">Total</td>
-                          <td className="py-3 px-4" colSpan={4 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                  </div>
-                </details>
-              )}
-
               {/* Holdings Research */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
                 <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
@@ -15540,6 +15328,218 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
                 </div>
               </details>
+
+              {/* Research Industry Pie Chart */}
+              {(() => {
+                const researchByIndustry = holdingsResearch
+                  .filter(h => h && h.ticker && h.industry)
+                  .reduce((acc, h) => {
+                    if (!acc[h.industry]) acc[h.industry] = [];
+                    acc[h.industry].push(h);
+                    return acc;
+                  }, {});
+                
+                const industryData = Object.entries(researchByIndustry)
+                  .map(([industry, stocks]) => ({ name: industry, count: stocks.length }))
+                  .sort((a, b) => b.count - a.count);
+                
+                const totalCount = industryData.reduce((sum, i) => sum + i.count, 0);
+                
+                if (industryData.length === 0) return null;
+                
+                const colors = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#14B8A6', '#6366F1', '#F97316', '#84CC16'];
+                let currentAngle = 0;
+                
+                return (
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH BY INDUSTRY</span>
+                      <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                    </summary>
+                    <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                      <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Research by Industry</h2>
+                      <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your research picks broken down by sector</p>
+                    </div>
+                    <div className="p-6 flex flex-col md:flex-row items-center gap-6">
+                      {/* Pie Chart */}
+                      <svg width="200" height="200" viewBox="0 0 200 200">
+                        {industryData.map((ind, idx) => {
+                          const percentage = (ind.count / totalCount) * 100;
+                          const angle = (percentage / 100) * 360;
+                          const startAngle = currentAngle;
+                          currentAngle += angle;
+                          
+                          const x1 = 100 + 80 * Math.cos((startAngle - 90) * Math.PI / 180);
+                          const y1 = 100 + 80 * Math.sin((startAngle - 90) * Math.PI / 180);
+                          const x2 = 100 + 80 * Math.cos((startAngle + angle - 90) * Math.PI / 180);
+                          const y2 = 100 + 80 * Math.sin((startAngle + angle - 90) * Math.PI / 180);
+                          const largeArc = angle > 180 ? 1 : 0;
+                          
+                          return (
+                            <path
+                              key={idx}
+                              d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                              fill={colors[idx % colors.length]}
+                            />
+                          );
+                        })}
+                      </svg>
+                      {/* Legend */}
+                      <div className="flex-1 space-y-2">
+                        {industryData.map((ind, idx) => {
+                          const percentage = (ind.count / totalCount) * 100;
+                          return (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors[idx % colors.length] }} />
+                              <span className="text-sm text-gray-700 flex-1">{ind.name}</span>
+                              <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>{ind.count} picks</span>
+                              <span className="text-sm font-semibold">{percentage.toFixed(1)}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    </div>
+                  </details>
+                );
+              })()}
+
+              {/* Master Research Table */}
+              {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
+                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MASTER RESEARCH SUMMARY</span>
+                    <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
+                  </summary>
+                  <div style={{backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
+                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                    <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Master Research Summary</h2>
+                    <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • All your research picks at a glance</p>
+                  </div>
+                  <div style={{overflowX:"auto"}}>
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
+                          <th 
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            onClick={() => {
+                              if (researchSortBy === 'ticker') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('ticker'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Ticker {researchSortBy === 'ticker' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            onClick={() => {
+                              if (researchSortBy === 'industry') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('industry'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Industry {researchSortBy === 'industry' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            onClick={() => {
+                              if (researchSortBy === 'tollBooth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('tollBooth'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Toll Booth? {researchSortBy === 'tollBooth' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            onClick={() => {
+                              if (researchSortBy === 'growth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('growth'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Growth {researchSortBy === 'growth' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            onClick={() => {
+                              if (researchSortBy === 'status') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
+                              else { setResearchSortBy('status'); setResearchSortDir('asc'); }
+                            }}
+                          >
+                            Status {researchSortBy === 'status' && (researchSortDir === 'asc' ? '↑' : '↓')}
+                          </th>
+                          {researchColumns.map(col => (
+                            <th key={col.id} style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>
+                              <div className="flex items-center gap-2">
+                                {col.name}
+                                <button
+                                  onClick={() => setResearchColumns(prev => prev.filter(c => c.id !== col.id))}
+                                  style={{background:"none",border:"none",cursor:"pointer",color:"rgba(239,68,68,0.4)"}}
+                                >
+                                  <Trash2 style={{width:"14px",height:"14px"}} />
+                                </button>
+                              </div>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(() => {
+                          const growthOrder = { 'High Growth': 4, 'Medium Growth': 3, 'Low Growth': 2, 'Very Low Growth': 1 };
+                          const statusOrder = { 'New': 3, 'Old': 2, 'Reserve': 1 };
+                          
+                          return holdingsResearch
+                            .filter(h => h && h.ticker)
+                            .sort((a, b) => {
+                              let comparison = 0;
+                              switch (researchSortBy) {
+                                case 'ticker':
+                                  comparison = (a.ticker || '').localeCompare(b.ticker || '');
+                                  break;
+                                case 'industry':
+                                  comparison = (a.industry || '').localeCompare(b.industry || '');
+                                  break;
+                                case 'tollBooth':
+                                  const aVal = a.tollBooth?.toLowerCase() === 'yes' ? 1 : 0;
+                                  const bVal = b.tollBooth?.toLowerCase() === 'yes' ? 1 : 0;
+                                  comparison = bVal - aVal;
+                                  break;
+                                case 'growth':
+                                  comparison = (growthOrder[a.growthProspects] || 0) - (growthOrder[b.growthProspects] || 0);
+                                  break;
+                                case 'status':
+                                  comparison = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+                                  break;
+                                default:
+                                  comparison = 0;
+                              }
+                              return researchSortDir === 'asc' ? comparison : -comparison;
+                            })
+                            .map((holding, idx) => (
+                              <tr key={idx} style={{borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
+                                <td className="py-3 px-4 font-bold">{holding.ticker}</td>
+                                <td className="py-3 px-4 text-gray-500">{holding.industry || '-'}</td>
+                                <td className="py-3 px-4 text-center">
+                                  {holding.tollBooth && holding.tollBooth.toLowerCase() === 'yes' ? <span style={{color:'rgba(34,197,94,0.9)'}}>●</span> : <span style={{color:'rgba(239,68,68,0.7)'}}>○</span>}
+                                </td>
+                                <td className="py-3 px-4 text-gray-600">{holding.growthProspects || '-'}</td>
+                                <td className="py-3 px-4 text-gray-600">{holding.status || '-'}</td>
+                                {researchColumns.map(col => (
+                                  <td key={col.id} className="py-3 px-4 text-gray-600">{holding[col.id] || '-'}</td>
+                                ))}
+                              </tr>
+                            ));
+                        })()}
+                      </tbody>
+                      <tfoot>
+                        <tr style={{background:"rgba(168,85,247,0.06)",borderTop:"0.5px solid rgba(168,85,247,0.3)",fontFamily:"monospace",fontWeight:600,color:"rgba(168,85,247,0.95)"}}>
+                          <td className="py-3 px-4">Total</td>
+                          <td className="py-3 px-4" colSpan={4 + researchColumns.length}>{holdingsResearch.filter(h => h && h.ticker).length} companies researched</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  </div>
+                </details>
+              )}
             </>
           )}
 
