@@ -3377,6 +3377,11 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('constellation');
+  // Coverage library drill-down: industry -> country -> company -> breakdown
+  const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
+  const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
+  const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
+  const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
   const [investmentMapGraph, setInvestmentMapGraph] = useState({
     current: { nodes: [], edges: [], types: [] },
@@ -13104,12 +13109,13 @@ ${JSON.stringify(ctx, null, 2)}`;
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {/* === INVESTMENT MAP — Free-form node graph (like Asset Map) === */}
-          {(investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
+          {(investmentsSubTab === 'coverage' || investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
             <>
               {/* Inner tabs for Research sub-sections */}
               <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
                 {[
                   {id:'researchMap',label:'MAP'},
+                  {id:'coverage',label:'COVERAGE'},
                   {id:'research',label:'HOLDINGS'},
                   {id:'livePrices',label:'LIVE PRICES'},
                   {id:'performance',label:'PERFORMANCE'},
@@ -14095,6 +14101,231 @@ ${JSON.stringify(ctx, null, 2)}`;
               })()}
             </>
           )}
+
+          {/* COVERAGE LIBRARY TAB — analysed companies, drill-down by industry → country → company */}
+          {investmentsSubTab === 'coverage' && (() => {
+            // ============================================================
+            // ANALYSED COMPANIES DATA — hardcoded breakdowns.
+            // To add a company: copy a block, fill in the fields. Group by industry + country.
+            // verdict: 'BUY' | 'HOLD' | 'WATCH' | 'AVOID'
+            // ============================================================
+            const COVERAGE = [
+              {
+                ticker: 'HSY',
+                name: 'The Hershey Company',
+                industry: 'Food & Beverage',
+                country: 'United States',
+                marketCap: 38000000000, // ~$38B, used for sorting
+                verdict: 'BUY',
+                oneLiner: 'Dominant North American confectionery brand with pricing power and a wide consumer moat.',
+                breakdown: null, // full breakdown built later
+              },
+              // --- Add more companies here over time ---
+            ];
+
+            const verdictColor = (v) => {
+              switch (v) {
+                case 'BUY': return '#22c55e';
+                case 'HOLD': return '#eab308';
+                case 'WATCH': return '#3b82f6';
+                case 'AVOID': return '#ef4444';
+                default: return 'rgba(148,163,184,0.7)';
+              }
+            };
+            const fmtCap = (n) => {
+              if (!n) return '';
+              if (n >= 1e12) return `$${(n/1e12).toFixed(2)}T`;
+              if (n >= 1e9) return `$${(n/1e9).toFixed(1)}B`;
+              if (n >= 1e6) return `$${(n/1e6).toFixed(0)}M`;
+              return `$${n}`;
+            };
+
+            // Search across all companies (bypasses drill-down)
+            const q = coverageSearch.trim().toLowerCase();
+            const searchResults = q
+              ? COVERAGE.filter(c =>
+                  c.ticker.toLowerCase().includes(q) ||
+                  c.name.toLowerCase().includes(q) ||
+                  c.industry.toLowerCase().includes(q) ||
+                  c.country.toLowerCase().includes(q)
+                )
+              : null;
+
+            // Selected company (full breakdown view)
+            const selected = coverageCompany ? COVERAGE.find(c => c.ticker === coverageCompany) : null;
+
+            // Distinct industries (only ones we cover), with counts
+            const industries = [...new Set(COVERAGE.map(c => c.industry))].sort();
+            // Countries within the selected industry
+            const countriesInIndustry = coverageIndustry
+              ? [...new Set(COVERAGE.filter(c => c.industry === coverageIndustry).map(c => c.country))].sort()
+              : [];
+            // Companies within the selected industry + country, sorted by market cap desc
+            const companiesInScope = (coverageIndustry && coverageCountry)
+              ? COVERAGE
+                  .filter(c => c.industry === coverageIndustry && c.country === coverageCountry)
+                  .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
+              : [];
+
+            const cardBtn = {
+              width: '100%', textAlign: 'left', background: 'rgba(5,12,24,0.85)',
+              border: '0.5px solid rgba(0,200,255,0.2)', borderLeft: '2px solid rgba(0,200,255,0.6)',
+              borderRadius: '6px', padding: '16px 18px', cursor: 'pointer', display: 'flex',
+              alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+            };
+
+            // ---------- COMPANY BREAKDOWN VIEW ----------
+            if (selected) {
+              return (
+                <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                  <button onClick={() => setCoverageCompany(null)}
+                    style={{alignSelf:'flex-start',fontSize:'11px',color:'rgba(0,200,255,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.4)',padding:'7px 14px',cursor:'pointer',borderRadius:'3px',fontWeight:600}}>
+                    ← BACK
+                  </button>
+                  {/* Header */}
+                  <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.25)',borderLeft:'2px solid #00c8ff',borderRadius:'6px',padding:'20px 24px',backgroundImage:'radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)',backgroundSize:'20px 20px'}}>
+                    <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
+                      <div>
+                        <div style={{fontSize:'9px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {selected.industry} · {selected.country}</div>
+                        <div style={{fontSize:'26px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{selected.ticker}</div>
+                        <div style={{fontSize:'13px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',marginTop:'2px'}}>{selected.name}</div>
+                      </div>
+                      <div style={{textAlign:'right'}}>
+                        <div style={{fontSize:'9px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',letterSpacing:'1.5px',marginBottom:'4px'}}>VERDICT</div>
+                        <div style={{display:'inline-block',padding:'5px 14px',borderRadius:'4px',background:`${verdictColor(selected.verdict)}1f`,border:`0.5px solid ${verdictColor(selected.verdict)}`,color:verdictColor(selected.verdict),fontFamily:'monospace',fontSize:'13px',fontWeight:700,letterSpacing:'1.5px'}}>{selected.verdict}</div>
+                        {selected.marketCap ? <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',marginTop:'8px'}}>MKT CAP {fmtCap(selected.marketCap)}</div> : null}
+                      </div>
+                    </div>
+                    <div style={{marginTop:'14px',fontSize:'13px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6}}>{selected.oneLiner}</div>
+                  </div>
+                  {/* Full breakdown placeholder */}
+                  <div style={{background:'rgba(5,12,24,0.5)',border:'0.5px dashed rgba(0,200,255,0.25)',borderRadius:'6px',padding:'40px 24px',textAlign:'center'}}>
+                    <div style={{fontSize:'11px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// FULL BREAKDOWN COMING</div>
+                    <div style={{fontSize:'12px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.6,maxWidth:'460px',margin:'0 auto'}}>This is where the deep analysis lives — business overview, brand/moat, segment data, income statement, balance sheet, cash flow, owner earnings, thesis &amp; risks. We build {selected.ticker} out next.</div>
+                  </div>
+                </div>
+              );
+            }
+
+            // ---------- SEARCH RESULTS VIEW ----------
+            if (searchResults) {
+              return (
+                <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                  <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderRadius:'6px',padding:'12px 16px'}}>
+                    <input
+                      type="text"
+                      value={coverageSearch}
+                      onChange={(e) => setCoverageSearch(e.target.value)}
+                      placeholder="Search ticker, name, industry, country…"
+                      style={{width:'100%',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'10px 12px',outline:'none'}}
+                    />
+                  </div>
+                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1.5px'}}>{searchResults.length} RESULT{searchResults.length !== 1 ? 'S' : ''}</div>
+                  {searchResults.length === 0 ? (
+                    <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies match "{coverageSearch}".</div>
+                  ) : searchResults.map(c => (
+                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageSearch(''); }} style={cardBtn}>
+                      <div>
+                        <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{c.ticker} <span style={{fontSize:'11px',color:'rgba(148,163,184,0.6)',fontWeight:400}}>· {c.name}</span></div>
+                        <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{c.industry} · {c.country}</div>
+                      </div>
+                      <div style={{display:'inline-block',padding:'4px 10px',borderRadius:'3px',background:`${verdictColor(c.verdict)}1f`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',flexShrink:0}}>{c.verdict}</div>
+                    </button>
+                  ))}
+                </div>
+              );
+            }
+
+            // ---------- DRILL-DOWN VIEWS ----------
+            return (
+              <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
+                {/* Search bar (always visible at top of drill-down) */}
+                <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderRadius:'6px',padding:'12px 16px'}}>
+                  <input
+                    type="text"
+                    value={coverageSearch}
+                    onChange={(e) => setCoverageSearch(e.target.value)}
+                    placeholder="Search ticker, name, industry, country…"
+                    style={{width:'100%',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'10px 12px',outline:'none'}}
+                  />
+                </div>
+
+                {/* Breadcrumb */}
+                <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',letterSpacing:'1px'}}>
+                  <button onClick={() => { setCoverageIndustry(null); setCoverageCountry(null); }}
+                    style={{background:'none',border:'none',color: coverageIndustry ? 'rgba(0,200,255,0.7)' : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
+                    ALL INDUSTRIES
+                  </button>
+                  {coverageIndustry && (
+                    <>
+                      <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
+                      <button onClick={() => setCoverageCountry(null)}
+                        style={{background:'none',border:'none',color: coverageCountry ? 'rgba(0,200,255,0.7)' : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
+                        {coverageIndustry.toUpperCase()}
+                      </button>
+                    </>
+                  )}
+                  {coverageCountry && (
+                    <>
+                      <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
+                      <span style={{color:'rgba(148,163,184,0.5)',fontWeight:600}}>{coverageCountry.toUpperCase()}</span>
+                    </>
+                  )}
+                </div>
+
+                {/* LEVEL 1: industries */}
+                {!coverageIndustry && (
+                  <>
+                    <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// BROWSE BY INDUSTRY</div>
+                    {industries.length === 0 ? (
+                      <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies analysed yet.</div>
+                    ) : industries.map(ind => {
+                      const count = COVERAGE.filter(c => c.industry === ind).length;
+                      return (
+                        <button key={ind} onClick={() => setCoverageIndustry(ind)} style={cardBtn}>
+                          <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{ind}</div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1px',flexShrink:0}}>{count} COMPAN{count !== 1 ? 'IES' : 'Y'} →</div>
+                        </button>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* LEVEL 2: countries within industry */}
+                {coverageIndustry && !coverageCountry && (
+                  <>
+                    <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageIndustry.toUpperCase()} · BY COUNTRY</div>
+                    {countriesInIndustry.map(country => {
+                      const count = COVERAGE.filter(c => c.industry === coverageIndustry && c.country === country).length;
+                      return (
+                        <button key={country} onClick={() => setCoverageCountry(country)} style={cardBtn}>
+                          <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{country}</div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1px',flexShrink:0}}>{count} COMPAN{count !== 1 ? 'IES' : 'Y'} →</div>
+                        </button>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* LEVEL 3: companies within industry + country */}
+                {coverageIndustry && coverageCountry && (
+                  <>
+                    <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
+                    {companiesInScope.map(c => (
+                      <button key={c.ticker} onClick={() => setCoverageCompany(c.ticker)} style={cardBtn}>
+                        <div>
+                          <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{c.ticker} <span style={{fontSize:'11px',color:'rgba(148,163,184,0.6)',fontWeight:400}}>· {c.name}</span></div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{c.oneLiner}</div>
+                          {c.marketCap ? <div style={{fontSize:'9px',color:'rgba(148,163,184,0.45)',fontFamily:'monospace',marginTop:'4px',letterSpacing:'1px'}}>MKT CAP {fmtCap(c.marketCap)}</div> : null}
+                        </div>
+                        <div style={{display:'inline-block',padding:'4px 10px',borderRadius:'3px',background:`${verdictColor(c.verdict)}1f`,border:`0.5px solid ${verdictColor(c.verdict)}`,color:verdictColor(c.verdict),fontFamily:'monospace',fontSize:'10px',fontWeight:700,letterSpacing:'1px',flexShrink:0}}>{c.verdict}</div>
+                      </button>
+                    ))}
+                  </>
+                )}
+              </div>
+            );
+          })()}
 
           {/* LIVE PRICES TAB */}
           {investmentsSubTab === 'livePrices' && (
