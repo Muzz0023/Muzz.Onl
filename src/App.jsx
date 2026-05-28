@@ -14061,6 +14061,33 @@ ${JSON.stringify(ctx, null, 2)}`;
               })()}
             </>
           )}
+          {(investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
+            <>
+              {/* Inner tabs for Research sub-sections */}
+              <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
+                {[
+                  {id:'research',label:'HOLDINGS'},
+                  {id:'livePrices',label:'LIVE PRICES'},
+                  {id:'performance',label:'PERFORMANCE'},
+                  {id:'accounting',label:'ACCOUNTING'},
+                  {id:'knowledge',label:'INVESTING GUIDE'},
+                  {id:'sp500',label:'S&P 500'},
+                ].map(sub => {
+                  const active = investmentsSubTab === sub.id || (sub.id === 'knowledge' && investmentsSubTab === 'books');
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => setInvestmentsSubTab(sub.id)}
+                      style={{padding:"6px 14px",background:active?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
+                    >
+                      {sub.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
           {/* LIVE PRICES TAB */}
           {investmentsSubTab === 'livePrices' && (
             <>
@@ -14809,32 +14836,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             </>
           )}
 
-          {(investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
-            <>
-              {/* Inner tabs for Research sub-sections */}
-              <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
-                {[
-                  {id:'research',label:'HOLDINGS'},
-                  {id:'livePrices',label:'LIVE PRICES'},
-                  {id:'performance',label:'PERFORMANCE'},
-                  {id:'accounting',label:'ACCOUNTING'},
-                  {id:'knowledge',label:'INVESTING GUIDE'},
-                  {id:'sp500',label:'S&P 500'},
-                ].map(sub => {
-                  const active = investmentsSubTab === sub.id || (sub.id === 'knowledge' && investmentsSubTab === 'books');
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => setInvestmentsSubTab(sub.id)}
-                      style={{padding:"6px 14px",background:active?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
-                    >
-                      {sub.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
 
           {investmentsSubTab === 'research' && (
             <>
