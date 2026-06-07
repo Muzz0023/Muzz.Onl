@@ -3,22 +3,84 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const DONNY_PRICE_ID = process.env.DONNY_PRICE_ID;
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-async function buffer(readable) {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+// ============================================
+// Look up a Supabase user_id from an email address.
+// Used as a fallback when the Stripe subscription has no `supabase_user_id` metadata
+// (e.g. when the subscription was created manually in the Stripe dashboard).
+// ============================================
+async function getUserIdByEmail(email) {
+  if (!email) return null;
+  try {
+    // Supabase admin API: list users filtered by email.
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?email=${encodeURIComponent(email)}`, {
+      headers: {
+        'apikey': SUPABASE_SERVICE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+      }
+    });
+    if (!r.ok) {
+      console.error('getUserIdByEmail: admin lookup failed', r.status);
+      return null;
+    }
+    const data = await r.json();
+    const users = data.users || data; // shape can vary
+    if (Array.isArray(users) && users.length > 0) {
+      // Exact email match (case-insensitive) to be safe
+      const hit = users.find(u => (u.email || '').toLowerCase() === email.toLowerCase());
+      return hit?.id || users[0]?.id || null;
+    }
+    return null;
+  } catch (e) {
+    console.error('getUserIdByEmail error:', e);
+    return null;
   }
-  return Buffer.concat(chunks);
+}
+
+// ============================================
+// Resolve the supabase_user_id for any Stripe event.
+// 1) Use metadata.supabase_user_id if present (the normal path via checkout).
+// 2) Otherwise, fall back to looking up the customer's email in Supabase Auth.
+// ============================================
+async function resolveUserId(obj) {
+  // Direct metadata on the object (checkout session or subscription)
+  if (obj.metadata?.supabase_user_id) return obj.metadata.supabase_user_id;
+
+  // Try the customer's email
+  let email = obj.customer_email || obj.customer_details?.email || null;
+  if (!email && obj.customer) {
+    try {
+      const customer = await stripe.customers.retrieve(obj.customer);
+      email = customer?.email || null;
+    } catch (e) {
+      console.error('Failed to retrieve customer for email fallback:', e);
+    }
+  }
+  if (email) {
+    const uid = await getUserIdByEmail(email);
+    if (uid) console.log(`Resolved user via email fallback: ${email} -> ${uid}`);
+    return uid;
+  }
+  return null;
+}
+
+// ============================================
+// Detect whether a subscription is the Donny tier by checking its price IDs
+// (more reliable than relying on metadata.plan which can be missing).
+// ============================================
+function subscriptionIsDonny(sub) {
+  if (sub.metadata?.plan === 'donny') return true;
+  if (!DONNY_PRICE_ID) return false;
+  const priceIds = (sub.items?.data || []).map(i => i.price?.id);
+  return priceIds.includes(DONNY_PRICE_ID);
 }
 
 async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
+  if (!userId) {
+    console.error('updateUserEliteStatus: no userId, skipping');
+    return;
+  }
   try {
     const updateData = {};
     if (isElite !== null) updateData.stripe_elite = isElite;
@@ -48,15 +110,12 @@ async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const buf = await buffer(req);
-  const sig = req.headers['stripe-signature'];
-
   let stripeEvent;
   try {
     if (process.env.STRIPE_WEBHOOK_SECRET) {
-      stripeEvent = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
+      stripeEvent = stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
     } else {
-      stripeEvent = JSON.parse(buf.toString());
+      stripeEvent = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     }
   } catch (err) {
     return res.status(400).send('Webhook Error: ' + err.message);
@@ -67,34 +126,34 @@ export default async function handler(req, res) {
 
   try {
     if (type === 'checkout.session.completed') {
-      if (obj.metadata?.supabase_user_id) {
-        const isDonny = obj.metadata?.plan === 'donny';
-        await updateUserEliteStatus(obj.metadata.supabase_user_id, true, isDonny ? true : null);
-      }
+      const userId = await resolveUserId(obj);
+      const isDonny = obj.metadata?.plan === 'donny';
+      if (userId) await updateUserEliteStatus(userId, true, isDonny ? true : null);
+
     } else if (type === 'invoice.paid' && obj.subscription) {
       const sub = await stripe.subscriptions.retrieve(obj.subscription);
-      if (sub.metadata?.supabase_user_id) {
-        const isDonny = sub.metadata?.plan === 'donny';
-        await updateUserEliteStatus(sub.metadata.supabase_user_id, true, isDonny ? true : null);
-      }
+      // resolveUserId checks metadata first, then falls back to invoice's customer_email
+      const userId = sub.metadata?.supabase_user_id || await resolveUserId(obj);
+      const isDonny = subscriptionIsDonny(sub);
+      if (userId) await updateUserEliteStatus(userId, true, isDonny ? true : null);
+
     } else if (type === 'invoice.payment_failed' && obj.subscription) {
       const sub = await stripe.subscriptions.retrieve(obj.subscription);
-      if (sub.metadata?.supabase_user_id) {
-        await updateUserEliteStatus(sub.metadata.supabase_user_id, false, false);
-      }
+      const userId = sub.metadata?.supabase_user_id || await resolveUserId(obj);
+      if (userId) await updateUserEliteStatus(userId, false, false);
+
     } else if (type === 'customer.subscription.deleted') {
-      if (obj.metadata?.supabase_user_id) {
-        await updateUserEliteStatus(obj.metadata.supabase_user_id, false, false);
-      }
-    } else if (type === 'customer.subscription.updated') {
-      if (obj.metadata?.supabase_user_id) {
-        const active = obj.status === 'active' || obj.status === 'trialing';
-        const isDonny = obj.metadata?.plan === 'donny';
-        await updateUserEliteStatus(obj.metadata.supabase_user_id, active, isDonny ? active : null);
-      }
+      const userId = await resolveUserId(obj);
+      if (userId) await updateUserEliteStatus(userId, false, false);
+
+    } else if (type === 'customer.subscription.updated' || type === 'customer.subscription.created') {
+      const userId = await resolveUserId(obj);
+      const active = obj.status === 'active' || obj.status === 'trialing';
+      const isDonny = subscriptionIsDonny(obj);
+      if (userId) await updateUserEliteStatus(userId, active, isDonny ? active : null);
     }
   } catch (error) {
-    console.error('Webhook processing error:', error);
+    console.error('Webhook handler error:', error);
     return res.status(500).send('Webhook error');
   }
 
