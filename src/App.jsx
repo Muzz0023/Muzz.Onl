@@ -1298,6 +1298,39 @@ const supabase = {
   }
 };
 
+
+// ============================================
+// LOCKED FEATURE — shown when a non-Elite user tries to access a paywalled section
+// ============================================
+function LockedFeature({ featureName, setActiveView }) {
+  return (
+    <div className="min-h-screen bg-transparent" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+      <div style={{ maxWidth: '460px', width: '100%', background: 'rgba(5,12,24,0.85)', border: '0.5px solid rgba(0,200,255,0.25)', borderLeft: '2px solid #00c8ff', borderRadius: '6px', padding: '32px 28px', backgroundImage: 'radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)', backgroundSize: '20px 20px' }}>
+        <div style={{ fontSize: '10px', color: 'rgba(0,200,255,0.5)', fontFamily: 'monospace', letterSpacing: '2.5px', fontWeight: 600, marginBottom: '8px' }}>// ELITE FEATURE</div>
+        <div style={{ fontSize: '24px', color: '#e0eaff', fontFamily: 'monospace', fontWeight: 600, letterSpacing: '1.5px', marginBottom: '10px' }}>{featureName}</div>
+        <div style={{ fontSize: '13px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', lineHeight: 1.6, marginBottom: '20px' }}>
+          This section is part of Muzz Elite. Upgrade to unlock {featureName} along with the rest of the suite.
+        </div>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setActiveView('subscription')}
+            style={{ flex: 1, minWidth: '140px', padding: '11px 16px', background: 'rgba(0,200,255,0.18)', border: '0.5px solid rgba(0,200,255,0.7)', borderRadius: '4px', color: '#00c8ff', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}
+          >
+            ⚡ UPGRADE
+          </button>
+          <button
+            onClick={() => setActiveView('home')}
+            style={{ flex: 1, minWidth: '140px', padding: '11px 16px', background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: 'rgba(224,234,255,0.7)', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '1.5px', cursor: 'pointer', fontWeight: 600 }}
+          >
+            ← DASHBOARD
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 // ============================================
 // AUTH CONTEXT
 // ============================================
