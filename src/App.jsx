@@ -7264,7 +7264,7 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
 
                 {/* Items */}
-                <div style={{padding:"10px 16px",minHeight:"55vh",display:"flex",flexDirection:"column",gap:"2px"}}>
+                <div style={{padding:"10px 16px",minHeight: items.length === 0 ? "auto" : "55vh",display:"flex",flexDirection:"column",gap:"2px"}}>
                   {items.length === 0 && (() => {
                     // Tailored sample tasks per built-in tab
                     const samplesByTab = {
