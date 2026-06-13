@@ -3427,7 +3427,7 @@ function MuzzApp() {
   });
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
-  const [investmentsSubTab, setInvestmentsSubTab] = useState('constellation');
+  const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
@@ -12922,7 +12922,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
               {[
-                {id:'constellation',label:'MAP'},
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
                 {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
@@ -12966,11 +12965,13 @@ ${JSON.stringify(ctx, null, 2)}`;
             </>
           )}
 
-          {(investmentsSubTab === 'constellation' || investmentsSubTab === 'researchMap') && (() => {
+          {(investmentsSubTab === 'portfolio' || investmentsSubTab === 'futurePortfolio' || investmentsSubTab === 'researchMap') && (() => {
             const isResearchMapTab = investmentsSubTab === 'researchMap';
-            // When on the dedicated Research Map sub-tab, force research mode and hide the switcher.
-            // On the main MAP tab, only current/future are valid — fall back to current if mode is stale 'research'.
-            const effectiveMode = isResearchMapTab ? 'research' : (constellationMode === 'research' ? 'current' : constellationMode);
+            // Each tab forces its own mode — current portfolio = current, future portfolio = future, research map = research.
+            // The mode switcher is no longer needed since the active sub-tab fully determines the view.
+            const effectiveMode = isResearchMapTab ? 'research'
+                                : investmentsSubTab === 'futurePortfolio' ? 'future'
+                                : 'current';
             const accent = '#00c8ff';
             const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
 
@@ -13114,8 +13115,8 @@ ${JSON.stringify(ctx, null, 2)}`;
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                {/* Mode switcher — hidden on the dedicated Research Map sub-tab (it's locked to research mode) */}
-                {!isResearchMapTab && (
+                {/* Mode switcher — hidden; each sub-tab determines its own mode */}
+                {false && (
                 <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"10px 14px",borderLeft:`2px solid ${accent}`}}>
                   <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// GRAPH MODE</div>
                   <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
