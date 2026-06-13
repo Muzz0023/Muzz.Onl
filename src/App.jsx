@@ -10070,13 +10070,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const leaves = inDrill ? byIndustry[drillIndustry] : industries.map(ind => ({ industry: ind, count: byIndustry[ind].length }));
             const N = leaves.length;
             const isWide = typeof window !== 'undefined' && window.innerWidth >= 768;
-            const canvasSize = isWide ? 700 : 360;
+            // Scale canvas + ring based on leaf count so cards don't crowd
+            const baseCanvas = isWide ? 760 : 380;
+            const canvasSize = isWide ? Math.max(baseCanvas, baseCanvas + Math.max(0, N - 8) * 18) : baseCanvas;
             const cx = canvasSize / 2;
             const cy = canvasSize / 2;
-            const bucketRadius = isWide ? 90 : 60;
-            const cardW = isWide ? 150 : 95;
+            const bucketRadius = isWide ? 100 : 64;
+            const cardW = isWide ? 180 : 110;
             const cardH = isWide ? 64 : 52;
-            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 55;
+            const ringRadius = isWide ? Math.min(canvasSize / 2 - 110, 360) : canvasSize / 2 - 62;
             const nodes = leaves.map((leaf, i) => {
               const angle = (-Math.PI / 2) + (i / Math.max(N, 1)) * Math.PI * 2;
               const x = cx + Math.cos(angle) * ringRadius;
