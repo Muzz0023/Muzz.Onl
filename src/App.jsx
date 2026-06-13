@@ -3039,18 +3039,8 @@ function MuzzApp() {
   }, [ctxMenu]);
 
   // Boot sequence — terminal-style intro on first dashboard mount
-  const [bootDone, setBootDone] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return sessionStorage.getItem('muzz_boot_done') === '1';
-  });
-  useEffect(() => {
-    if (bootDone) return;
-    const t = setTimeout(() => {
-      setBootDone(true);
-      try { sessionStorage.setItem('muzz_boot_done', '1'); } catch(e) {}
-    }, 2200);
-    return () => clearTimeout(t);
-  }, [bootDone]);
+  // Boot splash disabled — defaults to done so it never renders
+  const [bootDone, setBootDone] = useState(true);
 
   // Time Scrubber — null means "live", otherwise an ISO date string
   const [scrubberDate, setScrubberDate] = useState(null);
@@ -14710,15 +14700,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                       {/* Expanded edit panel */}
                       {isEditing && (
                         <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                          {holding?.ticker && (
-                            <button
-                              onClick={() => setDetailTicker(String(holding.ticker).trim().toUpperCase())}
-                              style={{padding:"10px 14px",background:"linear-gradient(135deg, rgba(0,200,255,0.18), rgba(0,200,255,0.08))",border:"0.5px solid rgba(0,200,255,0.6)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}
-                            >
-                              <span>📊 OPEN FULL ANALYSIS</span>
-                              <span style={{fontSize:"14px"}}>→</span>
-                            </button>
-                          )}
                           <div>
                             <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
                             <input
@@ -15242,15 +15223,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                       {/* Expanded edit panel */}
                       {isEditing && (
                         <div style={{padding:"14px 16px 16px",borderTop:"0.5px solid rgba(0,200,255,0.2)",background:"rgba(0,0,0,0.2)",display:"flex",flexDirection:"column",gap:"12px"}}>
-                          {holding?.ticker && (
-                            <button
-                              onClick={() => setDetailTicker(String(holding.ticker).trim().toUpperCase())}
-                              style={{padding:"10px 14px",background:"linear-gradient(135deg, rgba(0,200,255,0.18), rgba(0,200,255,0.08))",border:"0.5px solid rgba(0,200,255,0.6)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}
-                            >
-                              <span>📊 OPEN FULL ANALYSIS</span>
-                              <span style={{fontSize:"14px"}}>→</span>
-                            </button>
-                          )}
                           <div>
                             <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TICKER</div>
                             <input
