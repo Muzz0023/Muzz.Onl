@@ -1,19 +1,10 @@
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://lheniesboruihwmmkans.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET;
-const DONNY_PRODUCT_ID = process.env.DONNY_PRODUCT_ID || 'muzz_donny_monthly';
 
-async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
+async function updateUserEliteStatus(userId, isElite) {
   try {
-    const updateData = {};
-    if (isElite !== null) updateData.stripe_elite = isElite;
-    if (isDonnyElite !== null) updateData.stripe_donny_elite = isDonnyElite;
-    if (isDonnyElite === true) updateData.stripe_elite = true;
-    if (isElite === false && isDonnyElite === false) {
-      updateData.stripe_elite = false;
-      updateData.stripe_donny_elite = false;
-    }
-
+    const updateData = { stripe_elite: isElite, updated_at: new Date().toISOString() };
     await fetch(`${SUPABASE_URL}/rest/v1/user_data?user_id=eq.${userId}`, {
       method: 'PATCH',
       headers: {
@@ -22,9 +13,9 @@ async function updateUserEliteStatus(userId, isElite, isDonnyElite) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ ...updateData, updated_at: new Date().toISOString() }),
+      body: JSON.stringify(updateData),
     });
-    console.log(`Updated elite status for ${userId}:`, updateData);
+    console.log(`Updated elite for ${userId}: ${isElite}`);
   } catch (error) {
     console.error('Error updating elite status:', error);
   }
@@ -50,27 +41,18 @@ export default async function handler(req, res) {
 
     if (!app_user_id) return res.status(400).json({ error: 'Missing app_user_id' });
 
-    const isDonnyProduct = product_id === DONNY_PRODUCT_ID;
-    console.log(`RevenueCat webhook: type=${type}, user=${app_user_id}, product=${product_id}, isDonny=${isDonnyProduct}`);
+    console.log(`RevenueCat webhook: type=${type}, user=${app_user_id}, product=${product_id}`);
 
     switch (type) {
       case 'INITIAL_PURCHASE':
       case 'RENEWAL':
       case 'REACTIVATION':
-        if (isDonnyProduct) {
-          await updateUserEliteStatus(app_user_id, true, true);
-        } else {
-          await updateUserEliteStatus(app_user_id, true, null);
-        }
+        await updateUserEliteStatus(app_user_id, true);
         break;
       case 'CANCELLATION':
       case 'EXPIRATION':
       case 'BILLING_ISSUE':
-        if (isDonnyProduct) {
-          await updateUserEliteStatus(app_user_id, false, false);
-        } else {
-          await updateUserEliteStatus(app_user_id, false, null);
-        }
+        await updateUserEliteStatus(app_user_id, false);
         break;
       default:
         console.log(`Unhandled RevenueCat event type: ${type}`);
