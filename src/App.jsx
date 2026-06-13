@@ -8150,29 +8150,6 @@ ${JSON.stringify(ctx, null, 2)}`;
         <Sidebar />
         <SaveIndicator />
 
-        {/* TOP COMMAND BAR */}
-        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(3,8,18,0.95)",borderBottom:"0.5px solid rgba(0,200,255,0.2)",padding:"6px 12px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)",gap:"8px"}}>
-          <div style={{display:"flex",alignItems:"center",gap:"10px",overflow:"hidden",minWidth:0}}>
-            <span style={{fontSize:"11px",color:"#00c8ff",letterSpacing:"2px",fontFamily:"monospace",fontWeight:500,flexShrink:0}}>MUZZ.ONL</span>
-            {isWide && <>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{liveDate}</span>
-            </>}
-            {eliteName && <><span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span><span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{eliteName.toUpperCase()}</span></>}
-            {isWide && <>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace",flexShrink:0}}>|</span>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px",flexShrink:0}}>SID:{sessionId}</span>
-            </>}
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:"8px",flexShrink:0}}>
-            <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1px",whiteSpace:"nowrap"}}>{liveClock}</span>
-            <div style={{display:"flex",alignItems:"center",gap:"3px"}}>
-              <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#00c8ff",display:"inline-block",boxShadow:"0 0 6px #00c8ff",animation:"blink 2s infinite"}}></span>
-              <span style={{fontSize:"10px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace"}}>LIVE</span>
-            </div>
-          </div>
-        </div>
-
         {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",position:"relative",overflow:"hidden",padding:isWide?"40px 24px 14px":"60px 28px 20px"}}>
           <div className={isWide?"max-w-7xl mx-auto":"max-w-4xl mx-auto"}>
