@@ -9,10 +9,10 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { userId, userEmail, plan } = req.body;
+    const { userId, userEmail } = req.body;
     if (!userId || !userEmail) return res.status(400).json({ error: 'Missing userId or userEmail' });
 
-    const priceId = plan === 'donny' ? process.env.DONNY_PRICE_ID : process.env.STRIPE_PRICE_ID;
+    const priceId = process.env.STRIPE_PRICE_ID;
 
     const existingCustomers = await stripe.customers.list({ email: userEmail, limit: 1 });
     let customer;
@@ -29,8 +29,8 @@ export default async function handler(req, res) {
       mode: 'subscription',
       success_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=success',
       cancel_url: (process.env.NEXT_PUBLIC_URL || 'https://muzz.onl') + '?payment=cancelled',
-      metadata: { supabase_user_id: userId, plan: plan || 'elite' },
-      subscription_data: { metadata: { supabase_user_id: userId, plan: plan || 'elite' } },
+      metadata: { supabase_user_id: userId, plan: 'elite' },
+      subscription_data: { metadata: { supabase_user_id: userId, plan: 'elite' } },
     });
 
     return res.status(200).json({ url: session.url });
