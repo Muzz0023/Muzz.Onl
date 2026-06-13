@@ -8183,7 +8183,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                   </div>
                   <div style={{display:"flex",alignItems:"baseline",gap:"10px",flexWrap:"wrap"}}>
                     <RollingValue value={displayNetWorth} prefix="$" fmt={(v) => v.toLocaleString()} style={{fontSize:isWide?"40px":"32px",color:scrubberDate?"rgba(251,191,36,0.95)":"#e0eaff",fontFamily:"monospace",fontWeight:500,lineHeight:1}} />
-                    <Sparkline data={nwSeries} w={80} h={24} color="auto" />
                     {scrubLabel && <span style={{fontSize:"10px",color:"rgba(251,191,36,0.95)",fontFamily:"monospace",letterSpacing:"1.5px",border:"0.5px solid rgba(251,191,36,0.5)",padding:"2px 6px",borderRadius:"2px",background:"rgba(251,191,36,0.06)"}}>{scrubLabel}</span>}
                   </div>
                 </div>
@@ -8463,60 +8462,6 @@ ${JSON.stringify(ctx, null, 2)}`;
 
 
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))",gap:"8px"}}>
-            {/* ACHIEVEMENTS — Palantir style */}
-            <div style={palantirPanel}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{...palantirLabel,marginBottom:0}}>Achievements</span>
-                <span style={{fontSize:"10px",color:"rgba(0,200,255,0.3)",fontFamily:"monospace"}}>{[...new Set([netWorth>=1000,netWorth>=5000,netWorth>=10000,netWorth>=25000,netWorth>=50000,netWorth>=100000,savingsRate>=10,savingsRate>=20,savingsRate>=50,stocks.length>=1,stocks.length>=5,assets.length>=1])].filter(Boolean).length}/20 COMPLETE</span>
-              </div>
-              <div style={{maxHeight:"280px",overflowY:"auto"}}>
-                {(() => {
-                  const achievementData = [
-                    { id:"first_1k", title:"First $1K", current:netWorth, target:1000, unit:"$" },
-                    { id:"5k_club", title:"$5K Club", current:netWorth, target:5000, unit:"$" },
-                    { id:"10k_club", title:"$10K Club", current:netWorth, target:10000, unit:"$" },
-                    { id:"25k_club", title:"$25K Club", current:netWorth, target:25000, unit:"$" },
-                    { id:"50k_club", title:"$50K Club", current:netWorth, target:50000, unit:"$" },
-                    { id:"100k_club", title:"$100K Club", current:netWorth, target:100000, unit:"$" },
-                    { id:"250k_club", title:"$250K Club", current:netWorth, target:250000, unit:"$" },
-                    { id:"500k_club", title:"$500K Club", current:netWorth, target:500000, unit:"$" },
-                    { id:"1m_club", title:"Millionaire", current:netWorth, target:1000000, unit:"$" },
-                    { id:"saver_10", title:"Baby Saver", current:savingsRate, target:10, unit:"%" },
-                    { id:"saver_20", title:"Growing Saver", current:savingsRate, target:20, unit:"%" },
-                    { id:"super_saver", title:"Super Saver", current:savingsRate, target:50, unit:"%" },
-                    { id:"mega_saver", title:"Mega Saver", current:savingsRate, target:70, unit:"%" },
-                    { id:"first_stock", title:"First Investment", current:stocks.length, target:1, unit:" stocks" },
-                    { id:"diversified", title:"Diversified", current:stocks.length, target:5, unit:" stocks" },
-                    { id:"portfolio_pro", title:"Portfolio Pro", current:stocks.length, target:10, unit:" stocks" },
-                    { id:"asset_owner", title:"Asset Owner", current:assets.length, target:1, unit:" assets" },
-                    { id:"asset_collector", title:"Asset Collector", current:assets.length, target:5, unit:" assets" },
-                  ];
-                  const sorted = [...achievementData].sort((a,b) => {
-                    const ap = Math.min((a.current/a.target)*100,100);
-                    const bp = Math.min((b.current/b.target)*100,100);
-                    if(ap>=100&&bp<100) return 1;
-                    if(ap<100&&bp>=100) return -1;
-                    return bp-ap;
-                  });
-                  return sorted.map(a => {
-                    const progress = Math.min((a.current/a.target)*100,100);
-                    const isComplete = progress >= 100;
-                    const status = isComplete ? "COMPLETE" : progress > 0 ? "IN PROGRESS" : "LOCKED";
-                    const statusColor = isComplete ? "#00c8ff" : progress > 0 ? "rgba(251,191,36,0.8)" : "rgba(148,163,184,0.2)";
-                    return (
-                      <div key={a.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.04)"}}>
-                        <span style={{fontSize:"11px",color:isComplete?"#e0eaff":progress>0?"rgba(224,234,255,0.6)":"rgba(148,163,184,0.3)",fontFamily:"monospace",flex:1}}>{a.title}</span>
-                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                          {!isComplete && <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{progress.toFixed(0)}%</span>}
-                          <span style={{fontSize:"9px",color:statusColor,fontFamily:"monospace",letterSpacing:"1px",border:`0.5px solid ${statusColor}`,padding:"1px 5px"}}>{status}</span>
-                        </div>
-                      </div>
-                    );
-                  });
-                })()}
-              </div>
-            </div>
-
             {/* UPCOMING EVENTS */}
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(251,191,36,0.2)",borderRadius:"6px",backgroundImage:"radial-gradient(rgba(251,191,36,0.02) 1px, transparent 1px)",backgroundSize:"20px 20px"}}>
               <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(251,191,36,0.15)",borderLeft:"2px solid rgba(251,191,36,0.8)"}}>
@@ -8666,89 +8611,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             );
           })()}
           </div>
-
-          {/* FINANCIAL HEALTH SCORE */}
-          {(() => {
-            const {score, factors, rating, color} = health;
-            return (
-              <>
-                <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setShowHealthModal(true)}>
-                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{...palantirLabel,marginBottom:0}}>Financial Health Score</span>
-                    <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>TAP FOR BREAKDOWN →</span>
-                  </div>
-                  <div style={{padding:"16px 20px",display:"flex",alignItems:"center",gap:"20px"}}>
-                    <div>
-                      <div style={{fontSize:"52px",color,fontFamily:"monospace",fontWeight:500,lineHeight:1}}>{score}</div>
-                      <div style={{fontSize:"11px",color,fontFamily:"monospace",letterSpacing:"2px",marginTop:"4px",border:`0.5px solid ${color}`,padding:"2px 8px",display:"inline-block"}}>{rating}</div>
-                    </div>
-                    <div style={{flex:1}}>
-                      <div style={{height:"4px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",marginBottom:"12px"}}>
-                        <div style={{height:"4px",width:`${score}%`,background:`linear-gradient(90deg,rgba(239,68,68,0.8),rgba(251,191,36,0.9),${color})`,borderRadius:"2px"}} />
-                      </div>
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
-                        {factors.map((f,i) => (
-                          <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"4px 8px",background:"rgba(255,255,255,0.02)",borderRadius:"3px"}}>
-                            <span style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{f.label}</span>
-                            <span style={{fontSize:"9px",color:f.score===f.max?"#00c8ff":f.score>f.max*0.6?"rgba(251,191,36,0.8)":"rgba(239,68,68,0.6)",fontFamily:"monospace"}}>{f.status}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* HEALTH MODAL */}
-                {showHealthModal && (
-                  <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:200,background:"rgba(0,0,0,0.8)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}} onClick={() => setShowHealthModal(false)}>
-                    <div style={{background:"rgba(5,12,24,0.98)",border:"0.5px solid rgba(0,200,255,0.3)",borderRadius:"8px",width:"100%",maxWidth:"560px",maxHeight:"80vh",overflowY:"auto"}} onClick={e => e.stopPropagation()}>
-                      <div style={{padding:"16px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.15)",borderLeft:"3px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                        <div>
-                          <div style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px"}}>FINANCIAL HEALTH BREAKDOWN</div>
-                          <div style={{display:"flex",alignItems:"baseline",gap:"12px"}}>
-                            <span style={{fontSize:"36px",color,fontFamily:"monospace",fontWeight:500}}>{score}</span>
-                            <span style={{fontSize:"13px",color,fontFamily:"monospace",letterSpacing:"2px",border:`0.5px solid ${color}`,padding:"2px 10px"}}>{rating}</span>
-                          </div>
-                        </div>
-                        <button onClick={() => setShowHealthModal(false)} style={{background:"none",border:"0.5px solid rgba(0,200,255,0.3)",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",fontSize:"11px",padding:"4px 10px",cursor:"pointer",borderRadius:"3px",letterSpacing:"1px"}}>CLOSE</button>
-                      </div>
-                      <div style={{padding:"16px 20px"}}>
-                        <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px",marginBottom:"20px"}}>
-                          <div style={{height:"3px",width:`${score}%`,background:`linear-gradient(90deg,rgba(239,68,68,0.8),rgba(251,191,36,0.9),${color})`,borderRadius:"2px"}} />
-                        </div>
-                        {factors.map((f,i) => {
-                          const fc = f.score===f.max?"#00c8ff":f.score>f.max*0.6?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.8)";
-                          return (
-                            <div key={i} style={{marginBottom:"16px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(0,200,255,0.08)",borderRadius:"4px",borderLeft:`2px solid ${fc}`}}>
-                              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"6px"}}>
-                                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{f.label}</span>
-                                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>{f.score}/{f.max} pts</span>
-                                  <span style={{fontSize:"10px",color:fc,fontFamily:"monospace",letterSpacing:"1px",border:`0.5px solid ${fc}`,padding:"1px 6px"}}>{f.status}</span>
-                                </div>
-                              </div>
-                              <div style={{height:"2px",background:"rgba(255,255,255,0.05)",borderRadius:"1px",marginBottom:"8px"}}>
-                                <div style={{height:"2px",width:`${(f.score/f.max)*100}%`,background:fc,borderRadius:"1px"}} />
-                              </div>
-                              <div style={{fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace"}}>{f.hint}</div>
-                            </div>
-                          );
-                        })}
-                        <div style={{marginTop:"16px",padding:"10px 16px",background:"rgba(0,200,255,0.03)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"4px"}}>
-                          <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RATING SCALE</div>
-                          <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-                            {[["85-100","ELITE","#00c8ff"],["70-84","STRONG","rgba(34,197,94,0.9)"],["55-69","GOOD","rgba(251,191,36,0.9)"],["40-54","FAIR","rgba(251,146,60,0.9)"],["0-39","WEAK","rgba(239,68,68,0.8)"]].map(([range,label,c])=>(
-                              <span key={label} style={{fontSize:"9px",color:c,fontFamily:"monospace",border:`0.5px solid ${c}`,padding:"1px 6px",opacity:rating===label?1:0.4}}>{range} {label}</span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
-            );
-          })()}
 
           {reminders && reminders.length > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px"}}>
