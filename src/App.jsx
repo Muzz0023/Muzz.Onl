@@ -8631,11 +8631,6 @@ ${JSON.stringify(ctx, null, 2)}`;
             </div>
           )}
 
-          <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.1)",borderRadius:"6px",padding:"16px 20px"}}>
-            <div style={{fontSize:"14px",fontStyle:"italic",color:"rgba(224,234,255,0.7)",marginBottom:"6px"}}>"{todayQuote.quote}"</div>
-            <div style={{fontSize:"11px",color:"rgba(0,200,255,0.4)",letterSpacing:"1px"}}>— {todayQuote.author}</div>
-          </div>
-
           {isElite && (
             <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"12px 16px",background:"rgba(255,255,255,0.02)",border:"0.5px solid rgba(255,255,255,0.06)",borderRadius:"6px"}}>
               <span style={{fontSize:"14px"}}>💛</span>
