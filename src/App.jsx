@@ -24105,19 +24105,6 @@ ${JSON.stringify(ctx, null, 2)}`;
                 </div>
 
                 {/* Stats row */}
-                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
-                  {[
-                    {label:"STREAK",value:`${streak}🔥`,color:"rgba(255,165,0,0.9)"},
-                    {label:"BEST",value:`${bestStreak} days`,color:"rgba(0,200,255,0.6)"},
-                    {label:"31-DAY",value:`${completionRate}%`,color:completionRate>=70?"#00c8ff":completionRate>=40?"rgba(251,191,36,0.9)":"rgba(239,68,68,0.7)"},
-                  ].map((stat,i) => (
-                    <div key={i} style={{padding:"14px 12px",textAlign:"center",borderRight:i<2?"0.5px solid rgba(0,200,255,0.06)":"none"}}>
-                      <div style={{fontSize:"9px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>{stat.label}</div>
-                      <div style={{fontSize:"18px",color:stat.color,fontFamily:"monospace",fontWeight:600}}>{stat.value}</div>
-                    </div>
-                  ))}
-                </div>
-
                 {/* Completion rate bar */}
                 <div style={{padding:"10px 20px",borderBottom:"0.5px solid rgba(0,200,255,0.06)"}}>
                   <div style={{height:"3px",background:"rgba(255,255,255,0.05)",borderRadius:"2px"}}>
