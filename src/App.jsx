@@ -23793,6 +23793,16 @@ ${JSON.stringify(ctx, null, 2)}`;
     const thisMonthHabits = Object.keys(habitLog || {}).filter(k => k.includes(thisMonth)).length;
     const completedTasks = Array.isArray(dailyTasks) ? dailyTasks.filter(t => t.completed).length : 0;
     const totalTasks = Array.isArray(dailyTasks) ? dailyTasks.length : 0;
+    // Total tasks across all categories (Daily/Weekly/General + any custom lists), parsed from note JSON
+    const parseTaskItems = (noteVal) => { try { const i = JSON.parse(noteVal); return Array.isArray(i) ? i : []; } catch { return []; } };
+    const allTaskItems = [
+      ...parseTaskItems(dailyNote),
+      ...parseTaskItems(weeklyNote),
+      ...parseTaskItems(generalNote),
+      ...(Array.isArray(customTaskLists) ? customTaskLists.flatMap(l => parseTaskItems(l?.note || '')) : []),
+    ];
+    const totalAllTasks = allTaskItems.length;
+    const completedAllTasks = allTaskItems.filter(i => i.checked).length;
     const sleepEntries = Object.values(sleepData || {}).filter(s => s.hoursSlept);
     const avgSleep = sleepEntries.length > 0 ? (sleepEntries.reduce((s,e) => s + parseFloat(e.hoursSlept||0), 0) / sleepEntries.length).toFixed(1) : '—';
     const moodEntries = Object.values(mentalHealthData || {}).filter(m => m.mood);
@@ -23804,7 +23814,7 @@ ${JSON.stringify(ctx, null, 2)}`;
       { label:'SAVINGS RATE', value:`${savingsRateNum}%`, sub:'OF MONTHLY INCOME', color:'#22c55e' },
       { label:'PORTFOLIO', value:`$${totalStocks.toLocaleString()}`, sub:`${stocks.length} HOLDINGS`, color:'#8b5cf6' },
       { label:'MONTHLY BILLS', value:`$${totalMonthly.toFixed(0)}`, sub:'PER MONTH', color:'#ef4444' },
-      { label:'TASKS TODAY', value:`${completedTasks}/${totalTasks}`, sub:'COMPLETED', color:'#3b82f6' },
+      { label:'TOTAL TASKS', value:`${completedAllTasks}/${totalAllTasks}`, sub:'COMPLETED', color:'#3b82f6' },
       { label:'ASSETS', value:assets.length, sub:'TRACKED ASSETS', color:'#14b8a6' },
       { label:'HABITS', value:habits.length, sub:'ACTIVE HABITS', color:'#a855f7' },
       { label:'COUNTDOWNS', value:countdowns.length, sub:'UPCOMING EVENTS', color:'#f43f5e' },
