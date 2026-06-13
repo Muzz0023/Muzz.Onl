@@ -7337,13 +7337,15 @@ ${JSON.stringify(ctx, null, 2)}`;
                     </div>
                   ))}
 
-                  {/* Add button */}
+                  {/* Add button — hidden in empty state since template offers START FRESH */}
+                  {items.length > 0 && (
                   <button onClick={addItem} style={{display:"flex",alignItems:"center",gap:"10px",padding:"4px 0",background:"none",border:"none",cursor:"pointer",marginTop:"4px"}}>
                     <div style={{width:"20px",height:"20px",borderRadius:"50%",border:`1.5px dashed ${accentColor}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,opacity:0.4}}>
                       <span style={{color:accentColor,fontSize:"14px",lineHeight:1}}>+</span>
                     </div>
                     <span style={{color:"rgba(148,163,184,0.25)",fontSize:"15px",fontFamily:"system-ui"}}>New item</span>
                   </button>
+                  )}
 
                   {/* Completed section — collapsible */}
                   {checked.length > 0 && (
