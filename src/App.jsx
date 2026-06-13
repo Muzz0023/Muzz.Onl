@@ -5141,10 +5141,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {kvRow("AVG COST", avgCost > 0 ? `$${avgCost.toFixed(2)}` : "—")}
           {kvRow("VALUE", positionValue > 0 ? `$${positionValue.toLocaleString(undefined,{maximumFractionDigits:2})}` : "—")}
           {kvRow("P/L", pl!=null ? `${pl>=0?"+":""}${pl.toFixed(2)}%` : "—", pl==null?null:pl>=0?"rgba(34,197,94,0.9)":"rgba(239,68,68,0.9)")}
-          {sectionLabel("METADATA")}
-          {kvRow("NAME", tracked?.name || held?.name || "—")}
-          {kvRow("ENTITY_ID", `stock_${entity.id.toLowerCase()}`)}
-          {kvRow("TYPE", "EQUITY")}
         </>
       );
     } else if (entity.type === "BILL") {
@@ -5166,9 +5162,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {kvRow("ANNUAL", `$${annual.toFixed(2)}`)}
           {kvRow("DUE DAY", bill.dueDate || "—")}
           {kvRow("DAYS UNTIL", daysUntil!=null ? `${daysUntil}d` : "—", daysUntil!=null && daysUntil<=3 ? "rgba(239,68,68,0.9)" : daysUntil<=7 ? "rgba(251,191,36,0.9)" : null)}
-          {sectionLabel("METADATA")}
-          {kvRow("ENTITY_ID", `bill_${entity.id.toLowerCase().replace(/\s/g,'_')}`)}
-          {kvRow("TYPE", "RECURRING_OUTFLOW")}
         </>
       );
     } else if (entity.type === "ASSET") {
@@ -5180,9 +5173,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {sectionLabel("ASSET")}
           {kvRow("VALUE", `$${v.toLocaleString()}`)}
           {kvRow("CATEGORY", asset.category || "—")}
-          {sectionLabel("METADATA")}
-          {kvRow("ENTITY_ID", `asset_${entity.id.toLowerCase().replace(/\s/g,'_')}`)}
-          {kvRow("TYPE", (asset.category || "ASSET").toUpperCase())}
         </>
       );
     } else {
@@ -5204,54 +5194,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         {/* Body */}
         <div style={{flex:1,overflowY:"auto"}}>
           {content}
-
-          {/* HISTORY / AUDIT TRAIL */}
-          {(() => {
-            const eid = entity.type === "STOCK" ? `stock_${entity.id.toLowerCase()}` :
-                       entity.type === "BILL" ? `bill_${entity.id.toLowerCase().replace(/\s/g,'_')}` :
-                       entity.type === "ASSET" ? `asset_${entity.id.toLowerCase().replace(/\s/g,'_')}` : null;
-            const log = eid ? (deps.auditLog?.[eid] || []) : [];
-            // For stocks, also synthesize an intraday line from livePrices
-            let stockHistory = null;
-            if (entity.type === "STOCK") {
-              const p = deps.livePrices[entity.id];
-              if (p?.c && p?.pc && p.pc > 0 && p.c !== p.pc) {
-                stockHistory = [
-                  { ts: new Date().toISOString(), field: "price", from: p.pc, to: p.c, label: "Intraday (vs prev close)" },
-                ];
-              }
-            }
-            const combined = [...(stockHistory||[]), ...log].slice().reverse();
-            return (
-              <>
-                <div style={{padding:"8px 14px 4px",fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"2px",borderBottom:"0.5px solid rgba(0,200,255,0.06)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span>// HISTORY</span>
-                  <span style={{color:"rgba(148,163,184,0.4)",fontSize:"9px"}}>{combined.length} {combined.length===1?"event":"events"}</span>
-                </div>
-                {combined.length === 0 ? (
-                  <div style={{padding:"10px 14px",fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace",letterSpacing:"0.5px"}}>NO RECORDED CHANGES YET — edits will be tracked from now on.</div>
-                ) : (
-                  combined.slice(0, 12).map((e,i) => {
-                    const dir = e.to >= e.from ? "▲" : "▼";
-                    const color = e.to >= e.from ? "rgba(34,197,94,0.85)" : "rgba(239,68,68,0.85)";
-                    const pct = e.from > 0 ? Math.abs((e.to - e.from)/e.from * 100) : 0;
-                    const t = new Date(e.ts);
-                    const dateStr = t.toLocaleDateString('en-AU',{day:'2-digit',month:'short'});
-                    const timeStr = t.toTimeString().slice(0,5);
-                    return (
-                      <div key={i} style={{display:"grid",gridTemplateColumns:"56px 1fr auto",gap:"6px",padding:"5px 14px",fontFamily:"monospace",fontSize:"10.5px",borderBottom:"0.5px solid rgba(0,200,255,0.04)",alignItems:"center"}}>
-                        <span style={{color:"rgba(148,163,184,0.55)",letterSpacing:"0.3px"}}>{dateStr}</span>
-                        <span style={{color:"rgba(224,234,255,0.7)",letterSpacing:"0.3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
-                          <span style={{color:"rgba(0,200,255,0.4)"}}>{e.field || "value"}:</span> ${typeof e.from === "number" ? e.from.toFixed(2) : e.from} → ${typeof e.to === "number" ? e.to.toFixed(2) : e.to}
-                        </span>
-                        <span style={{color,letterSpacing:"0.3px",fontSize:"10px"}}>{dir} {pct.toFixed(2)}%</span>
-                      </div>
-                    );
-                  })
-                )}
-              </>
-            );
-          })()}
 
           {sectionLabel("RELATIONSHIPS")}
           <div style={{padding:"8px 14px"}}>
