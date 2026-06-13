@@ -2313,6 +2313,7 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
+  const [researchConstellationIndustry, setResearchConstellationIndustry] = useState(null);
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
@@ -10047,13 +10048,232 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
-          {(investmentsSubTab === 'portfolio' || investmentsSubTab === 'futurePortfolio' || investmentsSubTab === 'researchMap') && (() => {
-            const isResearchMapTab = investmentsSubTab === 'researchMap';
-            // Each tab forces its own mode — current portfolio = current, future portfolio = future, research map = research.
-            // The mode switcher is no longer needed since the active sub-tab fully determines the view.
-            const effectiveMode = isResearchMapTab ? 'research'
-                                : investmentsSubTab === 'futurePortfolio' ? 'future'
-                                : 'current';
+          {/* === RESEARCH CONSTELLATION — drill-down by industry === */}
+          {investmentsSubTab === 'researchMap' && (() => {
+            const accent = '#a855f7';
+            const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
+            const researchList = holdingsResearch.filter(s => s && s.ticker);
+
+            // Group by industry (case-insensitive, trimmed). Items without industry → "OTHER".
+            const byIndustry = {};
+            researchList.forEach(h => {
+              const ind = (h.industry && h.industry.trim()) ? h.industry.trim() : 'Other';
+              if (!byIndustry[ind]) byIndustry[ind] = [];
+              byIndustry[ind].push(h);
+            });
+            const industries = Object.keys(byIndustry).sort((a, b) => byIndustry[b].length - byIndustry[a].length);
+
+            const drillIndustry = researchConstellationIndustry;
+            const inDrill = drillIndustry && byIndustry[drillIndustry];
+
+            // What we render around the centre — industries OR companies in the drill industry
+            const leaves = inDrill ? byIndustry[drillIndustry] : industries.map(ind => ({ industry: ind, count: byIndustry[ind].length }));
+            const N = leaves.length;
+            const isWide = typeof window !== 'undefined' && window.innerWidth >= 768;
+            const canvasSize = isWide ? 700 : 360;
+            const cx = canvasSize / 2;
+            const cy = canvasSize / 2;
+            const bucketRadius = isWide ? 90 : 60;
+            const cardW = isWide ? 150 : 95;
+            const cardH = isWide ? 64 : 52;
+            const ringRadius = isWide ? Math.min(canvasSize / 2 - 90, 320) : canvasSize / 2 - 55;
+            const nodes = leaves.map((leaf, i) => {
+              const angle = (-Math.PI / 2) + (i / Math.max(N, 1)) * Math.PI * 2;
+              const x = cx + Math.cos(angle) * ringRadius;
+              const y = cy + Math.sin(angle) * ringRadius;
+              const pathR = ringRadius - cardH / 2;
+              const px = cx + Math.cos(angle) * pathR;
+              const py = cy + Math.sin(angle) * pathR;
+              const bx = cx + Math.cos(angle) * bucketRadius;
+              const by = cy + Math.sin(angle) * bucketRadius;
+              return { ...leaf, angle, x, y, px, py, bx, by };
+            });
+
+            const centreLabel = inDrill ? drillIndustry.toUpperCase() : 'RESEARCH';
+            const centreCount = inDrill ? byIndustry[drillIndustry].length : researchList.length;
+            const centreSub = inDrill ? `${centreCount} COMPAN${centreCount!==1?'IES':'Y'}` : `${centreCount} COMPAN${centreCount!==1?'IES':'Y'} · ${industries.length} INDUSTR${industries.length!==1?'IES':'Y'}`;
+
+            // Empty state
+            if (researchList.length === 0) {
+              return (
+                <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"40px 24px",textAlign:"center"}}>
+                  <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"2.5px",marginBottom:"10px",fontWeight:600}}>// EMPTY CONSTELLATION</div>
+                  <div style={{fontSize:"15px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"6px"}}>No research holdings yet.</div>
+                  <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.6}}>
+                    Add companies to the HOLDINGS tab with an industry tag to see them mapped here.
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",overflow:"hidden"}}>
+                {/* Header / breadcrumb */}
+                <div style={{padding:"12px 16px",borderLeft:`2px solid ${accent}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",flexWrap:"wrap"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
+                    <span style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH CONSTELLATION</span>
+                    {inDrill && (
+                      <>
+                        <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>›</span>
+                        <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>{drillIndustry.toUpperCase()}</span>
+                      </>
+                    )}
+                  </div>
+                  {inDrill && (
+                    <button
+                      onClick={() => setResearchConstellationIndustry(null)}
+                      style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${accent}15`,border:`0.5px solid ${accent}60`,padding:"6px 12px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}
+                    >
+                      ← ALL INDUSTRIES
+                    </button>
+                  )}
+                </div>
+
+                <div style={{padding:"20px 12px",backgroundImage:`radial-gradient(${accent}08 1px,transparent 1px)`,backgroundSize:"20px 20px"}}>
+                  {isWide ? (
+                  /* DESKTOP — Radial canvas */
+                  <div style={{position:"relative",width:`${canvasSize}px`,height:`${canvasSize}px`,margin:"0 auto",maxWidth:"100%"}}>
+                    <svg viewBox={`0 0 ${canvasSize} ${canvasSize}`} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0}}>
+                      <defs>
+                        <radialGradient id="rc-bg-glow" cx="50%" cy="50%" r="50%">
+                          <stop offset="0%" stopColor={accent} stopOpacity="0.08"/>
+                          <stop offset="70%" stopColor={accent} stopOpacity="0.02"/>
+                          <stop offset="100%" stopColor={accent} stopOpacity="0"/>
+                        </radialGradient>
+                        <filter id="rc-glow" x="-50%" y="-50%" width="200%" height="200%">
+                          <feGaussianBlur stdDeviation="2.5" result="b"/>
+                          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                      </defs>
+                      <circle cx={cx} cy={cy} r={ringRadius + 30} fill="url(#rc-bg-glow)"/>
+                      <circle cx={cx} cy={cy} r={ringRadius} fill="none" stroke={accent} strokeWidth="0.4" strokeDasharray="2 6" opacity="0.18"/>
+                      {nodes.map((n, i) => (
+                        <g key={i}>
+                          <line x1={n.bx} y1={n.by} x2={n.px} y2={n.py} stroke={accent} strokeWidth="3" opacity="0.12" filter="url(#rc-glow)"/>
+                          <line x1={n.bx} y1={n.by} x2={n.px} y2={n.py} stroke={accent} strokeWidth="1" opacity="0.6"/>
+                          <circle cx={n.px} cy={n.py} r="3" fill={accent} opacity="0.95"/>
+                          <circle cx={n.px} cy={n.py} r="6" fill="none" stroke={accent} strokeWidth="0.4" opacity="0.5"/>
+                        </g>
+                      ))}
+                      {nodes.map((n, i) => (
+                        <circle key={`p-${i}`} r="2.5" fill={accent} opacity="0">
+                          <animate attributeName="cx" from={n.bx} to={n.px} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
+                          <animate attributeName="cy" from={n.by} to={n.py} dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
+                          <animate attributeName="opacity" values="0;1;1;0" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" begin={`${i * 0.25}s`}/>
+                        </circle>
+                      ))}
+                    </svg>
+
+                    {/* Root node — centre */}
+                    <div style={{position:"absolute",left:cx,top:cy,transform:"translate(-50%,-50%)",zIndex:2}}>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 30px ${accent}55, inset 0 1px 0 ${accent}40`,minWidth:"150px",position:"relative"}}>
+                        <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600,textAlign:"center"}}>{centreLabel}</span>
+                        <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>{centreCount}</span>
+                        <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px",textAlign:"center"}}>{centreSub}</span>
+                      </div>
+                    </div>
+
+                    {/* Leaf nodes around the ring */}
+                    {nodes.map((n, idx) => {
+                      const isCompany = !!inDrill;
+                      const label = isCompany ? (n.ticker || '?') : n.industry;
+                      const sub = isCompany ? (n.industry || 'Other') : `${n.count} COMPAN${n.count!==1?'IES':'Y'}`;
+                      const onClick = () => {
+                        if (isCompany) {
+                          // Open per-stock deep dive
+                          setDetailTicker(n.ticker);
+                        } else {
+                          setResearchConstellationIndustry(n.industry);
+                        }
+                      };
+                      return (
+                        <div key={idx} onClick={onClick} style={{position:"absolute",left:n.x,top:n.y,transform:"translate(-50%,-50%)",width:`${cardW}px`,zIndex:1,cursor:"pointer"}}>
+                          <div style={{padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 12px ${accent}25`,minHeight:`${cardH}px`,display:"flex",flexDirection:"column",justifyContent:"center",transition:"all 0.15s"}}
+                            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 0 18px ${accent}55`; e.currentTarget.style.borderColor = accent; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `0 0 12px ${accent}25`; e.currentTarget.style.borderColor = `${accent}50`; }}
+                          >
+                            <div style={{position:"absolute",top:"0",left:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderLeft:`0.5px solid ${accent}80`}}/>
+                            <div style={{position:"absolute",top:"0",right:"0",width:"4px",height:"4px",borderTop:`0.5px solid ${accent}80`,borderRight:`0.5px solid ${accent}80`}}/>
+                            <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                              <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
+                              <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0,letterSpacing:"0.5px"}}>{label}</span>
+                            </div>
+                            <div style={{fontFamily:"monospace",fontSize:"8px",color:`${accent}99`,letterSpacing:"0.5px",marginTop:"3px",paddingLeft:"10px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{sub}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  ) : (
+                  /* MOBILE — Vertical spine */
+                  <div style={{position:"relative",maxWidth:"100%"}}>
+                    {/* Root node — top centre */}
+                    <div style={{display:"flex",justifyContent:"center",marginBottom:"8px",position:"relative",zIndex:2}}>
+                      <div style={{display:"inline-flex",flexDirection:"column",alignItems:"center",padding:"12px 22px",background:`linear-gradient(180deg, ${accent}30, ${accent}12)`,border:`1px solid ${accent}`,borderRadius:"6px",boxShadow:`0 0 24px ${accent}50`,minWidth:"160px",position:"relative"}}>
+                        <div style={{position:"absolute",top:"-1px",left:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",top:"-1px",right:"-1px",width:"8px",height:"8px",borderTop:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",left:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderLeft:`1px solid ${accent}`}}/>
+                        <div style={{position:"absolute",bottom:"-1px",right:"-1px",width:"8px",height:"8px",borderBottom:`1px solid ${accent}`,borderRight:`1px solid ${accent}`}}/>
+                        <span style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>{centreLabel}</span>
+                        <span style={{fontSize:"18px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>{centreCount}</span>
+                        <span style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px",textAlign:"center"}}>{centreSub}</span>
+                      </div>
+                    </div>
+
+                    {/* Vertical spine */}
+                    <div style={{position:"relative",paddingTop:"4px"}}>
+                      <div style={{position:"absolute",left:"50%",top:0,bottom:"20px",width:"1px",background:`linear-gradient(180deg, ${accent}, ${accent}30 90%, transparent)`,transform:"translateX(-50%)",zIndex:0}}/>
+                      {leaves.map((leaf, idx) => {
+                        const left = idx % 2 === 0;
+                        const isCompany = !!inDrill;
+                        const label = isCompany ? (leaf.ticker || '?') : leaf.industry;
+                        const sub = isCompany ? (leaf.industry || 'Other') : `${leaf.count} COMPAN${leaf.count!==1?'IES':'Y'}`;
+                        const onClick = () => {
+                          if (isCompany) {
+                            setDetailTicker(leaf.ticker);
+                          } else {
+                            setResearchConstellationIndustry(leaf.industry);
+                          }
+                        };
+                        return (
+                          <div key={idx} onClick={onClick} style={{position:"relative",display:"flex",justifyContent:left?"flex-start":"flex-end",marginBottom:"12px",zIndex:1,cursor:"pointer"}}>
+                            <div style={{position:"absolute",top:"50%",left:left?"calc(46% - 2px)":"50%",width:"4%",height:"1px",background:accent,opacity:0.6}}/>
+                            <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"6px",height:"6px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`}}/>
+                            <div style={{width:"46%",padding:"8px 10px",background:"rgba(5,12,24,0.95)",border:`0.5px solid ${accent}50`,borderLeft:left?`2px solid ${accent}`:undefined,borderRight:left?undefined:`2px solid ${accent}`,borderRadius:"4px",position:"relative",overflow:"hidden",boxShadow:`0 0 10px ${accent}20`}}>
+                              <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                                <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
+                                <span style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{label}</span>
+                              </div>
+                              <div style={{fontFamily:"monospace",fontSize:"9px",color:`${accent}99`,letterSpacing:"0.5px",marginTop:"3px",paddingLeft:"10px"}}>{sub}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  )}
+
+                  {/* Hint text below */}
+                  <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px",textAlign:"center"}}>
+                    <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px"}}>
+                      {inDrill
+                        ? '// TAP A COMPANY TO OPEN ITS DEEP DIVE'
+                        : '// TAP AN INDUSTRY TO SEE COMPANIES'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {(investmentsSubTab === 'portfolio' || investmentsSubTab === 'futurePortfolio') && (() => {
+            const isResearchMapTab = false;
+            // Each tab forces its own mode — current portfolio = current, future portfolio = future.
+            const effectiveMode = investmentsSubTab === 'futurePortfolio' ? 'future' : 'current';
             const accent = '#00c8ff';
             const rootName = (eliteName && eliteName.trim()) ? eliteName.trim().toUpperCase() : 'YOU';
 
