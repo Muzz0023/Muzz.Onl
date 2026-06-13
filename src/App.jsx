@@ -2946,8 +2946,23 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
             <circle cx="1" cy="1" r="1" fill="rgba(0,200,255,0.05)" />
           </pattern>
           <marker id="assetarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(0,200,255,0.5)" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(0,200,255,0.7)" />
           </marker>
+          {/* Neon glow filter — used on nodes + edges for that lit-up look */}
+          <filter id="nodeglow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="edgeglow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
         <rect className="assetmap-canvas-bg" width="100%" height="100%" fill="url(#assetgrid)" />
 
@@ -2956,10 +2971,15 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
             const from = nodes.find(n => n.id === edge.from);
             const to = nodes.find(n => n.id === edge.to);
             if (!from || !to) return null;
+            const path = edgePath(from, to);
             return (
               <g key={edge.id} style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); if (window.confirm('Delete this link?')) deleteEdge(edge.id); }}>
-                <path d={edgePath(from, to)} stroke="rgba(0,200,255,0.45)" strokeWidth="1.5" fill="none" markerEnd="url(#assetarrow)" />
-                <circle r="2.5" fill="rgba(0,200,255,0.85)"><animateMotion dur="3.5s" repeatCount="indefinite" path={edgePath(from, to)} /></circle>
+                {/* Soft outer halo */}
+                <path d={path} stroke="rgba(0,200,255,0.18)" strokeWidth="5" fill="none" filter="url(#edgeglow)" />
+                {/* Bright core line */}
+                <path d={path} stroke="rgba(0,220,255,0.85)" strokeWidth="1.4" fill="none" markerEnd="url(#assetarrow)" />
+                {/* Animated pulse along the line */}
+                <circle r="2.8" fill="rgba(220,240,255,0.95)" filter="url(#edgeglow)"><animateMotion dur="3.5s" repeatCount="indefinite" path={path} /></circle>
               </g>
             );
           })}
@@ -2981,14 +3001,22 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
             }
             return (
               <g key={node.id} data-node-id={node.id} transform={`translate(${node.x},${node.y})`} style={{ cursor: drag && drag.nodeId === node.id ? 'grabbing' : 'grab' }}>
-                <rect onMouseDown={(e) => handlePointerDownNode(e, node)} onTouchStart={touchHandlers((ev) => handlePointerDownNode(ev, node))} width={NODE_W} height={NODE_H} rx="4" fill={`${t.color}26`} stroke={isSelected ? t.color : `${t.color}99`} strokeWidth={isSelected ? 1.5 : 0.75} />
+                {/* Outer aura — soft color halo around the whole node */}
+                <rect x="-6" y="-6" width={NODE_W + 12} height={NODE_H + 12} rx="8" fill={`${t.color}1a`} filter="url(#nodeglow)" pointerEvents="none" />
+                {/* Glassy dark fill with bright color border */}
+                <rect onMouseDown={(e) => handlePointerDownNode(e, node)} onTouchStart={touchHandlers((ev) => handlePointerDownNode(ev, node))} width={NODE_W} height={NODE_H} rx="4" fill="rgba(8,12,24,0.92)" stroke={t.color} strokeWidth={isSelected ? 2 : 1.25} filter={isSelected ? "url(#nodeglow)" : undefined} />
+                {/* Inner color wash for subtle tint */}
+                <rect width={NODE_W} height={NODE_H} rx="4" fill={`${t.color}14`} pointerEvents="none" />
                 <rect x="0" y="0" width="3" height={NODE_H} fill={t.color} rx="2" />
                 <text x="10" y="14" fill={t.color} style={{ fontFamily: 'monospace', fontSize: '7px', letterSpacing: '1.5px', fontWeight: 600, pointerEvents: 'none' }}>{t.label}</text>
                 <text x="10" y="30" fill="#e0eaff" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 500, pointerEvents: 'none' }}>{node.label.length > 22 ? node.label.slice(0, 21) + '…' : node.label}</text>
-                {moneyStr && <text x="10" y="46" fill="rgba(34,197,94,0.9)" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 600, pointerEvents: 'none', letterSpacing: '0.5px' }}>{moneyStr}</text>}
-                <circle cx={NODE_W} cy={NODE_H / 2} r="10" fill={t.color} stroke="rgba(5,12,24,0.95)" strokeWidth="2" style={{ cursor: 'crosshair' }} onMouseDown={(e) => handlePointerDownConnector(e, node.id)} onTouchStart={touchHandlers((ev) => handlePointerDownConnector(ev, node.id))} />
-                <circle cx={NODE_W} cy={NODE_H / 2} r="4" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
-                <circle cx="0" cy={NODE_H / 2} r="6" fill="rgba(5,12,24,0.95)" stroke={`${t.color}99`} strokeWidth="1.5" style={{ pointerEvents: 'none' }} />
+                {moneyStr && <text x="10" y="46" fill="rgba(74,222,128,0.95)" style={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 600, pointerEvents: 'none', letterSpacing: '0.5px' }}>{moneyStr}</text>}
+                {/* Connector knob (right) — glowing puck */}
+                <circle cx={NODE_W} cy={NODE_H / 2} r="11" fill={`${t.color}26`} filter="url(#nodeglow)" pointerEvents="none" />
+                <circle cx={NODE_W} cy={NODE_H / 2} r="9" fill={t.color} stroke="rgba(5,12,24,0.95)" strokeWidth="2" style={{ cursor: 'crosshair' }} onMouseDown={(e) => handlePointerDownConnector(e, node.id)} onTouchStart={touchHandlers((ev) => handlePointerDownConnector(ev, node.id))} />
+                <circle cx={NODE_W} cy={NODE_H / 2} r="3.5" fill="rgba(5,12,24,0.95)" style={{ pointerEvents: 'none' }} />
+                {/* Inbound socket (left) */}
+                <circle cx="0" cy={NODE_H / 2} r="6" fill="rgba(5,12,24,0.95)" stroke={t.color} strokeWidth="1.5" style={{ pointerEvents: 'none' }} />
               </g>
             );
           })}
