@@ -8129,8 +8129,7 @@ ${JSON.stringify(ctx, null, 2)}`;
         {/* BOOT SEQUENCE (first load only) */}
         {!bootDone && <BootSequence onDone={() => { setBootDone(true); try { sessionStorage.setItem('muzz_boot_done','1'); } catch(e){} }} />}
 
-        {/* SYSTEM HEALTH RAIL — desktop only */}
-        {isWide && <SystemHealthRail checks={healthChecks} />}
+        {/* SYSTEM HEALTH RAIL — disabled */}
 
         {/* LEFT RAIL — desktop only */}
         {isWide && <LeftRail activeView={activeView} setActiveView={setActiveView} isElite={isElite} hidden={leftRailHidden} onToggle={() => setLeftRailHidden(h => !h)} />}
