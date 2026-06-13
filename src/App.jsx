@@ -10008,11 +10008,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
                 {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
-              ].map(tab => (
-                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:investmentsSubTab===tab.id?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${investmentsSubTab===tab.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:investmentsSubTab===tab.id?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+              ].map(tab => {
+                // The RESEARCH parent tab should stay highlighted across all its sub-tabs
+                // (MAP, COVERAGE, HOLDINGS, LIVE PRICES, PERFORMANCE, ACCOUNTING, INVESTING GUIDE, S&P 500)
+                const researchSubTabs = ['research','researchMap','coverage','livePrices','performance','accounting','knowledge','books','sp500'];
+                const isActive = tab.id === 'research'
+                  ? researchSubTabs.includes(investmentsSubTab)
+                  : investmentsSubTab === tab.id;
+                return (
+                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:isActive?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
                 </button>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
