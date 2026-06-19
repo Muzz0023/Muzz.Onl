@@ -14608,11 +14608,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>WELLNESS INTELLIGENCE</div>
-            <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>HEALTH</h1>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>AVG SLEEP · WEEK</div>
-                <div style={{fontSize:"24px",color:avgSleep ? sleepColor(avgSleep) : "rgba(148,163,184,0.4)",fontFamily:"monospace",fontWeight:600}}>{avgSleep ? avgSleep.toFixed(1) + 'h' : '—'}</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"2px"}}>AVG SLEEP · WEEK</div>
+                <div style={{fontSize:"24px",color:avgSleep ? sleepColor(avgSleep) : "rgba(148,163,184,0.4)",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{avgSleep ? avgSleep.toFixed(1) + 'h' : '—'}</div>
               </div>
             </div>
           </div>
@@ -14819,11 +14819,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
             <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
-            <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>GYM</h1>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>WEEKLY STEPS</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>{weekStepsTotal.toLocaleString()}</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"2px"}}>WEEKLY STEPS</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{weekStepsTotal.toLocaleString()}</div>
               </div>
             </div>
           </div>
