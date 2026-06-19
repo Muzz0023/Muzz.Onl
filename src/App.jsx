@@ -14607,11 +14607,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px"}}>WELLNESS INTELLIGENCE</div>
+            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>WELLNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>HEALTH</h1>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"2px"}}>AVG SLEEP · WEEK</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>AVG SLEEP · WEEK</div>
                 <div style={{fontSize:"24px",color:avgSleep ? sleepColor(avgSleep) : "rgba(148,163,184,0.4)",fontFamily:"monospace",fontWeight:600}}>{avgSleep ? avgSleep.toFixed(1) + 'h' : '—'}</div>
               </div>
             </div>
@@ -14636,38 +14636,38 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* SLEEP TAB */}
           {(gymSubTab||'sleep') === 'sleep' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
-                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// SLEEP LOG · 7 DAYS</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Pick bedtime and wake time. Hours calculate automatically.</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
+                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// SLEEP LOG · 7 DAYS</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Pick bedtime and wake time. Hours calculate automatically.</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                   {weekDays.map(day => {
                     const data = sleepData[day.date] || {};
                     const hrs = sleepHoursFor(day.date);
                     return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",flexWrap:"wrap",gap:"8px"}}>
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"18px 18px"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                            <div style={{width:"8px",height:"8px",borderRadius:"50%",background:hrs?sleepColor(hrs):"rgba(148,163,184,0.3)",boxShadow:hrs?`0 0 6px ${sleepColor(hrs)}`:"none"}}/>
-                            <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
+                            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hrs?sleepColor(hrs):"rgba(148,163,184,0.3)",boxShadow:hrs?`0 0 8px ${sleepColor(hrs)}`:"none"}}/>
+                            <span style={{fontFamily:"monospace",fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>TODAY</span>}
                           </div>
                           {hrs > 0 && (
-                            <span style={{fontFamily:"monospace",fontSize:"15px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
+                            <span style={{fontFamily:"monospace",fontSize:"18px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
                           )}
                         </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
                           <div>
-                            <div style={{fontSize:"10px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>BEDTIME</div>
-                            <input type="time" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px 10px",background:"rgba(0,0,0,0.5)",border:"none",borderBottom:`1px solid ${accent}60`,borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>BEDTIME</div>
+                            <input type="time" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} onClick={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} onFocus={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} className="slick-input accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
                           </div>
                           <div>
-                            <div style={{fontSize:"10px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>WAKE</div>
-                            <input type="time" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px 10px",background:"rgba(0,0,0,0.5)",border:"none",borderBottom:`1px solid ${accent}60`,borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>WAKE</div>
+                            <input type="time" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} onClick={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} onFocus={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} className="slick-input accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
                           </div>
                           <div>
-                            <div style={{fontSize:"10px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>QUALITY</div>
-                            <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"10px 10px",background:"rgba(0,0,0,0.5)",border:"none",borderBottom:`1px solid ${accent}60`,borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>QUALITY</div>
+                            <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
                               <option value="">—</option>
                               <option value="great">Great</option>
                               <option value="good">Good</option>
@@ -14677,7 +14677,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                         </div>
                         {(data.dreams !== undefined || day.isToday) && (
-                          <input type="text" placeholder="Dreams or notes..." value={data.dreams||''} onChange={e=>updateSleep(day.date,'dreams',e.target.value)} className="slick-input accent-orange" style={{marginTop:"8px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                          <input type="text" placeholder="Dreams or notes..." value={data.dreams||''} onChange={e=>updateSleep(day.date,'dreams',e.target.value)} className="slick-input accent-orange" style={{marginTop:"12px",width:"100%",padding:"12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}}/>
                         )}
                       </div>
                     );
@@ -14699,50 +14699,56 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* MENTAL TAB */}
           {gymSubTab === 'mental' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
-                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// MENTAL HEALTH · CHECK-INS</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Mood, energy, stress, and a daily journal note.</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
+                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// MENTAL HEALTH · CHECK-INS</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Mood, energy, stress, and a daily journal note.</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                   {weekDays.map(day => {
                     const data = mentalHealthData[day.date] || {};
                     const mood = MOODS.find(m => m.label.toLowerCase() === (data.mood||'').toLowerCase());
                     return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px",flexWrap:"wrap",gap:"8px"}}>
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"18px 18px"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                            <div style={{width:"8px",height:"8px",borderRadius:"50%",background:mood?mood.color:"rgba(148,163,184,0.3)",boxShadow:mood?`0 0 6px ${mood.color}`:"none"}}/>
-                            <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
+                            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:mood?mood.color:"rgba(148,163,184,0.3)",boxShadow:mood?`0 0 8px ${mood.color}`:"none"}}/>
+                            <span style={{fontFamily:"monospace",fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>TODAY</span>}
                           </div>
-                          {mood && <span style={{fontFamily:"monospace",fontSize:"11px",color:mood.color,letterSpacing:"1.5px",fontWeight:600}}>{mood.label.toUpperCase()}</span>}
+                          {mood && <span style={{fontFamily:"monospace",fontSize:"13px",color:mood.color,letterSpacing:"1.5px",fontWeight:600}}>{mood.label.toUpperCase()}</span>}
                         </div>
                         {/* Mood selector */}
-                        <div style={{display:"flex",gap:"4px",marginBottom:"6px",flexWrap:"wrap"}}>
+                        <div style={{display:"flex",gap:"6px",marginBottom:"12px",flexWrap:"wrap"}}>
                           {MOODS.map(m => {
                             const selected = (data.mood||'').toLowerCase() === m.label.toLowerCase();
                             return (
-                              <button key={m.label} onClick={()=>updateMental(day.date,'mood',m.label)} style={{flex:"1 1 60px",padding:"8px 4px",background:selected?`${m.color}22`:"rgba(0,0,0,0.3)",border:`0.5px solid ${selected?m.color:"rgba(255,255,255,0.08)"}`,borderRadius:"3px",cursor:"pointer",fontFamily:"monospace",fontSize:"10px",color:selected?m.color:"rgba(148,163,184,0.7)",letterSpacing:"1.5px",fontWeight:600}}>
+                              <button key={m.label} onClick={()=>updateMental(day.date,'mood',m.label)} style={{flex:"1 1 70px",padding:"12px 6px",background:selected?`${m.color}22`:"rgba(0,0,0,0.4)",border:`1px solid ${selected?m.color:"rgba(255,255,255,0.12)"}`,borderRadius:"4px",cursor:"pointer",fontFamily:"monospace",fontSize:"12px",color:selected?m.color:"rgba(224,234,255,0.7)",letterSpacing:"1.5px",fontWeight:600}}>
                                 {m.label.toUpperCase()}
                               </button>
                             );
                           })}
                         </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
-                          <select value={data.energy||''} onChange={e=>updateMental(day.date,'energy',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
-                            <option value="">Energy...</option>
-                            <option value="high">High</option>
-                            <option value="med">Medium</option>
-                            <option value="low">Low</option>
-                          </select>
-                          <select value={data.stress||''} onChange={e=>updateMental(day.date,'stress',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
-                            <option value="">Stress...</option>
-                            <option value="low">Low</option>
-                            <option value="med">Medium</option>
-                            <option value="high">High</option>
-                          </select>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                          <div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>ENERGY</div>
+                            <select value={data.energy||''} onChange={e=>updateMental(day.date,'energy',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
+                              <option value="">—</option>
+                              <option value="high">High</option>
+                              <option value="med">Medium</option>
+                              <option value="low">Low</option>
+                            </select>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>STRESS</div>
+                            <select value={data.stress||''} onChange={e=>updateMental(day.date,'stress',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
+                              <option value="">—</option>
+                              <option value="low">Low</option>
+                              <option value="med">Medium</option>
+                              <option value="high">High</option>
+                            </select>
+                          </div>
                         </div>
-                        <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"6px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                        <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"12px",width:"100%",padding:"12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}}/>
                       </div>
                     );
                   })}
@@ -14812,11 +14818,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px"}}>FITNESS INTELLIGENCE</div>
+            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
             <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
               <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>GYM</h1>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"2px"}}>WEEKLY STEPS</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>WEEKLY STEPS</div>
                 <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>{weekStepsTotal.toLocaleString()}</div>
               </div>
             </div>
