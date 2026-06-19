@@ -14601,22 +14601,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* KPI strip */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:"8px"}}>
-            {[
-              { label:'AVG SLEEP', value: avgSleep ? avgSleep.toFixed(1) + 'h' : '—', sub:'THIS WEEK', color: avgSleep ? sleepColor(avgSleep) : accent },
-              { label:'DAYS TRACKED', value: `${sleepDaysTracked}/7`, sub:'SLEEP', color: accent },
-              { label:'CHECK-INS', value: mentalCheckins, sub:'MENTAL', color:'rgba(168,85,247,0.9)' },
-              { label:'TODAY', value: sleepData[today]?.hours ? sleepData[today].hours + 'h' : '—', sub:'LAST NIGHT', color: sleepData[today]?.hours ? sleepColor(sleepData[today].hours) : 'rgba(148,163,184,0.4)' },
-            ].map((kpi,i) => (
-              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${kpi.color}30`,borderLeft:`2px solid ${kpi.color}`,borderRadius:"4px",padding:"10px 12px"}}>
-                <div style={{fontSize:"9px",color:`${kpi.color}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"3px",fontWeight:600}}>{kpi.label}</div>
-                <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>{kpi.value}</div>
-                <div style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{kpi.sub}</div>
-              </div>
-            ))}
-          </div>
-
           {/* Sub-tab toggle */}
           <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
             {[
@@ -14815,22 +14799,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         </div>
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* KPI strip */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:"8px"}}>
-            {[
-              { label:'WEEK TOTAL', value: weekStepsTotal.toLocaleString(), sub:'STEPS' },
-              { label:'GOAL HIT', value: `${goalDays}/7`, sub:`@ ${stepsGoal.toLocaleString()}/DAY` },
-              { label:'ACTIVE', value: activeDays, sub:'DAYS TRACKED' },
-              { label:'BEST', value: bestDay ? (dailySteps[bestDay.date]||0).toLocaleString() : '—', sub: bestDay ? bestDay.dayShort.toUpperCase() : 'NO DATA' },
-            ].map((kpi,i) => (
-              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}30`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",padding:"10px 12px"}}>
-                <div style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"3px",fontWeight:600}}>{kpi.label}</div>
-                <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>{kpi.value}</div>
-                <div style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{kpi.sub}</div>
-              </div>
-            ))}
-          </div>
-
           {/* Sub-tab toggle */}
           <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
             {[
