@@ -5594,14 +5594,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>DUE</span>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>STATUS</span>
               </div>
-              {billsDueSoon.slice(0,8).map((b,i) => {
+              {billsDueSoon.map((b,i) => {
                 const lvl = b.days <= 3 ? "CRITICAL" : b.days <= 7 ? "WATCH" : "NOMINAL";
                 return (
                   <div
                     key={i}
                     onClick={() => setInspectorEntity({ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" })}
                     onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" } }); }}
-                    style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
+                    style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
                   >
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{String(i+1).padStart(2,'0')}</span>
                     <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
