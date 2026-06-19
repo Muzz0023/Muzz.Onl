@@ -5607,7 +5607,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
                       <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
                     </span>
-                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':''}</span></span>
+                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':'/mo'}</span></span>
                     <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
                     <div style={{display:"flex",justifyContent:"flex-end"}}><SeverityPill level={lvl} /></div>
                   </div>
