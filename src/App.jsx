@@ -2301,7 +2301,9 @@ function MuzzApp() {
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
-  const [gymSubTab, setGymSubTab] = useState('mental');
+  const [gymSubTab, setGymSubTab] = useState('sleep');
+  const [gymWorkoutTab, setGymWorkoutTab] = useState('steps');
+  const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
   const [timesheetData, setTimesheetData] = useState({
@@ -14522,6 +14524,429 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // HEALTH VIEW — Sleep + Mental Health tabs (Palantir styled)
+  // ─────────────────────────────────────────────────────────────
+  if (activeView === 'gym') {
+    if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
+    const accent = 'rgba(251,146,60,0.9)';
+    const today = new Date().toISOString().split('T')[0];
+
+    const getWeekDays = () => {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        days.push({
+          date: d.toISOString().split('T')[0],
+          dayName: d.toLocaleDateString('en-AU', { weekday: 'long' }),
+          dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
+          dateNum: d.getDate(),
+          isToday: d.toISOString().split('T')[0] === today,
+        });
+      }
+      return days;
+    };
+    const weekDays = getWeekDays();
+
+    const updateSleep = (date, field, value) => {
+      setSleepData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}}));
+    };
+    const updateMental = (date, field, value) => {
+      setMentalHealthData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}}));
+    };
+
+    // KPI computations
+    const weekSleep = weekDays.map(d => sleepData[d.date]?.hours || 0).filter(h => h > 0);
+    const avgSleep = weekSleep.length ? (weekSleep.reduce((s,h)=>s+h,0)/weekSleep.length) : 0;
+    const mentalCheckins = weekDays.filter(d => mentalHealthData[d.date]?.mood).length;
+    const sleepDaysTracked = weekDays.filter(d => sleepData[d.date]?.hours).length;
+
+    const sleepColor = (hrs) => hrs >= 7 ? 'rgba(34,197,94,0.9)' : hrs >= 6 ? 'rgba(251,191,36,0.9)' : 'rgba(239,68,68,0.9)';
+
+    const MOODS = [
+      { emoji:'😊', label:'Great', value:5, color:'rgba(34,197,94,0.9)' },
+      { emoji:'🙂', label:'Good',  value:4, color:'rgba(132,204,22,0.9)' },
+      { emoji:'😐', label:'Okay',  value:3, color:'rgba(251,191,36,0.9)' },
+      { emoji:'😔', label:'Low',   value:2, color:'rgba(251,146,60,0.9)' },
+      { emoji:'😢', label:'Bad',   value:1, color:'rgba(239,68,68,0.9)' },
+    ];
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
+          <div className="max-w-5xl mx-auto">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px"}}>WELLNESS INTELLIGENCE</div>
+            <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
+              <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>HEALTH</h1>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"2px"}}>AVG SLEEP · WEEK</div>
+                <div style={{fontSize:"24px",color:avgSleep ? sleepColor(avgSleep) : "rgba(148,163,184,0.4)",fontFamily:"monospace",fontWeight:600}}>{avgSleep ? avgSleep.toFixed(1) + 'h' : '—'}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          {/* KPI strip */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:"8px"}}>
+            {[
+              { label:'AVG SLEEP', value: avgSleep ? avgSleep.toFixed(1) + 'h' : '—', sub:'THIS WEEK', color: avgSleep ? sleepColor(avgSleep) : accent },
+              { label:'DAYS TRACKED', value: `${sleepDaysTracked}/7`, sub:'SLEEP', color: accent },
+              { label:'CHECK-INS', value: mentalCheckins, sub:'MENTAL', color:'rgba(168,85,247,0.9)' },
+              { label:'TODAY', value: sleepData[today]?.hours ? sleepData[today].hours + 'h' : '—', sub:'LAST NIGHT', color: sleepData[today]?.hours ? sleepColor(sleepData[today].hours) : 'rgba(148,163,184,0.4)' },
+            ].map((kpi,i) => (
+              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${kpi.color}30`,borderLeft:`2px solid ${kpi.color}`,borderRadius:"4px",padding:"10px 12px"}}>
+                <div style={{fontSize:"9px",color:`${kpi.color}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"3px",fontWeight:600}}>{kpi.label}</div>
+                <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>{kpi.value}</div>
+                <div style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{kpi.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Sub-tab toggle */}
+          <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
+            {[
+              { id:'sleep', label:'🌙 SLEEP' },
+              { id:'mental', label:'🧠 MENTAL HEALTH' },
+            ].map(tab => {
+              const active = (gymSubTab||'sleep') === tab.id;
+              return (
+                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* SLEEP TAB */}
+          {(gymSubTab||'sleep') === 'sleep' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
+                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// SLEEP LOG · 7 DAYS</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Hours, quality, bedtime, wake time. Track patterns over the week.</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                  {weekDays.map(day => {
+                    const data = sleepData[day.date] || {};
+                    const hrs = parseFloat(data.hours)||0;
+                    return (
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px",flexWrap:"wrap",gap:"8px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                            <div style={{width:"8px",height:"8px",borderRadius:"50%",background:hrs?sleepColor(hrs):"rgba(148,163,184,0.3)",boxShadow:hrs?`0 0 6px ${sleepColor(hrs)}`:"none"}}/>
+                            <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
+                          </div>
+                          {hrs > 0 && (
+                            <span style={{fontFamily:"monospace",fontSize:"14px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
+                          )}
+                        </div>
+                        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:"6px"}}>
+                          <input type="number" step="0.5" placeholder="Hours" value={data.hours||''} onChange={e=>updateSleep(day.date,'hours',e.target.value)} className="slick-input accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                          <input type="time" placeholder="Bedtime" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} className="slick-input accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                          <input type="time" placeholder="Wake" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} className="slick-input accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                          <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
+                            <option value="">Quality...</option>
+                            <option value="great">Great</option>
+                            <option value="good">Good</option>
+                            <option value="ok">Okay</option>
+                            <option value="poor">Poor</option>
+                          </select>
+                        </div>
+                        {(data.dreams !== undefined || day.isToday) && (
+                          <input type="text" placeholder="Dreams or notes..." value={data.dreams||''} onChange={e=>updateSleep(day.date,'dreams',e.target.value)} className="slick-input accent-orange" style={{marginTop:"6px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Sleep guidance */}
+              <div style={{background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}15`,borderRadius:"4px",padding:"10px 14px"}}>
+                <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>// COLOUR CODE</div>
+                <div style={{display:"flex",gap:"14px",flexWrap:"wrap",fontFamily:"monospace",fontSize:"10px"}}>
+                  <span style={{color:"rgba(34,197,94,0.9)"}}>● 7+ hrs · Healthy</span>
+                  <span style={{color:"rgba(251,191,36,0.9)"}}>● 6–7 hrs · Marginal</span>
+                  <span style={{color:"rgba(239,68,68,0.9)"}}>● &lt;6 hrs · Sleep deficit</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MENTAL TAB */}
+          {gymSubTab === 'mental' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
+                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// MENTAL HEALTH · CHECK-INS</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Mood, energy, stress, and a daily journal note.</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {weekDays.map(day => {
+                    const data = mentalHealthData[day.date] || {};
+                    const mood = MOODS.find(m => m.label.toLowerCase() === (data.mood||'').toLowerCase());
+                    return (
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px",flexWrap:"wrap",gap:"8px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                            <div style={{width:"8px",height:"8px",borderRadius:"50%",background:mood?mood.color:"rgba(148,163,184,0.3)",boxShadow:mood?`0 0 6px ${mood.color}`:"none"}}/>
+                            <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
+                          </div>
+                          {mood && <span style={{fontSize:"20px"}}>{mood.emoji}</span>}
+                        </div>
+                        {/* Mood selector */}
+                        <div style={{display:"flex",gap:"4px",marginBottom:"6px",flexWrap:"wrap"}}>
+                          {MOODS.map(m => {
+                            const selected = (data.mood||'').toLowerCase() === m.label.toLowerCase();
+                            return (
+                              <button key={m.label} onClick={()=>updateMental(day.date,'mood',m.label)} style={{flex:"1 1 60px",padding:"6px 4px",background:selected?`${m.color}22`:"rgba(0,0,0,0.3)",border:`0.5px solid ${selected?m.color:"rgba(255,255,255,0.08)"}`,borderRadius:"3px",cursor:"pointer",fontFamily:"monospace",fontSize:"9px",color:selected?m.color:"rgba(148,163,184,0.7)",letterSpacing:"1px",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px"}}>
+                                <span style={{fontSize:"14px"}}>{m.emoji}</span>
+                                <span>{m.label.toUpperCase()}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
+                          <select value={data.energy||''} onChange={e=>updateMental(day.date,'energy',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
+                            <option value="">Energy...</option>
+                            <option value="high">⚡ High</option>
+                            <option value="med">~ Medium</option>
+                            <option value="low">↓ Low</option>
+                          </select>
+                          <select value={data.stress||''} onChange={e=>updateMental(day.date,'stress',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
+                            <option value="">Stress...</option>
+                            <option value="low">○ Low</option>
+                            <option value="med">◐ Medium</option>
+                            <option value="high">● High</option>
+                          </select>
+                        </div>
+                        <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"6px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // GYM VIEW — Weekly Steps + Workout Plan (Palantir styled)
+  // ─────────────────────────────────────────────────────────────
+  if (activeView === 'gymworkout') {
+    if (!isElite) return <LockedFeature featureName="Gym" setActiveView={setActiveView} />;
+    const accent = 'rgba(168,85,247,0.9)';
+    const today = new Date().toISOString().split('T')[0];
+
+    const getWeekDays = () => {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        days.push({
+          date: d.toISOString().split('T')[0],
+          dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
+          dateNum: d.getDate(),
+          isToday: d.toISOString().split('T')[0] === today,
+        });
+      }
+      return days;
+    };
+    const weekDays = getWeekDays();
+    const stepsGoal = workoutPlan?.stepsGoal || 10000;
+    const setStepsGoal = (val) => setWorkoutPlan(prev => ({...(prev||{weeks:{}}), stepsGoal: parseInt(val)||0 }));
+
+    const updateSteps = (date, value) => setDailySteps(prev => ({...prev, [date]: parseInt(value)||0}));
+
+    const weekStepsTotal = weekDays.reduce((sum,d) => sum + (dailySteps[d.date]||0), 0);
+    const activeDays = weekDays.filter(d => (dailySteps[d.date]||0) > 0).length;
+    const goalDays = weekDays.filter(d => (dailySteps[d.date]||0) >= stepsGoal).length;
+    const bestDay = weekDays.reduce((best,d) => (dailySteps[d.date]||0) > (dailySteps[best?.date]||0) ? d : best, null);
+
+    // Workout plan state — 4 weeks × 7 days
+    const currentWeek = workoutSubWeek || 1;
+    const setCurrentWeek = (w) => setWorkoutSubWeek(w);
+    const workoutWeek = workoutPlan?.weeks?.[currentWeek] || {};
+    const updateWorkout = (dayKey, field, value) => {
+      setWorkoutPlan(prev => {
+        const next = {...(prev||{weeks:{},stepsGoal:10000})};
+        next.weeks = {...(next.weeks||{})};
+        next.weeks[currentWeek] = {...(next.weeks[currentWeek]||{})};
+        next.weeks[currentWeek][dayKey] = {...(next.weeks[currentWeek][dayKey]||{}), [field]: value};
+        return next;
+      });
+    };
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
+          <div className="max-w-5xl mx-auto">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px"}}>FITNESS INTELLIGENCE</div>
+            <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
+              <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>GYM</h1>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"2px"}}>WEEKLY STEPS</div>
+                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600}}>{weekStepsTotal.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          {/* KPI strip */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:"8px"}}>
+            {[
+              { label:'WEEK TOTAL', value: weekStepsTotal.toLocaleString(), sub:'STEPS' },
+              { label:'GOAL HIT', value: `${goalDays}/7`, sub:`@ ${stepsGoal.toLocaleString()}/DAY` },
+              { label:'ACTIVE', value: activeDays, sub:'DAYS TRACKED' },
+              { label:'BEST', value: bestDay ? (dailySteps[bestDay.date]||0).toLocaleString() : '—', sub: bestDay ? bestDay.dayShort.toUpperCase() : 'NO DATA' },
+            ].map((kpi,i) => (
+              <div key={i} style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}30`,borderLeft:`2px solid ${accent}`,borderRadius:"4px",padding:"10px 12px"}}>
+                <div style={{fontSize:"9px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"3px",fontWeight:600}}>{kpi.label}</div>
+                <div style={{fontSize:"20px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px"}}>{kpi.value}</div>
+                <div style={{fontSize:"8px",color:"rgba(148,163,184,0.55)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"2px"}}>{kpi.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Sub-tab toggle */}
+          <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
+            {[
+              { id:'steps', label:'👟 STEPS' },
+              { id:'plan', label:'💪 4-WEEK PLAN' },
+            ].map(tab => {
+              const active = (gymWorkoutTab||'steps') === tab.id;
+              return (
+                <button key={tab.id} onClick={() => setGymWorkoutTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* STEPS TAB */}
+          {(gymWorkoutTab||'steps') === 'steps' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              {/* Goal */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px",display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
+                <div style={{flex:1,minWidth:"180px"}}>
+                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DAILY STEP GOAL</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px"}}>10,000 is the classic target. Adjust to your fitness level.</div>
+                </div>
+                <input type="number" value={stepsGoal} onChange={e=>setStepsGoal(e.target.value)} className="slick-input accent-orange" style={{width:"120px",padding:"8px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`1px solid ${accent}`,color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"right"}}/>
+              </div>
+
+              {/* 7-day bar chart */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
+                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// 7-DAY VISUAL</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Bar height = steps. Green bar = goal hit.</div>
+                <div style={{display:"flex",gap:"4px",alignItems:"flex-end",height:"140px",borderBottom:`0.5px solid ${accent}20`,paddingBottom:"4px"}}>
+                  {weekDays.map(day => {
+                    const steps = dailySteps[day.date]||0;
+                    const maxSteps = Math.max(stepsGoal, ...weekDays.map(d => dailySteps[d.date]||0)) || stepsGoal;
+                    const pct = Math.min(100, (steps/maxSteps)*100);
+                    const hit = steps >= stepsGoal;
+                    const color = steps === 0 ? "rgba(148,163,184,0.2)" : hit ? "rgba(34,197,94,0.85)" : accent;
+                    return (
+                      <div key={day.date} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
+                        <div style={{flex:1,width:"100%",display:"flex",alignItems:"flex-end",position:"relative"}}>
+                          <div style={{width:"100%",height:`${pct}%`,background:color,borderRadius:"2px 2px 0 0",boxShadow:steps?`0 0 8px ${color}`:"none",transition:"height 0.3s"}}/>
+                          {steps > 0 && (
+                            <div style={{position:"absolute",bottom:"100%",left:"50%",transform:"translateX(-50%)",fontSize:"8px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",marginBottom:"2px",whiteSpace:"nowrap"}}>{steps>=1000?(steps/1000).toFixed(1)+'k':steps}</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{display:"flex",gap:"4px",marginTop:"4px"}}>
+                  {weekDays.map(day => (
+                    <div key={day.date} style={{flex:1,textAlign:"center"}}>
+                      <div style={{fontSize:"9px",color:day.isToday?accent:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:day.isToday?600:400}}>{day.dayShort.toUpperCase()}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Daily entry */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
+                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// LOG STEPS</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                  {weekDays.map(day => {
+                    const steps = dailySteps[day.date]||0;
+                    const hit = steps >= stepsGoal;
+                    return (
+                      <div key={day.date} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px"}}>
+                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:steps===0?"rgba(148,163,184,0.3)":hit?"rgba(34,197,94,0.9)":accent,boxShadow:steps?`0 0 6px ${hit?"rgba(34,197,94,0.9)":accent}`:"none"}}/>
+                        <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px",minWidth:"50px"}}>{day.dayShort.toUpperCase()}</span>
+                        {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
+                        <input type="number" placeholder="0" value={steps||''} onChange={e=>updateSteps(day.date,e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",textAlign:"right"}}/>
+                        <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",minWidth:"40px"}}>steps</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PLAN TAB */}
+          {gymWorkoutTab === 'plan' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+              {/* Week picker */}
+              <div style={{display:"flex",gap:"4px"}}>
+                {[1,2,3,4].map(w => {
+                  const active = currentWeek === w;
+                  return (
+                    <button key={w} onClick={()=>setCurrentWeek(w)} style={{flex:1,padding:"10px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                      WEEK {w}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
+                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// WEEK {currentWeek} · WORKOUT PLAN</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Plan and tick off each day's workout. Build a routine that sticks.</div>
+                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                  {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(dayKey => {
+                    const d = workoutWeek[dayKey] || {};
+                    const done = !!d.done;
+                    return (
+                      <div key={dayKey} style={{background:done?"rgba(34,197,94,0.06)":"rgba(255,255,255,0.02)",border:`0.5px solid ${done?"rgba(34,197,94,0.4)":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                          <button onClick={()=>updateWorkout(dayKey,'done',!done)} style={{width:"18px",height:"18px",borderRadius:"3px",border:`1px solid ${done?"rgba(34,197,94,0.9)":accent+"60"}`,background:done?"rgba(34,197,94,0.9)":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:"monospace",fontSize:"12px",fontWeight:700,flexShrink:0}}>{done?'✓':''}</button>
+                          <span style={{fontFamily:"monospace",fontSize:"11px",color:done?"rgba(34,197,94,0.9)":"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px",minWidth:"40px"}}>{dayKey.toUpperCase()}</span>
+                          <input type="text" placeholder="Workout name (e.g. Push day, Legs, Cardio)" value={d.name||''} onChange={e=>updateWorkout(dayKey,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                        </div>
+                        <input type="text" placeholder="Exercises, sets, reps..." value={d.exercises||''} onChange={e=>updateWorkout(dayKey,'exercises',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
