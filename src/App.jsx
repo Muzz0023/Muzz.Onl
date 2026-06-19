@@ -5194,13 +5194,75 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // Bills due soon
     const billsDueSoon = (() => {
       const now = new Date();
-      return subscriptions.filter(s => s.dueDate && s.name && s.monthly > 0).map(s => {
-        const day = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
-        if (!day) return null;
-        let next = new Date(now.getFullYear(), now.getMonth(), day);
-        if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
-        return { name:s.name, days:Math.ceil((next-now)/86400000), amount:s.monthly };
-      }).filter(Boolean).sort((a,b) => a.days - b.days);
+      now.setHours(0,0,0,0);
+
+      // Same frequency-to-monthly multipliers as the Bills view, so totals match
+      const FREQ_MULT = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
+
+      const computeNext = (s) => {
+        const freq = s?.freq || 'monthly';
+        if (freq === 'weekly' || freq === 'fortnightly') {
+          const wd = s?.weekday;
+          if (wd === undefined || wd === null || wd === '') return null;
+          const targetIso = parseInt(wd);
+          if (isNaN(targetIso)) return null;
+          const todayIso = (now.getDay() + 6) % 7;
+          let daysAhead = (targetIso - todayIso + 7) % 7;
+          if (daysAhead === 0) daysAhead = freq === 'weekly' ? 7 : 14;
+          let next = new Date(now);
+          next.setDate(now.getDate() + daysAhead);
+          if (freq === 'fortnightly' && s?.anchor) {
+            const anchor = new Date(s.anchor);
+            if (!isNaN(anchor)) {
+              anchor.setHours(0,0,0,0);
+              const diffDays = Math.round((next - anchor) / 86400000);
+              if (diffDays % 14 !== 0) next.setDate(next.getDate() + 7);
+            }
+          }
+          return next;
+        }
+        if (freq === 'monthly') {
+          const day = s?.dueDate ? parseInt(String(s.dueDate).replace(/[^0-9]/g,'')) : null;
+          if (!day) return null;
+          let next = new Date(now.getFullYear(), now.getMonth(), day);
+          if (next < now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
+          return next;
+        }
+        // quarterly / halfyear / annual — use dueDates array of "DD-MM" strings
+        const dates = (s?.dueDates && s.dueDates.length > 0) ? s.dueDates : (s?.dueDate ? [s.dueDate] : []);
+        if (dates.length === 0) return null;
+        let nextDate = null;
+        let nextDaysAway = Infinity;
+        dates.forEach(str => {
+          const m = String(str).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
+          if (!m) return;
+          const day = parseInt(m[1]);
+          const month = parseInt(m[2]) - 1;
+          if (!day || month < 0 || month > 11) return;
+          let cand = new Date(now.getFullYear(), month, day);
+          if (cand < now) cand = new Date(now.getFullYear()+1, month, day);
+          const daysAway = Math.round((cand - now) / 86400000);
+          if (daysAway < nextDaysAway) { nextDate = cand; nextDaysAway = daysAway; }
+        });
+        return nextDate;
+      };
+
+      return subscriptions
+        .filter(s => s && s.name && (parseFloat(s.monthly) || 0) > 0)
+        .map(s => {
+          const next = computeNext(s);
+          if (!next) return null;
+          const days = Math.ceil((next - now) / 86400000);
+          return {
+            name: s.name,
+            days,
+            amount: parseFloat(s.monthly) || 0,
+            freq: s.freq || 'monthly',
+            monthlyEquiv: (parseFloat(s.monthly) || 0) * (FREQ_MULT[s.freq || 'monthly'] || 1),
+          };
+        })
+        .filter(Boolean)
+        .sort((a,b) => a.days - b.days);
     })();
 
     // Object IDs / metadata
@@ -5545,7 +5607,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
                       <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
                     </span>
-                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}</span>
+                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':''}</span></span>
                     <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
                     <div style={{display:"flex",justifyContent:"flex-end"}}><SeverityPill level={lvl} /></div>
                   </div>
@@ -5554,7 +5616,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Footer total row */}
               <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(0,200,255,0.12)",background:"rgba(0,200,255,0.02)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Σ MONTHLY OUTFLOW</span>
-                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+b.amount,0).toFixed(2)}</span>
+                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+(b.monthlyEquiv||b.amount),0).toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -14640,7 +14702,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {(gymSubTab||'sleep') === 'sleep' && (
             <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
               <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// SLEEP LOG · 7 DAYS</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// SLEEP LOG · 7 DAYS</div>
+                  <button onClick={() => {
+                    if (!window.confirm("Clear all sleep entries for this week? This can't be undone.")) return;
+                    setSleepData(prev => {
+                      const next = {...prev};
+                      weekDays.forEach(d => { delete next[d.date]; });
+                      return next;
+                    });
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                </div>
                 <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Pick bedtime and wake time. Hours calculate automatically.</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                   {weekDays.map(day => {
@@ -14712,7 +14784,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {gymSubTab === 'mental' && (
             <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
               <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// MENTAL HEALTH · CHECK-INS</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MENTAL HEALTH · CHECK-INS</div>
+                  <button onClick={() => {
+                    if (!window.confirm("Clear all mental health check-ins for this week? This can't be undone.")) return;
+                    setMentalHealthData(prev => {
+                      const next = {...prev};
+                      weekDays.forEach(d => { delete next[d.date]; });
+                      return next;
+                    });
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                </div>
                 <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Mood, energy, stress, and a daily journal note.</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                   {weekDays.map(day => {
@@ -14921,7 +15003,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Daily entry */}
               <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
-                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// LOG STEPS</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"12px",marginBottom:"10px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// LOG STEPS</div>
+                  <button onClick={() => {
+                    if (!window.confirm("Clear all step entries for this week? This can't be undone.")) return;
+                    setDailySteps(prev => {
+                      const next = {...prev};
+                      weekDays.forEach(d => { delete next[d.date]; });
+                      return next;
+                    });
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {weekDays.map(day => {
                     const steps = dailySteps[day.date]||0;
@@ -14957,7 +15049,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               </div>
 
               <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// WEEK {currentWeek} · WORKOUT PLAN</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// WEEK {currentWeek} · WORKOUT PLAN</div>
+                  <button onClick={() => {
+                    if (!window.confirm("Clear ALL exercises across all 4 weeks? This can't be undone.")) return;
+                    setWorkoutPlan(prev => {
+                      const next = {...(prev||{weeks:{},stepsGoal:10000})};
+                      next.weeks = {}; // wipe all weeks
+                      return next;
+                    });
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR MONTH</button>
+                </div>
                 <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Log exercises per day. Track sets, reps, weight, drop sets and sets to failure.</div>
 
                 <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
