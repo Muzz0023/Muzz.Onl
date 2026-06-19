@@ -14823,6 +14823,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       });
     };
 
+    // Exercise helpers — operate on workoutPlan.weeks[w][dayKey].exercises array
+    const addExercise = (dayKey) => {
+      const existing = workoutWeek[dayKey] || {};
+      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
+      const newRow = { id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false };
+      updateWorkout(dayKey, 'exercises', [...list, newRow]);
+    };
+    const updateExercise = (dayKey, exId, field, value) => {
+      const existing = workoutWeek[dayKey] || {};
+      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
+      const updated = list.map(e => e.id === exId ? {...e, [field]: value} : e);
+      updateWorkout(dayKey, 'exercises', updated);
+    };
+    const removeExercise = (dayKey, exId) => {
+      const existing = workoutWeek[dayKey] || {};
+      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
+      updateWorkout(dayKey, 'exercises', list.filter(e => e.id !== exId));
+    };
+
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
@@ -14924,34 +14943,105 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {/* PLAN TAB */}
           {gymWorkoutTab === 'plan' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
               {/* Week picker */}
               <div style={{display:"flex",gap:"4px"}}>
                 {[1,2,3,4].map(w => {
                   const active = currentWeek === w;
                   return (
-                    <button key={w} onClick={()=>setCurrentWeek(w)} style={{flex:1,padding:"10px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                    <button key={w} onClick={()=>setCurrentWeek(w)} style={{flex:1,padding:"12px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"4px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
                       WEEK {w}
                     </button>
                   );
                 })}
               </div>
 
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
-                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// WEEK {currentWeek} · WORKOUT PLAN</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Plan and tick off each day's workout. Build a routine that sticks.</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
+                <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"6px"}}>// WEEK {currentWeek} · WORKOUT PLAN</div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Log exercises per day. Track sets, reps, weight, drop sets and sets to failure.</div>
+
+                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
                   {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(dayKey => {
                     const d = workoutWeek[dayKey] || {};
                     const done = !!d.done;
+                    const exerciseList = Array.isArray(d.exercises) ? d.exercises : [];
+                    const legacyText = (typeof d.exercises === 'string') ? d.exercises : '';
+                    const hasContent = exerciseList.length > 0 || legacyText || d.name;
+
                     return (
-                      <div key={dayKey} style={{background:done?"rgba(34,197,94,0.06)":"rgba(255,255,255,0.02)",border:`0.5px solid ${done?"rgba(34,197,94,0.4)":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
-                        <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
-                          <button onClick={()=>updateWorkout(dayKey,'done',!done)} style={{width:"18px",height:"18px",borderRadius:"3px",border:`1px solid ${done?"rgba(34,197,94,0.9)":accent+"60"}`,background:done?"rgba(34,197,94,0.9)":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:"monospace",fontSize:"12px",fontWeight:700,flexShrink:0}}>{done?'✓':''}</button>
-                          <span style={{fontFamily:"monospace",fontSize:"11px",color:done?"rgba(34,197,94,0.9)":"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px",minWidth:"40px"}}>{dayKey.toUpperCase()}</span>
-                          <input type="text" placeholder="Workout name (e.g. Push day, Legs, Cardio)" value={d.name||''} onChange={e=>updateWorkout(dayKey,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                      <div key={dayKey} style={{background:done?"rgba(34,197,94,0.06)":"rgba(255,255,255,0.02)",border:`0.5px solid ${done?"rgba(34,197,94,0.4)":hasContent?accent+"30":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"16px"}}>
+                        {/* Day header */}
+                        <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom: hasContent ? "14px" : "0"}}>
+                          <button onClick={()=>updateWorkout(dayKey,'done',!done)} style={{width:"22px",height:"22px",borderRadius:"4px",border:`1px solid ${done?"rgba(34,197,94,0.9)":accent+"60"}`,background:done?"rgba(34,197,94,0.9)":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:"monospace",fontSize:"14px",fontWeight:700,flexShrink:0}}>{done?'✓':''}</button>
+                          <span style={{fontFamily:"monospace",fontSize:"13px",color:done?"rgba(34,197,94,0.9)":"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px",minWidth:"44px"}}>{dayKey.toUpperCase()}</span>
+                          <input type="text" placeholder="Day name (e.g. Push, Legs, Cardio, Rest)" value={d.name||''} onChange={e=>updateWorkout(dayKey,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600}}/>
                         </div>
-                        <input type="text" placeholder="Exercises, sets, reps..." value={d.exercises||''} onChange={e=>updateWorkout(dayKey,'exercises',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+
+                        {/* Legacy text field — show with migrate prompt if old data exists */}
+                        {legacyText && (
+                          <div style={{marginBottom:"12px",padding:"10px 12px",background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.3)",borderRadius:"4px"}}>
+                            <div style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// LEGACY ENTRY</div>
+                            <div style={{fontSize:"12px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace",marginBottom:"8px"}}>{legacyText}</div>
+                            <button onClick={()=>updateWorkout(dayKey,'exercises',[])} style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"none",border:"0.5px solid rgba(251,191,36,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600}}>CLEAR & USE NEW FORMAT</button>
+                          </div>
+                        )}
+
+                        {/* Exercises */}
+                        {exerciseList.length > 0 && (
+                          <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px"}}>
+                            {exerciseList.map((ex, idx) => (
+                              <div key={ex.id} style={{background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"5px",padding:"12px"}}>
+                                {/* Row 1: index + name + delete */}
+                                <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"10px"}}>
+                                  <span style={{fontFamily:"monospace",fontSize:"10px",color:`${accent}99`,letterSpacing:"1px",fontWeight:600,minWidth:"22px"}}>{String(idx+1).padStart(2,'0')}</span>
+                                  <input type="text" placeholder="Exercise (e.g. Bench Press)" value={ex.name||''} onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600}}/>
+                                  <button onClick={()=>removeExercise(dayKey,ex.id)} style={{width:"30px",height:"30px",borderRadius:"4px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}} title="Remove">×</button>
+                                </div>
+
+                                {/* Row 2: sets / reps / weight */}
+                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"10px"}}>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>SETS</div>
+                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.sets||''} onChange={e=>updateExercise(dayKey,ex.id,'sets',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
+                                  </div>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>REPS</div>
+                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.reps||''} onChange={e=>updateExercise(dayKey,ex.id,'reps',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
+                                  </div>
+                                  <div>
+                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>WEIGHT (KG)</div>
+                                    <input type="number" inputMode="decimal" placeholder="0" value={ex.weight||''} onChange={e=>updateExercise(dayKey,ex.id,'weight',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
+                                  </div>
+                                </div>
+
+                                {/* Row 3: drop set + failure toggles */}
+                                <div style={{display:"flex",gap:"8px"}}>
+                                  <button onClick={()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet)} style={{flex:1,padding:"10px 12px",background:ex.dropSet?`${accent}22`:"rgba(0,0,0,0.3)",border:`1px solid ${ex.dropSet?accent:"rgba(255,255,255,0.1)"}`,borderRadius:"4px",color:ex.dropSet?accent:"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
+                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.dropSet?accent:"rgba(148,163,184,0.3)",boxShadow:ex.dropSet?`0 0 6px ${accent}`:"none"}}/>
+                                    DROP SET
+                                  </button>
+                                  <button onClick={()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure)} style={{flex:1,padding:"10px 12px",background:ex.toFailure?"rgba(239,68,68,0.18)":"rgba(0,0,0,0.3)",border:`1px solid ${ex.toFailure?"rgba(239,68,68,0.7)":"rgba(255,255,255,0.1)"}`,borderRadius:"4px",color:ex.toFailure?"rgba(239,68,68,0.95)":"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
+                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.toFailure?"rgba(239,68,68,0.9)":"rgba(148,163,184,0.3)",boxShadow:ex.toFailure?"0 0 6px rgba(239,68,68,0.9)":"none"}}/>
+                                    TO FAILURE
+                                  </button>
+                                </div>
+
+                                {/* Optional notes per exercise */}
+                                {(ex.notes !== undefined && ex.notes !== '') && (
+                                  <input type="text" placeholder="Notes (form cues, RPE, etc.)" value={ex.notes||''} onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value)} className="slick-input accent-orange" style={{marginTop:"10px",width:"100%",padding:"8px 10px",background:"rgba(0,0,0,0.3)",border:`0.5px solid ${accent}20`,borderRadius:"3px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"11px"}}/>
+                                )}
+                                {ex.notes === undefined || ex.notes === '' ? (
+                                  <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{marginTop:"8px",fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",padding:"4px 0"}}>+ Add notes</button>
+                                ) : null}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Add exercise button */}
+                        <button onClick={()=>addExercise(dayKey)} style={{width:"100%",padding:"12px",background:"rgba(0,0,0,0.3)",border:`1px dashed ${accent}50`,borderRadius:"4px",color:accent,fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
+                          + ADD EXERCISE
+                        </button>
                       </div>
                     );
                   })}
