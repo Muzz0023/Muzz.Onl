@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -3301,6 +3301,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "countdowns", label: "Countdowns", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
+    { id: "gym", label: "Health", icon: Heart, eliteOnly: true },
+    { id: "gymworkout", label: "Gym", icon: Dumbbell, eliteOnly: true },
     { id: "timetable", label: "Timetable", icon: Calendar, eliteOnly: true },
     { id: "work", label: "Work", icon: Briefcase, eliteOnly: true },
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
