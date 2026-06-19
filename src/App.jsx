@@ -14598,7 +14598,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { label:'Good',  value:4, color:'rgba(132,204,22,0.9)' },
       { label:'Okay',  value:3, color:'rgba(251,191,36,0.9)' },
       { label:'Low',   value:2, color:'rgba(251,146,60,0.9)' },
-      { label:'Bad',   value:1, color:'rgba(239,68,68,0.9)' },
+      { label:'Sad',   value:1, color:'rgba(239,68,68,0.9)' },
     ];
 
     return (
