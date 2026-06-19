@@ -14567,20 +14567,38 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       setMentalHealthData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}}));
     };
 
-    // KPI computations
-    const weekSleep = weekDays.map(d => sleepData[d.date]?.hours || 0).filter(h => h > 0);
+    // Auto-calculate sleep hours from bedtime + wake time. Handles overnight (e.g. 22:00 → 06:00 = 8h).
+    const calcSleepHours = (bedtime, wakeTime) => {
+      if (!bedtime || !wakeTime) return 0;
+      const [bh, bm] = bedtime.split(':').map(Number);
+      const [wh, wm] = wakeTime.split(':').map(Number);
+      if (isNaN(bh) || isNaN(wh)) return 0;
+      const bedMin = bh * 60 + (bm||0);
+      const wakeMin = wh * 60 + (wm||0);
+      let diff = wakeMin - bedMin;
+      if (diff <= 0) diff += 24 * 60; // wraps past midnight
+      return diff / 60;
+    };
+
+    // sleepHoursFor pulls from bedtime+wakeTime first, falls back to manually saved hours (legacy data)
+    const sleepHoursFor = (date) => {
+      const d = sleepData[date] || {};
+      const calc = d.bedtime && d.wakeTime ? calcSleepHours(d.bedtime, d.wakeTime) : 0;
+      return calc || parseFloat(d.hours) || 0;
+    };
+    const weekSleep = weekDays.map(d => sleepHoursFor(d.date)).filter(h => h > 0);
     const avgSleep = weekSleep.length ? (weekSleep.reduce((s,h)=>s+h,0)/weekSleep.length) : 0;
     const mentalCheckins = weekDays.filter(d => mentalHealthData[d.date]?.mood).length;
-    const sleepDaysTracked = weekDays.filter(d => sleepData[d.date]?.hours).length;
+    const sleepDaysTracked = weekDays.filter(d => sleepHoursFor(d.date) > 0).length;
 
     const sleepColor = (hrs) => hrs >= 7 ? 'rgba(34,197,94,0.9)' : hrs >= 6 ? 'rgba(251,191,36,0.9)' : 'rgba(239,68,68,0.9)';
 
     const MOODS = [
-      { emoji:'😊', label:'Great', value:5, color:'rgba(34,197,94,0.9)' },
-      { emoji:'🙂', label:'Good',  value:4, color:'rgba(132,204,22,0.9)' },
-      { emoji:'😐', label:'Okay',  value:3, color:'rgba(251,191,36,0.9)' },
-      { emoji:'😔', label:'Low',   value:2, color:'rgba(251,146,60,0.9)' },
-      { emoji:'😢', label:'Bad',   value:1, color:'rgba(239,68,68,0.9)' },
+      { label:'Great', value:5, color:'rgba(34,197,94,0.9)' },
+      { label:'Good',  value:4, color:'rgba(132,204,22,0.9)' },
+      { label:'Okay',  value:3, color:'rgba(251,191,36,0.9)' },
+      { label:'Low',   value:2, color:'rgba(251,146,60,0.9)' },
+      { label:'Bad',   value:1, color:'rgba(239,68,68,0.9)' },
     ];
 
     return (
@@ -14604,8 +14622,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Sub-tab toggle */}
           <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
             {[
-              { id:'sleep', label:'🌙 SLEEP' },
-              { id:'mental', label:'🧠 MENTAL HEALTH' },
+              { id:'sleep', label:'SLEEP' },
+              { id:'mental', label:'MENTAL HEALTH' },
             ].map(tab => {
               const active = (gymSubTab||'sleep') === tab.id;
               return (
@@ -14621,37 +14639,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
                 <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// SLEEP LOG · 7 DAYS</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Hours, quality, bedtime, wake time. Track patterns over the week.</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Pick bedtime and wake time. Hours calculate automatically.</div>
                 <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
                   {weekDays.map(day => {
                     const data = sleepData[day.date] || {};
-                    const hrs = parseFloat(data.hours)||0;
+                    const hrs = sleepHoursFor(day.date);
                     return (
                       <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",padding:"10px 12px"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"8px",flexWrap:"wrap",gap:"8px"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px",flexWrap:"wrap",gap:"8px"}}>
                           <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                             <div style={{width:"8px",height:"8px",borderRadius:"50%",background:hrs?sleepColor(hrs):"rgba(148,163,184,0.3)",boxShadow:hrs?`0 0 6px ${sleepColor(hrs)}`:"none"}}/>
                             <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
                             {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
                           </div>
                           {hrs > 0 && (
-                            <span style={{fontFamily:"monospace",fontSize:"14px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
+                            <span style={{fontFamily:"monospace",fontSize:"15px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
                           )}
                         </div>
-                        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:"6px"}}>
-                          <input type="number" step="0.5" placeholder="Hours" value={data.hours||''} onChange={e=>updateSleep(day.date,'hours',e.target.value)} className="slick-input accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
-                          <input type="time" placeholder="Bedtime" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} className="slick-input accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
-                          <input type="time" placeholder="Wake" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} className="slick-input accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
-                          <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
-                            <option value="">Quality...</option>
-                            <option value="great">Great</option>
-                            <option value="good">Good</option>
-                            <option value="ok">Okay</option>
-                            <option value="poor">Poor</option>
-                          </select>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
+                          <div>
+                            <div style={{fontSize:"8px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>BEDTIME</div>
+                            <input type="time" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}/>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"8px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>WAKE</div>
+                            <input type="time" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}/>
+                          </div>
+                          <div>
+                            <div style={{fontSize:"8px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>QUALITY</div>
+                            <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}>
+                              <option value="">—</option>
+                              <option value="great">Great</option>
+                              <option value="good">Good</option>
+                              <option value="ok">Okay</option>
+                              <option value="poor">Poor</option>
+                            </select>
+                          </div>
                         </div>
                         {(data.dreams !== undefined || day.isToday) && (
-                          <input type="text" placeholder="Dreams or notes..." value={data.dreams||''} onChange={e=>updateSleep(day.date,'dreams',e.target.value)} className="slick-input accent-orange" style={{marginTop:"6px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
+                          <input type="text" placeholder="Dreams or notes..." value={data.dreams||''} onChange={e=>updateSleep(day.date,'dreams',e.target.value)} className="slick-input accent-orange" style={{marginTop:"8px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
                         )}
                       </div>
                     );
@@ -14689,16 +14715,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
                             {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
                           </div>
-                          {mood && <span style={{fontSize:"20px"}}>{mood.emoji}</span>}
+                          {mood && <span style={{fontFamily:"monospace",fontSize:"11px",color:mood.color,letterSpacing:"1.5px",fontWeight:600}}>{mood.label.toUpperCase()}</span>}
                         </div>
                         {/* Mood selector */}
                         <div style={{display:"flex",gap:"4px",marginBottom:"6px",flexWrap:"wrap"}}>
                           {MOODS.map(m => {
                             const selected = (data.mood||'').toLowerCase() === m.label.toLowerCase();
                             return (
-                              <button key={m.label} onClick={()=>updateMental(day.date,'mood',m.label)} style={{flex:"1 1 60px",padding:"6px 4px",background:selected?`${m.color}22`:"rgba(0,0,0,0.3)",border:`0.5px solid ${selected?m.color:"rgba(255,255,255,0.08)"}`,borderRadius:"3px",cursor:"pointer",fontFamily:"monospace",fontSize:"9px",color:selected?m.color:"rgba(148,163,184,0.7)",letterSpacing:"1px",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px"}}>
-                                <span style={{fontSize:"14px"}}>{m.emoji}</span>
-                                <span>{m.label.toUpperCase()}</span>
+                              <button key={m.label} onClick={()=>updateMental(day.date,'mood',m.label)} style={{flex:"1 1 60px",padding:"8px 4px",background:selected?`${m.color}22`:"rgba(0,0,0,0.3)",border:`0.5px solid ${selected?m.color:"rgba(255,255,255,0.08)"}`,borderRadius:"3px",cursor:"pointer",fontFamily:"monospace",fontSize:"10px",color:selected?m.color:"rgba(148,163,184,0.7)",letterSpacing:"1.5px",fontWeight:600}}>
+                                {m.label.toUpperCase()}
                               </button>
                             );
                           })}
@@ -14706,15 +14731,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px"}}>
                           <select value={data.energy||''} onChange={e=>updateMental(day.date,'energy',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
                             <option value="">Energy...</option>
-                            <option value="high">⚡ High</option>
-                            <option value="med">~ Medium</option>
-                            <option value="low">↓ Low</option>
+                            <option value="high">High</option>
+                            <option value="med">Medium</option>
+                            <option value="low">Low</option>
                           </select>
                           <select value={data.stress||''} onChange={e=>updateMental(day.date,'stress',e.target.value)} className="slick-select accent-orange" style={{padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}>
                             <option value="">Stress...</option>
-                            <option value="low">○ Low</option>
-                            <option value="med">◐ Medium</option>
-                            <option value="high">● High</option>
+                            <option value="low">Low</option>
+                            <option value="med">Medium</option>
+                            <option value="high">High</option>
                           </select>
                         </div>
                         <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"6px",width:"100%",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px"}}/>
@@ -14802,8 +14827,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Sub-tab toggle */}
           <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
             {[
-              { id:'steps', label:'👟 STEPS' },
-              { id:'plan', label:'💪 4-WEEK PLAN' },
+              { id:'steps', label:'STEPS' },
+              { id:'plan', label:'4-WEEK PLAN' },
             ].map(tab => {
               const active = (gymWorkoutTab||'steps') === tab.id;
               return (
