@@ -8256,7 +8256,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Elite Badge & Name'].map((f,i) => (
+                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -8311,6 +8311,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Bills & Debt Management', free: false, elite: true },
                 { feature: 'Assets Management', free: false, elite: true },
                 { feature: 'Investment Management', free: false, elite: true },
+                { feature: 'Health & Sleep Tracker', free: false, elite: true },
+                { feature: 'Gym & Steps Tracker', free: false, elite: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true },
               ].map((row, i, arr) => {
                 const renderCell = (val, color) => val
