@@ -14676,9 +14676,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </select>
                           </div>
                         </div>
-                        {(data.dreams !== undefined || day.isToday) && (
-                          <input type="text" placeholder="Dreams or notes..." value={data.dreams||''} onChange={e=>updateSleep(day.date,'dreams',e.target.value)} className="slick-input accent-orange" style={{marginTop:"12px",width:"100%",padding:"12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}}/>
-                        )}
+                        {/* Times woken counter */}
+                        <div style={{marginTop:"14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"12px 14px",background:"rgba(0,0,0,0.35)",border:`0.5px solid ${accent}25`,borderRadius:"4px"}}>
+                          <div style={{display:"flex",flexDirection:"column",gap:"2px"}}>
+                            <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)",letterSpacing:"1.5px",fontWeight:600}}>TIMES WOKEN</span>
+                            <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.5px"}}>How many times you woke during the night</span>
+                          </div>
+                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                            <button onClick={()=>updateSleep(day.date,'wakeups',Math.max(0,(parseInt(data.wakeups)||0)-1))} style={{width:"36px",height:"36px",borderRadius:"4px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
+                            <span style={{minWidth:"32px",textAlign:"center",fontFamily:"monospace",fontSize:"18px",color:"#e0eaff",fontWeight:600}}>{parseInt(data.wakeups)||0}</span>
+                            <button onClick={()=>updateSleep(day.date,'wakeups',(parseInt(data.wakeups)||0)+1)} style={{width:"36px",height:"36px",borderRadius:"4px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
