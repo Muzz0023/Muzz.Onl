@@ -14658,15 +14658,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </div>
                         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
                           <div>
-                            <div style={{fontSize:"8px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>BEDTIME</div>
+                            <div style={{fontSize:"10px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>BEDTIME</div>
                             <input type="time" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px 10px",background:"rgba(0,0,0,0.5)",border:"none",borderBottom:`1px solid ${accent}60`,borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
                           </div>
                           <div>
-                            <div style={{fontSize:"8px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>WAKE</div>
+                            <div style={{fontSize:"10px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>WAKE</div>
                             <input type="time" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px 10px",background:"rgba(0,0,0,0.5)",border:"none",borderBottom:`1px solid ${accent}60`,borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
                           </div>
                           <div>
-                            <div style={{fontSize:"8px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",marginBottom:"3px"}}>QUALITY</div>
+                            <div style={{fontSize:"10px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>QUALITY</div>
                             <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"10px 10px",background:"rgba(0,0,0,0.5)",border:"none",borderBottom:`1px solid ${accent}60`,borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
                               <option value="">—</option>
                               <option value="great">Great</option>
