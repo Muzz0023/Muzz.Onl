@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download, Heart } from 'lucide-react';
+import { X, Send, Minus, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Dumbbell, ShoppingCart, Bell, Award, Wallet, Menu, Home, Star, Trophy, Flame, CheckCircle2, Plus, Trash2, ChevronDown, ChevronUp, LogOut, Mail, Lock, Eye, EyeOff, MessageCircle, Save, Loader2, HelpCircle, Briefcase, Upload, Download } from 'lucide-react';
 
 // ============================================
 // REVENUECAT CONFIGURATION
@@ -2301,9 +2301,7 @@ function MuzzApp() {
   const [customDiets, setCustomDiets] = useState([]);
   const [expandedCustomDiet, setExpandedCustomDiet] = useState(null);
   const [waterIntake, setWaterIntake] = useState({ goal: 3, goalStr: '3', days: {} });
-  const [gymSubTab, setGymSubTab] = useState('sleep');
-  const [gymWorkoutTab, setGymWorkoutTab] = useState('steps');
-  const [workoutSubWeek, setWorkoutSubWeek] = useState(1);
+  const [gymSubTab, setGymSubTab] = useState('mental');
   const [sleepData, setSleepData] = useState({});
   const [mentalHealthData, setMentalHealthData] = useState({});
   const [timesheetData, setTimesheetData] = useState({
@@ -3301,8 +3299,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "countdowns", label: "Countdowns", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: CheckCircle2 },
     { id: "reminders", label: "Reminders", icon: Bell },
-    { id: "gym", label: "Health", icon: Heart, eliteOnly: true },
-    { id: "gymworkout", label: "Gym", icon: Dumbbell, eliteOnly: true },
     { id: "timetable", label: "Timetable", icon: Calendar, eliteOnly: true },
     { id: "work", label: "Work", icon: Briefcase, eliteOnly: true },
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
@@ -5194,75 +5190,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     // Bills due soon
     const billsDueSoon = (() => {
       const now = new Date();
-      now.setHours(0,0,0,0);
-
-      // Same frequency-to-monthly multipliers as the Bills view, so totals match
-      const FREQ_MULT = { weekly: 52/12, fortnightly: 26/12, monthly: 1, quarterly: 1/3, halfyear: 1/6, annual: 1/12 };
-
-      const computeNext = (s) => {
-        const freq = s?.freq || 'monthly';
-        if (freq === 'weekly' || freq === 'fortnightly') {
-          const wd = s?.weekday;
-          if (wd === undefined || wd === null || wd === '') return null;
-          const targetIso = parseInt(wd);
-          if (isNaN(targetIso)) return null;
-          const todayIso = (now.getDay() + 6) % 7;
-          let daysAhead = (targetIso - todayIso + 7) % 7;
-          if (daysAhead === 0) daysAhead = freq === 'weekly' ? 7 : 14;
-          let next = new Date(now);
-          next.setDate(now.getDate() + daysAhead);
-          if (freq === 'fortnightly' && s?.anchor) {
-            const anchor = new Date(s.anchor);
-            if (!isNaN(anchor)) {
-              anchor.setHours(0,0,0,0);
-              const diffDays = Math.round((next - anchor) / 86400000);
-              if (diffDays % 14 !== 0) next.setDate(next.getDate() + 7);
-            }
-          }
-          return next;
-        }
-        if (freq === 'monthly') {
-          const day = s?.dueDate ? parseInt(String(s.dueDate).replace(/[^0-9]/g,'')) : null;
-          if (!day) return null;
-          let next = new Date(now.getFullYear(), now.getMonth(), day);
-          if (next < now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
-          return next;
-        }
-        // quarterly / halfyear / annual — use dueDates array of "DD-MM" strings
-        const dates = (s?.dueDates && s.dueDates.length > 0) ? s.dueDates : (s?.dueDate ? [s.dueDate] : []);
-        if (dates.length === 0) return null;
-        let nextDate = null;
-        let nextDaysAway = Infinity;
-        dates.forEach(str => {
-          const m = String(str).match(/^(\d{1,2})[\/\-\.](\d{1,2})$/);
-          if (!m) return;
-          const day = parseInt(m[1]);
-          const month = parseInt(m[2]) - 1;
-          if (!day || month < 0 || month > 11) return;
-          let cand = new Date(now.getFullYear(), month, day);
-          if (cand < now) cand = new Date(now.getFullYear()+1, month, day);
-          const daysAway = Math.round((cand - now) / 86400000);
-          if (daysAway < nextDaysAway) { nextDate = cand; nextDaysAway = daysAway; }
-        });
-        return nextDate;
-      };
-
-      return subscriptions
-        .filter(s => s && s.name && (parseFloat(s.monthly) || 0) > 0)
-        .map(s => {
-          const next = computeNext(s);
-          if (!next) return null;
-          const days = Math.ceil((next - now) / 86400000);
-          return {
-            name: s.name,
-            days,
-            amount: parseFloat(s.monthly) || 0,
-            freq: s.freq || 'monthly',
-            monthlyEquiv: (parseFloat(s.monthly) || 0) * (FREQ_MULT[s.freq || 'monthly'] || 1),
-          };
-        })
-        .filter(Boolean)
-        .sort((a,b) => a.days - b.days);
+      return subscriptions.filter(s => s.dueDate && s.name && s.monthly > 0).map(s => {
+        const day = parseInt(s.dueDate.toString().replace(/[^0-9]/g,''));
+        if (!day) return null;
+        let next = new Date(now.getFullYear(), now.getMonth(), day);
+        if (next <= now) next = new Date(now.getFullYear(), now.getMonth()+1, day);
+        return { name:s.name, days:Math.ceil((next-now)/86400000), amount:s.monthly };
+      }).filter(Boolean).sort((a,b) => a.days - b.days);
     })();
 
     // Object IDs / metadata
@@ -5594,20 +5528,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>DUE</span>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",textAlign:"right"}}>STATUS</span>
               </div>
-              {billsDueSoon.map((b,i) => {
+              {billsDueSoon.slice(0,8).map((b,i) => {
                 const lvl = b.days <= 3 ? "CRITICAL" : b.days <= 7 ? "WATCH" : "NOMINAL";
                 return (
                   <div
                     key={i}
                     onClick={() => setInspectorEntity({ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" })}
                     onContextMenu={(e) => { e.preventDefault(); setCtxMenu({ x:e.clientX, y:e.clientY, entity:{ type:"BILL", id:b.name, label:b.name, view:"varied", viewName:"Bills" } }); }}
-                    style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
+                    style={{display:"grid",gridTemplateColumns:"22px minmax(0,1fr) 64px 44px 80px",gap:"6px",padding:"7px 12px",borderBottom:i<billsDueSoon.slice(0,8).length-1?"0.5px solid rgba(0,200,255,0.05)":"none",cursor:"pointer",alignItems:"center"}}
                   >
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.4)",fontFamily:"monospace"}}>{String(i+1).padStart(2,'0')}</span>
                     <span style={{minWidth:0,overflow:"hidden",display:"flex"}}>
                       <span style={{color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",borderBottom:"0.5px dashed rgba(0,200,255,0.4)",paddingBottom:"1px",letterSpacing:"0.3px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,flex:1}}>{b.name}</span>
                     </span>
-                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}<span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",marginLeft:"3px"}}>{b.freq==='weekly'?'/wk':b.freq==='fortnightly'?'/2wk':b.freq==='quarterly'?'/qtr':b.freq==='halfyear'?'/6mo':b.freq==='annual'?'/yr':'/mo'}</span></span>
+                    <span style={{fontSize:"11px",color:"#e0eaff",fontFamily:"monospace",textAlign:"right"}}>${b.amount.toFixed(0)}</span>
                     <span style={{fontSize:"11px",color:b.days<=3?"rgba(239,68,68,0.85)":b.days<=7?"rgba(251,191,36,0.85)":"rgba(0,200,255,0.6)",fontFamily:"monospace",textAlign:"right"}}>{b.days}d</span>
                     <div style={{display:"flex",justifyContent:"flex-end"}}><SeverityPill level={lvl} /></div>
                   </div>
@@ -5616,7 +5550,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Footer total row */}
               <div style={{padding:"8px 14px",borderTop:"0.5px solid rgba(0,200,255,0.12)",background:"rgba(0,200,255,0.02)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <span style={{fontSize:"9px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>Σ MONTHLY OUTFLOW</span>
-                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+(b.monthlyEquiv||b.amount),0).toFixed(2)}</span>
+                <span style={{fontSize:"12px",color:"rgba(239,68,68,0.85)",fontFamily:"monospace",fontWeight:500}}>${billsDueSoon.reduce((s,b)=>s+b.amount,0).toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -8318,7 +8252,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Elite Badge & Name'].map((f,i) => (
+                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -8373,8 +8307,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Bills & Debt Management', free: false, elite: true },
                 { feature: 'Assets Management', free: false, elite: true },
                 { feature: 'Investment Management', free: false, elite: true },
-                { feature: 'Health & Sleep Tracker', free: false, elite: true },
-                { feature: 'Gym & Steps Tracker', free: false, elite: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true },
               ].map((row, i, arr) => {
                 const renderCell = (val, color) => val
@@ -11319,18 +11251,71 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             // verdict: 'BUY' | 'HOLD' | 'WATCH' | 'AVOID'
             // ============================================================
             const COVERAGE = [
-              {
-                ticker: 'HSY',
-                name: 'The Hershey Company',
-                industry: 'Food & Beverage',
-                country: 'United States',
-                marketCap: 40000000000, // ~$40B
-                marketCapDate: '28 May 2026', // date the market cap figure was captured
-                verdict: 'BUY',
-                oneLiner: 'Dominant North American confectionery brand with pricing power and a wide consumer moat.',
-                breakdown: null, // full breakdown built later
-              },
-              // --- Add more companies here over time ---
+              // === TECHNOLOGY · USA ===
+              { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null },
+              { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null },
+              { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null },
+              { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null },
+              { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null },
+
+              // === RAILWAY · CANADA & USA ===
+              { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null },
+              { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railway',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null },
+              { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railway',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null },
+              { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railway',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
+
+              // === FINANCIAL · USA ===
+              { ticker: 'V',     name: 'Visa',                           industry: 'Financial',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
+              { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null },
+              { ticker: 'AXP',   name: 'American Express',               industry: 'Financial',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null },
+              { ticker: 'MCO',   name: 'Moody\u2019s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
+
+              // === MEDIA · USA ===
+              { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null },
+              { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null },
+
+              // === BEVERAGE · USA ===
+              { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: null },
+              { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: null },
+
+              // === WASTE · USA ===
+              { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: null },
+              { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null },
+
+              // === CONGLOMERATE · USA ===
+              { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null },
+
+              // === RETAIL · USA ===
+              { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: null },
+
+              // === FOOD · USA ===
+              { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: null },
+
+              // === ENTERTAINMENT · NETHERLANDS ===
+              { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
+
+              // === WHOLESALE · AUSTRALIA ===
+              { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: null },
+
+              // === BANKING · AUSTRALIA ===
+              { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null },
+
+              // === RETAIL · AUSTRALIA ===
+              { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null },
+              { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: null },
+              { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: null },
+
+              // === INFRASTRUCTURE · AUSTRALIA ===
+              { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null },
+
+              // === EXCHANGE · AUSTRALIA ===
+              { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia\u2019s primary stock exchange — monopoly listing venue.',                breakdown: null },
+
+              // === TECHNOLOGY · AUSTRALIA ===
+              { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null },
+
+              // === MEDIA · AUSTRALIA ===
+              { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null },
             ];
 
             const verdictColor = (v) => {
@@ -14590,567 +14575,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </>
           )}
 
-        </div>
-      </div>
-    );
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // HEALTH VIEW — Sleep + Mental Health tabs (Palantir styled)
-  // ─────────────────────────────────────────────────────────────
-  if (activeView === 'gym') {
-    if (!isElite) return <LockedFeature featureName="Health" setActiveView={setActiveView} />;
-    const accent = 'rgba(251,146,60,0.9)';
-    const today = new Date().toISOString().split('T')[0];
-
-    const getWeekDays = () => {
-      const now = new Date();
-      const dayOfWeek = now.getDay();
-      const monday = new Date(now);
-      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-      const days = [];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(monday);
-        d.setDate(monday.getDate() + i);
-        days.push({
-          date: d.toISOString().split('T')[0],
-          dayName: d.toLocaleDateString('en-AU', { weekday: 'long' }),
-          dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
-          dateNum: d.getDate(),
-          isToday: d.toISOString().split('T')[0] === today,
-        });
-      }
-      return days;
-    };
-    const weekDays = getWeekDays();
-
-    const updateSleep = (date, field, value) => {
-      setSleepData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}}));
-    };
-    const updateMental = (date, field, value) => {
-      setMentalHealthData(prev => ({...prev, [date]: {...(prev[date]||{}), [field]: value}}));
-    };
-
-    // Auto-calculate sleep hours from bedtime + wake time. Handles overnight (e.g. 22:00 → 06:00 = 8h).
-    const calcSleepHours = (bedtime, wakeTime) => {
-      if (!bedtime || !wakeTime) return 0;
-      const [bh, bm] = bedtime.split(':').map(Number);
-      const [wh, wm] = wakeTime.split(':').map(Number);
-      if (isNaN(bh) || isNaN(wh)) return 0;
-      const bedMin = bh * 60 + (bm||0);
-      const wakeMin = wh * 60 + (wm||0);
-      let diff = wakeMin - bedMin;
-      if (diff <= 0) diff += 24 * 60; // wraps past midnight
-      return diff / 60;
-    };
-
-    // sleepHoursFor pulls from bedtime+wakeTime first, falls back to manually saved hours (legacy data)
-    const sleepHoursFor = (date) => {
-      const d = sleepData[date] || {};
-      const calc = d.bedtime && d.wakeTime ? calcSleepHours(d.bedtime, d.wakeTime) : 0;
-      return calc || parseFloat(d.hours) || 0;
-    };
-    const weekSleep = weekDays.map(d => sleepHoursFor(d.date)).filter(h => h > 0);
-    const avgSleep = weekSleep.length ? (weekSleep.reduce((s,h)=>s+h,0)/weekSleep.length) : 0;
-    const mentalCheckins = weekDays.filter(d => mentalHealthData[d.date]?.mood).length;
-    const sleepDaysTracked = weekDays.filter(d => sleepHoursFor(d.date) > 0).length;
-
-    const sleepColor = (hrs) => hrs >= 7 ? 'rgba(34,197,94,0.9)' : hrs >= 6 ? 'rgba(251,191,36,0.9)' : 'rgba(239,68,68,0.9)';
-
-    const MOODS = [
-      { label:'Great', value:5, color:'rgba(34,197,94,0.9)' },
-      { label:'Good',  value:4, color:'rgba(132,204,22,0.9)' },
-      { label:'Okay',  value:3, color:'rgba(251,191,36,0.9)' },
-      { label:'Low',   value:2, color:'rgba(251,146,60,0.9)' },
-      { label:'Sad',   value:1, color:'rgba(239,68,68,0.9)' },
-    ];
-
-    return (
-      <div className="min-h-screen bg-transparent pb-24">
-        <Sidebar /><SaveIndicator />
-        <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
-          <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>WELLNESS INTELLIGENCE</div>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
-              <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>HEALTH</h1>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"2px"}}>AVG SLEEP · WEEK</div>
-                <div style={{fontSize:"24px",color:avgSleep ? sleepColor(avgSleep) : "rgba(148,163,184,0.4)",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{avgSleep ? avgSleep.toFixed(1) + 'h' : '—'}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* Sub-tab toggle */}
-          <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
-            {[
-              { id:'sleep', label:'SLEEP' },
-              { id:'mental', label:'MENTAL HEALTH' },
-            ].map(tab => {
-              const active = (gymSubTab||'sleep') === tab.id;
-              return (
-                <button key={tab.id} onClick={() => setGymSubTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* SLEEP TAB */}
-          {(gymSubTab||'sleep') === 'sleep' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// SLEEP LOG · 7 DAYS</div>
-                  <button onClick={() => {
-                    if (!window.confirm("Clear all sleep entries for this week? This can't be undone.")) return;
-                    setSleepData(prev => {
-                      const next = {...prev};
-                      weekDays.forEach(d => { delete next[d.date]; });
-                      return next;
-                    });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
-                </div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Pick bedtime and wake time. Hours calculate automatically.</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {weekDays.map(day => {
-                    const data = sleepData[day.date] || {};
-                    const hrs = sleepHoursFor(day.date);
-                    return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"18px 18px"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hrs?sleepColor(hrs):"rgba(148,163,184,0.3)",boxShadow:hrs?`0 0 8px ${sleepColor(hrs)}`:"none"}}/>
-                            <span style={{fontFamily:"monospace",fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>TODAY</span>}
-                          </div>
-                          {hrs > 0 && (
-                            <span style={{fontFamily:"monospace",fontSize:"18px",color:sleepColor(hrs),fontWeight:600}}>{hrs.toFixed(1)}h</span>
-                          )}
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
-                          <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>BEDTIME</div>
-                            <input type="time" value={data.bedtime||''} onChange={e=>updateSleep(day.date,'bedtime',e.target.value)} onClick={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} onFocus={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} className="slick-input accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
-                          </div>
-                          <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>WAKE</div>
-                            <input type="time" value={data.wakeTime||''} onChange={e=>updateSleep(day.date,'wakeTime',e.target.value)} onClick={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} onFocus={e=>{try{e.target.showPicker&&e.target.showPicker();}catch(_){}}} className="slick-input accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"16px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}/>
-                          </div>
-                          <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>QUALITY</div>
-                            <select value={data.quality||''} onChange={e=>updateSleep(day.date,'quality',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
-                              <option value="">—</option>
-                              <option value="great">Great</option>
-                              <option value="good">Good</option>
-                              <option value="ok">Okay</option>
-                              <option value="poor">Poor</option>
-                            </select>
-                          </div>
-                        </div>
-                        {/* Times woken counter */}
-                        <div style={{marginTop:"14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",padding:"12px 14px",background:"rgba(0,0,0,0.35)",border:`0.5px solid ${accent}25`,borderRadius:"4px"}}>
-                          <div style={{display:"flex",flexDirection:"column",gap:"2px"}}>
-                            <span style={{fontFamily:"monospace",fontSize:"11px",color:"rgba(224,234,255,0.85)",letterSpacing:"1.5px",fontWeight:600}}>TIMES WOKEN</span>
-                            <span style={{fontFamily:"monospace",fontSize:"9px",color:"rgba(148,163,184,0.55)",letterSpacing:"0.5px"}}>How many times you woke during the night</span>
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                            <button onClick={()=>updateSleep(day.date,'wakeups',Math.max(0,(parseInt(data.wakeups)||0)-1))} style={{width:"36px",height:"36px",borderRadius:"4px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
-                            <span style={{minWidth:"32px",textAlign:"center",fontFamily:"monospace",fontSize:"18px",color:"#e0eaff",fontWeight:600}}>{parseInt(data.wakeups)||0}</span>
-                            <button onClick={()=>updateSleep(day.date,'wakeups',(parseInt(data.wakeups)||0)+1)} style={{width:"36px",height:"36px",borderRadius:"4px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Sleep guidance */}
-              <div style={{background:"rgba(5,12,24,0.6)",border:`0.5px solid ${accent}15`,borderRadius:"4px",padding:"10px 14px"}}>
-                <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>// COLOUR CODE</div>
-                <div style={{display:"flex",gap:"14px",flexWrap:"wrap",fontFamily:"monospace",fontSize:"10px"}}>
-                  <span style={{color:"rgba(34,197,94,0.9)"}}>● 7+ hrs · Healthy</span>
-                  <span style={{color:"rgba(251,191,36,0.9)"}}>● 6–7 hrs · Marginal</span>
-                  <span style={{color:"rgba(239,68,68,0.9)"}}>● &lt;6 hrs · Sleep deficit</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* MENTAL TAB */}
-          {gymSubTab === 'mental' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MENTAL HEALTH · CHECK-INS</div>
-                  <button onClick={() => {
-                    if (!window.confirm("Clear all mental health check-ins for this week? This can't be undone.")) return;
-                    setMentalHealthData(prev => {
-                      const next = {...prev};
-                      weekDays.forEach(d => { delete next[d.date]; });
-                      return next;
-                    });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
-                </div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Mood, energy, stress, and a daily journal note.</div>
-                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {weekDays.map(day => {
-                    const data = mentalHealthData[day.date] || {};
-                    const mood = MOODS.find(m => m.label.toLowerCase() === (data.mood||'').toLowerCase());
-                    return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"18px 18px"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",flexWrap:"wrap",gap:"8px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:mood?mood.color:"rgba(148,163,184,0.3)",boxShadow:mood?`0 0 8px ${mood.color}`:"none"}}/>
-                            <span style={{fontFamily:"monospace",fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>TODAY</span>}
-                          </div>
-                          {mood && <span style={{fontFamily:"monospace",fontSize:"13px",color:mood.color,letterSpacing:"1.5px",fontWeight:600}}>{mood.label.toUpperCase()}</span>}
-                        </div>
-                        {/* Mood selector */}
-                        <div style={{display:"flex",gap:"6px",marginBottom:"12px",flexWrap:"wrap"}}>
-                          {MOODS.map(m => {
-                            const selected = (data.mood||'').toLowerCase() === m.label.toLowerCase();
-                            return (
-                              <button key={m.label} onClick={()=>updateMental(day.date,'mood',m.label)} style={{flex:"1 1 70px",padding:"12px 6px",background:selected?`${m.color}22`:"rgba(0,0,0,0.4)",border:`1px solid ${selected?m.color:"rgba(255,255,255,0.12)"}`,borderRadius:"4px",cursor:"pointer",fontFamily:"monospace",fontSize:"12px",color:selected?m.color:"rgba(224,234,255,0.7)",letterSpacing:"1.5px",fontWeight:600}}>
-                                {m.label.toUpperCase()}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-                          <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>ENERGY</div>
-                            <select value={data.energy||''} onChange={e=>updateMental(day.date,'energy',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
-                              <option value="">—</option>
-                              <option value="high">High</option>
-                              <option value="med">Medium</option>
-                              <option value="low">Low</option>
-                            </select>
-                          </div>
-                          <div>
-                            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>STRESS</div>
-                            <select value={data.stress||''} onChange={e=>updateMental(day.date,'stress',e.target.value)} className="slick-select accent-orange" style={{width:"100%",padding:"14px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,colorScheme:"dark",cursor:"pointer"}}>
-                              <option value="">—</option>
-                              <option value="low">Low</option>
-                              <option value="med">Medium</option>
-                              <option value="high">High</option>
-                            </select>
-                          </div>
-                        </div>
-                        <input type="text" placeholder="Journal note..." value={data.note||''} onChange={e=>updateMental(day.date,'note',e.target.value)} className="slick-input accent-orange" style={{marginTop:"12px",width:"100%",padding:"12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}}/>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // GYM VIEW — Weekly Steps + Workout Plan (Palantir styled)
-  // ─────────────────────────────────────────────────────────────
-  if (activeView === 'gymworkout') {
-    if (!isElite) return <LockedFeature featureName="Gym" setActiveView={setActiveView} />;
-    const accent = 'rgba(168,85,247,0.9)';
-    const today = new Date().toISOString().split('T')[0];
-
-    const getWeekDays = () => {
-      const now = new Date();
-      const dayOfWeek = now.getDay();
-      const monday = new Date(now);
-      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-      const days = [];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(monday);
-        d.setDate(monday.getDate() + i);
-        days.push({
-          date: d.toISOString().split('T')[0],
-          dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
-          dateNum: d.getDate(),
-          isToday: d.toISOString().split('T')[0] === today,
-        });
-      }
-      return days;
-    };
-    const weekDays = getWeekDays();
-    const stepsGoal = workoutPlan?.stepsGoal || 10000;
-    const setStepsGoal = (val) => setWorkoutPlan(prev => ({...(prev||{weeks:{}}), stepsGoal: parseInt(val)||0 }));
-
-    const updateSteps = (date, value) => setDailySteps(prev => ({...prev, [date]: parseInt(value)||0}));
-
-    const weekStepsTotal = weekDays.reduce((sum,d) => sum + (dailySteps[d.date]||0), 0);
-    const activeDays = weekDays.filter(d => (dailySteps[d.date]||0) > 0).length;
-    const goalDays = weekDays.filter(d => (dailySteps[d.date]||0) >= stepsGoal).length;
-    const bestDay = weekDays.reduce((best,d) => (dailySteps[d.date]||0) > (dailySteps[best?.date]||0) ? d : best, null);
-
-    // Workout plan state — 4 weeks × 7 days
-    const currentWeek = workoutSubWeek || 1;
-    const setCurrentWeek = (w) => setWorkoutSubWeek(w);
-    const workoutWeek = workoutPlan?.weeks?.[currentWeek] || {};
-    const updateWorkout = (dayKey, field, value) => {
-      setWorkoutPlan(prev => {
-        const next = {...(prev||{weeks:{},stepsGoal:10000})};
-        next.weeks = {...(next.weeks||{})};
-        next.weeks[currentWeek] = {...(next.weeks[currentWeek]||{})};
-        next.weeks[currentWeek][dayKey] = {...(next.weeks[currentWeek][dayKey]||{}), [field]: value};
-        return next;
-      });
-    };
-
-    // Exercise helpers — operate on workoutPlan.weeks[w][dayKey].exercises array
-    const addExercise = (dayKey) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
-      const newRow = { id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name:'', sets:'', reps:'', weight:'', dropSet:false, toFailure:false };
-      updateWorkout(dayKey, 'exercises', [...list, newRow]);
-    };
-    const updateExercise = (dayKey, exId, field, value) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
-      const updated = list.map(e => e.id === exId ? {...e, [field]: value} : e);
-      updateWorkout(dayKey, 'exercises', updated);
-    };
-    const removeExercise = (dayKey, exId) => {
-      const existing = workoutWeek[dayKey] || {};
-      const list = Array.isArray(existing.exercises) ? existing.exercises : [];
-      updateWorkout(dayKey, 'exercises', list.filter(e => e.id !== exId));
-    };
-
-    return (
-      <div className="min-h-screen bg-transparent pb-24">
-        <Sidebar /><SaveIndicator />
-        <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
-          <div className="max-w-5xl mx-auto">
-            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
-            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>FITNESS INTELLIGENCE</div>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
-              <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>GYM</h1>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"2px"}}>WEEKLY STEPS</div>
-                <div style={{fontSize:"24px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{weekStepsTotal.toLocaleString()}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* Sub-tab toggle */}
-          <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
-            {[
-              { id:'steps', label:'STEPS' },
-              { id:'plan', label:'4-WEEK PLAN' },
-            ].map(tab => {
-              const active = (gymWorkoutTab||'steps') === tab.id;
-              return (
-                <button key={tab.id} onClick={() => setGymWorkoutTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* STEPS TAB */}
-          {(gymWorkoutTab||'steps') === 'steps' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-              {/* Goal */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px",display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
-                <div style={{flex:1,minWidth:"180px"}}>
-                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DAILY STEP GOAL</div>
-                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",marginTop:"2px"}}>10,000 is the classic target. Adjust to your fitness level.</div>
-                </div>
-                <input type="number" value={stepsGoal} onChange={e=>setStepsGoal(e.target.value)} className="slick-input accent-orange" style={{width:"120px",padding:"8px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`1px solid ${accent}`,color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"right"}}/>
-              </div>
-
-              {/* 7-day bar chart */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
-                <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// 7-DAY VISUAL</div>
-                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Bar height = steps. Green bar = goal hit.</div>
-                <div style={{display:"flex",gap:"4px",alignItems:"flex-end",height:"140px",borderBottom:`0.5px solid ${accent}20`,paddingBottom:"4px"}}>
-                  {weekDays.map(day => {
-                    const steps = dailySteps[day.date]||0;
-                    const maxSteps = Math.max(stepsGoal, ...weekDays.map(d => dailySteps[d.date]||0)) || stepsGoal;
-                    const pct = Math.min(100, (steps/maxSteps)*100);
-                    const hit = steps >= stepsGoal;
-                    const color = steps === 0 ? "rgba(148,163,184,0.2)" : hit ? "rgba(34,197,94,0.85)" : accent;
-                    return (
-                      <div key={day.date} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
-                        <div style={{flex:1,width:"100%",display:"flex",alignItems:"flex-end",position:"relative"}}>
-                          <div style={{width:"100%",height:`${pct}%`,background:color,borderRadius:"2px 2px 0 0",boxShadow:steps?`0 0 8px ${color}`:"none",transition:"height 0.3s"}}/>
-                          {steps > 0 && (
-                            <div style={{position:"absolute",bottom:"100%",left:"50%",transform:"translateX(-50%)",fontSize:"8px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",marginBottom:"2px",whiteSpace:"nowrap"}}>{steps>=1000?(steps/1000).toFixed(1)+'k':steps}</div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div style={{display:"flex",gap:"4px",marginTop:"4px"}}>
-                  {weekDays.map(day => (
-                    <div key={day.date} style={{flex:1,textAlign:"center"}}>
-                      <div style={{fontSize:"9px",color:day.isToday?accent:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:day.isToday?600:400}}>{day.dayShort.toUpperCase()}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Daily entry */}
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"12px",marginBottom:"10px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"11px",color:`${accent}cc`,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// LOG STEPS</div>
-                  <button onClick={() => {
-                    if (!window.confirm("Clear all step entries for this week? This can't be undone.")) return;
-                    setDailySteps(prev => {
-                      const next = {...prev};
-                      weekDays.forEach(d => { delete next[d.date]; });
-                      return next;
-                    });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
-                </div>
-                <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                  {weekDays.map(day => {
-                    const steps = dailySteps[day.date]||0;
-                    const hit = steps >= stepsGoal;
-                    return (
-                      <div key={day.date} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px"}}>
-                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:steps===0?"rgba(148,163,184,0.3)":hit?"rgba(34,197,94,0.9)":accent,boxShadow:steps?`0 0 6px ${hit?"rgba(34,197,94,0.9)":accent}`:"none"}}/>
-                        <span style={{fontFamily:"monospace",fontSize:"11px",color:day.isToday?accent:"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px",minWidth:"50px"}}>{day.dayShort.toUpperCase()}</span>
-                        {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
-                        <input type="number" placeholder="0" value={steps||''} onChange={e=>updateSteps(day.date,e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 10px",background:"rgba(0,0,0,0.4)",border:"none",borderBottom:`0.5px solid ${accent}30`,color:"#e0eaff",fontFamily:"monospace",fontSize:"11px",textAlign:"right"}}/>
-                        <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",minWidth:"40px"}}>steps</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* PLAN TAB */}
-          {gymWorkoutTab === 'plan' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-              {/* Week picker */}
-              <div style={{display:"flex",gap:"4px"}}>
-                {[1,2,3,4].map(w => {
-                  const active = currentWeek === w;
-                  return (
-                    <button key={w} onClick={()=>setCurrentWeek(w)} style={{flex:1,padding:"12px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"4px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
-                      WEEK {w}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// WEEK {currentWeek} · WORKOUT PLAN</div>
-                  <button onClick={() => {
-                    if (!window.confirm("Clear ALL exercises across all 4 weeks? This can't be undone.")) return;
-                    setWorkoutPlan(prev => {
-                      const next = {...(prev||{weeks:{},stepsGoal:10000})};
-                      next.weeks = {}; // wipe all weeks
-                      return next;
-                    });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR MONTH</button>
-                </div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Log exercises per day. Track sets, reps, weight, drop sets and sets to failure.</div>
-
-                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(dayKey => {
-                    const d = workoutWeek[dayKey] || {};
-                    const done = !!d.done;
-                    const exerciseList = Array.isArray(d.exercises) ? d.exercises : [];
-                    const legacyText = (typeof d.exercises === 'string') ? d.exercises : '';
-                    const hasContent = exerciseList.length > 0 || legacyText || d.name;
-
-                    return (
-                      <div key={dayKey} style={{background:done?"rgba(34,197,94,0.06)":"rgba(255,255,255,0.02)",border:`0.5px solid ${done?"rgba(34,197,94,0.4)":hasContent?accent+"30":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"16px"}}>
-                        {/* Day header */}
-                        <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom: hasContent ? "14px" : "0"}}>
-                          <button onClick={()=>updateWorkout(dayKey,'done',!done)} style={{width:"22px",height:"22px",borderRadius:"4px",border:`1px solid ${done?"rgba(34,197,94,0.9)":accent+"60"}`,background:done?"rgba(34,197,94,0.9)":"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:"monospace",fontSize:"14px",fontWeight:700,flexShrink:0}}>{done?'✓':''}</button>
-                          <span style={{fontFamily:"monospace",fontSize:"13px",color:done?"rgba(34,197,94,0.9)":"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px",minWidth:"44px"}}>{dayKey.toUpperCase()}</span>
-                          <input type="text" placeholder="Day name (e.g. Push, Legs, Cardio, Rest)" value={d.name||''} onChange={e=>updateWorkout(dayKey,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600}}/>
-                        </div>
-
-                        {/* Legacy text field — show with migrate prompt if old data exists */}
-                        {legacyText && (
-                          <div style={{marginBottom:"12px",padding:"10px 12px",background:"rgba(251,191,36,0.06)",border:"0.5px solid rgba(251,191,36,0.3)",borderRadius:"4px"}}>
-                            <div style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// LEGACY ENTRY</div>
-                            <div style={{fontSize:"12px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace",marginBottom:"8px"}}>{legacyText}</div>
-                            <button onClick={()=>updateWorkout(dayKey,'exercises',[])} style={{fontSize:"10px",color:"rgba(251,191,36,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"none",border:"0.5px solid rgba(251,191,36,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600}}>CLEAR & USE NEW FORMAT</button>
-                          </div>
-                        )}
-
-                        {/* Exercises */}
-                        {exerciseList.length > 0 && (
-                          <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"12px"}}>
-                            {exerciseList.map((ex, idx) => (
-                              <div key={ex.id} style={{background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}25`,borderRadius:"5px",padding:"12px"}}>
-                                {/* Row 1: index + name + delete */}
-                                <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"10px"}}>
-                                  <span style={{fontFamily:"monospace",fontSize:"10px",color:`${accent}99`,letterSpacing:"1px",fontWeight:600,minWidth:"22px"}}>{String(idx+1).padStart(2,'0')}</span>
-                                  <input type="text" placeholder="Exercise (e.g. Bench Press)" value={ex.name||''} onChange={e=>updateExercise(dayKey,ex.id,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px",fontWeight:600}}/>
-                                  <button onClick={()=>removeExercise(dayKey,ex.id)} style={{width:"30px",height:"30px",borderRadius:"4px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}} title="Remove">×</button>
-                                </div>
-
-                                {/* Row 2: sets / reps / weight */}
-                                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"10px"}}>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>SETS</div>
-                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.sets||''} onChange={e=>updateExercise(dayKey,ex.id,'sets',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
-                                  </div>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>REPS</div>
-                                    <input type="number" inputMode="numeric" placeholder="0" value={ex.reps||''} onChange={e=>updateExercise(dayKey,ex.id,'reps',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
-                                  </div>
-                                  <div>
-                                    <div style={{fontSize:"9px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px",fontWeight:600}}>WEIGHT (KG)</div>
-                                    <input type="number" inputMode="decimal" placeholder="0" value={ex.weight||''} onChange={e=>updateExercise(dayKey,ex.id,'weight',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600,textAlign:"center",colorScheme:"dark"}}/>
-                                  </div>
-                                </div>
-
-                                {/* Row 3: drop set + failure toggles */}
-                                <div style={{display:"flex",gap:"8px"}}>
-                                  <button onClick={()=>updateExercise(dayKey,ex.id,'dropSet',!ex.dropSet)} style={{flex:1,padding:"10px 12px",background:ex.dropSet?`${accent}22`:"rgba(0,0,0,0.3)",border:`1px solid ${ex.dropSet?accent:"rgba(255,255,255,0.1)"}`,borderRadius:"4px",color:ex.dropSet?accent:"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
-                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.dropSet?accent:"rgba(148,163,184,0.3)",boxShadow:ex.dropSet?`0 0 6px ${accent}`:"none"}}/>
-                                    DROP SET
-                                  </button>
-                                  <button onClick={()=>updateExercise(dayKey,ex.id,'toFailure',!ex.toFailure)} style={{flex:1,padding:"10px 12px",background:ex.toFailure?"rgba(239,68,68,0.18)":"rgba(0,0,0,0.3)",border:`1px solid ${ex.toFailure?"rgba(239,68,68,0.7)":"rgba(255,255,255,0.1)"}`,borderRadius:"4px",color:ex.toFailure?"rgba(239,68,68,0.95)":"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:"6px"}}>
-                                    <span style={{width:"8px",height:"8px",borderRadius:"50%",background:ex.toFailure?"rgba(239,68,68,0.9)":"rgba(148,163,184,0.3)",boxShadow:ex.toFailure?"0 0 6px rgba(239,68,68,0.9)":"none"}}/>
-                                    TO FAILURE
-                                  </button>
-                                </div>
-
-                                {/* Optional notes per exercise */}
-                                {(ex.notes !== undefined && ex.notes !== '') && (
-                                  <input type="text" placeholder="Notes (form cues, RPE, etc.)" value={ex.notes||''} onChange={e=>updateExercise(dayKey,ex.id,'notes',e.target.value)} className="slick-input accent-orange" style={{marginTop:"10px",width:"100%",padding:"8px 10px",background:"rgba(0,0,0,0.3)",border:`0.5px solid ${accent}20`,borderRadius:"3px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"11px"}}/>
-                                )}
-                                {ex.notes === undefined || ex.notes === '' ? (
-                                  <button onClick={()=>updateExercise(dayKey,ex.id,'notes',' ')} style={{marginTop:"8px",fontSize:"10px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",padding:"4px 0"}}>+ Add notes</button>
-                                ) : null}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Add exercise button */}
-                        <button onClick={()=>addExercise(dayKey)} style={{width:"100%",padding:"12px",background:"rgba(0,0,0,0.3)",border:`1px dashed ${accent}50`,borderRadius:"4px",color:accent,fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>
-                          + ADD EXERCISE
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     );
