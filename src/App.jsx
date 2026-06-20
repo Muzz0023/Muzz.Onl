@@ -11520,6 +11520,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   />
                 </div>
 
+                {/* USD blurb */}
+                <div style={{display:'flex',alignItems:'center',gap:'8px',padding:'8px 12px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.2)',borderLeft:'2px solid rgba(34,197,94,0.6)',borderRadius:'4px',flexWrap:'wrap'}}>
+                  <span style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// NOTE</span>
+                  <span style={{fontSize:'11px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',letterSpacing:'0.3px'}}>All market caps shown in USD. Captured on the date listed beside each figure.</span>
+                </div>
+
                 {/* Breadcrumb */}
                 <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',letterSpacing:'1px'}}>
                   <button onClick={() => { setCoverageIndustry(null); setCoverageCountry(null); }}
