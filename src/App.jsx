@@ -1929,6 +1929,21 @@ function MuzzApp() {
     }
   }, [activeView]);
 
+  // Research takeover boot — trigger 1.5s "Bloomberg Terminal" boot sequence when ENTERING Research mode
+  // from any non-research sub-tab. Doesn't re-trigger when switching between Research sub-tabs.
+  useEffect(() => {
+    const researchTabs = ['research','researchMap','coverage','livePrices','performance','accounting','knowledge','books','sp500','futurePortfolio'];
+    const isResearchNow = researchTabs.includes(investmentsSubTab);
+    const wasResearchBefore = researchTabs.includes(prevInvestmentsSubTabRef.current);
+    if (isResearchNow && !wasResearchBefore) {
+      setBootingResearch(true);
+      const t = setTimeout(() => setBootingResearch(false), 1500);
+      prevInvestmentsSubTabRef.current = investmentsSubTab;
+      return () => clearTimeout(t);
+    }
+    prevInvestmentsSubTabRef.current = investmentsSubTab;
+  }, [investmentsSubTab]);
+
   // Viewport tracking — Bridge layout activates on wide screens
   const [isWide, setIsWide] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
   useEffect(() => {
@@ -2316,6 +2331,9 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
+  // Research takeover ("Bloomberg Terminal" mode) — boot sequence + dedicated chrome
+  const [bootingResearch, setBootingResearch] = useState(false);
+  const prevInvestmentsSubTabRef = React.useRef(investmentsSubTab);
   const [researchConstellationIndustry, setResearchConstellationIndustry] = useState(null);
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
@@ -9516,7 +9534,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     };
 
     return (
-      <div className="min-h-screen bg-transparent pb-24">
+      <div className="min-h-screen bg-transparent pb-24" style={(() => {
+        const researchTabs = ['research','researchMap','coverage','futurePortfolio','livePrices','performance','accounting','knowledge','books','sp500'];
+        const inResearchMode = researchTabs.includes(investmentsSubTab);
+        return { position: 'relative', zIndex: 10, paddingTop: inResearchMode ? '36px' : 0, transition: 'padding-top 0.2s ease' };
+      })()}>
         <Sidebar /><SaveIndicator />
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
@@ -10060,6 +10082,65 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         })()}
 
 
+        {/* === RESEARCH TAKEOVER — Bloomberg Terminal mode === */}
+        {(() => {
+          const researchTabs = ['research','researchMap','coverage','futurePortfolio','livePrices','performance','accounting','knowledge','books','sp500'];
+          const inResearchMode = researchTabs.includes(investmentsSubTab);
+          if (!inResearchMode) return null;
+
+          return (
+            <>
+              {/* Pure black background — covers the starfield */}
+              <div style={{position:"fixed",inset:0,background:"#000",zIndex:1,pointerEvents:"none"}}/>
+
+              {/* Subtle amber CRT scanline overlay */}
+              <div style={{position:"fixed",inset:0,zIndex:2,pointerEvents:"none",background:"repeating-linear-gradient(0deg, rgba(245,158,11,0.012) 0px, rgba(245,158,11,0.012) 1px, transparent 1px, transparent 3px)",mixBlendMode:"screen"}}/>
+
+              {/* Bloomberg Terminal-style HUD strip — fixed at the very top */}
+              <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"rgba(0,0,0,0.92)",borderBottom:"0.5px solid rgba(245,158,11,0.4)",padding:"8px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",backdropFilter:"blur(8px)"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px",flexWrap:"wrap"}}>
+                  <span style={{fontSize:"10px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",letterSpacing:"2.5px",fontWeight:700}}>RESEARCH OS</span>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>v2.0 // BUILD 2026.06</span>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"6px"}}>
+                    <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
+                    ONLINE
+                  </span>
+                </div>
+                <button
+                  onClick={() => setInvestmentsSubTab('portfolio')}
+                  style={{fontSize:"10px",color:"rgba(245,158,11,0.9)",fontFamily:"monospace",letterSpacing:"2px",background:"rgba(245,158,11,0.1)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"2px",padding:"5px 12px",cursor:"pointer",fontWeight:600}}
+                >
+                  ← EXIT
+                </button>
+              </div>
+            </>
+          );
+        })()}
+
+        {/* === BOOT SEQUENCE OVERLAY — fades in when entering Research === */}
+        {bootingResearch && (
+          <div
+            onClick={() => setBootingResearch(false)}
+            style={{position:"fixed",inset:0,zIndex:100,background:"#000",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",animation:"researchBootFade 0.3s ease-out"}}
+          >
+            <style>{`
+              @keyframes researchBootFade { from { opacity: 0; } to { opacity: 1; } }
+              @keyframes bootCaret { 50% { opacity: 0; } }
+              @keyframes bootLine { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
+            `}</style>
+            <div style={{fontFamily:"monospace",color:"rgba(245,158,11,0.95)",fontSize:"12px",lineHeight:1.8,letterSpacing:"1px",maxWidth:"520px",width:"100%",padding:"0 24px"}}>
+              <div style={{animation:"bootLine 0.15s ease-out 0.0s both"}}>&gt; INITIALIZING RESEARCH OS v2.0...</div>
+              <div style={{animation:"bootLine 0.15s ease-out 0.15s both"}}>&gt; LOADING MARKET DATA FEED......... <span style={{color:"rgba(34,197,94,0.9)"}}>[ OK ]</span></div>
+              <div style={{animation:"bootLine 0.15s ease-out 0.30s both"}}>&gt; MOUNTING COVERAGE DATABASE....... <span style={{color:"rgba(34,197,94,0.9)"}}>[ OK ]</span></div>
+              <div style={{animation:"bootLine 0.15s ease-out 0.45s both"}}>&gt; SYNCING PORTFOLIO STATE.......... <span style={{color:"rgba(34,197,94,0.9)"}}>[ OK ]</span></div>
+              <div style={{animation:"bootLine 0.15s ease-out 0.60s both"}}>&gt; CONNECTING TO YAHOO FINANCE...... <span style={{color:"rgba(34,197,94,0.9)"}}>[ OK ]</span></div>
+              <div style={{animation:"bootLine 0.15s ease-out 0.75s both"}}>&gt; AUTHENTICATING USER.............. <span style={{color:"rgba(34,197,94,0.9)"}}>[ OK ]</span></div>
+              <div style={{animation:"bootLine 0.15s ease-out 0.95s both",marginTop:"16px",color:"rgba(245,158,11,0.95)",fontWeight:600}}>&gt; READY. WELCOME, {(eliteName && eliteName.trim().toUpperCase()) || 'OPERATOR'}.<span style={{display:"inline-block",width:"8px",height:"14px",background:"rgba(245,158,11,0.95)",marginLeft:"4px",verticalAlign:"text-bottom",animation:"bootCaret 1s steps(1) infinite"}}/></div>
+              <div style={{animation:"bootLine 0.15s ease-out 1.1s both",marginTop:"24px",fontSize:"9px",color:"rgba(245,158,11,0.4)",letterSpacing:"1.5px",textAlign:"center"}}>[ TAP TO SKIP ]</div>
+            </div>
+          </div>
+        )}
+
         {/* HEADER */}
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
@@ -10077,17 +10158,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
               {[
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
-                {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                 {id:'research',label:'RESEARCH'},
               ].map(tab => {
                 // The RESEARCH parent tab should stay highlighted across all its sub-tabs
-                // (MAP, COVERAGE, HOLDINGS, LIVE PRICES, PERFORMANCE, ACCOUNTING, INVESTING GUIDE, S&P 500)
-                const researchSubTabs = ['research','researchMap','coverage','livePrices','performance','accounting','knowledge','books','sp500'];
+                // (MAP, COVERAGE, HOLDINGS, FUTURE PORTFOLIO, LIVE PRICES, PERFORMANCE, ACCOUNTING, INVESTING GUIDE, S&P 500)
+                const researchSubTabs = ['research','researchMap','coverage','futurePortfolio','livePrices','performance','accounting','knowledge','books','sp500'];
                 const isActive = tab.id === 'research'
                   ? researchSubTabs.includes(investmentsSubTab)
                   : investmentsSubTab === tab.id;
+                // Amber accent for the RESEARCH tab (Bloomberg Terminal vibe); cyan elsewhere
+                const activeAccent = tab.id === 'research' ? '245,158,11' : '0,200,255';
+                const activeText = tab.id === 'research' ? 'rgba(245,158,11,0.95)' : '#00c8ff';
                 return (
-                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:isActive?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
+                <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?`rgba(${activeAccent},0.18)`:"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?`rgba(${activeAccent},0.7)`:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:isActive?activeText:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
                 </button>
                 );
@@ -10098,7 +10181,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
           {/* === INVESTMENT MAP — Free-form node graph (like Asset Map) === */}
-          {(investmentsSubTab === 'coverage' || investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
+          {(investmentsSubTab === 'coverage' || investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'futurePortfolio' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
             <>
               {/* Inner tabs for Research sub-sections */}
               <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
@@ -10106,6 +10189,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {id:'researchMap',label:'MAP'},
                   {id:'coverage',label:'COVERAGE'},
                   {id:'research',label:'HOLDINGS'},
+                  {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
                   {id:'livePrices',label:'LIVE PRICES'},
                   {id:'performance',label:'PERFORMANCE'},
                   {id:'accounting',label:'ACCOUNTING'},
@@ -10113,11 +10197,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {id:'sp500',label:'S&P 500'},
                 ].map(sub => {
                   const active = investmentsSubTab === sub.id || (sub.id === 'knowledge' && investmentsSubTab === 'books');
+                  // Amber accent for Bloomberg Terminal mode
                   return (
                     <button
                       key={sub.id}
                       onClick={() => setInvestmentsSubTab(sub.id)}
-                      style={{padding:"6px 14px",background:active?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
+                      style={{padding:"6px 14px",background:active?"rgba(245,158,11,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(245,158,11,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"rgba(245,158,11,0.95)":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
                     >
                       {sub.label}
                     </button>
