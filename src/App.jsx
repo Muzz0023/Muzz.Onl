@@ -2208,7 +2208,7 @@ function MuzzApp() {
       4: { name: '', setsInfo: '', exercises: [] }
     }
   });
-  const [dietSubTab, setDietSubTab] = useState('meals');
+  const [dietSubTab, setDietSubTab] = useState('water');
   const [activeShoppingListId, setActiveShoppingListId] = useState('default');
   const [expandedDietPlan, setExpandedDietPlan] = useState(null);
   const [trackedStocks, setTrackedStocks] = useState([]);
@@ -8320,7 +8320,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Nutrition & Meal Tracker','Elite Badge & Name'].map((f,i) => (
+                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Nutrition & Water Tracker','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -8377,7 +8377,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Investment Management', free: false, elite: true },
                 { feature: 'Health & Sleep Tracker', free: false, elite: true },
                 { feature: 'Gym & Steps Tracker', free: false, elite: true },
-                { feature: 'Nutrition & Meal Tracker', free: false, elite: true },
+                { feature: 'Nutrition & Water Tracker', free: false, elite: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true },
               ].map((row, i, arr) => {
                 const renderCell = (val, color) => val
@@ -15249,14 +15249,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const waterGoal = waterIntake?.goal || 3;
 
     // Helpers
-    const updateMeal = (date, slot, field, value) => {
-      setDailyMeals(prev => {
-        const next = {...prev};
-        next[date] = {...(next[date]||{})};
-        next[date][slot] = {...(next[date][slot]||{}), [field]: value};
-        return next;
-      });
-    };
     const updateWater = (date, value) => {
       setWaterIntake(prev => ({
         goal: prev?.goal || 3,
@@ -15310,13 +15302,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       setCustomDiets(prev => prev.filter(d => d.id !== id));
     };
 
-    const MEAL_SLOTS = [
-      { key: 'breakfast', label: 'BREAKFAST' },
-      { key: 'lunch',     label: 'LUNCH' },
-      { key: 'dinner',    label: 'DINNER' },
-      { key: 'snacks',    label: 'SNACKS' },
-    ];
-
     return (
       <div className="min-h-screen bg-transparent pb-24">
         <Sidebar /><SaveIndicator />
@@ -15338,12 +15323,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Sub-tab toggle */}
           <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
             {[
-              { id:'meals',     label:'MEALS' },
               { id:'water',     label:'WATER' },
               { id:'groceries', label:'GROCERIES' },
               { id:'diets',     label:'DIETS' },
             ].map(tab => {
-              const active = (dietSubTab||'meals') === tab.id;
+              const active = (dietSubTab||'water') === tab.id;
               return (
                 <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
                   {tab.label}
@@ -15351,60 +15335,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               );
             })}
           </div>
-
-          {/* MEALS TAB */}
-          {(dietSubTab||'meals') === 'meals' && (
-            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
-              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
-                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MEAL LOG · 7 DAYS</div>
-                  <button onClick={() => {
-                    if (!window.confirm("Clear all meals for this week? This can't be undone.")) return;
-                    setDailyMeals(prev => {
-                      const next = {...prev};
-                      weekDays.forEach(d => { delete next[d.date]; });
-                      return next;
-                    });
-                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
-                </div>
-                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Log breakfast, lunch, dinner and snacks. Calories optional.</div>
-
-                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-                  {weekDays.map(day => {
-                    const dayMeals = dailyMeals[day.date] || {};
-                    const totalCals = MEAL_SLOTS.reduce((sum, s) => sum + (parseInt(dayMeals[s.key]?.cals)||0), 0);
-                    const hasContent = MEAL_SLOTS.some(s => dayMeals[s.key]?.text || dayMeals[s.key]?.cals);
-                    return (
-                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":hasContent?accent+"20":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"16px"}}>
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px",flexWrap:"wrap",gap:"8px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasContent?accent:"rgba(148,163,184,0.3)",boxShadow:hasContent?`0 0 8px ${accent}`:"none"}}/>
-                            <span style={{fontFamily:"monospace",fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
-                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>TODAY</span>}
-                          </div>
-                          {totalCals > 0 && (
-                            <span style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:600}}>{totalCals.toLocaleString()} <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>kcal</span></span>
-                          )}
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-                          {MEAL_SLOTS.map(slot => {
-                            const data = dayMeals[slot.key] || {};
-                            return (
-                              <div key={slot.key} style={{display:"grid",gridTemplateColumns:"86px 1fr 90px",gap:"8px",alignItems:"center"}}>
-                                <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",letterSpacing:"1.5px",fontWeight:600}}>{slot.label}</span>
-                                <input type="text" placeholder={`What did you eat for ${slot.label.toLowerCase()}?`} value={data.text||''} onChange={e=>updateMeal(day.date,slot.key,'text',e.target.value)} className="slick-input accent-orange" style={{padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}/>
-                                <input type="number" inputMode="numeric" placeholder="cal" value={data.cals||''} onChange={e=>updateMeal(day.date,slot.key,'cals',e.target.value)} className="slick-input accent-orange" style={{padding:"10px 8px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",textAlign:"center",colorScheme:"dark"}}/>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* WATER TAB */}
           {dietSubTab === 'water' && (
