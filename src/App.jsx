@@ -2208,7 +2208,8 @@ function MuzzApp() {
       4: { name: '', setsInfo: '', exercises: [] }
     }
   });
-  const [dietSubTab, setDietSubTab] = useState('groceries');
+  const [dietSubTab, setDietSubTab] = useState('meals');
+  const [activeShoppingListId, setActiveShoppingListId] = useState('default');
   const [expandedDietPlan, setExpandedDietPlan] = useState(null);
   const [trackedStocks, setTrackedStocks] = useState([]);
   const [livePrices, setLivePrices] = useState({});
@@ -3303,6 +3304,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "reminders", label: "Reminders", icon: Bell },
     { id: "gym", label: "Health", icon: Heart, eliteOnly: true },
     { id: "gymworkout", label: "Gym", icon: Dumbbell, eliteOnly: true },
+    { id: "nutrition", label: "Nutrition", icon: ShoppingCart, eliteOnly: true },
     { id: "timetable", label: "Timetable", icon: Calendar, eliteOnly: true },
     { id: "work", label: "Work", icon: Briefcase, eliteOnly: true },
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
@@ -3730,7 +3732,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'HEALTH',   id:'gym',           label:'Health',          elite:true  },
       { section: 'HEALTH',   id:'gymworkout',    label:'Gym',             elite:true  },
       { section: 'HEALTH',   id:'work',          label:'Work',            elite:true  },
-      { section: 'HEALTH',   id:'diet',          label:'Diet',            elite:true  },
+      { section: 'HEALTH',   id:'nutrition',     label:'Nutrition',       elite:true  },
       { section: 'HEALTH',   id:'timetable',     label:'Timetable',       elite:true  },
       { section: 'FINANCE',  id:'varied',        label:'Bills',           elite:true  },
       { section: 'FINANCE',  id:'assets',        label:'Assets',          elite:true  },
@@ -8318,7 +8320,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"6px"}}>PERSONAL FINANCE & LIFE MGMT</div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"4px",borderTop:"0.5px solid rgba(245,158,11,0.15)",paddingTop:"12px"}}>
-                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Elite Badge & Name'].map((f,i) => (
+                  {['Work & Timesheet','Bills & Debt Management','Assets Management','Investment Management','Health & Sleep Tracker','Gym & Steps Tracker','Nutrition & Meal Tracker','Elite Badge & Name'].map((f,i) => (
                     <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"11px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace"}}>
                       <span style={{color:"rgba(245,158,11,0.8)",fontWeight:600}}>+</span>{f}
                     </div>
@@ -8375,6 +8377,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 { feature: 'Investment Management', free: false, elite: true },
                 { feature: 'Health & Sleep Tracker', free: false, elite: true },
                 { feature: 'Gym & Steps Tracker', free: false, elite: true },
+                { feature: 'Nutrition & Meal Tracker', free: false, elite: true },
                 { feature: 'Elite Badge & Name', free: false, elite: true },
               ].map((row, i, arr) => {
                 const renderCell = (val, color) => val
@@ -15207,6 +15210,390 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // NUTRITION VIEW — Meals + Water + Groceries + Diets
+  // ─────────────────────────────────────────────────────────────
+  if (activeView === 'nutrition') {
+    if (!isElite) return <LockedFeature featureName="Nutrition" setActiveView={setActiveView} />;
+    const accent = 'rgba(34,197,94,0.9)';
+    const today = new Date().toISOString().split('T')[0];
+
+    const getWeekDays = () => {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        days.push({
+          date: d.toISOString().split('T')[0],
+          dayShort: d.toLocaleDateString('en-AU', { weekday: 'short' }),
+          dateNum: d.getDate(),
+          isToday: d.toISOString().split('T')[0] === today,
+        });
+      }
+      return days;
+    };
+    const weekDays = getWeekDays();
+    const todayWater = (waterIntake?.days?.[today]) || 0;
+    const waterGoal = waterIntake?.goal || 3;
+
+    // Helpers
+    const updateMeal = (date, slot, field, value) => {
+      setDailyMeals(prev => {
+        const next = {...prev};
+        next[date] = {...(next[date]||{})};
+        next[date][slot] = {...(next[date][slot]||{}), [field]: value};
+        return next;
+      });
+    };
+    const updateWater = (date, value) => {
+      setWaterIntake(prev => ({
+        goal: prev?.goal || 3,
+        goalStr: prev?.goalStr || '3',
+        days: {...(prev?.days||{}), [date]: Math.max(0, value)},
+      }));
+    };
+    const setGoal = (value) => {
+      const v = parseFloat(value)||0;
+      setWaterIntake(prev => ({
+        goal: v,
+        goalStr: value,
+        days: prev?.days || {},
+      }));
+    };
+
+    // Groceries helpers
+    const activeList = shoppingLists.find(l => l.id === activeShoppingListId) || shoppingLists[0];
+    const activeListItems = groceries.filter(g => g.listId === (activeList?.id || 'default'));
+    const addGroceryItem = (name) => {
+      if (!name.trim()) return;
+      const item = { id: 'g_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), listId: activeList?.id || 'default', name: name.trim(), qty: '', category: '', done: false };
+      setGroceries(prev => [...prev, item]);
+    };
+    const toggleGroceryDone = (id) => setGroceries(prev => prev.map(g => g.id === id ? {...g, done: !g.done} : g));
+    const updateGrocery = (id, field, value) => setGroceries(prev => prev.map(g => g.id === id ? {...g, [field]: value} : g));
+    const removeGrocery = (id) => setGroceries(prev => prev.filter(g => g.id !== id));
+    const addShoppingList = (name) => {
+      if (!name.trim()) return;
+      const id = 'list_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      setShoppingLists(prev => [...prev, { id, name: name.trim(), emoji: '🛒' }]);
+      setActiveShoppingListId(id);
+    };
+    const removeShoppingList = (id) => {
+      if (id === 'default') return;
+      if (!window.confirm('Delete this list and all its items?')) return;
+      setShoppingLists(prev => prev.filter(l => l.id !== id));
+      setGroceries(prev => prev.filter(g => g.listId !== id));
+      setActiveShoppingListId('default');
+    };
+
+    // Diet helpers
+    const addCustomDiet = () => {
+      const id = 'diet_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      setCustomDiets(prev => [...prev, { id, name: '', description: '', rules: '', active: false }]);
+    };
+    const updateCustomDiet = (id, field, value) => setCustomDiets(prev => prev.map(d => d.id === id ? {...d, [field]: value} : d));
+    const setActiveDiet = (id) => setCustomDiets(prev => prev.map(d => ({...d, active: d.id === id ? !d.active : false})));
+    const removeCustomDiet = (id) => {
+      if (!window.confirm('Delete this diet?')) return;
+      setCustomDiets(prev => prev.filter(d => d.id !== id));
+    };
+
+    const MEAL_SLOTS = [
+      { key: 'breakfast', label: 'BREAKFAST' },
+      { key: 'lunch',     label: 'LUNCH' },
+      { key: 'dinner',    label: 'DINNER' },
+      { key: 'snacks',    label: 'SNACKS' },
+    ];
+
+    return (
+      <div className="min-h-screen bg-transparent pb-24">
+        <Sidebar /><SaveIndicator />
+        <div style={{borderBottom:`0.5px solid ${accent}25`,padding:"56px 24px 16px"}}>
+          <div className="max-w-5xl mx-auto">
+            <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"2px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
+            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"3px",marginBottom:"6px",fontWeight:600}}>NUTRITION INTELLIGENCE</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"16px",flexWrap:"wrap"}}>
+              <h1 style={{fontSize:"36px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"3px",margin:0}}>NUTRITION</h1>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"2px"}}>WATER · TODAY</div>
+                <div style={{fontSize:"24px",color:todayWater >= waterGoal ? accent : "#e0eaff",fontFamily:"monospace",fontWeight:600,lineHeight:1}}>{todayWater}<span style={{fontSize:"14px",color:"rgba(148,163,184,0.6)"}}> / {waterGoal}L</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+          {/* Sub-tab toggle */}
+          <div style={{display:"flex",gap:"4px",overflowX:"auto"}}>
+            {[
+              { id:'meals',     label:'MEALS' },
+              { id:'water',     label:'WATER' },
+              { id:'groceries', label:'GROCERIES' },
+              { id:'diets',     label:'DIETS' },
+            ].map(tab => {
+              const active = (dietSubTab||'meals') === tab.id;
+              return (
+                <button key={tab.id} onClick={() => setDietSubTab(tab.id)} style={{padding:"6px 14px",background:active?`${accent}22`:"rgba(255,255,255,0.04)",border:`0.5px solid ${active?accent:"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",fontWeight:600}}>
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* MEALS TAB */}
+          {(dietSubTab||'meals') === 'meals' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MEAL LOG · 7 DAYS</div>
+                  <button onClick={() => {
+                    if (!window.confirm("Clear all meals for this week? This can't be undone.")) return;
+                    setDailyMeals(prev => {
+                      const next = {...prev};
+                      weekDays.forEach(d => { delete next[d.date]; });
+                      return next;
+                    });
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                </div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Log breakfast, lunch, dinner and snacks. Calories optional.</div>
+
+                <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+                  {weekDays.map(day => {
+                    const dayMeals = dailyMeals[day.date] || {};
+                    const totalCals = MEAL_SLOTS.reduce((sum, s) => sum + (parseInt(dayMeals[s.key]?.cals)||0), 0);
+                    const hasContent = MEAL_SLOTS.some(s => dayMeals[s.key]?.text || dayMeals[s.key]?.cals);
+                    return (
+                      <div key={day.date} style={{background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":hasContent?accent+"20":"rgba(255,255,255,0.06)"}`,borderRadius:"6px",padding:"16px"}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"12px",flexWrap:"wrap",gap:"8px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:hasContent?accent:"rgba(148,163,184,0.3)",boxShadow:hasContent?`0 0 8px ${accent}`:"none"}}/>
+                            <span style={{fontFamily:"monospace",fontSize:"13px",color:day.isToday?accent:"rgba(224,234,255,0.95)",fontWeight:600,letterSpacing:"1.5px"}}>{day.dayShort.toUpperCase()} · {day.dateNum}</span>
+                            {day.isToday && <span style={{fontSize:"10px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",fontWeight:600}}>TODAY</span>}
+                          </div>
+                          {totalCals > 0 && (
+                            <span style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:600}}>{totalCals.toLocaleString()} <span style={{fontSize:"10px",color:"rgba(148,163,184,0.6)"}}>kcal</span></span>
+                          )}
+                        </div>
+                        <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                          {MEAL_SLOTS.map(slot => {
+                            const data = dayMeals[slot.key] || {};
+                            return (
+                              <div key={slot.key} style={{display:"grid",gridTemplateColumns:"86px 1fr 90px",gap:"8px",alignItems:"center"}}>
+                                <span style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",letterSpacing:"1.5px",fontWeight:600}}>{slot.label}</span>
+                                <input type="text" placeholder={`What did you eat for ${slot.label.toLowerCase()}?`} value={data.text||''} onChange={e=>updateMeal(day.date,slot.key,'text',e.target.value)} className="slick-input accent-orange" style={{padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}/>
+                                <input type="number" inputMode="numeric" placeholder="cal" value={data.cals||''} onChange={e=>updateMeal(day.date,slot.key,'cals',e.target.value)} className="slick-input accent-orange" style={{padding:"10px 8px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",textAlign:"center",colorScheme:"dark"}}/>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* WATER TAB */}
+          {dietSubTab === 'water' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              {/* Goal setter */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"16px",display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
+                <div style={{flex:1,minWidth:"180px"}}>
+                  <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DAILY WATER GOAL</div>
+                  <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",marginTop:"2px"}}>Track in litres. 2–3L is the typical target.</div>
+                </div>
+                <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                  <input type="number" step="0.5" value={waterIntake?.goalStr || waterGoal} onChange={e=>setGoal(e.target.value)} className="slick-input accent-orange" style={{width:"100px",padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"15px",fontWeight:600,textAlign:"right",colorScheme:"dark"}}/>
+                  <span style={{fontFamily:"monospace",fontSize:"13px",color:"rgba(148,163,184,0.7)"}}>L</span>
+                </div>
+              </div>
+
+              {/* 7-day bar chart */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"16px"}}>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"4px"}}>// 7-DAY VISUAL</div>
+                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"14px"}}>Bar height = litres. Green bar = goal hit.</div>
+                <div style={{display:"flex",gap:"4px",alignItems:"flex-end",height:"140px",borderBottom:`0.5px solid ${accent}20`,paddingBottom:"4px"}}>
+                  {weekDays.map(day => {
+                    const litres = waterIntake?.days?.[day.date] || 0;
+                    const maxL = Math.max(waterGoal, ...weekDays.map(d => waterIntake?.days?.[d.date]||0)) || waterGoal;
+                    const pct = Math.min(100, (litres/maxL)*100);
+                    const hit = litres >= waterGoal;
+                    const color = litres === 0 ? "rgba(148,163,184,0.2)" : hit ? accent : "rgba(96,165,250,0.85)";
+                    return (
+                      <div key={day.date} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"4px",height:"100%"}}>
+                        <div style={{flex:1,width:"100%",display:"flex",alignItems:"flex-end",position:"relative"}}>
+                          <div style={{width:"100%",height:`${pct}%`,background:color,borderRadius:"2px 2px 0 0",boxShadow:litres?`0 0 8px ${color}`:"none",transition:"height 0.3s"}}/>
+                          {litres > 0 && (
+                            <div style={{position:"absolute",bottom:"100%",left:"50%",transform:"translateX(-50%)",fontSize:"9px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",marginBottom:"2px",whiteSpace:"nowrap"}}>{litres}L</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{display:"flex",gap:"4px",marginTop:"4px"}}>
+                  {weekDays.map(day => (
+                    <div key={day.date} style={{flex:1,textAlign:"center"}}>
+                      <div style={{fontSize:"9px",color:day.isToday?accent:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1px",fontWeight:day.isToday?600:400}}>{day.dayShort.toUpperCase()}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Daily logger */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"16px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"12px",marginBottom:"14px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// LOG WATER</div>
+                  <button onClick={() => {
+                    if (!window.confirm("Clear all water entries for this week? This can't be undone.")) return;
+                    setWaterIntake(prev => {
+                      const days = {...(prev?.days||{})};
+                      weekDays.forEach(d => { delete days[d.date]; });
+                      return { goal: prev?.goal || 3, goalStr: prev?.goalStr || '3', days };
+                    });
+                  }} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR WEEK</button>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                  {weekDays.map(day => {
+                    const litres = waterIntake?.days?.[day.date] || 0;
+                    const hit = litres >= waterGoal;
+                    return (
+                      <div key={day.date} style={{display:"flex",alignItems:"center",gap:"12px",padding:"10px 12px",background:day.isToday?`${accent}10`:"rgba(255,255,255,0.02)",border:`0.5px solid ${day.isToday?accent+"50":"rgba(255,255,255,0.06)"}`,borderRadius:"4px"}}>
+                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:litres===0?"rgba(148,163,184,0.3)":hit?accent:"rgba(96,165,250,0.85)",boxShadow:litres?`0 0 6px ${hit?accent:"rgba(96,165,250,0.85)"}`:"none"}}/>
+                        <span style={{fontFamily:"monospace",fontSize:"12px",color:day.isToday?accent:"rgba(224,234,255,0.9)",fontWeight:600,letterSpacing:"1.5px",minWidth:"60px"}}>{day.dayShort.toUpperCase()}</span>
+                        {day.isToday && <span style={{fontSize:"9px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px"}}>TODAY</span>}
+                        <div style={{flex:1}}/>
+                        <button onClick={()=>updateWater(day.date, litres - 0.25)} style={{width:"36px",height:"36px",borderRadius:"4px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
+                        <span style={{minWidth:"60px",textAlign:"center",fontFamily:"monospace",fontSize:"15px",color:"#e0eaff",fontWeight:600}}>{litres}L</span>
+                        <button onClick={()=>updateWater(day.date, litres + 0.25)} style={{width:"36px",height:"36px",borderRadius:"4px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}50`,color:"#e0eaff",fontFamily:"monospace",fontSize:"18px",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* GROCERIES TAB */}
+          {dietSubTab === 'groceries' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              {/* List selector */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"14px"}}>
+                <div style={{fontSize:"12px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// SHOPPING LISTS</div>
+                <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
+                  {shoppingLists.map(list => {
+                    const isActive = (activeShoppingListId||'default') === list.id;
+                    const count = groceries.filter(g => g.listId === list.id && !g.done).length;
+                    return (
+                      <button key={list.id} onClick={()=>setActiveShoppingListId(list.id)} style={{padding:"8px 12px",background:isActive?`${accent}22`:"rgba(0,0,0,0.3)",border:`0.5px solid ${isActive?accent:"rgba(255,255,255,0.1)"}`,borderRadius:"4px",color:isActive?accent:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer",fontWeight:600,display:"flex",alignItems:"center",gap:"6px"}}>
+                        {list.name}
+                        {count > 0 && <span style={{fontSize:"9px",background:`${accent}30`,color:accent,padding:"1px 6px",borderRadius:"8px",fontWeight:600}}>{count}</span>}
+                      </button>
+                    );
+                  })}
+                  <button onClick={() => {
+                    const name = window.prompt('New list name?');
+                    if (name) addShoppingList(name);
+                  }} style={{padding:"8px 12px",background:"transparent",border:`0.5px dashed ${accent}50`,borderRadius:"4px",color:accent,fontFamily:"monospace",fontSize:"11px",letterSpacing:"1px",cursor:"pointer",fontWeight:600}}>+ NEW LIST</button>
+                </div>
+              </div>
+
+              {/* Items panel */}
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// {(activeList?.name || 'GROCERIES').toUpperCase()}</div>
+                  <div style={{display:"flex",gap:"6px"}}>
+                    {activeListItems.some(g => g.done) && (
+                      <button onClick={() => {
+                        if (!window.confirm('Clear all completed items?')) return;
+                        setGroceries(prev => prev.filter(g => !(g.listId === activeList?.id && g.done)));
+                      }} style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(0,0,0,0.4)",border:"0.5px solid rgba(255,255,255,0.15)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>CLEAR DONE</button>
+                    )}
+                    {activeList && activeList.id !== 'default' && (
+                      <button onClick={() => removeShoppingList(activeList.id)} style={{fontSize:"10px",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",letterSpacing:"1.5px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",borderRadius:"3px",padding:"6px 10px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>DELETE LIST</button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Add item input */}
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  const input = e.target.elements.newItem;
+                  addGroceryItem(input.value);
+                  input.value = '';
+                }} style={{display:"flex",gap:"8px",marginBottom:"14px"}}>
+                  <input name="newItem" type="text" placeholder="Add item..." className="slick-input accent-orange" style={{flex:1,padding:"12px",background:"rgba(0,0,0,0.5)",border:`1px solid ${accent}40`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"13px"}}/>
+                  <button type="submit" style={{padding:"12px 18px",background:`${accent}22`,border:`1px solid ${accent}`,borderRadius:"4px",color:accent,fontFamily:"monospace",fontSize:"12px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>+ ADD</button>
+                </form>
+
+                {activeListItems.length === 0 ? (
+                  <div style={{padding:"40px 20px",textAlign:"center",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"0.5px"}}>
+                    No items yet. Add something above.
+                  </div>
+                ) : (
+                  <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+                    {activeListItems.sort((a,b) => (a.done?1:0) - (b.done?1:0)).map(item => (
+                      <div key={item.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",background:item.done?"rgba(34,197,94,0.05)":"rgba(0,0,0,0.3)",border:`0.5px solid ${item.done?accent+"40":"rgba(255,255,255,0.06)"}`,borderRadius:"4px",opacity:item.done?0.6:1}}>
+                        <button onClick={()=>toggleGroceryDone(item.id)} style={{width:"20px",height:"20px",borderRadius:"3px",border:`1px solid ${item.done?accent:accent+"60"}`,background:item.done?accent:"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"#020611",fontFamily:"monospace",fontSize:"12px",fontWeight:700,flexShrink:0}}>{item.done?'✓':''}</button>
+                        <input type="text" value={item.name} onChange={e=>updateGrocery(item.id,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"6px 8px",background:"transparent",border:"none",color:item.done?"rgba(148,163,184,0.7)":"#e0eaff",fontFamily:"monospace",fontSize:"13px",textDecoration:item.done?"line-through":"none"}}/>
+                        <input type="text" value={item.qty||''} onChange={e=>updateGrocery(item.id,'qty',e.target.value)} placeholder="qty" className="slick-input accent-orange" style={{width:"70px",padding:"6px 8px",background:"rgba(0,0,0,0.4)",border:`0.5px solid ${accent}30`,borderRadius:"3px",color:"rgba(224,234,255,0.85)",fontFamily:"monospace",fontSize:"11px",textAlign:"center"}}/>
+                        <button onClick={()=>removeGrocery(item.id)} style={{width:"26px",height:"26px",borderRadius:"3px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"12px",fontWeight:600,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* DIETS TAB */}
+          {dietSubTab === 'diets' && (
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              <div style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${accent}25`,borderRadius:"6px",padding:"20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"12px",marginBottom:"6px",flexWrap:"wrap"}}>
+                  <div style={{fontSize:"13px",color:"#e0eaff",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MY DIETS</div>
+                  <button onClick={addCustomDiet} style={{fontSize:"11px",color:accent,fontFamily:"monospace",letterSpacing:"1.5px",background:`${accent}10`,border:`0.5px solid ${accent}60`,borderRadius:"4px",padding:"8px 14px",cursor:"pointer",fontWeight:600}}>+ NEW DIET</button>
+                </div>
+                <div style={{fontSize:"11px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px",marginBottom:"18px"}}>Build your own diet plans. Mark one active to anchor your goals.</div>
+
+                {customDiets.length === 0 ? (
+                  <div style={{padding:"40px 20px",textAlign:"center",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontSize:"12px",letterSpacing:"0.5px"}}>
+                    No diets yet. Tap NEW DIET to start one.
+                  </div>
+                ) : (
+                  <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+                    {customDiets.map(diet => (
+                      <div key={diet.id} style={{background:diet.active?`${accent}08`:"rgba(0,0,0,0.3)",border:`0.5px solid ${diet.active?accent:"rgba(255,255,255,0.08)"}`,borderLeft:diet.active?`2px solid ${accent}`:undefined,borderRadius:"5px",padding:"14px"}}>
+                        <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
+                          <button onClick={()=>setActiveDiet(diet.id)} style={{padding:"5px 10px",background:diet.active?`${accent}30`:"rgba(0,0,0,0.4)",border:`0.5px solid ${diet.active?accent:"rgba(255,255,255,0.15)"}`,borderRadius:"3px",color:diet.active?accent:"rgba(148,163,184,0.7)",fontFamily:"monospace",fontSize:"9px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>{diet.active?'● ACTIVE':'○ INACTIVE'}</button>
+                          <input type="text" placeholder="Diet name (e.g. High protein, Low carb, 16:8 fast)" value={diet.name||''} onChange={e=>updateCustomDiet(diet.id,'name',e.target.value)} className="slick-input accent-orange" style={{flex:1,padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}30`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"14px",fontWeight:600}}/>
+                          <button onClick={()=>removeCustomDiet(diet.id)} style={{width:"30px",height:"30px",borderRadius:"4px",background:"rgba(239,68,68,0.08)",border:"0.5px solid rgba(239,68,68,0.4)",color:"rgba(239,68,68,0.9)",fontFamily:"monospace",fontSize:"14px",fontWeight:600,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+                        </div>
+                        <div style={{marginBottom:"8px"}}>
+                          <div style={{fontSize:"10px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>DESCRIPTION</div>
+                          <input type="text" placeholder="One-line summary..." value={diet.description||''} onChange={e=>updateCustomDiet(diet.id,'description',e.target.value)} className="slick-input accent-orange" style={{width:"100%",padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}25`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px"}}/>
+                        </div>
+                        <div>
+                          <div style={{fontSize:"10px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"5px",fontWeight:600}}>RULES</div>
+                          <textarea placeholder={"e.g.\n- 150g+ protein daily\n- Eat only between 12pm and 8pm\n- No added sugar"} value={diet.rules||''} onChange={e=>updateCustomDiet(diet.id,'rules',e.target.value)} className="slick-textarea accent-orange" style={{width:"100%",padding:"10px 12px",background:"rgba(0,0,0,0.5)",border:`0.5px solid ${accent}25`,borderRadius:"4px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",minHeight:"90px",resize:"vertical"}}/>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
