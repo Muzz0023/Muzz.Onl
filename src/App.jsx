@@ -10171,7 +10171,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               <div style={{flex:1}}>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
-                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",letterSpacing:"2px",fontWeight:600}}>// PREMIUM WORKSPACE</span>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",letterSpacing:"2px",fontWeight:600}}>// PREMIUM RESEARCH WORKSPACE</span>
                   <span style={{fontSize:"9px",color:"rgba(245,158,11,0.45)",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"5px"}}>
                     <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
                     ONLINE
