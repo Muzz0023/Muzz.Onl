@@ -10077,14 +10077,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={{display:"flex",gap:"4px",flexWrap:"wrap",overflowX:"auto"}}>
               {[
                 {id:'portfolio',label:'CURRENT PORTFOLIO'},
-                {id:'research',label:'RESEARCH'},
               ].map(tab => {
-                // The RESEARCH parent tab should stay highlighted across all its sub-tabs
-                // (MAP, COVERAGE, HOLDINGS, FUTURE PORTFOLIO, LIVE PRICES, PERFORMANCE, ACCOUNTING, INVESTING GUIDE, S&P 500)
-                const researchSubTabs = ['research','researchMap','coverage','futurePortfolio','livePrices','performance','accounting','knowledge','books','sp500'];
-                const isActive = tab.id === 'research'
-                  ? researchSubTabs.includes(investmentsSubTab)
-                  : investmentsSubTab === tab.id;
+                const isActive = investmentsSubTab === tab.id;
                 return (
                 <button key={tab.id} onClick={() => setInvestmentsSubTab(tab.id)} style={{padding:"6px 14px",background:isActive?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${isActive?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:isActive?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}>
                   {tab.label}
@@ -10099,6 +10093,23 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* === INVESTMENT MAP — Free-form node graph (like Asset Map) === */}
           {(investmentsSubTab === 'coverage' || investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'futurePortfolio' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
             <>
+              {/* Research mode header — exit button + identifier */}
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
+                <button
+                  onClick={() => setInvestmentsSubTab('portfolio')}
+                  style={{fontSize:"11px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",letterSpacing:"2px",background:"rgba(245,158,11,0.08)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"3px",padding:"7px 14px",cursor:"pointer",fontWeight:600}}
+                >
+                  ← EXIT RESEARCH
+                </button>
+                <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>RESEARCH OS</span>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.45)",fontFamily:"monospace",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"6px"}}>
+                    <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
+                    ONLINE
+                  </span>
+                </div>
+              </div>
+
               {/* Inner tabs for Research sub-sections */}
               <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
                 {[
@@ -10117,7 +10128,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <button
                       key={sub.id}
                       onClick={() => setInvestmentsSubTab(sub.id)}
-                      style={{padding:"6px 14px",background:active?"rgba(0,200,255,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"#00c8ff":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
+                      style={{padding:"6px 14px",background:active?"rgba(245,158,11,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(245,158,11,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"rgba(245,158,11,0.95)":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
                     >
                       {sub.label}
                     </button>
@@ -10125,6 +10136,58 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 })}
               </div>
             </>
+          )}
+
+          {/* === RESEARCH OS — Premium entry card, shows when on portfolio === */}
+          {investmentsSubTab === 'portfolio' && (
+            <button
+              onClick={() => setInvestmentsSubTab('researchMap')}
+              style={{
+                width:"100%",
+                background:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%)",
+                border:"1px solid rgba(245,158,11,0.5)",
+                borderLeft:"3px solid rgba(245,158,11,0.95)",
+                borderRadius:"6px",
+                padding:"22px 24px",
+                cursor:"pointer",
+                textAlign:"left",
+                display:"flex",
+                alignItems:"center",
+                gap:"20px",
+                position:"relative",
+                overflow:"hidden",
+                fontFamily:"monospace",
+                backgroundImage:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%), radial-gradient(circle at 0% 50%, rgba(245,158,11,0.08) 0%, transparent 40%)",
+                transition:"all 0.2s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.9)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 24px rgba(245,158,11,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(245,158,11,0.5)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+            >
+              {/* Corner brackets */}
+              <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:"1px solid rgba(245,158,11,0.7)",borderLeft:"1px solid rgba(245,158,11,0.7)"}}/>
+              <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:"1px solid rgba(245,158,11,0.7)",borderRight:"1px solid rgba(245,158,11,0.7)"}}/>
+              <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:"1px solid rgba(245,158,11,0.7)",borderLeft:"1px solid rgba(245,158,11,0.7)"}}/>
+              <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:"1px solid rgba(245,158,11,0.7)",borderRight:"1px solid rgba(245,158,11,0.7)"}}/>
+
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"6px"}}>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",letterSpacing:"2px",fontWeight:600}}>// PREMIUM WORKSPACE</span>
+                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.45)",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"5px"}}>
+                    <span style={{display:"inline-block",width:"5px",height:"5px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 4px rgba(34,197,94,0.9)"}}/>
+                    ONLINE
+                  </span>
+                </div>
+                <div style={{fontSize:"22px",color:"#e0eaff",letterSpacing:"2.5px",fontWeight:600,marginBottom:"6px"}}>RESEARCH OS</div>
+                <div style={{fontSize:"11px",color:"rgba(224,234,255,0.6)",letterSpacing:"0.3px",lineHeight:1.5}}>
+                  Deep-dive coverage · Investment Map · Holdings research · Live prices · Performance · Investing guide
+                </div>
+              </div>
+
+              <div style={{display:"flex",alignItems:"center",gap:"10px",flexShrink:0}}>
+                <span style={{fontSize:"11px",color:"rgba(245,158,11,0.95)",letterSpacing:"2px",fontWeight:600}}>ENTER</span>
+                <span style={{fontSize:"18px",color:"rgba(245,158,11,0.95)"}}>→</span>
+              </div>
+            </button>
           )}
 
           {/* === RESEARCH CONSTELLATION — drill-down by industry === */}
