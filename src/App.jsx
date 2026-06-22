@@ -2389,6 +2389,77 @@ function MuzzApp() {
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [researchMode, setResearchMode] = useState(false); // True when user is inside the Research OS workspace
   const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
+  const [openTooltipKey, setOpenTooltipKey] = useState(null); // Tracks which inline explainer is currently open (one at a time)
+
+  // Plain-language explainers for the Holdings/Future Research fields. Tapped via the ⓘ icon next to each label.
+  const FIELD_EXPLAINERS = {
+    tollBooth: {
+      title: 'Toll Booth Economics',
+      body: 'Does this business sit between two parties and take a small cut of every transaction? Like a toll booth on a bridge — you can\'t avoid paying. Examples: Visa, Mastercard, ASX, PEXA, payment processors. These businesses tend to have durable competitive advantages and pricing power.',
+    },
+    capitalIntensity: {
+      title: 'Capital Intensity',
+      body: 'How much money does the business need to keep reinvesting just to maintain operations? Light = software / asset-light (high margins, low reinvestment). Medium = retail / consumer goods. Heavy = airlines, telcos, miners (constant equipment replacement). Buffett prefers Light — more cash returned to owners.',
+    },
+    growthProspects: {
+      title: 'Growth Prospects',
+      body: 'Realistic estimate of the business\'s earnings growth potential over the next 5–10 years. Low = mature, stable cash flow. Medium = steady single-digit growth. High = expanding markets, new products, or pricing power that compounds earnings.',
+    },
+    industry: {
+      title: 'Industry',
+      body: 'The sector the company operates in. Used for grouping across Map, Coverage, and the industry pie chart.',
+    },
+    holdingStatus: {
+      title: 'Holding Status',
+      body: 'Where this position sits in your portfolio. New = recently added, still building conviction. Core = high-conviction long-term holding. Reserve = holding but watching closely. Trim = considering reducing position.',
+    },
+  };
+
+  // Helper that renders an InfoLabel — text + ⓘ icon + inline explainer that toggles below.
+  const InfoLabel = ({ rowKey, fieldKey, text }) => {
+    const tipKey = `${rowKey}-${fieldKey}`;
+    const isOpen = openTooltipKey === tipKey;
+    const explainer = FIELD_EXPLAINERS[fieldKey];
+    return (
+      <div style={{marginBottom:"4px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+          <span style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>{text}</span>
+          {explainer && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setOpenTooltipKey(isOpen ? null : tipKey); }}
+              aria-label={`What is ${text}?`}
+              style={{
+                width:"14px", height:"14px",
+                background: isOpen ? "rgba(245,158,11,0.18)" : "rgba(245,158,11,0.06)",
+                border:`0.5px solid ${isOpen ? "rgba(245,158,11,0.9)" : "rgba(245,158,11,0.4)"}`,
+                borderRadius:"50%",
+                color: isOpen ? "rgba(245,158,11,1)" : "rgba(245,158,11,0.7)",
+                fontSize:"9px", fontFamily:"monospace", fontWeight:600,
+                cursor:"pointer", lineHeight:1,
+                display:"flex", alignItems:"center", justifyContent:"center",
+                padding:0, flexShrink:0,
+              }}
+            >?</button>
+          )}
+        </div>
+        {isOpen && explainer && (
+          <div style={{
+            marginTop:"6px",
+            padding:"10px 12px",
+            background:"rgba(245,158,11,0.05)",
+            border:"0.5px solid rgba(245,158,11,0.3)",
+            borderLeft:"2px solid rgba(245,158,11,0.95)",
+            borderRadius:"3px",
+            fontFamily:"monospace",
+          }}>
+            <div style={{fontSize:"9px",color:"rgba(245,158,11,0.95)",letterSpacing:"1.5px",fontWeight:600,marginBottom:"4px"}}>// {explainer.title.toUpperCase()}</div>
+            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.85)",lineHeight:1.5,letterSpacing:"0.3px"}}>{explainer.body}</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
 
   // ────────────────────────────────────────────────────────────
   // Coverage helpers — used by Holdings, Future Portfolio, Map etc.
@@ -12313,7 +12384,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOLL BOOTH ECONOMICS?</div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="tollBooth" text="TOLL BOOTH ECONOMICS?" />
                               <select
                                 value={holding?.tollBooth || ''}
                                 onFocus={scrollInputIntoView}
@@ -12347,7 +12418,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CAPITAL INTENSITY</div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="capitalIntensity" text="CAPITAL INTENSITY" />
                               <select
                                 value={holding?.capitalIntensity || ''}
                                 onFocus={scrollInputIntoView}
@@ -12360,7 +12431,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </select>
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>GROWTH PROSPECTS</div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="growthProspects" text="GROWTH PROSPECTS" />
                               <select
                                 value={holding?.growthProspects || ''}
                                 onFocus={scrollInputIntoView}
@@ -12376,7 +12447,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INDUSTRY</div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="industry" text="INDUSTRY" />
                               <select
                                 value={holding?.industry || ''}
                                 onFocus={scrollInputIntoView}
@@ -12388,7 +12459,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </select>
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>STATUS</div>
+                              <InfoLabel rowKey={`future-${index}`} fieldKey="holdingStatus" text="STATUS" />
                               <select
                                 value={holding?.status || ''}
                                 onFocus={scrollInputIntoView}
@@ -12866,7 +12937,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             />
                           </div>
                           <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>TOLL BOOTH ECONOMICS?</div>
+                            <InfoLabel rowKey={`holdings-${index}`} fieldKey="tollBooth" text="TOLL BOOTH ECONOMICS?" />
                             <select
                               value={holding?.tollBooth || ''}
                               onFocus={scrollInputIntoView}
@@ -12879,7 +12950,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>CAPITAL INTENSITY</div>
+                              <InfoLabel rowKey={`holdings-${index}`} fieldKey="capitalIntensity" text="CAPITAL INTENSITY" />
                               <select
                                 value={holding?.capitalIntensity || ''}
                                 onFocus={scrollInputIntoView}
@@ -12892,7 +12963,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </select>
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>GROWTH PROSPECTS</div>
+                              <InfoLabel rowKey={`holdings-${index}`} fieldKey="growthProspects" text="GROWTH PROSPECTS" />
                               <select
                                 value={holding?.growthProspects || ''}
                                 onFocus={scrollInputIntoView}
@@ -12908,7 +12979,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           </div>
                           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>INDUSTRY</div>
+                              <InfoLabel rowKey={`holdings-${index}`} fieldKey="industry" text="INDUSTRY" />
                               <select
                                 value={holding?.industry || ''}
                                 onFocus={scrollInputIntoView}
@@ -12920,7 +12991,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </select>
                             </div>
                             <div>
-                              <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>HOLDING STATUS</div>
+                              <InfoLabel rowKey={`holdings-${index}`} fieldKey="holdingStatus" text="HOLDING STATUS" />
                               <select
                                 value={holding?.status || ''}
                                 onFocus={scrollInputIntoView}
