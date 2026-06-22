@@ -12530,16 +12530,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </select>
                             </div>
                           </div>
-                          <div>
-                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"4px"}}>RESEARCH NOTES</div>
-                            <textarea
-                              value={holding?.notes || ''}
-                              onFocus={scrollInputIntoView}
-                              onChange={(e) => updateF('notes', e.target.value)}
-                              placeholder="Your research notes..."
-                              style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",minHeight:"80px",resize:"vertical"}}
-                            />
-                          </div>
                           <button onClick={() => { setFutureResearch(prev => prev.filter((_, i) => i !== index)); setEditingFutureResearchIdx(null); }}
                             style={{alignSelf:"flex-end",fontSize:"10px",color:"rgba(239,68,68,0.75)",fontFamily:"monospace",letterSpacing:"1px",background:"rgba(239,68,68,0.06)",border:"0.5px solid rgba(239,68,68,0.3)",padding:"6px 14px",cursor:"pointer",borderRadius:"3px",fontWeight:600}}>DELETE</button>
                         </div>
