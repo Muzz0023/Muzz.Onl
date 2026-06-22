@@ -2316,6 +2316,7 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
+  const [researchSection, setResearchSection] = useState('home'); // Research workspace inner section
   const [researchConstellationIndustry, setResearchConstellationIndustry] = useState(null);
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
@@ -3310,6 +3311,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
+    { id: "research", label: "Research", icon: Star, eliteOnly: true },
     { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
     { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
   ];
@@ -3737,6 +3739,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'FINANCE',  id:'varied',        label:'Bills',           elite:true  },
       { section: 'FINANCE',  id:'assets',        label:'Assets',          elite:true  },
       { section: 'FINANCE',  id:'investments',   label:'Investments',     elite:true  },
+      { section: 'FINANCE',  id:'research',      label:'Research',        elite:true  },
       { section: 'CUSTOM',   id:'custom1',       label: customCategories?.[0]?.name || 'Custom 1' },
       { section: 'CUSTOM',   id:'custom2',       label: customCategories?.[1]?.name || 'Custom 2', elite:true },
       { section: 'CUSTOM',   id:'custom3',       label: customCategories?.[2]?.name || 'Custom 3', elite:true },
@@ -9694,6 +9697,201 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
+  // ═════════════════════════════════════════════════════════════════════════════
+  // RESEARCH OS — Standalone workspace, Palantir/Bloomberg-style command center
+  // ═════════════════════════════════════════════════════════════════════════════
+  if (activeView === 'research') {
+    if (!isElite) return <LockedFeature featureName="Research OS" setActiveView={setActiveView} />;
+    const amber = 'rgba(245,158,11,0.95)';
+    const amberDim = 'rgba(245,158,11,0.6)';
+    const amberGlow = 'rgba(245,158,11,0.35)';
+
+    // Tile click handler — set sub-tab + flip view. Existing render path handles content.
+    const enterSection = (subTab) => {
+      setInvestmentsSubTab(subTab);
+      setActiveView('investments');
+    };
+
+    // === Live portfolio metrics ===
+    const portfolioValue = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.currentPrice || s?.price)||0), 0);
+    const portfolioCost  = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.price)||0), 0);
+    const portfolioPL    = portfolioValue - portfolioCost;
+    const portfolioPLPct = portfolioCost > 0 ? (portfolioPL / portfolioCost) * 100 : 0;
+    const holdingsCount  = (holdingsResearch || []).filter(h => h && h.ticker).length;
+    const futureCount    = (futureResearch || []).filter(f => f && f.ticker).length;
+    const liveCount      = (trackedStocks || []).filter(s => s && (s.symbol || s.ticker)).length;
+    const coverageCount  = 32; // Matches the populated COVERAGE array
+
+    // Format helpers
+    const fmtCurrency = (n) => '$' + Math.round(Math.abs(n||0)).toLocaleString();
+
+    // Live clock
+    const now = liveTime || new Date();
+    const timeStr = now.toLocaleTimeString('en-AU', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const dateStr = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+
+    // Section tiles
+    const TILES = [
+      { id:'researchMap',     glyph:'⊞', label:'MAP',              desc:'Constellation graph of your research universe.',  stat: `${holdingsCount} HOLDINGS` },
+      { id:'coverage',        glyph:'◇', label:'COVERAGE',         desc:'Industry → country → company drill-down library.', stat: `${coverageCount} COMPANIES` },
+      { id:'research',        glyph:'≡', label:'HOLDINGS',         desc:'Your research notes on every position you hold.',  stat: `${holdingsCount} ROWS` },
+      { id:'futurePortfolio', glyph:'◬', label:'FUTURE PORTFOLIO', desc:'Watchlist of companies you plan to enter.',        stat: `${futureCount} WATCHED` },
+      { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',      desc:'Real-time price tracker with profit / loss.',      stat: `${liveCount} TRACKED` },
+      { id:'performance',     glyph:'↗', label:'PERFORMANCE',      desc:'Returns over time across positions and periods.',  stat: null },
+      { id:'accounting',      glyph:'◳', label:'ACCOUNTING',       desc:'Financial statements & moat indicators.',          stat: null },
+      { id:'knowledge',       glyph:'⌬', label:'INVESTING GUIDE',  desc:'Buffett & Munger principles, applied.',            stat: null },
+      { id:'sp500',           glyph:'★', label:'S&P 500',          desc:'Index data and benchmark comparisons.',            stat: null },
+    ];
+
+    return (
+      <div className="min-h-screen pb-24" style={{background:"#000", position:"relative", overflow:"hidden"}}>
+        <Sidebar /><SaveIndicator />
+
+        {/* Amber grid backdrop — pure CSS background, not an overlay */}
+        <div style={{
+          position:"absolute", inset:0,
+          backgroundImage:"linear-gradient(rgba(245,158,11,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.025) 1px, transparent 1px)",
+          backgroundSize:"40px 40px",
+          pointerEvents:"none",
+          WebkitMaskImage:"radial-gradient(ellipse at 50% 30%, black 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
+          maskImage:"radial-gradient(ellipse at 50% 30%, black 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
+        }}/>
+
+        {/* === TOP HUD STRIP === */}
+        <div style={{position:"relative", zIndex:5, borderBottom:`0.5px solid ${amberGlow}`, background:"rgba(0,0,0,0.6)", padding:"56px 24px 12px"}}>
+          <div className="max-w-6xl mx-auto" style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",flexWrap:"wrap"}}>
+            <button onClick={() => setActiveView('investments')} style={{
+              fontSize:"11px", color:amber, fontFamily:"monospace", letterSpacing:"2px",
+              background:"rgba(245,158,11,0.08)", border:`0.5px solid ${amberGlow}`,
+              borderRadius:"3px", padding:"7px 14px", cursor:"pointer", fontWeight:600,
+            }}>← INVESTMENTS</button>
+
+            <div style={{display:"flex",alignItems:"center",gap:"16px",fontFamily:"monospace",flexWrap:"wrap"}}>
+              <span style={{fontSize:"10px",color:amberDim,letterSpacing:"1.5px"}}>{dateStr}</span>
+              <span style={{fontSize:"10px",color:amber,letterSpacing:"1.5px",fontWeight:600}}>{timeStr}</span>
+              <span style={{fontSize:"10px",color:amberDim,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"6px"}}>
+                <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
+                ONLINE
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* === MAIN HEADER === */}
+        <div style={{position:"relative",zIndex:5,padding:"32px 24px 24px"}}>
+          <div className="max-w-6xl mx-auto">
+            <div style={{fontSize:"10px",color:amberDim,fontFamily:"monospace",letterSpacing:"3px",marginBottom:"8px",fontWeight:600}}>// PREMIUM RESEARCH WORKSPACE</div>
+            <h1 style={{fontSize:"42px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"4px",margin:0,lineHeight:1}}>RESEARCH<span style={{color:amber}}> OS</span></h1>
+            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"10px"}}>v2.0 // BUILD 2026.06 // OPERATOR: {(eliteName && eliteName.trim().toUpperCase()) || 'MUZZ'}</div>
+          </div>
+        </div>
+
+        {/* === HUD STATUS STRIP === */}
+        <div style={{position:"relative",zIndex:5,padding:"0 24px 24px"}}>
+          <div className="max-w-6xl mx-auto">
+            <div style={{
+              display:"grid",
+              gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))",
+              gap:"1px",
+              background:amberGlow,
+              border:`0.5px solid ${amberGlow}`,
+              borderRadius:"3px",
+              overflow:"hidden",
+            }}>
+              {[
+                { label:'PORTFOLIO VALUE', value: fmtCurrency(portfolioValue), unit:'AUD', color: '#e0eaff' },
+                { label:'UNREALISED P/L',  value: (portfolioPL >= 0 ? '+' : '−') + fmtCurrency(portfolioPL), unit: (portfolioPLPct >= 0 ? '+' : '') + portfolioPLPct.toFixed(2) + '%', color: portfolioPL >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' },
+                { label:'HOLDINGS',        value: holdingsCount, unit:'POSITIONS', color: '#e0eaff' },
+                { label:'COVERAGE',        value: coverageCount, unit:'COMPANIES', color: '#e0eaff' },
+              ].map((m,i) => (
+                <div key={i} style={{background:"#000", padding:"14px 16px"}}>
+                  <div style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",fontWeight:600}}>{m.label}</div>
+                  <div style={{fontSize:"22px",color:m.color,fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px",lineHeight:1}}>{m.value}</div>
+                  <div style={{fontSize:"9px",color:"rgba(224,234,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"6px"}}>{m.unit}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* === SECTION TILES === */}
+        <div style={{position:"relative",zIndex:5,padding:"0 24px 24px"}}>
+          <div className="max-w-6xl mx-auto">
+            <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"14px"}}>
+              <div style={{flex:1,height:"0.5px",background:amberGlow}}/>
+              <span style={{fontSize:"10px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// SECTIONS</span>
+              <div style={{flex:1,height:"0.5px",background:amberGlow}}/>
+            </div>
+
+            <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(240px, 1fr))", gap:"12px"}}>
+              {TILES.map((tile, idx) => (
+                <button
+                  key={tile.id}
+                  onClick={() => enterSection(tile.id)}
+                  style={{
+                    background:"linear-gradient(160deg, rgba(245,158,11,0.06) 0%, rgba(0,0,0,0.4) 100%)",
+                    border:`0.5px solid ${amberGlow}`,
+                    borderLeft:`2px solid ${amber}`,
+                    borderRadius:"4px",
+                    padding:"18px",
+                    cursor:"pointer",
+                    textAlign:"left",
+                    fontFamily:"monospace",
+                    position:"relative",
+                    minHeight:"160px",
+                    display:"flex",
+                    flexDirection:"column",
+                    transition:"all 0.18s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = amber;
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = `0 6px 24px rgba(245,158,11,0.18)`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = amberGlow;
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  {/* Corner brackets */}
+                  <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                  <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                  <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                  <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px"}}>
+                    <span style={{fontSize:"28px",color:amber,lineHeight:1,fontWeight:300}}>{tile.glyph}</span>
+                    <span style={{fontSize:"9px",color:amberDim,letterSpacing:"1.5px",fontWeight:600}}>{String(idx+1).padStart(2,'0')}</span>
+                  </div>
+
+                  <div style={{fontSize:"15px",color:"#e0eaff",fontWeight:600,letterSpacing:"2px",marginBottom:"6px"}}>{tile.label}</div>
+                  <div style={{fontSize:"10px",color:"rgba(224,234,255,0.55)",lineHeight:1.5,letterSpacing:"0.3px",flex:1}}>{tile.desc}</div>
+
+                  <div style={{marginTop:"12px",paddingTop:"10px",borderTop:`0.5px solid ${amberGlow}`,fontSize:"9px",letterSpacing:"1.5px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{color:amberDim}}>{tile.stat || ''}</span>
+                    <span style={{color:amber}}>OPEN →</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* === FOOTER STRIP === */}
+        <div style={{position:"relative",zIndex:5,padding:"16px 24px 32px"}}>
+          <div className="max-w-6xl mx-auto" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"12px",flexWrap:"wrap"}}>
+            <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MARKET CAPS IN USD</span>
+            <span style={{fontSize:"9px",color:"rgba(224,234,255,0.3)",fontFamily:"monospace"}}>·</span>
+            <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PRICES FROM YAHOO FINANCE</span>
+            <span style={{fontSize:"9px",color:"rgba(224,234,255,0.3)",fontFamily:"monospace"}}>·</span>
+            <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// NOT FINANCIAL ADVICE</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (activeView === 'investments') {
     if (!isElite) return <LockedFeature featureName="Investments" setActiveView={setActiveView} />;
     const industries = [
@@ -10096,10 +10294,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               {/* Research mode header — exit button + identifier */}
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
                 <button
-                  onClick={() => setInvestmentsSubTab('portfolio')}
+                  onClick={() => setActiveView('research')}
                   style={{fontSize:"11px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",letterSpacing:"2px",background:"rgba(245,158,11,0.08)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"3px",padding:"7px 14px",cursor:"pointer",fontWeight:600}}
                 >
-                  ← EXIT RESEARCH
+                  ← BACK TO RESEARCH
                 </button>
                 <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
                   <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>RESEARCH OS</span>
@@ -10141,7 +10339,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* === RESEARCH OS — Premium entry card, shows when on portfolio === */}
           {investmentsSubTab === 'portfolio' && (
             <button
-              onClick={() => setInvestmentsSubTab('researchMap')}
+              onClick={() => setActiveView('research')}
               style={{
                 width:"100%",
                 background:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%)",
