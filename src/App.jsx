@@ -12537,6 +12537,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
+                {futureResearch.length > 0 && (
                 <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`,display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
                   <button
                     onClick={() => { setFutureResearch(prev => [...prev, { ticker: '' }]); setEditingFutureResearchIdx(futureResearch.length); }}
@@ -12600,6 +12601,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     ⚡ Generate from Core
                   </button>
                 </div>
+                )}
                 </div>
               </details>
 
