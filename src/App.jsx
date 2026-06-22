@@ -12287,28 +12287,74 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <div style={{padding:"12px 16px",display:"flex",flexDirection:"column",gap:"10px"}}>
                   {futureResearch.length === 0 && (() => {
-                    const samples = [
-                      { ticker: 'GOOG',   notes: 'AI tailwind, search moat, advertising dominance' },
-                      { ticker: 'AXP',    notes: 'Premium spending, network effects'              },
-                      { ticker: 'V',      notes: 'Payment rails, scaling globally'                },
-                    ];
-                    const useTemplate = () => setFutureResearch(samples);
+                    // === Generate from Core: pull Core-status holdings from Holdings Research into Future Portfolio
+                    const coreHoldings = (holdingsResearch || []).filter(h => h && (h.status === 'Core') && h.ticker);
+
+                    const generateFromCore = () => {
+                      if (coreHoldings.length === 0) {
+                        window.alert(
+                          "No Core holdings yet.\n\n" +
+                          "To use this: open Holdings Research, expand any holding you want to research further, and set HOLDING STATUS to 'Core'. " +
+                          "Those will auto-populate here with all their research data filled in — you just add a Planned Investment $."
+                        );
+                        return;
+                      }
+                      // Smart merge — skip tickers already in Future
+                      const existingTickers = new Set((futureResearch || []).map(f => String(f?.ticker || '').trim().toUpperCase()).filter(Boolean));
+                      const newEntries = coreHoldings
+                        .filter(h => !existingTickers.has(String(h.ticker).trim().toUpperCase()))
+                        .map(h => ({
+                          ticker: h.ticker,
+                          industry: h.industry || '',
+                          tollBooth: h.tollBooth || '',
+                          capitalIntensity: h.capitalIntensity || '',
+                          growthProspects: h.growthProspects || '',
+                          notes: h.notes || '',
+                          plannedAmount: 0,
+                          plannedAmountStr: '',
+                          status: '',
+                        }));
+                      if (newEntries.length === 0) {
+                        window.alert("All your Core holdings are already in Future Portfolio.");
+                        return;
+                      }
+                      setFutureResearch(prev => [...prev, ...newEntries]);
+                    };
                     const startFresh = () => setFutureResearch(prev => [...prev, { ticker: '', notes: '' }]);
+
                     return (
-                      <div style={{border:"1px solid rgba(0,200,255,0.35)",borderLeft:"2px solid #00c8ff",borderRadius:"6px",padding:"14px",background:"rgba(0,200,255,0.05)"}}>
-                        <div style={{fontSize:"10px",color:"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.7}}>// PREVIEW · WATCHLIST</div>
-                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Stocks you're researching to potentially buy.</div>
-                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>Build conviction before allocating capital. Track the thesis for each candidate.</div>
-                        <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
-                          {samples.map((s, i) => (
-                            <div key={i} style={{padding:"10px 12px",background:"rgba(0,0,0,0.25)",border:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid rgba(0,200,255,0.4)",borderRadius:"3px"}}>
-                              <div style={{fontFamily:"monospace",fontSize:"13px",fontWeight:600,color:"#e0eaff",marginBottom:"4px"}}>{s.ticker}</div>
-                              <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.7)",lineHeight:1.5}}>{s.notes}</div>
-                            </div>
-                          ))}
+                      <div style={{border:`1px solid ${researchMode?"rgba(245,158,11,0.45)":"rgba(0,200,255,0.35)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,borderRadius:"6px",padding:"14px",background:researchMode?"rgba(245,158,11,0.05)":"rgba(0,200,255,0.05)"}}>
+                        <div style={{fontSize:"10px",color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",opacity:0.85}}>// GENERATE FROM CORE HOLDINGS</div>
+                        <div style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,marginBottom:"4px"}}>Auto-populate from your Core holdings.</div>
+                        <div style={{fontSize:"11px",color:"rgba(148,163,184,0.65)",fontFamily:"monospace",lineHeight:1.5,marginBottom:"12px"}}>
+                          Mark a holding as <span style={{color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontWeight:600}}>Core</span> in Holdings Research and it auto-fills here with all its research data — Toll Booth, Capital Intensity, Growth, Industry. You just add a Planned Investment $.
                         </div>
+
+                        {coreHoldings.length > 0 ? (
+                          <>
+                            <div style={{fontSize:"9px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"1.5px",marginBottom:"6px",fontWeight:600}}>// {coreHoldings.length} CORE HOLDING{coreHoldings.length!==1?'S':''} READY TO PROMOTE</div>
+                            <div style={{display:"flex",flexDirection:"column",gap:"6px",marginBottom:"12px",opacity:0.9}}>
+                              {coreHoldings.slice(0,5).map((h, i) => (
+                                <div key={i} style={{padding:"8px 12px",background:"rgba(0,0,0,0.25)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.5)":"rgba(0,200,255,0.4)"}`,borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}>
+                                  <div style={{fontFamily:"monospace",fontSize:"12px",fontWeight:600,color:"#e0eaff",flexShrink:0}}>{h.ticker}</div>
+                                  <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(224,234,255,0.55)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,textAlign:"right"}}>
+                                    {[h.industry, h.tollBooth ? `Toll: ${h.tollBooth}` : null, h.capitalIntensity, h.growthProspects].filter(Boolean).join(' · ')}
+                                  </div>
+                                </div>
+                              ))}
+                              {coreHoldings.length > 5 && (
+                                <div style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace",fontStyle:"italic",paddingLeft:"4px"}}>+ {coreHoldings.length - 5} more</div>
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{padding:"12px",background:"rgba(0,0,0,0.25)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.25)":"rgba(148,163,184,0.25)"}`,borderRadius:"3px",marginBottom:"12px",fontSize:"11px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",lineHeight:1.5,textAlign:"center"}}>
+                            No Core holdings yet. Open Holdings Research and mark something as Core.
+                          </div>
+                        )}
+
                         <div style={{display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
-                          <button onClick={useTemplate} style={{flex:1,padding:"12px",background:"rgba(0,200,255,0.18)",border:"1px solid rgba(0,200,255,0.7)",borderRadius:"4px",color:"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>USE THIS TEMPLATE</button>
+                          <button onClick={generateFromCore} style={{flex:1,padding:"12px",background:researchMode?"rgba(245,158,11,0.18)":"rgba(0,200,255,0.18)",border:`1px solid ${researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.7)"}`,borderRadius:"4px",color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>⚡ GENERATE TABLE</button>
                           <button onClick={startFresh} style={{flex:1,padding:"12px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"4px",color:"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer",fontWeight:600}}>START FRESH</button>
                         </div>
                       </div>
@@ -12491,11 +12537,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`,display:"flex",flexDirection:isWide?"row":"column",gap:"8px"}}>
                   <button
                     onClick={() => { setFutureResearch(prev => [...prev, { ticker: '' }]); setEditingFutureResearchIdx(futureResearch.length); }}
                     style={{
-                      width:"100%", padding:"12px",
+                      flex:1, padding:"12px",
                       border:`2px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"}`,
                       borderRadius:"6px",
                       background:"transparent",
@@ -12507,6 +12553,51 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     onMouseLeave={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)"; }}
                   >
                     + Add Research Entry
+                  </button>
+                  <button
+                    onClick={() => {
+                      const coreHoldings = (holdingsResearch || []).filter(h => h && h.status === 'Core' && h.ticker);
+                      if (coreHoldings.length === 0) {
+                        window.alert(
+                          "No Core holdings yet.\n\n" +
+                          "Open Holdings Research, expand a holding, and set HOLDING STATUS to 'Core'. " +
+                          "It'll auto-populate here with all its research data — you just add a Planned Investment $."
+                        );
+                        return;
+                      }
+                      const existingTickers = new Set((futureResearch || []).map(f => String(f?.ticker || '').trim().toUpperCase()).filter(Boolean));
+                      const newEntries = coreHoldings
+                        .filter(h => !existingTickers.has(String(h.ticker).trim().toUpperCase()))
+                        .map(h => ({
+                          ticker: h.ticker,
+                          industry: h.industry || '',
+                          tollBooth: h.tollBooth || '',
+                          capitalIntensity: h.capitalIntensity || '',
+                          growthProspects: h.growthProspects || '',
+                          notes: h.notes || '',
+                          plannedAmount: 0,
+                          plannedAmountStr: '',
+                          status: '',
+                        }));
+                      if (newEntries.length === 0) {
+                        window.alert("All your Core holdings are already in Future Portfolio.");
+                        return;
+                      }
+                      setFutureResearch(prev => [...prev, ...newEntries]);
+                    }}
+                    style={{
+                      flex:1, padding:"12px",
+                      border:`2px solid ${researchMode?"rgba(245,158,11,0.6)":"rgba(0,200,255,0.5)"}`,
+                      borderRadius:"6px",
+                      background:researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.08)",
+                      color:researchMode?"rgba(245,158,11,0.95)":"#00c8ff",
+                      fontFamily:"monospace", fontSize:"12px", letterSpacing:"1px", fontWeight:600,
+                      cursor:"pointer", transition:"all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = researchMode?"rgba(245,158,11,0.18)":"rgba(0,200,255,0.18)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = researchMode?"rgba(245,158,11,0.08)":"rgba(0,200,255,0.08)"; }}
+                  >
+                    ⚡ Generate from Core
                   </button>
                 </div>
                 </div>
