@@ -1914,6 +1914,77 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
 }
 
 
+// ════════════════════════════════════════════════════════════════════
+// COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
+// ════════════════════════════════════════════════════════════════════
+const COVERAGE_DATA = [
+  // === TECHNOLOGY · USA ===
+  { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null },
+  { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null },
+  { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null },
+  { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null },
+  { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null },
+
+  // === RAILWAY · CANADA & USA ===
+  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null },
+  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railway',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null },
+  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railway',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null },
+  { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railway',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
+
+  // === FINANCIAL · USA ===
+  { ticker: 'V',     name: 'Visa',                           industry: 'Financial',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
+  { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null },
+  { ticker: 'AXP',   name: 'American Express',               industry: 'Financial',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null },
+  { ticker: 'MCO',   name: 'Moody\u2019s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
+
+  // === MEDIA · USA ===
+  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null },
+  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null },
+
+  // === BEVERAGE · USA ===
+  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: null },
+  { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: null },
+
+  // === WASTE · USA ===
+  { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: null },
+  { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null },
+
+  // === CONGLOMERATE · USA ===
+  { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null },
+
+  // === RETAIL · USA ===
+  { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: null },
+
+  // === FOOD · USA ===
+  { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: null },
+
+  // === ENTERTAINMENT · NETHERLANDS ===
+  { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
+
+  // === WHOLESALE · AUSTRALIA ===
+  { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: null },
+
+  // === BANKING · AUSTRALIA ===
+  { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null },
+
+  // === RETAIL · AUSTRALIA ===
+  { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null },
+  { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: null },
+  { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: null },
+
+  // === INFRASTRUCTURE · AUSTRALIA ===
+  { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null },
+
+  // === EXCHANGE · AUSTRALIA ===
+  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia\u2019s primary stock exchange — monopoly listing venue.',                breakdown: null },
+
+  // === TECHNOLOGY · AUSTRALIA ===
+  { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null },
+
+  // === MEDIA · AUSTRALIA ===
+  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null },
+];
+
 function MuzzApp() {
   // All state declarations at the top
   const [activeView, setActiveView] = useState('home');
@@ -2318,6 +2389,39 @@ function MuzzApp() {
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
   const [researchMode, setResearchMode] = useState(false); // True when user is inside the Research OS workspace
   const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
+
+  // ────────────────────────────────────────────────────────────
+  // Coverage helpers — used by Holdings, Future Portfolio, Map etc.
+  // to surface "is this ticker covered by Muzz?" + handle tap behaviour.
+  // ────────────────────────────────────────────────────────────
+  const findCoverageEntry = (ticker) => {
+    if (!ticker) return null;
+    const t = String(ticker).trim().toUpperCase();
+    return COVERAGE_DATA.find(c => String(c.ticker).toUpperCase() === t) || null;
+  };
+
+  // When a ticker is tapped anywhere in Research mode, route to Coverage drill-down.
+  // If covered: navigate to that company directly. If not: prompt to stub it (TODO for later — for now just show a friendly toast).
+  const openTickerInCoverage = (ticker) => {
+    if (!ticker) return;
+    const entry = findCoverageEntry(ticker);
+    if (entry) {
+      setCoverageIndustry(entry.industry);
+      setCoverageCountry(entry.country);
+      setCoverageCompany(entry.ticker);
+      setInvestmentsSubTab('coverage');
+    } else {
+      // Not in coverage — friendly prompt
+      const proceed = window.confirm(`${String(ticker).toUpperCase()} isn't in Muzz Coverage yet.\n\nWould you like to view the Coverage library?`);
+      if (proceed) {
+        setCoverageIndustry(null);
+        setCoverageCountry(null);
+        setCoverageCompany(null);
+        setInvestmentsSubTab('coverage');
+      }
+    }
+  };
+
   const [researchConstellationIndustry, setResearchConstellationIndustry] = useState(null);
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
@@ -10513,8 +10617,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const sub = isCompany ? (n.industry || 'Other') : `${n.count} COMPAN${n.count!==1?'IES':'Y'}`;
                       const onClick = () => {
                         if (isCompany) {
-                          // Open per-stock deep dive
-                          setDetailTicker(n.ticker);
+                          // In research mode, route to Coverage drill-down. Otherwise legacy detail popup.
+                          if (researchMode) {
+                            openTickerInCoverage(n.ticker);
+                          } else {
+                            setDetailTicker(n.ticker);
+                          }
                         } else {
                           setResearchConstellationIndustry(n.industry);
                         }
@@ -10530,6 +10638,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                               <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
                               <span style={{fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0,letterSpacing:"0.5px"}}>{label}</span>
+                              {isCompany && (() => {
+                                const covered = !!findCoverageEntry(n.ticker);
+                                return (
+                                  <span title={covered ? 'Covered by Muzz' : 'Not in Muzz Coverage'} style={{fontSize:"10px",color:covered?"rgba(245,158,11,0.95)":"rgba(148,163,184,0.5)",fontFamily:"monospace",flexShrink:0,lineHeight:1}}>
+                                    {covered ? '◆' : '○'}
+                                  </span>
+                                );
+                              })()}
                             </div>
                             <div style={{fontFamily:"monospace",fontSize:"8px",color:`${accent}99`,letterSpacing:"0.5px",marginTop:"3px",paddingLeft:"10px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{sub}</div>
                           </div>
@@ -10563,7 +10679,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         const sub = isCompany ? (leaf.industry || 'Other') : `${leaf.count} COMPAN${leaf.count!==1?'IES':'Y'}`;
                         const onClick = () => {
                           if (isCompany) {
-                            setDetailTicker(leaf.ticker);
+                            if (researchMode) {
+                              openTickerInCoverage(leaf.ticker);
+                            } else {
+                              setDetailTicker(leaf.ticker);
+                            }
                           } else {
                             setResearchConstellationIndustry(leaf.industry);
                           }
@@ -10576,6 +10696,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                                 <div style={{width:"5px",height:"5px",borderRadius:"50%",background:accent,boxShadow:`0 0 6px ${accent}`,flexShrink:0}}/>
                                 <span style={{fontFamily:"monospace",fontSize:"12px",color:"#e0eaff",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1,minWidth:0}}>{label}</span>
+                                {isCompany && (() => {
+                                  const covered = !!findCoverageEntry(leaf.ticker);
+                                  return (
+                                    <span title={covered ? 'Covered by Muzz' : 'Not in Muzz Coverage'} style={{fontSize:"11px",color:covered?"rgba(245,158,11,0.95)":"rgba(148,163,184,0.5)",fontFamily:"monospace",flexShrink:0,lineHeight:1}}>
+                                      {covered ? '◆' : '○'}
+                                    </span>
+                                  );
+                                })()}
                               </div>
                               <div style={{fontFamily:"monospace",fontSize:"9px",color:`${accent}99`,letterSpacing:"0.5px",marginTop:"3px",paddingLeft:"10px"}}>{sub}</div>
                             </div>
@@ -10590,7 +10718,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{marginTop:"20px",borderTop:`0.5px solid ${accent}15`,paddingTop:"14px",textAlign:"center"}}>
                     <div style={{fontSize:"9px",color:`${accent}99`,fontFamily:"monospace",letterSpacing:"1.5px"}}>
                       {inDrill
-                        ? '// TAP A COMPANY TO OPEN ITS DEEP DIVE'
+                        ? '// ◆ COVERED  /  ○ NOT COVERED  ·  TAP A COMPANY TO OPEN IN COVERAGE'
                         : '// TAP AN INDUSTRY TO SEE COMPANIES'}
                     </div>
                   </div>
@@ -11569,73 +11697,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             // To add a company: copy a block, fill in the fields. Group by industry + country.
             // verdict: 'BUY' | 'HOLD' | 'WATCH' | 'AVOID'
             // ============================================================
-            const COVERAGE = [
-              // === TECHNOLOGY · USA ===
-              { ticker: 'GOOG',  name: 'Alphabet',                       industry: 'Technology',    country: 'United States', marketCap: 4500000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global search, advertising and cloud computing giant.',                                          breakdown: null },
-              { ticker: 'AAPL',  name: 'Apple',                          industry: 'Technology',    country: 'United States', marketCap: 4400000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Consumer hardware ecosystem with deep services and brand moat.',                                breakdown: null },
-              { ticker: 'MSFT',  name: 'Microsoft',                      industry: 'Technology',    country: 'United States', marketCap: 2800000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise software, cloud (Azure) and productivity suite leader.',                            breakdown: null },
-              { ticker: 'AMZN',  name: 'Amazon',                         industry: 'Technology',    country: 'United States', marketCap: 2600000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'E-commerce, logistics and AWS cloud platform.',                                                breakdown: null },
-              { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null },
-
-              // === RAILWAY · CANADA & USA ===
-              { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null },
-              { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railway',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null },
-              { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railway',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null },
-              { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railway',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
-
-              // === FINANCIAL · USA ===
-              { ticker: 'V',     name: 'Visa',                           industry: 'Financial',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
-              { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null },
-              { ticker: 'AXP',   name: 'American Express',               industry: 'Financial',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null },
-              { ticker: 'MCO',   name: 'Moody\u2019s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
-
-              // === MEDIA · USA ===
-              { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null },
-              { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null },
-
-              // === BEVERAGE · USA ===
-              { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: null },
-              { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: null },
-
-              // === WASTE · USA ===
-              { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: null },
-              { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null },
-
-              // === CONGLOMERATE · USA ===
-              { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null },
-
-              // === RETAIL · USA ===
-              { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: null },
-
-              // === FOOD · USA ===
-              { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: null },
-
-              // === ENTERTAINMENT · NETHERLANDS ===
-              { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
-
-              // === WHOLESALE · AUSTRALIA ===
-              { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: null },
-
-              // === BANKING · AUSTRALIA ===
-              { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null },
-
-              // === RETAIL · AUSTRALIA ===
-              { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null },
-              { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: null },
-              { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: null },
-
-              // === INFRASTRUCTURE · AUSTRALIA ===
-              { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null },
-
-              // === EXCHANGE · AUSTRALIA ===
-              { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia\u2019s primary stock exchange — monopoly listing venue.',                breakdown: null },
-
-              // === TECHNOLOGY · AUSTRALIA ===
-              { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null },
-
-              // === MEDIA · AUSTRALIA ===
-              { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null },
-            ];
+            const COVERAGE = COVERAGE_DATA;
 
             const verdictColor = (v) => {
               switch (v) {
@@ -11967,7 +12029,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                               <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
                               <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:600,letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{ticker || <span style={{color:"rgba(148,163,184,0.4)",fontWeight:500,letterSpacing:"0"}}>Unset ticker</span>}</div>
+                                <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:600,letterSpacing:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"8px"}}>
+                                  <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{ticker || <span style={{color:"rgba(148,163,184,0.4)",fontWeight:500,letterSpacing:"0"}}>Unset ticker</span>}</span>
+                                  {ticker && (() => {
+                                    const covered = !!findCoverageEntry(ticker);
+                                    return (
+                                      <span
+                                        title={covered ? 'Covered by Muzz · tap to open Coverage' : 'Not in Muzz Coverage'}
+                                        onClick={(e) => { e.stopPropagation(); openTickerInCoverage(ticker); }}
+                                        style={{
+                                          fontSize:"9px", padding:"2px 6px",
+                                          background: covered ? "rgba(245,158,11,0.12)" : "rgba(148,163,184,0.08)",
+                                          border: `0.5px solid ${covered ? "rgba(245,158,11,0.5)" : "rgba(148,163,184,0.3)"}`,
+                                          borderRadius:"2px",
+                                          color: covered ? "rgba(245,158,11,0.95)" : "rgba(148,163,184,0.65)",
+                                          letterSpacing:"1px", fontWeight:600, flexShrink:0, cursor:"pointer",
+                                        }}
+                                      >
+                                        {covered ? '◆ COVERED' : '○ NOT COVERED'}
+                                      </span>
+                                    );
+                                  })()}
+                                </div>
                                 <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
                                   {shares > 0 ? `${shares} share${shares!==1?'s':''}` : 'No shares'}{avgCost > 0 ? ` @ $${avgCost.toFixed(2)}` : ''}{currentPrice > 0 ? ` · ${dailyChange >= 0 ? '▲' : '▼'} ${Math.abs(dailyChange).toFixed(2)}%` : ''}
                                 </div>
@@ -12178,7 +12261,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                         <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"8px"}}>
+                            <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</span>
+                            {holding?.ticker && (() => {
+                              const covered = !!findCoverageEntry(holding.ticker);
+                              return (
+                                <span
+                                  title={covered ? 'Covered by Muzz · tap to open Coverage' : 'Not in Muzz Coverage'}
+                                  onClick={(e) => { e.stopPropagation(); openTickerInCoverage(holding.ticker); }}
+                                  style={{
+                                    fontSize:"9px", padding:"2px 6px",
+                                    background: covered ? "rgba(245,158,11,0.12)" : "rgba(148,163,184,0.08)",
+                                    border: `0.5px solid ${covered ? "rgba(245,158,11,0.5)" : "rgba(148,163,184,0.3)"}`,
+                                    borderRadius:"2px",
+                                    color: covered ? "rgba(245,158,11,0.95)" : "rgba(148,163,184,0.65)",
+                                    letterSpacing:"1px", fontWeight:600, flexShrink:0, cursor:"pointer",
+                                  }}
+                                >
+                                  {covered ? '◆ COVERED' : '○ NOT COVERED'}
+                                </span>
+                              );
+                            })()}
+                          </div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
                             {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}
                           </div>
@@ -12708,7 +12812,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         style={{width:"100%",display:"flex",alignItems:"center",gap:"12px",padding:"12px 14px",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
                         <div style={{width:"10px",height:"10px",borderRadius:"50%",background:"#00c8ff",boxShadow:"0 0 6px rgba(0,200,255,0.5)",flexShrink:0}}/>
                         <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:"2px"}}>
-                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</div>
+                          <div style={{fontFamily:"monospace",fontSize:"13px",color:"#e0eaff",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:"8px"}}>
+                            <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{holding?.ticker || <span style={{color:"rgba(148,163,184,0.4)"}}>Unnamed ticker</span>}</span>
+                            {holding?.ticker && (() => {
+                              const covered = !!findCoverageEntry(holding.ticker);
+                              return (
+                                <span
+                                  title={covered ? 'Covered by Muzz · tap to open Coverage' : 'Not in Muzz Coverage'}
+                                  onClick={(e) => { e.stopPropagation(); openTickerInCoverage(holding.ticker); }}
+                                  style={{
+                                    fontSize:"9px", padding:"2px 6px",
+                                    background: covered ? "rgba(245,158,11,0.12)" : "rgba(148,163,184,0.08)",
+                                    border: `0.5px solid ${covered ? "rgba(245,158,11,0.5)" : "rgba(148,163,184,0.3)"}`,
+                                    borderRadius:"2px",
+                                    color: covered ? "rgba(245,158,11,0.95)" : "rgba(148,163,184,0.65)",
+                                    letterSpacing:"1px", fontWeight:600, flexShrink:0, cursor:"pointer",
+                                  }}
+                                >
+                                  {covered ? '◆ COVERED' : '○ NOT COVERED'}
+                                </span>
+                              );
+                            })()}
+                          </div>
                           <div style={{fontFamily:"monospace",fontSize:"10px",color:"rgba(148,163,184,0.55)"}}>
                             {holding?.industry || 'No industry'}{holding?.status ? ` · ${holding.status}` : ''}{holding?.tollBooth ? ` · Toll: ${holding.tollBooth}` : ''}
                           </div>
