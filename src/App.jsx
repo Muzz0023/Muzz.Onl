@@ -3311,7 +3311,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     { id: "varied", label: "Bills", icon: Wallet, eliteOnly: true },
     { id: "assets", label: "Assets", icon: DollarSign, eliteOnly: true },
     { id: "investments", label: "Investments", icon: TrendingUp, eliteOnly: true },
-    { id: "research", label: "Research", icon: Star, eliteOnly: true },
     { id: "feedback", label: "Feedback & Support", icon: MessageCircle },
     { id: "upgrade", label: isElite ? "Elite Status" : "Upgrade to Elite", icon: Award },
   ];
@@ -3739,7 +3738,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
       { section: 'FINANCE',  id:'varied',        label:'Bills',           elite:true  },
       { section: 'FINANCE',  id:'assets',        label:'Assets',          elite:true  },
       { section: 'FINANCE',  id:'investments',   label:'Investments',     elite:true  },
-      { section: 'FINANCE',  id:'research',      label:'Research',        elite:true  },
       { section: 'CUSTOM',   id:'custom1',       label: customCategories?.[0]?.name || 'Custom 1' },
       { section: 'CUSTOM',   id:'custom2',       label: customCategories?.[1]?.name || 'Custom 2', elite:true },
       { section: 'CUSTOM',   id:'custom3',       label: customCategories?.[2]?.name || 'Custom 3', elite:true },
