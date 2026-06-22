@@ -12466,9 +12466,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onChange={(e) => updateF('status', e.target.value)}
                                 style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
                                 <option value="">Select Status</option>
-                                <option value="Old">Old</option>
                                 <option value="New">New</option>
+                                <option value="Core">Core</option>
                                 <option value="Reserve">Reserve</option>
+                                <option value="Trim">Trim</option>
                               </select>
                             </div>
                           </div>
@@ -12999,8 +13000,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
                                 <option value="">Select</option>
                                 <option value="New">New</option>
-                                <option value="Old">Old</option>
+                                <option value="Core">Core</option>
                                 <option value="Reserve">Reserve</option>
+                                <option value="Trim">Trim</option>
                               </select>
                             </div>
                           </div>
