@@ -12312,7 +12312,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           notes: h.notes || '',
                           plannedAmount: 0,
                           plannedAmountStr: '',
-                          status: '',
+                          status: 'Core',
                         }));
                       if (newEntries.length === 0) {
                         window.alert("All your Core holdings are already in Future Portfolio.");
@@ -12360,7 +12360,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     );
                   })()}
-                  {futureResearch.map((holding, index) => {
+                  {(() => {
+                    // Sort by planned investment descending (highest at top), preserving original indices for editing
+                    const sortedView = futureResearch
+                      .map((holding, originalIndex) => ({ holding, originalIndex }))
+                      .sort((a, b) => {
+                        const aP = parseFloat(a.holding?.plannedAmount) || 0;
+                        const bP = parseFloat(b.holding?.plannedAmount) || 0;
+                        return bP - aP; // descending
+                      });
+                    return sortedView;
+                  })().map(({ holding, originalIndex }) => {
+                    const index = originalIndex; // use original index for all updates
                     const isEditing = editingFutureResearchIdx === index;
                     const updateF = (field, val) => {
                       setFutureResearch(prev => {
@@ -12471,9 +12482,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 onChange={(e) => updateF('capitalIntensity', e.target.value)}
                                 style={{width:"100%",boxSizing:"border-box",background:"rgba(0,200,255,0.04)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"3px",color:"#e0eaff",fontFamily:"monospace",fontSize:"12px",padding:"8px 10px",outline:"none",colorScheme:"dark"}}>
                                 <option value="">Select</option>
-                                <option value="Toll-Like">Toll-Like</option>
-                                <option value="Lean">Lean</option>
-                                <option value="Heavy">Heavy</option>
+                                <option value="Toll-Like Capital Intensity">Toll-Like</option>
+                                <option value="Lean Capital Intensity">Lean</option>
+                                <option value="Heavy Capital Intensity">Heavy</option>
                               </select>
                             </div>
                             <div>
@@ -12578,7 +12589,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           notes: h.notes || '',
                           plannedAmount: 0,
                           plannedAmountStr: '',
-                          status: '',
+                          status: 'Core',
                         }));
                       if (newEntries.length === 0) {
                         window.alert("All your Core holdings are already in Future Portfolio.");
