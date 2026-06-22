@@ -2316,7 +2316,8 @@ function MuzzApp() {
   const [workSubTab, setWorkSubTab] = useState('timesheet');
   const [assetsSubTab, setAssetsSubTab] = useState('assets');
   const [investmentsSubTab, setInvestmentsSubTab] = useState('portfolio');
-  const [researchSection, setResearchSection] = useState('home'); // Research workspace inner section
+  const [researchMode, setResearchMode] = useState(false); // True when user is inside the Research OS workspace
+  const [researchDrawerOpen, setResearchDrawerOpen] = useState(false); // Hamburger drawer state
   const [researchConstellationIndustry, setResearchConstellationIndustry] = useState(null);
   // Coverage library drill-down: industry -> country -> company -> breakdown
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
@@ -9695,201 +9696,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     );
   }
 
-  // ═════════════════════════════════════════════════════════════════════════════
-  // RESEARCH OS — Standalone workspace, Palantir/Bloomberg-style command center
-  // ═════════════════════════════════════════════════════════════════════════════
-  if (activeView === 'research') {
-    if (!isElite) return <LockedFeature featureName="Research OS" setActiveView={setActiveView} />;
-    const amber = 'rgba(245,158,11,0.95)';
-    const amberDim = 'rgba(245,158,11,0.6)';
-    const amberGlow = 'rgba(245,158,11,0.35)';
-
-    // Tile click handler — set sub-tab + flip view. Existing render path handles content.
-    const enterSection = (subTab) => {
-      setInvestmentsSubTab(subTab);
-      setActiveView('investments');
-    };
-
-    // === Live portfolio metrics ===
-    const portfolioValue = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.currentPrice || s?.price)||0), 0);
-    const portfolioCost  = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.price)||0), 0);
-    const portfolioPL    = portfolioValue - portfolioCost;
-    const portfolioPLPct = portfolioCost > 0 ? (portfolioPL / portfolioCost) * 100 : 0;
-    const holdingsCount  = (holdingsResearch || []).filter(h => h && h.ticker).length;
-    const futureCount    = (futureResearch || []).filter(f => f && f.ticker).length;
-    const liveCount      = (trackedStocks || []).filter(s => s && (s.symbol || s.ticker)).length;
-    const coverageCount  = 32; // Matches the populated COVERAGE array
-
-    // Format helpers
-    const fmtCurrency = (n) => '$' + Math.round(Math.abs(n||0)).toLocaleString();
-
-    // Live clock
-    const now = liveTime || new Date();
-    const timeStr = now.toLocaleTimeString('en-AU', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const dateStr = now.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
-
-    // Section tiles
-    const TILES = [
-      { id:'researchMap',     glyph:'⊞', label:'MAP',              desc:'Constellation graph of your research universe.',  stat: `${holdingsCount} HOLDINGS` },
-      { id:'coverage',        glyph:'◇', label:'COVERAGE',         desc:'Industry → country → company drill-down library.', stat: `${coverageCount} COMPANIES` },
-      { id:'research',        glyph:'≡', label:'HOLDINGS',         desc:'Your research notes on every position you hold.',  stat: `${holdingsCount} ROWS` },
-      { id:'futurePortfolio', glyph:'◬', label:'FUTURE PORTFOLIO', desc:'Watchlist of companies you plan to enter.',        stat: `${futureCount} WATCHED` },
-      { id:'livePrices',      glyph:'⊕', label:'LIVE PRICES',      desc:'Real-time price tracker with profit / loss.',      stat: `${liveCount} TRACKED` },
-      { id:'performance',     glyph:'↗', label:'PERFORMANCE',      desc:'Returns over time across positions and periods.',  stat: null },
-      { id:'accounting',      glyph:'◳', label:'ACCOUNTING',       desc:'Financial statements & moat indicators.',          stat: null },
-      { id:'knowledge',       glyph:'⌬', label:'INVESTING GUIDE',  desc:'Buffett & Munger principles, applied.',            stat: null },
-      { id:'sp500',           glyph:'★', label:'S&P 500',          desc:'Index data and benchmark comparisons.',            stat: null },
-    ];
-
-    return (
-      <div className="min-h-screen pb-24" style={{background:"#000", position:"relative", overflow:"hidden"}}>
-        <Sidebar /><SaveIndicator />
-
-        {/* Amber grid backdrop — pure CSS background, not an overlay */}
-        <div style={{
-          position:"absolute", inset:0,
-          backgroundImage:"linear-gradient(rgba(245,158,11,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.025) 1px, transparent 1px)",
-          backgroundSize:"40px 40px",
-          pointerEvents:"none",
-          WebkitMaskImage:"radial-gradient(ellipse at 50% 30%, black 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
-          maskImage:"radial-gradient(ellipse at 50% 30%, black 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
-        }}/>
-
-        {/* === TOP HUD STRIP === */}
-        <div style={{position:"relative", zIndex:5, borderBottom:`0.5px solid ${amberGlow}`, background:"rgba(0,0,0,0.6)", padding:"56px 24px 12px"}}>
-          <div className="max-w-6xl mx-auto" style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"12px",flexWrap:"wrap"}}>
-            <button onClick={() => setActiveView('investments')} style={{
-              fontSize:"11px", color:amber, fontFamily:"monospace", letterSpacing:"2px",
-              background:"rgba(245,158,11,0.08)", border:`0.5px solid ${amberGlow}`,
-              borderRadius:"3px", padding:"7px 14px", cursor:"pointer", fontWeight:600,
-            }}>← INVESTMENTS</button>
-
-            <div style={{display:"flex",alignItems:"center",gap:"16px",fontFamily:"monospace",flexWrap:"wrap"}}>
-              <span style={{fontSize:"10px",color:amberDim,letterSpacing:"1.5px"}}>{dateStr}</span>
-              <span style={{fontSize:"10px",color:amber,letterSpacing:"1.5px",fontWeight:600}}>{timeStr}</span>
-              <span style={{fontSize:"10px",color:amberDim,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"6px"}}>
-                <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
-                ONLINE
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* === MAIN HEADER === */}
-        <div style={{position:"relative",zIndex:5,padding:"32px 24px 24px"}}>
-          <div className="max-w-6xl mx-auto">
-            <div style={{fontSize:"10px",color:amberDim,fontFamily:"monospace",letterSpacing:"3px",marginBottom:"8px",fontWeight:600}}>// PREMIUM RESEARCH WORKSPACE</div>
-            <h1 style={{fontSize:"42px",color:"#e0eaff",fontFamily:"monospace",fontWeight:600,letterSpacing:"4px",margin:0,lineHeight:1}}>RESEARCH<span style={{color:amber}}> OS</span></h1>
-            <div style={{fontSize:"11px",color:"rgba(224,234,255,0.45)",fontFamily:"monospace",letterSpacing:"1px",marginTop:"10px"}}>v2.0 // BUILD 2026.06 // OPERATOR: {(eliteName && eliteName.trim().toUpperCase()) || 'MUZZ'}</div>
-          </div>
-        </div>
-
-        {/* === HUD STATUS STRIP === */}
-        <div style={{position:"relative",zIndex:5,padding:"0 24px 24px"}}>
-          <div className="max-w-6xl mx-auto">
-            <div style={{
-              display:"grid",
-              gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))",
-              gap:"1px",
-              background:amberGlow,
-              border:`0.5px solid ${amberGlow}`,
-              borderRadius:"3px",
-              overflow:"hidden",
-            }}>
-              {[
-                { label:'PORTFOLIO VALUE', value: fmtCurrency(portfolioValue), unit:'AUD', color: '#e0eaff' },
-                { label:'UNREALISED P/L',  value: (portfolioPL >= 0 ? '+' : '−') + fmtCurrency(portfolioPL), unit: (portfolioPLPct >= 0 ? '+' : '') + portfolioPLPct.toFixed(2) + '%', color: portfolioPL >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' },
-                { label:'HOLDINGS',        value: holdingsCount, unit:'POSITIONS', color: '#e0eaff' },
-                { label:'COVERAGE',        value: coverageCount, unit:'COMPANIES', color: '#e0eaff' },
-              ].map((m,i) => (
-                <div key={i} style={{background:"#000", padding:"14px 16px"}}>
-                  <div style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"6px",fontWeight:600}}>{m.label}</div>
-                  <div style={{fontSize:"22px",color:m.color,fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px",lineHeight:1}}>{m.value}</div>
-                  <div style={{fontSize:"9px",color:"rgba(224,234,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"6px"}}>{m.unit}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* === SECTION TILES === */}
-        <div style={{position:"relative",zIndex:5,padding:"0 24px 24px"}}>
-          <div className="max-w-6xl mx-auto">
-            <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"14px"}}>
-              <div style={{flex:1,height:"0.5px",background:amberGlow}}/>
-              <span style={{fontSize:"10px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// SECTIONS</span>
-              <div style={{flex:1,height:"0.5px",background:amberGlow}}/>
-            </div>
-
-            <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(240px, 1fr))", gap:"12px"}}>
-              {TILES.map((tile, idx) => (
-                <button
-                  key={tile.id}
-                  onClick={() => enterSection(tile.id)}
-                  style={{
-                    background:"linear-gradient(160deg, rgba(245,158,11,0.06) 0%, rgba(0,0,0,0.4) 100%)",
-                    border:`0.5px solid ${amberGlow}`,
-                    borderLeft:`2px solid ${amber}`,
-                    borderRadius:"4px",
-                    padding:"18px",
-                    cursor:"pointer",
-                    textAlign:"left",
-                    fontFamily:"monospace",
-                    position:"relative",
-                    minHeight:"160px",
-                    display:"flex",
-                    flexDirection:"column",
-                    transition:"all 0.18s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = amber;
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow = `0 6px 24px rgba(245,158,11,0.18)`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = amberGlow;
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  {/* Corner brackets */}
-                  <div style={{position:"absolute",top:"6px",left:"6px",width:"10px",height:"10px",borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
-                  <div style={{position:"absolute",top:"6px",right:"6px",width:"10px",height:"10px",borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
-                  <div style={{position:"absolute",bottom:"6px",left:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
-                  <div style={{position:"absolute",bottom:"6px",right:"6px",width:"10px",height:"10px",borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
-
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"10px"}}>
-                    <span style={{fontSize:"28px",color:amber,lineHeight:1,fontWeight:300}}>{tile.glyph}</span>
-                    <span style={{fontSize:"9px",color:amberDim,letterSpacing:"1.5px",fontWeight:600}}>{String(idx+1).padStart(2,'0')}</span>
-                  </div>
-
-                  <div style={{fontSize:"15px",color:"#e0eaff",fontWeight:600,letterSpacing:"2px",marginBottom:"6px"}}>{tile.label}</div>
-                  <div style={{fontSize:"10px",color:"rgba(224,234,255,0.55)",lineHeight:1.5,letterSpacing:"0.3px",flex:1}}>{tile.desc}</div>
-
-                  <div style={{marginTop:"12px",paddingTop:"10px",borderTop:`0.5px solid ${amberGlow}`,fontSize:"9px",letterSpacing:"1.5px",fontWeight:600,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{color:amberDim}}>{tile.stat || ''}</span>
-                    <span style={{color:amber}}>OPEN →</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* === FOOTER STRIP === */}
-        <div style={{position:"relative",zIndex:5,padding:"16px 24px 32px"}}>
-          <div className="max-w-6xl mx-auto" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"12px",flexWrap:"wrap"}}>
-            <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MARKET CAPS IN USD</span>
-            <span style={{fontSize:"9px",color:"rgba(224,234,255,0.3)",fontFamily:"monospace"}}>·</span>
-            <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PRICES FROM YAHOO FINANCE</span>
-            <span style={{fontSize:"9px",color:"rgba(224,234,255,0.3)",fontFamily:"monospace"}}>·</span>
-            <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// NOT FINANCIAL ADVICE</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (activeView === 'investments') {
     if (!isElite) return <LockedFeature featureName="Investments" setActiveView={setActiveView} />;
     const industries = [
@@ -10042,7 +9848,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     }
 
     return (
-      <div className="min-h-screen bg-transparent">
+      <div className="min-h-screen" style={{background: researchMode ? "#000" : "transparent", transition:"background 0.2s ease"}}>
         <Sidebar />
         <SaveIndicator />
 
@@ -10256,7 +10062,237 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
         })()}
 
 
-        {/* HEADER */}
+        {/* ═══════════════ RESEARCH OS CHROME — only when researchMode === true ═══════════════ */}
+        {researchMode && (() => {
+          const amber = 'rgba(245,158,11,0.95)';
+          const amberDim = 'rgba(245,158,11,0.6)';
+          const amberGlow = 'rgba(245,158,11,0.35)';
+
+          // === Live metrics for HUD status strip ===
+          const portfolioValueLocal = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.currentPrice || s?.price)||0), 0);
+          const portfolioCostLocal  = (stocks || []).reduce((sum, s) => sum + (parseFloat(s?.shares)||0) * (parseFloat(s?.price)||0), 0);
+          const portfolioPLLocal    = portfolioValueLocal - portfolioCostLocal;
+          const portfolioPLPctLocal = portfolioCostLocal > 0 ? (portfolioPLLocal / portfolioCostLocal) * 100 : 0;
+          const holdingsCountLocal  = (holdingsResearch || []).filter(h => h && h.ticker).length;
+          const coverageCountLocal  = 32;
+          const fmtCurrencyLocal = (n) => '$' + Math.round(Math.abs(n||0)).toLocaleString();
+
+          // Live clock
+          const nowR = liveTime || new Date();
+          const timeStrR = nowR.toLocaleTimeString('en-AU', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+          // Section grouping for drawer
+          const DRAWER_GROUPS = [
+            {
+              title: 'CORE RESEARCH',
+              items: [
+                { id:'research',        glyph:'≡', label:'Holdings',         desc:'Your positions' },
+                { id:'futurePortfolio', glyph:'◬', label:'Future Portfolio', desc:'Watchlist' },
+                { id:'researchMap',     glyph:'⊞', label:'Map',              desc:'Constellation graph' },
+                { id:'coverage',        glyph:'◇', label:'Coverage',         desc:'Company library' },
+              ],
+            },
+            {
+              title: 'LIVE DATA',
+              items: [
+                { id:'livePrices',  glyph:'⊕', label:'Live Prices',  desc:'Real-time tracker' },
+                { id:'performance', glyph:'↗', label:'Performance',  desc:'Returns over time' },
+              ],
+            },
+            {
+              title: 'INFORMATION',
+              items: [
+                { id:'accounting', glyph:'◳', label:'Accounting',      desc:'Financial statements' },
+                { id:'knowledge',  glyph:'⌬', label:'Investing Guide', desc:'Buffett & Munger' },
+                { id:'sp500',      glyph:'★', label:'S&P 500',         desc:'Index data' },
+              ],
+            },
+          ];
+
+          // Current section label for display in chrome
+          const currentSectionLabel = (() => {
+            for (const g of DRAWER_GROUPS) {
+              const f = g.items.find(i => i.id === investmentsSubTab || (i.id === 'knowledge' && investmentsSubTab === 'books'));
+              if (f) return f.label.toUpperCase();
+            }
+            return 'RESEARCH';
+          })();
+
+          return (
+            <>
+              {/* === TOP HUD STRIP === */}
+              <div style={{
+                position:"sticky", top:0, zIndex:30,
+                borderBottom:`0.5px solid ${amberGlow}`,
+                background:"rgba(0,0,0,0.92)",
+                backdropFilter:"blur(8px)",
+                padding:"12px 16px",
+                display:"flex", alignItems:"center", justifyContent:"space-between", gap:"12px", flexWrap:"wrap",
+              }}>
+                <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+                  <button
+                    onClick={() => setResearchDrawerOpen(true)}
+                    aria-label="Open research menu"
+                    style={{
+                      width:"36px", height:"36px",
+                      background:"rgba(245,158,11,0.08)",
+                      border:`0.5px solid ${amberGlow}`,
+                      borderRadius:"4px",
+                      color:amber,
+                      cursor:"pointer",
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                      padding:0,
+                    }}>
+                    <div style={{display:"flex",flexDirection:"column",gap:"4px",alignItems:"center"}}>
+                      <div style={{width:"14px",height:"1.5px",background:amber}}/>
+                      <div style={{width:"14px",height:"1.5px",background:amber}}/>
+                      <div style={{width:"14px",height:"1.5px",background:amber}}/>
+                    </div>
+                  </button>
+                  <div style={{display:"flex",alignItems:"baseline",gap:"10px"}}>
+                    <span style={{fontSize:"11px",color:amber,fontFamily:"monospace",letterSpacing:"2.5px",fontWeight:700}}>RESEARCH OS</span>
+                    <span style={{fontSize:"9px",color:amberDim,fontFamily:"monospace",letterSpacing:"1.5px"}}>// {currentSectionLabel}</span>
+                  </div>
+                </div>
+
+                <div style={{display:"flex",alignItems:"center",gap:"14px",fontFamily:"monospace"}}>
+                  <span style={{fontSize:"10px",color:amber,letterSpacing:"1.5px",fontWeight:600}}>{timeStrR}</span>
+                  <span style={{fontSize:"10px",color:amberDim,letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"6px"}}>
+                    <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
+                    ONLINE
+                  </span>
+                </div>
+              </div>
+
+              {/* === HUD STATUS STRIP — 4 live metrics === */}
+              <div style={{padding:"12px 16px 0",background:"rgba(0,0,0,0.5)"}}>
+                <div className="max-w-6xl mx-auto">
+                  <div style={{
+                    display:"grid",
+                    gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))",
+                    gap:"1px",
+                    background:amberGlow,
+                    border:`0.5px solid ${amberGlow}`,
+                    borderRadius:"3px",
+                    overflow:"hidden",
+                  }}>
+                    {[
+                      { label:'PORTFOLIO VALUE', value: fmtCurrencyLocal(portfolioValueLocal), unit:'AUD', color: '#e0eaff' },
+                      { label:'UNREALISED P/L',  value: (portfolioPLLocal >= 0 ? '+' : '−') + fmtCurrencyLocal(portfolioPLLocal), unit: (portfolioPLPctLocal >= 0 ? '+' : '') + portfolioPLPctLocal.toFixed(2) + '%', color: portfolioPLLocal >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)' },
+                      { label:'HOLDINGS',        value: holdingsCountLocal, unit:'POSITIONS', color: '#e0eaff' },
+                      { label:'COVERAGE',        value: coverageCountLocal, unit:'COMPANIES', color: '#e0eaff' },
+                    ].map((m,i) => (
+                      <div key={i} style={{background:"#000", padding:"10px 12px"}}>
+                        <div style={{fontSize:"8px",color:amberDim,fontFamily:"monospace",letterSpacing:"2px",marginBottom:"4px",fontWeight:600}}>{m.label}</div>
+                        <div style={{fontSize:"16px",color:m.color,fontFamily:"monospace",fontWeight:600,letterSpacing:"0.5px",lineHeight:1}}>{m.value}</div>
+                        <div style={{fontSize:"8px",color:"rgba(224,234,255,0.4)",fontFamily:"monospace",letterSpacing:"1.5px",marginTop:"4px"}}>{m.unit}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* === DRAWER — slides in from the left === */}
+              {researchDrawerOpen && (
+                <>
+                  {/* Backdrop */}
+                  <div
+                    onClick={() => setResearchDrawerOpen(false)}
+                    style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",backdropFilter:"blur(2px)",zIndex:99}}
+                  />
+                  {/* Drawer panel */}
+                  <div style={{
+                    position:"fixed", top:0, left:0, bottom:0,
+                    width:"min(320px, 88vw)",
+                    background:"#000",
+                    borderRight:`0.5px solid ${amberGlow}`,
+                    zIndex:100,
+                    display:"flex", flexDirection:"column",
+                    fontFamily:"monospace",
+                    overflow:"auto",
+                  }}>
+                    {/* Drawer header */}
+                    <div style={{padding:"20px 18px 14px",borderBottom:`0.5px solid ${amberGlow}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                      <div>
+                        <div style={{fontSize:"9px",color:amberDim,letterSpacing:"2px",marginBottom:"3px",fontWeight:600}}>// MENU</div>
+                        <div style={{fontSize:"15px",color:amber,letterSpacing:"2.5px",fontWeight:700}}>RESEARCH OS</div>
+                      </div>
+                      <button
+                        onClick={() => setResearchDrawerOpen(false)}
+                        style={{width:"28px",height:"28px",background:"rgba(245,158,11,0.08)",border:`0.5px solid ${amberGlow}`,borderRadius:"3px",color:amber,cursor:"pointer",fontSize:"14px",lineHeight:1}}>
+                        ×
+                      </button>
+                    </div>
+
+                    {/* Section groups */}
+                    <div style={{padding:"14px 12px",flex:1}}>
+                      {DRAWER_GROUPS.map((group, gi) => (
+                        <div key={gi} style={{marginBottom:"18px"}}>
+                          <div style={{padding:"0 6px 8px",fontSize:"9px",color:amberDim,letterSpacing:"2px",fontWeight:600}}>// {group.title}</div>
+                          {group.items.map(item => {
+                            const isActive = investmentsSubTab === item.id || (item.id === 'knowledge' && investmentsSubTab === 'books');
+                            return (
+                              <button
+                                key={item.id}
+                                onClick={() => { setInvestmentsSubTab(item.id); setResearchDrawerOpen(false); }}
+                                style={{
+                                  width:"100%",
+                                  background: isActive ? `rgba(245,158,11,0.12)` : "transparent",
+                                  border:`0.5px solid ${isActive ? amber : "rgba(255,255,255,0.05)"}`,
+                                  borderLeft: isActive ? `2px solid ${amber}` : "2px solid transparent",
+                                  borderRadius:"3px",
+                                  padding:"10px 12px",
+                                  marginBottom:"4px",
+                                  cursor:"pointer",
+                                  textAlign:"left",
+                                  display:"flex", alignItems:"center", gap:"12px",
+                                  transition:"all 0.15s ease",
+                                }}
+                                onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.background = "rgba(245,158,11,0.05)"; e.currentTarget.style.borderColor = amberGlow; }}}
+                                onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; }}}
+                              >
+                                <span style={{fontSize:"18px",color:isActive?amber:amberDim,lineHeight:1,width:"22px",textAlign:"center"}}>{item.glyph}</span>
+                                <div style={{flex:1,minWidth:0}}>
+                                  <div style={{fontSize:"12px",color:isActive?"#e0eaff":"rgba(224,234,255,0.85)",fontWeight:600,letterSpacing:"1.5px"}}>{item.label.toUpperCase()}</div>
+                                  <div style={{fontSize:"9px",color:"rgba(224,234,255,0.45)",letterSpacing:"0.3px",marginTop:"2px"}}>{item.desc}</div>
+                                </div>
+                                {isActive && <span style={{fontSize:"10px",color:amber}}>●</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Drawer footer: exit research */}
+                    <div style={{padding:"14px 14px 20px",borderTop:`0.5px solid ${amberGlow}`}}>
+                      <button
+                        onClick={() => { setResearchMode(false); setInvestmentsSubTab('portfolio'); setResearchDrawerOpen(false); }}
+                        style={{
+                          width:"100%",
+                          background:"rgba(239,68,68,0.06)",
+                          border:`0.5px solid rgba(239,68,68,0.4)`,
+                          borderRadius:"3px",
+                          padding:"10px 12px",
+                          cursor:"pointer",
+                          color:"rgba(239,68,68,0.9)",
+                          fontSize:"10px",
+                          letterSpacing:"2px",
+                          fontWeight:600,
+                          fontFamily:"monospace",
+                        }}>
+                        ← EXIT RESEARCH OS
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          );
+        })()}
+
+        {/* HEADER — only shown when NOT in research mode */}
+        {!researchMode && (
         <div style={{borderBottom:"0.5px solid rgba(0,200,255,0.15)",padding:"56px 24px 16px"}}>
           <div className="max-w-5xl mx-auto">
             <button onClick={() => setActiveView('home')} style={{fontSize:"11px",color:"rgba(0,200,255,0.6)",fontFamily:"monospace",letterSpacing:"1px",background:"none",border:"none",cursor:"pointer",marginBottom:"12px",display:"block"}}>← DASHBOARD</button>
@@ -10284,60 +10320,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             </div>
           </div>
         </div>
+        )}
 
         <div className="max-w-5xl mx-auto px-6 py-5" style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-          {/* === INVESTMENT MAP — Free-form node graph (like Asset Map) === */}
-          {(investmentsSubTab === 'coverage' || investmentsSubTab === 'researchMap' || investmentsSubTab === 'research' || investmentsSubTab === 'futurePortfolio' || investmentsSubTab === 'livePrices' || investmentsSubTab === 'performance' || investmentsSubTab === 'accounting' || investmentsSubTab === 'knowledge' || investmentsSubTab === 'books' || investmentsSubTab === 'sp500') && (
-            <>
-              {/* Research mode header — exit button + identifier */}
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
-                <button
-                  onClick={() => setActiveView('research')}
-                  style={{fontSize:"11px",color:"rgba(245,158,11,0.95)",fontFamily:"monospace",letterSpacing:"2px",background:"rgba(245,158,11,0.08)",border:"0.5px solid rgba(245,158,11,0.5)",borderRadius:"3px",padding:"7px 14px",cursor:"pointer",fontWeight:600}}
-                >
-                  ← BACK TO RESEARCH
-                </button>
-                <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.6)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>RESEARCH OS</span>
-                  <span style={{fontSize:"9px",color:"rgba(245,158,11,0.45)",fontFamily:"monospace",letterSpacing:"1.5px",display:"flex",alignItems:"center",gap:"6px"}}>
-                    <span style={{display:"inline-block",width:"6px",height:"6px",borderRadius:"50%",background:"rgba(34,197,94,0.9)",boxShadow:"0 0 6px rgba(34,197,94,0.9)"}}/>
-                    ONLINE
-                  </span>
-                </div>
-              </div>
-
-              {/* Inner tabs for Research sub-sections */}
-              <div style={{display:"flex",gap:"4px",flexWrap:"wrap",marginBottom:"16px"}}>
-                {[
-                  {id:'researchMap',label:'MAP'},
-                  {id:'coverage',label:'COVERAGE'},
-                  {id:'research',label:'HOLDINGS'},
-                  {id:'futurePortfolio',label:'FUTURE PORTFOLIO'},
-                  {id:'livePrices',label:'LIVE PRICES'},
-                  {id:'performance',label:'PERFORMANCE'},
-                  {id:'accounting',label:'ACCOUNTING'},
-                  {id:'knowledge',label:'INVESTING GUIDE'},
-                  {id:'sp500',label:'S&P 500'},
-                ].map(sub => {
-                  const active = investmentsSubTab === sub.id || (sub.id === 'knowledge' && investmentsSubTab === 'books');
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => setInvestmentsSubTab(sub.id)}
-                      style={{padding:"6px 14px",background:active?"rgba(245,158,11,0.18)":"rgba(255,255,255,0.04)",border:`0.5px solid ${active?"rgba(245,158,11,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:active?"rgba(245,158,11,0.95)":"rgba(224,234,255,0.7)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1.5px",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontWeight:600}}
-                    >
-                      {sub.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-
           {/* === RESEARCH OS — Premium entry card, shows when on portfolio === */}
           {investmentsSubTab === 'portfolio' && (
             <button
-              onClick={() => setActiveView('research')}
+              onClick={() => { setInvestmentsSubTab('research'); setResearchMode(true); }}
               style={{
                 width:"100%",
                 background:"linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%)",
