@@ -4858,7 +4858,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Per-Job Breakdown */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <span style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",fontFamily:"monospace",letterSpacing:"1.5px"}}>BREAKDOWN BY JOB</span>
                 </div>
                 {jobs.map((job, i) => {
@@ -5183,7 +5183,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
     const palantirLabel = {fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px",fontFamily:"monospace"};
     const palantirValue = {fontSize:"26px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500};
     const palantirSubValue = {fontSize:"13px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",marginTop:"2px"};
-    const accentHeader = {padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"};
+    const accentHeader = {padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"};
     const liveClock = liveTime.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
     const liveDate = liveTime.toLocaleDateString('en-AU',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
 
@@ -5576,7 +5576,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             const maxVal = Math.max(...chartData.map(d => d.value), 1);
             return (
               <div style={{...palantirPanel}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Financial Overview</span>
                   <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace",letterSpacing:"1px"}}>MONTHLY SNAPSHOT</span>
                 </div>
@@ -5636,7 +5636,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             if (total === 0) return (
               <div style={{...palantirPanel}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
                 </div>
                 <div style={{padding:"20px",textAlign:"center",color:"rgba(0,200,255,0.3)",fontSize:"11px",fontFamily:"monospace",letterSpacing:"1px"}}>NO ASSETS TRACKED</div>
@@ -5660,7 +5660,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             return (
               <div style={{...palantirPanel,cursor:"pointer"}} onClick={() => setActiveView('assets')}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Asset Allocation</span>
                   <span style={{fontSize:"10px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500}}>${total.toLocaleString()}</span>
                 </div>
@@ -5783,7 +5783,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
             return (
               <div style={palantirPanel} onClick={() => setActiveView('assets')} >
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
                   <span style={{...palantirLabel,marginBottom:0}}>Wealth Milestones</span>
                   <span style={{fontSize:"10px",color:"rgba(0,200,255,0.4)",fontFamily:"monospace"}}>${netWorth.toLocaleString()}</span>
                 </div>
@@ -5883,7 +5883,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {reminders && reminders.length > 0 && (
             <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <span style={{fontSize:"11px",color:"rgba(0,200,255,0.5)",letterSpacing:"1.5px",textTransform:"uppercase",fontFamily:"monospace"}}>Reminders</span>
                 <button onClick={() => setActiveView('reminders')} style={{fontSize:"10px",color:"rgba(0,200,255,0.5)",background:"none",border:"none",cursor:"pointer",letterSpacing:"1px"}}>VIEW ALL →</button>
               </div>
@@ -6762,7 +6762,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.03)",borderBottom:"0.5px solid rgba(0,200,255,0.1)"}}>
                       <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'name') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('name'); setBillsSortDir('asc'); }
@@ -6771,7 +6771,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         Subscription {billsSortBy === 'name' && (billsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"center",padding:"10px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"center",padding:"10px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'due') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('due'); setBillsSortDir('asc'); }
@@ -6782,7 +6782,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <th className="text-right py-3 px-3 font-semibold">Daily</th>
                       <th className="text-right py-3 px-3 font-semibold">Weekly</th>
                       <th 
-                        style={{textAlign:"right",padding:"10px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (billsSortBy === 'monthly') setBillsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setBillsSortBy('monthly'); setBillsSortDir('asc'); }
@@ -7632,7 +7632,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
               {/* Small Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Small Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Short-term savings targets</p>
                 </div>
@@ -7761,7 +7761,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setBillSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -7770,7 +7770,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Big Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Big Goals</h2>
                   <p className="text-sm" style={{color:"rgba(148,163,184,0.8)"}}>Long-term financial targets</p>
                 </div>
@@ -7899,7 +7899,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setBillBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -8170,7 +8170,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {personalDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('personal')}
-                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                     >
                       + Add Personal Debt
                     </button>
@@ -8231,7 +8231,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     {businessDebts.map(renderDebtCard)}
                     <button
                       onClick={() => addDebt('business')}
-                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                     >
                       + Add Business Debt
                     </button>
@@ -8689,12 +8689,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Assets Input */}
               <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS{filledAssets.length>0?` · ${filledAssets.length}`:''}</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Assets</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Property, super, cash, vehicles, etc.</p>
                 </div>
@@ -8834,10 +8834,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 );
               })}
             </div>
-            <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+            <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
               <button
                 onClick={() => { const id = Date.now(); setAssets(prev => [...prev, { id, name: '', category: '', value: 0, valueStr: '', dateAdded: new Date().toISOString() }]); setEditingAssetIdx(assets.length); }}
-                style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
               >
                 + Add Asset
               </button>
@@ -8848,12 +8848,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Type Breakdown — collapsible */}
           {filledAssets.length > 0 && (
             <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BREAKDOWN BY TYPE</span>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// BREAKDOWN BY TYPE</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Breakdown by Type</h2>
                 <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
               </div>
@@ -8862,7 +8862,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <thead>
                     <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                       <th 
-                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'type') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('type'); setAssetsSortDir('asc'); }
@@ -8871,7 +8871,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         Type {assetsSortBy === 'type' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'value') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('value'); setAssetsSortDir('asc'); }
@@ -8880,7 +8880,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         Value {assetsSortBy === 'value' && (assetsSortDir === 'asc' ? '↑' : '↓')}
                       </th>
                       <th 
-                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                        style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                         onClick={() => {
                           if (assetsSortBy === 'percent') setAssetsSortDir(d => d === 'asc' ? 'desc' : 'asc');
                           else { setAssetsSortBy('percent'); setAssetsSortDir('asc'); }
@@ -9127,12 +9127,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {/* Assets Breakdown — collapsible */}
           {filledAssets.length > 0 && (
             <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden"}}>
-              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS BREAKDOWN</span>
+              <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSETS BREAKDOWN</span>
                 <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
               </summary>
               <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-              <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+              <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                 <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Assets Breakdown</h2>
               </div>
               
@@ -9241,7 +9241,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
               {/* Small Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Small Goals</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Short-term savings targets</p>
                 </div>
@@ -9331,7 +9331,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setSmallGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Small Goal
                   </button>
@@ -9340,7 +9340,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Big Goals */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Big Goals</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Long-term wealth targets</p>
                 </div>
@@ -9430,7 +9430,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   })}
                   <button
                     onClick={() => setBigGoals(prev => [...prev, { name: '', target: 0, targetStr: '', current: 0, currentStr: '' }])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Big Goal
                   </button>
@@ -9453,7 +9453,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* The 3 Asset Categories */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>📚 The 3 Asset Categories (Buffett's Framework)</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Warren Buffett explains that all investments fall into one of three buckets</p>
                 </div>
@@ -9586,7 +9586,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <div style={assetMapExpanded ? {position:"fixed",inset:0,zIndex:1000,background:"rgba(2,6,16,0.98)",backdropFilter:"blur(8px)",padding:"16px",display:"flex",flexDirection:"column"} : {padding:"12px 16px"}}>
               <div style={{marginBottom:"10px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",flexShrink:0}}>
                 {assetMapExpanded && (
-                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSET MAP · FULLSCREEN</span>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// ASSET MAP · FULLSCREEN</span>
                 )}
                 <button
                   onClick={() => setAssetMapExpanded(v => !v)}
@@ -10053,7 +10053,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 )}
                 <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"16px 20px",marginBottom:"16px"}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"14px",gap:"10px",flexWrap:"wrap"}}>
-                    <div style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PRICE CHART</div>
+                    <div style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PRICE CHART</div>
                     <div style={{display:"flex",gap:"4px",flexWrap:"wrap"}}>
                       {ranges.map(r => (
                         <button key={r.id} onClick={() => setDetailChartRange(r.id)} style={{padding:"5px 10px",background:detailChartRange===r.id?"rgba(0,200,255,0.2)":"rgba(255,255,255,0.04)",border:`0.5px solid ${detailChartRange===r.id?"rgba(0,200,255,0.7)":"rgba(255,255,255,0.12)"}`,borderRadius:"3px",color:detailChartRange===r.id?"#00c8ff":"rgba(224,234,255,0.6)",fontFamily:"monospace",fontSize:"10px",letterSpacing:"1px",cursor:"pointer",fontWeight:600}}>{r.label}</button>
@@ -10082,7 +10082,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:isWide?"1fr 1fr":"1fr",gap:"12px",marginBottom:"16px"}}>
                   <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"14px 18px"}}>
-                    <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// VALUATION</div>
+                    <div style={{fontSize:"10px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"12px"}}>// VALUATION</div>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",rowGap:"10px",columnGap:"16px",fontFamily:"monospace"}}>
                       <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>MARKET CAP</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.marketCap)}</div></div>
                       <div><div style={{fontSize:"9px",color:"rgba(148,163,184,0.5)",letterSpacing:"1px"}}>ENTERPRISE VAL</div><div style={{fontSize:"13px",color:"#e0eaff",fontWeight:600,marginTop:"2px"}}>{fmtMoney(f.enterpriseValue)}</div></div>
@@ -10136,7 +10136,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 </div>
                 {f.businessSummary && (
                   <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.2)",borderRadius:"6px",padding:"14px 18px",marginBottom:"16px"}}>
-                    <div style={{fontSize:"10px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// BUSINESS</div>
+                    <div style={{fontSize:"10px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600,marginBottom:"10px"}}>// BUSINESS</div>
                     <div style={{fontSize:"12px",color:"rgba(224,234,255,0.75)",fontFamily:"monospace",lineHeight:1.65}}>{f.businessSummary}</div>
                     {f.website && (
                       <div style={{marginTop:"10px"}}>
@@ -11022,13 +11022,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             <>
 
               {/* Stocks Input */}
-              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// STOCKS & ETFS{stocks.length>0?` · ${stocks.length}`:''}</span>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// STOCKS & ETFS{stocks.length>0?` · ${stocks.length}`:''}</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Stocks & ETFs</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Individual stocks, ETFs, index funds</p>
                 </div>
@@ -11286,10 +11286,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => { setStocks(prev => [...prev, { id: Date.now(), name: '', invested: 0, investedStr: '', currentValue: 0, currentValueStr: '', shares: 0, sharesStr: '', avgCost: 0, avgCostStr: '', industry: '', dateAdded: new Date().toISOString() }]); setEditingStockIdx(stocks.length); }}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Stock
                   </button>
@@ -11299,9 +11299,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Name Pie Chart */}
               {filledStocks.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY NAME</span>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY NAME</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                   </summary>
                   <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -11388,9 +11388,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Industry Pie Chart */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY INDUSTRY · CHART</span>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY INDUSTRY · CHART</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                   </summary>
                   <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -11470,13 +11470,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Portfolio by Industry */}
               {stocksByIndustry.length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY INDUSTRY · TABLE</span>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO BY INDUSTRY · TABLE</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                   </summary>
                   <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                     <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Portfolio by Industry</h2>
                     <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort</p>
                   </div>
@@ -11485,7 +11485,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <thead>
                         <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                           <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'industry') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('industry'); setCurrentSortDir('asc'); }
@@ -11494,7 +11494,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Industry {currentSortBy === 'industry' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'holdings') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('holdings'); setCurrentSortDir('asc'); }
@@ -11503,7 +11503,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Holdings {currentSortBy === 'holdings' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'value') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('value'); setCurrentSortDir('asc'); }
@@ -11512,7 +11512,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Value {currentSortBy === 'value' && (currentSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (currentSortBy === 'percent') setCurrentSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setCurrentSortBy('percent'); setCurrentSortDir('asc'); }
@@ -12148,7 +12148,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{marginTop:"12px"}}>
                     <button
                       onClick={() => { const id = Date.now(); setTrackedStocks(prev => [...prev, { id, ticker: '', shares: '', avgCost: '' }]); setEditingTrackedStockId(id); }}
-                      style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                      style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                     >
                       + Add Tracked Stock
                     </button>
@@ -12419,10 +12419,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => { setFutureResearch(prev => [...prev, { ticker: '' }]); setEditingFutureResearchIdx(futureResearch.length); }}
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors text-sm font-medium"
+                    style={{
+                      width:"100%", padding:"12px",
+                      border:`2px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"}`,
+                      borderRadius:"6px",
+                      background:"transparent",
+                      color:researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)",
+                      fontFamily:"monospace", fontSize:"12px", letterSpacing:"1px", fontWeight:600,
+                      cursor:"pointer", transition:"all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.8)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,1)":"rgba(0,200,255,0.95)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = researchMode?"rgba(245,158,11,0.4)":"rgba(148,163,184,0.4)"; e.currentTarget.style.color = researchMode?"rgba(245,158,11,0.85)":"rgba(148,163,184,0.7)"; }}
                   >
                     + Add Research Entry
                   </button>
@@ -12470,13 +12480,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 });
                 
                 return (
-                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE PORTFOLIO SUMMARY</span>
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// FUTURE PORTFOLIO SUMMARY</span>
                       <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                     </summary>
                     <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                       <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Future Portfolio Summary</h2>
                       <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • Your planned investments at a glance</p>
                     </div>
@@ -12485,7 +12495,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <thead>
                           <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                             <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'ticker') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('ticker'); setFutureSortDir('asc'); }
@@ -12494,7 +12504,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Ticker {futureSortBy === 'ticker' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'industry') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('industry'); setFutureSortDir('asc'); }
@@ -12503,7 +12513,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Industry {futureSortBy === 'industry' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'tollBooth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('tollBooth'); setFutureSortDir('asc'); }
@@ -12512,7 +12522,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Toll Booth? {futureSortBy === 'tollBooth' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'growth') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('growth'); setFutureSortDir('asc'); }
@@ -12521,7 +12531,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               Growth {futureSortBy === 'growth' && (futureSortDir === 'asc' ? '↑' : '↓')}
                             </th>
                             <th 
-                              style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'planned') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('planned'); setFutureSortDir('asc'); }
@@ -12531,7 +12541,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </th>
                             <th style={{textAlign:"right",padding:"10px 12px",fontFamily:"monospace",fontSize:"11px",color:"#e0eaff",fontWeight:600}}>Weight %</th>
                             <th 
-                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                              style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                               onClick={() => {
                                 if (futureSortBy === 'status') setFutureSortDir(d => d === 'asc' ? 'desc' : 'asc');
                                 else { setFutureSortBy('status'); setFutureSortDir('asc'); }
@@ -12586,13 +12596,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 let currentAngle = 0;
                 
                 return (
-                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO COMPANY WEIGHTING</span>
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// PORTFOLIO COMPANY WEIGHTING</span>
                       <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                     </summary>
                     <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                       <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Portfolio Company Weighting</h2>
                       <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Weight of each company in your future portfolio</p>
                     </div>
@@ -12662,7 +12672,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 
                 return (
                   <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                       <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>INDUSTRY ALLOCATION</h2>
                       <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Breakdown of your future portfolio by industry</p>
                     </div>
@@ -12713,8 +12723,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
           {investmentsSubTab === 'research' && (
             <>
               {/* Holdings Research */}
-              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// HOLDINGS RESEARCH{holdingsResearch.length>0?` · ${holdingsResearch.length}`:''}</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
@@ -12944,10 +12954,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     );
                   })}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => { setHoldingsResearch(prev => [...prev, {}]); setEditingResearchIdx(holdingsResearch.length); }}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Research Entry
                   </button>
@@ -12977,13 +12987,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 let currentAngle = 0;
                 
                 return (
-                  <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                      <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH BY INDUSTRY</span>
+                  <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                    <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                      <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// RESEARCH BY INDUSTRY</span>
                       <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                     </summary>
                     <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                    <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                    <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                       <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Research by Industry</h2>
                       <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Your research picks broken down by sector</p>
                     </div>
@@ -13033,13 +13043,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Master Research Table */}
               {holdingsResearch.filter(h => h && h.ticker).length > 0 && (
-                <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
-                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                    <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MASTER RESEARCH SUMMARY</span>
+                <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden",marginBottom:"12px"}}>
+                  <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                    <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// MASTER RESEARCH SUMMARY</span>
                     <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                   </summary>
                   <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                  <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                  <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                     <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Master Research Summary</h2>
                     <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Click column headers to sort • All your research picks at a glance</p>
                   </div>
@@ -13048,7 +13058,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       <thead>
                         <tr style={{background:"rgba(0,200,255,0.02)",borderBottom:"0.5px solid rgba(0,200,255,0.08)"}}>
                           <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'ticker') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('ticker'); setResearchSortDir('asc'); }
@@ -13057,7 +13067,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Ticker {researchSortBy === 'ticker' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'industry') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('industry'); setResearchSortDir('asc'); }
@@ -13066,7 +13076,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Industry {researchSortBy === 'industry' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"center",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'tollBooth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('tollBooth'); setResearchSortDir('asc'); }
@@ -13075,7 +13085,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Toll Booth? {researchSortBy === 'tollBooth' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'growth') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('growth'); setResearchSortDir('asc'); }
@@ -13084,7 +13094,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             Growth {researchSortBy === 'growth' && (researchSortDir === 'asc' ? '↑' : '↓')}
                           </th>
                           <th 
-                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
+                            style={{textAlign:"left",padding:"10px 12px",fontFamily:"monospace",fontSize:"9px",color:researchMode?"rgba(245,158,11,0.7)":"rgba(0,200,255,0.6)",letterSpacing:"1.5px",fontWeight:500,cursor:"pointer",userSelect:"none"}}
                             onClick={() => {
                               if (researchSortBy === 'status') setResearchSortDir(d => d === 'asc' ? 'desc' : 'asc');
                               else { setResearchSortBy('status'); setResearchSortDir('asc'); }
@@ -13318,10 +13328,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => setCompanyEconomics(prev => [...prev, {}])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Company
                   </button>
@@ -13479,10 +13489,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => setBiggestRisks(prev => [...prev, {}])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Company
                   </button>
@@ -13493,13 +13503,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
           {investmentsSubTab === 'declined' && (
             <>
-              <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                  <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES{declinedCompanies.length>0?` · ${declinedCompanies.length}`:''}</span>
+              <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                  <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES{declinedCompanies.length>0?` · ${declinedCompanies.length}`:''}</span>
                   <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                 </summary>
                 <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>Declined Companies</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.7)",fontFamily:"monospace",letterSpacing:"0.5px"}}>Track companies you've passed on and why</p>
                 </div>
@@ -13605,10 +13615,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                   ))}
                 </div>
-                <div style={{padding:"12px 16px",borderTop:"0.5px solid rgba(0,200,255,0.08)"}}>
+                <div style={{padding:"12px 16px",borderTop:`0.5px solid ${researchMode?"rgba(245,158,11,0.12)":"rgba(0,200,255,0.08)"}`}}>
                   <button
                     onClick={() => setDeclinedCompanies(prev => [...prev, { ticker: '', industry: '', reason: '' }])}
-                    style={{width:"100%",padding:"10px",background:"rgba(0,200,255,0.06)",border:"0.5px dashed rgba(0,200,255,0.3)",borderRadius:"3px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
+                    style={{width:"100%",padding:"10px",background:researchMode?"rgba(245,158,11,0.06)":"rgba(0,200,255,0.06)",border:`0.5px dashed ${researchMode?"rgba(245,158,11,0.4)":"rgba(0,200,255,0.3)"}`,borderRadius:"3px",color:researchMode?"rgba(245,158,11,0.85)":"rgba(0,200,255,0.7)",fontFamily:"monospace",fontSize:"11px",letterSpacing:"1.5px",cursor:"pointer"}}
                   >
                     + Add Company
                   </button>
@@ -13634,9 +13644,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                 return (
                   <>
-                    <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                        <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED BY INDUSTRY</span>
+                    <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                        <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED BY INDUSTRY</span>
                         <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                       </summary>
                       <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -13714,9 +13724,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </details>
 
                     {/* Breakdown Table */}
-                    <details open style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.25)",borderRadius:"6px",overflow:"hidden"}}>
-                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:"2px solid #00c8ff"}}>
-                        <span style={{fontSize:"11px",color:"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES BREAKDOWN</span>
+                    <details open style={{background:"rgba(5,12,24,0.85)",border:`0.5px solid ${researchMode?"rgba(245,158,11,0.3)":"rgba(0,200,255,0.25)"}`,borderRadius:"6px",overflow:"hidden"}}>
+                      <summary style={{padding:"12px 16px",cursor:"pointer",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between",borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
+                        <span style={{fontSize:"11px",color:researchMode?"rgba(245,158,11,0.95)":"rgba(0,200,255,0.7)",fontFamily:"monospace",letterSpacing:"2px",fontWeight:600}}>// DECLINED COMPANIES BREAKDOWN</span>
                         <span style={{fontSize:"10px",color:"rgba(148,163,184,0.5)",fontFamily:"monospace"}}>tap to collapse</span>
                       </summary>
                       <div style={{backgroundImage:researchMode?"radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)":"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
@@ -13786,7 +13796,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Equity Investment Breakdown Guide */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>EQUITY INVESTMENT BREAKDOWN GUIDE</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Key questions to ask when analyzing a stock</p>
                 </div>
@@ -13934,7 +13944,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Yourself vs Consensus & Yourself */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>SELF-ASSESSMENT QUESTIONS</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Check yourself before you wreck yourself</p>
                 </div>
@@ -13969,7 +13979,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* 10 Don'ts & 15 Do's */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>PHILIP FISHER'S RULES</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>From "Common Stocks and Uncommon Profits"</p>
                 </div>
@@ -14021,7 +14031,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Durable Competitive Advantages */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>TYPES OF DURABLE COMPETITIVE ADVANTAGES</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Buffett classifies great businesses into three categories</p>
                 </div>
@@ -14058,7 +14068,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Beer & Foam Analogy */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>THE BEER & FOAM ANALOGY</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Understanding hype vs real value in markets</p>
                 </div>
@@ -14137,7 +14147,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Book Recommendations */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>RECOMMENDED READING LIST</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Books to level up your investing game</p>
                 </div>
@@ -14296,7 +14306,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Core Ratios */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>CORE RATIOS & METRICS</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>The fundamental numbers you need to track</p>
                 </div>
@@ -14357,7 +14367,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Trend Checks */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>BREAKDOWN METRICS – TREND CHECKS</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>Track these over 10-15 years to spot red flags or strengths</p>
                 </div>
@@ -14429,7 +14439,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Income Statement Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHAT TO LOOK FOR IN THE INCOME STATEMENT</h2>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
@@ -14493,7 +14503,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* EPS Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>EPS (EARNINGS PER SHARE) ANALYSIS</h2>
                   <p style={{fontSize:"10px",color:"rgba(148,163,184,0.6)",fontFamily:"monospace",letterSpacing:"0.5px",marginTop:"4px"}}>EPS = Net Income / Shares Outstanding</p>
                 </div>
@@ -14534,7 +14544,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Balance Sheet Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHAT TO LOOK FOR IN THE BALANCE SHEET</h2>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
@@ -14608,7 +14618,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* Cash Flow Deep Dive */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>CASH FLOW STATEMENT INSIGHTS</h2>
                 </div>
                 <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:"12px"}}>
@@ -14644,7 +14654,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
               {/* When to Sell */}
               <div style={{background:"rgba(5,12,24,0.85)",border:"0.5px solid rgba(0,200,255,0.15)",borderRadius:"6px",overflow:"hidden",backgroundImage:"radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)",backgroundSize:"20px 20px"}}>
-                <div style={{padding:"10px 16px",borderBottom:"0.5px solid rgba(0,200,255,0.1)",borderLeft:"2px solid #00c8ff"}}>
+                <div style={{padding:"10px 16px",borderBottom:`0.5px solid ${researchMode?"rgba(245,158,11,0.15)":"rgba(0,200,255,0.1)"}`,borderLeft:`2px solid ${researchMode?"rgba(245,158,11,0.95)":"#00c8ff"}`}}>
                   <h2 style={{fontSize:"14px",color:"#e0eaff",fontFamily:"monospace",fontWeight:500,letterSpacing:"1.5px"}}>WHEN YOU MAY CONSIDER SELLING</h2>
                 </div>
                 <div style={{padding:"14px 16px"}}>
