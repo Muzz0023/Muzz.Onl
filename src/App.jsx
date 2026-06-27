@@ -2744,6 +2744,140 @@ const HSY_BREAKDOWN = {
     // BALANCE SHEET — historical financials
     // ════════════════════════════════════════════════════════════════════
     balanceSheet: {
+      // ═══════════════════════════════════════════════════════════
+      // CURRENT ASSETS
+      // ═══════════════════════════════════════════════════════════
+      cash: {
+        label: 'Cash & Cash Equivalents', unit: 'M USD',
+        series: [
+          { year: 2009, value: 253 },  { year: 2010, value: 884 },  { year: 2011, value: 693 },
+          { year: 2012, value: 728 },  { year: 2013, value: 1118 }, { year: 2014, value: 374 },
+          { year: 2015, value: 346 },  { year: 2016, value: 296 },  { year: 2017, value: 380 },
+          { year: 2018, value: 587 },  { year: 2019, value: 493 },  { year: 2020, value: 1143 },
+          { year: 2021, value: 329 },  { year: 2022, value: 463 },  { year: 2023, value: 401 },
+          { year: 2024, value: 730 },
+        ],
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable (net)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 599 }, { year: 2016, value: 581 }, { year: 2017, value: 588 },
+          { year: 2018, value: 594 }, { year: 2019, value: 569 }, { year: 2020, value: 615 },
+          { year: 2021, value: 671 }, { year: 2022, value: 711 }, { year: 2023, value: 824 },
+          { year: 2024, value: 800 },
+        ],
+      },
+      dso: {
+        label: 'DSO · Days Sales Outstanding', unit: 'days',
+        series: [
+          { year: 2015, value: 29.60 }, { year: 2016, value: 28.52 }, { year: 2017, value: 28.57 },
+          { year: 2018, value: 27.83 }, { year: 2019, value: 25.98 }, { year: 2020, value: 27.55 },
+          { year: 2021, value: 27.32 }, { year: 2022, value: 24.91 }, { year: 2023, value: 26.93 },
+          { year: 2024, value: 26.08 },
+        ],
+        avg10yr: 27.33,
+        note: 'Days Sales Outstanding — how quickly Hershey collects on credit sales. Compressed from ~30 days to ~26 days over the decade.',
+      },
+      inventory: {
+        label: 'Inventory', unit: 'M USD',
+        series: [
+          { year: 2014, value: 898 }, { year: 2015, value: 801 }, { year: 2016, value: 746 },
+          { year: 2017, value: 753 }, { year: 2018, value: 785 }, { year: 2019, value: 815 },
+          { year: 2020, value: 964 }, { year: 2021, value: 986 }, { year: 2022, value: 1173 },
+          { year: 2023, value: 1341 }, { year: 2024, value: 1254 },
+        ],
+      },
+      inventoryTurnover: {
+        label: 'Inventory Turnover', unit: 'x',
+        series: [
+          { year: 2014, value: 4.55 }, { year: 2015, value: 5.00 }, { year: 2016, value: 5.73 },
+          { year: 2017, value: 5.39 }, { year: 2018, value: 5.37 }, { year: 2019, value: 5.35 },
+          { year: 2020, value: 4.61 }, { year: 2021, value: 5.00 }, { year: 2022, value: 5.05 },
+          { year: 2023, value: 4.60 }, { year: 2024, value: 4.71 },
+        ],
+        avg11yr: 5.03,
+        note: '11-year average: 5.03 times per year. Steady turn rate for a shelf-stable confection business.',
+      },
+      dio: {
+        label: 'DIO · Days Inventory Outstanding', unit: 'days',
+        series: [
+          { year: 2014, value: 80.20 }, { year: 2015, value: 73.02 }, { year: 2016, value: 63.73 },
+          { year: 2017, value: 67.68 }, { year: 2018, value: 67.95 }, { year: 2019, value: 68.19 },
+          { year: 2020, value: 79.11 }, { year: 2021, value: 73.07 }, { year: 2022, value: 72.32 },
+          { year: 2023, value: 79.37 }, { year: 2024, value: 77.57 },
+        ],
+        avg11yr: 72.93,
+        note: '11-year average: 72.93 days. Inventory sits longer post-2020 as Hershey scaled inventory to meet supply chain volatility.',
+      },
+      prepaidAndOther: {
+        label: 'Prepaid Expenses and Other', unit: 'M USD',
+        series: [
+          { year: 2015, value: 152 }, { year: 2016, value: 193 }, { year: 2017, value: 281 },
+          { year: 2018, value: 272 }, { year: 2019, value: 240 }, { year: 2020, value: 254 },
+          { year: 2021, value: 257 }, { year: 2022, value: 272 }, { year: 2023, value: 346 },
+          { year: 2024, value: 974 },
+        ],
+        note: '2024 spike to $974M is unusual — worth investigating in 10-K footnotes.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets', unit: 'M USD',
+        series: [
+          { year: 2015, value: 1849 }, { year: 2016, value: 1817 }, { year: 2017, value: 2002 },
+          { year: 2018, value: 2239 }, { year: 2019, value: 2117 }, { year: 2020, value: 2978 },
+          { year: 2021, value: 2246 }, { year: 2022, value: 2620 }, { year: 2023, value: 2912 },
+          { year: 2024, value: 3759 },
+        ],
+      },
+
+      // ═══════════════════════════════════════════════════════════
+      // NON-CURRENT ASSETS
+      // ═══════════════════════════════════════════════════════════
+      ppeNet: {
+        label: 'Property, Plant & Equipment (net)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 2240 }, { year: 2016, value: 2177 }, { year: 2017, value: 2107 },
+          { year: 2018, value: 2130 }, { year: 2019, value: 2153 }, { year: 2020, value: 2285 },
+          { year: 2021, value: 2586 }, { year: 2022, value: 2770 }, { year: 2023, value: 3310 },
+          { year: 2024, value: 3459 },
+        ],
+      },
+      goodwill: {
+        label: 'Goodwill', unit: 'M USD',
+        series: [
+          { year: 2015, value: 684 },  { year: 2016, value: 812 },  { year: 2017, value: 821 },
+          { year: 2018, value: 1801 }, { year: 2019, value: 1986 }, { year: 2020, value: 1988 },
+          { year: 2021, value: 2633 }, { year: 2022, value: 2607 }, { year: 2023, value: 2696 },
+          { year: 2024, value: 2706 },
+        ],
+        note: 'Goodwill has compounded 4x — driven by acquisitions (Amplify 2017, Dot’s 2021, Sour Strips 2024, LesserEvil 2025).',
+      },
+      otherIntangibles: {
+        label: 'Other Intangibles', unit: 'M USD',
+        series: [
+          { year: 2015, value: 379 },  { year: 2016, value: 493 },  { year: 2017, value: 369 },
+          { year: 2018, value: 1278 }, { year: 2019, value: 1341 }, { year: 2020, value: 1295 },
+          { year: 2021, value: 2038 }, { year: 2022, value: 1966 }, { year: 2023, value: 1879 },
+          { year: 2024, value: 1874 },
+        ],
+      },
+      otherNonCurrentAssets: {
+        label: 'Other Non-Current Assets', unit: 'M USD',
+        series: [
+          { year: 2015, value: 155 },  { year: 2016, value: 168 },  { year: 2017, value: 252 },
+          { year: 2018, value: 253 },  { year: 2019, value: 512 },  { year: 2020, value: 556 },
+          { year: 2021, value: 868 },  { year: 2022, value: 945 },  { year: 2023, value: 1061 },
+          { year: 2024, value: 1112 },
+        ],
+      },
+      deferredTaxesCurrent: {
+        label: 'Deferred Income Taxes (current)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 36 }, { year: 2016, value: 57 }, { year: 2017, value: 3 },
+          { year: 2018, value: 1 },  { year: 2019, value: 31 }, { year: 2020, value: 29 },
+          { year: 2021, value: 41 }, { year: 2022, value: 40 }, { year: 2023, value: 44 },
+          { year: 2024, value: 37 },
+        ],
+      },
       totalAssets: {
         label: 'Total Assets', unit: 'M USD',
         series: [
@@ -2753,6 +2887,140 @@ const HSY_BREAKDOWN = {
           { year: 2018, value: 7703 }, { year: 2019, value: 8140 }, { year: 2020, value: 9131 },
           { year: 2021, value: 10412 }, { year: 2022, value: 10948 }, { year: 2023, value: 11902 },
           { year: 2024, value: 12946 },
+        ],
+      },
+
+      // ═══════════════════════════════════════════════════════════
+      // CURRENT LIABILITIES
+      // ═══════════════════════════════════════════════════════════
+      accountsPayable: {
+        label: 'Accounts Payable', unit: 'M USD',
+        series: [
+          { year: 2015, value: 474 },  { year: 2016, value: 523 },  { year: 2017, value: 523 },
+          { year: 2018, value: 502 },  { year: 2019, value: 551 },  { year: 2020, value: 580 },
+          { year: 2021, value: 692 },  { year: 2022, value: 971 },  { year: 2023, value: 1086 },
+          { year: 2024, value: 1159 },
+        ],
+      },
+      dpo: {
+        label: 'DPO · Days Payables Outstanding', unit: 'days',
+        series: [
+          { year: 2015, value: 43.23 }, { year: 2016, value: 44.66 }, { year: 2017, value: 47.04 },
+          { year: 2018, value: 43.49 }, { year: 2019, value: 46.07 }, { year: 2020, value: 47.59 },
+          { year: 2021, value: 51.33 }, { year: 2022, value: 59.84 }, { year: 2023, value: 64.28 },
+          { year: 2024, value: 71.70 },
+        ],
+        avg10yr: 51.92,
+        note: 'Hershey has stretched payment terms from ~43 days to ~72 days, freeing working capital.',
+      },
+      accruedLiabilities: {
+        label: 'Accrued Liabilities', unit: 'M USD',
+        series: [
+          { year: 2015, value: 857 }, { year: 2016, value: 751 }, { year: 2017, value: 676 },
+          { year: 2018, value: 679 }, { year: 2019, value: 702 }, { year: 2020, value: 782 },
+          { year: 2021, value: 856 }, { year: 2022, value: 833 }, { year: 2023, value: 868 },
+          { year: 2024, value: 807 },
+        ],
+      },
+      accruedIncomeTaxes: {
+        label: 'Accrued Income Taxes', unit: 'M USD',
+        series: [
+          { year: 2015, value: 23 }, { year: 2016, value: 3 },  { year: 2017, value: 18 },
+          { year: 2018, value: 34 }, { year: 2019, value: 20 }, { year: 2020, value: 17 },
+          { year: 2021, value: 3 },  { year: 2022, value: 7 },  { year: 2023, value: 29 },
+          { year: 2024, value: 51 },
+        ],
+      },
+      shortTermDebt: {
+        label: 'Short-Term Debt', unit: 'M USD',
+        series: [
+          { year: 2015, value: 364 },  { year: 2016, value: 632 },  { year: 2017, value: 559 },
+          { year: 2018, value: 1198 }, { year: 2019, value: 32 },   { year: 2020, value: 74 },
+          { year: 2021, value: 939 },  { year: 2022, value: 694 },  { year: 2023, value: 720 },
+          { year: 2024, value: 1307 },
+        ],
+      },
+      currentLongTermDebt: {
+        label: 'Current Portion of Long-Term Debt', unit: 'M USD',
+        series: [
+          { year: 2015, value: 500 }, { year: 2016, value: 0 },   { year: 2017, value: 300 },
+          { year: 2018, value: 5 },   { year: 2019, value: 703 }, { year: 2020, value: 439 },
+          { year: 2021, value: 3 },   { year: 2022, value: 754 }, { year: 2023, value: 305 },
+          { year: 2024, value: 605 },
+        ],
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities', unit: 'M USD',
+        series: [
+          { year: 2015, value: 2218 }, { year: 2016, value: 1909 }, { year: 2017, value: 2077 },
+          { year: 2018, value: 2419 }, { year: 2019, value: 2009 }, { year: 2020, value: 1892 },
+          { year: 2021, value: 2493 }, { year: 2022, value: 3257 }, { year: 2023, value: 3008 },
+          { year: 2024, value: 3930 },
+        ],
+      },
+      currentRatio: {
+        label: 'Current Ratio', unit: 'x',
+        series: [
+          { year: 2009, value: 1.52 }, { year: 2010, value: 1.54 }, { year: 2011, value: 1.74 },
+          { year: 2012, value: 1.43 }, { year: 2013, value: 1.76 }, { year: 2014, value: 1.16 },
+          { year: 2015, value: 0.95 }, { year: 2016, value: 0.95 }, { year: 2017, value: 0.96 },
+          { year: 2018, value: 0.92 }, { year: 2019, value: 1.08 }, { year: 2020, value: 1.59 },
+          { year: 2021, value: 0.90 }, { year: 2022, value: 0.80 }, { year: 2023, value: 0.96 },
+          { year: 2024, value: 0.95 },
+        ],
+        avg2015_2024: 1.11,
+      },
+
+      // ═══════════════════════════════════════════════════════════
+      // NON-CURRENT LIABILITIES
+      // ═══════════════════════════════════════════════════════════
+      longTermDebt: {
+        label: 'Long-Term Debt', unit: 'M USD',
+        series: [
+          { year: 2015, value: 1557 }, { year: 2016, value: 2438 }, { year: 2017, value: 2061 },
+          { year: 2018, value: 3254 }, { year: 2019, value: 3531 }, { year: 2020, value: 4090 },
+          { year: 2021, value: 4087 }, { year: 2022, value: 3344 }, { year: 2023, value: 3789 },
+          { year: 2024, value: 3190 },
+        ],
+      },
+      ltDebtToEquity: {
+        label: 'Long-Term Debt / Equity', unit: 'x',
+        series: [
+          { year: 2015, value: 1.48 }, { year: 2016, value: 2.83 }, { year: 2017, value: 2.21 },
+          { year: 2018, value: 2.31 }, { year: 2019, value: 2.02 }, { year: 2020, value: 1.82 },
+          { year: 2021, value: 1.48 }, { year: 2022, value: 1.01 }, { year: 2023, value: 0.92 },
+          { year: 2024, value: 0.67 },
+        ],
+        avg2015_2024: 1.88,
+        note: 'Average 1.88x. Dropped from 2.83x peak (2016) to 0.67x (2024). Lower = better.',
+      },
+      ltDebtToNetIncome: {
+        label: 'Long-Term Debt / Net Income', unit: 'x',
+        series: [
+          { year: 2015, value: 4 }, { year: 2016, value: 4 }, { year: 2017, value: 4 },
+          { year: 2018, value: 3 }, { year: 2019, value: 4 }, { year: 2020, value: 4 },
+          { year: 2021, value: 3 }, { year: 2022, value: 2.5 }, { year: 2023, value: 2.5 },
+          { year: 2024, value: 2 },
+        ],
+        avg2015_2024: 3.3,
+        note: 'Average 3.3 years. LT Debt could be paid off with ~2 years of net income at current run-rate.',
+      },
+      otherLongTermLiabilities: {
+        label: 'Other Long-Term Liabilities', unit: 'M USD',
+        series: [
+          { year: 2015, value: 469 }, { year: 2016, value: 400 }, { year: 2017, value: 439 },
+          { year: 2018, value: 446 }, { year: 2019, value: 656 }, { year: 2020, value: 683 },
+          { year: 2021, value: 787 }, { year: 2022, value: 720 }, { year: 2023, value: 661 },
+          { year: 2024, value: 688 },
+        ],
+      },
+      deferredTaxesNonCurrent: {
+        label: 'Deferred Income Taxes (non-current)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 53 },  { year: 2016, value: 40 },  { year: 2017, value: 46 },
+          { year: 2018, value: 177 }, { year: 2019, value: 200 }, { year: 2020, value: 229 },
+          { year: 2021, value: 288 }, { year: 2022, value: 328 }, { year: 2023, value: 346 },
+          { year: 2024, value: 424 },
         ],
       },
       totalDebt: {
@@ -2766,15 +3034,70 @@ const HSY_BREAKDOWN = {
           { year: 2024, value: 8232 },
         ],
       },
+      debtToEquity: {
+        label: 'Total Debt / Equity', unit: 'x',
+        series: [
+          { year: 2015, value: 4.10 }, { year: 2016, value: 5.67 }, { year: 2017, value: 4.96 },
+          { year: 2018, value: 4.47 }, { year: 2019, value: 3.67 }, { year: 2020, value: 3.08 },
+          { year: 2021, value: 2.78 }, { year: 2022, value: 2.32 }, { year: 2023, value: 1.95 },
+          { year: 2024, value: 1.75 },
+        ],
+        avg2015_2024: 3.48,
+        note: 'Improving steadily — from 5.67x peak in 2016 to 1.75x in 2024. Equity has compounded faster than debt.',
+      },
+
+      // ═══════════════════════════════════════════════════════════
+      // EQUITY
+      // ═══════════════════════════════════════════════════════════
+      commonStock: {
+        label: 'Common Stock', unit: 'M USD',
+        series: [
+          { year: 2015, value: 299 }, { year: 2016, value: 299 }, { year: 2017, value: 299 },
+          { year: 2018, value: 299 }, { year: 2019, value: 161 }, { year: 2020, value: 161 },
+          { year: 2021, value: 161 }, { year: 2022, value: 163 }, { year: 2023, value: 167 },
+          { year: 2024, value: 167 },
+        ],
+      },
+      classBCommonStock: {
+        label: 'Class B Common Stock', unit: 'M USD',
+        series: [
+          { year: 2015, value: 61 }, { year: 2016, value: 61 }, { year: 2017, value: 61 },
+          { year: 2018, value: 61 }, { year: 2019, value: 61 }, { year: 2020, value: 61 },
+          { year: 2021, value: 61 }, { year: 2022, value: 58 }, { year: 2023, value: 55 },
+          { year: 2024, value: 55 },
+        ],
+      },
+      additionalPaidInCapital: {
+        label: 'Additional Paid-In Capital', unit: 'M USD',
+        series: [
+          { year: 2015, value: 784 },  { year: 2016, value: 870 },  { year: 2017, value: 925 },
+          { year: 2018, value: 982 },  { year: 2019, value: 1142 }, { year: 2020, value: 1191 },
+          { year: 2021, value: 1260 }, { year: 2022, value: 1297 }, { year: 2023, value: 1346 },
+          { year: 2024, value: 1377 },
+        ],
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings', unit: 'M USD',
+        series: [
+          { year: 2009, value: 4148 }, { year: 2010, value: 4374 }, { year: 2011, value: 4707 },
+          { year: 2012, value: 5027 }, { year: 2013, value: 5454 }, { year: 2014, value: 5860 },
+          { year: 2015, value: 5897 }, { year: 2016, value: 6115 }, { year: 2017, value: 6371 },
+          { year: 2018, value: 7032 }, { year: 2019, value: 1290 }, { year: 2020, value: 1928 },
+          { year: 2021, value: 2719 }, { year: 2022, value: 3589 }, { year: 2023, value: 4562 },
+          { year: 2024, value: 5698 },
+        ],
+        note: '2019 reset from $7.0B to $1.3B reflects accounting reclassification (likely related to adoption of new accounting standards). Compounding strongly post-reset.',
+      },
       shareholderEquity: {
         label: 'Shareholder Equity', unit: 'M USD',
         series: [
-          { year: 2009, value: 760 },  { year: 2010, value: 937 },  { year: 2011, value: 880 },
-          { year: 2012, value: 1048 }, { year: 2013, value: 1616 }, { year: 2014, value: 1519 },
-          { year: 2015, value: 1047 }, { year: 2016, value: 827 },  { year: 2017, value: 931 },
-          { year: 2018, value: 1407 }, { year: 2019, value: 1744 }, { year: 2020, value: 2237 },
-          { year: 2021, value: 2757 }, { year: 2022, value: 3299 }, { year: 2023, value: 4009 },
-          { year: 2024, value: 4714 },
+          { year: 2004, value: 1137 }, { year: 2005, value: 1016 }, { year: 2006, value: 683 },
+          { year: 2007, value: 592 },  { year: 2008, value: 318 },  { year: 2009, value: 760 },
+          { year: 2010, value: 937 },  { year: 2011, value: 880 },  { year: 2012, value: 1048 },
+          { year: 2013, value: 1616 }, { year: 2014, value: 1519 }, { year: 2015, value: 1047 },
+          { year: 2016, value: 827 },  { year: 2017, value: 931 },  { year: 2018, value: 1407 },
+          { year: 2019, value: 1744 }, { year: 2020, value: 2237 }, { year: 2021, value: 2757 },
+          { year: 2022, value: 3299 }, { year: 2023, value: 4009 }, { year: 2024, value: 4714 },
         ],
       },
       bookValuePerShare: {
@@ -2789,30 +3112,25 @@ const HSY_BREAKDOWN = {
         ],
         cagr2015_2024: 24.4,
       },
-      currentRatio: {
-        label: 'Current Ratio', unit: 'x',
+
+      // ═══════════════════════════════════════════════════════════
+      // WORKING CAPITAL EFFICIENCY
+      // ═══════════════════════════════════════════════════════════
+      ccc: {
+        label: 'Cash Conversion Cycle', unit: 'days',
         series: [
-          { year: 2009, value: 1.52 }, { year: 2010, value: 1.54 }, { year: 2011, value: 1.74 },
-          { year: 2012, value: 1.43 }, { year: 2013, value: 1.76 }, { year: 2014, value: 1.16 },
-          { year: 2015, value: 0.95 }, { year: 2016, value: 0.95 }, { year: 2017, value: 0.96 },
-          { year: 2018, value: 0.92 }, { year: 2019, value: 1.08 }, { year: 2020, value: 1.59 },
-          { year: 2021, value: 0.90 }, { year: 2022, value: 0.80 }, { year: 2023, value: 0.96 },
-          { year: 2024, value: 0.95 },
+          { year: 2015, value: 59.39 }, { year: 2016, value: 47.59 }, { year: 2017, value: 49.21 },
+          { year: 2018, value: 52.30 }, { year: 2019, value: 48.10 }, { year: 2020, value: 59.07 },
+          { year: 2021, value: 49.06 }, { year: 2022, value: 37.40 }, { year: 2023, value: 42.01 },
+          { year: 2024, value: 31.95 },
         ],
-        avg2015_2024: 1.11,
+        avg10yr: 47.61,
+        note: 'Hershey has compressed its cash conversion cycle from 59 to 32 days over the past decade — collecting faster, paying suppliers later, holding less inventory.',
       },
-      debtToEquity: {
-        label: 'Total Debt / Equity', unit: 'x',
-        series: [
-          { year: 2015, value: 4.10 }, { year: 2016, value: 5.67 }, { year: 2017, value: 4.96 },
-          { year: 2018, value: 4.47 }, { year: 2019, value: 3.67 }, { year: 2020, value: 3.08 },
-          { year: 2021, value: 2.78 }, { year: 2022, value: 2.32 }, { year: 2023, value: 1.95 },
-          { year: 2024, value: 1.75 },
-        ],
-        avg2015_2024: 3.48,
-        note: 'Improving steadily — from 5.67x peak in 2016 to 1.75x in 2024. Equity has compounded faster than debt.',
-      },
-      // Returns — multi-line chart of ROE / ROIC / ROA
+
+      // ═══════════════════════════════════════════════════════════
+      // RETURNS
+      // ═══════════════════════════════════════════════════════════
       returns: {
         roe: [
           { year: 2009, value: 57.39 }, { year: 2010, value: 54.38 }, { year: 2011, value: 71.44 },
@@ -2838,31 +3156,23 @@ const HSY_BREAKDOWN = {
         ],
         averages: { roe: 61.03, roic: 18.37, roa: 14.12 },
       },
-      ccc: {
-        label: 'Cash Conversion Cycle', unit: 'days',
-        series: [
-          { year: 2015, value: 59.39 }, { year: 2016, value: 47.59 }, { year: 2017, value: 49.21 },
-          { year: 2018, value: 52.30 }, { year: 2019, value: 48.10 }, { year: 2020, value: 59.07 },
-          { year: 2021, value: 49.06 }, { year: 2022, value: 37.40 }, { year: 2023, value: 42.01 },
-          { year: 2024, value: 31.95 },
-        ],
-        avg10yr: 47.61,
-        note: 'Hershey has compressed its cash conversion cycle from 59 to 32 days over the past decade — collecting faster, paying suppliers later, holding less inventory.',
-      },
-      // Buffett's $1 retained earnings test
+
+      // ═══════════════════════════════════════════════════════════
+      // QUALITY INDICATORS (Buffett tests)
+      // ═══════════════════════════════════════════════════════════
       retainedEarningsTest: {
-        period: '2009 \u2013 2024',
+        period: '2009 – 2024',
         retainedEarnings2009: 4148,
         retainedEarnings2024: 5698,
-        retainedEarningsIncrease: 1.55, // billions
+        retainedEarningsIncrease: 1.55,
         marketCap2009: 9.99,
         marketCap2024: 34.75,
         marketCapIncrease: 24.76,
         multiplier: 16,
-        verdict: 'For every $1 of retained earnings, Hershey created nearly $16 in market value from 2009 to 2024. Buffett\u2019s preferred test for compounders — HSY blows through it.',
+        verdict: 'For every $1 of retained earnings, Hershey created nearly $16 in market value from 2009 to 2024. Buffett’s preferred test for compounders — HSY blows through it.',
       },
       tangibleEquity: {
-        note: 'Tangible equity (Equity \u2013 Goodwill \u2013 Intangibles) is near-zero or negative for most years. Hershey carries massive goodwill and intangibles from acquisitions, while paying out most profit as dividends + buybacks.',
+        note: 'Tangible equity (Equity – Goodwill – Intangibles) is near-zero or negative for most years. Hershey carries massive goodwill and intangibles from acquisitions, while paying out most profit as dividends + buybacks.',
         rows: [
           { year: 2024, equity: 4714, goodwill: 2706, intangibles: 1874, tangible: 134 },
           { year: 2023, equity: 4009, goodwill: 2696, intangibles: 1879, tangible: -566 },
@@ -2876,7 +3186,7 @@ const HSY_BREAKDOWN = {
           { year: 2015, equity: 1047, goodwill: 684,  intangibles: 379,  tangible: -16 },
         ],
         rote2024: 1653,
-        interpretation: 'Hershey earns ~$2.2B on just $134M of tangible equity \u2014 a 1,653% return on tangible equity. Brand companies are Buffett\u2019s favourites for this exact reason: enormous profits on minimal physical capital. The Reese\u2019s and Hershey\u2019s brand, shelf dominance, and distribution relationships don\u2019t appear on the balance sheet, but they\u2019re where the real value lives.',
+        interpretation: 'Hershey earns ~$2.2B on just $134M of tangible equity — a 1,653% return on tangible equity. Brand companies are Buffett’s favourites for this exact reason: enormous profits on minimal physical capital. The Reese’s and Hershey’s brand, shelf dominance, and distribution relationships don’t appear on the balance sheet, but they’re where the real value lives.',
       },
     },
 
@@ -3969,6 +4279,7 @@ function MuzzApp() {
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
   const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
   const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('overview'); // active tab on Coverage company breakdown page
+  const [coverageBreakdownView, setCoverageBreakdownView] = useState('table');   // 'table' | 'chart' — preferred view for time-series data
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
   const [investmentMapGraph, setInvestmentMapGraph] = useState({
@@ -13333,31 +13644,62 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       { id: 'thesis',    label: 'THESIS',    enabled: !!bd.thesis },
                     ];
                     const activeTab = coverageBreakdownTab;
+                    // Tabs that contain time-series data (where the chart/table toggle is useful)
+                    const dataHeavyTabs = ['numbers', 'segments', 'income', 'balance', 'cashflow'];
+                    const showViewToggle = dataHeavyTabs.includes(activeTab);
                     // Tabs strip
                     const tabsStrip = (
-                      <div style={{display:'flex',gap:'4px',flexWrap:'wrap',borderBottom:`0.5px solid ${amberGlow}`,paddingBottom:'10px'}}>
-                        {TABS.map(t => {
-                          const isActive = activeTab === t.id;
-                          return (
-                            <button
-                              key={t.id}
-                              onClick={() => t.enabled && setCoverageBreakdownTab(t.id)}
-                              disabled={!t.enabled}
-                              style={{
-                                padding:'7px 14px',
-                                background: isActive ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.04)',
-                                border: `0.5px solid ${isActive ? amber : 'rgba(255,255,255,0.12)'}`,
-                                borderRadius:'3px',
-                                color: !t.enabled ? 'rgba(148,163,184,0.3)' : (isActive ? amber : 'rgba(224,234,255,0.7)'),
-                                fontFamily:'monospace', fontSize:'10px', letterSpacing:'1.5px', fontWeight:600,
-                                cursor: t.enabled ? 'pointer' : 'not-allowed',
-                                whiteSpace:'nowrap',
-                              }}>
-                              {t.label}
-                              {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>·</span>}
-                            </button>
-                          );
-                        })}
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px',borderBottom:`0.5px solid ${amberGlow}`,paddingBottom:'10px',flexWrap:'wrap'}}>
+                        <div style={{display:'flex',gap:'4px',flexWrap:'wrap',flex:1,minWidth:0}}>
+                          {TABS.map(t => {
+                            const isActive = activeTab === t.id;
+                            return (
+                              <button
+                                key={t.id}
+                                onClick={() => t.enabled && setCoverageBreakdownTab(t.id)}
+                                disabled={!t.enabled}
+                                style={{
+                                  padding:'7px 14px',
+                                  background: isActive ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.04)',
+                                  border: `0.5px solid ${isActive ? amber : 'rgba(255,255,255,0.12)'}`,
+                                  borderRadius:'3px',
+                                  color: !t.enabled ? 'rgba(148,163,184,0.3)' : (isActive ? amber : 'rgba(224,234,255,0.7)'),
+                                  fontFamily:'monospace', fontSize:'10px', letterSpacing:'1.5px', fontWeight:600,
+                                  cursor: t.enabled ? 'pointer' : 'not-allowed',
+                                  whiteSpace:'nowrap',
+                                }}>
+                                {t.label}
+                                {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>\u00b7</span>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {showViewToggle && (
+                          <div style={{display:'flex',gap:'2px',padding:'2px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',flexShrink:0}}>
+                            {[
+                              { id: 'table', label: 'TABLE' },
+                              { id: 'chart', label: 'CHART' },
+                            ].map(v => {
+                              const isActive = coverageBreakdownView === v.id;
+                              return (
+                                <button
+                                  key={v.id}
+                                  onClick={() => setCoverageBreakdownView(v.id)}
+                                  style={{
+                                    padding:'5px 10px',
+                                    background: isActive ? 'rgba(245,158,11,0.18)' : 'transparent',
+                                    border: `0.5px solid ${isActive ? amber : 'transparent'}`,
+                                    borderRadius:'2px',
+                                    color: isActive ? amber : 'rgba(148,163,184,0.6)',
+                                    fontFamily:'monospace', fontSize:'9px', letterSpacing:'1.5px', fontWeight:700,
+                                    cursor:'pointer',
+                                  }}>
+                                  {v.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     );
 
@@ -13381,6 +13723,105 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       if (unit === 'days')           return v.toFixed(1) + 'd';
                       if (unit === 'USD')            return '$' + Math.round(v).toLocaleString();
                       return v.toLocaleString();
+                    };
+
+                    // Shared table — renders a scannable table given { label, unit, series } with peak/trough flags
+                    const TimeSeriesTable = ({ data }) => {
+                      if (!data || !data.series || data.series.length === 0) return null;
+                      const series = data.series;
+                      const maxVal = Math.max(...series.map(d => d.value));
+                      const minVal = Math.min(...series.map(d => d.value));
+                      const peakYear = series.find(d => d.value === maxVal)?.year;
+                      const troughYear = series.find(d => d.value === minVal)?.year;
+                      const latest = series[series.length - 1];
+                      const first  = series[0];
+                      const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
+                      // Display newest → oldest for scanning
+                      const rowsDesc = [...series].reverse();
+                      return (
+                        <div style={{
+                          background:'rgba(0,0,0,0.4)',
+                          border:`0.5px solid ${amberGlow}`,
+                          borderLeft:`2px solid ${amber}`,
+                          borderRadius:'4px',
+                          padding:'14px',
+                          marginBottom:'12px',
+                        }}>
+                          {/* Header */}
+                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
+                            <div>
+                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
+                              <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} \u2013 {latest.year} \u00b7 {series.length} years</div>
+                            </div>
+                            <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
+                              <div style={{textAlign:'right'}}>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>LATEST</div>
+                                <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{fmtVal(latest.value, data.unit)}</div>
+                              </div>
+                              <div style={{textAlign:'right'}}>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
+                                <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Table */}
+                          <div style={{overflowX:'auto'}}>
+                            <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                              <thead>
+                                <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                  <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                  <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>VALUE</th>
+                                  <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>\u0394 YoY</th>
+                                  <th style={{textAlign:'center',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',width:'40px'}}>FLAG</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {rowsDesc.map((d, i) => {
+                                  // Find prior year value (descending list, so prior = next index)
+                                  const prior = rowsDesc[i + 1];
+                                  const yoy = prior && prior.value !== 0 ? ((d.value - prior.value) / prior.value) * 100 : null;
+                                  const isPeak = d.year === peakYear;
+                                  const isTrough = d.year === troughYear;
+                                  const isLatest = d.year === latest.year;
+                                  let flag = null;
+                                  let flagColor = null;
+                                  if (isPeak)         { flag = '\u2191 PEAK';   flagColor = 'rgba(34,197,94,0.95)'; }
+                                  else if (isTrough)  { flag = '\u2193 TROUGH'; flagColor = 'rgba(239,68,68,0.95)'; }
+                                  else if (isLatest)  { flag = '\u25cf';        flagColor = amber; }
+                                  const rowBg = isPeak ? 'rgba(34,197,94,0.05)' : (isTrough ? 'rgba(239,68,68,0.04)' : 'transparent');
+                                  return (
+                                    <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background:rowBg}}>
+                                      <td style={{padding:'4px 8px',color: isLatest ? '#e0eaff' : 'rgba(224,234,255,0.7)',fontWeight: isLatest ? 700 : 500}}>{d.year}</td>
+                                      <td style={{padding:'4px 8px',textAlign:'right',color: isLatest ? '#e0eaff' : 'rgba(224,234,255,0.85)',fontWeight: isLatest ? 700 : 500}}>{fmtVal(d.value, data.unit)}</td>
+                                      <td style={{padding:'4px 8px',textAlign:'right',fontFamily:'monospace',fontSize:'9px',color: yoy === null ? 'rgba(148,163,184,0.4)' : (yoy >= 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.75)')}}>
+                                        {yoy === null ? '\u2014' : (yoy >= 0 ? '+' : '') + yoy.toFixed(1) + '%'}
+                                      </td>
+                                      <td style={{padding:'4px 8px',textAlign:'center',color: flagColor || 'transparent',fontSize:'8px',fontWeight:700,letterSpacing:'0.5px'}}>{flag || ''}</td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                          {/* Footer */}
+                          <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
+                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                              <span style={{color:'rgba(34,197,94,0.95)',fontSize:'10px',fontFamily:'monospace',fontWeight:700}}>\u2191</span>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} \u00b7 {fmtVal(maxVal, data.unit)}</span>
+                            </div>
+                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                              <span style={{color:'rgba(239,68,68,0.95)',fontSize:'10px',fontFamily:'monospace',fontWeight:700}}>\u2193</span>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} \u00b7 {fmtVal(minVal, data.unit)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    };
+
+                    // Smart wrapper — switches between chart and table based on global view mode
+                    const TimeSeries = ({ data }) => {
+                      if (coverageBreakdownView === 'chart') return <TimeSeries data={data} />;
+                      return <TimeSeriesTable data={data} />;
                     };
 
                     // Shared bar chart — renders an SVG bar chart given { label, unit, series }
@@ -14428,10 +14869,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// LONG-TERM HISTORY</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Multi-year time-series across market cap, headcount, and productivity per employee.</div>
 
-                          {marketCapHistory && <TimeSeriesChart data={marketCapHistory} />}
-                          {employees && <TimeSeriesChart data={employees} />}
-                          {revenuePerEmployee && <TimeSeriesChart data={revenuePerEmployee} />}
-                          {netIncomePerEmployee && <TimeSeriesChart data={netIncomePerEmployee} />}
+                          {marketCapHistory && <TimeSeries data={marketCapHistory} />}
+                          {employees && <TimeSeries data={employees} />}
+                          {revenuePerEmployee && <TimeSeries data={revenuePerEmployee} />}
+                          {netIncomePerEmployee && <TimeSeries data={netIncomePerEmployee} />}
 
                           {/* CEO PERFORMANCE */}
                           {ceoPerformance && (
@@ -14508,15 +14949,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, cost structure, operating leverage, margins, taxes, and dividends.</div>
 
                           {/* REVENUE & COSTS */}
-                          {IS.netSales       && <TimeSeriesChart data={IS.netSales} />}
-                          {IS.costOfSales    && <TimeSeriesChart data={IS.costOfSales} />}
-                          {IS.grossProfit    && <TimeSeriesChart data={IS.grossProfit} />}
+                          {IS.netSales       && <TimeSeries data={IS.netSales} />}
+                          {IS.costOfSales    && <TimeSeries data={IS.costOfSales} />}
+                          {IS.grossProfit    && <TimeSeries data={IS.grossProfit} />}
 
                           {/* OPERATING EXPENSES */}
-                          {IS.smaExpense     && <TimeSeriesChart data={IS.smaExpense} />}
+                          {IS.smaExpense     && <TimeSeries data={IS.smaExpense} />}
                           {IS.smaToGrossProfit && (
                             <>
-                              <TimeSeriesChart data={IS.smaToGrossProfit} />
+                              <TimeSeries data={IS.smaToGrossProfit} />
                               {IS.smaToGrossProfit.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Operating Leverage —</span> {IS.smaToGrossProfit.note}
@@ -14526,7 +14967,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
                           {IS.businessRealignment && (
                             <>
-                              <TimeSeriesChart data={IS.businessRealignment} />
+                              <TimeSeries data={IS.businessRealignment} />
                               {IS.businessRealignment.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.businessRealignment.note}
@@ -14536,14 +14977,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* OPERATING PROFIT */}
-                          {IS.operatingProfit  && <TimeSeriesChart data={IS.operatingProfit} />}
-                          {IS.operatingMargin  && <TimeSeriesChart data={IS.operatingMargin} />}
+                          {IS.operatingProfit  && <TimeSeries data={IS.operatingProfit} />}
+                          {IS.operatingMargin  && <TimeSeries data={IS.operatingMargin} />}
 
                           {/* NON-OPERATING */}
-                          {IS.interestExpense  && <TimeSeriesChart data={IS.interestExpense} />}
+                          {IS.interestExpense  && <TimeSeries data={IS.interestExpense} />}
                           {IS.otherIncomeExpense && (
                             <>
-                              <TimeSeriesChart data={IS.otherIncomeExpense} />
+                              <TimeSeries data={IS.otherIncomeExpense} />
                               {IS.otherIncomeExpense.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.otherIncomeExpense.note}
@@ -14553,10 +14994,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* TAX */}
-                          {IS.provisionForTaxes && <TimeSeriesChart data={IS.provisionForTaxes} />}
+                          {IS.provisionForTaxes && <TimeSeries data={IS.provisionForTaxes} />}
                           {IS.taxRate && (
                             <>
-                              <TimeSeriesChart data={IS.taxRate} />
+                              <TimeSeries data={IS.taxRate} />
                               {IS.taxRate.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.taxRate.note}
@@ -14568,7 +15009,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* NOPAT */}
                           {IS.nopat && (
                             <>
-                              <TimeSeriesChart data={IS.nopat} />
+                              <TimeSeries data={IS.nopat} />
                               {IS.nopat.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Definition —</span> {IS.nopat.note}
@@ -14578,9 +15019,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* BOTTOM LINE */}
-                          {IS.netIncome       && <TimeSeriesChart data={IS.netIncome} />}
-                          {IS.eps             && <TimeSeriesChart data={IS.eps} />}
-                          {IS.profitMargin    && <TimeSeriesChart data={IS.profitMargin} />}
+                          {IS.netIncome       && <TimeSeries data={IS.netIncome} />}
+                          {IS.eps             && <TimeSeries data={IS.eps} />}
+                          {IS.profitMargin    && <TimeSeries data={IS.profitMargin} />}
 
                           {/* Margin trio multi-line */}
                           {IS.margins && (() => {
@@ -14643,7 +15084,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* ROE using Operating Profit */}
                           {IS.roeOperating && (
                             <>
-                              <TimeSeriesChart data={IS.roeOperating} />
+                              <TimeSeries data={IS.roeOperating} />
                               {IS.roeOperating.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.roeOperating.note}
@@ -14937,7 +15378,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* North America Combined long-history chart */}
                           {segments.naCombined && (
                             <>
-                              <TimeSeriesChart data={segments.naCombined} />
+                              <TimeSeries data={segments.naCombined} />
                               {segments.naCombined.description && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {segments.naCombined.description}
@@ -14956,35 +15397,104 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const renderBalanceTab = () => {
                       if (!bd.numbers || !bd.numbers.balanceSheet) return null;
                       const { balanceSheet } = bd.numbers;
+                      const BS = balanceSheet;
+
+                      // Helper: chart + optional note panel
+                      const chartWithNote = (data, noteColor) => {
+                        if (!data) return null;
+                        return (
+                          <>
+                            <TimeSeries data={data} />
+                            {data.note && (
+                              <div style={{padding:'8px 12px',background: noteColor === 'green' ? 'rgba(34,197,94,0.06)' : 'rgba(245,158,11,0.04)',border: noteColor === 'green' ? '0.5px solid rgba(34,197,94,0.35)' : `0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                <span style={{color: noteColor === 'green' ? 'rgba(34,197,94,0.85)' : amber,fontWeight:600}}>Note —</span> {data.note}
+                              </div>
+                            )}
+                          </>
+                        );
+                      };
+
                       return (
                         <div>
-                      {/* ════════════════════════════════════════════════
-                          BALANCE SHEET
-                          ════════════════════════════════════════════════ */}
-                      {balanceSheet && (
-                        <>
                           <SectionHeading>// BALANCE SHEET</SectionHeading>
-                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Asset growth, debt picture, returns on capital, and working capital efficiency.</div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Asset composition, debt structure, equity build, working capital efficiency, returns on capital, and Buffett quality indicators.</div>
 
-                          {balanceSheet.totalAssets && <TimeSeriesChart data={balanceSheet.totalAssets} />}
-                          {balanceSheet.totalDebt && <TimeSeriesChart data={balanceSheet.totalDebt} />}
-                          {balanceSheet.shareholderEquity && <TimeSeriesChart data={balanceSheet.shareholderEquity} />}
-                          {balanceSheet.bookValuePerShare && <TimeSeriesChart data={balanceSheet.bookValuePerShare} />}
-                          {balanceSheet.currentRatio && <TimeSeriesChart data={balanceSheet.currentRatio} />}
-                          {balanceSheet.debtToEquity && (
+                          {/* CURRENT ASSETS */}
+                          <SectionHeading>// CURRENT ASSETS</SectionHeading>
+                          {BS.cash               && <TimeSeries data={BS.cash} />}
+                          {BS.accountsReceivable && <TimeSeries data={BS.accountsReceivable} />}
+                          {BS.dso                && chartWithNote(BS.dso, 'green')}
+                          {BS.inventory          && <TimeSeries data={BS.inventory} />}
+                          {BS.inventoryTurnover  && chartWithNote(BS.inventoryTurnover, 'amber')}
+                          {BS.dio                && chartWithNote(BS.dio, 'amber')}
+                          {BS.prepaidAndOther    && chartWithNote(BS.prepaidAndOther, 'amber')}
+                          {BS.totalCurrentAssets && <TimeSeries data={BS.totalCurrentAssets} />}
+
+                          {/* NON-CURRENT ASSETS */}
+                          <SectionHeading>// NON-CURRENT ASSETS</SectionHeading>
+                          {BS.ppeNet                && <TimeSeries data={BS.ppeNet} />}
+                          {BS.goodwill              && chartWithNote(BS.goodwill, 'amber')}
+                          {BS.otherIntangibles      && <TimeSeries data={BS.otherIntangibles} />}
+                          {BS.otherNonCurrentAssets && <TimeSeries data={BS.otherNonCurrentAssets} />}
+                          {BS.deferredTaxesCurrent  && <TimeSeries data={BS.deferredTaxesCurrent} />}
+                          {BS.totalAssets           && <TimeSeries data={BS.totalAssets} />}
+
+                          {/* CURRENT LIABILITIES */}
+                          <SectionHeading>// CURRENT LIABILITIES</SectionHeading>
+                          {BS.accountsPayable         && <TimeSeries data={BS.accountsPayable} />}
+                          {BS.dpo                     && chartWithNote(BS.dpo, 'green')}
+                          {BS.accruedLiabilities      && <TimeSeries data={BS.accruedLiabilities} />}
+                          {BS.accruedIncomeTaxes      && <TimeSeries data={BS.accruedIncomeTaxes} />}
+                          {BS.shortTermDebt           && <TimeSeries data={BS.shortTermDebt} />}
+                          {BS.currentLongTermDebt     && <TimeSeries data={BS.currentLongTermDebt} />}
+                          {BS.totalCurrentLiabilities && <TimeSeries data={BS.totalCurrentLiabilities} />}
+                          {BS.currentRatio && (
                             <>
-                              <TimeSeriesChart data={balanceSheet.debtToEquity} />
-                              {balanceSheet.debtToEquity.note && (
+                              <TimeSeries data={BS.currentRatio} />
+                              {BS.currentRatio.avg2015_2024 && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.debtToEquity.note}
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>10-yr Avg —</span> {BS.currentRatio.avg2015_2024}x. Lower = better for a high-velocity inventory business.
                                 </div>
                               )}
                             </>
                           )}
 
-                          {/* Returns triple — multi-line ROE/ROIC/ROA */}
-                          {balanceSheet.returns && (() => {
-                            const r = balanceSheet.returns;
+                          {/* NON-CURRENT LIABILITIES */}
+                          <SectionHeading>// NON-CURRENT LIABILITIES</SectionHeading>
+                          {BS.longTermDebt             && <TimeSeries data={BS.longTermDebt} />}
+                          {BS.ltDebtToEquity           && chartWithNote(BS.ltDebtToEquity, 'green')}
+                          {BS.ltDebtToNetIncome        && chartWithNote(BS.ltDebtToNetIncome, 'green')}
+                          {BS.otherLongTermLiabilities && <TimeSeries data={BS.otherLongTermLiabilities} />}
+                          {BS.deferredTaxesNonCurrent  && <TimeSeries data={BS.deferredTaxesNonCurrent} />}
+                          {BS.totalDebt                && <TimeSeries data={BS.totalDebt} />}
+                          {BS.debtToEquity             && chartWithNote(BS.debtToEquity, 'green')}
+
+                          {/* EQUITY */}
+                          <SectionHeading>// EQUITY</SectionHeading>
+                          {BS.commonStock             && <TimeSeries data={BS.commonStock} />}
+                          {BS.classBCommonStock       && <TimeSeries data={BS.classBCommonStock} />}
+                          {BS.additionalPaidInCapital && <TimeSeries data={BS.additionalPaidInCapital} />}
+                          {BS.retainedEarnings        && chartWithNote(BS.retainedEarnings, 'amber')}
+                          {BS.shareholderEquity       && <TimeSeries data={BS.shareholderEquity} />}
+                          {BS.bookValuePerShare && (
+                            <>
+                              <TimeSeries data={BS.bookValuePerShare} />
+                              {BS.bookValuePerShare.cagr2015_2024 && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>CAGR 2015-2024 —</span> {BS.bookValuePerShare.cagr2015_2024}% per year. Outstanding compounding rate.
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* WORKING CAPITAL EFFICIENCY */}
+                          <SectionHeading>// WORKING CAPITAL EFFICIENCY</SectionHeading>
+                          {BS.ccc && chartWithNote(BS.ccc, 'green')}
+
+                          {/* RETURNS — multi-line ROE/ROIC/ROA */}
+                          <SectionHeading>// RETURNS ON CAPITAL</SectionHeading>
+                          {BS.returns && (() => {
+                            const r = BS.returns;
                             const allYears = [...new Set([...r.roe.map(d=>d.year), ...r.roic.map(d=>d.year), ...r.roa.map(d=>d.year)])].sort((a,b)=>a-b);
                             const maxVal = Math.max(...r.roe.map(d=>d.value), ...r.roic.map(d=>d.value), ...r.roa.map(d=>d.value));
                             const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
@@ -15041,21 +15551,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             );
                           })()}
 
-                          {/* Cash Conversion Cycle */}
-                          {balanceSheet.ccc && (
-                            <>
-                              <TimeSeriesChart data={balanceSheet.ccc} />
-                              {balanceSheet.ccc.note && (
-                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.ccc.note}
-                                </div>
-                              )}
-                            </>
-                          )}
+                          {/* QUALITY INDICATORS */}
+                          <SectionHeading>// QUALITY INDICATORS</SectionHeading>
 
-                          {/* Retained Earnings Test — Buffett's preferred compounder check */}
-                          {balanceSheet.retainedEarningsTest && (() => {
-                            const t = balanceSheet.retainedEarningsTest;
+                          {/* Retained Earnings Test */}
+                          {BS.retainedEarningsTest && (() => {
+                            const t = BS.retainedEarningsTest;
                             return (
                               <div style={{
                                 background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
@@ -15072,7 +15573,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{position:'absolute',bottom:'8px',right:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
                                 <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// BUFFETT'S $1 RETAINED EARNINGS TEST · {t.period}</div>
                                 <div style={{fontSize:'11px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'14px',letterSpacing:'0.3px'}}>For every $1 of retained earnings, how much market value did the company create?</div>
-
                                 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'10px',marginBottom:'14px'}}>
                                   <div>
                                     <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2009</div>
@@ -15091,21 +15591,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.marketCapIncrease}B</div>
                                   </div>
                                 </div>
-
                                 <div style={{display:'flex',alignItems:'baseline',gap:'10px',justifyContent:'center',padding:'12px 14px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'4px',marginBottom:'10px'}}>
                                   <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>$1 IN →</span>
                                   <span style={{fontSize:'30px',color:'rgba(34,197,94,1)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>${t.multiplier}</span>
                                   <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>OUT</span>
                                 </div>
-
                                 <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{t.verdict}</div>
                               </div>
                             );
                           })()}
 
-                          {/* Tangible equity / ROTE breakdown */}
-                          {balanceSheet.tangibleEquity && (() => {
-                            const te = balanceSheet.tangibleEquity;
+                          {/* Tangible Equity / ROTE */}
+                          {BS.tangibleEquity && (() => {
+                            const te = BS.tangibleEquity;
                             return (
                               <div style={{
                                 background:'rgba(0,0,0,0.4)',
@@ -15119,14 +15617,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// TANGIBLE EQUITY · ROTE</div>
                                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{te.note}</div>
                                 </div>
-
-                                {/* Big ROTE callout */}
                                 <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
                                   <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// 2024 ROTE</div>
                                   <div style={{fontSize:'28px',color:amber,fontFamily:'monospace',fontWeight:700}}>{te.rote2024.toLocaleString()}%</div>
                                   <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>$2.2B Net Income on $134M Tangible Equity</div>
                                 </div>
-
                                 <div style={{overflowX:'auto',marginBottom:'10px'}}>
                                   <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
                                     <thead>
@@ -15151,16 +15646,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </tbody>
                                   </table>
                                 </div>
-
                                 <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Interpretation —</span> {te.interpretation}
                                 </div>
                               </div>
                             );
                           })()}
-                        </>
-                      )}
-
                         </div>
                       );
                     };
@@ -15179,11 +15670,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// CASH FLOW</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Operating cash flow, reinvestment intensity, and free cash flow / owner earnings.</div>
 
-                          {cashFlow.operatingCashFlow && <TimeSeriesChart data={cashFlow.operatingCashFlow} />}
-                          {cashFlow.capex && <TimeSeriesChart data={cashFlow.capex} />}
+                          {cashFlow.operatingCashFlow && <TimeSeries data={cashFlow.operatingCashFlow} />}
+                          {cashFlow.capex && <TimeSeries data={cashFlow.capex} />}
                           {cashFlow.capexRatio && (
                             <>
-                              <TimeSeriesChart data={cashFlow.capexRatio} />
+                              <TimeSeries data={cashFlow.capexRatio} />
                               {cashFlow.capexRatio.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {cashFlow.capexRatio.note}
@@ -15191,7 +15682,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
-                          {cashFlow.freeCashFlow && <TimeSeriesChart data={cashFlow.freeCashFlow} />}
+                          {cashFlow.freeCashFlow && <TimeSeries data={cashFlow.freeCashFlow} />}
                         </>
                       )}
                         </div>
