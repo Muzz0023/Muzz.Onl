@@ -2751,6 +2751,69 @@ const HSY_BREAKDOWN = {
     },
 
     // ════════════════════════════════════════════════════════════════════
+    // SEGMENT RESULTS — revenue by reportable segment
+    // ════════════════════════════════════════════════════════════════════
+    segments: {
+      // Revenue mix percentages by year — for the stacked area chart
+      mix: [
+        { year: 2019, naConfectionery: 86, naSaltySnacks: 5,  international: 10 },
+        { year: 2020, naConfectionery: 87, naSaltySnacks: 5,  international: 9 },
+        { year: 2021, naConfectionery: 85, naSaltySnacks: 6,  international: 8 },
+        { year: 2022, naConfectionery: 82, naSaltySnacks: 10, international: 8 },
+        { year: 2023, naConfectionery: 82, naSaltySnacks: 10, international: 8 },
+        { year: 2024, naConfectionery: 82, naSaltySnacks: 10, international: 8 },
+      ],
+      headlineInsight: {
+        title: 'The Snacking Shift',
+        body: 'Salty Snacks doubled its revenue share from 5% in 2019 to 10% in 2024 — North America Confectionery dropped from 87% to 82% over the same period (not because it shrunk, but because Salty Snacks grew faster, accelerated by the Dot\u2019s Pretzels acquisition in 2021 and LesserEvil in 2025). International has been stuck at 8% — the international growth pillar of the strategic plan isn\u2019t translating yet.',
+      },
+      // Detailed per-segment time series
+      naConfectionery: {
+        label: 'North America Confectionery', unit: 'M USD',
+        description: 'U.S. & Canada chocolate and non-chocolate confectionery, gum, mints, protein bars, spreads, snack bites, pantry & food service. Includes Hershey\u2019s Chocolate World retail stores (Hershey PA, NY, Las Vegas, Niagara Falls, Singapore) and trademark licensing.',
+        contribution: { '2024': 81.4, '2023': 81.7, '2022': 81.9 },
+        trend: 'Slight % decline (other segments growing faster), but overwhelmingly the largest revenue driver. The backbone of Hershey\u2019s business.',
+        series: [
+          { year: 2019, value: 6815 }, { year: 2020, value: 7084 }, { year: 2021, value: 7682 },
+          { year: 2022, value: 8536 }, { year: 2023, value: 9123 }, { year: 2024, value: 9118 },
+        ],
+      },
+      naSaltySnacks: {
+        label: 'North America Salty Snacks', unit: 'M USD',
+        description: 'U.S. salty snacks — ready-to-eat popcorn, pretzels, baked snacks, and other savoury items. Includes SkinnyPop, Pirate\u2019s Booty, Dot\u2019s Homestyle Pretzels, Pirate\u2019s Booty, and (from late 2025) LesserEvil.',
+        contribution: { '2024': 10.1, '2023': 9.8, '2022': 9.9 },
+        trend: 'Gradual increase reflecting the snacking strategy. The acquisition wave (Amplify, Dot\u2019s, Weaver Popcorn, LesserEvil) is built around this segment.',
+        series: [
+          { year: 2019, value: 410 },  { year: 2020, value: 438 },  { year: 2021, value: 555 },
+          { year: 2022, value: 1029 }, { year: 2023, value: 1092 }, { year: 2024, value: 1135 },
+        ],
+        highlight: true,
+      },
+      international: {
+        label: 'International', unit: 'M USD',
+        description: 'All operations outside North America. Manufacturing in Mexico, Brazil, India, Malaysia for local markets. Distribution to Asia, Latin America, Europe, Middle East, Africa, and other regions.',
+        contribution: { '2024': 8.5, '2023': 8.5, '2022': 8.2 },
+        trend: 'Stable at ~8-9% of sales over the past decade. Long-term growth pillar that hasn\u2019t materially expanded share \u2014 the international strategic imperative remains an open question.',
+        series: [
+          { year: 2013, value: 946 }, { year: 2014, value: 1069 }, { year: 2015, value: 918 },
+          { year: 2016, value: 907 }, { year: 2017, value: 894 }, { year: 2018, value: 889 },
+          { year: 2019, value: 761 }, { year: 2020, value: 626 }, { year: 2021, value: 733 },
+          { year: 2022, value: 853 }, { year: 2023, value: 949 }, { year: 2024, value: 948 },
+        ],
+      },
+      naCombined: {
+        label: 'North America Combined', unit: 'M USD',
+        description: 'Combined NA Confectionery + NA Salty Snacks. Pre-2019 figures are dominated by Confectionery — Salty Snacks scaled materially from 2019 onward after the 2017 Amplify (SkinnyPop) and 2021 Dot\u2019s Pretzels acquisitions flowed into the segment.',
+        series: [
+          { year: 2013, value: 6200 }, { year: 2014, value: 6352 }, { year: 2015, value: 6468 },
+          { year: 2016, value: 6533 }, { year: 2017, value: 6621 }, { year: 2018, value: 6901 },
+          { year: 2019, value: 7225 }, { year: 2020, value: 8522 }, { year: 2021, value: 9237 },
+          { year: 2022, value: 9565 }, { year: 2023, value: 10215 }, { year: 2024, value: 10253 },
+        ],
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════════
     // CASH FLOW — historical financials
     // ════════════════════════════════════════════════════════════════════
     cashFlow: {
@@ -13128,12 +13191,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const amberDim = 'rgba(245,158,11,0.6)';
                     const amberGlow = 'rgba(245,158,11,0.35)';
                     const TABS = [
-                      { id: 'overview', label: 'OVERVIEW',    enabled: !!bd.overview },
-                      { id: 'brands',  label: 'BRANDS',     enabled: !!bd.brands },
-                      { id: 'moat',    label: 'MOAT',       enabled: !!bd.moat },
-                      { id: 'numbers', label: 'NUMBERS',    enabled: !!bd.numbers },
-                      { id: 'risks',   label: 'RISKS',      enabled: !!bd.risks },
-                      { id: 'thesis',  label: 'THESIS',     enabled: !!bd.thesis },
+                      { id: 'overview',  label: 'OVERVIEW',  enabled: !!bd.overview },
+                      { id: 'brands',    label: 'BRANDS',    enabled: !!bd.brands },
+                      { id: 'moat',      label: 'MOAT',      enabled: !!bd.moat },
+                      { id: 'numbers',   label: 'NUMBERS',   enabled: !!bd.numbers },
+                      { id: 'segments',  label: 'SEGMENTS',  enabled: !!(bd.numbers && bd.numbers.segments) },
+                      { id: 'pnl',       label: 'P&L',       enabled: !!(bd.numbers && bd.numbers.incomeStatement) },
+                      { id: 'balance',   label: 'BALANCE',   enabled: !!(bd.numbers && bd.numbers.balanceSheet) },
+                      { id: 'cashflow',  label: 'CASH FLOW', enabled: !!(bd.numbers && bd.numbers.cashFlow) },
+                      { id: 'risks',     label: 'RISKS',     enabled: !!bd.risks },
+                      { id: 'thesis',    label: 'THESIS',    enabled: !!bd.thesis },
                     ];
                     const activeTab = coverageBreakdownTab;
                     // Tabs strip
@@ -13172,6 +13239,103 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div style={{flex:1,height:'0.5px',background:amberGlow}}/>
                       </div>
                     );
+
+                    // Shared format helper — used by chart components across all tabs
+                    const fmtVal = (v, unit) => {
+                      if (unit === 'B USD')          return '$' + v + 'B';
+                      if (unit === 'M USD')          return '$' + Math.round(v).toLocaleString() + 'M';
+                      if (unit === 'USD per share')  return '$' + v.toFixed(2);
+                      if (unit === 'USD per bag' || unit === 'USD per bar' || unit === 'USD per pack') return '$' + v.toFixed(2);
+                      if (unit === '%')              return v.toFixed(1) + '%';
+                      if (unit === 'x')              return v.toFixed(2) + 'x';
+                      if (unit === 'days')           return v.toFixed(1) + 'd';
+                      if (unit === 'USD')            return '$' + Math.round(v).toLocaleString();
+                      return v.toLocaleString();
+                    };
+
+                    // Shared bar chart — renders an SVG bar chart given { label, unit, series }
+                    const TimeSeriesChart = ({ data }) => {
+                      if (!data || !data.series || data.series.length === 0) return null;
+                      const series = data.series;
+                      const maxVal = Math.max(...series.map(d => d.value));
+                      const minVal = Math.min(...series.map(d => d.value));
+                      const peakYear = series.find(d => d.value === maxVal)?.year;
+                      const troughYear = series.find(d => d.value === minVal)?.year;
+                      const latest = series[series.length - 1];
+                      const first  = series[0];
+                      const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
+                      const W = 800, H = 200, PL = 40, PR = 10, PT = 16, PB = 28;
+                      const innerW = W - PL - PR;
+                      const innerH = H - PT - PB;
+                      const barW = innerW / series.length * 0.7;
+                      const gap  = innerW / series.length * 0.3;
+                      const yScale = v => PT + innerH - (v / maxVal) * innerH;
+                      return (
+                        <div style={{
+                          background:'rgba(0,0,0,0.4)',
+                          border:`0.5px solid ${amberGlow}`,
+                          borderLeft:`2px solid ${amber}`,
+                          borderRadius:'4px',
+                          padding:'14px',
+                          marginBottom:'12px',
+                        }}>
+                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
+                            <div>
+                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
+                              <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} – {latest.year}</div>
+                            </div>
+                            <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
+                              <div style={{textAlign:'right'}}>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>LATEST {latest.year}</div>
+                                <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{fmtVal(latest.value, data.unit)}</div>
+                              </div>
+                              <div style={{textAlign:'right'}}>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
+                                <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{width:'100%',overflowX:'auto'}}>
+                            <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'480px',display:'block'}}>
+                              {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                <g key={i}>
+                                  <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                  <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{fmtVal(maxVal * p, data.unit).replace(/^\$/, '$').replace(/USD$/, '')}</text>
+                                </g>
+                              ))}
+                              {series.map((d, i) => {
+                                const x = PL + (i * (barW + gap)) + gap/2;
+                                const y = yScale(d.value);
+                                const h = (PT + innerH) - y;
+                                const isPeak = d.year === peakYear;
+                                const isTrough = d.year === troughYear;
+                                const isLast = i === series.length - 1;
+                                const fill = isPeak ? 'rgba(34,197,94,0.85)' : (isTrough ? 'rgba(239,68,68,0.7)' : (isLast ? amber : 'rgba(245,158,11,0.55)'));
+                                return (
+                                  <g key={i}>
+                                    <rect x={x} y={y} width={barW} height={h} fill={fill} rx="1" />
+                                    <text x={x + barW/2} y={H - PB + 10} textAnchor="middle" fontSize="7" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(d.year).slice(-2)}</text>
+                                    {(isPeak || isLast) && (
+                                      <text x={x + barW/2} y={y - 4} textAnchor="middle" fontSize="7" fill={isPeak ? 'rgba(34,197,94,0.95)' : amber} fontFamily="monospace" fontWeight="600">{fmtVal(d.value, data.unit).replace(/^\$/, '').replace(' USD', '')}</text>
+                                    )}
+                                  </g>
+                                );
+                              })}
+                            </svg>
+                          </div>
+                          <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
+                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                              <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(34,197,94,0.85)',borderRadius:'1px'}}/>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} · {fmtVal(maxVal, data.unit)}</span>
+                            </div>
+                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                              <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(239,68,68,0.7)',borderRadius:'1px'}}/>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} · {fmtVal(minVal, data.unit)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    };
 
                     // === BRANDS TAB ===
                     const renderBrandsTab = () => {
@@ -14126,115 +14290,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === NUMBERS TAB ===
                     const renderNumbersTab = () => {
                       if (!bd.numbers) return null;
-                      const { marketCapHistory, employees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance, incomeStatement, balanceSheet, cashFlow } = bd.numbers;
-
-                      // Format helpers
-                      const fmtVal = (v, unit) => {
-                        if (unit === 'B USD')          return '$' + v + 'B';
-                        if (unit === 'M USD')          return '$' + Math.round(v).toLocaleString() + 'M';
-                        if (unit === 'USD per share')  return '$' + v.toFixed(2);
-                        if (unit === 'USD per bag' || unit === 'USD per bar' || unit === 'USD per pack') return '$' + v.toFixed(2);
-                        if (unit === '%')              return v.toFixed(1) + '%';
-                        if (unit === 'x')              return v.toFixed(2) + 'x';
-                        if (unit === 'days')           return v.toFixed(1) + 'd';
-                        if (unit === 'USD')            return '$' + Math.round(v).toLocaleString();
-                        return v.toLocaleString();
-                      };
-
-                      // Bar chart — renders an SVG bar chart given { label, unit, series }
-                      const TimeSeriesChart = ({ data }) => {
-                        if (!data || !data.series || data.series.length === 0) return null;
-                        const series = data.series;
-                        const maxVal = Math.max(...series.map(d => d.value));
-                        const minVal = Math.min(...series.map(d => d.value));
-                        // Peak / trough flags
-                        const peakYear = series.find(d => d.value === maxVal)?.year;
-                        const troughYear = series.find(d => d.value === minVal)?.year;
-                        // Last point — most recent
-                        const latest = series[series.length - 1];
-                        const first  = series[0];
-                        const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
-                        // Chart dims
-                        const W = 800, H = 200, PL = 40, PR = 10, PT = 16, PB = 28;
-                        const innerW = W - PL - PR;
-                        const innerH = H - PT - PB;
-                        const barW = innerW / series.length * 0.7;
-                        const gap  = innerW / series.length * 0.3;
-                        const yScale = v => PT + innerH - (v / maxVal) * innerH;
-
-                        return (
-                          <div style={{
-                            background:'rgba(0,0,0,0.4)',
-                            border:`0.5px solid ${amberGlow}`,
-                            borderLeft:`2px solid ${amber}`,
-                            borderRadius:'4px',
-                            padding:'14px',
-                            marginBottom:'12px',
-                          }}>
-                            {/* Header row */}
-                            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
-                              <div>
-                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
-                                <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} – {latest.year}</div>
-                              </div>
-                              <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
-                                <div style={{textAlign:'right'}}>
-                                  <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>LATEST {latest.year}</div>
-                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{fmtVal(latest.value, data.unit)}</div>
-                                </div>
-                                <div style={{textAlign:'right'}}>
-                                  <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
-                                  <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* SVG chart */}
-                            <div style={{width:'100%',overflowX:'auto'}}>
-                              <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'480px',display:'block'}}>
-                                {/* Y grid lines */}
-                                {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
-                                  <g key={i}>
-                                    <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
-                                    <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{fmtVal(maxVal * p, data.unit).replace(/^\$/, '$').replace(/USD$/, '')}</text>
-                                  </g>
-                                ))}
-                                {/* Bars */}
-                                {series.map((d, i) => {
-                                  const x = PL + (i * (barW + gap)) + gap/2;
-                                  const y = yScale(d.value);
-                                  const h = (PT + innerH) - y;
-                                  const isPeak = d.year === peakYear;
-                                  const isTrough = d.year === troughYear;
-                                  const isLast = i === series.length - 1;
-                                  const fill = isPeak ? 'rgba(34,197,94,0.85)' : (isTrough ? 'rgba(239,68,68,0.7)' : (isLast ? amber : 'rgba(245,158,11,0.55)'));
-                                  return (
-                                    <g key={i}>
-                                      <rect x={x} y={y} width={barW} height={h} fill={fill} rx="1" />
-                                      <text x={x + barW/2} y={H - PB + 10} textAnchor="middle" fontSize="7" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(d.year).slice(-2)}</text>
-                                      {(isPeak || isLast) && (
-                                        <text x={x + barW/2} y={y - 4} textAnchor="middle" fontSize="7" fill={isPeak ? 'rgba(34,197,94,0.95)' : amber} fontFamily="monospace" fontWeight="600">{fmtVal(d.value, data.unit).replace(/^\$/, '').replace(' USD', '')}</text>
-                                      )}
-                                    </g>
-                                  );
-                                })}
-                              </svg>
-                            </div>
-
-                            {/* Footer stats */}
-                            <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
-                              <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                                <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(34,197,94,0.85)',borderRadius:'1px'}}/>
-                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} · {fmtVal(maxVal, data.unit)}</span>
-                              </div>
-                              <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                                <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(239,68,68,0.7)',borderRadius:'1px'}}/>
-                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} · {fmtVal(minVal, data.unit)}</span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      };
+                      const { marketCapHistory, employees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance } = bd.numbers;
 
                       return (
                         <div>
@@ -14307,385 +14363,644 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
-                          {/* ════════════════════════════════════════════════
-                              INCOME STATEMENT
-                              ════════════════════════════════════════════════ */}
-                          {incomeStatement && (
+                        </div>
+                      );
+                    };
+
+                    // === PNL TAB ===
+                    const renderPnlTab = () => {
+                      if (!bd.numbers || !bd.numbers.incomeStatement) return null;
+                      const { incomeStatement } = bd.numbers;
+                      return (
+                        <div>
+                      {/* ════════════════════════════════════════════════
+                          INCOME STATEMENT
+                          ════════════════════════════════════════════════ */}
+                      {incomeStatement && (
+                        <>
+                          <SectionHeading>// INCOME STATEMENT</SectionHeading>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, margin trajectory, and dividend payout history.</div>
+
+                          {incomeStatement.netSales       && <TimeSeriesChart data={incomeStatement.netSales} />}
+                          {incomeStatement.grossProfit    && <TimeSeriesChart data={incomeStatement.grossProfit} />}
+                          {incomeStatement.netIncome      && <TimeSeriesChart data={incomeStatement.netIncome} />}
+                          {incomeStatement.eps            && <TimeSeriesChart data={incomeStatement.eps} />}
+
+                          {/* Margin trio */}
+                          {incomeStatement.margins && (() => {
+                            const m = incomeStatement.margins;
+                            const allYears = m.gross.map(d => d.year);
+                            const maxVal = Math.max(...m.gross.map(d=>d.value), ...m.operating.map(d=>d.value), ...m.profit.map(d=>d.value));
+                            const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
+                            const innerW = W - PL - PR;
+                            const innerH = H - PT - PB;
+                            const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
+                            const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
+                            const lines = [
+                              { label: 'Gross Margin',     series: m.gross,     color: amber },
+                              { label: 'Operating Margin', series: m.operating, color: 'rgba(34,197,94,0.9)' },
+                              { label: 'Profit Margin',    series: m.profit,    color: 'rgba(96,165,250,0.9)' },
+                            ];
+                            return (
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// MARGIN TRIO · %</div>
+                                  <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
+                                </div>
+                                <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
+                                  {lines.map((L, i) => (
+                                    <div key={i} style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                      <span style={{display:'inline-block',width:'14px',height:'2px',background:L.color,borderRadius:'1px'}}/>
+                                      <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{L.label}</span>
+                                      <span style={{fontSize:'10px',color:L.color,fontFamily:'monospace',fontWeight:700}}>{L.series[L.series.length-1].value.toFixed(1)}%</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div style={{width:'100%',overflowX:'auto'}}>
+                                  <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
+                                    {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                      <g key={i}>
+                                        <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                        <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{(maxVal * p).toFixed(0)}%</text>
+                                      </g>
+                                    ))}
+                                    {allYears.map((y, i) => {
+                                      if (i % 3 !== 0 && i !== allYears.length - 1) return null;
+                                      return <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(y).slice(-2)}</text>;
+                                    })}
+                                    {lines.map((L, i) => (
+                                      <polyline key={i} points={L.series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ')} fill="none" stroke={L.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    ))}
+                                  </svg>
+                                </div>
+                              </div>
+                            );
+                          })()}
+
+                          {/* Tax rate */}
+                          {incomeStatement.taxRate && (
                             <>
-                              <SectionHeading>// INCOME STATEMENT</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, margin trajectory, and dividend payout history.</div>
+                              <TimeSeriesChart data={incomeStatement.taxRate} />
+                              {incomeStatement.taxRate.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {incomeStatement.taxRate.note}
+                                </div>
+                              )}
+                            </>
+                          )}
 
-                              {incomeStatement.netSales       && <TimeSeriesChart data={incomeStatement.netSales} />}
-                              {incomeStatement.grossProfit    && <TimeSeriesChart data={incomeStatement.grossProfit} />}
-                              {incomeStatement.netIncome      && <TimeSeriesChart data={incomeStatement.netIncome} />}
-                              {incomeStatement.eps            && <TimeSeriesChart data={incomeStatement.eps} />}
+                          {/* Dividends table — 25-year history with payout flags */}
+                          {incomeStatement.dividends && (
+                            <div style={{
+                              background:'rgba(0,0,0,0.4)',
+                              border:`0.5px solid ${amberGlow}`,
+                              borderLeft:`2px solid ${amber}`,
+                              borderRadius:'4px',
+                              padding:'14px',
+                              marginBottom:'12px',
+                            }}>
+                              <div style={{marginBottom:'10px'}}>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// DIVIDENDS PER SHARE · 25-YEAR HISTORY</div>
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{incomeStatement.dividends.note}</div>
+                              </div>
+                              <div style={{overflowX:'auto'}}>
+                                <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                  <thead>
+                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                      <th style={{textAlign:'left',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                      <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EPS</th>
+                                      <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVIDEND</th>
+                                      <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PAYOUT %</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {incomeStatement.dividends.rows.map((r, i) => (
+                                      <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)',background: r.abnormal ? 'rgba(239,68,68,0.04)' : 'transparent'}}>
+                                        <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                        <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.eps.toFixed(2)}</td>
+                                        <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.dividend.toFixed(2)}</td>
+                                        <td style={{padding:'5px 8px',textAlign:'right',color: r.abnormal ? 'rgba(239,68,68,0.95)' : 'rgba(224,234,255,0.8)',fontWeight: r.abnormal ? 700 : 400}}>{r.payout.toFixed(2)}%{r.abnormal ? ' ⚠' : ''}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          )}
 
-                              {/* Margin trio */}
-                              {incomeStatement.margins && (() => {
-                                const m = incomeStatement.margins;
-                                const allYears = m.gross.map(d => d.year);
-                                const maxVal = Math.max(...m.gross.map(d=>d.value), ...m.operating.map(d=>d.value), ...m.profit.map(d=>d.value));
-                                const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
-                                const innerW = W - PL - PR;
-                                const innerH = H - PT - PB;
-                                const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
-                                const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
-                                const lines = [
-                                  { label: 'Gross Margin',     series: m.gross,     color: amber },
-                                  { label: 'Operating Margin', series: m.operating, color: 'rgba(34,197,94,0.9)' },
-                                  { label: 'Profit Margin',    series: m.profit,    color: 'rgba(96,165,250,0.9)' },
-                                ];
-                                return (
-                                  <div style={{
-                                    background:'rgba(0,0,0,0.4)',
-                                    border:`0.5px solid ${amberGlow}`,
-                                    borderLeft:`2px solid ${amber}`,
-                                    borderRadius:'4px',
-                                    padding:'14px',
-                                    marginBottom:'12px',
-                                  }}>
-                                    <div style={{marginBottom:'10px'}}>
-                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// MARGIN TRIO · %</div>
-                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
+                          {/* CAGR callouts */}
+                          {incomeStatement.cagr && (
+                            <div style={{
+                              marginBottom:'12px',
+                              padding:'12px 14px',
+                              background:'rgba(34,197,94,0.06)',
+                              border:'0.5px solid rgba(34,197,94,0.35)',
+                              borderLeft:'2px solid rgba(34,197,94,0.85)',
+                              borderRadius:'3px',
+                            }}>
+                              <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// NET INCOME CAGR</div>
+                              <div style={{display:'flex',gap:'18px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                <div>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2014</div>
+                                  <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2014}%</div>
+                                </div>
+                                <div>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2014 – 2024</div>
+                                  <div style={{fontSize:'16px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2014_2024}%</div>
+                                </div>
+                                <div>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2024</div>
+                                  <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2024}%</div>
+                                </div>
+                              </div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{incomeStatement.cagr.note}</div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                        </div>
+                      );
+                    };
+
+                    // === SEGMENTS TAB ===
+                    const renderSegmentsTab = () => {
+                      if (!bd.numbers || !bd.numbers.segments) return null;
+                      const { segments } = bd.numbers;
+                      return (
+                        <div>
+                      {/* ════════════════════════════════════════════════
+                          SEGMENT RESULTS
+                          ════════════════════════════════════════════════ */}
+                      {segments && (
+                        <>
+                          <SectionHeading>// SEGMENT RESULTS</SectionHeading>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Revenue by reportable segment — the mix shift toward salty snacks is one of HSY\u2019s defining strategic stories.</div>
+
+                          {/* Headline insight callout */}
+                          {segments.headlineInsight && (
+                            <div style={{
+                              background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                              border:'0.5px solid rgba(34,197,94,0.45)',
+                              borderLeft:'2px solid rgba(34,197,94,0.95)',
+                              borderRadius:'4px',
+                              padding:'14px',
+                              marginBottom:'12px',
+                              position:'relative',
+                            }}>
+                              <div style={{position:'absolute',top:'8px',right:'10px',fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>⚡ INSIGHT</div>
+                              <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// HEADLINE INSIGHT</div>
+                              <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'8px'}}>{segments.headlineInsight.title}</div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{segments.headlineInsight.body}</div>
+                            </div>
+                          )}
+
+                          {/* Mix shift stacked area chart */}
+                          {segments.mix && (() => {
+                            const mix = segments.mix;
+                            const years = mix.map(m => m.year);
+                            const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
+                            const innerW = W - PL - PR;
+                            const innerH = H - PT - PB;
+                            const xFor = (year) => PL + (years.indexOf(year) / (years.length - 1)) * innerW;
+                            const yFor = (pct) => PT + innerH - (pct / 100) * innerH;
+                            // Build cumulative percentages per year, in stack order: NA Confectionery (bottom) → NA Salty Snacks (mid) → International (top)
+                            const segOrder = [
+                              { key: 'naConfectionery', label: 'NA Confectionery', color: 'rgba(245,158,11,0.85)' },
+                              { key: 'naSaltySnacks',   label: 'NA Salty Snacks',  color: 'rgba(34,197,94,0.85)' },
+                              { key: 'international',   label: 'International',    color: 'rgba(96,165,250,0.85)' },
+                            ];
+                            // For each segment, build a path that is the cumulative area
+                            const stackedPaths = segOrder.map((seg, si) => {
+                              // For each year, lower edge is sum of previous segments, upper edge is sum including this segment
+                              const upper = mix.map(m => {
+                                let cum = 0;
+                                for (let i = 0; i <= si; i++) cum += m[segOrder[i].key];
+                                return { year: m.year, value: cum };
+                              });
+                              const lower = mix.map(m => {
+                                let cum = 0;
+                                for (let i = 0; i < si; i++) cum += m[segOrder[i].key];
+                                return { year: m.year, value: cum };
+                              });
+                              // Build polygon
+                              const upPts = upper.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ');
+                              const lowPtsReversed = [...lower].reverse().map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ');
+                              return { ...seg, polygon: `${upPts} ${lowPtsReversed}` };
+                            });
+
+                            return (
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// REVENUE MIX BY SEGMENT · %</div>
+                                  <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{years[0]} – {years[years.length-1]}</div>
+                                </div>
+                                <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
+                                  {segOrder.map((s, i) => {
+                                    const latest = mix[mix.length-1][s.key];
+                                    const earliest = mix[0][s.key];
+                                    const delta = latest - earliest;
+                                    return (
+                                      <div key={i} style={{display:'flex',alignItems:'baseline',gap:'6px'}}>
+                                        <span style={{display:'inline-block',width:'14px',height:'10px',background:s.color,borderRadius:'1px'}}/>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.5px',fontWeight:600}}>{s.label}</span>
+                                        <span style={{fontSize:'10px',color:s.color,fontFamily:'monospace',fontWeight:700}}>{latest}%</span>
+                                        <span style={{fontSize:'9px',color: delta > 0 ? 'rgba(34,197,94,0.85)' : (delta < 0 ? 'rgba(239,68,68,0.85)' : 'rgba(148,163,184,0.6)'),fontFamily:'monospace',fontWeight:600}}>{delta > 0 ? '+' : ''}{delta}pp</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                <div style={{width:'100%',overflowX:'auto'}}>
+                                  <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
+                                    {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                      <g key={i}>
+                                        <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                        <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{Math.round(100*p)}%</text>
+                                      </g>
+                                    ))}
+                                    {years.map((y, i) => (
+                                      <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{y}</text>
+                                    ))}
+                                    {stackedPaths.map((s, i) => (
+                                      <polygon key={i} points={s.polygon} fill={s.color} stroke={s.color.replace(/[\d.]+\)/, '0.95)')} strokeWidth="0.5" />
+                                    ))}
+                                  </svg>
+                                </div>
+                              </div>
+                            );
+                          })()}
+
+                          {/* Per-segment cards */}
+                          {[segments.naConfectionery, segments.naSaltySnacks, segments.international].filter(Boolean).map((seg, i) => {
+                            if (!seg) return null;
+                            const latest = seg.series[seg.series.length-1];
+                            const first  = seg.series[0];
+                            const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
+                            const isHighlight = seg.highlight;
+                            return (
+                              <div key={i} style={{
+                                background: isHighlight ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${isHighlight ? amber : amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'10px',
+                                position:'relative',
+                              }}>
+                                {isHighlight && (
+                                  <>
+                                    <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                    <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                    <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                    <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                  </>
+                                )}
+                                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px',flexWrap:'wrap',marginBottom:'10px'}}>
+                                  <div style={{minWidth:0,flex:1}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// SEGMENT {isHighlight ? '\u00b7 GROWTH ENGINE' : ''}</div>
+                                    <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{seg.label}</div>
+                                  </div>
+                                  <div style={{display:'flex',gap:'12px',alignItems:'flex-start'}}>
+                                    <div style={{textAlign:'right'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{latest.year}</div>
+                                      <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>${latest.value.toLocaleString()}M</div>
                                     </div>
-                                    <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
-                                      {lines.map((L, i) => (
-                                        <div key={i} style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                                          <span style={{display:'inline-block',width:'14px',height:'2px',background:L.color,borderRadius:'1px'}}/>
-                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{L.label}</span>
-                                          <span style={{fontSize:'10px',color:L.color,fontFamily:'monospace',fontWeight:700}}>{L.series[L.series.length-1].value.toFixed(1)}%</span>
-                                        </div>
-                                      ))}
+                                    <div style={{textAlign:'right'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>VS {first.year}</div>
+                                      <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
                                     </div>
-                                    <div style={{width:'100%',overflowX:'auto'}}>
-                                      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
-                                        {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
-                                          <g key={i}>
-                                            <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
-                                            <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{(maxVal * p).toFixed(0)}%</text>
-                                          </g>
-                                        ))}
-                                        {allYears.map((y, i) => {
-                                          if (i % 3 !== 0 && i !== allYears.length - 1) return null;
-                                          return <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(y).slice(-2)}</text>;
+                                  </div>
+                                </div>
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{seg.description}</div>
+
+                                {/* Inline mini-chart */}
+                                {(() => {
+                                  const series = seg.series;
+                                  const maxV = Math.max(...series.map(d => d.value));
+                                  const W2 = 700, H2 = 90, PL2 = 40, PR2 = 8, PT2 = 8, PB2 = 20;
+                                  const iW = W2 - PL2 - PR2;
+                                  const iH = H2 - PT2 - PB2;
+                                  const barW = iW / series.length * 0.7;
+                                  const gap = iW / series.length * 0.3;
+                                  return (
+                                    <div style={{width:'100%',overflowX:'auto',marginBottom:'10px'}}>
+                                      <svg viewBox={`0 0 ${W2} ${H2}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'400px',display:'block'}}>
+                                        <line x1={PL2} x2={W2-PR2} y1={PT2 + iH} y2={PT2 + iH} stroke={amberGlow} strokeWidth="0.5" />
+                                        {series.map((d, j) => {
+                                          const x = PL2 + j * (barW + gap) + gap/2;
+                                          const y = PT2 + iH - (d.value / maxV) * iH;
+                                          const h = (PT2 + iH) - y;
+                                          const isLast = j === series.length - 1;
+                                          return (
+                                            <g key={j}>
+                                              <rect x={x} y={y} width={barW} height={h} fill={isLast ? amber : 'rgba(245,158,11,0.55)'} rx="1" />
+                                              <text x={x + barW/2} y={H2 - PB2 + 12} textAnchor="middle" fontSize="7" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(d.year).slice(-2)}</text>
+                                            </g>
+                                          );
                                         })}
-                                        {lines.map((L, i) => (
-                                          <polyline key={i} points={L.series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ')} fill="none" stroke={L.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        ))}
+                                        <text x={PL2-6} y={PT2 + 6} textAnchor="end" fontSize="7" fill="rgba(245,158,11,0.5)" fontFamily="monospace">${Math.round(maxV)}M</text>
+                                        <text x={PL2-6} y={PT2 + iH + 3} textAnchor="end" fontSize="7" fill="rgba(245,158,11,0.5)" fontFamily="monospace">$0</text>
                                       </svg>
                                     </div>
-                                  </div>
-                                );
-                              })()}
+                                  );
+                                })()}
 
-                              {/* Tax rate */}
-                              {incomeStatement.taxRate && (
-                                <>
-                                  <TimeSeriesChart data={incomeStatement.taxRate} />
-                                  {incomeStatement.taxRate.note && (
-                                    <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                      <span style={{color:amber,fontWeight:600}}>Note —</span> {incomeStatement.taxRate.note}
-                                    </div>
-                                  )}
-                                </>
+                                {/* Contribution % grid */}
+                                {seg.contribution && (
+                                  <div style={{display:'flex',gap:'12px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                    {Object.entries(seg.contribution).sort((a,b) => b[0].localeCompare(a[0])).map(([yr, pct]) => (
+                                      <div key={yr} style={{padding:'4px 10px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,marginBottom:'1px'}}>{yr}</div>
+                                        <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{pct}%</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {seg.trend && (
+                                  <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// TREND</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{seg.trend}</div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+
+                          {/* North America Combined long-history chart */}
+                          {segments.naCombined && (
+                            <>
+                              <TimeSeriesChart data={segments.naCombined} />
+                              {segments.naCombined.description && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {segments.naCombined.description}
+                                </div>
                               )}
+                            </>
+                          )}
+                        </>
+                      )}
 
-                              {/* Dividends table — 25-year history with payout flags */}
-                              {incomeStatement.dividends && (
-                                <div style={{
-                                  background:'rgba(0,0,0,0.4)',
-                                  border:`0.5px solid ${amberGlow}`,
-                                  borderLeft:`2px solid ${amber}`,
-                                  borderRadius:'4px',
-                                  padding:'14px',
-                                  marginBottom:'12px',
-                                }}>
-                                  <div style={{marginBottom:'10px'}}>
-                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// DIVIDENDS PER SHARE · 25-YEAR HISTORY</div>
-                                    <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{incomeStatement.dividends.note}</div>
+                        </div>
+                      );
+                    };
+
+                    // === BALANCE TAB ===
+                    const renderBalanceTab = () => {
+                      if (!bd.numbers || !bd.numbers.balanceSheet) return null;
+                      const { balanceSheet } = bd.numbers;
+                      return (
+                        <div>
+                      {/* ════════════════════════════════════════════════
+                          BALANCE SHEET
+                          ════════════════════════════════════════════════ */}
+                      {balanceSheet && (
+                        <>
+                          <SectionHeading>// BALANCE SHEET</SectionHeading>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Asset growth, debt picture, returns on capital, and working capital efficiency.</div>
+
+                          {balanceSheet.totalAssets && <TimeSeriesChart data={balanceSheet.totalAssets} />}
+                          {balanceSheet.totalDebt && <TimeSeriesChart data={balanceSheet.totalDebt} />}
+                          {balanceSheet.shareholderEquity && <TimeSeriesChart data={balanceSheet.shareholderEquity} />}
+                          {balanceSheet.bookValuePerShare && <TimeSeriesChart data={balanceSheet.bookValuePerShare} />}
+                          {balanceSheet.currentRatio && <TimeSeriesChart data={balanceSheet.currentRatio} />}
+                          {balanceSheet.debtToEquity && (
+                            <>
+                              <TimeSeriesChart data={balanceSheet.debtToEquity} />
+                              {balanceSheet.debtToEquity.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.debtToEquity.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* Returns triple — multi-line ROE/ROIC/ROA */}
+                          {balanceSheet.returns && (() => {
+                            const r = balanceSheet.returns;
+                            const allYears = [...new Set([...r.roe.map(d=>d.year), ...r.roic.map(d=>d.year), ...r.roa.map(d=>d.year)])].sort((a,b)=>a-b);
+                            const maxVal = Math.max(...r.roe.map(d=>d.value), ...r.roic.map(d=>d.value), ...r.roa.map(d=>d.value));
+                            const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
+                            const innerW = W - PL - PR;
+                            const innerH = H - PT - PB;
+                            const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
+                            const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
+                            const lines = [
+                              { label: 'ROE',  series: r.roe,  color: amber, avg: r.averages.roe },
+                              { label: 'ROIC', series: r.roic, color: 'rgba(34,197,94,0.9)', avg: r.averages.roic },
+                              { label: 'ROA',  series: r.roa,  color: 'rgba(96,165,250,0.9)', avg: r.averages.roa },
+                            ];
+                            return (
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// RETURNS · ROE · ROIC · ROA</div>
+                                  <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
+                                </div>
+                                <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
+                                  {lines.map((L, i) => (
+                                    <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                      <span style={{display:'inline-block',width:'14px',height:'2px',background:L.color,borderRadius:'1px'}}/>
+                                      <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.5px',fontWeight:600}}>{L.label}</span>
+                                      <span style={{fontSize:'10px',color:L.color,fontFamily:'monospace',fontWeight:700}}>{L.series[L.series.length-1].value.toFixed(1)}%</span>
+                                      <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace'}}>avg {L.avg}%</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div style={{width:'100%',overflowX:'auto'}}>
+                                  <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
+                                    {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                      <g key={i}>
+                                        <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                        <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{(maxVal * p).toFixed(0)}%</text>
+                                      </g>
+                                    ))}
+                                    {allYears.map((y, i) => {
+                                      if (i % 3 !== 0 && i !== allYears.length - 1) return null;
+                                      return <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(y).slice(-2)}</text>;
+                                    })}
+                                    {lines.map((L, i) => (
+                                      <polyline key={i} points={L.series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ')} fill="none" stroke={L.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    ))}
+                                  </svg>
+                                </div>
+                              </div>
+                            );
+                          })()}
+
+                          {/* Cash Conversion Cycle */}
+                          {balanceSheet.ccc && (
+                            <>
+                              <TimeSeriesChart data={balanceSheet.ccc} />
+                              {balanceSheet.ccc.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.ccc.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* Retained Earnings Test — Buffett's preferred compounder check */}
+                          {balanceSheet.retainedEarningsTest && (() => {
+                            const t = balanceSheet.retainedEarningsTest;
+                            return (
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:'0.5px solid rgba(34,197,94,0.55)',
+                                borderLeft:'2px solid rgba(34,197,94,0.95)',
+                                borderRadius:'4px',
+                                padding:'18px',
+                                marginBottom:'12px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'8px',left:'8px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{position:'absolute',top:'8px',right:'8px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{position:'absolute',bottom:'8px',left:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{position:'absolute',bottom:'8px',right:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// BUFFETT'S $1 RETAINED EARNINGS TEST · {t.period}</div>
+                                <div style={{fontSize:'11px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'14px',letterSpacing:'0.3px'}}>For every $1 of retained earnings, how much market value did the company create?</div>
+
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'10px',marginBottom:'14px'}}>
+                                  <div>
+                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2009</div>
+                                    <div style={{fontSize:'14px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2009.toLocaleString()}M</div>
                                   </div>
-                                  <div style={{overflowX:'auto'}}>
-                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
-                                      <thead>
-                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
-                                          <th style={{textAlign:'left',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
-                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EPS</th>
-                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVIDEND</th>
-                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PAYOUT %</th>
+                                  <div>
+                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2024</div>
+                                    <div style={{fontSize:'14px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2024.toLocaleString()}M</div>
+                                  </div>
+                                  <div>
+                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE INCREASE</div>
+                                    <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.retainedEarningsIncrease}B</div>
+                                  </div>
+                                  <div>
+                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP INCREASE</div>
+                                    <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.marketCapIncrease}B</div>
+                                  </div>
+                                </div>
+
+                                <div style={{display:'flex',alignItems:'baseline',gap:'10px',justifyContent:'center',padding:'12px 14px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'4px',marginBottom:'10px'}}>
+                                  <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>$1 IN →</span>
+                                  <span style={{fontSize:'30px',color:'rgba(34,197,94,1)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>${t.multiplier}</span>
+                                  <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>OUT</span>
+                                </div>
+
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{t.verdict}</div>
+                              </div>
+                            );
+                          })()}
+
+                          {/* Tangible equity / ROTE breakdown */}
+                          {balanceSheet.tangibleEquity && (() => {
+                            const te = balanceSheet.tangibleEquity;
+                            return (
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// TANGIBLE EQUITY · ROTE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{te.note}</div>
+                                </div>
+
+                                {/* Big ROTE callout */}
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// 2024 ROTE</div>
+                                  <div style={{fontSize:'28px',color:amber,fontFamily:'monospace',fontWeight:700}}>{te.rote2024.toLocaleString()}%</div>
+                                  <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>$2.2B Net Income on $134M Tangible Equity</div>
+                                </div>
+
+                                <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                                  <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                        <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EQUITY</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– GOODWILL</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– INTANGIBLES</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>= TANGIBLE</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {te.rows.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
+                                          <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>{r.equity.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.goodwill.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.intangibles.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color: r.tangible < 0 ? 'rgba(239,68,68,0.9)' : 'rgba(34,197,94,0.9)',fontWeight:700}}>{r.tangible.toLocaleString()}</td>
                                         </tr>
-                                      </thead>
-                                      <tbody>
-                                        {incomeStatement.dividends.rows.map((r, i) => (
-                                          <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)',background: r.abnormal ? 'rgba(239,68,68,0.04)' : 'transparent'}}>
-                                            <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
-                                            <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.eps.toFixed(2)}</td>
-                                            <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.dividend.toFixed(2)}</td>
-                                            <td style={{padding:'5px 8px',textAlign:'right',color: r.abnormal ? 'rgba(239,68,68,0.95)' : 'rgba(224,234,255,0.8)',fontWeight: r.abnormal ? 700 : 400}}>{r.payout.toFixed(2)}%{r.abnormal ? ' ⚠' : ''}</td>
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* CAGR callouts */}
-                              {incomeStatement.cagr && (
-                                <div style={{
-                                  marginBottom:'12px',
-                                  padding:'12px 14px',
-                                  background:'rgba(34,197,94,0.06)',
-                                  border:'0.5px solid rgba(34,197,94,0.35)',
-                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
-                                  borderRadius:'3px',
-                                }}>
-                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// NET INCOME CAGR</div>
-                                  <div style={{display:'flex',gap:'18px',flexWrap:'wrap',marginBottom:'8px'}}>
-                                    <div>
-                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2014</div>
-                                      <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2014}%</div>
-                                    </div>
-                                    <div>
-                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2014 – 2024</div>
-                                      <div style={{fontSize:'16px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2014_2024}%</div>
-                                    </div>
-                                    <div>
-                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2024</div>
-                                      <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2024}%</div>
-                                    </div>
-                                  </div>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{incomeStatement.cagr.note}</div>
-                                </div>
-                              )}
-                            </>
-                          )}
-
-                          {/* ════════════════════════════════════════════════
-                              BALANCE SHEET
-                              ════════════════════════════════════════════════ */}
-                          {balanceSheet && (
-                            <>
-                              <SectionHeading>// BALANCE SHEET</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Asset growth, debt picture, returns on capital, and working capital efficiency.</div>
-
-                              {balanceSheet.totalAssets && <TimeSeriesChart data={balanceSheet.totalAssets} />}
-                              {balanceSheet.totalDebt && <TimeSeriesChart data={balanceSheet.totalDebt} />}
-                              {balanceSheet.shareholderEquity && <TimeSeriesChart data={balanceSheet.shareholderEquity} />}
-                              {balanceSheet.bookValuePerShare && <TimeSeriesChart data={balanceSheet.bookValuePerShare} />}
-                              {balanceSheet.currentRatio && <TimeSeriesChart data={balanceSheet.currentRatio} />}
-                              {balanceSheet.debtToEquity && (
-                                <>
-                                  <TimeSeriesChart data={balanceSheet.debtToEquity} />
-                                  {balanceSheet.debtToEquity.note && (
-                                    <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                      <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.debtToEquity.note}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-
-                              {/* Returns triple — multi-line ROE/ROIC/ROA */}
-                              {balanceSheet.returns && (() => {
-                                const r = balanceSheet.returns;
-                                const allYears = [...new Set([...r.roe.map(d=>d.year), ...r.roic.map(d=>d.year), ...r.roa.map(d=>d.year)])].sort((a,b)=>a-b);
-                                const maxVal = Math.max(...r.roe.map(d=>d.value), ...r.roic.map(d=>d.value), ...r.roa.map(d=>d.value));
-                                const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
-                                const innerW = W - PL - PR;
-                                const innerH = H - PT - PB;
-                                const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
-                                const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
-                                const lines = [
-                                  { label: 'ROE',  series: r.roe,  color: amber, avg: r.averages.roe },
-                                  { label: 'ROIC', series: r.roic, color: 'rgba(34,197,94,0.9)', avg: r.averages.roic },
-                                  { label: 'ROA',  series: r.roa,  color: 'rgba(96,165,250,0.9)', avg: r.averages.roa },
-                                ];
-                                return (
-                                  <div style={{
-                                    background:'rgba(0,0,0,0.4)',
-                                    border:`0.5px solid ${amberGlow}`,
-                                    borderLeft:`2px solid ${amber}`,
-                                    borderRadius:'4px',
-                                    padding:'14px',
-                                    marginBottom:'12px',
-                                  }}>
-                                    <div style={{marginBottom:'10px'}}>
-                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// RETURNS · ROE · ROIC · ROA</div>
-                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
-                                    </div>
-                                    <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
-                                      {lines.map((L, i) => (
-                                        <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px'}}>
-                                          <span style={{display:'inline-block',width:'14px',height:'2px',background:L.color,borderRadius:'1px'}}/>
-                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.5px',fontWeight:600}}>{L.label}</span>
-                                          <span style={{fontSize:'10px',color:L.color,fontFamily:'monospace',fontWeight:700}}>{L.series[L.series.length-1].value.toFixed(1)}%</span>
-                                          <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace'}}>avg {L.avg}%</span>
-                                        </div>
                                       ))}
-                                    </div>
-                                    <div style={{width:'100%',overflowX:'auto'}}>
-                                      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
-                                        {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
-                                          <g key={i}>
-                                            <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
-                                            <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{(maxVal * p).toFixed(0)}%</text>
-                                          </g>
-                                        ))}
-                                        {allYears.map((y, i) => {
-                                          if (i % 3 !== 0 && i !== allYears.length - 1) return null;
-                                          return <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(y).slice(-2)}</text>;
-                                        })}
-                                        {lines.map((L, i) => (
-                                          <polyline key={i} points={L.series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ')} fill="none" stroke={L.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        ))}
-                                      </svg>
-                                    </div>
-                                  </div>
-                                );
-                              })()}
+                                    </tbody>
+                                  </table>
+                                </div>
 
-                              {/* Cash Conversion Cycle */}
-                              {balanceSheet.ccc && (
-                                <>
-                                  <TimeSeriesChart data={balanceSheet.ccc} />
-                                  {balanceSheet.ccc.note && (
-                                    <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                      <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.ccc.note}
-                                    </div>
-                                  )}
-                                </>
-                              )}
+                                <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Interpretation —</span> {te.interpretation}
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </>
+                      )}
 
-                              {/* Retained Earnings Test — Buffett's preferred compounder check */}
-                              {balanceSheet.retainedEarningsTest && (() => {
-                                const t = balanceSheet.retainedEarningsTest;
-                                return (
-                                  <div style={{
-                                    background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
-                                    border:'0.5px solid rgba(34,197,94,0.55)',
-                                    borderLeft:'2px solid rgba(34,197,94,0.95)',
-                                    borderRadius:'4px',
-                                    padding:'18px',
-                                    marginBottom:'12px',
-                                    position:'relative',
-                                  }}>
-                                    <div style={{position:'absolute',top:'8px',left:'8px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
-                                    <div style={{position:'absolute',top:'8px',right:'8px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
-                                    <div style={{position:'absolute',bottom:'8px',left:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
-                                    <div style={{position:'absolute',bottom:'8px',right:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
-                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// BUFFETT'S $1 RETAINED EARNINGS TEST · {t.period}</div>
-                                    <div style={{fontSize:'11px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'14px',letterSpacing:'0.3px'}}>For every $1 of retained earnings, how much market value did the company create?</div>
+                        </div>
+                      );
+                    };
 
-                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'10px',marginBottom:'14px'}}>
-                                      <div>
-                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2009</div>
-                                        <div style={{fontSize:'14px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2009.toLocaleString()}M</div>
-                                      </div>
-                                      <div>
-                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2024</div>
-                                        <div style={{fontSize:'14px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2024.toLocaleString()}M</div>
-                                      </div>
-                                      <div>
-                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE INCREASE</div>
-                                        <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.retainedEarningsIncrease}B</div>
-                                      </div>
-                                      <div>
-                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP INCREASE</div>
-                                        <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.marketCapIncrease}B</div>
-                                      </div>
-                                    </div>
+                    // === CASHFLOW TAB ===
+                    const renderCashFlowTab = () => {
+                      if (!bd.numbers || !bd.numbers.cashFlow) return null;
+                      const { cashFlow } = bd.numbers;
+                      return (
+                        <div>
+                      {/* ════════════════════════════════════════════════
+                          CASH FLOW
+                          ════════════════════════════════════════════════ */}
+                      {cashFlow && (
+                        <>
+                          <SectionHeading>// CASH FLOW</SectionHeading>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Operating cash flow, reinvestment intensity, and free cash flow / owner earnings.</div>
 
-                                    <div style={{display:'flex',alignItems:'baseline',gap:'10px',justifyContent:'center',padding:'12px 14px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'4px',marginBottom:'10px'}}>
-                                      <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>$1 IN →</span>
-                                      <span style={{fontSize:'30px',color:'rgba(34,197,94,1)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>${t.multiplier}</span>
-                                      <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>OUT</span>
-                                    </div>
-
-                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{t.verdict}</div>
-                                  </div>
-                                );
-                              })()}
-
-                              {/* Tangible equity / ROTE breakdown */}
-                              {balanceSheet.tangibleEquity && (() => {
-                                const te = balanceSheet.tangibleEquity;
-                                return (
-                                  <div style={{
-                                    background:'rgba(0,0,0,0.4)',
-                                    border:`0.5px solid ${amberGlow}`,
-                                    borderLeft:`2px solid ${amber}`,
-                                    borderRadius:'4px',
-                                    padding:'14px',
-                                    marginBottom:'12px',
-                                  }}>
-                                    <div style={{marginBottom:'10px'}}>
-                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// TANGIBLE EQUITY · ROTE</div>
-                                      <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{te.note}</div>
-                                    </div>
-
-                                    {/* Big ROTE callout */}
-                                    <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
-                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// 2024 ROTE</div>
-                                      <div style={{fontSize:'28px',color:amber,fontFamily:'monospace',fontWeight:700}}>{te.rote2024.toLocaleString()}%</div>
-                                      <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>$2.2B Net Income on $134M Tangible Equity</div>
-                                    </div>
-
-                                    <div style={{overflowX:'auto',marginBottom:'10px'}}>
-                                      <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
-                                        <thead>
-                                          <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
-                                            <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
-                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EQUITY</th>
-                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– GOODWILL</th>
-                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– INTANGIBLES</th>
-                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>= TANGIBLE</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {te.rows.map((r, i) => (
-                                            <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
-                                              <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
-                                              <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>{r.equity.toLocaleString()}</td>
-                                              <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.goodwill.toLocaleString()}</td>
-                                              <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.intangibles.toLocaleString()}</td>
-                                              <td style={{padding:'4px 8px',textAlign:'right',color: r.tangible < 0 ? 'rgba(239,68,68,0.9)' : 'rgba(34,197,94,0.9)',fontWeight:700}}>{r.tangible.toLocaleString()}</td>
-                                            </tr>
-                                          ))}
-                                        </tbody>
-                                      </table>
-                                    </div>
-
-                                    <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
-                                      <span style={{color:amber,fontWeight:600}}>Interpretation —</span> {te.interpretation}
-                                    </div>
-                                  </div>
-                                );
-                              })()}
-                            </>
-                          )}
-
-                          {/* ════════════════════════════════════════════════
-                              CASH FLOW
-                              ════════════════════════════════════════════════ */}
-                          {cashFlow && (
+                          {cashFlow.operatingCashFlow && <TimeSeriesChart data={cashFlow.operatingCashFlow} />}
+                          {cashFlow.capex && <TimeSeriesChart data={cashFlow.capex} />}
+                          {cashFlow.capexRatio && (
                             <>
-                              <SectionHeading>// CASH FLOW</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Operating cash flow, reinvestment intensity, and free cash flow / owner earnings.</div>
-
-                              {cashFlow.operatingCashFlow && <TimeSeriesChart data={cashFlow.operatingCashFlow} />}
-                              {cashFlow.capex && <TimeSeriesChart data={cashFlow.capex} />}
-                              {cashFlow.capexRatio && (
-                                <>
-                                  <TimeSeriesChart data={cashFlow.capexRatio} />
-                                  {cashFlow.capexRatio.note && (
-                                    <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                      <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {cashFlow.capexRatio.note}
-                                    </div>
-                                  )}
-                                </>
+                              <TimeSeriesChart data={cashFlow.capexRatio} />
+                              {cashFlow.capexRatio.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {cashFlow.capexRatio.note}
+                                </div>
                               )}
-                              {cashFlow.freeCashFlow && <TimeSeriesChart data={cashFlow.freeCashFlow} />}
                             </>
                           )}
+                          {cashFlow.freeCashFlow && <TimeSeriesChart data={cashFlow.freeCashFlow} />}
+                        </>
+                      )}
                         </div>
                       );
                     };
@@ -15144,11 +15459,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {tabsStrip}
                         <div style={{paddingTop:'8px'}}>
                           {activeTab === 'overview' && (bd.overview ? renderOverviewTab() : renderEmptyTab('overview'))}
-                          {activeTab === 'brands' && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
-                          {activeTab === 'moat'    && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
-                          {activeTab === 'numbers' && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
-                          {activeTab === 'risks'   && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
-                          {activeTab === 'thesis'  && (bd.thesis ? renderThesisTab() : renderEmptyTab('thesis'))}
+                          {activeTab === 'brands'   && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
+                          {activeTab === 'moat'     && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
+                          {activeTab === 'numbers'  && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
+                          {activeTab === 'segments' && ((bd.numbers && bd.numbers.segments) ? renderSegmentsTab() : renderEmptyTab('segments'))}
+                          {activeTab === 'pnl'      && ((bd.numbers && bd.numbers.incomeStatement) ? renderPnlTab() : renderEmptyTab('P&L'))}
+                          {activeTab === 'balance'  && ((bd.numbers && bd.numbers.balanceSheet) ? renderBalanceTab() : renderEmptyTab('balance'))}
+                          {activeTab === 'cashflow' && ((bd.numbers && bd.numbers.cashFlow) ? renderCashFlowTab() : renderEmptyTab('cash flow'))}
+                          {activeTab === 'risks'    && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
+                          {activeTab === 'thesis'   && (bd.thesis ? renderThesisTab() : renderEmptyTab('thesis'))}
                         </div>
                       </div>
                     );
