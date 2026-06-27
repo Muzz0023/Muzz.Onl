@@ -1919,6 +1919,66 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
 // First populated breakdown; serves as template for all 32 Coverage companies
 // ════════════════════════════════════════════════════════════════════
 const HSY_BREAKDOWN = {
+  overview: {
+    // Quick-glance fact sheet
+    facts: {
+      founded:        '1894 by Milton S. Hershey',
+      incorporated:   '24 October 1927 · Delaware',
+      brandCount:     '90+',
+      globalReach:    '~70 countries',
+    },
+    // Identity & positioning blocks
+    identity: {
+      coreIdentity: 'Global confectionery leader. Focused on "making more moments of goodness."',
+      industryPosition: [
+        'Largest chocolate producer in North America.',
+        'Leading U.S. snack maker.',
+        'Global leader in chocolate & non-chocolate confectionery.',
+      ],
+    },
+    // Customers & marketing
+    customers: {
+      mainCustomers: 'Wholesale distributors, chain grocery stores, mass merchandisers, chain drug stores, vending companies, wholesale clubs, convenience stores, dollar stores, concessionaires, and department stores.',
+      keyDistributor: {
+        name: 'McLane Company, Inc.',
+        share: '~27%',
+        period: '2024 consolidated net sales',
+        note: 'McLane is also the primary distributor of Hershey products to Wal-Mart Stores, Inc. Concentration risk worth tracking.',
+      },
+      marketingFoundation: 'Strong brand equities, product innovation, and superior product quality.',
+      marketingActivities: [
+        'Consumer advertising & promotional programs.',
+        'Promotional programs directed at retail customers.',
+        'Heavy focus on new product development, testing, and innovation.',
+      ],
+      distributionNetwork: [
+        'Products shipped from manufacturing plants to strategically located distribution centres.',
+        'Efficient logistics support sales growth & service levels.',
+        'Primarily use common carriers to move goods to customers.',
+      ],
+    },
+    // Raw materials & pricing
+    rawMaterials: {
+      keyInput: {
+        name: 'Cocoa Products',
+        detail: 'Liquor, butter, powder. Most significant input for chocolate production.',
+      },
+      cocoaSupply: {
+        regions: 'Far East, West Africa (~70% of world supply), Central & South America.',
+        risks: 'Climate change, extreme weather, crop disease, political unrest → can cause price fluctuations but historically no complete supply loss.',
+        procurement: 'Managed by Hershey’s trading company in Switzerland — oversees price risk management, physical supply procurement, sustainable sourcing oversight, real-time cocoa market intelligence, and attracts skilled commodities traders.',
+      },
+      otherMaterials: 'Sugar, corn products, dairy (Class II & IV), wheat, peanuts, almonds, energy.',
+      sourcing: [
+        'U.S. suppliers: most inputs for U.S. & Canada operations.',
+        'International: imports when not locally available.',
+      ],
+      pricingStrategy: {
+        approach: 'Adjusts product prices & weights when input costs rise. Price changes balance raw & packaging costs, fuel/utilities/transport, employee benefits, competitive dynamics, and profit objectives.',
+        lag: 'Time delay before net sales reflect list price increases — honouring prior promotional commitments, plus increased promotional allowances offsetting gains.',
+      },
+    },
+  },
   brands: {
     segments: [
       {
@@ -3018,7 +3078,7 @@ function MuzzApp() {
       setCoverageIndustry(entry.industry);
       setCoverageCountry(entry.country);
       setCoverageCompany(entry.ticker);
-      setCoverageBreakdownTab('brands');
+      setCoverageBreakdownTab('overview');
       setInvestmentsSubTab('coverage');
     } else {
       // Not in coverage — friendly prompt
@@ -3037,7 +3097,7 @@ function MuzzApp() {
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
   const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
-  const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('brands'); // active tab on Coverage company breakdown page
+  const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('overview'); // active tab on Coverage company breakdown page
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
   const [investmentMapGraph, setInvestmentMapGraph] = useState({
@@ -12390,6 +12450,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     const amberDim = 'rgba(245,158,11,0.6)';
                     const amberGlow = 'rgba(245,158,11,0.35)';
                     const TABS = [
+                      { id: 'overview', label: 'OVERVIEW',    enabled: !!bd.overview },
                       { id: 'brands',  label: 'BRANDS',     enabled: !!bd.brands },
                       { id: 'moat',    label: 'MOAT',       enabled: !!bd.moat },
                       { id: 'numbers', label: 'NUMBERS',    enabled: !!bd.numbers },
@@ -12622,6 +12683,162 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 );
                               })}
+                            </>
+                          )}
+                        </div>
+                      );
+                    };
+
+                    // === OVERVIEW TAB ===
+                    const renderOverviewTab = () => {
+                      if (!bd.overview) return null;
+                      const { facts, identity, customers, rawMaterials } = bd.overview;
+
+                      // Quick-glance stat card
+                      const StatCard = ({ label, value, sub }) => (
+                        <div style={{
+                          background:'rgba(0,0,0,0.4)',
+                          border:`0.5px solid ${amberGlow}`,
+                          borderLeft:`2px solid ${amber}`,
+                          borderRadius:'4px',
+                          padding:'12px 14px',
+                          position:'relative',
+                        }}>
+                          <div style={{position:'absolute',top:'6px',right:'8px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>{label}</div>
+                          <div style={{fontSize:'16px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{value}</div>
+                          {sub && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{sub}</div>}
+                        </div>
+                      );
+
+                      // Plain info panel for paragraph-style content
+                      const InfoPanel = ({ label, children, accent = 'amber' }) => {
+                        const accentColor = accent === 'red' ? 'rgba(239,68,68,0.85)' : amber;
+                        const accentBorder = accent === 'red' ? 'rgba(239,68,68,0.35)' : amberGlow;
+                        const accentBg = accent === 'red' ? 'rgba(239,68,68,0.04)' : 'rgba(0,0,0,0.4)';
+                        return (
+                          <div style={{
+                            background: accentBg,
+                            border:`0.5px solid ${accentBorder}`,
+                            borderLeft:`2px solid ${accentColor}`,
+                            borderRadius:'4px',
+                            padding:'12px 14px',
+                            marginBottom:'8px',
+                          }}>
+                            <div style={{fontSize:'9px',color: accent === 'red' ? 'rgba(239,68,68,0.85)' : amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>{label}</div>
+                            <div style={{fontSize:'11px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{children}</div>
+                          </div>
+                        );
+                      };
+
+                      // Bulleted list panel
+                      const BulletPanel = ({ label, items }) => (
+                        <div style={{
+                          background:'rgba(0,0,0,0.4)',
+                          border:`0.5px solid ${amberGlow}`,
+                          borderLeft:`2px solid ${amber}`,
+                          borderRadius:'4px',
+                          padding:'12px 14px',
+                          marginBottom:'8px',
+                        }}>
+                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>{label}</div>
+                          <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                            {items.map((it, i) => (
+                              <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                <span>{it}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+
+                      return (
+                        <div>
+                          {/* HEADLINE STATS */}
+                          <SectionHeading>// HEADLINE STATS</SectionHeading>
+                          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px',marginBottom:'4px'}}>
+                            <StatCard label="FOUNDED"      value="1894"             sub="by Milton S. Hershey" />
+                            <StatCard label="INCORPORATED" value="1927"             sub="Delaware" />
+                            <StatCard label="BRANDS"       value={facts.brandCount} sub="across all categories" />
+                            <StatCard label="GLOBAL REACH" value={facts.globalReach} sub="worldwide" />
+                          </div>
+
+                          {/* IDENTITY & POSITIONING */}
+                          <SectionHeading>// IDENTITY & POSITIONING</SectionHeading>
+                          <InfoPanel label="// CORE IDENTITY">{identity.coreIdentity}</InfoPanel>
+                          <BulletPanel label="// INDUSTRY POSITION" items={identity.industryPosition} />
+
+                          {/* CUSTOMERS & MARKETING */}
+                          <SectionHeading>// CUSTOMERS & MARKETING</SectionHeading>
+                          <InfoPanel label="// MAIN CUSTOMERS">{customers.mainCustomers}</InfoPanel>
+
+                          {/* McLane callout — concentration risk, render in red accent */}
+                          {customers.keyDistributor && (
+                            <div style={{
+                              background:'rgba(239,68,68,0.04)',
+                              border:'0.5px solid rgba(239,68,68,0.4)',
+                              borderLeft:'2px solid rgba(239,68,68,0.85)',
+                              borderRadius:'4px',
+                              padding:'14px',
+                              marginBottom:'8px',
+                              position:'relative',
+                            }}>
+                              <div style={{position:'absolute',top:'8px',right:'10px',fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CONCENTRATION RISK</div>
+                              <div style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY DISTRIBUTOR</div>
+                              <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                <span style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{customers.keyDistributor.name}</span>
+                                <span style={{fontSize:'18px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{customers.keyDistributor.share}</span>
+                                <span style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.5px'}}>{customers.keyDistributor.period}</span>
+                              </div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{customers.keyDistributor.note}</div>
+                            </div>
+                          )}
+
+                          <InfoPanel label="// MARKETING FOUNDATION">{customers.marketingFoundation}</InfoPanel>
+                          <BulletPanel label="// MARKETING ACTIVITIES" items={customers.marketingActivities} />
+                          <BulletPanel label="// DISTRIBUTION NETWORK" items={customers.distributionNetwork} />
+
+                          {/* RAW MATERIALS & PRICING */}
+                          <SectionHeading>// RAW MATERIALS & PRICING</SectionHeading>
+
+                          {/* Featured cocoa callout */}
+                          {rawMaterials.keyInput && (
+                            <div style={{
+                              background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                              border:`0.5px solid ${amber}`,
+                              borderLeft:`2px solid ${amber}`,
+                              borderRadius:'4px',
+                              padding:'14px',
+                              marginBottom:'8px',
+                              position:'relative',
+                            }}>
+                              <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                              <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                              <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                              <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY RAW MATERIAL</div>
+                              <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'6px'}}>{rawMaterials.keyInput.name}</div>
+                              <div style={{fontSize:'11px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{rawMaterials.keyInput.detail}</div>
+                            </div>
+                          )}
+
+                          {/* Cocoa supply detail — regions has 70% West Africa, treat as concentration risk */}
+                          {rawMaterials.cocoaSupply && (
+                            <>
+                              <InfoPanel label="// COCOA SUPPLY · REGIONS" accent="red">{rawMaterials.cocoaSupply.regions} <span style={{color:'rgba(239,68,68,0.85)',fontWeight:600}}>Heavy geographic concentration.</span></InfoPanel>
+                              <InfoPanel label="// COCOA SUPPLY · RISKS">{rawMaterials.cocoaSupply.risks}</InfoPanel>
+                              <InfoPanel label="// COCOA PROCUREMENT">{rawMaterials.cocoaSupply.procurement}</InfoPanel>
+                            </>
+                          )}
+
+                          <InfoPanel label="// OTHER RAW MATERIALS">{rawMaterials.otherMaterials}</InfoPanel>
+                          <BulletPanel label="// SOURCING" items={rawMaterials.sourcing} />
+
+                          {rawMaterials.pricingStrategy && (
+                            <>
+                              <InfoPanel label="// PRICING STRATEGY">{rawMaterials.pricingStrategy.approach}</InfoPanel>
+                              <InfoPanel label="// LAG IN PRICE IMPACT">{rawMaterials.pricingStrategy.lag}</InfoPanel>
                             </>
                           )}
                         </div>
@@ -13123,6 +13340,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       }}>
                         {tabsStrip}
                         <div style={{paddingTop:'8px'}}>
+                          {activeTab === 'overview' && (bd.overview ? renderOverviewTab() : renderEmptyTab('overview'))}
                           {activeTab === 'brands' && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
                           {activeTab === 'moat'    && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
                           {activeTab === 'numbers' && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
@@ -13158,7 +13376,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {searchResults.length === 0 ? (
                     <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies match "{coverageSearch}".</div>
                   ) : searchResults.map(c => (
-                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('brands'); setCoverageSearch(''); }}
+                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); setCoverageSearch(''); }}
                       style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
                       <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
                         <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
@@ -13261,7 +13479,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <>
                     <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
                     {companiesInScope.map(c => (
-                      <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('brands'); }}
+                      <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); }}
                         style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
                         {/* Top row: ticker + name */}
                         <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
