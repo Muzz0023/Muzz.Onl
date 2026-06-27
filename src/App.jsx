@@ -2690,6 +2690,79 @@ const HSY_BREAKDOWN = {
         { category: 'Financial Impact',                points: ['Climate-related spending is not material to Hershey’s results of operations, CapEx, or competitive position.'] },
       ],
     },
+    // Purchase obligations — forward commodity contracts (as of Dec 31 2024)
+    purchaseObligations: {
+      asOf: '31 Dec 2024',
+      description: 'Forward contracts with brokers and dealers to buy raw materials (mainly cocoa, sugar, dairy, nuts). Some are fixed-price (price certainty, but exposure if commodity prices fall), others unpriced (variable cost exposure managed via commodity futures and derivative hedges).',
+      schedule: [
+        { year: 2025, value: 1143.4 },
+        { year: 2026, value: 496.7 },
+        { year: 2027, value: 13.9 },
+        { year: 2028, value: 13.7 },
+        { year: 2029, value: 13.7 },
+      ],
+      unit: 'M USD',
+      takeaways: [
+        { label: 'Stability',         text: 'Forward contracts and hedging reduce the risk of sudden spikes in cocoa, sugar, or dairy prices.' },
+        { label: 'Trade-off',          text: 'Fixed-price contracts provide certainty but can become costly if commodity prices drop below the locked-in rate.' },
+        { label: 'Risk Control',      text: 'Unpriced contracts create exposure to commodity volatility, but Hershey manages this through futures and other derivatives.' },
+        { label: 'Practical Purpose', text: 'These contracts ensure reliable supply of raw materials for chocolate and snacks production.' },
+      ],
+      trackRecord: 'Over the past 3 years, all obligations were met by taking delivery and making payment. Demonstrates contracts are tied to actual production needs, not speculation.',
+    },
+    // Contingencies — environmental, legal, labor
+    contingencies: {
+      environmental: {
+        title: 'Environmental Contingencies',
+        rows: [
+          { issue: 'Asbestos in Facilities',  description: 'Some facilities contain asbestos. Must be handled safely if facilities are renovated or demolished.', impact: 'No current asset retirement obligation recorded — removal is uncertain and not planned.' },
+          { issue: 'Regulatory Compliance',   description: 'Hershey’s asbestos management program complies with regulations.', impact: 'Normal repairs / maintenance don’t require asbestos removal.' },
+          { issue: 'Financial Effect',        description: 'No reliable estimate of costs due to uncertainty.', impact: 'Risk is low unless major renovations or demolitions occur.' },
+        ],
+      },
+      legal: {
+        title: 'Legal Contingencies',
+        rows: [
+          { issue: 'Range of Cases',  description: 'Includes trade regulation, product liability, advertising, contracts, environmental, patent / trademark, labor & employment, human / workplace rights, and tax.', impact: 'Normal course of business risks.' },
+          { issue: 'Financial Risk',  description: 'Hershey states individual or aggregate cases are not expected to be material.',                                                                                  impact: 'Minimal expected effect on financial condition, results, or cash flows.' },
+        ],
+      },
+      labor: {
+        title: 'Collective Bargaining',
+        stats: [
+          { label: 'WORKFORCE',         value: '~20,030', sub: '~18,540 FT + 1,490 PT worldwide' },
+          { label: 'UNIONISED',         value: '~6,525',  sub: '~33% of workforce under CBAs' },
+          { label: '2025 RENEGOTIATIONS', value: '~69%',  sub: 'of union employees at 7 facilities (all outside U.S.)' },
+        ],
+        outlook: 'Hershey expects successful renegotiation of upcoming 2025 CBAs. No U.S. labor disputes flagged.',
+      },
+      tldr: 'Asbestos is contained, legal cases are routine, and while labor contracts will need renewal in 2025, Hershey expects smooth agreements.',
+    },
+    // Enterprise Risk Management — governance structure
+    erm: {
+      description: 'Top-down governance model. The Board holds ultimate accountability. Committees oversee specialised risk categories. The Resiliency Team and General Counsel handle daily risk management and report upward.',
+      board: {
+        title: 'Board of Directors',
+        responsibilities: 'Ultimate responsibility for the ERM program. Reviews business & operational risks throughout the year. Oversees strategic planning, CEO & senior management succession, ESG & sustainability programs. Delegates risk oversight to committees and management as appropriate.',
+      },
+      committees: [
+        { name: 'Audit Committee',                       responsibilities: 'Oversees legal & regulatory compliance and Code of Conduct. Reviews key accounting policies, financial statement integrity, internal controls. Manages internal & independent audit matters. Oversees public ESG reporting within its scope.' },
+        { name: 'Compensation & Human Capital Committee', responsibilities: 'Reviews compensation programs (with independent consultants) to ensure no excessive risk-taking. Oversees succession planning, talent management, pay equity, and human capital practices.' },
+        { name: 'Executive Committee',                   responsibilities: 'Reviews and approves related-person transactions between Hershey and affiliated entities or directors.' },
+        { name: 'Finance & Risk Management (F&RM) Committee', responsibilities: 'Primary oversight of the ERM process. Reviews key enterprise risks & mitigation plans. Oversees cybersecurity & information risks, financial risks (insurance, capital structure, credit, M&A), human rights, environmental stewardship, and responsible sourcing / commodities risks.', highlight: true },
+        { name: 'Governance Committee',                  responsibilities: 'Oversees Board composition, succession, director independence, and related-party transactions. Oversees governance of ESG policies & programs (targets, standards, metrics). Ensures compliance with corporate governance documents.' },
+      ],
+      management: [
+        { role: 'Resiliency Team',  responsibilities: 'Day-to-day risk management. Cross-functional team (operations, finance, audit, legal, compliance, IT, security). Reports to General Counsel. Conducts bi-annual ERM assessment to identify key risks. Works with global leaders to form a holistic enterprise risk view. Reports findings to F&RM Committee and Board.' },
+        { role: 'General Counsel',  responsibilities: 'Executive leader of the ERM program. Oversees development & execution of ERM processes. Acts as central coordinator between the Resiliency Team, committees, and Board.' },
+      ],
+      independence: {
+        independentDirectors: '10 of 11',
+        leadIndependent: true,
+        committeesAllIndependent: true,
+        summary: '10 of 11 directors are independent. A Lead Independent Director is appointed to strengthen independent oversight. Key committees are composed entirely of independent directors, ensuring checks & balances on management, including the CEO.',
+      },
+    },
   },
   thesis: {
     vision: 'To be a leading snacking powerhouse, meeting evolving consumer snacking needs while strengthening growth capabilities.',
@@ -2739,6 +2812,72 @@ const HSY_BREAKDOWN = {
       },
     ],
     bigPicture: 'Hershey is balancing its strong core confection dominance with expansion into salty snacks and international markets, while investing heavily in digital transformation, supply chain upgrades, and ESG leadership to sustain long-term growth.',
+    // Recent business acquisitions — strategic M&A execution
+    acquisitions: {
+      description: 'Hershey is balancing confection growth (Sour Strips) with snacking expansion / better-for-you platforms (Weaver, LesserEvil) to pursue its "snacking powerhouse" vision.',
+      deals: [
+        {
+          year: 2025,
+          name: 'LesserEvil',
+          segment: 'North America Salty Snacks',
+          price: '~$750M',
+          priceNote: 'WSJ reported figure; not officially disclosed',
+          status: 'Closed 19 Nov 2025',
+          rationale: 'Multi-category, better-for-you snacks platform. Organic popcorn, puffs, curls. Extends portfolio into new categories alongside SkinnyPop, Dot’s Pretzels, and Pirate’s Booty. CEO Kirk Tanner: "Charting the next generation of growth to lead the future of snacking."',
+          highlight: true,
+        },
+        {
+          year: 2024,
+          name: 'Sour Strips',
+          subtitle: 'from Actual Candy, LLC',
+          segment: 'North America Confectionery',
+          price: 'Immaterial',
+          priceNote: 'Initial cash funded by cash on hand + short-term borrowings. Contingent payments possible if targets met.',
+          allocation: 'Minimal net assets · $41.8M trademarks (22-yr life) · $41.3M customer relationships (14-16 yr life) · remainder goodwill',
+          goodwillDeductible: true,
+          rationale: 'Brand-driven acquisition. Gain an emerging sour candy brand and leverage Hershey’s brand-building, distribution, and retail relationships to accelerate growth. Most value is in intangibles.',
+        },
+        {
+          year: 2023,
+          name: 'Weaver Popcorn Manufacturing',
+          subtitle: 'assets / manufacturing plants',
+          segment: 'North America Salty Snacks',
+          price: '$165.8M',
+          priceNote: 'Cash on hand + short-term borrowings',
+          allocation: '$79.1M property, plant & equipment · $1.5M other net assets · $85.2M goodwill',
+          goodwillDeductible: true,
+          rationale: 'Asset-driven acquisition. Expand manufacturing capacity for SkinnyPop and salty snacks. Strengthens supply chain and supports growth in salty snacking.',
+        },
+      ],
+    },
+    // Sustainability / ESG framework
+    sustainability: {
+      founderLegacy: 'Milton Hershey believed in responsible citizenship — investing in communities and creating the Milton Hershey School for disadvantaged children.',
+      coreBelief: 'Use chocolate to "Make More Moments of Goodness" for current and future generations.',
+      strategy: 'Our Shared Goodness Promise — Hershey’s global sustainability framework.',
+      focusAreas: [
+        { name: 'People',                    description: 'Empower employees & partners who make and sell Hershey brands.' },
+        { name: 'Communities',               description: 'Support farming communities supplying ingredients.' },
+        { name: 'Consumers & Stakeholders',  description: 'Deliver on commitments with trust and transparency.' },
+        { name: 'Environment',               description: 'Protect natural resources.' },
+        { name: 'Children & Youth',          description: 'Support education, welfare, and future opportunities.' },
+      ],
+      esg2024: {
+        year: '2024',
+        highlights: [
+          { category: 'Cocoa & Farmer Livelihoods', points: ['5-year agreement with cooperatives in Côte d’Ivoire to strengthen cocoa farmer resilience.', 'Cocoa For Good strategy continued.', 'Income Accelerator: 1,850 households received direct cash transfers.'] },
+          { category: 'Education in Cocoa Regions', points: ['Built 10 primary schools in partnership with Côte d’Ivoire’s oversight committee and the International Cocoa Initiative.'] },
+          { category: 'Responsible Sourcing & Human Rights', points: ['Trained 100+ suppliers across 5 countries on labor rights, safety, and root-cause problem solving.'] },
+          { category: 'Emissions Reduction & Energy', points: ['India Mandideep Plant earned EPA ENERGY STAR®.', 'Renewable & zero-emissions energy coverage at 82%.', 'On-site solar installed in Malaysia.'] },
+          { category: 'Agricultural Sustainability', points: ['Expanded agroforestry & regenerative agriculture programs across cocoa, dairy, sugar, and sugar beets.'] },
+          { category: 'Deforestation Prevention', points: ['Strengthened monitoring with Earthworm Foundation + Airbus Starling satellites.', 'Invested in protecting forests in Côte d’Ivoire, Ghana, Indonesia, Mexico & U.S.'] },
+          { category: 'Recognition & Awards', points: ['Named one of the World’s Most Ethical Companies® (Ethisphere).', 'Earned Global Great Place to Work® certifications.', 'Best Place to Work for Disability Inclusion.'] },
+          { category: 'Community Investment', points: ['Over 300 grants to nonprofits supporting youth, education, workforce, health care, housing, and thriving communities.'] },
+          { category: 'ESG Compliance & Reporting', points: ['Completed double materiality assessment.', 'Advanced controls & assurance.', 'Adopted data automation for non-financial ESG reporting.'] },
+        ],
+      },
+      reporting: 'Publishes annual ESG Report with frameworks, policies, and disclosures.',
+    },
   },
 };
 
@@ -13288,7 +13427,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -13413,6 +13552,262 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {environmental.rows.map((r, i) => (
                                 <InfoPanel key={i} category={r.category} points={r.points} />
                               ))}
+                            </>
+                          )}
+
+                          {/* PURCHASE OBLIGATIONS — forward commodity contracts */}
+                          {purchaseObligations && (() => {
+                            const maxVal = Math.max(...purchaseObligations.schedule.map(s => s.value));
+                            const total  = purchaseObligations.schedule.reduce((sum, s) => sum + s.value, 0);
+                            // Chart dims
+                            const W = 700, H = 200, PL = 50, PR = 16, PT = 16, PB = 36;
+                            const innerW = W - PL - PR;
+                            const innerH = H - PT - PB;
+                            const barW = innerW / purchaseObligations.schedule.length * 0.65;
+                            const gap  = innerW / purchaseObligations.schedule.length * 0.35;
+                            return (
+                              <>
+                                <SectionHeading>// PURCHASE OBLIGATIONS · {purchaseObligations.asOf}</SectionHeading>
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{purchaseObligations.description}</div>
+
+                                <div style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'10px',
+                                }}>
+                                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
+                                    <div>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// FUTURE COMMITMENTS</div>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{purchaseObligations.schedule[0].year} – {purchaseObligations.schedule[purchaseObligations.schedule.length-1].year}</div>
+                                    </div>
+                                    <div style={{textAlign:'right'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>TOTAL COMMITTED</div>
+                                      <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>${total.toFixed(1)}M</div>
+                                    </div>
+                                  </div>
+                                  <div style={{width:'100%',overflowX:'auto'}}>
+                                    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'460px',display:'block'}}>
+                                      {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                        <g key={i}>
+                                          <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                          <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">${(maxVal * p).toFixed(0)}M</text>
+                                        </g>
+                                      ))}
+                                      {purchaseObligations.schedule.map((s, i) => {
+                                        const x = PL + i * (barW + gap) + gap/2;
+                                        const y = PT + innerH - (s.value / maxVal) * innerH;
+                                        const h = (PT + innerH) - y;
+                                        const isLargest = s.value === maxVal;
+                                        return (
+                                          <g key={i}>
+                                            <rect x={x} y={y} width={barW} height={h} fill={isLargest ? amber : 'rgba(245,158,11,0.55)'} rx="1" />
+                                            <text x={x + barW/2} y={H - PB + 14} textAnchor="middle" fontSize="9" fill="rgba(224,234,255,0.7)" fontFamily="monospace" fontWeight="600">{s.year}</text>
+                                            <text x={x + barW/2} y={y - 4} textAnchor="middle" fontSize="9" fill={isLargest ? amber : 'rgba(245,158,11,0.75)'} fontFamily="monospace" fontWeight="700">${s.value < 100 ? s.value.toFixed(1) : Math.round(s.value)}M</text>
+                                          </g>
+                                        );
+                                      })}
+                                    </svg>
+                                  </div>
+                                  <div style={{marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`,fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontStyle:'italic'}}>FRONT-LOADED: Most commitments are concentrated in 2025-2026. After that, only small amounts are locked in \u2014 Hershey prefers flexibility given commodity volatility.</div>
+                                </div>
+
+                                {/* Takeaways */}
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'8px',marginBottom:'10px'}}>
+                                  {purchaseObligations.takeaways.map((t, i) => (
+                                    <div key={i} style={{
+                                      background:'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'3px',
+                                      padding:'10px 12px',
+                                    }}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {t.label.toUpperCase()}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{t.text}</div>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                {purchaseObligations.trackRecord && (
+                                  <div style={{
+                                    padding:'12px 14px',
+                                    background:'rgba(34,197,94,0.06)',
+                                    border:'0.5px solid rgba(34,197,94,0.35)',
+                                    borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                    borderRadius:'3px',
+                                    marginBottom:'10px',
+                                  }}>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TRACK RECORD</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{purchaseObligations.trackRecord}</div>
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
+
+                          {/* CONTINGENCIES — Environmental + Legal + Labor */}
+                          {contingencies && (
+                            <>
+                              <SectionHeading>// CONTINGENCIES</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Environmental, legal, and labor exposures disclosed in financial statements.</div>
+
+                              {/* Environmental + Legal — tabular row treatment */}
+                              {[contingencies.environmental, contingencies.legal].filter(Boolean).map((block, bi) => (
+                                <div key={bi} style={{marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// {block.title.toUpperCase()}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {block.rows.map((row, ri) => (
+                                      <div key={ri} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        padding:'10px 12px',
+                                      }}>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'5px'}}>{row.issue}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'5px'}}>{row.description}</div>
+                                        <div style={{padding:'6px 8px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginRight:'6px'}}>IMPACT:</span>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{row.impact}</span>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+
+                              {/* Labor — stat-card treatment */}
+                              {contingencies.labor && (
+                                <div style={{marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// {contingencies.labor.title.toUpperCase()}</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                    {contingencies.labor.stats.map((s, i) => (
+                                      <div key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        padding:'10px 12px',
+                                      }}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>{s.label}</div>
+                                        <div style={{fontSize:'16px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{s.value}</div>
+                                        <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.4,marginTop:'3px'}}>{s.sub}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  {contingencies.labor.outlook && (
+                                    <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginRight:'6px'}}>OUTLOOK:</span>
+                                      <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{contingencies.labor.outlook}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* TL;DR */}
+                              {contingencies.tldr && (
+                                <div style={{
+                                  marginTop:'4px',
+                                  padding:'12px 14px',
+                                  background:'rgba(34,197,94,0.06)',
+                                  border:'0.5px solid rgba(34,197,94,0.35)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                  borderRadius:'3px',
+                                }}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TL;DR</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{contingencies.tldr}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ENTERPRISE RISK MANAGEMENT — governance structure */}
+                          {erm && (
+                            <>
+                              <SectionHeading>// ENTERPRISE RISK MANAGEMENT</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{erm.description}</div>
+
+                              {/* Board */}
+                              {erm.board && (
+                                <div style={{
+                                  background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                  border:`0.5px solid ${amber}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'10px',
+                                  position:'relative',
+                                }}>
+                                  <div style={{position:'absolute',top:'6px',right:'8px',fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>TIER 01</div>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// ULTIMATE AUTHORITY</div>
+                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'8px'}}>{erm.board.title}</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{erm.board.responsibilities}</div>
+                                </div>
+                              )}
+
+                              {/* Committees */}
+                              {erm.committees && erm.committees.length > 0 && (
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// TIER 02 · BOARD COMMITTEES · {erm.committees.length}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                    {erm.committees.map((c, i) => (
+                                      <details key={i} style={{
+                                        background: c.highlight ? 'rgba(245,158,11,0.06)' : 'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${c.highlight ? amber : amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        overflow:'hidden',
+                                      }}>
+                                        <summary style={{padding:'9px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'8px'}}>
+                                          <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{c.name}{c.highlight ? ' · PRIMARY ERM' : ''}</span>
+                                          <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                        </summary>
+                                        <div style={{padding:'8px 12px 10px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.responsibilities}</div>
+                                      </details>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Management Layer */}
+                              {erm.management && erm.management.length > 0 && (
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// TIER 03 · MANAGEMENT &amp; DAILY OPERATIONS</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'8px'}}>
+                                    {erm.management.map((m, i) => (
+                                      <div key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        padding:'12px',
+                                      }}>
+                                        <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'6px'}}>{m.role}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{m.responsibilities}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Independence */}
+                              {erm.independence && (
+                                <div style={{
+                                  padding:'12px 14px',
+                                  background:'rgba(34,197,94,0.06)',
+                                  border:'0.5px solid rgba(34,197,94,0.35)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                  borderRadius:'3px',
+                                }}>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'6px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// INDEPENDENCE &amp; GOVERNANCE</div>
+                                    <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>{erm.independence.independentDirectors} INDEPENDENT</div>
+                                  </div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{erm.independence.summary}</div>
+                                </div>
+                              )}
                             </>
                           )}
                         </div>
@@ -13788,7 +14183,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === THESIS TAB ===
                     const renderThesisTab = () => {
                       if (!bd.thesis) return null;
-                      const { vision, strategicImperatives, bigPicture } = bd.thesis;
+                      const { vision, strategicImperatives, bigPicture, acquisitions, sustainability } = bd.thesis;
 
                       return (
                         <div>
@@ -13862,6 +14257,183 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{fontSize:'10px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>⚡ BIG PICTURE</div>
                               <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{bigPicture}</div>
                             </div>
+                          )}
+
+                          {/* BUSINESS ACQUISITIONS */}
+                          {acquisitions && acquisitions.deals && acquisitions.deals.length > 0 && (
+                            <>
+                              <SectionHeading>// BUSINESS ACQUISITIONS · {acquisitions.deals.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{acquisitions.description}</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                                {acquisitions.deals.map((d, i) => {
+                                  const isHighlight = d.highlight;
+                                  return (
+                                    <div key={i} style={{
+                                      background: isHighlight ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${isHighlight ? amber : amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'4px',
+                                      padding:'14px',
+                                      position:'relative',
+                                    }}>
+                                      {isHighlight && (
+                                        <>
+                                          <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                        </>
+                                      )}
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'10px',flexWrap:'wrap',marginBottom:'10px'}}>
+                                        <div style={{minWidth:0,flex:1}}>
+                                          <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                            <span style={{fontSize:'18px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{d.year}</span>
+                                            <span style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{d.name}</span>
+                                          </div>
+                                          {d.subtitle && (
+                                            <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>{d.subtitle}</div>
+                                          )}
+                                        </div>
+                                        <div style={{display:'flex',flexDirection:'column',gap:'4px',alignItems:'flex-end'}}>
+                                          <span style={{
+                                            padding:'3px 9px',
+                                            background:'rgba(245,158,11,0.10)',
+                                            border:`0.5px solid ${amber}`,
+                                            borderRadius:'2px',
+                                            fontSize:'11px',
+                                            color: amber,
+                                            fontFamily:'monospace',
+                                            fontWeight:700,
+                                            letterSpacing:'0.5px',
+                                          }}>{d.price}</span>
+                                          {d.status && (
+                                            <span style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>{d.status.toUpperCase()}</span>
+                                          )}
+                                        </div>
+                                      </div>
+
+                                      <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginBottom:'10px'}}>
+                                        <div>
+                                          <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>SEGMENT</div>
+                                          <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,marginTop:'2px'}}>{d.segment}</div>
+                                        </div>
+                                        {d.priceNote && (
+                                          <div style={{flex:1,minWidth:'200px'}}>
+                                            <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>FUNDING / NOTE</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,marginTop:'2px'}}>{d.priceNote}</div>
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {d.allocation && (
+                                        <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// PURCHASE PRICE ALLOCATION</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5}}>{d.allocation}</div>
+                                        </div>
+                                      )}
+
+                                      {d.goodwillDeductible && (
+                                        <div style={{display:'inline-block',padding:'2px 7px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.45)',borderRadius:'2px',marginBottom:'8px'}}>
+                                          <span style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:700}}>✓ GOODWILL TAX DEDUCTIBLE</span>
+                                        </div>
+                                      )}
+
+                                      <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// STRATEGIC RATIONALE</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.rationale}</div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
+
+                          {/* SUSTAINABILITY */}
+                          {sustainability && (
+                            <>
+                              <SectionHeading>// SUSTAINABILITY · SHARED GOODNESS PROMISE</SectionHeading>
+
+                              {/* Founder legacy */}
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'12px 14px',
+                                marginBottom:'10px',
+                              }}>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// FOUNDER LEGACY</div>
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>{sustainability.founderLegacy}</div>
+                                <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// CORE BELIEF</div>
+                                  <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>"{sustainability.coreBelief}"</div>
+                                </div>
+                              </div>
+
+                              {/* Focus areas */}
+                              {sustainability.focusAreas && sustainability.focusAreas.length > 0 && (
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// FIVE FOCUS AREAS</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'8px'}}>
+                                    {sustainability.focusAreas.map((f, i) => (
+                                      <div key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        padding:'10px 12px',
+                                        position:'relative',
+                                      }}>
+                                        <div style={{position:'absolute',top:'6px',right:'8px',fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{String(i+1).padStart(2,'0')}</div>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'4px'}}>{f.name}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{f.description}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* 2024 ESG highlights */}
+                              {sustainability.esg2024 && sustainability.esg2024.highlights && (
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// {sustainability.esg2024.year} ESG HIGHLIGHTS · {sustainability.esg2024.highlights.length}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                    {sustainability.esg2024.highlights.map((h, i) => (
+                                      <details key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        overflow:'hidden',
+                                      }}>
+                                        <summary style={{padding:'8px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'8px'}}>
+                                          <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{h.category}</span>
+                                          <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace'}}>{h.points.length} ›</span>
+                                        </summary>
+                                        <div style={{padding:'8px 12px 10px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                          <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                            {h.points.map((p, j) => (
+                                              <li key={j} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                                <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                                <span>{p}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </details>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Reporting note */}
+                              {sustainability.reporting && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Reporting —</span> {sustainability.reporting}
+                                </div>
+                              )}
+                            </>
                           )}
                         </div>
                       );
