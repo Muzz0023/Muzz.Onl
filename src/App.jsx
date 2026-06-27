@@ -3326,7 +3326,7 @@ const HSY_BREAKDOWN = {
         note: 'Average (2009–2024): 25%. Hershey reinvests just a quarter of operating cash flow back into the business — a hallmark of a high-quality, low-capital-intensity compounder.',
       },
       freeCashFlow: {
-        label: 'Free Cash Flow · Owner Earnings', unit: 'M USD',
+        label: 'Free Cash Flow', unit: 'M USD',
         series: [
           { year: 2008, value: 236.582 },
           { year: 2009, value: 920.279 },
