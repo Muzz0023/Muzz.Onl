@@ -13639,6 +13639,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
               : [];
 
+            // Amber palette — Coverage uses amber accents (matching the Research OS aesthetic)
+            const amber = 'rgba(245,158,11,0.95)';
+            const amberDim = 'rgba(245,158,11,0.6)';
+            const amberGlow = 'rgba(245,158,11,0.35)';
+
             const cardBtn = {
               width: '100%', textAlign: 'left', background: 'rgba(15,10,2,0.85)',
               border: `0.5px solid ${amberGlow}`, borderLeft: `2px solid ${amber}`,
@@ -13671,9 +13676,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {/* Full breakdown — if populated, render tabbed deep-dive; else placeholder */}
                   {selected.breakdown ? (() => {
                     const bd = selected.breakdown;
-                    const amber = 'rgba(245,158,11,0.95)';
-                    const amberDim = 'rgba(245,158,11,0.6)';
-                    const amberGlow = 'rgba(245,158,11,0.35)';
+                    // amber palette inherited from enclosing scope
                     const TABS = [
                       { id: 'overview',  label: 'OVERVIEW',  enabled: !!bd.overview },
                       { id: 'brands',    label: 'BRANDS',    enabled: !!bd.brands },
