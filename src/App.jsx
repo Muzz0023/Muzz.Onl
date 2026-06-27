@@ -1915,6 +1915,126 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
 
 
 // ════════════════════════════════════════════════════════════════════
+// HSY_BREAKDOWN — The Hershey Company deep-dive Coverage data
+// First populated breakdown; serves as template for all 32 Coverage companies
+// ════════════════════════════════════════════════════════════════════
+const HSY_BREAKDOWN = {
+  brands: {
+    topSellers: [
+      { name: "Hershey's Kisses",     note: 'Iconic foil-wrapped milk chocolate. Cultural symbol of US confectionery.' },
+      { name: "Reese's",              note: 'Peanut-butter cups, cash cow franchise, multiple line extensions.' },
+      { name: "Hershey Chocolate Bar", note: 'Original 1900s flagship milk chocolate bar. Foundation of the brand.' },
+    ],
+    portfolio: {
+      chocolate: [
+        '5th Avenue', 'Almond Joy', 'barkTHINS', 'Brookside', 'Cadbury (US)', 'Heath',
+        "Hershey's", "Hershey's Kisses", 'Kit Kat (US)', "Lily's", 'Milk Duds', 'Mounds',
+        'Mr. Goodbar', 'Payday', "Reese's", 'Rolo', 'Skor', 'Symphony',
+        'Whatchamacallit', 'Whoppers', 'York', 'Zagnut', 'Zero',
+      ],
+      candy: [
+        'Breath Savers', 'Bubble Yum', 'Good & Plenty', 'Ice Breakers',
+        'Jolly Rancher', "Lily's", 'Shaq-A-Licious XL Gummies',
+      ],
+      snacking: [
+        "Dot's Homestyle Pretzels", 'Fulfil', 'ONE Brands', "Pirate's Booty", 'SkinnyPop',
+      ],
+    },
+    // Hershey's global ranking within each snacking category. "leaders" is top 5 in that category.
+    categoryRankings: [
+      { category: 'Chocolate Confectionery', hsyRank: 4, leaders: [
+        { rank: 1, name: 'Mars',                brands: 'Snickers, M&Ms, Dove' },
+        { rank: 2, name: 'Mondelez',            brands: 'Cadbury, Milka' },
+        { rank: 3, name: 'Ferrero',             brands: 'Kinder, Ferrero Rocher, Butterfinger' },
+        { rank: 4, name: 'Hershey',             brands: "Reese's, Kit Kat (US), Hershey's", highlight: true },
+        { rank: 5, name: 'Lindt & Sprüngli',    brands: 'Lindt' },
+      ]},
+      { category: 'Candy (Non-Chocolate)', hsyRank: 5, leaders: [
+        { rank: 1, name: 'Mars',                brands: 'Skittles, Starburst, Life Savers' },
+        { rank: 2, name: 'Ferrara / Ferrero',   brands: 'Trolli, Nerds, Laffy Taffy' },
+        { rank: 3, name: 'Mondelez',            brands: 'Sour Patch Kids, Swedish Fish' },
+        { rank: 4, name: 'Perfetti Van Melle',  brands: 'Mentos, Airheads, Chupa Chups' },
+        { rank: 5, name: 'Hershey',             brands: 'Jolly Rancher, Ice Breakers', highlight: true },
+      ]},
+      { category: 'Popcorn / Puffed Snacks', hsyRank: 2, leaders: [
+        { rank: 1, name: 'Smartfood (PepsiCo)', brands: 'Smartfood' },
+        { rank: 2, name: 'Hershey (Amplify)',   brands: 'SkinnyPop', highlight: true },
+        { rank: 3, name: 'Conagra',             brands: 'Boom Chicka Pop' },
+        { rank: 4, name: 'Conagra',             brands: 'Act II' },
+        { rank: 5, name: "Campbell's",          brands: 'Pop Secret' },
+      ]},
+      { category: 'Protein / Snack Bars', hsyRank: 3, leaders: [
+        { rank: 1, name: 'Mondelez',            brands: 'Clif Bar' },
+        { rank: 2, name: 'Mars',                brands: 'KIND' },
+        { rank: 3, name: 'Hershey',             brands: 'ONE Brands', highlight: true },
+        { rank: 4, name: 'Mars',                brands: 'Quest' },
+        { rank: 5, name: "Kellogg's",           brands: 'RXBar' },
+      ]},
+      { category: 'Gum & Mints', hsyRank: 3, leaders: [
+        { rank: 1, name: 'Wrigley (Mars)',      brands: 'Orbit, 5, Extra' },
+        { rank: 2, name: 'Perfetti Van Melle',  brands: 'Mentos, Airheads Gum' },
+        { rank: 3, name: 'Hershey',             brands: 'Ice Breakers, Breath Savers', highlight: true },
+        { rank: 4, name: 'Ferrero',             brands: 'Tic Tac' },
+        { rank: 5, name: 'Mondelez',            brands: 'Trident' },
+      ]},
+      { category: 'Pretzels', hsyRank: 1, leaders: [
+        { rank: 1, name: 'Hershey',             brands: "Dot's Homestyle Pretzels", highlight: true },
+        { rank: 2, name: "Campbell's",          brands: "Snyder's of Hanover" },
+        { rank: 3, name: 'PepsiCo (Frito-Lay)', brands: 'Rold Gold' },
+        { rank: 4, name: "Campbell's",          brands: 'Pretzel Crisps' },
+        { rank: 5, name: 'General Mills',       brands: "Annie's" },
+      ]},
+    ],
+    // Each Hershey brand and its top competitors. Grouped by segment for browsing.
+    competitorMatchups: [
+      // === CHOCOLATE ===
+      { hsyBrand: '5th Avenue',          segment: 'Chocolate', competitors: ['Baby Ruth (Ferrero)', 'Snickers (Mars)'] },
+      { hsyBrand: 'Almond Joy',          segment: 'Chocolate', competitors: ['Bounty (Mars)'] },
+      { hsyBrand: 'barkTHINS',           segment: 'Chocolate', competitors: ['Hu Chocolate', 'Endangered Species', 'Ghirardelli (snacking/dark bark)'] },
+      { hsyBrand: 'Brookside',           segment: 'Chocolate', competitors: ['Dove Chocolate Fruit (Mars)', 'Ghirardelli Fruit & Nut'] },
+      { hsyBrand: 'Cadbury (US)',        segment: 'Chocolate', competitors: ['Lindt', 'Milka (Mondelez)', 'Ghirardelli'] },
+      { hsyBrand: 'Heath',               segment: 'Chocolate', competitors: ['Toffifay (Storck)', "Werther's Original Caramel"] },
+      { hsyBrand: "Hershey's (core milk)", segment: 'Chocolate', competitors: ['Mars Bar, Dove (Mars)', 'Nestlé (international)', 'Lindt'] },
+      { hsyBrand: "Hershey's Kisses",    segment: 'Chocolate', competitors: ['Dove Promises (Mars)', 'Ferrero Rocher'] },
+      { hsyBrand: 'Kit Kat (US)',        segment: 'Chocolate', competitors: ['Twix (Mars)', 'Lion Bar (Nestlé, global)'] },
+      { hsyBrand: "Lily's (low-sugar)",  segment: 'Chocolate', competitors: ['ChocZero', 'Hu Kitchen', 'Atkins Chocolate'] },
+      { hsyBrand: 'Milk Duds',           segment: 'Chocolate', competitors: ['Raisinets (Ferrero/Nestlé)', 'Goobers', 'Junior Mints'] },
+      { hsyBrand: 'Mounds',              segment: 'Chocolate', competitors: ['Bounty (Mars)'] },
+      { hsyBrand: 'Mr. Goodbar',         segment: 'Chocolate', competitors: ['Crunch (Ferrero)', 'Snickers Almond'] },
+      { hsyBrand: 'Payday',              segment: 'Chocolate', competitors: ['Baby Ruth (Ferrero)', 'Salted Nut Roll (Pearson\'s)'] },
+      { hsyBrand: "Reese's",             segment: 'Chocolate', competitors: ['Peanut Butter M&Ms (Mars)', 'Butterfinger (Ferrero)', "Justin's PB Cups"] },
+      { hsyBrand: 'Rolo',                segment: 'Chocolate', competitors: ['Caramello (Cadbury)', "Werther's Soft Caramels"] },
+      { hsyBrand: 'Skor',                segment: 'Chocolate', competitors: ['Daim (Mondelez, EU)', 'Toffifay'] },
+      { hsyBrand: 'Symphony',            segment: 'Chocolate', competitors: ['Lindt Swiss Classic', 'Milka', 'Dove Milk Chocolate'] },
+      { hsyBrand: 'Whatchamacallit',     segment: 'Chocolate', competitors: ['100 Grand (Ferrero)'] },
+      { hsyBrand: 'Whoppers',            segment: 'Chocolate', competitors: ['Maltesers (Mars)', 'Nestlé Buncha Crunch'] },
+      { hsyBrand: 'York',                segment: 'Chocolate', competitors: ['Junior Mints', 'Andes Mints'] },
+      { hsyBrand: 'Zagnut',              segment: 'Chocolate', competitors: ["Chick-O-Stick (Atkinson's)", 'Clark Bar (NECCO)', 'Mallo Cup (Boyers)'] },
+      { hsyBrand: 'Zero',                segment: 'Chocolate', competitors: ['Milky Way (Mars)', '3 Musketeers (Mars)'] },
+      // === CANDY ===
+      { hsyBrand: 'Breath Savers',       segment: 'Candy',     competitors: ['Altoids (Mars)', 'Tic Tac (Ferrero)', 'Listerine Strips'] },
+      { hsyBrand: 'Bubble Yum',          segment: 'Candy',     competitors: ['Hubba Bubba (Mars)', 'Big League Chew', 'Bazooka'] },
+      { hsyBrand: 'Good & Plenty',       segment: 'Candy',     competitors: ['Red Vines', 'Twizzlers (Hershey)', 'Black licorice brands'] },
+      { hsyBrand: 'Ice Breakers',        segment: 'Candy',     competitors: ['Altoids', 'Mentos (Perfetti Van Melle)', '5 Gum (Mars)'] },
+      { hsyBrand: 'Jolly Rancher',       segment: 'Candy',     competitors: ['Life Savers (Mars)', 'Starburst (Mars)', 'Now & Later'] },
+      { hsyBrand: "Lily's (sweets)",     segment: 'Candy',     competitors: ['SmartSweets', 'Zollipops', 'ChocZero Gummies'] },
+      { hsyBrand: 'Shaq-A-Licious',      segment: 'Candy',     competitors: ['Haribo', 'Trolli (Ferrara)', 'Black Forest', 'Albanese'] },
+      // === SNACKING ===
+      { hsyBrand: "Dot's Pretzels",      segment: 'Snacking',  competitors: ["Snyder's of Hanover (Campbell's)", 'Pretzel Crisps (Snack Factory)'] },
+      { hsyBrand: 'Fulfil',              segment: 'Snacking',  competitors: ['Clif Bar (Mondelez)', 'Quest Bars', 'RXBar (Kellogg)'] },
+      { hsyBrand: 'ONE Brands',          segment: 'Snacking',  competitors: ['Quest (Mars)', 'Kind Bars (Mars)', 'Atkins'] },
+      { hsyBrand: "Pirate's Booty",      segment: 'Snacking',  competitors: ['Smartfood (PepsiCo)', 'Popcorners (PepsiCo)', "Annie's Cheddar Bunnies"] },
+      { hsyBrand: 'SkinnyPop',           segment: 'Snacking',  competitors: ['Boom Chicka Pop (Conagra)', 'Smartfood', 'LesserEvil'] },
+    ],
+  },
+  // Other tabs will populate next session
+  moat: null,
+  numbers: null,
+  risks: null,
+  thesis: null,
+};
+
+// ════════════════════════════════════════════════════════════════════
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
 const COVERAGE_DATA = [
@@ -1956,7 +2076,7 @@ const COVERAGE_DATA = [
   { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: null },
 
   // === FOOD · USA ===
-  { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: null },
+  { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
 
   // === ENTERTAINMENT · NETHERLANDS ===
   { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
@@ -2480,6 +2600,7 @@ function MuzzApp() {
       setCoverageIndustry(entry.industry);
       setCoverageCountry(entry.country);
       setCoverageCompany(entry.ticker);
+      setCoverageBreakdownTab('brands');
       setInvestmentsSubTab('coverage');
     } else {
       // Not in coverage — friendly prompt
@@ -2498,6 +2619,7 @@ function MuzzApp() {
   const [coverageIndustry, setCoverageIndustry] = useState(null); // selected industry name or null
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
   const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
+  const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('brands'); // active tab on Coverage company breakdown page
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
   const [investmentMapGraph, setInvestmentMapGraph] = useState({
@@ -11843,11 +11965,251 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     </div>
                     <div style={{marginTop:'14px',fontSize:'13px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6}}>{selected.oneLiner}</div>
                   </div>
-                  {/* Full breakdown placeholder */}
-                  <div style={{background:'rgba(5,12,24,0.5)',border:'0.5px dashed rgba(0,200,255,0.25)',borderRadius:'6px',padding:'40px 24px',textAlign:'center'}}>
-                    <div style={{fontSize:'11px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// FULL BREAKDOWN COMING</div>
-                    <div style={{fontSize:'12px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.6,maxWidth:'460px',margin:'0 auto'}}>This is where the deep analysis lives — business overview, brand/moat, segment data, income statement, balance sheet, cash flow, owner earnings, thesis &amp; risks. We build {selected.ticker} out next.</div>
-                  </div>
+                  {/* Full breakdown — if populated, render tabbed deep-dive; else placeholder */}
+                  {selected.breakdown ? (() => {
+                    const bd = selected.breakdown;
+                    const amber = 'rgba(245,158,11,0.95)';
+                    const amberDim = 'rgba(245,158,11,0.6)';
+                    const amberGlow = 'rgba(245,158,11,0.35)';
+                    const TABS = [
+                      { id: 'brands',  label: 'BRANDS',     enabled: !!bd.brands },
+                      { id: 'moat',    label: 'MOAT',       enabled: !!bd.moat },
+                      { id: 'numbers', label: 'NUMBERS',    enabled: !!bd.numbers },
+                      { id: 'risks',   label: 'RISKS',      enabled: !!bd.risks },
+                      { id: 'thesis',  label: 'THESIS',     enabled: !!bd.thesis },
+                    ];
+                    const activeTab = coverageBreakdownTab;
+                    // Tabs strip
+                    const tabsStrip = (
+                      <div style={{display:'flex',gap:'4px',flexWrap:'wrap',borderBottom:`0.5px solid ${amberGlow}`,paddingBottom:'10px'}}>
+                        {TABS.map(t => {
+                          const isActive = activeTab === t.id;
+                          return (
+                            <button
+                              key={t.id}
+                              onClick={() => t.enabled && setCoverageBreakdownTab(t.id)}
+                              disabled={!t.enabled}
+                              style={{
+                                padding:'7px 14px',
+                                background: isActive ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.04)',
+                                border: `0.5px solid ${isActive ? amber : 'rgba(255,255,255,0.12)'}`,
+                                borderRadius:'3px',
+                                color: !t.enabled ? 'rgba(148,163,184,0.3)' : (isActive ? amber : 'rgba(224,234,255,0.7)'),
+                                fontFamily:'monospace', fontSize:'10px', letterSpacing:'1.5px', fontWeight:600,
+                                cursor: t.enabled ? 'pointer' : 'not-allowed',
+                                whiteSpace:'nowrap',
+                              }}>
+                              {t.label}
+                              {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>·</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+
+                    // Section heading helper
+                    const SectionHeading = ({ children }) => (
+                      <div style={{display:'flex',alignItems:'center',gap:'10px',marginTop:'18px',marginBottom:'10px'}}>
+                        <div style={{flex:1,height:'0.5px',background:amberGlow}}/>
+                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,whiteSpace:'nowrap'}}>{children}</span>
+                        <div style={{flex:1,height:'0.5px',background:amberGlow}}/>
+                      </div>
+                    );
+
+                    // === BRANDS TAB ===
+                    const renderBrandsTab = () => {
+                      if (!bd.brands) return null;
+                      const { topSellers, portfolio, categoryRankings, competitorMatchups } = bd.brands;
+
+                      return (
+                        <div>
+                          {/* Top sellers */}
+                          {topSellers && topSellers.length > 0 && (
+                            <>
+                              <SectionHeading>// TOP SELLERS</SectionHeading>
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'10px'}}>
+                                {topSellers.map((s, i) => (
+                                  <div key={i} style={{
+                                    background:'linear-gradient(160deg, rgba(245,158,11,0.07) 0%, rgba(0,0,0,0.3) 100%)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'14px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'6px',right:'8px',fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{String(i+1).padStart(2,'0')}</div>
+                                    <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'6px'}}>{s.name}</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{s.note}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* Brand portfolio — chips */}
+                          {portfolio && (
+                            <>
+                              <SectionHeading>// BRAND PORTFOLIO</SectionHeading>
+                              {[
+                                { key:'chocolate', label:'CHOCOLATE', items: portfolio.chocolate || [] },
+                                { key:'candy',     label:'CANDY',     items: portfolio.candy || [] },
+                                { key:'snacking',  label:'SNACKING',  items: portfolio.snacking || [] },
+                              ].map(group => group.items.length === 0 ? null : (
+                                <div key={group.key} style={{marginBottom:'14px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// {group.label} · {group.items.length}</div>
+                                  <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+                                    {group.items.map((brand, i) => (
+                                      <span key={i} style={{
+                                        padding:'4px 10px',
+                                        background:'rgba(245,158,11,0.06)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderRadius:'2px',
+                                        color:'rgba(224,234,255,0.85)',
+                                        fontFamily:'monospace',
+                                        fontSize:'10px',
+                                        letterSpacing:'0.5px',
+                                      }}>{brand}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          )}
+
+                          {/* Global category rankings */}
+                          {categoryRankings && categoryRankings.length > 0 && (
+                            <>
+                              <SectionHeading>// GLOBAL CATEGORY RANKINGS</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5}}>Hershey's competitive position in each snack/confectionery category.</div>
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'12px'}}>
+                                {categoryRankings.map((cat, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderRadius:'4px',
+                                    padding:'12px',
+                                  }}>
+                                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px',gap:'8px'}}>
+                                      <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{cat.category}</div>
+                                      <div style={{
+                                        padding:'2px 8px',
+                                        background: cat.hsyRank === 1 ? 'rgba(34,197,94,0.15)' : 'rgba(245,158,11,0.12)',
+                                        border:`0.5px solid ${cat.hsyRank === 1 ? 'rgba(34,197,94,0.55)' : amberGlow}`,
+                                        borderRadius:'2px',
+                                        fontSize:'9px',
+                                        color: cat.hsyRank === 1 ? 'rgba(34,197,94,0.95)' : amber,
+                                        fontFamily:'monospace',
+                                        letterSpacing:'1px',
+                                        fontWeight:600,
+                                        whiteSpace:'nowrap',
+                                      }}>HSY #{cat.hsyRank}</div>
+                                    </div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                      {cat.leaders.map((L, j) => (
+                                        <div key={j} style={{
+                                          display:'flex',alignItems:'center',gap:'8px',
+                                          padding:'5px 8px',
+                                          background: L.highlight ? 'rgba(245,158,11,0.10)' : 'rgba(255,255,255,0.02)',
+                                          border: L.highlight ? `0.5px solid ${amberGlow}` : '0.5px solid rgba(255,255,255,0.04)',
+                                          borderLeft: L.highlight ? `2px solid ${amber}` : '2px solid transparent',
+                                          borderRadius:'2px',
+                                        }}>
+                                          <span style={{fontSize:'10px',color: L.highlight ? amber : amberDim,fontFamily:'monospace',fontWeight:700,minWidth:'18px',textAlign:'center'}}>{L.rank}</span>
+                                          <span style={{fontSize:'10px',color: L.highlight ? '#e0eaff' : 'rgba(224,234,255,0.75)',fontFamily:'monospace',fontWeight:600,minWidth:'70px'}}>{L.name}</span>
+                                          <span style={{fontSize:'9px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{L.brands}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* Competitor matchups */}
+                          {competitorMatchups && competitorMatchups.length > 0 && (
+                            <>
+                              <SectionHeading>// COMPETITOR MATCHUPS</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5}}>Tap a Hershey brand to reveal its top competitors.</div>
+                              {['Chocolate', 'Candy', 'Snacking'].map(seg => {
+                                const inSeg = competitorMatchups.filter(m => m.segment === seg);
+                                if (inSeg.length === 0) return null;
+                                return (
+                                  <div key={seg} style={{marginBottom:'14px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// {seg.toUpperCase()} · {inSeg.length}</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                      {inSeg.map((m, i) => (
+                                        <details key={i} style={{
+                                          background:'rgba(0,0,0,0.4)',
+                                          border:`0.5px solid ${amberGlow}`,
+                                          borderLeft:`2px solid ${amber}`,
+                                          borderRadius:'3px',
+                                          overflow:'hidden',
+                                        }}>
+                                          <summary style={{padding:'8px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'8px'}}>
+                                            <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{m.hsyBrand}</span>
+                                            <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px'}}>{m.competitors.length} vs ›</span>
+                                          </summary>
+                                          <div style={{padding:'8px 12px 10px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'6px'}}>VS</div>
+                                            <div style={{display:'flex',flexWrap:'wrap',gap:'5px'}}>
+                                              {m.competitors.map((c, j) => (
+                                                <span key={j} style={{
+                                                  padding:'3px 8px',
+                                                  background:'rgba(239,68,68,0.06)',
+                                                  border:'0.5px solid rgba(239,68,68,0.3)',
+                                                  borderRadius:'2px',
+                                                  color:'rgba(224,234,255,0.85)',
+                                                  fontFamily:'monospace',
+                                                  fontSize:'10px',
+                                                  letterSpacing:'0.3px',
+                                                }}>{c}</span>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        </details>
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
+                      );
+                    };
+
+                    // === PLACEHOLDER FOR UNBUILT TABS ===
+                    const renderEmptyTab = (tabName) => (
+                      <div style={{padding:'40px 24px',textAlign:'center',background:'rgba(5,12,24,0.4)',border:`0.5px dashed ${amberGlow}`,borderRadius:'4px'}}>
+                        <div style={{fontSize:'11px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// {tabName.toUpperCase()} · COMING NEXT</div>
+                        <div style={{fontSize:'11px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.5,maxWidth:'420px',margin:'0 auto'}}>Notes will be added in a future session.</div>
+                      </div>
+                    );
+
+                    return (
+                      <div style={{
+                        background:'rgba(5,12,24,0.85)',
+                        border:`0.5px solid ${amberGlow}`,
+                        borderRadius:'6px',
+                        padding:'16px 18px',
+                      }}>
+                        {tabsStrip}
+                        <div style={{paddingTop:'8px'}}>
+                          {activeTab === 'brands' && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
+                          {activeTab === 'moat'    && renderEmptyTab('moat')}
+                          {activeTab === 'numbers' && renderEmptyTab('numbers')}
+                          {activeTab === 'risks'   && renderEmptyTab('risks')}
+                          {activeTab === 'thesis'  && renderEmptyTab('thesis')}
+                        </div>
+                      </div>
+                    );
+                  })() : (
+                    <div style={{background:'rgba(5,12,24,0.5)',border:'0.5px dashed rgba(0,200,255,0.25)',borderRadius:'6px',padding:'40px 24px',textAlign:'center'}}>
+                      <div style={{fontSize:'11px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// FULL BREAKDOWN COMING</div>
+                      <div style={{fontSize:'12px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.6,maxWidth:'460px',margin:'0 auto'}}>This is where the deep analysis lives — business overview, brand/moat, segment data, income statement, balance sheet, cash flow, owner earnings, thesis &amp; risks. We build {selected.ticker} out next.</div>
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -11869,7 +12231,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   {searchResults.length === 0 ? (
                     <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies match "{coverageSearch}".</div>
                   ) : searchResults.map(c => (
-                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageSearch(''); }}
+                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('brands'); setCoverageSearch(''); }}
                       style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
                       <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
                         <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
@@ -11972,7 +12334,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <>
                     <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
                     {companiesInScope.map(c => (
-                      <button key={c.ticker} onClick={() => setCoverageCompany(c.ticker)}
+                      <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('brands'); }}
                         style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
                         {/* Top row: ticker + name */}
                         <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
