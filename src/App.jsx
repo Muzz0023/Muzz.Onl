@@ -2134,14 +2134,14 @@ const HSY_BREAKDOWN = {
       historical: [
         {
           name: 'Michele Buck',
-          tenure: '2017 \u2013 2025',
+          tenure: '2017 – 2025',
           years: 8,
           valueAdded: 13,
           note: '$13B in increased valuation during her tenure.',
         },
         {
           name: 'John P. Bilbrey',
-          tenure: '2011 \u2013 2017',
+          tenure: '2011 – 2017',
           years: 6,
           valueAdded: 10,
           note: '$10B in increased valuation during his tenure.',
@@ -2156,7 +2156,7 @@ const HSY_BREAKDOWN = {
         {
           name: 'Business & Operations',
           items: [
-            { risk: 'Reputation / Brand Image',     meaning: 'Issues with product quality, safety, ESG practices, or labor rights could damage Hershey\u2019s reputation and hurt sales.' },
+            { risk: 'Reputation / Brand Image',     meaning: 'Issues with product quality, safety, ESG practices, or labor rights could damage Hershey’s reputation and hurt sales.' },
             { risk: 'Supply Chain Disruptions',     meaning: 'Events like natural disasters, pandemics, labor strikes, or material shortages could stop production or delay deliveries.' },
             { risk: 'Talent Acquisition & Retention', meaning: 'Difficulty attracting and keeping skilled employees (especially management) could slow growth and hurt performance.' },
             { risk: 'Climate Change',               meaning: 'Extreme weather, crop failures, or stricter GHG rules could raise costs, disrupt supply chains (especially cocoa), or harm reputation.' },
@@ -2165,16 +2165,16 @@ const HSY_BREAKDOWN = {
         {
           name: 'Industry Risks',
           items: [
-            { risk: 'Raw Material & Energy Costs',  meaning: 'Prices for cocoa, sugar, dairy, nuts, etc. are volatile. Big increases raise Hershey\u2019s costs unless hedged.' },
+            { risk: 'Raw Material & Energy Costs',  meaning: 'Prices for cocoa, sugar, dairy, nuts, etc. are volatile. Big increases raise Hershey’s costs unless hedged.' },
             { risk: 'Pricing Power / Elasticity',   meaning: 'Price hikes or smaller product sizes may not fully offset cost increases and could reduce consumer demand.' },
-            { risk: 'Changing Consumer Demand',     meaning: 'Health trends, digital shopping, or reduced candy/snack consumption could hurt sales if Hershey doesn\u2019t adapt.' },
-            { risk: 'Competition',                  meaning: 'Large global rivals (Mars, Nestl\u00e9, Mondelez) and private-label brands create pricing pressure and require heavy marketing spend.' },
+            { risk: 'Changing Consumer Demand',     meaning: 'Health trends, digital shopping, or reduced candy/snack consumption could hurt sales if Hershey doesn’t adapt.' },
+            { risk: 'Competition',                  meaning: 'Large global rivals (Mars, Nestlé, Mondelez) and private-label brands create pricing pressure and require heavy marketing spend.' },
           ],
         },
         {
           name: 'Strategic Initiatives',
           items: [
-            { risk: 'M&A Execution',                meaning: 'If acquisitions (e.g. Sour Strips, Weaver/Popcorn, Dot\u2019s Pretzels) aren\u2019t integrated well, synergies may not materialise.' },
+            { risk: 'M&A Execution',                meaning: 'If acquisitions (e.g. Sour Strips, Weaver/Popcorn, Dot’s Pretzels) aren’t integrated well, synergies may not materialise.' },
             { risk: 'International Expansion',      meaning: 'Growth outside the U.S. faces risks like political instability, tariffs, FX swings, or weak brand acceptance.' },
             { risk: 'Cost-Saving Programs',         meaning: 'Strategic initiatives (automation, restructuring) may not deliver expected efficiencies or savings.' },
           ],
@@ -2183,18 +2183,18 @@ const HSY_BREAKDOWN = {
           name: 'Government & Regulation',
           items: [
             { risk: 'Changing Laws',                meaning: 'New food, trade, labor, or environmental rules (e.g. EU deforestation regulation in 2025) could raise costs and compliance risks.' },
-            { risk: 'Macroeconomic & Political Risks', meaning: 'Global recessions, inflation, energy costs, or conflicts (e.g. Russia\u2013Ukraine) can hurt sales, raise costs, and disrupt markets.' },
+            { risk: 'Macroeconomic & Political Risks', meaning: 'Global recessions, inflation, energy costs, or conflicts (e.g. Russia–Ukraine) can hurt sales, raise costs, and disrupt markets.' },
           ],
         },
         {
           name: 'Digital & Cybersecurity',
           items: [
             { risk: 'IT / Cybersecurity',           meaning: 'Hershey is a target for hackers and ransomware. Breaches could disrupt operations, cause financial loss, or damage reputation.' },
-            { risk: 'ERP Implementation',           meaning: 'Hershey\u2019s new enterprise system (launched 2024) could face post-implementation issues, disrupting forecasting, reporting, or logistics.' },
+            { risk: 'ERP Implementation',           meaning: 'Hershey’s new enterprise system (launched 2024) could face post-implementation issues, disrupting forecasting, reporting, or logistics.' },
           ],
         },
       ],
-      tldr: 'Hershey\u2019s main risks revolve around commodity costs (especially cocoa), climate and supply chain disruptions, reputation / brand safety, global expansion uncertainty, and technology / cybersecurity challenges.',
+      tldr: 'Hershey’s main risks revolve around commodity costs (especially cocoa), climate and supply chain disruptions, reputation / brand safety, global expansion uncertainty, and technology / cybersecurity challenges.',
     },
 
     // Cybersecurity (Item 1C) — 8 detail rows
@@ -2227,7 +2227,7 @@ const HSY_BREAKDOWN = {
             'Maintains cyber insurance policy',
             'May not fully cover all breach-related claims',
           ],
-          meaning: 'They have financial protection, but it\u2019s not foolproof.',
+          meaning: 'They have financial protection, but it’s not foolproof.',
         },
         {
           category: 'Third-Party Risk',
@@ -2245,7 +2245,7 @@ const HSY_BREAKDOWN = {
             'No material incidents in 2024',
             'Acknowledges that attacks are growing more sophisticated',
           ],
-          meaning: 'They\u2019ve been attacked, but so far no major financial or operational impact. Risk is increasing over time.',
+          meaning: 'They’ve been attacked, but so far no major financial or operational impact. Risk is increasing over time.',
         },
         {
           category: 'Governance & Oversight',
@@ -2264,7 +2264,7 @@ const HSY_BREAKDOWN = {
             'CIO: 20+ years in IT, digital transformation',
             'CTO: 20+ years in tech, expertise in AI, predictive analytics, automation, supply chain',
           ],
-          meaning: 'Leadership has deep technical expertise, which strengthens Hershey\u2019s defence capabilities.',
+          meaning: 'Leadership has deep technical expertise, which strengthens Hershey’s defence capabilities.',
         },
         {
           category: 'Employee Training',
@@ -2276,7 +2276,7 @@ const HSY_BREAKDOWN = {
           meaning: 'Hershey invests in training employees to reduce human error (a common cause of breaches).',
         },
       ],
-      tldr: 'Hershey takes a comprehensive and proactive approach to cybersecurity \u2014 aligned with NIST, involving leadership and the Board, engaging third-party experts, and training employees. While they\u2019ve faced attacks, they report no material breaches so far. Controls and governance are strong for a consumer goods company.',
+      tldr: 'Hershey takes a comprehensive and proactive approach to cybersecurity \u2014 aligned with NIST, involving leadership and the Board, engaging third-party experts, and training employees. While they’ve faced attacks, they report no material breaches so far. Controls and governance are strong for a consumer goods company.',
     },
 
     // Macro trends affecting business — 2024
@@ -2302,7 +2302,7 @@ const HSY_BREAKDOWN = {
         {
           category: 'Geopolitical Factors',
           points: [
-            'Russia\u2013Ukraine conflict and tariffs / retaliatory tariffs increased uncertainty',
+            'Russia–Ukraine conflict and tariffs / retaliatory tariffs increased uncertainty',
             'No material 2024 impact on commodity prices or supply availability, but risks remain if conditions escalate',
           ],
         },
@@ -2320,7 +2320,7 @@ const HSY_BREAKDOWN = {
             'Ongoing inflationary pressures',
             'Possible recession impact',
             'Changing consumer shopping behaviors',
-            'Further disruption from geopolitical events (e.g. escalation in Russia\u2013Ukraine conflict)',
+            'Further disruption from geopolitical events (e.g. escalation in Russia–Ukraine conflict)',
           ],
         },
       ],
@@ -2350,7 +2350,7 @@ const COVERAGE_DATA = [
   { ticker: 'V',     name: 'Visa',                           industry: 'Financial',     country: 'United States', marketCap: 622000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network — fee-based toll road of card transactions.',                          breakdown: null },
   { ticker: 'MA',    name: 'Mastercard',                     industry: 'Financial',     country: 'United States', marketCap: 433000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global payment network duopoly partner to Visa.',                                              breakdown: null },
   { ticker: 'AXP',   name: 'American Express',               industry: 'Financial',     country: 'United States', marketCap: 230000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Premium card network with membership-fee revenue and affluent customer base.',                breakdown: null },
-  { ticker: 'MCO',   name: 'Moody\u2019s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
+  { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
 
   // === MEDIA · USA ===
   { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null },
@@ -2391,7 +2391,7 @@ const COVERAGE_DATA = [
   { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null },
 
   // === EXCHANGE · AUSTRALIA ===
-  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia\u2019s primary stock exchange — monopoly listing venue.',                breakdown: null },
+  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: null },
 
   // === TECHNOLOGY · AUSTRALIA ===
   { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null },
@@ -12572,7 +12572,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {cyber && (
                             <>
                               <SectionHeading>// CYBERSECURITY · ITEM 1C</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Hershey\u2019s defensive posture across {cyber.rows.length} dimensions of cyber risk.</div>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Hershey’s defensive posture across {cyber.rows.length} dimensions of cyber risk.</div>
                               {cyber.rows.map((r, i) => (
                                 <InfoPanel key={i} category={r.category} points={r.points} meaning={r.meaning} />
                               ))}
@@ -12583,8 +12583,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* MACRO TRENDS */}
                           {macroTrends && (
                             <>
-                              <SectionHeading>// MACRO TRENDS{macroTrends.year ? ` \u00b7 ${macroTrends.year}` : ''}</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>External forces shaping Hershey\u2019s business environment.</div>
+                              <SectionHeading>// MACRO TRENDS{macroTrends.year ? ` · ${macroTrends.year}` : ''}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>External forces shaping Hershey’s business environment.</div>
                               {macroTrends.rows.map((r, i) => (
                                 <InfoPanel key={i} category={r.category} points={r.points} />
                               ))}
@@ -12640,7 +12640,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
                               <div>
                                 <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
-                                <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} \u2013 {latest.year}</div>
+                                <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} – {latest.year}</div>
                               </div>
                               <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
                                 <div style={{textAlign:'right'}}>
@@ -12690,11 +12690,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
                               <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
                                 <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(34,197,94,0.85)',borderRadius:'1px'}}/>
-                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} \u00b7 {fmtVal(maxVal, data.unit)}</span>
+                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} · {fmtVal(maxVal, data.unit)}</span>
                               </div>
                               <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
                                 <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(239,68,68,0.7)',borderRadius:'1px'}}/>
-                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} \u00b7 {fmtVal(minVal, data.unit)}</span>
+                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} · {fmtVal(minVal, data.unit)}</span>
                               </div>
                             </div>
                           </div>
@@ -12733,7 +12733,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <span style={{display:'inline-block',width:'6px',height:'6px',borderRadius:'50%',background:'rgba(34,197,94,0.9)',boxShadow:'0 0 6px rgba(34,197,94,0.9)'}}/>
                                     <span style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CURRENT</span>
                                   </div>
-                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// CEO {ceoPerformance.current.startYear ? `\u00b7 SINCE ${ceoPerformance.current.startYear}` : ''}</div>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// CEO {ceoPerformance.current.startYear ? `· SINCE ${ceoPerformance.current.startYear}` : ''}</div>
                                   <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{ceoPerformance.current.name}</div>
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{ceoPerformance.current.status}</div>
                                 </div>
