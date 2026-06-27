@@ -1920,6 +1920,23 @@ function AssetMapGraph({ graph, setGraph, title, hideAddNode, hideNetPosition, c
 // ════════════════════════════════════════════════════════════════════
 const HSY_BREAKDOWN = {
   brands: {
+    segments: [
+      {
+        name: 'North America Confectionery',
+        description: 'Core chocolate & non-chocolate confectionery; gum, refreshment products, protein bars, spreads, snack bites/mixes, pantry & food service. Also includes retail stores & global trademark licensing.',
+        markets: 'U.S. & Canada. Hershey’s Chocolate World stores in Hershey PA, New York NY, Las Vegas NV, Niagara Falls Ontario, and Singapore.',
+      },
+      {
+        name: 'North America Salty Snacks',
+        description: 'Salty snacking portfolio, including popcorn, baked snacks, pretzels and other savoury snacks.',
+        markets: 'U.S. market.',
+      },
+      {
+        name: 'International',
+        description: 'Confectionery & snacks outside North America. Includes manufacturing & distribution.',
+        markets: 'Operations in Mexico, Brazil, India, Malaysia. Distribution across Asia, Latin America, Middle East, Europe, Africa, and other export markets.',
+      },
+    ],
     topSellers: [
       { name: "Hershey's Kisses",     note: 'Iconic foil-wrapped milk chocolate. Cultural symbol of US confectionery.' },
       { name: "Reese's",              note: 'Peanut-butter cups, cash cow franchise, multiple line extensions.' },
@@ -2028,7 +2045,113 @@ const HSY_BREAKDOWN = {
     ],
   },
   // Other tabs will populate next session
-  moat: null,
+  moat: {
+    pricingPower: {
+      label: 'Pricing Power · Long-Term',
+      description: 'Nominal retail price of three flagship Hershey products over 25 years. Sustained price increases without volume collapse is classic pricing-power evidence — a key Buffett indicator of a durable consumer brand.',
+      products: [
+        {
+          name: "Hershey's Chocolate Bar",
+          unit: 'USD per bar',
+          color: 'amber',
+          series: [
+            { year: 2000, value: 0.50 },
+            { year: 2001, value: 0.52 },
+            { year: 2002, value: 0.54 },
+            { year: 2003, value: 0.55 },
+            { year: 2004, value: 0.57 },
+            { year: 2005, value: 0.58 },
+            { year: 2006, value: 0.60 },
+            { year: 2007, value: 0.62 },
+            { year: 2008, value: 0.65 },
+            { year: 2009, value: 0.68 },
+            { year: 2010, value: 0.75 },
+            { year: 2011, value: 0.80 },
+            { year: 2012, value: 0.85 },
+            { year: 2013, value: 0.90 },
+            { year: 2014, value: 0.95 },
+            { year: 2015, value: 1.00 },
+            { year: 2016, value: 1.05 },
+            { year: 2017, value: 1.10 },
+            { year: 2018, value: 1.15 },
+            { year: 2019, value: 1.20 },
+            { year: 2020, value: 1.25 },
+            { year: 2021, value: 1.30 },
+            { year: 2022, value: 1.33 },
+            { year: 2023, value: 1.35 },
+            { year: 2024, value: 1.35 },
+            { year: 2025, value: 1.35 },
+          ],
+        },
+        {
+          name: "Reese's Miniatures (pack)",
+          unit: 'USD per pack',
+          color: 'gold',
+          series: [
+            { year: 2000, value: 2.50 },
+            { year: 2001, value: 2.55 },
+            { year: 2002, value: 2.60 },
+            { year: 2003, value: 2.70 },
+            { year: 2004, value: 2.80 },
+            { year: 2005, value: 2.90 },
+            { year: 2006, value: 3.00 },
+            { year: 2007, value: 3.10 },
+            { year: 2008, value: 3.20 },
+            { year: 2009, value: 3.30 },
+            { year: 2010, value: 3.50 },
+            { year: 2011, value: 3.60 },
+            { year: 2012, value: 3.75 },
+            { year: 2013, value: 3.85 },
+            { year: 2014, value: 4.00 },
+            { year: 2015, value: 4.10 },
+            { year: 2016, value: 4.25 },
+            { year: 2017, value: 4.40 },
+            { year: 2018, value: 4.50 },
+            { year: 2019, value: 4.60 },
+            { year: 2020, value: 4.75 },
+            { year: 2021, value: 4.90 },
+            { year: 2022, value: 5.00 },
+            { year: 2023, value: 5.10 },
+            { year: 2024, value: 5.20 },
+            { year: 2025, value: 5.20 },
+          ],
+        },
+        {
+          name: "Hershey's Kisses (small bag)",
+          unit: 'USD per bag',
+          color: 'brass',
+          series: [
+            { year: 2000, value: 2.50 },
+            { year: 2001, value: 2.55 },
+            { year: 2002, value: 2.60 },
+            { year: 2003, value: 2.70 },
+            { year: 2004, value: 2.80 },
+            { year: 2005, value: 2.90 },
+            { year: 2006, value: 3.00 },
+            { year: 2007, value: 3.10 },
+            { year: 2008, value: 3.20 },
+            { year: 2009, value: 3.30 },
+            { year: 2010, value: 3.50 },
+            { year: 2011, value: 3.60 },
+            { year: 2012, value: 3.75 },
+            { year: 2013, value: 3.85 },
+            { year: 2014, value: 4.00 },
+            { year: 2015, value: 4.10 },
+            { year: 2016, value: 4.25 },
+            { year: 2017, value: 4.40 },
+            { year: 2018, value: 4.50 },
+            { year: 2019, value: 4.60 },
+            { year: 2020, value: 4.75 },
+            { year: 2021, value: 4.90 },
+            { year: 2022, value: 5.00 },
+            { year: 2023, value: 5.10 },
+            { year: 2024, value: 5.20 },
+            { year: 2025, value: 5.20 },
+          ],
+        },
+      ],
+    },
+  },
   numbers: {
     // === Market Cap History (end-of-year snapshots, USD) ===
     marketCapHistory: {
@@ -12314,10 +12437,41 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === BRANDS TAB ===
                     const renderBrandsTab = () => {
                       if (!bd.brands) return null;
-                      const { topSellers, portfolio, categoryRankings, competitorMatchups } = bd.brands;
+                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups } = bd.brands;
 
                       return (
                         <div>
+                          {/* Reportable Segments */}
+                          {segments && segments.length > 0 && (
+                            <>
+                              <SectionHeading>// REPORTABLE SEGMENTS · {segments.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>How Hershey organises its business for reporting purposes.</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'4px'}}>
+                                {segments.map((seg, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'14px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'6px',right:'10px',fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>SEGMENT {String(i+1).padStart(2,'0')}</div>
+                                    <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'10px'}}>{seg.name}</div>
+                                    <div style={{marginBottom:'10px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// DESCRIPTION</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{seg.description}</div>
+                                    </div>
+                                    <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// MARKETS / OPERATIONS</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{seg.markets}</div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
                           {/* Top sellers */}
                           {topSellers && topSellers.length > 0 && (
                             <>
@@ -12775,6 +12929,191 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     };
 
+                    // === MOAT TAB ===
+                    const renderMoatTab = () => {
+                      if (!bd.moat) return null;
+                      const { pricingPower } = bd.moat;
+
+                      // Multi-line chart that compares price series across multiple products
+                      const PricingPowerChart = ({ data }) => {
+                        if (!data || !data.products || data.products.length === 0) return null;
+                        const products = data.products;
+                        // All years across products (union)
+                        const allYearsSet = new Set();
+                        products.forEach(p => p.series.forEach(d => allYearsSet.add(d.year)));
+                        const allYears = [...allYearsSet].sort((a,b) => a-b);
+                        // Max value across all series for Y-scale
+                        const maxVal = Math.max(...products.flatMap(p => p.series.map(d => d.value)));
+
+                        // Color palette for product lines (warm tones cohesive with amber theme)
+                        const COLORS = {
+                          amber: 'rgba(245,158,11,0.95)',
+                          gold:  'rgba(234,179,8,0.95)',
+                          brass: 'rgba(251,146,60,0.95)',
+                        };
+                        const colorFor = (key) => COLORS[key] || 'rgba(245,158,11,0.95)';
+
+                        // Chart dims
+                        const W = 800, H = 240, PL = 50, PR = 12, PT = 16, PB = 32;
+                        const innerW = W - PL - PR;
+                        const innerH = H - PT - PB;
+                        const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
+                        const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
+
+                        // For each product, compute path string for polyline
+                        const polylinePoints = (series) => series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ');
+
+                        return (
+                          <div style={{
+                            background:'rgba(0,0,0,0.4)',
+                            border:`0.5px solid ${amberGlow}`,
+                            borderLeft:`2px solid ${amber}`,
+                            borderRadius:'4px',
+                            padding:'14px',
+                            marginBottom:'12px',
+                          }}>
+                            {/* Header */}
+                            <div style={{marginBottom:'12px'}}>
+                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// PRICING POWER · NOMINAL USD</div>
+                              <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,marginBottom:'4px'}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{data.description}</div>
+                            </div>
+
+                            {/* Legend */}
+                            <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
+                              {products.map((p, i) => (
+                                <div key={i} style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                  <span style={{display:'inline-block',width:'14px',height:'2px',background:colorFor(p.color),borderRadius:'1px'}}/>
+                                  <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.5px'}}>{p.name}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* SVG line chart */}
+                            <div style={{width:'100%',overflowX:'auto'}}>
+                              <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
+                                {/* Y grid + labels */}
+                                {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                  <g key={i}>
+                                    <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                    <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">${(maxVal * p).toFixed(2)}</text>
+                                  </g>
+                                ))}
+                                {/* X axis year labels — every 5 years for readability */}
+                                {allYears.map((y, i) => {
+                                  if (i % 5 !== 0 && i !== allYears.length - 1) return null;
+                                  return (
+                                    <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{y}</text>
+                                  );
+                                })}
+                                {/* Product lines */}
+                                {products.map((p, i) => {
+                                  const c = colorFor(p.color);
+                                  const fillC = c.replace(/[\d.]+\)/, '0.12)');
+                                  // Build area path
+                                  const areaPath = `M ${xFor(p.series[0].year)},${PT + innerH} ` +
+                                    p.series.map(d => `L ${xFor(d.year)},${yFor(d.value)}`).join(' ') +
+                                    ` L ${xFor(p.series[p.series.length-1].year)},${PT + innerH} Z`;
+                                  return (
+                                    <g key={i}>
+                                      <path d={areaPath} fill={fillC} />
+                                      <polyline points={polylinePoints(p.series)} fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                      {/* Latest value label */}
+                                      {(() => {
+                                        const last = p.series[p.series.length - 1];
+                                        return (
+                                          <g>
+                                            <circle cx={xFor(last.year)} cy={yFor(last.value)} r="3" fill={c} />
+                                            <text x={xFor(last.year) + 6} y={yFor(last.value) + 3} fontSize="9" fill={c} fontFamily="monospace" fontWeight="600">${last.value.toFixed(2)}</text>
+                                          </g>
+                                        );
+                                      })()}
+                                    </g>
+                                  );
+                                })}
+                              </svg>
+                            </div>
+                          </div>
+                        );
+                      };
+
+                      // Per-product summary card showing key stats
+                      const ProductStatCard = ({ product }) => {
+                        const series = product.series;
+                        const first = series[0];
+                        const last = series[series.length - 1];
+                        const changePct = first.value !== 0 ? ((last.value - first.value) / first.value) * 100 : 0;
+                        // Detect flat run — most recent consecutive years where price didn't change
+                        let flatYears = 1;
+                        for (let i = series.length - 2; i >= 0; i--) {
+                          if (series[i].value === last.value) flatYears++; else break;
+                        }
+                        const flatSince = flatYears > 1 ? series[series.length - flatYears].year : null;
+
+                        return (
+                          <div style={{
+                            background:'rgba(0,0,0,0.4)',
+                            border:`0.5px solid ${amberGlow}`,
+                            borderLeft:`2px solid ${amber}`,
+                            borderRadius:'4px',
+                            padding:'14px',
+                            position:'relative',
+                          }}>
+                            <div style={{position:'absolute',top:'6px',right:'8px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                            <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'10px'}}>{product.name}</div>
+                            <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginBottom:'8px'}}>
+                              <div>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{first.year}</div>
+                                <div style={{fontSize:'13px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700}}>${first.value.toFixed(2)}</div>
+                              </div>
+                              <div>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{last.year}</div>
+                                <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>${last.value.toFixed(2)}</div>
+                              </div>
+                              <div>
+                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
+                                <div style={{fontSize:'13px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
+                              </div>
+                            </div>
+                            {flatSince && (
+                              <div style={{padding:'6px 10px',background:'rgba(239,68,68,0.06)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'3px'}}>
+                                <span style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>FLAT SINCE {flatSince}</span>
+                                <span style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',marginLeft:'8px'}}>{flatYears} yrs no price increase</span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      };
+
+                      return (
+                        <div>
+                          {pricingPower && (
+                            <>
+                              <SectionHeading>// PRICING POWER</SectionHeading>
+                              <PricingPowerChart data={pricingPower} />
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'10px'}}>
+                                {pricingPower.products.map((p, i) => (
+                                  <ProductStatCard key={i} product={p} />
+                                ))}
+                              </div>
+                              {/* TL;DR callout */}
+                              <div style={{
+                                marginTop:'12px',
+                                padding:'12px 14px',
+                                background:'rgba(34,197,94,0.06)',
+                                border:'0.5px solid rgba(34,197,94,0.35)',
+                                borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                borderRadius:'3px',
+                              }}>
+                                <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TL;DR</div>
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>Hershey has compounded retail prices over 25 years across its flagship products — classic pricing-power evidence. Note the flat stretch since 2022–2024 — consumer cost-fatigue is testing how much further the moat can be pressed without volume loss.</div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      );
+                    };
+
                     return (
                       <div style={{
                         background:'rgba(5,12,24,0.85)',
@@ -12785,7 +13124,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {tabsStrip}
                         <div style={{paddingTop:'8px'}}>
                           {activeTab === 'brands' && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
-                          {activeTab === 'moat'    && renderEmptyTab('moat')}
+                          {activeTab === 'moat'    && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
                           {activeTab === 'numbers' && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
                           {activeTab === 'risks'   && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
                           {activeTab === 'thesis'  && renderEmptyTab('thesis')}
