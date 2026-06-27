@@ -2163,7 +2163,7 @@ const HSY_BREAKDOWN = {
     ],
     // Competitor landscape — major global rivals and their brand portfolios
     competitorLandscape: {
-      description: 'Hershey’s primary global competitors and the brand portfolios they bring to the fight.',
+      description: 'Hershey’s primary global competitors and a sample of their key brands. Portfolios shown are not exhaustive.',
       competitors: [
         {
           name: 'Mars Wrigley',
@@ -12920,11 +12920,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {competitorLandscape && competitorLandscape.competitors && (
                             <>
                               <SectionHeading>// COMPETITOR LANDSCAPE · {competitorLandscape.competitors.length}</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitorLandscape.description} Tap a competitor to reveal their brand portfolio.</div>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitorLandscape.description} Tap a competitor to see a sample of their key brands.</div>
                               <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
                                 {competitorLandscape.competitors.map((c, i) => {
-                                  // Count total brands across this competitor's categories
-                                  const totalBrands = c.categories.reduce((sum, cat) => sum + cat.brands.length, 0);
                                   return (
                                     <details key={i} style={{
                                       background:'rgba(0,0,0,0.4)',
@@ -12954,12 +12952,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                           letterSpacing:'1px',
                                           fontWeight:700,
                                           flexShrink:0,
-                                        }}>{totalBrands} ›</span>
+                                        }}>KEY BRANDS ›</span>
                                       </summary>
                                       <div style={{padding:'8px 12px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
                                         {c.categories.map((cat, ci) => (
                                           <div key={ci} style={{marginBottom: ci === c.categories.length - 1 ? 0 : '10px'}}>
-                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// {cat.label.toUpperCase()} · {cat.brands.length}</div>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// {cat.label.toUpperCase()}</div>
                                             <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
                                               {cat.brands.map((b, bi) => (
                                                 <span key={bi} style={{
@@ -13605,7 +13603,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, trademarks, licensing } = bd.moat;
+                      const { pricingPower } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -13760,100 +13758,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
-                          {/* TRADEMARKS */}
-                          {trademarks && (
-                            <>
-                              <SectionHeading>// TRADEMARKS</SectionHeading>
-                              <div style={{
-                                background:'rgba(0,0,0,0.4)',
-                                border:`0.5px solid ${amberGlow}`,
-                                borderLeft:`2px solid ${amber}`,
-                                borderRadius:'4px',
-                                padding:'12px 14px',
-                                marginBottom:'10px',
-                              }}>
-                                <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Owned —</span> {trademarks.owned}</div>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Validity —</span> {trademarks.validity}</div>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Strategy —</span> {trademarks.strategy}</div>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Licensing to Others —</span> {trademarks.licensingToOthers}</div>
-                                </div>
-                              </div>
-                            </>
-                          )}
-
-                          {/* LICENSING AGREEMENTS */}
-                          {licensing && (
-                            <>
-                              <SectionHeading>// LICENSING AGREEMENTS · {licensing.agreements.length}</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{licensing.description}</div>
-                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'4px'}}>
-                                {licensing.agreements.map((agr, i) => {
-                                  const isHighlight = agr.highlight;
-                                  return (
-                                    <div key={i} style={{
-                                      background: isHighlight ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
-                                      border:`0.5px solid ${isHighlight ? amber : amberGlow}`,
-                                      borderLeft:`2px solid ${amber}`,
-                                      borderRadius:'4px',
-                                      padding:'14px',
-                                      position:'relative',
-                                    }}>
-                                      {isHighlight && (
-                                        <>
-                                          <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
-                                          <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
-                                          <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
-                                          <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
-                                        </>
-                                      )}
-                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',marginBottom:'8px',flexWrap:'wrap'}}>
-                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// LICENSOR {isHighlight ? '· FEATURED' : ''}</div>
-                                        <span style={{
-                                          padding:'2px 8px',
-                                          background:'rgba(245,158,11,0.10)',
-                                          border:`0.5px solid ${amberGlow}`,
-                                          borderRadius:'2px',
-                                          fontSize:'9px',
-                                          color: amber,
-                                          fontFamily:'monospace',
-                                          letterSpacing:'1px',
-                                          fontWeight:700,
-                                        }}>{agr.region.toUpperCase()}</span>
-                                      </div>
-                                      <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'10px'}}>{agr.licensor}</div>
-                                      <div style={{marginBottom:'10px'}}>
-                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// BRANDS LICENSED · {agr.brands.length}</div>
-                                        <div style={{display:'flex',flexWrap:'wrap',gap:'5px'}}>
-                                          {agr.brands.map((b, j) => (
-                                            <span key={j} style={{padding:'3px 9px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',color:'#e0eaff',fontFamily:'monospace',fontSize:'10px',letterSpacing:'0.5px',fontWeight:600}}>{b}</span>
-                                          ))}
-                                        </div>
-                                      </div>
-                                      <div style={{padding:'8px 10px',background: isHighlight ? 'rgba(34,197,94,0.06)' : 'rgba(245,158,11,0.05)',border:`0.5px solid ${isHighlight ? 'rgba(34,197,94,0.35)' : amberGlow}`,borderRadius:'3px'}}>
-                                        <div style={{fontSize:'9px',color: isHighlight ? 'rgba(34,197,94,0.85)' : amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// REQUIREMENTS</div>
-                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{agr.requirements}</div>
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                              {licensing.tldr && (
-                                <div style={{
-                                  marginTop:'12px',
-                                  padding:'12px 14px',
-                                  background:'rgba(34,197,94,0.06)',
-                                  border:'0.5px solid rgba(34,197,94,0.35)',
-                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
-                                  borderRadius:'3px',
-                                }}>
-                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TL;DR</div>
-                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{licensing.tldr}</div>
-                                </div>
-                              )}
-                            </>
-                          )}
-
                           {pricingPower && (
                             <>
                               <SectionHeading>// PRICING POWER</SectionHeading>
