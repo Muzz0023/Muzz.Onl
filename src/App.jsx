@@ -2029,7 +2029,126 @@ const HSY_BREAKDOWN = {
   },
   // Other tabs will populate next session
   moat: null,
-  numbers: null,
+  numbers: {
+    // === Market Cap History (end-of-year snapshots, USD) ===
+    marketCapHistory: {
+      label: 'Market Cap History',
+      unit: 'B USD',
+      series: [
+        { year: 2009, value: 5 },
+        { year: 2010, value: 7 },
+        { year: 2011, value: 10 },
+        { year: 2012, value: 12 },
+        { year: 2013, value: 17 },
+        { year: 2014, value: 18 },
+        { year: 2015, value: 15 },
+        { year: 2016, value: 18 },
+        { year: 2017, value: 20 },
+        { year: 2018, value: 19 },
+        { year: 2019, value: 27 },
+        { year: 2020, value: 29 },
+        { year: 2021, value: 37 },
+        { year: 2022, value: 45 },
+        { year: 2023, value: 36 },
+        { year: 2024, value: 34 },
+        { year: 2025, value: 33 },
+      ],
+    },
+
+    // === Total Employees ===
+    employees: {
+      label: 'Total Employees',
+      unit: '',
+      series: [
+        { year: 2010, value: 13500 },
+        { year: 2011, value: 13800 },
+        { year: 2012, value: 14200 },
+        { year: 2013, value: 14800 },
+        { year: 2014, value: 22450 },
+        { year: 2015, value: 20710 },
+        { year: 2016, value: 17980 },
+        { year: 2017, value: 16910 },
+        { year: 2018, value: 16420 },
+        { year: 2019, value: 16140 },
+        { year: 2020, value: 16880 },
+        { year: 2021, value: 18990 },
+        { year: 2022, value: 19865 },
+        { year: 2023, value: 20505 },
+        { year: 2024, value: 20030 },
+      ],
+    },
+
+    // === Revenue per Employee (USD) ===
+    revenuePerEmployee: {
+      label: 'Revenue per Employee',
+      unit: 'USD',
+      series: [
+        { year: 2010, value: 420074 },
+        { year: 2011, value: 440640 },
+        { year: 2012, value: 467202 },
+        { year: 2013, value: 482170 },
+        { year: 2014, value: 330511 },
+        { year: 2015, value: 356713 },
+        { year: 2016, value: 413828 },
+        { year: 2017, value: 444453 },
+        { year: 2018, value: 474531 },
+        { year: 2019, value: 494847 },
+        { year: 2020, value: 482812 },
+        { year: 2021, value: 472367 },
+        { year: 2022, value: 524434 },
+        { year: 2023, value: 544602 },
+        { year: 2024, value: 559425 },
+      ],
+    },
+
+    // === Net Income per Employee (USD) ===
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee',
+      unit: 'USD',
+      series: [
+        { year: 2010, value: 37759 },
+        { year: 2011, value: 45573 },
+        { year: 2012, value: 46547 },
+        { year: 2013, value: 55439 },
+        { year: 2014, value: 37723 },
+        { year: 2015, value: 24768 },
+        { year: 2016, value: 40047 },
+        { year: 2017, value: 46293 },
+        { year: 2018, value: 71714 },
+        { year: 2019, value: 71228 },
+        { year: 2020, value: 75735 },
+        { year: 2021, value: 77815 },
+        { year: 2022, value: 82776 },
+        { year: 2023, value: 90779 },
+        { year: 2024, value: 110885 },
+      ],
+    },
+
+    // === CEO Performance ===
+    ceoPerformance: {
+      current: {
+        name: 'Kirk Tanner',
+        status: 'Current CEO',
+        startYear: 2025,
+      },
+      historical: [
+        {
+          name: 'Michele Buck',
+          tenure: '2017 \u2013 2025',
+          years: 8,
+          valueAdded: 13,
+          note: '$13B in increased valuation during her tenure.',
+        },
+        {
+          name: 'John P. Bilbrey',
+          tenure: '2011 \u2013 2017',
+          years: 6,
+          valueAdded: 10,
+          note: '$10B in increased valuation during his tenure.',
+        },
+      ],
+    },
+  },
   risks: {
     // 14 risk factors grouped by category
     riskFactors: {
@@ -2162,7 +2281,7 @@ const HSY_BREAKDOWN = {
 
     // Macro trends affecting business — 2024
     macroTrends: {
-      year: '2024',
+      year: '2025',
       rows: [
         {
           category: 'Consumer Behavior',
@@ -12475,6 +12594,187 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     };
 
+                    // === NUMBERS TAB ===
+                    const renderNumbersTab = () => {
+                      if (!bd.numbers) return null;
+                      const { marketCapHistory, employees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance } = bd.numbers;
+
+                      // Format helpers
+                      const fmtVal = (v, unit) => {
+                        if (unit === 'B USD') return '$' + v + 'B';
+                        if (unit === 'USD')   return '$' + Math.round(v).toLocaleString();
+                        return v.toLocaleString();
+                      };
+
+                      // Bar chart — renders an SVG bar chart given { label, unit, series }
+                      const TimeSeriesChart = ({ data }) => {
+                        if (!data || !data.series || data.series.length === 0) return null;
+                        const series = data.series;
+                        const maxVal = Math.max(...series.map(d => d.value));
+                        const minVal = Math.min(...series.map(d => d.value));
+                        // Peak / trough flags
+                        const peakYear = series.find(d => d.value === maxVal)?.year;
+                        const troughYear = series.find(d => d.value === minVal)?.year;
+                        // Last point — most recent
+                        const latest = series[series.length - 1];
+                        const first  = series[0];
+                        const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
+                        // Chart dims
+                        const W = 800, H = 200, PL = 40, PR = 10, PT = 16, PB = 28;
+                        const innerW = W - PL - PR;
+                        const innerH = H - PT - PB;
+                        const barW = innerW / series.length * 0.7;
+                        const gap  = innerW / series.length * 0.3;
+                        const yScale = v => PT + innerH - (v / maxVal) * innerH;
+
+                        return (
+                          <div style={{
+                            background:'rgba(0,0,0,0.4)',
+                            border:`0.5px solid ${amberGlow}`,
+                            borderLeft:`2px solid ${amber}`,
+                            borderRadius:'4px',
+                            padding:'14px',
+                            marginBottom:'12px',
+                          }}>
+                            {/* Header row */}
+                            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
+                              <div>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
+                                <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} \u2013 {latest.year}</div>
+                              </div>
+                              <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
+                                <div style={{textAlign:'right'}}>
+                                  <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>LATEST {latest.year}</div>
+                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{fmtVal(latest.value, data.unit)}</div>
+                                </div>
+                                <div style={{textAlign:'right'}}>
+                                  <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
+                                  <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* SVG chart */}
+                            <div style={{width:'100%',overflowX:'auto'}}>
+                              <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'480px',display:'block'}}>
+                                {/* Y grid lines */}
+                                {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                  <g key={i}>
+                                    <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                    <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{fmtVal(maxVal * p, data.unit).replace(/^\$/, '$').replace(/USD$/, '')}</text>
+                                  </g>
+                                ))}
+                                {/* Bars */}
+                                {series.map((d, i) => {
+                                  const x = PL + (i * (barW + gap)) + gap/2;
+                                  const y = yScale(d.value);
+                                  const h = (PT + innerH) - y;
+                                  const isPeak = d.year === peakYear;
+                                  const isTrough = d.year === troughYear;
+                                  const isLast = i === series.length - 1;
+                                  const fill = isPeak ? 'rgba(34,197,94,0.85)' : (isTrough ? 'rgba(239,68,68,0.7)' : (isLast ? amber : 'rgba(245,158,11,0.55)'));
+                                  return (
+                                    <g key={i}>
+                                      <rect x={x} y={y} width={barW} height={h} fill={fill} rx="1" />
+                                      <text x={x + barW/2} y={H - PB + 10} textAnchor="middle" fontSize="7" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(d.year).slice(-2)}</text>
+                                      {(isPeak || isLast) && (
+                                        <text x={x + barW/2} y={y - 4} textAnchor="middle" fontSize="7" fill={isPeak ? 'rgba(34,197,94,0.95)' : amber} fontFamily="monospace" fontWeight="600">{fmtVal(d.value, data.unit).replace(/^\$/, '').replace(' USD', '')}</text>
+                                      )}
+                                    </g>
+                                  );
+                                })}
+                              </svg>
+                            </div>
+
+                            {/* Footer stats */}
+                            <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
+                              <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(34,197,94,0.85)',borderRadius:'1px'}}/>
+                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} \u00b7 {fmtVal(maxVal, data.unit)}</span>
+                              </div>
+                              <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(239,68,68,0.7)',borderRadius:'1px'}}/>
+                                <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} \u00b7 {fmtVal(minVal, data.unit)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      };
+
+                      return (
+                        <div>
+                          {/* HISTORICAL CHARTS */}
+                          <SectionHeading>// LONG-TERM HISTORY</SectionHeading>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Multi-year time-series across market cap, headcount, and productivity per employee.</div>
+
+                          {marketCapHistory && <TimeSeriesChart data={marketCapHistory} />}
+                          {employees && <TimeSeriesChart data={employees} />}
+                          {revenuePerEmployee && <TimeSeriesChart data={revenuePerEmployee} />}
+                          {netIncomePerEmployee && <TimeSeriesChart data={netIncomePerEmployee} />}
+
+                          {/* CEO PERFORMANCE */}
+                          {ceoPerformance && (
+                            <>
+                              <SectionHeading>// CEO PERFORMANCE</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Value created by each CEO during their tenure (increase in market cap).</div>
+
+                              {/* Current CEO panel */}
+                              {ceoPerformance.current && (
+                                <div style={{
+                                  background:'linear-gradient(160deg, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.4) 100%)',
+                                  border:'0.5px solid rgba(34,197,94,0.45)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.9)',
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'10px',
+                                  position:'relative',
+                                }}>
+                                  <div style={{position:'absolute',top:'8px',right:'10px',display:'flex',alignItems:'center',gap:'6px'}}>
+                                    <span style={{display:'inline-block',width:'6px',height:'6px',borderRadius:'50%',background:'rgba(34,197,94,0.9)',boxShadow:'0 0 6px rgba(34,197,94,0.9)'}}/>
+                                    <span style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CURRENT</span>
+                                  </div>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// CEO {ceoPerformance.current.startYear ? `\u00b7 SINCE ${ceoPerformance.current.startYear}` : ''}</div>
+                                  <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{ceoPerformance.current.name}</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',marginTop:'4px'}}>{ceoPerformance.current.status}</div>
+                                </div>
+                              )}
+
+                              {/* Historical CEOs */}
+                              {ceoPerformance.historical && ceoPerformance.historical.length > 0 && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'10px'}}>
+                                  {ceoPerformance.historical.map((c, i) => (
+                                    <div key={i} style={{
+                                      background:'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'4px',
+                                      padding:'14px',
+                                      position:'relative',
+                                    }}>
+                                      <div style={{position:'absolute',top:'6px',right:'8px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {c.tenure}</div>
+                                      <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'10px'}}>{c.name}</div>
+                                      <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                        <div>
+                                          <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>TENURE</div>
+                                          <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{c.years} <span style={{fontSize:'10px',color:'rgba(224,234,255,0.5)'}}>YRS</span></div>
+                                        </div>
+                                        <div>
+                                          <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>VALUE ADDED</div>
+                                          <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${c.valueAdded}B</div>
+                                        </div>
+                                      </div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.4}}>{c.note}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      );
+                    };
+
                     return (
                       <div style={{
                         background:'rgba(5,12,24,0.85)',
@@ -12486,7 +12786,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         <div style={{paddingTop:'8px'}}>
                           {activeTab === 'brands' && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
                           {activeTab === 'moat'    && renderEmptyTab('moat')}
-                          {activeTab === 'numbers' && renderEmptyTab('numbers')}
+                          {activeTab === 'numbers' && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
                           {activeTab === 'risks'   && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
                           {activeTab === 'thesis'  && renderEmptyTab('thesis')}
                         </div>
