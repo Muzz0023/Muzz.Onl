@@ -1978,6 +1978,64 @@ const HSY_BREAKDOWN = {
         lag: 'Time delay before net sales reflect list price increases — honouring prior promotional commitments, plus increased promotional allowances offsetting gains.',
       },
     },
+    // Properties / Facilities (from 2024 10-K)
+    properties: {
+      summary: {
+        globalFootprint: 'Hershey owns and leases facilities worldwide for manufacturing, sales, distribution, and admin functions.',
+        condition: 'Facilities are well maintained with adequate capacity for seasonal demand spikes, changing product mixes, and additional growth.',
+        improvement: 'Regular upgrades to incorporate latest technologies.',
+        management: 'Assets not managed by segment — manufacturing, warehousing & distribution are integrated across global operations as a unified system.',
+      },
+      largestFacilities: ['Hershey, PA', 'Lancaster, PA', 'Hazleton, PA', 'Monterrey, Mexico', 'El Salto, Mexico', 'Stuarts Draft, VA'],
+      segmentSupport: [
+        { segment: 'North America Confectionery & Salty Snacks', facilities: 'U.S., Canada & Mexico facilities' },
+        { segment: 'International',                              facilities: 'Malaysia facility' },
+      ],
+      facilities: [
+        {
+          country: 'United States',
+          items: [
+            { location: 'Hershey, Pennsylvania (3 principal plants)', type: 'Manufacturing — confectionery products and pantry items', status: 'Own' },
+            { location: 'Lancaster, Pennsylvania',                    type: 'Manufacturing — confectionery products',                  status: 'Own' },
+            { location: 'Hazleton, Pennsylvania',                     type: 'Manufacturing — confectionery products',                  status: 'Own' },
+            { location: 'Robinson, Illinois',                         type: 'Manufacturing — confectionery products and pantry items', status: 'Own' },
+            { location: 'Stuarts Draft, Virginia',                    type: 'Manufacturing — confectionery products and pantry items', status: 'Own' },
+            { location: 'Edgerton, Kansas',                           type: 'Manufacturing — salty snack products',                    status: 'Own' },
+            { location: 'Bluffton, Indiana',                          type: 'Manufacturing — salty snack products',                    status: 'Lease' },
+            { location: 'Plymouth, Indiana',                          type: 'Manufacturing — salty snack products',                    status: 'Lease' },
+            { location: 'Lawrence, Kansas',                           type: 'Manufacturing — salty snack products',                    status: 'Lease' },
+            { location: 'Whitestown, Indiana',                        type: 'Manufacturing — salty snack products',                    status: 'Lease' },
+            { location: 'Annville, Pennsylvania',                     type: 'Distribution',                                            status: 'Own' },
+            { location: 'Palmyra, Pennsylvania',                      type: 'Distribution',                                            status: 'Own' },
+            { location: 'Edwardsville, Illinois',                     type: 'Distribution',                                            status: 'Own' },
+            { location: 'Ogden, Utah',                                type: 'Distribution',                                            status: 'Own' },
+            { location: 'Kennesaw, Georgia',                          type: 'Distribution',                                            status: 'Lease' },
+            { location: 'Whitestown, Indiana',                        type: 'Distribution',                                            status: 'Lease' },
+            { location: 'Hershey, Pennsylvania',                      type: 'Corporate administrative',                                status: 'Lease' },
+            { location: 'New York, New York',                         type: 'Retail',                                                  status: 'Lease' },
+          ],
+        },
+        {
+          country: 'Canada',
+          items: [
+            { location: 'Brantford, Ontario', type: 'Distribution', status: 'Own' },
+          ],
+        },
+        {
+          country: 'Mexico',
+          items: [
+            { location: 'Monterrey, Mexico', type: 'Manufacturing — confectionery products',                  status: 'Own' },
+            { location: 'El Salto, Mexico',  type: 'Manufacturing — confectionery products and pantry items', status: 'Own' },
+          ],
+        },
+        {
+          country: 'Malaysia',
+          items: [
+            { location: 'Johor, Malaysia', type: 'Manufacturing — confectionery products', status: 'Own' },
+          ],
+        },
+      ],
+    },
   },
   brands: {
     segments: [
@@ -2106,6 +2164,44 @@ const HSY_BREAKDOWN = {
   },
   // Other tabs will populate next session
   moat: {
+    trademarks: {
+      owned: 'Hershey owns various registered & unregistered trademarks (e.g. Hershey’s, Reese’s). These are critical to its business.',
+      validity: 'Trademarks remain valid as long as used or renewed (renewable in fixed terms, depending on jurisdiction).',
+      strategy: 'Hershey seeks protection in the U.S. and key international markets.',
+      licensingToOthers: 'Licenses Hershey’s & Reese’s trademarks to third parties for pantry items, flavoured milks, and other products.',
+    },
+    licensing: {
+      description: 'Hershey both owns and licenses iconic brands. Several of its biggest U.S. products (Kit Kat, Rolo) are produced under licence from Nestlé. Others (York, Almond Joy, Mounds) come via Kraft/Cadbury agreements.',
+      agreements: [
+        {
+          licensor: 'Société des Produits Nestlé S.A.',
+          brands: ['Kit Kat®', 'Rolo®'],
+          region: 'U.S.',
+          requirements: 'Minimum unit volume sales requirement — exceeded in 2024.',
+          highlight: true,
+        },
+        {
+          licensor: 'Cadbury UK Ltd.',
+          brands: ['Cadbury', 'Caramello'],
+          region: 'U.S.',
+          requirements: 'Minimum sales requirement — exceeded in 2024.',
+          highlight: true,
+        },
+        {
+          licensor: 'Kraft Foods Ireland Intellectual Property Ltd. / Cadbury UK Ltd.',
+          brands: ['York', 'Peter Paul Almond Joy', 'Peter Paul Mounds'],
+          region: 'Worldwide',
+          requirements: 'None.',
+        },
+        {
+          licensor: 'Iconic IP Interests, LLC',
+          brands: ['Good & Plenty', 'Heath', 'Jolly Rancher', 'Milk Duds', 'Payday', 'Whoppers'],
+          region: 'Worldwide',
+          requirements: 'None.',
+        },
+      ],
+      tldr: 'Licensing requirements (e.g. minimum sales volumes for Kit Kat, Cadbury) were exceeded in 2024 — keeping these high-value agreements active. The licensed-brand revenue stream is a meaningful chunk of HSY’s U.S. confectionery portfolio.',
+    },
     pricingPower: {
       label: 'Pricing Power · Long-Term',
       description: 'Nominal retail price of three flagship Hershey products over 25 years. Sustained price increases without volume collapse is classic pricing-power evidence — a key Buffett indicator of a durable consumer brand.',
@@ -2508,8 +2604,77 @@ const HSY_BREAKDOWN = {
         },
       ],
     },
+    // Food Quality & Safety Regulation
+    foodQuality: {
+      rows: [
+        { category: 'Regulatory Oversight · U.S.',     points: ['FDA, USDA, FTC, Department of Commerce, EPA, plus state & local agencies.'] },
+        { category: 'Regulatory Oversight · Global',   points: ['Similar agencies regulate Hershey’s businesses outside the U.S.'] },
+        { category: 'Internal Program',                points: ['Product Excellence Program — core to global supply chain.', 'Ensures safety, quality & compliance with laws.'] },
+        { category: 'Scope of Evaluation',             points: ['Ingredients, packaging, processes, products, distribution, and environment.'] },
+        { category: 'Risk Management',                 points: ['Risks identified → controls established to ensure safety & quality.'] },
+        { category: 'Audits & Compliance',             points: ['Conducted by government agencies, third-party firms, and Hershey’s own quality assurance staff.'] },
+      ],
+    },
+    // Environmental Considerations
+    environmental: {
+      rows: [
+        { category: 'Regulatory Compliance',           points: ['Ongoing operating & capital expenditures to comply with environmental laws and regulations.'] },
+        { category: 'Voluntary Commitments',           points: ['Eliminate commodity-driven deforestation.', 'Reduce GHG emissions across operations & supply chain.'] },
+        { category: 'Focus Areas for Climate Action',  points: ['Scope 1 & 2 emissions (direct & purchased energy).', 'FLAG emissions (Forest, Land, Agriculture).', 'Non-FLAG emissions (other value chain sources).'] },
+        { category: 'Alignment',                       points: ['Actions consistent with global environmental standards.'] },
+        { category: 'Financial Impact',                points: ['Climate-related spending is not material to Hershey’s results of operations, CapEx, or competitive position.'] },
+      ],
+    },
   },
-  thesis: null,
+  thesis: {
+    vision: 'To be a leading snacking powerhouse, meeting evolving consumer snacking needs while strengthening growth capabilities.',
+    businessSegments: [
+      { number: '01', name: 'North America Confectionery', description: 'Core chocolate, non-chocolate confectionery, gum, refreshment, protein bars, pantry & food service.' },
+      { number: '02', name: 'North America Salty Snacks',  description: 'Ready-to-eat popcorn, pretzels, baked snacks, and other savoury snacking products.' },
+      { number: '03', name: 'International',                description: 'Confectionery & snacks across Mexico, Brazil, India, Malaysia, and export markets worldwide.' },
+    ],
+    strategicImperatives: [
+      {
+        number: '01',
+        title: 'Drive Core Confection Business & Broaden Snacking',
+        points: [
+          'Maintain U.S. confection leadership.',
+          'Deepen consumer connections through innovation.',
+          'Expand confection brands into new snacking occasions.',
+          'Use acquisitions to diversify into new snack categories.',
+        ],
+      },
+      {
+        number: '02',
+        title: 'Deliver Profitable International Growth',
+        points: [
+          'Focus resources on highest-potential international markets.',
+          'Reset strategy to target emerging markets for long-term growth.',
+          'Balance investment with market risk and opportunity size.',
+        ],
+      },
+      {
+        number: '03',
+        title: 'Expand Competitive Advantage via Differentiated Capabilities',
+        points: [
+          'Leverage advanced data & analytics for insights.',
+          'Enhance digital transformation & media models.',
+          'Transform supply chain & ERP system for efficiency.',
+        ],
+      },
+      {
+        number: '04',
+        title: 'Responsibly Manage Operations for Long-Term Sustainability',
+        points: [
+          'Foster strong employee engagement & inclusive culture.',
+          'Gender & diversity leadership — women in top roles, 50% representation across company, 40% Board women.',
+          'Maintain pay equity across gender & people of colour in U.S.',
+          'Drive ESG — cocoa farmer/community support, climate change mitigation, sustainable packaging, human rights, diversity & inclusion.',
+        ],
+      },
+    ],
+    bigPicture: 'Hershey is balancing its strong core confection dominance with expansion into salty snacks and international markets, while investing heavily in digital transformation, supply chain upgrades, and ESG leadership to sustain long-term growth.',
+  },
 };
 
 // ════════════════════════════════════════════════════════════════════
@@ -12692,7 +12857,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -12841,6 +13006,142 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <InfoPanel label="// LAG IN PRICE IMPACT">{rawMaterials.pricingStrategy.lag}</InfoPanel>
                             </>
                           )}
+
+                          {/* PROPERTIES / FACILITIES */}
+                          {properties && (() => {
+                            // Group facilities by country, then sub-group by type within country
+                            const typeOrder = [
+                              { match: /Manufacturing.*confectionery/i, label: 'Manufacturing · Confectionery' },
+                              { match: /Manufacturing.*salty/i,         label: 'Manufacturing · Salty Snacks' },
+                              { match: /Distribution/i,                 label: 'Distribution' },
+                              { match: /Corporate/i,                    label: 'Corporate' },
+                              { match: /Retail/i,                       label: 'Retail' },
+                            ];
+                            const bucketFor = (type) => {
+                              for (const t of typeOrder) if (t.match.test(type)) return t.label;
+                              return 'Other';
+                            };
+                            // Count total facilities
+                            const totalCount = properties.facilities.reduce((sum, c) => sum + c.items.length, 0);
+
+                            return (
+                              <>
+                                <SectionHeading>// PROPERTIES &amp; FACILITIES · {totalCount}</SectionHeading>
+
+                                {/* Summary panel */}
+                                {properties.summary && (
+                                  <div style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'12px 14px',
+                                    marginBottom:'10px',
+                                  }}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// OPERATIONAL FOOTPRINT</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Global footprint —</span> {properties.summary.globalFootprint}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Condition —</span> {properties.summary.condition}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Improvement —</span> {properties.summary.improvement}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Management —</span> {properties.summary.management}</div>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Largest facilities chips */}
+                                {properties.largestFacilities && properties.largestFacilities.length > 0 && (
+                                  <div style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'12px 14px',
+                                    marginBottom:'10px',
+                                  }}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// LARGEST FACILITIES · {properties.largestFacilities.length}</div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+                                      {properties.largestFacilities.map((f, i) => (
+                                        <span key={i} style={{padding:'4px 10px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',color:'#e0eaff',fontFamily:'monospace',fontSize:'10px',letterSpacing:'0.5px',fontWeight:600}}>{f}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Segment support */}
+                                {properties.segmentSupport && properties.segmentSupport.length > 0 && (
+                                  <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                    {properties.segmentSupport.map((s, i) => (
+                                      <div key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'4px',
+                                        padding:'10px 12px',
+                                      }}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// SEGMENT SUPPORT</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>{s.facilities}</span> → {s.segment}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {/* Facilities grouped by country, then type */}
+                                {properties.facilities.map((country, ci) => {
+                                  // Group within country by type bucket
+                                  const grouped = {};
+                                  country.items.forEach(item => {
+                                    const b = bucketFor(item.type);
+                                    if (!grouped[b]) grouped[b] = [];
+                                    grouped[b].push(item);
+                                  });
+                                  const orderedBuckets = [...typeOrder.map(t => t.label), 'Other'].filter(b => grouped[b]);
+
+                                  return (
+                                    <div key={ci} style={{marginBottom:'14px'}}>
+                                      <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'8px'}}>
+                                        <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{country.country}</div>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{country.items.length} {country.items.length === 1 ? 'SITE' : 'SITES'}</div>
+                                      </div>
+                                      {orderedBuckets.map(bucket => (
+                                        <div key={bucket} style={{marginBottom:'8px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px',opacity:0.8}}>// {bucket.toUpperCase()} · {grouped[bucket].length}</div>
+                                          <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                            {grouped[bucket].map((item, ii) => {
+                                              const isOwn = item.status === 'Own';
+                                              return (
+                                                <div key={ii} style={{
+                                                  display:'flex',alignItems:'center',justifyContent:'space-between',gap:'8px',
+                                                  padding:'6px 10px',
+                                                  background:'rgba(0,0,0,0.35)',
+                                                  border:`0.5px solid ${amberGlow}`,
+                                                  borderLeft:`2px solid ${isOwn ? 'rgba(34,197,94,0.7)' : 'rgba(245,158,11,0.7)'}`,
+                                                  borderRadius:'3px',
+                                                }}>
+                                                  <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px',flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{item.location}</span>
+                                                  <span style={{
+                                                    padding:'2px 7px',
+                                                    background: isOwn ? 'rgba(34,197,94,0.10)' : 'rgba(245,158,11,0.10)',
+                                                    border: `0.5px solid ${isOwn ? 'rgba(34,197,94,0.5)' : amberGlow}`,
+                                                    borderRadius:'2px',
+                                                    fontSize:'8px',
+                                                    color: isOwn ? 'rgba(34,197,94,0.95)' : amber,
+                                                    fontFamily:'monospace',
+                                                    letterSpacing:'1px',
+                                                    fontWeight:700,
+                                                    flexShrink:0,
+                                                  }}>{item.status.toUpperCase()}</span>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  );
+                                })}
+                              </>
+                            );
+                          })()}
                         </div>
                       );
                     };
@@ -12856,7 +13157,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -12957,6 +13258,28 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <SectionHeading>// MACRO TRENDS{macroTrends.year ? ` · ${macroTrends.year}` : ''}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>External forces shaping Hershey’s business environment.</div>
                               {macroTrends.rows.map((r, i) => (
+                                <InfoPanel key={i} category={r.category} points={r.points} />
+                              ))}
+                            </>
+                          )}
+
+                          {/* FOOD QUALITY & SAFETY REGULATION */}
+                          {foodQuality && (
+                            <>
+                              <SectionHeading>// FOOD QUALITY & SAFETY REGULATION</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Regulatory oversight and Hershey's internal Product Excellence Program.</div>
+                              {foodQuality.rows.map((r, i) => (
+                                <InfoPanel key={i} category={r.category} points={r.points} />
+                              ))}
+                            </>
+                          )}
+
+                          {/* ENVIRONMENTAL CONSIDERATIONS */}
+                          {environmental && (
+                            <>
+                              <SectionHeading>// ENVIRONMENTAL CONSIDERATIONS</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Climate action, deforestation commitments, and GHG emissions scope.</div>
+                              {environmental.rows.map((r, i) => (
                                 <InfoPanel key={i} category={r.category} points={r.points} />
                               ))}
                             </>
@@ -13149,7 +13472,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower } = bd.moat;
+                      const { pricingPower, trademarks, licensing } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -13304,6 +13627,100 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
+                          {/* TRADEMARKS */}
+                          {trademarks && (
+                            <>
+                              <SectionHeading>// TRADEMARKS</SectionHeading>
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'12px 14px',
+                                marginBottom:'10px',
+                              }}>
+                                <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Owned —</span> {trademarks.owned}</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Validity —</span> {trademarks.validity}</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Strategy —</span> {trademarks.strategy}</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amber,fontWeight:600}}>Licensing to Others —</span> {trademarks.licensingToOthers}</div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          {/* LICENSING AGREEMENTS */}
+                          {licensing && (
+                            <>
+                              <SectionHeading>// LICENSING AGREEMENTS · {licensing.agreements.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{licensing.description}</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'4px'}}>
+                                {licensing.agreements.map((agr, i) => {
+                                  const isHighlight = agr.highlight;
+                                  return (
+                                    <div key={i} style={{
+                                      background: isHighlight ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${isHighlight ? amber : amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'4px',
+                                      padding:'14px',
+                                      position:'relative',
+                                    }}>
+                                      {isHighlight && (
+                                        <>
+                                          <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                        </>
+                                      )}
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',marginBottom:'8px',flexWrap:'wrap'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// LICENSOR {isHighlight ? '· FEATURED' : ''}</div>
+                                        <span style={{
+                                          padding:'2px 8px',
+                                          background:'rgba(245,158,11,0.10)',
+                                          border:`0.5px solid ${amberGlow}`,
+                                          borderRadius:'2px',
+                                          fontSize:'9px',
+                                          color: amber,
+                                          fontFamily:'monospace',
+                                          letterSpacing:'1px',
+                                          fontWeight:700,
+                                        }}>{agr.region.toUpperCase()}</span>
+                                      </div>
+                                      <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'10px'}}>{agr.licensor}</div>
+                                      <div style={{marginBottom:'10px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// BRANDS LICENSED · {agr.brands.length}</div>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'5px'}}>
+                                          {agr.brands.map((b, j) => (
+                                            <span key={j} style={{padding:'3px 9px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',color:'#e0eaff',fontFamily:'monospace',fontSize:'10px',letterSpacing:'0.5px',fontWeight:600}}>{b}</span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                      <div style={{padding:'8px 10px',background: isHighlight ? 'rgba(34,197,94,0.06)' : 'rgba(245,158,11,0.05)',border:`0.5px solid ${isHighlight ? 'rgba(34,197,94,0.35)' : amberGlow}`,borderRadius:'3px'}}>
+                                        <div style={{fontSize:'9px',color: isHighlight ? 'rgba(34,197,94,0.85)' : amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// REQUIREMENTS</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{agr.requirements}</div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {licensing.tldr && (
+                                <div style={{
+                                  marginTop:'12px',
+                                  padding:'12px 14px',
+                                  background:'rgba(34,197,94,0.06)',
+                                  border:'0.5px solid rgba(34,197,94,0.35)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                  borderRadius:'3px',
+                                }}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TL;DR</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{licensing.tldr}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
                           {pricingPower && (
                             <>
                               <SectionHeading>// PRICING POWER</SectionHeading>
@@ -13331,6 +13748,88 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     };
 
+                    // === THESIS TAB ===
+                    const renderThesisTab = () => {
+                      if (!bd.thesis) return null;
+                      const { vision, strategicImperatives, bigPicture } = bd.thesis;
+
+                      return (
+                        <div>
+                          {/* VISION */}
+                          {vision && (
+                            <>
+                              <SectionHeading>// VISION</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:`0.5px solid ${amber}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'16px 18px',
+                                marginBottom:'12px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px',textAlign:'center'}}>// CORPORATE VISION</div>
+                                <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',textAlign:'center',fontStyle:'italic'}}>"{vision}"</div>
+                              </div>
+                            </>
+                          )}
+
+                          {/* STRATEGIC IMPERATIVES */}
+                          {strategicImperatives && strategicImperatives.length > 0 && (
+                            <>
+                              <SectionHeading>// STRATEGIC IMPERATIVES · {strategicImperatives.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The four pillars guiding Hershey’s capital allocation and operating decisions.</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'4px'}}>
+                                {strategicImperatives.map((imp, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'14px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'6px',right:'8px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'10px'}}>
+                                      <div style={{fontSize:'18px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{imp.number}</div>
+                                      <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',flex:1}}>{imp.title}</div>
+                                    </div>
+                                    <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {imp.points.map((p, j) => (
+                                        <li key={j} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                          <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                          <span>{p}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* BIG PICTURE TL;DR */}
+                          {bigPicture && (
+                            <div style={{
+                              marginTop:'14px',
+                              padding:'14px 16px',
+                              background:'rgba(34,197,94,0.06)',
+                              border:'0.5px solid rgba(34,197,94,0.35)',
+                              borderLeft:'2px solid rgba(34,197,94,0.85)',
+                              borderRadius:'3px',
+                            }}>
+                              <div style={{fontSize:'10px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>⚡ BIG PICTURE</div>
+                              <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{bigPicture}</div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    };
+
                     return (
                       <div style={{
                         background:'rgba(5,12,24,0.85)',
@@ -13345,7 +13844,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {activeTab === 'moat'    && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
                           {activeTab === 'numbers' && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
                           {activeTab === 'risks'   && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
-                          {activeTab === 'thesis'  && renderEmptyTab('thesis')}
+                          {activeTab === 'thesis'  && (bd.thesis ? renderThesisTab() : renderEmptyTab('thesis'))}
                         </div>
                       </div>
                     );
