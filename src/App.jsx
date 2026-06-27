@@ -16171,13 +16171,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             if (searchResults) {
               return (
                 <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
-                  <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderRadius:'6px',padding:'12px 16px'}}>
+                  <div style={{background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderRadius:'6px',padding:'12px 16px'}}>
                     <input
                       type="text"
                       value={coverageSearch}
                       onChange={(e) => setCoverageSearch(e.target.value)}
                       placeholder="Search ticker, name, industry, country…"
-                      style={{width:'100%',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'10px 12px',outline:'none'}}
+                      style={{width:'100%',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'10px 12px',outline:'none'}}
                     />
                   </div>
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1.5px'}}>{searchResults.length} RESULT{searchResults.length !== 1 ? 'S' : ''}</div>
@@ -16185,13 +16185,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies match "{coverageSearch}".</div>
                   ) : searchResults.map(c => (
                     <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); setCoverageSearch(''); }}
-                      style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
+                      style={{width:'100%',textAlign:'left',background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
                       <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
                         <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
                         <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
                       </div>
                       <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
-                        <span style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'1px'}}>{c.industry} · {c.country}</span>
+                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px'}}>{c.industry} · {c.country}</span>
                         {c.marketCap ? (
                           <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'3px 9px'}}>
                             <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
@@ -16209,13 +16209,13 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
             return (
               <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
                 {/* Search bar (always visible at top of drill-down) */}
-                <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderRadius:'6px',padding:'12px 16px'}}>
+                <div style={{background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderRadius:'6px',padding:'12px 16px'}}>
                   <input
                     type="text"
                     value={coverageSearch}
                     onChange={(e) => setCoverageSearch(e.target.value)}
                     placeholder="Search ticker, name, industry, country…"
-                    style={{width:'100%',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(0,200,255,0.3)',borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'10px 12px',outline:'none'}}
+                    style={{width:'100%',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'4px',color:'#e0eaff',fontFamily:'monospace',fontSize:'13px',padding:'10px 12px',outline:'none'}}
                   />
                 </div>
 
@@ -16288,7 +16288,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
                     {companiesInScope.map(c => (
                       <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); }}
-                        style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
+                        style={{width:'100%',textAlign:'left',background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
                         {/* Top row: ticker + name */}
                         <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
                           <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
