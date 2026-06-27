@@ -2545,7 +2545,7 @@ const HSY_BREAKDOWN = {
           { year: 2019, value: 52.6 }, { year: 2020, value: 51.1 }, { year: 2021, value: 49.4 },
           { year: 2022, value: 49.7 }, { year: 2023, value: 48.8 }, { year: 2024, value: 44.8 },
         ],
-        note: 'SM&A as a share of gross profit has compressed steadily \u2014 from ~59% in 2010 to ~45% in 2024. Operating leverage is widening as Hershey grows faster than its overheads.',
+        note: 'SM&A as a share of gross profit has compressed steadily — from ~59% in 2010 to ~45% in 2024. Operating leverage is widening as Hershey grows faster than its overheads.',
       },
       businessRealignment: {
         label: 'Business Realignment Costs', unit: 'M USD',
@@ -2555,7 +2555,7 @@ const HSY_BREAKDOWN = {
           { year: 2019, value: 8.1 },  { year: 2020, value: 18.5 }, { year: 2021, value: 3.5 },
           { year: 2022, value: 2.0 },  { year: 2023, value: 0.4 },  { year: 2024, value: 29.0 },
         ],
-        note: 'One-off restructuring costs \u2014 2015 spike ($94.8M) was the "Project 2017" initiative. 2024 uptick relates to the new ERP rollout and supply chain transformation.',
+        note: 'One-off restructuring costs — 2015 spike ($94.8M) was the "Project 2017" initiative. 2024 uptick relates to the new ERP rollout and supply chain transformation.',
       },
       operatingMargin: {
         label: 'Operating Margin', unit: '%',
@@ -2587,7 +2587,7 @@ const HSY_BREAKDOWN = {
           { year: 2019, value: 91.5 },  { year: 2020, value: 79.7 },  { year: 2021, value: 74.1 },
           { year: 2022, value: 68.6 },  { year: 2023, value: 63.9 },  { year: 2024, value: 61.5 },
         ],
-        note: 'ROE calculated using Operating Profit (not Net Income). Declining trend reflects equity growing faster than operating profit \u2014 the business has gotten less leveraged and balance sheet stronger. The 2016 peak (151.8%) reflects tiny equity base after heavy buybacks.',
+        note: 'ROE calculated using Operating Profit (not Net Income). Declining trend reflects equity growing faster than operating profit — the business has gotten less leveraged and balance sheet stronger. The 2016 peak (151.8%) reflects tiny equity base after heavy buybacks.',
       },
       interestExpense: {
         label: 'Interest Expense', unit: 'M USD',
@@ -2607,7 +2607,7 @@ const HSY_BREAKDOWN = {
           { year: 2019, value: 71.1 },  { year: 2020, value: 138.3 }, { year: 2021, value: 119.1 },
           { year: 2022, value: 206.1 }, { year: 2023, value: 237.2 }, { year: 2024, value: 258.6 },
         ],
-        note: 'Rising other (income)/expense line includes non-operating items \u2014 pension, write-downs, FX, and various non-core items.',
+        note: 'Rising other (income)/expense line includes non-operating items — pension, write-downs, FX, and various non-core items.',
       },
       provisionForTaxes: {
         label: 'Provision for Income Taxes', unit: 'M USD',
@@ -2638,7 +2638,7 @@ const HSY_BREAKDOWN = {
           { year: 2021, value: 1686 }, { year: 2022, value: 1938 }, { year: 2023, value: 2195 },
           { year: 2024, value: 2604 },
         ],
-        note: 'NOPAT = Operating Profit \u00d7 (1 \u2013 effective tax rate). The cleanest measure of a business\u2019s operating earnings power, stripped of capital structure and tax engineering.',
+        note: 'NOPAT = Operating Profit × (1 – effective tax rate). The cleanest measure of a business’s operating earnings power, stripped of capital structure and tax engineering.',
       },
       profitMargin: {
         label: 'Profit Margin', unit: '%',
@@ -3205,14 +3205,14 @@ const HSY_BREAKDOWN = {
       ],
       headlineInsight: {
         title: 'The Snacking Shift',
-        body: 'Salty Snacks doubled its revenue share from 5% in 2019 to 10% in 2024 — North America Confectionery dropped from 87% to 82% over the same period (not because it shrunk, but because Salty Snacks grew faster, accelerated by the Dot\u2019s Pretzels acquisition in 2021 and LesserEvil in 2025). International has been stuck at 8% — the international growth pillar of the strategic plan isn\u2019t translating yet.',
+        body: 'Salty Snacks doubled its revenue share from 5% in 2019 to 10% in 2024 — North America Confectionery dropped from 87% to 82% over the same period (not because it shrunk, but because Salty Snacks grew faster, accelerated by the Dot’s Pretzels acquisition in 2021 and LesserEvil in 2025). International has been stuck at 8% — the international growth pillar of the strategic plan isn’t translating yet.',
       },
       // Detailed per-segment time series
       naConfectionery: {
         label: 'North America Confectionery', unit: 'M USD',
-        description: 'U.S. & Canada chocolate and non-chocolate confectionery, gum, mints, protein bars, spreads, snack bites, pantry & food service. Includes Hershey\u2019s Chocolate World retail stores (Hershey PA, NY, Las Vegas, Niagara Falls, Singapore) and trademark licensing.',
+        description: 'U.S. & Canada chocolate and non-chocolate confectionery, gum, mints, protein bars, spreads, snack bites, pantry & food service. Includes Hershey’s Chocolate World retail stores (Hershey PA, NY, Las Vegas, Niagara Falls, Singapore) and trademark licensing.',
         contribution: { '2024': 81.4, '2023': 81.7, '2022': 81.9 },
-        trend: 'Slight % decline (other segments growing faster), but overwhelmingly the largest revenue driver. The backbone of Hershey\u2019s business.',
+        trend: 'Slight % decline (other segments growing faster), but overwhelmingly the largest revenue driver. The backbone of Hershey’s business.',
         series: [
           { year: 2019, value: 6815 }, { year: 2020, value: 7084 }, { year: 2021, value: 7682 },
           { year: 2022, value: 8536 }, { year: 2023, value: 9123 }, { year: 2024, value: 9118 },
@@ -3220,9 +3220,9 @@ const HSY_BREAKDOWN = {
       },
       naSaltySnacks: {
         label: 'North America Salty Snacks', unit: 'M USD',
-        description: 'U.S. salty snacks — ready-to-eat popcorn, pretzels, baked snacks, and other savoury items. Includes SkinnyPop, Pirate\u2019s Booty, Dot\u2019s Homestyle Pretzels, Pirate\u2019s Booty, and (from late 2025) LesserEvil.',
+        description: 'U.S. salty snacks — ready-to-eat popcorn, pretzels, baked snacks, and other savoury items. Includes SkinnyPop, Pirate’s Booty, Dot’s Homestyle Pretzels, Pirate’s Booty, and (from late 2025) LesserEvil.',
         contribution: { '2024': 10.1, '2023': 9.8, '2022': 9.9 },
-        trend: 'Gradual increase reflecting the snacking strategy. The acquisition wave (Amplify, Dot\u2019s, Weaver Popcorn, LesserEvil) is built around this segment.',
+        trend: 'Gradual increase reflecting the snacking strategy. The acquisition wave (Amplify, Dot’s, Weaver Popcorn, LesserEvil) is built around this segment.',
         series: [
           { year: 2019, value: 410 },  { year: 2020, value: 438 },  { year: 2021, value: 555 },
           { year: 2022, value: 1029 }, { year: 2023, value: 1092 }, { year: 2024, value: 1135 },
@@ -3233,7 +3233,7 @@ const HSY_BREAKDOWN = {
         label: 'International', unit: 'M USD',
         description: 'All operations outside North America. Manufacturing in Mexico, Brazil, India, Malaysia for local markets. Distribution to Asia, Latin America, Europe, Middle East, Africa, and other regions.',
         contribution: { '2024': 8.5, '2023': 8.5, '2022': 8.2 },
-        trend: 'Stable at ~8-9% of sales over the past decade. Long-term growth pillar that hasn\u2019t materially expanded share \u2014 the international strategic imperative remains an open question.',
+        trend: 'Stable at ~8-9% of sales over the past decade. Long-term growth pillar that hasn’t materially expanded share — the international strategic imperative remains an open question.',
         series: [
           { year: 2013, value: 946 }, { year: 2014, value: 1069 }, { year: 2015, value: 918 },
           { year: 2016, value: 907 }, { year: 2017, value: 894 }, { year: 2018, value: 889 },
@@ -3243,7 +3243,7 @@ const HSY_BREAKDOWN = {
       },
       naCombined: {
         label: 'North America Combined', unit: 'M USD',
-        description: 'Combined NA Confectionery + NA Salty Snacks. Pre-2019 figures are dominated by Confectionery — Salty Snacks scaled materially from 2019 onward after the 2017 Amplify (SkinnyPop) and 2021 Dot\u2019s Pretzels acquisitions flowed into the segment.',
+        description: 'Combined NA Confectionery + NA Salty Snacks. Pre-2019 figures are dominated by Confectionery — Salty Snacks scaled materially from 2019 onward after the 2017 Amplify (SkinnyPop) and 2021 Dot’s Pretzels acquisitions flowed into the segment.',
         series: [
           { year: 2013, value: 6200 }, { year: 2014, value: 6352 }, { year: 2015, value: 6468 },
           { year: 2016, value: 6533 }, { year: 2017, value: 6621 }, { year: 2018, value: 6901 },
@@ -3432,7 +3432,7 @@ const HSY_BREAKDOWN = {
           meaning: 'Hershey invests in training employees to reduce human error (a common cause of breaches).',
         },
       ],
-      tldr: 'Hershey takes a comprehensive and proactive approach to cybersecurity \u2014 aligned with NIST, involving leadership and the Board, engaging third-party experts, and training employees. While they’ve faced attacks, they report no material breaches so far. Controls and governance are strong for a consumer goods company.',
+      tldr: 'Hershey takes a comprehensive and proactive approach to cybersecurity — aligned with NIST, involving leadership and the Board, engaging third-party experts, and training employees. While they’ve faced attacks, they report no material breaches so far. Controls and governance are strong for a consumer goods company.',
     },
 
     // Macro trends affecting business — 2024
@@ -13669,7 +13669,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   whiteSpace:'nowrap',
                                 }}>
                                 {t.label}
-                                {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>\u00b7</span>}
+                                {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>·</span>}
                               </button>
                             );
                           })}
@@ -13751,7 +13751,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
                             <div>
                               <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
-                              <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} \u2013 {latest.year} \u00b7 {series.length} years</div>
+                              <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} – {latest.year} · {series.length} years</div>
                             </div>
                             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
                               <div style={{textAlign:'right'}}>
@@ -13771,7 +13771,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
                                   <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
                                   <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>VALUE</th>
-                                  <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>\u0394 YoY</th>
+                                  <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>Δ YoY</th>
                                   <th style={{textAlign:'center',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',width:'40px'}}>FLAG</th>
                                 </tr>
                               </thead>
@@ -13785,16 +13785,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   const isLatest = d.year === latest.year;
                                   let flag = null;
                                   let flagColor = null;
-                                  if (isPeak)         { flag = '\u2191 PEAK';   flagColor = 'rgba(34,197,94,0.95)'; }
-                                  else if (isTrough)  { flag = '\u2193 TROUGH'; flagColor = 'rgba(239,68,68,0.95)'; }
-                                  else if (isLatest)  { flag = '\u25cf';        flagColor = amber; }
+                                  if (isPeak)         { flag = '↑ PEAK';   flagColor = 'rgba(34,197,94,0.95)'; }
+                                  else if (isTrough)  { flag = '↓ TROUGH'; flagColor = 'rgba(239,68,68,0.95)'; }
+                                  else if (isLatest)  { flag = '●';        flagColor = amber; }
                                   const rowBg = isPeak ? 'rgba(34,197,94,0.05)' : (isTrough ? 'rgba(239,68,68,0.04)' : 'transparent');
                                   return (
                                     <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background:rowBg}}>
                                       <td style={{padding:'4px 8px',color: isLatest ? '#e0eaff' : 'rgba(224,234,255,0.7)',fontWeight: isLatest ? 700 : 500}}>{d.year}</td>
                                       <td style={{padding:'4px 8px',textAlign:'right',color: isLatest ? '#e0eaff' : 'rgba(224,234,255,0.85)',fontWeight: isLatest ? 700 : 500}}>{fmtVal(d.value, data.unit)}</td>
                                       <td style={{padding:'4px 8px',textAlign:'right',fontFamily:'monospace',fontSize:'9px',color: yoy === null ? 'rgba(148,163,184,0.4)' : (yoy >= 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.75)')}}>
-                                        {yoy === null ? '\u2014' : (yoy >= 0 ? '+' : '') + yoy.toFixed(1) + '%'}
+                                        {yoy === null ? '—' : (yoy >= 0 ? '+' : '') + yoy.toFixed(1) + '%'}
                                       </td>
                                       <td style={{padding:'4px 8px',textAlign:'center',color: flagColor || 'transparent',fontSize:'8px',fontWeight:700,letterSpacing:'0.5px'}}>{flag || ''}</td>
                                     </tr>
@@ -13806,12 +13806,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* Footer */}
                           <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
                             <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                              <span style={{color:'rgba(34,197,94,0.95)',fontSize:'10px',fontFamily:'monospace',fontWeight:700}}>\u2191</span>
-                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} \u00b7 {fmtVal(maxVal, data.unit)}</span>
+                              <span style={{color:'rgba(34,197,94,0.95)',fontSize:'10px',fontFamily:'monospace',fontWeight:700}}>↑</span>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} · {fmtVal(maxVal, data.unit)}</span>
                             </div>
                             <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                              <span style={{color:'rgba(239,68,68,0.95)',fontSize:'10px',fontFamily:'monospace',fontWeight:700}}>\u2193</span>
-                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} \u00b7 {fmtVal(minVal, data.unit)}</span>
+                              <span style={{color:'rgba(239,68,68,0.95)',fontSize:'10px',fontFamily:'monospace',fontWeight:700}}>↓</span>
+                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} · {fmtVal(minVal, data.unit)}</span>
                             </div>
                           </div>
                         </div>
@@ -14655,7 +14655,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       })}
                                     </svg>
                                   </div>
-                                  <div style={{marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`,fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontStyle:'italic'}}>FRONT-LOADED: Most commitments are concentrated in 2025-2026. After that, only small amounts are locked in \u2014 Hershey prefers flexibility given commodity volatility.</div>
+                                  <div style={{marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`,fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontStyle:'italic'}}>FRONT-LOADED: Most commitments are concentrated in 2025-2026. After that, only small amounts are locked in — Hershey prefers flexibility given commodity volatility.</div>
                                 </div>
 
                                 {/* Takeaways */}
@@ -15176,7 +15176,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {segments && (
                         <>
                           <SectionHeading>// SEGMENT RESULTS</SectionHeading>
-                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Revenue by reportable segment — the mix shift toward salty snacks is one of HSY\u2019s defining strategic stories.</div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Revenue by reportable segment — the mix shift toward salty snacks is one of HSY’s defining strategic stories.</div>
 
                           {/* Headline insight callout */}
                           {segments.headlineInsight && (
@@ -15305,7 +15305,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 )}
                                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px',flexWrap:'wrap',marginBottom:'10px'}}>
                                   <div style={{minWidth:0,flex:1}}>
-                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// SEGMENT {isHighlight ? '\u00b7 GROWTH ENGINE' : ''}</div>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// SEGMENT {isHighlight ? '· GROWTH ENGINE' : ''}</div>
                                     <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{seg.label}</div>
                                   </div>
                                   <div style={{display:'flex',gap:'12px',alignItems:'flex-start'}}>
