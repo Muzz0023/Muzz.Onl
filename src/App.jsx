@@ -2030,7 +2030,183 @@ const HSY_BREAKDOWN = {
   // Other tabs will populate next session
   moat: null,
   numbers: null,
-  risks: null,
+  risks: {
+    // 14 risk factors grouped by category
+    riskFactors: {
+      categories: [
+        {
+          name: 'Business & Operations',
+          items: [
+            { risk: 'Reputation / Brand Image',     meaning: 'Issues with product quality, safety, ESG practices, or labor rights could damage Hershey\u2019s reputation and hurt sales.' },
+            { risk: 'Supply Chain Disruptions',     meaning: 'Events like natural disasters, pandemics, labor strikes, or material shortages could stop production or delay deliveries.' },
+            { risk: 'Talent Acquisition & Retention', meaning: 'Difficulty attracting and keeping skilled employees (especially management) could slow growth and hurt performance.' },
+            { risk: 'Climate Change',               meaning: 'Extreme weather, crop failures, or stricter GHG rules could raise costs, disrupt supply chains (especially cocoa), or harm reputation.' },
+          ],
+        },
+        {
+          name: 'Industry Risks',
+          items: [
+            { risk: 'Raw Material & Energy Costs',  meaning: 'Prices for cocoa, sugar, dairy, nuts, etc. are volatile. Big increases raise Hershey\u2019s costs unless hedged.' },
+            { risk: 'Pricing Power / Elasticity',   meaning: 'Price hikes or smaller product sizes may not fully offset cost increases and could reduce consumer demand.' },
+            { risk: 'Changing Consumer Demand',     meaning: 'Health trends, digital shopping, or reduced candy/snack consumption could hurt sales if Hershey doesn\u2019t adapt.' },
+            { risk: 'Competition',                  meaning: 'Large global rivals (Mars, Nestl\u00e9, Mondelez) and private-label brands create pricing pressure and require heavy marketing spend.' },
+          ],
+        },
+        {
+          name: 'Strategic Initiatives',
+          items: [
+            { risk: 'M&A Execution',                meaning: 'If acquisitions (e.g. Sour Strips, Weaver/Popcorn, Dot\u2019s Pretzels) aren\u2019t integrated well, synergies may not materialise.' },
+            { risk: 'International Expansion',      meaning: 'Growth outside the U.S. faces risks like political instability, tariffs, FX swings, or weak brand acceptance.' },
+            { risk: 'Cost-Saving Programs',         meaning: 'Strategic initiatives (automation, restructuring) may not deliver expected efficiencies or savings.' },
+          ],
+        },
+        {
+          name: 'Government & Regulation',
+          items: [
+            { risk: 'Changing Laws',                meaning: 'New food, trade, labor, or environmental rules (e.g. EU deforestation regulation in 2025) could raise costs and compliance risks.' },
+            { risk: 'Macroeconomic & Political Risks', meaning: 'Global recessions, inflation, energy costs, or conflicts (e.g. Russia\u2013Ukraine) can hurt sales, raise costs, and disrupt markets.' },
+          ],
+        },
+        {
+          name: 'Digital & Cybersecurity',
+          items: [
+            { risk: 'IT / Cybersecurity',           meaning: 'Hershey is a target for hackers and ransomware. Breaches could disrupt operations, cause financial loss, or damage reputation.' },
+            { risk: 'ERP Implementation',           meaning: 'Hershey\u2019s new enterprise system (launched 2024) could face post-implementation issues, disrupting forecasting, reporting, or logistics.' },
+          ],
+        },
+      ],
+      tldr: 'Hershey\u2019s main risks revolve around commodity costs (especially cocoa), climate and supply chain disruptions, reputation / brand safety, global expansion uncertainty, and technology / cybersecurity challenges.',
+    },
+
+    // Cybersecurity (Item 1C) — 8 detail rows
+    cyber: {
+      rows: [
+        {
+          category: 'Risk Management & Strategy',
+          points: [
+            'Cybersecurity program aligned with NIST framework',
+            'Integrated into Enterprise Risk Management',
+            'Focus on preventing unauthorised access, misuse, viruses, ransomware',
+            'Regular monitoring, updates, and testing (backup, disaster recovery, new software)',
+            'Incident response plan in place',
+          ],
+          meaning: 'Hershey treats cybersecurity as a core part of risk management, not an isolated function. They actively prepare for and respond to cyber threats.',
+        },
+        {
+          category: 'Technology & Safeguards',
+          points: [
+            'Industry-standard security tech',
+            'Identity, trust, vulnerability, and threat management',
+            'Backup systems and disaster recovery tested regularly',
+            'External consultants and security firms used for expertise',
+          ],
+          meaning: 'Hershey invests in tech and external support to stay current and reduce vulnerabilities.',
+        },
+        {
+          category: 'Insurance',
+          points: [
+            'Maintains cyber insurance policy',
+            'May not fully cover all breach-related claims',
+          ],
+          meaning: 'They have financial protection, but it\u2019s not foolproof.',
+        },
+        {
+          category: 'Third-Party Risk',
+          points: [
+            'Third-party risk management program',
+            'Certification of major tech suppliers',
+            'Oversight of vendors and partners to prevent IT misuse',
+          ],
+          meaning: 'Hershey monitors not only internal systems but also external partners (suppliers, service providers).',
+        },
+        {
+          category: 'Current Exposure',
+          points: [
+            'Regularly targeted by attacks, ransomware, breaches',
+            'No material incidents in 2024',
+            'Acknowledges that attacks are growing more sophisticated',
+          ],
+          meaning: 'They\u2019ve been attacked, but so far no major financial or operational impact. Risk is increasing over time.',
+        },
+        {
+          category: 'Governance & Oversight',
+          points: [
+            'Oversight by Finance & Risk Management Committee of the Board',
+            'CISO reports to Board regularly',
+            'CISO reports to CTO; CIO also reports to CTO',
+            'CTO reports to CEO, integrates cybersecurity into global tech strategy',
+          ],
+          meaning: 'Cybersecurity is directly linked to top leadership and Board oversight, not just IT staff.',
+        },
+        {
+          category: 'Leadership Experience',
+          points: [
+            'CISO: 30+ years IT, 20 years in cybersecurity (security engineering, architecture, incident response)',
+            'CIO: 20+ years in IT, digital transformation',
+            'CTO: 20+ years in tech, expertise in AI, predictive analytics, automation, supply chain',
+          ],
+          meaning: 'Leadership has deep technical expertise, which strengthens Hershey\u2019s defence capabilities.',
+        },
+        {
+          category: 'Employee Training',
+          points: [
+            'Company-wide training: phishing simulations, cyber wellness, acceptable use, incident reporting',
+            'Executives and employees receive ongoing training',
+            'Simulations, tabletop exercises, readiness tests',
+          ],
+          meaning: 'Hershey invests in training employees to reduce human error (a common cause of breaches).',
+        },
+      ],
+      tldr: 'Hershey takes a comprehensive and proactive approach to cybersecurity \u2014 aligned with NIST, involving leadership and the Board, engaging third-party experts, and training employees. While they\u2019ve faced attacks, they report no material breaches so far. Controls and governance are strong for a consumer goods company.',
+    },
+
+    // Macro trends affecting business — 2024
+    macroTrends: {
+      year: '2024',
+      rows: [
+        {
+          category: 'Consumer Behavior',
+          points: [
+            'U.S. consumers faced cost fatigue and limited income growth due to tight labor markets',
+            'Reduced discretionary spending and shifting purchasing patterns',
+            'Led to declining demand for Hershey products',
+          ],
+        },
+        {
+          category: 'Commodity Pressures',
+          points: [
+            'Heavy reliance on exchange-traded commodities (cocoa, sugar, dairy, etc.)',
+            'Cocoa prices rose ~70% in 2024, becoming the primary incremental cost',
+            'Gross margin pressure and net sales / net income declines, despite mitigation actions',
+          ],
+        },
+        {
+          category: 'Geopolitical Factors',
+          points: [
+            'Russia\u2013Ukraine conflict and tariffs / retaliatory tariffs increased uncertainty',
+            'No material 2024 impact on commodity prices or supply availability, but risks remain if conditions escalate',
+          ],
+        },
+        {
+          category: 'Liquidity & Cash Management',
+          points: [
+            'As of Dec 31 2024, sufficient liquidity to fund strategic initiatives and meet material obligations',
+            'Actively monitoring discretionary spending to preserve liquidity',
+          ],
+        },
+        {
+          category: 'Forward Risks',
+          points: [
+            'Higher supply chain costs',
+            'Ongoing inflationary pressures',
+            'Possible recession impact',
+            'Changing consumer shopping behaviors',
+            'Further disruption from geopolitical events (e.g. escalation in Russia\u2013Ukraine conflict)',
+          ],
+        },
+      ],
+    },
+  },
   thesis: null,
 };
 
@@ -12187,6 +12363,118 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     );
 
+                    // === RISKS TAB ===
+                    const renderRisksTab = () => {
+                      if (!bd.risks) return null;
+                      const { riskFactors, cyber, macroTrends } = bd.risks;
+
+                      // Shared panel style for cyber + macro rows
+                      const InfoPanel = ({ category, points, meaning }) => (
+                        <div style={{
+                          background:'rgba(0,0,0,0.4)',
+                          border:`0.5px solid ${amberGlow}`,
+                          borderLeft:`2px solid ${amber}`,
+                          borderRadius:'4px',
+                          padding:'12px 14px',
+                          marginBottom:'8px',
+                          position:'relative',
+                        }}>
+                          <div style={{position:'absolute',top:'6px',right:'8px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                          <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px',marginBottom:'8px'}}>{category}</div>
+                          <ul style={{listStyle:'none',padding:0,margin:'0 0 8px 0',display:'flex',flexDirection:'column',gap:'4px'}}>
+                            {points.map((p, i) => (
+                              <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                <span>{p}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          {meaning && (
+                            <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginTop:'8px'}}>
+                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// WHAT IT MEANS</div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{meaning}</div>
+                            </div>
+                          )}
+                        </div>
+                      );
+
+                      // TL;DR callout
+                      const Tldr = ({ text }) => (
+                        <div style={{
+                          marginTop:'10px',
+                          padding:'12px 14px',
+                          background:'rgba(34,197,94,0.06)',
+                          border:'0.5px solid rgba(34,197,94,0.35)',
+                          borderLeft:'2px solid rgba(34,197,94,0.85)',
+                          borderRadius:'3px',
+                        }}>
+                          <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// TL;DR</div>
+                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{text}</div>
+                        </div>
+                      );
+
+                      return (
+                        <div>
+                          {/* RISK FACTORS — expandable rows grouped by category */}
+                          {riskFactors && (
+                            <>
+                              <SectionHeading>// RISK FACTORS</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Tap a risk to reveal what it means and why it matters.</div>
+                              {riskFactors.categories.map((cat, ci) => (
+                                <div key={ci} style={{marginBottom:'14px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// {cat.name.toUpperCase()} · {cat.items.length}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {cat.items.map((it, i) => (
+                                      <details key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        overflow:'hidden',
+                                      }}>
+                                        <summary style={{padding:'8px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'8px'}}>
+                                          <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{it.risk}</span>
+                                          <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                        </summary>
+                                        <div style={{padding:'10px 12px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// WHAT IT MEANS</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{it.meaning}</div>
+                                        </div>
+                                      </details>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                              {riskFactors.tldr && <Tldr text={riskFactors.tldr} />}
+                            </>
+                          )}
+
+                          {/* CYBERSECURITY — 8 panels */}
+                          {cyber && (
+                            <>
+                              <SectionHeading>// CYBERSECURITY · ITEM 1C</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Hershey\u2019s defensive posture across {cyber.rows.length} dimensions of cyber risk.</div>
+                              {cyber.rows.map((r, i) => (
+                                <InfoPanel key={i} category={r.category} points={r.points} meaning={r.meaning} />
+                              ))}
+                              {cyber.tldr && <Tldr text={cyber.tldr} />}
+                            </>
+                          )}
+
+                          {/* MACRO TRENDS */}
+                          {macroTrends && (
+                            <>
+                              <SectionHeading>// MACRO TRENDS{macroTrends.year ? ` \u00b7 ${macroTrends.year}` : ''}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>External forces shaping Hershey\u2019s business environment.</div>
+                              {macroTrends.rows.map((r, i) => (
+                                <InfoPanel key={i} category={r.category} points={r.points} />
+                              ))}
+                            </>
+                          )}
+                        </div>
+                      );
+                    };
+
                     return (
                       <div style={{
                         background:'rgba(5,12,24,0.85)',
@@ -12199,7 +12487,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {activeTab === 'brands' && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
                           {activeTab === 'moat'    && renderEmptyTab('moat')}
                           {activeTab === 'numbers' && renderEmptyTab('numbers')}
-                          {activeTab === 'risks'   && renderEmptyTab('risks')}
+                          {activeTab === 'risks'   && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
                           {activeTab === 'thesis'  && renderEmptyTab('thesis')}
                         </div>
                       </div>
