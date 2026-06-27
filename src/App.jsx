@@ -2507,6 +2507,15 @@ const HSY_BREAKDOWN = {
           { year: 2022, value: 10419 }, { year: 2023, value: 11165 }, { year: 2024, value: 11202 },
         ],
       },
+      costOfSales: {
+        label: 'Cost of Sales', unit: 'M USD',
+        series: [
+          { year: 2014, value: 4086 }, { year: 2015, value: 4004 }, { year: 2016, value: 4271 },
+          { year: 2017, value: 4060 }, { year: 2018, value: 4216 }, { year: 2019, value: 4364 },
+          { year: 2020, value: 4448 }, { year: 2021, value: 4923 }, { year: 2022, value: 5921 },
+          { year: 2023, value: 6167 }, { year: 2024, value: 5901 },
+        ],
+      },
       grossProfit: {
         label: 'Gross Profit', unit: 'M USD',
         series: [
@@ -2517,12 +2526,140 @@ const HSY_BREAKDOWN = {
           { year: 2022, value: 4499 }, { year: 2023, value: 4998 }, { year: 2024, value: 5301 },
         ],
       },
+      smaExpense: {
+        label: 'SM&A Expense', unit: 'M USD',
+        series: [
+          { year: 2010, value: 1427 }, { year: 2011, value: 1478 }, { year: 2012, value: 1704 },
+          { year: 2013, value: 1924 }, { year: 2014, value: 1898 }, { year: 2015, value: 1969 },
+          { year: 2016, value: 1891 }, { year: 2017, value: 1886 }, { year: 2018, value: 1875 },
+          { year: 2019, value: 1906 }, { year: 2020, value: 1891 }, { year: 2021, value: 2001 },
+          { year: 2022, value: 2236 }, { year: 2023, value: 2437 }, { year: 2024, value: 2374 },
+        ],
+      },
+      smaToGrossProfit: {
+        label: 'SM&A as % of Gross Profit', unit: '%',
+        series: [
+          { year: 2010, value: 59.1 }, { year: 2011, value: 58.4 }, { year: 2012, value: 59.6 },
+          { year: 2013, value: 58.6 }, { year: 2014, value: 56.9 }, { year: 2015, value: 58.2 },
+          { year: 2016, value: 59.7 }, { year: 2017, value: 54.6 }, { year: 2018, value: 52.4 },
+          { year: 2019, value: 52.6 }, { year: 2020, value: 51.1 }, { year: 2021, value: 49.4 },
+          { year: 2022, value: 49.7 }, { year: 2023, value: 48.8 }, { year: 2024, value: 44.8 },
+        ],
+        note: 'SM&A as a share of gross profit has compressed steadily \u2014 from ~59% in 2010 to ~45% in 2024. Operating leverage is widening as Hershey grows faster than its overheads.',
+      },
+      businessRealignment: {
+        label: 'Business Realignment Costs', unit: 'M USD',
+        series: [
+          { year: 2013, value: 18.7 }, { year: 2014, value: 29.7 }, { year: 2015, value: 94.8 },
+          { year: 2016, value: 18.9 }, { year: 2017, value: 47.8 }, { year: 2018, value: 19.1 },
+          { year: 2019, value: 8.1 },  { year: 2020, value: 18.5 }, { year: 2021, value: 3.5 },
+          { year: 2022, value: 2.0 },  { year: 2023, value: 0.4 },  { year: 2024, value: 29.0 },
+        ],
+        note: 'One-off restructuring costs \u2014 2015 spike ($94.8M) was the "Project 2017" initiative. 2024 uptick relates to the new ERP rollout and supply chain transformation.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin', unit: '%',
+        series: [
+          { year: 2010, value: 16.0 }, { year: 2011, value: 17.4 }, { year: 2012, value: 16.7 },
+          { year: 2013, value: 18.7 }, { year: 2014, value: 18.8 }, { year: 2015, value: 14.0 },
+          { year: 2016, value: 16.9 }, { year: 2017, value: 17.5 }, { year: 2018, value: 20.8 },
+          { year: 2019, value: 20.0 }, { year: 2020, value: 21.9 }, { year: 2021, value: 22.8 },
+          { year: 2022, value: 21.7 }, { year: 2023, value: 22.9 }, { year: 2024, value: 25.9 },
+        ],
+      },
+      operatingProfit: {
+        label: 'Operating Profit', unit: 'M USD',
+        series: [
+          { year: 2010, value: 905 },  { year: 2011, value: 1055 }, { year: 2012, value: 1111 },
+          { year: 2013, value: 1338 }, { year: 2014, value: 1392 }, { year: 2015, value: 1038 },
+          { year: 2016, value: 1255 }, { year: 2017, value: 1313 }, { year: 2018, value: 1624 },
+          { year: 2019, value: 1596 }, { year: 2020, value: 1783 }, { year: 2021, value: 2044 },
+          { year: 2022, value: 2261 }, { year: 2023, value: 2561 }, { year: 2024, value: 2898 },
+        ],
+      },
+      // ROE using Operating Profit (as opposed to Net Income — kept for analyst reference)
+      roeOperating: {
+        label: 'ROE (Operating Profit)', unit: '%',
+        series: [
+          { year: 2010, value: 96.6 },  { year: 2011, value: 119.9 }, { year: 2012, value: 106.0 },
+          { year: 2013, value: 82.8 },  { year: 2014, value: 91.7 },  { year: 2015, value: 99.1 },
+          { year: 2016, value: 151.8 }, { year: 2017, value: 141.1 }, { year: 2018, value: 115.4 },
+          { year: 2019, value: 91.5 },  { year: 2020, value: 79.7 },  { year: 2021, value: 74.1 },
+          { year: 2022, value: 68.6 },  { year: 2023, value: 63.9 },  { year: 2024, value: 61.5 },
+        ],
+        note: 'ROE calculated using Operating Profit (not Net Income). Declining trend reflects equity growing faster than operating profit \u2014 the business has gotten less leveraged and balance sheet stronger. The 2016 peak (151.8%) reflects tiny equity base after heavy buybacks.',
+      },
+      interestExpense: {
+        label: 'Interest Expense', unit: 'M USD',
+        series: [
+          { year: 2010, value: 96.4 },  { year: 2011, value: 92.2 },  { year: 2012, value: 95.6 },
+          { year: 2013, value: 88.4 },  { year: 2014, value: 83.5 },  { year: 2015, value: 105.8 },
+          { year: 2016, value: 90.2 },  { year: 2017, value: 98.3 },  { year: 2018, value: 138.8 },
+          { year: 2019, value: 144.1 }, { year: 2020, value: 149.4 }, { year: 2021, value: 127.4 },
+          { year: 2022, value: 137.6 }, { year: 2023, value: 151.8 }, { year: 2024, value: 165.7 },
+        ],
+      },
+      otherIncomeExpense: {
+        label: 'Other (Income) / Expense', unit: 'M USD',
+        series: [
+          { year: 2013, value: 1.6 },   { year: 2014, value: 2.7 },   { year: 2015, value: 30.1 },
+          { year: 2016, value: 65.6 },  { year: 2017, value: 104.4 }, { year: 2018, value: 74.8 },
+          { year: 2019, value: 71.1 },  { year: 2020, value: 138.3 }, { year: 2021, value: 119.1 },
+          { year: 2022, value: 206.1 }, { year: 2023, value: 237.2 }, { year: 2024, value: 258.6 },
+        ],
+        note: 'Rising other (income)/expense line includes non-operating items \u2014 pension, write-downs, FX, and various non-core items.',
+      },
+      provisionForTaxes: {
+        label: 'Provision for Income Taxes', unit: 'M USD',
+        series: [
+          { year: 2010, value: 299.1 }, { year: 2011, value: 333.9 }, { year: 2012, value: 354.6 },
+          { year: 2013, value: 430.8 }, { year: 2014, value: 459.1 }, { year: 2015, value: 388.9 },
+          { year: 2016, value: 379.4 }, { year: 2017, value: 354.1 }, { year: 2018, value: 239.0 },
+          { year: 2019, value: 234.0 }, { year: 2020, value: 219.6 }, { year: 2021, value: 314.4 },
+          { year: 2022, value: 272.3 }, { year: 2023, value: 310.1 }, { year: 2024, value: 252.7 },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate', unit: '%',
+        series: [
+          { year: 2010, value: 37.0 }, { year: 2011, value: 34.7 }, { year: 2012, value: 34.9 },
+          { year: 2013, value: 34.4 }, { year: 2014, value: 35.2 }, { year: 2015, value: 43.1 },
+          { year: 2016, value: 34.5 }, { year: 2017, value: 31.9 }, { year: 2018, value: 17.0 },
+          { year: 2019, value: 16.9 }, { year: 2020, value: 14.7 }, { year: 2021, value: 17.5 },
+          { year: 2022, value: 14.2 }, { year: 2023, value: 14.3 }, { year: 2024, value: 10.2 },
+        ],
+        note: 'Big drop after the 2017 Tax Cuts and Jobs Act (TCJA) reduced US corporate rate from 35% to 21%.',
+      },
+      nopat: {
+        label: 'NOPAT (Net Operating Profit After Tax)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 590 },  { year: 2016, value: 822 },  { year: 2017, value: 895 },
+          { year: 2018, value: 1348 }, { year: 2019, value: 1324 }, { year: 2020, value: 1521 },
+          { year: 2021, value: 1686 }, { year: 2022, value: 1938 }, { year: 2023, value: 2195 },
+          { year: 2024, value: 2604 },
+        ],
+        note: 'NOPAT = Operating Profit \u00d7 (1 \u2013 effective tax rate). The cleanest measure of a business\u2019s operating earnings power, stripped of capital structure and tax engineering.',
+      },
+      profitMargin: {
+        label: 'Profit Margin', unit: '%',
+        series: [
+          { year: 2004, value: 13.30 }, { year: 2005, value: 11.00 }, { year: 2006, value: 12.10 },
+          { year: 2007, value: 4.60 },  { year: 2008, value: 6.30 },  { year: 2009, value: 8.40 },
+          { year: 2010, value: 8.97 },  { year: 2011, value: 10.33 }, { year: 2012, value: 9.93 },
+          { year: 2013, value: 11.47 }, { year: 2014, value: 11.40 }, { year: 2015, value: 6.93 },
+          { year: 2016, value: 9.68 },  { year: 2017, value: 10.40 }, { year: 2018, value: 15.11 },
+          { year: 2019, value: 14.39 }, { year: 2020, value: 15.68 }, { year: 2021, value: 16.46 },
+          { year: 2022, value: 15.78 }, { year: 2023, value: 16.67 }, { year: 2024, value: 19.83 },
+        ],
+      },
       netIncome: {
         label: 'Net Income', unit: 'M USD',
         series: [
-          { year: 2010, value: 509 }, { year: 2011, value: 628 }, { year: 2012, value: 660 },
-          { year: 2013, value: 820 }, { year: 2014, value: 846 }, { year: 2015, value: 512 },
-          { year: 2016, value: 720 }, { year: 2017, value: 782 }, { year: 2018, value: 1177 },
+          { year: 2004, value: 574 },  { year: 2005, value: 488 },  { year: 2006, value: 559 },
+          { year: 2007, value: 214 },  { year: 2008, value: 311 },  { year: 2009, value: 435 },
+          { year: 2010, value: 509 },  { year: 2011, value: 628 },  { year: 2012, value: 660 },
+          { year: 2013, value: 820 },  { year: 2014, value: 846 },  { year: 2015, value: 512 },
+          { year: 2016, value: 720 },  { year: 2017, value: 782 },  { year: 2018, value: 1177 },
           { year: 2019, value: 1149 }, { year: 2020, value: 1278 }, { year: 2021, value: 1477 },
           { year: 2022, value: 1644 }, { year: 2023, value: 1861 }, { year: 2024, value: 2221 },
         ],
@@ -2530,11 +2667,15 @@ const HSY_BREAKDOWN = {
       eps: {
         label: 'EPS Diluted', unit: 'USD per share',
         series: [
-          { year: 2010, value: 2.21 }, { year: 2011, value: 2.74 }, { year: 2012, value: 2.89 },
-          { year: 2013, value: 3.61 }, { year: 2014, value: 3.77 }, { year: 2015, value: 2.32 },
-          { year: 2016, value: 3.34 }, { year: 2017, value: 3.66 }, { year: 2018, value: 5.58 },
-          { year: 2019, value: 5.46 }, { year: 2020, value: 6.11 }, { year: 2021, value: 7.11 },
-          { year: 2022, value: 7.96 }, { year: 2023, value: 9.06 }, { year: 2024, value: 10.92 },
+          { year: 2000, value: 2.42 }, { year: 2001, value: 1.50 }, { year: 2002, value: 2.93 },
+          { year: 2003, value: 3.46 }, { year: 2004, value: 2.24 }, { year: 2005, value: 1.97 },
+          { year: 2006, value: 2.34 }, { year: 2007, value: 0.93 }, { year: 2008, value: 1.36 },
+          { year: 2009, value: 1.90 }, { year: 2010, value: 2.21 }, { year: 2011, value: 2.74 },
+          { year: 2012, value: 2.89 }, { year: 2013, value: 3.61 }, { year: 2014, value: 3.77 },
+          { year: 2015, value: 2.32 }, { year: 2016, value: 3.34 }, { year: 2017, value: 3.66 },
+          { year: 2018, value: 5.58 }, { year: 2019, value: 5.46 }, { year: 2020, value: 6.11 },
+          { year: 2021, value: 7.11 }, { year: 2022, value: 7.96 }, { year: 2023, value: 9.06 },
+          { year: 2024, value: 10.92 },
         ],
       },
       margins: {
@@ -2559,17 +2700,6 @@ const HSY_BREAKDOWN = {
           { year: 2019, value: 14.39 }, { year: 2020, value: 15.68 }, { year: 2021, value: 16.46 },
           { year: 2022, value: 15.78 }, { year: 2023, value: 16.67 }, { year: 2024, value: 19.83 },
         ],
-      },
-      taxRate: {
-        label: 'Effective Tax Rate', unit: '%',
-        series: [
-          { year: 2010, value: 37.0 }, { year: 2011, value: 34.7 }, { year: 2012, value: 34.9 },
-          { year: 2013, value: 34.4 }, { year: 2014, value: 35.2 }, { year: 2015, value: 43.1 },
-          { year: 2016, value: 34.5 }, { year: 2017, value: 31.9 }, { year: 2018, value: 17.0 },
-          { year: 2019, value: 16.9 }, { year: 2020, value: 14.7 }, { year: 2021, value: 17.5 },
-          { year: 2022, value: 14.2 }, { year: 2023, value: 14.3 }, { year: 2024, value: 10.2 },
-        ],
-        note: 'Big drop after the 2017 Tax Cuts and Jobs Act (TCJA) reduced US corporate rate from 35% to 21%.',
       },
       dividends: {
         // Year, EPS, Dividend, Distribution % — flagging years where payout exceeded 100% (unsustainable)
@@ -13196,7 +13326,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       { id: 'moat',      label: 'MOAT',      enabled: !!bd.moat },
                       { id: 'numbers',   label: 'NUMBERS',   enabled: !!bd.numbers },
                       { id: 'segments',  label: 'SEGMENTS',  enabled: !!(bd.numbers && bd.numbers.segments) },
-                      { id: 'pnl',       label: 'P&L',       enabled: !!(bd.numbers && bd.numbers.incomeStatement) },
+                      { id: 'income',    label: 'INCOME',    enabled: !!(bd.numbers && bd.numbers.incomeStatement) },
                       { id: 'balance',   label: 'BALANCE',   enabled: !!(bd.numbers && bd.numbers.balanceSheet) },
                       { id: 'cashflow',  label: 'CASH FLOW', enabled: !!(bd.numbers && bd.numbers.cashFlow) },
                       { id: 'risks',     label: 'RISKS',     enabled: !!bd.risks },
@@ -14367,28 +14497,94 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     };
 
-                    // === PNL TAB ===
-                    const renderPnlTab = () => {
+                    // === INCOME TAB ===
+                    const renderIncomeTab = () => {
                       if (!bd.numbers || !bd.numbers.incomeStatement) return null;
                       const { incomeStatement } = bd.numbers;
+                      const IS = incomeStatement;
                       return (
                         <div>
-                      {/* ════════════════════════════════════════════════
-                          INCOME STATEMENT
-                          ════════════════════════════════════════════════ */}
-                      {incomeStatement && (
-                        <>
                           <SectionHeading>// INCOME STATEMENT</SectionHeading>
-                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, margin trajectory, and dividend payout history.</div>
+                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, cost structure, operating leverage, margins, taxes, and dividends.</div>
 
-                          {incomeStatement.netSales       && <TimeSeriesChart data={incomeStatement.netSales} />}
-                          {incomeStatement.grossProfit    && <TimeSeriesChart data={incomeStatement.grossProfit} />}
-                          {incomeStatement.netIncome      && <TimeSeriesChart data={incomeStatement.netIncome} />}
-                          {incomeStatement.eps            && <TimeSeriesChart data={incomeStatement.eps} />}
+                          {/* REVENUE & COSTS */}
+                          {IS.netSales       && <TimeSeriesChart data={IS.netSales} />}
+                          {IS.costOfSales    && <TimeSeriesChart data={IS.costOfSales} />}
+                          {IS.grossProfit    && <TimeSeriesChart data={IS.grossProfit} />}
 
-                          {/* Margin trio */}
-                          {incomeStatement.margins && (() => {
-                            const m = incomeStatement.margins;
+                          {/* OPERATING EXPENSES */}
+                          {IS.smaExpense     && <TimeSeriesChart data={IS.smaExpense} />}
+                          {IS.smaToGrossProfit && (
+                            <>
+                              <TimeSeriesChart data={IS.smaToGrossProfit} />
+                              {IS.smaToGrossProfit.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Operating Leverage —</span> {IS.smaToGrossProfit.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {IS.businessRealignment && (
+                            <>
+                              <TimeSeriesChart data={IS.businessRealignment} />
+                              {IS.businessRealignment.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.businessRealignment.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* OPERATING PROFIT */}
+                          {IS.operatingProfit  && <TimeSeriesChart data={IS.operatingProfit} />}
+                          {IS.operatingMargin  && <TimeSeriesChart data={IS.operatingMargin} />}
+
+                          {/* NON-OPERATING */}
+                          {IS.interestExpense  && <TimeSeriesChart data={IS.interestExpense} />}
+                          {IS.otherIncomeExpense && (
+                            <>
+                              <TimeSeriesChart data={IS.otherIncomeExpense} />
+                              {IS.otherIncomeExpense.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.otherIncomeExpense.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* TAX */}
+                          {IS.provisionForTaxes && <TimeSeriesChart data={IS.provisionForTaxes} />}
+                          {IS.taxRate && (
+                            <>
+                              <TimeSeriesChart data={IS.taxRate} />
+                              {IS.taxRate.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.taxRate.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* NOPAT */}
+                          {IS.nopat && (
+                            <>
+                              <TimeSeriesChart data={IS.nopat} />
+                              {IS.nopat.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Definition —</span> {IS.nopat.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* BOTTOM LINE */}
+                          {IS.netIncome       && <TimeSeriesChart data={IS.netIncome} />}
+                          {IS.eps             && <TimeSeriesChart data={IS.eps} />}
+                          {IS.profitMargin    && <TimeSeriesChart data={IS.profitMargin} />}
+
+                          {/* Margin trio multi-line */}
+                          {IS.margins && (() => {
+                            const m = IS.margins;
                             const allYears = m.gross.map(d => d.year);
                             const maxVal = Math.max(...m.gross.map(d=>d.value), ...m.operating.map(d=>d.value), ...m.profit.map(d=>d.value));
                             const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
@@ -14444,20 +14640,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             );
                           })()}
 
-                          {/* Tax rate */}
-                          {incomeStatement.taxRate && (
+                          {/* ROE using Operating Profit */}
+                          {IS.roeOperating && (
                             <>
-                              <TimeSeriesChart data={incomeStatement.taxRate} />
-                              {incomeStatement.taxRate.note && (
+                              <TimeSeriesChart data={IS.roeOperating} />
+                              {IS.roeOperating.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {incomeStatement.taxRate.note}
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.roeOperating.note}
                                 </div>
                               )}
                             </>
                           )}
 
-                          {/* Dividends table — 25-year history with payout flags */}
-                          {incomeStatement.dividends && (
+                          {/* DIVIDENDS — 25-year payout history */}
+                          {IS.dividends && (
                             <div style={{
                               background:'rgba(0,0,0,0.4)',
                               border:`0.5px solid ${amberGlow}`,
@@ -14468,7 +14664,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             }}>
                               <div style={{marginBottom:'10px'}}>
                                 <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// DIVIDENDS PER SHARE · 25-YEAR HISTORY</div>
-                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{incomeStatement.dividends.note}</div>
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{IS.dividends.note}</div>
                               </div>
                               <div style={{overflowX:'auto'}}>
                                 <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
@@ -14481,7 +14677,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {incomeStatement.dividends.rows.map((r, i) => (
+                                    {IS.dividends.rows.map((r, i) => (
                                       <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)',background: r.abnormal ? 'rgba(239,68,68,0.04)' : 'transparent'}}>
                                         <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
                                         <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.eps.toFixed(2)}</td>
@@ -14495,8 +14691,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           )}
 
-                          {/* CAGR callouts */}
-                          {incomeStatement.cagr && (
+                          {/* CAGR */}
+                          {IS.cagr && (
                             <div style={{
                               marginBottom:'12px',
                               padding:'12px 14px',
@@ -14509,23 +14705,20 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{display:'flex',gap:'18px',flexWrap:'wrap',marginBottom:'8px'}}>
                                 <div>
                                   <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2014</div>
-                                  <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2014}%</div>
+                                  <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{IS.cagr.netIncomeCAGR_2004_2014}%</div>
                                 </div>
                                 <div>
                                   <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2014 – 2024</div>
-                                  <div style={{fontSize:'16px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2014_2024}%</div>
+                                  <div style={{fontSize:'16px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>{IS.cagr.netIncomeCAGR_2014_2024}%</div>
                                 </div>
                                 <div>
                                   <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2024</div>
-                                  <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2024}%</div>
+                                  <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{IS.cagr.netIncomeCAGR_2004_2024}%</div>
                                 </div>
                               </div>
-                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{incomeStatement.cagr.note}</div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.cagr.note}</div>
                             </div>
                           )}
-                        </>
-                      )}
-
                         </div>
                       );
                     };
@@ -15463,7 +15656,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {activeTab === 'moat'     && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
                           {activeTab === 'numbers'  && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
                           {activeTab === 'segments' && ((bd.numbers && bd.numbers.segments) ? renderSegmentsTab() : renderEmptyTab('segments'))}
-                          {activeTab === 'pnl'      && ((bd.numbers && bd.numbers.incomeStatement) ? renderPnlTab() : renderEmptyTab('P&L'))}
+                          {activeTab === 'income'   && ((bd.numbers && bd.numbers.incomeStatement) ? renderIncomeTab() : renderEmptyTab('income'))}
                           {activeTab === 'balance'  && ((bd.numbers && bd.numbers.balanceSheet) ? renderBalanceTab() : renderEmptyTab('balance'))}
                           {activeTab === 'cashflow' && ((bd.numbers && bd.numbers.cashFlow) ? renderCashFlowTab() : renderEmptyTab('cash flow'))}
                           {activeTab === 'risks'    && (bd.risks ? renderRisksTab() : renderEmptyTab('risks'))}
