@@ -4279,7 +4279,6 @@ function MuzzApp() {
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
   const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
   const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('overview'); // active tab on Coverage company breakdown page
-  const [coverageBreakdownView, setCoverageBreakdownView] = useState('table');   // 'table' | 'chart' — preferred view for time-series data
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
   const [investmentMapGraph, setInvestmentMapGraph] = useState({
@@ -13644,62 +13643,31 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       { id: 'thesis',    label: 'THESIS',    enabled: !!bd.thesis },
                     ];
                     const activeTab = coverageBreakdownTab;
-                    // Tabs that contain time-series data (where the chart/table toggle is useful)
-                    const dataHeavyTabs = ['numbers', 'segments', 'income', 'balance', 'cashflow'];
-                    const showViewToggle = dataHeavyTabs.includes(activeTab);
                     // Tabs strip
                     const tabsStrip = (
-                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px',borderBottom:`0.5px solid ${amberGlow}`,paddingBottom:'10px',flexWrap:'wrap'}}>
-                        <div style={{display:'flex',gap:'4px',flexWrap:'wrap',flex:1,minWidth:0}}>
-                          {TABS.map(t => {
-                            const isActive = activeTab === t.id;
-                            return (
-                              <button
-                                key={t.id}
-                                onClick={() => t.enabled && setCoverageBreakdownTab(t.id)}
-                                disabled={!t.enabled}
-                                style={{
-                                  padding:'7px 14px',
-                                  background: isActive ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.04)',
-                                  border: `0.5px solid ${isActive ? amber : 'rgba(255,255,255,0.12)'}`,
-                                  borderRadius:'3px',
-                                  color: !t.enabled ? 'rgba(148,163,184,0.3)' : (isActive ? amber : 'rgba(224,234,255,0.7)'),
-                                  fontFamily:'monospace', fontSize:'10px', letterSpacing:'1.5px', fontWeight:600,
-                                  cursor: t.enabled ? 'pointer' : 'not-allowed',
-                                  whiteSpace:'nowrap',
-                                }}>
-                                {t.label}
-                                {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>·</span>}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {showViewToggle && (
-                          <div style={{display:'flex',gap:'2px',padding:'2px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',flexShrink:0}}>
-                            {[
-                              { id: 'table', label: 'TABLE' },
-                              { id: 'chart', label: 'CHART' },
-                            ].map(v => {
-                              const isActive = coverageBreakdownView === v.id;
-                              return (
-                                <button
-                                  key={v.id}
-                                  onClick={() => setCoverageBreakdownView(v.id)}
-                                  style={{
-                                    padding:'5px 10px',
-                                    background: isActive ? 'rgba(245,158,11,0.18)' : 'transparent',
-                                    border: `0.5px solid ${isActive ? amber : 'transparent'}`,
-                                    borderRadius:'2px',
-                                    color: isActive ? amber : 'rgba(148,163,184,0.6)',
-                                    fontFamily:'monospace', fontSize:'9px', letterSpacing:'1.5px', fontWeight:700,
-                                    cursor:'pointer',
-                                  }}>
-                                  {v.label}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
+                      <div style={{display:'flex',gap:'4px',flexWrap:'wrap',borderBottom:`0.5px solid ${amberGlow}`,paddingBottom:'10px'}}>
+                        {TABS.map(t => {
+                          const isActive = activeTab === t.id;
+                          return (
+                            <button
+                              key={t.id}
+                              onClick={() => t.enabled && setCoverageBreakdownTab(t.id)}
+                              disabled={!t.enabled}
+                              style={{
+                                padding:'7px 14px',
+                                background: isActive ? 'rgba(245,158,11,0.18)' : 'rgba(255,255,255,0.04)',
+                                border: `0.5px solid ${isActive ? amber : 'rgba(255,255,255,0.12)'}`,
+                                borderRadius:'3px',
+                                color: !t.enabled ? 'rgba(148,163,184,0.3)' : (isActive ? amber : 'rgba(224,234,255,0.7)'),
+                                fontFamily:'monospace', fontSize:'10px', letterSpacing:'1.5px', fontWeight:600,
+                                cursor: t.enabled ? 'pointer' : 'not-allowed',
+                                whiteSpace:'nowrap',
+                              }}>
+                              {t.label}
+                              {!t.enabled && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(148,163,184,0.4)'}}>·</span>}
+                            </button>
+                          );
+                        })}
                       </div>
                     );
 
@@ -13818,95 +13786,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       );
                     };
 
-                    // Smart wrapper — switches between chart and table based on global view mode
-                    const TimeSeries = ({ data }) => {
-                      if (coverageBreakdownView === 'chart') return <TimeSeries data={data} />;
-                      return <TimeSeriesTable data={data} />;
-                    };
-
-                    // Shared bar chart — renders an SVG bar chart given { label, unit, series }
-                    const TimeSeriesChart = ({ data }) => {
-                      if (!data || !data.series || data.series.length === 0) return null;
-                      const series = data.series;
-                      const maxVal = Math.max(...series.map(d => d.value));
-                      const minVal = Math.min(...series.map(d => d.value));
-                      const peakYear = series.find(d => d.value === maxVal)?.year;
-                      const troughYear = series.find(d => d.value === minVal)?.year;
-                      const latest = series[series.length - 1];
-                      const first  = series[0];
-                      const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
-                      const W = 800, H = 200, PL = 40, PR = 10, PT = 16, PB = 28;
-                      const innerW = W - PL - PR;
-                      const innerH = H - PT - PB;
-                      const barW = innerW / series.length * 0.7;
-                      const gap  = innerW / series.length * 0.3;
-                      const yScale = v => PT + innerH - (v / maxVal) * innerH;
-                      return (
-                        <div style={{
-                          background:'rgba(0,0,0,0.4)',
-                          border:`0.5px solid ${amberGlow}`,
-                          borderLeft:`2px solid ${amber}`,
-                          borderRadius:'4px',
-                          padding:'14px',
-                          marginBottom:'12px',
-                        }}>
-                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px',gap:'12px',flexWrap:'wrap'}}>
-                            <div>
-                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
-                              <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} – {latest.year}</div>
-                            </div>
-                            <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
-                              <div style={{textAlign:'right'}}>
-                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>LATEST {latest.year}</div>
-                                <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{fmtVal(latest.value, data.unit)}</div>
-                              </div>
-                              <div style={{textAlign:'right'}}>
-                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
-                                <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
-                              </div>
-                            </div>
-                          </div>
-                          <div style={{width:'100%',overflowX:'auto'}}>
-                            <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'480px',display:'block'}}>
-                              {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
-                                <g key={i}>
-                                  <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
-                                  <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{fmtVal(maxVal * p, data.unit).replace(/^\$/, '$').replace(/USD$/, '')}</text>
-                                </g>
-                              ))}
-                              {series.map((d, i) => {
-                                const x = PL + (i * (barW + gap)) + gap/2;
-                                const y = yScale(d.value);
-                                const h = (PT + innerH) - y;
-                                const isPeak = d.year === peakYear;
-                                const isTrough = d.year === troughYear;
-                                const isLast = i === series.length - 1;
-                                const fill = isPeak ? 'rgba(34,197,94,0.85)' : (isTrough ? 'rgba(239,68,68,0.7)' : (isLast ? amber : 'rgba(245,158,11,0.55)'));
-                                return (
-                                  <g key={i}>
-                                    <rect x={x} y={y} width={barW} height={h} fill={fill} rx="1" />
-                                    <text x={x + barW/2} y={H - PB + 10} textAnchor="middle" fontSize="7" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(d.year).slice(-2)}</text>
-                                    {(isPeak || isLast) && (
-                                      <text x={x + barW/2} y={y - 4} textAnchor="middle" fontSize="7" fill={isPeak ? 'rgba(34,197,94,0.95)' : amber} fontFamily="monospace" fontWeight="600">{fmtVal(d.value, data.unit).replace(/^\$/, '').replace(' USD', '')}</text>
-                                    )}
-                                  </g>
-                                );
-                              })}
-                            </svg>
-                          </div>
-                          <div style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'8px',paddingTop:'8px',borderTop:`0.5px solid ${amberGlow}`}}>
-                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                              <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(34,197,94,0.85)',borderRadius:'1px'}}/>
-                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>PEAK {peakYear} · {fmtVal(maxVal, data.unit)}</span>
-                            </div>
-                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                              <span style={{display:'inline-block',width:'8px',height:'8px',background:'rgba(239,68,68,0.7)',borderRadius:'1px'}}/>
-                              <span style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'1px'}}>TROUGH {troughYear} · {fmtVal(minVal, data.unit)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    };
 
                     // === BRANDS TAB ===
                     const renderBrandsTab = () => {
@@ -14869,10 +14748,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// LONG-TERM HISTORY</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Multi-year time-series across market cap, headcount, and productivity per employee.</div>
 
-                          {marketCapHistory && <TimeSeries data={marketCapHistory} />}
-                          {employees && <TimeSeries data={employees} />}
-                          {revenuePerEmployee && <TimeSeries data={revenuePerEmployee} />}
-                          {netIncomePerEmployee && <TimeSeries data={netIncomePerEmployee} />}
+                          {marketCapHistory && <TimeSeriesTable data={marketCapHistory} />}
+                          {employees && <TimeSeriesTable data={employees} />}
+                          {revenuePerEmployee && <TimeSeriesTable data={revenuePerEmployee} />}
+                          {netIncomePerEmployee && <TimeSeriesTable data={netIncomePerEmployee} />}
 
                           {/* CEO PERFORMANCE */}
                           {ceoPerformance && (
@@ -14949,15 +14828,15 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, cost structure, operating leverage, margins, taxes, and dividends.</div>
 
                           {/* REVENUE & COSTS */}
-                          {IS.netSales       && <TimeSeries data={IS.netSales} />}
-                          {IS.costOfSales    && <TimeSeries data={IS.costOfSales} />}
-                          {IS.grossProfit    && <TimeSeries data={IS.grossProfit} />}
+                          {IS.netSales       && <TimeSeriesTable data={IS.netSales} />}
+                          {IS.costOfSales    && <TimeSeriesTable data={IS.costOfSales} />}
+                          {IS.grossProfit    && <TimeSeriesTable data={IS.grossProfit} />}
 
                           {/* OPERATING EXPENSES */}
-                          {IS.smaExpense     && <TimeSeries data={IS.smaExpense} />}
+                          {IS.smaExpense     && <TimeSeriesTable data={IS.smaExpense} />}
                           {IS.smaToGrossProfit && (
                             <>
-                              <TimeSeries data={IS.smaToGrossProfit} />
+                              <TimeSeriesTable data={IS.smaToGrossProfit} />
                               {IS.smaToGrossProfit.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Operating Leverage —</span> {IS.smaToGrossProfit.note}
@@ -14967,7 +14846,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
                           {IS.businessRealignment && (
                             <>
-                              <TimeSeries data={IS.businessRealignment} />
+                              <TimeSeriesTable data={IS.businessRealignment} />
                               {IS.businessRealignment.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.businessRealignment.note}
@@ -14977,14 +14856,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* OPERATING PROFIT */}
-                          {IS.operatingProfit  && <TimeSeries data={IS.operatingProfit} />}
-                          {IS.operatingMargin  && <TimeSeries data={IS.operatingMargin} />}
+                          {IS.operatingProfit  && <TimeSeriesTable data={IS.operatingProfit} />}
+                          {IS.operatingMargin  && <TimeSeriesTable data={IS.operatingMargin} />}
 
                           {/* NON-OPERATING */}
-                          {IS.interestExpense  && <TimeSeries data={IS.interestExpense} />}
+                          {IS.interestExpense  && <TimeSeriesTable data={IS.interestExpense} />}
                           {IS.otherIncomeExpense && (
                             <>
-                              <TimeSeries data={IS.otherIncomeExpense} />
+                              <TimeSeriesTable data={IS.otherIncomeExpense} />
                               {IS.otherIncomeExpense.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.otherIncomeExpense.note}
@@ -14994,10 +14873,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* TAX */}
-                          {IS.provisionForTaxes && <TimeSeries data={IS.provisionForTaxes} />}
+                          {IS.provisionForTaxes && <TimeSeriesTable data={IS.provisionForTaxes} />}
                           {IS.taxRate && (
                             <>
-                              <TimeSeries data={IS.taxRate} />
+                              <TimeSeriesTable data={IS.taxRate} />
                               {IS.taxRate.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.taxRate.note}
@@ -15009,7 +14888,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* NOPAT */}
                           {IS.nopat && (
                             <>
-                              <TimeSeries data={IS.nopat} />
+                              <TimeSeriesTable data={IS.nopat} />
                               {IS.nopat.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Definition —</span> {IS.nopat.note}
@@ -15019,9 +14898,9 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* BOTTOM LINE */}
-                          {IS.netIncome       && <TimeSeries data={IS.netIncome} />}
-                          {IS.eps             && <TimeSeries data={IS.eps} />}
-                          {IS.profitMargin    && <TimeSeries data={IS.profitMargin} />}
+                          {IS.netIncome       && <TimeSeriesTable data={IS.netIncome} />}
+                          {IS.eps             && <TimeSeriesTable data={IS.eps} />}
+                          {IS.profitMargin    && <TimeSeriesTable data={IS.profitMargin} />}
 
                           {/* Margin trio multi-line */}
                           {IS.margins && (() => {
@@ -15084,7 +14963,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* ROE using Operating Profit */}
                           {IS.roeOperating && (
                             <>
-                              <TimeSeries data={IS.roeOperating} />
+                              <TimeSeriesTable data={IS.roeOperating} />
                               {IS.roeOperating.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.roeOperating.note}
@@ -15378,7 +15257,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* North America Combined long-history chart */}
                           {segments.naCombined && (
                             <>
-                              <TimeSeries data={segments.naCombined} />
+                              <TimeSeriesTable data={segments.naCombined} />
                               {segments.naCombined.description && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:amber,fontWeight:600}}>Note —</span> {segments.naCombined.description}
@@ -15404,7 +15283,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         if (!data) return null;
                         return (
                           <>
-                            <TimeSeries data={data} />
+                            <TimeSeriesTable data={data} />
                             {data.note && (
                               <div style={{padding:'8px 12px',background: noteColor === 'green' ? 'rgba(34,197,94,0.06)' : 'rgba(245,158,11,0.04)',border: noteColor === 'green' ? '0.5px solid rgba(34,197,94,0.35)' : `0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                 <span style={{color: noteColor === 'green' ? 'rgba(34,197,94,0.85)' : amber,fontWeight:600}}>Note —</span> {data.note}
@@ -15421,36 +15300,36 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                           {/* CURRENT ASSETS */}
                           <SectionHeading>// CURRENT ASSETS</SectionHeading>
-                          {BS.cash               && <TimeSeries data={BS.cash} />}
-                          {BS.accountsReceivable && <TimeSeries data={BS.accountsReceivable} />}
+                          {BS.cash               && <TimeSeriesTable data={BS.cash} />}
+                          {BS.accountsReceivable && <TimeSeriesTable data={BS.accountsReceivable} />}
                           {BS.dso                && chartWithNote(BS.dso, 'green')}
-                          {BS.inventory          && <TimeSeries data={BS.inventory} />}
+                          {BS.inventory          && <TimeSeriesTable data={BS.inventory} />}
                           {BS.inventoryTurnover  && chartWithNote(BS.inventoryTurnover, 'amber')}
                           {BS.dio                && chartWithNote(BS.dio, 'amber')}
                           {BS.prepaidAndOther    && chartWithNote(BS.prepaidAndOther, 'amber')}
-                          {BS.totalCurrentAssets && <TimeSeries data={BS.totalCurrentAssets} />}
+                          {BS.totalCurrentAssets && <TimeSeriesTable data={BS.totalCurrentAssets} />}
 
                           {/* NON-CURRENT ASSETS */}
                           <SectionHeading>// NON-CURRENT ASSETS</SectionHeading>
-                          {BS.ppeNet                && <TimeSeries data={BS.ppeNet} />}
+                          {BS.ppeNet                && <TimeSeriesTable data={BS.ppeNet} />}
                           {BS.goodwill              && chartWithNote(BS.goodwill, 'amber')}
-                          {BS.otherIntangibles      && <TimeSeries data={BS.otherIntangibles} />}
-                          {BS.otherNonCurrentAssets && <TimeSeries data={BS.otherNonCurrentAssets} />}
-                          {BS.deferredTaxesCurrent  && <TimeSeries data={BS.deferredTaxesCurrent} />}
-                          {BS.totalAssets           && <TimeSeries data={BS.totalAssets} />}
+                          {BS.otherIntangibles      && <TimeSeriesTable data={BS.otherIntangibles} />}
+                          {BS.otherNonCurrentAssets && <TimeSeriesTable data={BS.otherNonCurrentAssets} />}
+                          {BS.deferredTaxesCurrent  && <TimeSeriesTable data={BS.deferredTaxesCurrent} />}
+                          {BS.totalAssets           && <TimeSeriesTable data={BS.totalAssets} />}
 
                           {/* CURRENT LIABILITIES */}
                           <SectionHeading>// CURRENT LIABILITIES</SectionHeading>
-                          {BS.accountsPayable         && <TimeSeries data={BS.accountsPayable} />}
+                          {BS.accountsPayable         && <TimeSeriesTable data={BS.accountsPayable} />}
                           {BS.dpo                     && chartWithNote(BS.dpo, 'green')}
-                          {BS.accruedLiabilities      && <TimeSeries data={BS.accruedLiabilities} />}
-                          {BS.accruedIncomeTaxes      && <TimeSeries data={BS.accruedIncomeTaxes} />}
-                          {BS.shortTermDebt           && <TimeSeries data={BS.shortTermDebt} />}
-                          {BS.currentLongTermDebt     && <TimeSeries data={BS.currentLongTermDebt} />}
-                          {BS.totalCurrentLiabilities && <TimeSeries data={BS.totalCurrentLiabilities} />}
+                          {BS.accruedLiabilities      && <TimeSeriesTable data={BS.accruedLiabilities} />}
+                          {BS.accruedIncomeTaxes      && <TimeSeriesTable data={BS.accruedIncomeTaxes} />}
+                          {BS.shortTermDebt           && <TimeSeriesTable data={BS.shortTermDebt} />}
+                          {BS.currentLongTermDebt     && <TimeSeriesTable data={BS.currentLongTermDebt} />}
+                          {BS.totalCurrentLiabilities && <TimeSeriesTable data={BS.totalCurrentLiabilities} />}
                           {BS.currentRatio && (
                             <>
-                              <TimeSeries data={BS.currentRatio} />
+                              <TimeSeriesTable data={BS.currentRatio} />
                               {BS.currentRatio.avg2015_2024 && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>10-yr Avg —</span> {BS.currentRatio.avg2015_2024}x. Lower = better for a high-velocity inventory business.
@@ -15461,24 +15340,24 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                           {/* NON-CURRENT LIABILITIES */}
                           <SectionHeading>// NON-CURRENT LIABILITIES</SectionHeading>
-                          {BS.longTermDebt             && <TimeSeries data={BS.longTermDebt} />}
+                          {BS.longTermDebt             && <TimeSeriesTable data={BS.longTermDebt} />}
                           {BS.ltDebtToEquity           && chartWithNote(BS.ltDebtToEquity, 'green')}
                           {BS.ltDebtToNetIncome        && chartWithNote(BS.ltDebtToNetIncome, 'green')}
-                          {BS.otherLongTermLiabilities && <TimeSeries data={BS.otherLongTermLiabilities} />}
-                          {BS.deferredTaxesNonCurrent  && <TimeSeries data={BS.deferredTaxesNonCurrent} />}
-                          {BS.totalDebt                && <TimeSeries data={BS.totalDebt} />}
+                          {BS.otherLongTermLiabilities && <TimeSeriesTable data={BS.otherLongTermLiabilities} />}
+                          {BS.deferredTaxesNonCurrent  && <TimeSeriesTable data={BS.deferredTaxesNonCurrent} />}
+                          {BS.totalDebt                && <TimeSeriesTable data={BS.totalDebt} />}
                           {BS.debtToEquity             && chartWithNote(BS.debtToEquity, 'green')}
 
                           {/* EQUITY */}
                           <SectionHeading>// EQUITY</SectionHeading>
-                          {BS.commonStock             && <TimeSeries data={BS.commonStock} />}
-                          {BS.classBCommonStock       && <TimeSeries data={BS.classBCommonStock} />}
-                          {BS.additionalPaidInCapital && <TimeSeries data={BS.additionalPaidInCapital} />}
+                          {BS.commonStock             && <TimeSeriesTable data={BS.commonStock} />}
+                          {BS.classBCommonStock       && <TimeSeriesTable data={BS.classBCommonStock} />}
+                          {BS.additionalPaidInCapital && <TimeSeriesTable data={BS.additionalPaidInCapital} />}
                           {BS.retainedEarnings        && chartWithNote(BS.retainedEarnings, 'amber')}
-                          {BS.shareholderEquity       && <TimeSeries data={BS.shareholderEquity} />}
+                          {BS.shareholderEquity       && <TimeSeriesTable data={BS.shareholderEquity} />}
                           {BS.bookValuePerShare && (
                             <>
-                              <TimeSeries data={BS.bookValuePerShare} />
+                              <TimeSeriesTable data={BS.bookValuePerShare} />
                               {BS.bookValuePerShare.cagr2015_2024 && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>CAGR 2015-2024 —</span> {BS.bookValuePerShare.cagr2015_2024}% per year. Outstanding compounding rate.
@@ -15670,11 +15549,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// CASH FLOW</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Operating cash flow, reinvestment intensity, and free cash flow / owner earnings.</div>
 
-                          {cashFlow.operatingCashFlow && <TimeSeries data={cashFlow.operatingCashFlow} />}
-                          {cashFlow.capex && <TimeSeries data={cashFlow.capex} />}
+                          {cashFlow.operatingCashFlow && <TimeSeriesTable data={cashFlow.operatingCashFlow} />}
+                          {cashFlow.capex && <TimeSeriesTable data={cashFlow.capex} />}
                           {cashFlow.capexRatio && (
                             <>
-                              <TimeSeries data={cashFlow.capexRatio} />
+                              <TimeSeriesTable data={cashFlow.capexRatio} />
                               {cashFlow.capexRatio.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {cashFlow.capexRatio.note}
@@ -15682,7 +15561,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
-                          {cashFlow.freeCashFlow && <TimeSeries data={cashFlow.freeCashFlow} />}
+                          {cashFlow.freeCashFlow && <TimeSeriesTable data={cashFlow.freeCashFlow} />}
                         </>
                       )}
                         </div>
