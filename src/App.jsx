@@ -3260,48 +3260,92 @@ const HSY_BREAKDOWN = {
       operatingCashFlow: {
         label: 'Operating Cash Flow', unit: 'M USD',
         series: [
-          { year: 2008, value: 520 },  { year: 2009, value: 1066 }, { year: 2010, value: 901 },
-          { year: 2011, value: 588 },  { year: 2012, value: 1095 }, { year: 2013, value: 1191 },
-          { year: 2014, value: 844 },  { year: 2015, value: 1214 }, { year: 2016, value: 1013 },
-          { year: 2017, value: 1250 }, { year: 2018, value: 1600 }, { year: 2019, value: 1764 },
-          { year: 2020, value: 1700 }, { year: 2021, value: 2083 }, { year: 2022, value: 2328 },
-          { year: 2023, value: 2323 }, { year: 2024, value: 2532 },
+          { year: 2008, value: 519.561 },
+          { year: 2009, value: 1065.749 },
+          { year: 2010, value: 901.423,  down: true },
+          { year: 2011, value: 587.867,  down: true },
+          { year: 2012, value: 1094.827 },
+          { year: 2013, value: 1191.399 },
+          { year: 2014, value: 844.377,  down: true },
+          { year: 2015, value: 1214.456 },
+          { year: 2016, value: 1013.428, down: true },
+          { year: 2017, value: 1249.515 },
+          { year: 2018, value: 1599.993 },
+          { year: 2019, value: 1763.873 },
+          { year: 2020, value: 1699.657, down: true },
+          { year: 2021, value: 2082.884 },
+          { year: 2022, value: 2327.837 },
+          { year: 2023, value: 2323.190, down: true },
+          { year: 2024, value: 2531.596 },
         ],
       },
       capex: {
         label: 'Net CapEx', unit: 'M USD',
         series: [
-          { year: 2008, value: 283 }, { year: 2009, value: 145 }, { year: 2010, value: 201 },
-          { year: 2011, value: 348 }, { year: 2012, value: 278 }, { year: 2013, value: 351 },
-          { year: 2014, value: 371 }, { year: 2015, value: 357 }, { year: 2016, value: 269 },
-          { year: 2017, value: 258 }, { year: 2018, value: 329 }, { year: 2019, value: 318 },
-          { year: 2020, value: 442 }, { year: 2021, value: 496 }, { year: 2022, value: 519 },
-          { year: 2023, value: 771 }, { year: 2024, value: 606 },
-        ],
-      },
-      freeCashFlow: {
-        label: 'Free Cash Flow / Owner Earnings', unit: 'M USD',
-        series: [
-          { year: 2008, value: 237 },  { year: 2009, value: 920 },  { year: 2010, value: 700 },
-          { year: 2011, value: 240 },  { year: 2012, value: 817 },  { year: 2013, value: 840 },
-          { year: 2014, value: 474 },  { year: 2015, value: 858 },  { year: 2016, value: 744 },
-          { year: 2017, value: 992 },  { year: 2018, value: 1271 }, { year: 2019, value: 1446 },
-          { year: 2020, value: 1258 }, { year: 2021, value: 1587 }, { year: 2022, value: 1808 },
-          { year: 2023, value: 1552 }, { year: 2024, value: 1926 },
+          { year: 2008, value: 282.979 },
+          { year: 2009, value: 145.470 },
+          { year: 2010, value: 201.487 },
+          { year: 2011, value: 347.567, spike: true },
+          { year: 2012, value: 277.966 },
+          { year: 2013, value: 350.911, spike: true },
+          { year: 2014, value: 370.789 },
+          { year: 2015, value: 356.810 },
+          { year: 2016, value: 269.476, spike: true },
+          { year: 2017, value: 257.675 },
+          { year: 2018, value: 328.601, spike: true },
+          { year: 2019, value: 318.192 },
+          { year: 2020, value: 441.626, spike: true },
+          { year: 2021, value: 495.877 },
+          { year: 2022, value: 519.481 },
+          { year: 2023, value: 771.109, spike: true },
+          { year: 2024, value: 605.942 },
         ],
       },
       capexRatio: {
-        label: 'CapEx as % of OCF', unit: '%',
+        label: 'OCF to CapEx Ratio', unit: '%',
         avg2009_2024: 25,
         series: [
-          { year: 2008, value: 50 }, { year: 2009, value: 12 }, { year: 2010, value: 20 },
-          { year: 2011, value: 55 }, { year: 2012, value: 24 }, { year: 2013, value: 27 },
-          { year: 2014, value: 41 }, { year: 2015, value: 27 }, { year: 2016, value: 27 },
-          { year: 2017, value: 20 }, { year: 2018, value: 20 }, { year: 2019, value: 18 },
-          { year: 2020, value: 26 }, { year: 2021, value: 24 }, { year: 2022, value: 22 },
-          { year: 2023, value: 33 }, { year: 2024, value: 24 },
+          { year: 2008, value: 50, spike: true },
+          { year: 2009, value: 12 },
+          { year: 2010, value: 20 },
+          { year: 2011, value: 55, spike: true },
+          { year: 2012, value: 24 },
+          { year: 2013, value: 27, spike: true },
+          { year: 2014, value: 41, spike: true },
+          { year: 2015, value: 27, spike: true },
+          { year: 2016, value: 27, spike: true },
+          { year: 2017, value: 20 },
+          { year: 2018, value: 20 },
+          { year: 2019, value: 18 },
+          { year: 2020, value: 26, spike: true },
+          { year: 2021, value: 24 },
+          { year: 2022, value: 22 },
+          { year: 2023, value: 33, spike: true },
+          { year: 2024, value: 24 },
         ],
-        note: 'Hershey reinvests an average of just 25% of operating cash flow back into the business — a hallmark of a high-quality, low-capital-intensity compounder.',
+        note: 'Average (2009–2024): 25%. Hershey reinvests just a quarter of operating cash flow back into the business — a hallmark of a high-quality, low-capital-intensity compounder.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow · Owner Earnings', unit: 'M USD',
+        series: [
+          { year: 2008, value: 236.582 },
+          { year: 2009, value: 920.279 },
+          { year: 2010, value: 699.936, down: true },
+          { year: 2011, value: 240.300, down: true },
+          { year: 2012, value: 816.861 },
+          { year: 2013, value: 840.488 },
+          { year: 2014, value: 473.588, down: true },
+          { year: 2015, value: 857.646 },
+          { year: 2016, value: 743.952, down: true },
+          { year: 2017, value: 991.840 },
+          { year: 2018, value: 1271.392 },
+          { year: 2019, value: 1445.681 },
+          { year: 2020, value: 1258.031, down: true },
+          { year: 2021, value: 1587.007 },
+          { year: 2022, value: 1808.356 },
+          { year: 2023, value: 1552.081, down: true },
+          { year: 2024, value: 1925.654 },
+        ],
       },
     },
   },
@@ -13683,7 +13727,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // Shared format helper — used by chart components across all tabs
                     const fmtVal = (v, unit) => {
                       if (unit === 'B USD')          return '$' + v + 'B';
-                      if (unit === 'M USD')          return '$' + Math.round(v).toLocaleString() + 'M';
+                      if (unit === 'M USD') {
+                        // Keep fractional precision when present (eg 2531.596 → $2,531.6M)
+                        const hasDecimals = v !== Math.floor(v);
+                        return '$' + v.toLocaleString(undefined, { minimumFractionDigits: hasDecimals ? 1 : 0, maximumFractionDigits: 1 }) + 'M';
+                      }
                       if (unit === 'USD per share')  return '$' + v.toFixed(2);
                       if (unit === 'USD per bag' || unit === 'USD per bar' || unit === 'USD per pack') return '$' + v.toFixed(2);
                       if (unit === '%')              return v.toFixed(1) + '%';
@@ -13751,12 +13799,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   const isPeak = d.year === peakYear;
                                   const isTrough = d.year === troughYear;
                                   const isLatest = d.year === latest.year;
-                                  let flag = null;
-                                  let flagColor = null;
-                                  if (isPeak)         { flag = '↑ PEAK';   flagColor = 'rgba(34,197,94,0.95)'; }
-                                  else if (isTrough)  { flag = '↓ TROUGH'; flagColor = 'rgba(239,68,68,0.95)'; }
-                                  else if (isLatest)  { flag = '●';        flagColor = amber; }
-                                  const rowBg = isPeak ? 'rgba(34,197,94,0.05)' : (isTrough ? 'rgba(239,68,68,0.04)' : 'transparent');
+                                  // Build list of flags for this row — supports multiple markers
+                                  const flags = [];
+                                  if (isPeak)    flags.push({ text: '↑ PEAK',   color: 'rgba(34,197,94,0.95)' });
+                                  if (isTrough)  flags.push({ text: '↓ TROUGH', color: 'rgba(239,68,68,0.95)' });
+                                  if (d.spike)   flags.push({ text: '⚠ SPIKE',  color: 'rgba(245,158,11,0.95)' });
+                                  if (d.down)    flags.push({ text: '⬇ DOWN',   color: 'rgba(239,68,68,0.85)' });
+                                  if (isLatest && flags.length === 0) flags.push({ text: '●', color: amber });
+                                  const rowBg = isPeak ? 'rgba(34,197,94,0.05)' : (isTrough ? 'rgba(239,68,68,0.04)' : (d.spike ? 'rgba(245,158,11,0.05)' : (d.down ? 'rgba(239,68,68,0.025)' : 'transparent')));
                                   return (
                                     <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background:rowBg}}>
                                       <td style={{padding:'4px 8px',color: isLatest ? '#e0eaff' : 'rgba(224,234,255,0.7)',fontWeight: isLatest ? 700 : 500}}>{d.year}</td>
@@ -13764,7 +13814,11 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                       <td style={{padding:'4px 8px',textAlign:'right',fontFamily:'monospace',fontSize:'9px',color: yoy === null ? 'rgba(148,163,184,0.4)' : (yoy >= 0 ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.75)')}}>
                                         {yoy === null ? '—' : (yoy >= 0 ? '+' : '') + yoy.toFixed(1) + '%'}
                                       </td>
-                                      <td style={{padding:'4px 8px',textAlign:'center',color: flagColor || 'transparent',fontSize:'8px',fontWeight:700,letterSpacing:'0.5px'}}>{flag || ''}</td>
+                                      <td style={{padding:'4px 8px',textAlign:'center',fontSize:'8px',fontWeight:700,letterSpacing:'0.5px',whiteSpace:'nowrap'}}>
+                                        {flags.map((f, fi) => (
+                                          <span key={fi} style={{color:f.color,marginLeft: fi > 0 ? '6px' : 0}}>{f.text}</span>
+                                        ))}
+                                      </td>
                                     </tr>
                                   );
                                 })}
