@@ -15214,9 +15214,6 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* Per-segment cards */}
                           {[segments.naConfectionery, segments.naSaltySnacks, segments.international].filter(Boolean).map((seg, i) => {
                             if (!seg) return null;
-                            const latest = seg.series[seg.series.length-1];
-                            const first  = seg.series[0];
-                            const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
                             const isHighlight = seg.highlight;
                             return (
                               <div key={i} style={{
@@ -15236,55 +15233,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
                                   </>
                                 )}
-                                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px',flexWrap:'wrap',marginBottom:'10px'}}>
-                                  <div style={{minWidth:0,flex:1}}>
-                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// SEGMENT {isHighlight ? '· GROWTH ENGINE' : ''}</div>
-                                    <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{seg.label}</div>
-                                  </div>
-                                  <div style={{display:'flex',gap:'12px',alignItems:'flex-start'}}>
-                                    <div style={{textAlign:'right'}}>
-                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{latest.year}</div>
-                                      <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>${latest.value.toLocaleString()}M</div>
-                                    </div>
-                                    <div style={{textAlign:'right'}}>
-                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>VS {first.year}</div>
-                                      <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
-                                    </div>
-                                  </div>
+                                <div style={{marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// SEGMENT {isHighlight ? '· GROWTH ENGINE' : ''}</div>
+                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{seg.label}</div>
                                 </div>
                                 <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{seg.description}</div>
 
-                                {/* Inline mini-chart */}
-                                {(() => {
-                                  const series = seg.series;
-                                  const maxV = Math.max(...series.map(d => d.value));
-                                  const W2 = 700, H2 = 90, PL2 = 40, PR2 = 8, PT2 = 8, PB2 = 20;
-                                  const iW = W2 - PL2 - PR2;
-                                  const iH = H2 - PT2 - PB2;
-                                  const barW = iW / series.length * 0.7;
-                                  const gap = iW / series.length * 0.3;
-                                  return (
-                                    <div style={{width:'100%',overflowX:'auto',marginBottom:'10px'}}>
-                                      <svg viewBox={`0 0 ${W2} ${H2}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'400px',display:'block'}}>
-                                        <line x1={PL2} x2={W2-PR2} y1={PT2 + iH} y2={PT2 + iH} stroke={amberGlow} strokeWidth="0.5" />
-                                        {series.map((d, j) => {
-                                          const x = PL2 + j * (barW + gap) + gap/2;
-                                          const y = PT2 + iH - (d.value / maxV) * iH;
-                                          const h = (PT2 + iH) - y;
-                                          const isLast = j === series.length - 1;
-                                          return (
-                                            <g key={j}>
-                                              <rect x={x} y={y} width={barW} height={h} fill={isLast ? amber : 'rgba(245,158,11,0.55)'} rx="1" />
-                                              <text x={x + barW/2} y={H2 - PB2 + 12} textAnchor="middle" fontSize="7" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(d.year).slice(-2)}</text>
-                                            </g>
-                                          );
-                                        })}
-                                        <text x={PL2-6} y={PT2 + 6} textAnchor="end" fontSize="7" fill="rgba(245,158,11,0.5)" fontFamily="monospace">${Math.round(maxV)}M</text>
-                                        <text x={PL2-6} y={PT2 + iH + 3} textAnchor="end" fontSize="7" fill="rgba(245,158,11,0.5)" fontFamily="monospace">$0</text>
-                                      </svg>
-                                    </div>
-                                  );
-                                })()}
+                                {/* Revenue table */}
+                                <TimeSeriesTable data={seg} />
 
                                 {/* Contribution % grid */}
                                 {seg.contribution && (
