@@ -2161,6 +2161,71 @@ const HSY_BREAKDOWN = {
       { hsyBrand: "Pirate's Booty",      segment: 'Snacking',  competitors: ['Smartfood (PepsiCo)', 'Popcorners (PepsiCo)', "Annie's Cheddar Bunnies"] },
       { hsyBrand: 'SkinnyPop',           segment: 'Snacking',  competitors: ['Boom Chicka Pop (Conagra)', 'Smartfood', 'LesserEvil'] },
     ],
+    // Competitor landscape — major global rivals and their brand portfolios
+    competitorLandscape: {
+      description: 'Hershey’s primary global competitors and the brand portfolios they bring to the fight.',
+      competitors: [
+        {
+          name: 'Mars Wrigley',
+          country: 'United States',
+          note: 'World’s largest chocolate company. Privately held. Owns Wrigley gum business.',
+          categories: [
+            { label: 'Chocolate', brands: ['Bounty', 'Celebrations', "M&M's", 'Maltesers', 'Mars', 'Milky Way', 'Pods', 'Snickers', 'Twix'] },
+            { label: 'Sweets',    brands: ['Airwaves', 'Eclipse', 'Extra', 'Hubba Bubba', 'Juicy Fruit', 'PK', 'Skittles'] },
+          ],
+        },
+        {
+          name: 'Mondelez International',
+          country: 'United States',
+          note: 'Global snack giant. Spun out of Kraft Foods. Strongest in international chocolate & biscuits.',
+          categories: [
+            { label: 'Chocolate', brands: ['5 Star', 'Alpen Gold', 'Cadbury', 'Cadbury Dairy Milk', 'Côte d’Or', 'Daim', 'Freia', 'Hu', 'Lacta', 'Marabou', 'Milka', 'Toblerone'] },
+            { label: 'Sweets',    brands: ['Clorets', 'Halls', 'Maynards Bassett’s', 'Sour Patch Kids'] },
+            { label: 'Snacks',    brands: ['7Days', 'Barni', 'Belvita', 'Bournvita', 'Chips Ahoy!', 'Clif', 'Club Social', 'Enjoy Life Foods', 'Grenade', 'Honey Maid', 'Kinh Do', 'LU', 'Mikado', 'Oreo', 'Perfect Snacks', 'Philadelphia', 'Prince', 'Ritz', 'Royal', 'Tang', 'Tate’s Bake Shop', 'Tiger', 'Triscuit', 'TUC', 'Wheat Thins'] },
+          ],
+        },
+        {
+          name: 'Ferrero',
+          country: 'Italy',
+          note: 'Family-owned Italian confectionery. Rapidly acquiring U.S. brands — bought Nestlé U.S. confectionery (Butterfinger, Crunch, 100 Grand) plus Ferrara Candy.',
+          categories: [
+            { label: 'Chocolate & Confection', brands: ['100 Grand', 'Baby Ruth', 'Butterfinger', 'Chunky', 'Crunch', 'Duplo', 'Eat Natural', 'Ferrero Brioss', 'Ferrero Kuesschen', 'Ferrero Rocher', 'Ferrero Tronky', 'Fiesta', 'Fulfil', 'Giotto', 'Goobers', 'Hanuta', 'Kinder', 'Mon Chéri', 'Nutella', 'Oh Henry', 'Pocket Coffee', 'Raffaello', 'Raisinets', 'Snocaps', 'Thorntons', 'Tic Tac', 'Yogurette'] },
+            { label: 'Ice Cream',              brands: ['Blue Bunny', 'Blue Ribbon Classics', 'Bomb Pop', 'Halo Top'] },
+            { label: 'Biscuits & Cookies',     brands: ['Famous Amos', 'Keebler', 'Little Brownie Bakers', 'Mother’s', 'Murray', 'Nonni’s', 'Delacre', 'Délichoc', 'Fox’s Fabulous', 'Crunch Creams', 'Jammie Dodgers', 'Maryland', 'Party Rings', 'Paterson’s', 'Rocky', 'Royal Dansk', 'Skinny Cookies', 'Thomas Fudge', 'Wagon Wheels', 'Kjeldsens'] },
+            { label: 'Ferrara Candy (US)',     brands: ['Atomic Fireballs', 'Black Forest', 'Boston Baked Beans', 'Bottle Caps', 'Brach’s', 'Chuckles', 'Fannie May', 'Fun Dip', 'Funables', 'Gobstopper', 'Jelly Belly', 'Jujyfruits', 'Laffy Taffy', 'Lemonhead', 'Nerds', 'Now & Later', 'Pixy Stix', 'Power Crunch', 'Red Hots', 'Runts', 'Spree', 'Stretch Island', 'SweeTarts', 'Trolli'] },
+            { label: 'Brazil (Dori)',          brands: ['Bolete', 'Deliket', 'Disqueti', 'Dori', 'Gomets', 'Jubes', 'Lua Cheia', 'Pettiz', 'Yogurte 100', 'Estathè', 'Michel et Augustin'] },
+          ],
+        },
+        {
+          name: 'Nestlé',
+          country: 'Switzerland',
+          note: 'World’s largest food company. Licenses Kit Kat & Rolo to HSY in the U.S. — co-opetition relationship.',
+          categories: [
+            { label: 'Chocolate', brands: ['Kit Kat', 'Milkybar', 'Aero', 'Smarties', 'Milo', 'Crunch', 'Rolo', 'Peppermint Crisp', 'Chokito'] },
+            { label: 'Sweets',    brands: ['Allens'] },
+            { label: 'Snacking',  brands: ['Le Snak', 'Uncle Tobys Muesli Bars', 'Roll Ups'] },
+          ],
+        },
+        {
+          name: 'Lindt & Sprüngli',
+          country: 'Switzerland',
+          note: 'Premium chocolate maker. Strongest in gift & seasonal. Owns Ghirardelli and Russell Stover in the U.S.',
+          categories: [
+            { label: 'Chocolate', brands: ['Lindt', 'Ghirardelli', 'Russell Stover', 'Caffarel', 'Hofbauer', 'Küfferle'] },
+          ],
+        },
+        {
+          name: 'PepsiCo',
+          country: 'United States',
+          note: 'Primary competitor in salty snacks via Frito-Lay. Threatens HSY’s growth segment (Dot’s, SkinnyPop, Pirate’s Booty).',
+          categories: [
+            { label: 'Salty Snacks',  brands: ['Lay’s', 'Doritos', 'Cheetos', 'Tostitos', 'Ruffles', 'Fritos', 'SunChips', 'Smartfood', 'PopCorners', 'Rold Gold', 'Stacy’s', 'Funyuns', 'Munchies', 'Munchos', 'Baken-Ets', 'Chester’s', 'Cracker Jack', 'Off The Eaten Path', 'Sabritas', 'Sabritones', 'Santitas', 'Miss Vickies', 'Maui Style', 'NatuChips', 'Spitz', 'Hilo Life', 'Red Rock Deli', 'Bare', 'Grandma’s', 'Nut Harvest', 'Sabra', 'Quaker'] },
+            { label: 'Beverages',     brands: ['Pepsi', 'Mountain Dew', 'Gatorade', 'Aquafina', 'Lipton', 'Brisk', 'Bubly', 'Starbucks (RTD)', 'Tazo', 'Pure Leaf', 'Propel', 'LIFEWTR', 'SodaStream', 'Rockstar', 'Starry', 'Manzanita Sol', 'Looza', 'Sobe', 'Simply', 'Ocean Spray', 'Alvalle', 'Soulboost', 'Muscle Milk', 'Yachak'] },
+            { label: 'Food & Cereal', brands: ['Cap’N Crunch', 'Pearl Milling Company', 'Pasta Roni', 'Near East', 'Gamesa', 'Evolve', 'Health Warrior', 'Jack Link’s'] },
+          ],
+        },
+      ],
+    },
   },
   // Other tabs will populate next session
   moat: {
@@ -12663,7 +12728,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === BRANDS TAB ===
                     const renderBrandsTab = () => {
                       if (!bd.brands) return null;
-                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups } = bd.brands;
+                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups, competitorLandscape } = bd.brands;
 
                       return (
                         <div>
@@ -12848,6 +12913,74 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 );
                               })}
+                            </>
+                          )}
+
+                          {/* COMPETITOR LANDSCAPE — brand portfolios of major rivals */}
+                          {competitorLandscape && competitorLandscape.competitors && (
+                            <>
+                              <SectionHeading>// COMPETITOR LANDSCAPE · {competitorLandscape.competitors.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitorLandscape.description} Tap a competitor to reveal their brand portfolio.</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                {competitorLandscape.competitors.map((c, i) => {
+                                  // Count total brands across this competitor's categories
+                                  const totalBrands = c.categories.reduce((sum, cat) => sum + cat.brands.length, 0);
+                                  return (
+                                    <details key={i} style={{
+                                      background:'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'3px',
+                                      overflow:'hidden',
+                                    }}>
+                                      <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                        <div style={{display:'flex',flexDirection:'column',gap:'2px',minWidth:0,flex:1}}>
+                                          <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                            <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{c.name}</span>
+                                            <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px'}}>{c.country}</span>
+                                          </div>
+                                          {c.note && (
+                                            <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'2px'}}>{c.note}</span>
+                                          )}
+                                        </div>
+                                        <span style={{
+                                          padding:'3px 9px',
+                                          background:'rgba(245,158,11,0.10)',
+                                          border:`0.5px solid ${amberGlow}`,
+                                          borderRadius:'2px',
+                                          fontSize:'9px',
+                                          color: amber,
+                                          fontFamily:'monospace',
+                                          letterSpacing:'1px',
+                                          fontWeight:700,
+                                          flexShrink:0,
+                                        }}>{totalBrands} ›</span>
+                                      </summary>
+                                      <div style={{padding:'8px 12px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                        {c.categories.map((cat, ci) => (
+                                          <div key={ci} style={{marginBottom: ci === c.categories.length - 1 ? 0 : '10px'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// {cat.label.toUpperCase()} · {cat.brands.length}</div>
+                                            <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                              {cat.brands.map((b, bi) => (
+                                                <span key={bi} style={{
+                                                  padding:'3px 8px',
+                                                  background:'rgba(239,68,68,0.06)',
+                                                  border:'0.5px solid rgba(239,68,68,0.3)',
+                                                  borderRadius:'2px',
+                                                  color:'rgba(224,234,255,0.85)',
+                                                  fontFamily:'monospace',
+                                                  fontSize:'10px',
+                                                  letterSpacing:'0.3px',
+                                                }}>{b}</span>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </details>
+                                  );
+                                })}
+                              </div>
                             </>
                           )}
                         </div>
