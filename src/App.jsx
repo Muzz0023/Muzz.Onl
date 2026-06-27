@@ -2492,6 +2492,315 @@ const HSY_BREAKDOWN = {
         },
       ],
     },
+
+    // ════════════════════════════════════════════════════════════════════
+    // INCOME STATEMENT — historical financials
+    // ════════════════════════════════════════════════════════════════════
+    incomeStatement: {
+      netSales: {
+        label: 'Net Sales', unit: 'M USD',
+        series: [
+          { year: 2010, value: 5671 }, { year: 2011, value: 6081 }, { year: 2012, value: 6644 },
+          { year: 2013, value: 7146 }, { year: 2014, value: 7422 }, { year: 2015, value: 7387 },
+          { year: 2016, value: 7440 }, { year: 2017, value: 7515 }, { year: 2018, value: 7791 },
+          { year: 2019, value: 7986 }, { year: 2020, value: 8150 }, { year: 2021, value: 8971 },
+          { year: 2022, value: 10419 }, { year: 2023, value: 11165 }, { year: 2024, value: 11202 },
+        ],
+      },
+      grossProfit: {
+        label: 'Gross Profit', unit: 'M USD',
+        series: [
+          { year: 2010, value: 2415 }, { year: 2011, value: 2532 }, { year: 2012, value: 2860 },
+          { year: 2013, value: 3281 }, { year: 2014, value: 3336 }, { year: 2015, value: 3383 },
+          { year: 2016, value: 3170 }, { year: 2017, value: 3455 }, { year: 2018, value: 3575 },
+          { year: 2019, value: 3623 }, { year: 2020, value: 3701 }, { year: 2021, value: 4049 },
+          { year: 2022, value: 4499 }, { year: 2023, value: 4998 }, { year: 2024, value: 5301 },
+        ],
+      },
+      netIncome: {
+        label: 'Net Income', unit: 'M USD',
+        series: [
+          { year: 2010, value: 509 }, { year: 2011, value: 628 }, { year: 2012, value: 660 },
+          { year: 2013, value: 820 }, { year: 2014, value: 846 }, { year: 2015, value: 512 },
+          { year: 2016, value: 720 }, { year: 2017, value: 782 }, { year: 2018, value: 1177 },
+          { year: 2019, value: 1149 }, { year: 2020, value: 1278 }, { year: 2021, value: 1477 },
+          { year: 2022, value: 1644 }, { year: 2023, value: 1861 }, { year: 2024, value: 2221 },
+        ],
+      },
+      eps: {
+        label: 'EPS Diluted', unit: 'USD per share',
+        series: [
+          { year: 2010, value: 2.21 }, { year: 2011, value: 2.74 }, { year: 2012, value: 2.89 },
+          { year: 2013, value: 3.61 }, { year: 2014, value: 3.77 }, { year: 2015, value: 2.32 },
+          { year: 2016, value: 3.34 }, { year: 2017, value: 3.66 }, { year: 2018, value: 5.58 },
+          { year: 2019, value: 5.46 }, { year: 2020, value: 6.11 }, { year: 2021, value: 7.11 },
+          { year: 2022, value: 7.96 }, { year: 2023, value: 9.06 }, { year: 2024, value: 10.92 },
+        ],
+      },
+      margins: {
+        gross: [
+          { year: 2010, value: 42.6 }, { year: 2011, value: 41.6 }, { year: 2012, value: 43.0 },
+          { year: 2013, value: 45.9 }, { year: 2014, value: 45.0 }, { year: 2015, value: 45.8 },
+          { year: 2016, value: 42.6 }, { year: 2017, value: 46.0 }, { year: 2018, value: 45.9 },
+          { year: 2019, value: 45.4 }, { year: 2020, value: 45.4 }, { year: 2021, value: 45.1 },
+          { year: 2022, value: 43.2 }, { year: 2023, value: 44.8 }, { year: 2024, value: 47.3 },
+        ],
+        operating: [
+          { year: 2010, value: 16.0 }, { year: 2011, value: 17.4 }, { year: 2012, value: 16.7 },
+          { year: 2013, value: 18.7 }, { year: 2014, value: 18.8 }, { year: 2015, value: 14.0 },
+          { year: 2016, value: 16.9 }, { year: 2017, value: 17.5 }, { year: 2018, value: 20.8 },
+          { year: 2019, value: 20.0 }, { year: 2020, value: 21.9 }, { year: 2021, value: 22.8 },
+          { year: 2022, value: 21.7 }, { year: 2023, value: 22.9 }, { year: 2024, value: 25.9 },
+        ],
+        profit: [
+          { year: 2010, value: 8.97 }, { year: 2011, value: 10.33 }, { year: 2012, value: 9.93 },
+          { year: 2013, value: 11.47 }, { year: 2014, value: 11.40 }, { year: 2015, value: 6.93 },
+          { year: 2016, value: 9.68 }, { year: 2017, value: 10.40 }, { year: 2018, value: 15.11 },
+          { year: 2019, value: 14.39 }, { year: 2020, value: 15.68 }, { year: 2021, value: 16.46 },
+          { year: 2022, value: 15.78 }, { year: 2023, value: 16.67 }, { year: 2024, value: 19.83 },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate', unit: '%',
+        series: [
+          { year: 2010, value: 37.0 }, { year: 2011, value: 34.7 }, { year: 2012, value: 34.9 },
+          { year: 2013, value: 34.4 }, { year: 2014, value: 35.2 }, { year: 2015, value: 43.1 },
+          { year: 2016, value: 34.5 }, { year: 2017, value: 31.9 }, { year: 2018, value: 17.0 },
+          { year: 2019, value: 16.9 }, { year: 2020, value: 14.7 }, { year: 2021, value: 17.5 },
+          { year: 2022, value: 14.2 }, { year: 2023, value: 14.3 }, { year: 2024, value: 10.2 },
+        ],
+        note: 'Big drop after the 2017 Tax Cuts and Jobs Act (TCJA) reduced US corporate rate from 35% to 21%.',
+      },
+      dividends: {
+        // Year, EPS, Dividend, Distribution % — flagging years where payout exceeded 100% (unsustainable)
+        rows: [
+          { year: 2024, eps: 10.92, dividend: 5.48, payout: 50.18 },
+          { year: 2023, eps: 9.06,  dividend: 4.46, payout: 49.23 },
+          { year: 2022, eps: 7.96,  dividend: 3.87, payout: 48.62 },
+          { year: 2021, eps: 7.11,  dividend: 3.41, payout: 47.96 },
+          { year: 2020, eps: 6.11,  dividend: 3.15, payout: 51.56 },
+          { year: 2019, eps: 5.46,  dividend: 2.99, payout: 54.84 },
+          { year: 2018, eps: 5.58,  dividend: 2.76, payout: 49.46 },
+          { year: 2017, eps: 3.66,  dividend: 2.55, payout: 69.67 },
+          { year: 2016, eps: 3.34,  dividend: 2.40, payout: 71.86 },
+          { year: 2015, eps: 2.32,  dividend: 2.24, payout: 96.55, abnormal: true },
+          { year: 2014, eps: 3.77,  dividend: 2.04, payout: 54.12 },
+          { year: 2013, eps: 3.61,  dividend: 1.81, payout: 50.14 },
+          { year: 2012, eps: 2.89,  dividend: 1.60, payout: 55.36 },
+          { year: 2011, eps: 2.74,  dividend: 1.38, payout: 50.36 },
+          { year: 2010, eps: 2.21,  dividend: 1.28, payout: 57.92 },
+          { year: 2009, eps: 1.90,  dividend: 1.19, payout: 62.63 },
+          { year: 2008, eps: 1.36,  dividend: 1.19, payout: 87.50 },
+          { year: 2007, eps: 0.93,  dividend: 2.13, payout: 229.03, abnormal: true },
+          { year: 2006, eps: 2.34,  dividend: 2.03, payout: 86.75 },
+          { year: 2005, eps: 1.97,  dividend: 1.93, payout: 97.97, abnormal: true },
+          { year: 2004, eps: 2.24,  dividend: 2.21, payout: 98.66, abnormal: true },
+          { year: 2003, eps: 3.46,  dividend: 2.14, payout: 61.85 },
+          { year: 2002, eps: 2.93,  dividend: 2.00, payout: 68.26 },
+          { year: 2001, eps: 1.50,  dividend: 1.91, payout: 127.33, abnormal: true },
+          { year: 2000, eps: 2.42,  dividend: 1.76, payout: 72.73 },
+        ],
+        note: 'Distribution rate over 100% indicates Hershey paid out more in dividends than it earned that year — typically funded by debt or balance sheet. Five abnormal years flagged (2001, 2004, 2005, 2007, 2015).',
+      },
+      cagr: {
+        netIncomeCAGR_2004_2014: 4.07,
+        netIncomeCAGR_2014_2024: 10.14,
+        netIncomeCAGR_2004_2024: 6.92,
+        note: 'Net income compounding accelerated dramatically post-2014 — from 4% to 10% CAGR.',
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════════
+    // BALANCE SHEET — historical financials
+    // ════════════════════════════════════════════════════════════════════
+    balanceSheet: {
+      totalAssets: {
+        label: 'Total Assets', unit: 'M USD',
+        series: [
+          { year: 2009, value: 3675 }, { year: 2010, value: 4272 }, { year: 2011, value: 4407 },
+          { year: 2012, value: 4754 }, { year: 2013, value: 5357 }, { year: 2014, value: 5622 },
+          { year: 2015, value: 5344 }, { year: 2016, value: 5524 }, { year: 2017, value: 5553 },
+          { year: 2018, value: 7703 }, { year: 2019, value: 8140 }, { year: 2020, value: 9131 },
+          { year: 2021, value: 10412 }, { year: 2022, value: 10948 }, { year: 2023, value: 11902 },
+          { year: 2024, value: 12946 },
+        ],
+      },
+      totalDebt: {
+        label: 'Total Debt', unit: 'M USD',
+        series: [
+          { year: 2009, value: 2914 }, { year: 2010, value: 3335 }, { year: 2011, value: 3526 },
+          { year: 2012, value: 3706 }, { year: 2013, value: 3741 }, { year: 2014, value: 4103 },
+          { year: 2015, value: 4296 }, { year: 2016, value: 4696 }, { year: 2017, value: 4622 },
+          { year: 2018, value: 6295 }, { year: 2019, value: 6395 }, { year: 2020, value: 6893 },
+          { year: 2021, value: 7655 }, { year: 2022, value: 7649 }, { year: 2023, value: 7803 },
+          { year: 2024, value: 8232 },
+        ],
+      },
+      shareholderEquity: {
+        label: 'Shareholder Equity', unit: 'M USD',
+        series: [
+          { year: 2009, value: 760 },  { year: 2010, value: 937 },  { year: 2011, value: 880 },
+          { year: 2012, value: 1048 }, { year: 2013, value: 1616 }, { year: 2014, value: 1519 },
+          { year: 2015, value: 1047 }, { year: 2016, value: 827 },  { year: 2017, value: 931 },
+          { year: 2018, value: 1407 }, { year: 2019, value: 1744 }, { year: 2020, value: 2237 },
+          { year: 2021, value: 2757 }, { year: 2022, value: 3299 }, { year: 2023, value: 4009 },
+          { year: 2024, value: 4714 },
+        ],
+      },
+      bookValuePerShare: {
+        label: 'Book Value Per Share', unit: 'USD',
+        series: [
+          { year: 2009, value: 2.11 }, { year: 2010, value: 2.60 }, { year: 2011, value: 2.43 },
+          { year: 2012, value: 2.91 }, { year: 2013, value: 4.48 }, { year: 2014, value: 4.22 },
+          { year: 2015, value: 2.90 }, { year: 2016, value: 2.29 }, { year: 2017, value: 2.58 },
+          { year: 2018, value: 3.90 }, { year: 2019, value: 7.93 }, { year: 2020, value: 10.17 },
+          { year: 2021, value: 12.53 }, { year: 2022, value: 14.99 }, { year: 2023, value: 19.06 },
+          { year: 2024, value: 21.92 },
+        ],
+        cagr2015_2024: 24.4,
+      },
+      currentRatio: {
+        label: 'Current Ratio', unit: 'x',
+        series: [
+          { year: 2009, value: 1.52 }, { year: 2010, value: 1.54 }, { year: 2011, value: 1.74 },
+          { year: 2012, value: 1.43 }, { year: 2013, value: 1.76 }, { year: 2014, value: 1.16 },
+          { year: 2015, value: 0.95 }, { year: 2016, value: 0.95 }, { year: 2017, value: 0.96 },
+          { year: 2018, value: 0.92 }, { year: 2019, value: 1.08 }, { year: 2020, value: 1.59 },
+          { year: 2021, value: 0.90 }, { year: 2022, value: 0.80 }, { year: 2023, value: 0.96 },
+          { year: 2024, value: 0.95 },
+        ],
+        avg2015_2024: 1.11,
+      },
+      debtToEquity: {
+        label: 'Total Debt / Equity', unit: 'x',
+        series: [
+          { year: 2015, value: 4.10 }, { year: 2016, value: 5.67 }, { year: 2017, value: 4.96 },
+          { year: 2018, value: 4.47 }, { year: 2019, value: 3.67 }, { year: 2020, value: 3.08 },
+          { year: 2021, value: 2.78 }, { year: 2022, value: 2.32 }, { year: 2023, value: 1.95 },
+          { year: 2024, value: 1.75 },
+        ],
+        avg2015_2024: 3.48,
+        note: 'Improving steadily — from 5.67x peak in 2016 to 1.75x in 2024. Equity has compounded faster than debt.',
+      },
+      // Returns — multi-line chart of ROE / ROIC / ROA
+      returns: {
+        roe: [
+          { year: 2009, value: 57.39 }, { year: 2010, value: 54.38 }, { year: 2011, value: 71.44 },
+          { year: 2012, value: 63.05 }, { year: 2013, value: 50.75 }, { year: 2014, value: 55.74 },
+          { year: 2015, value: 49.00 }, { year: 2016, value: 87.04 }, { year: 2017, value: 84.05 },
+          { year: 2018, value: 83.67 }, { year: 2019, value: 65.92 }, { year: 2020, value: 57.07 },
+          { year: 2021, value: 53.58 }, { year: 2022, value: 49.83 }, { year: 2023, value: 46.47 },
+          { year: 2024, value: 47.04 },
+        ],
+        roic: [
+          { year: 2015, value: 11.50 }, { year: 2016, value: 16.09 }, { year: 2017, value: 17.21 },
+          { year: 2018, value: 21.94 }, { year: 2019, value: 17.94 }, { year: 2020, value: 19.45 },
+          { year: 2021, value: 18.66 }, { year: 2022, value: 18.85 }, { year: 2023, value: 20.04 },
+          { year: 2024, value: 22.04 },
+        ],
+        roa: [
+          { year: 2009, value: 11.86 }, { year: 2010, value: 11.93 }, { year: 2011, value: 14.27 },
+          { year: 2012, value: 13.90 }, { year: 2013, value: 15.32 }, { year: 2014, value: 15.06 },
+          { year: 2015, value: 9.60 },  { year: 2016, value: 13.03 }, { year: 2017, value: 14.10 },
+          { year: 2018, value: 15.29 }, { year: 2019, value: 14.12 }, { year: 2020, value: 14.00 },
+          { year: 2021, value: 14.18 }, { year: 2022, value: 15.03 }, { year: 2023, value: 15.64 },
+          { year: 2024, value: 17.16 },
+        ],
+        averages: { roe: 61.03, roic: 18.37, roa: 14.12 },
+      },
+      ccc: {
+        label: 'Cash Conversion Cycle', unit: 'days',
+        series: [
+          { year: 2015, value: 59.39 }, { year: 2016, value: 47.59 }, { year: 2017, value: 49.21 },
+          { year: 2018, value: 52.30 }, { year: 2019, value: 48.10 }, { year: 2020, value: 59.07 },
+          { year: 2021, value: 49.06 }, { year: 2022, value: 37.40 }, { year: 2023, value: 42.01 },
+          { year: 2024, value: 31.95 },
+        ],
+        avg10yr: 47.61,
+        note: 'Hershey has compressed its cash conversion cycle from 59 to 32 days over the past decade — collecting faster, paying suppliers later, holding less inventory.',
+      },
+      // Buffett's $1 retained earnings test
+      retainedEarningsTest: {
+        period: '2009 \u2013 2024',
+        retainedEarnings2009: 4148,
+        retainedEarnings2024: 5698,
+        retainedEarningsIncrease: 1.55, // billions
+        marketCap2009: 9.99,
+        marketCap2024: 34.75,
+        marketCapIncrease: 24.76,
+        multiplier: 16,
+        verdict: 'For every $1 of retained earnings, Hershey created nearly $16 in market value from 2009 to 2024. Buffett\u2019s preferred test for compounders — HSY blows through it.',
+      },
+      tangibleEquity: {
+        note: 'Tangible equity (Equity \u2013 Goodwill \u2013 Intangibles) is near-zero or negative for most years. Hershey carries massive goodwill and intangibles from acquisitions, while paying out most profit as dividends + buybacks.',
+        rows: [
+          { year: 2024, equity: 4714, goodwill: 2706, intangibles: 1874, tangible: 134 },
+          { year: 2023, equity: 4009, goodwill: 2696, intangibles: 1879, tangible: -566 },
+          { year: 2022, equity: 3299, goodwill: 2607, intangibles: 1966, tangible: -1274 },
+          { year: 2021, equity: 2757, goodwill: 2633, intangibles: 2038, tangible: -1914 },
+          { year: 2020, equity: 2237, goodwill: 1988, intangibles: 1295, tangible: -1046 },
+          { year: 2019, equity: 1744, goodwill: 1986, intangibles: 1341, tangible: -1583 },
+          { year: 2018, equity: 1407, goodwill: 1801, intangibles: 1278, tangible: -1672 },
+          { year: 2017, equity: 931,  goodwill: 821,  intangibles: 369,  tangible: -259 },
+          { year: 2016, equity: 827,  goodwill: 812,  intangibles: 493,  tangible: -478 },
+          { year: 2015, equity: 1047, goodwill: 684,  intangibles: 379,  tangible: -16 },
+        ],
+        rote2024: 1653,
+        interpretation: 'Hershey earns ~$2.2B on just $134M of tangible equity \u2014 a 1,653% return on tangible equity. Brand companies are Buffett\u2019s favourites for this exact reason: enormous profits on minimal physical capital. The Reese\u2019s and Hershey\u2019s brand, shelf dominance, and distribution relationships don\u2019t appear on the balance sheet, but they\u2019re where the real value lives.',
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════════
+    // CASH FLOW — historical financials
+    // ════════════════════════════════════════════════════════════════════
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Operating Cash Flow', unit: 'M USD',
+        series: [
+          { year: 2008, value: 520 },  { year: 2009, value: 1066 }, { year: 2010, value: 901 },
+          { year: 2011, value: 588 },  { year: 2012, value: 1095 }, { year: 2013, value: 1191 },
+          { year: 2014, value: 844 },  { year: 2015, value: 1214 }, { year: 2016, value: 1013 },
+          { year: 2017, value: 1250 }, { year: 2018, value: 1600 }, { year: 2019, value: 1764 },
+          { year: 2020, value: 1700 }, { year: 2021, value: 2083 }, { year: 2022, value: 2328 },
+          { year: 2023, value: 2323 }, { year: 2024, value: 2532 },
+        ],
+      },
+      capex: {
+        label: 'Net CapEx', unit: 'M USD',
+        series: [
+          { year: 2008, value: 283 }, { year: 2009, value: 145 }, { year: 2010, value: 201 },
+          { year: 2011, value: 348 }, { year: 2012, value: 278 }, { year: 2013, value: 351 },
+          { year: 2014, value: 371 }, { year: 2015, value: 357 }, { year: 2016, value: 269 },
+          { year: 2017, value: 258 }, { year: 2018, value: 329 }, { year: 2019, value: 318 },
+          { year: 2020, value: 442 }, { year: 2021, value: 496 }, { year: 2022, value: 519 },
+          { year: 2023, value: 771 }, { year: 2024, value: 606 },
+        ],
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow / Owner Earnings', unit: 'M USD',
+        series: [
+          { year: 2008, value: 237 },  { year: 2009, value: 920 },  { year: 2010, value: 700 },
+          { year: 2011, value: 240 },  { year: 2012, value: 817 },  { year: 2013, value: 840 },
+          { year: 2014, value: 474 },  { year: 2015, value: 858 },  { year: 2016, value: 744 },
+          { year: 2017, value: 992 },  { year: 2018, value: 1271 }, { year: 2019, value: 1446 },
+          { year: 2020, value: 1258 }, { year: 2021, value: 1587 }, { year: 2022, value: 1808 },
+          { year: 2023, value: 1552 }, { year: 2024, value: 1926 },
+        ],
+      },
+      capexRatio: {
+        label: 'CapEx as % of OCF', unit: '%',
+        avg2009_2024: 25,
+        series: [
+          { year: 2008, value: 50 }, { year: 2009, value: 12 }, { year: 2010, value: 20 },
+          { year: 2011, value: 55 }, { year: 2012, value: 24 }, { year: 2013, value: 27 },
+          { year: 2014, value: 41 }, { year: 2015, value: 27 }, { year: 2016, value: 27 },
+          { year: 2017, value: 20 }, { year: 2018, value: 20 }, { year: 2019, value: 18 },
+          { year: 2020, value: 26 }, { year: 2021, value: 24 }, { year: 2022, value: 22 },
+          { year: 2023, value: 33 }, { year: 2024, value: 24 },
+        ],
+        note: 'Hershey reinvests an average of just 25% of operating cash flow back into the business — a hallmark of a high-quality, low-capital-intensity compounder.',
+      },
+    },
   },
   risks: {
     // 14 risk factors grouped by category
@@ -13817,12 +14126,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === NUMBERS TAB ===
                     const renderNumbersTab = () => {
                       if (!bd.numbers) return null;
-                      const { marketCapHistory, employees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance } = bd.numbers;
+                      const { marketCapHistory, employees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance, incomeStatement, balanceSheet, cashFlow } = bd.numbers;
 
                       // Format helpers
                       const fmtVal = (v, unit) => {
-                        if (unit === 'B USD') return '$' + v + 'B';
-                        if (unit === 'USD')   return '$' + Math.round(v).toLocaleString();
+                        if (unit === 'B USD')          return '$' + v + 'B';
+                        if (unit === 'M USD')          return '$' + Math.round(v).toLocaleString() + 'M';
+                        if (unit === 'USD per share')  return '$' + v.toFixed(2);
+                        if (unit === 'USD per bag' || unit === 'USD per bar' || unit === 'USD per pack') return '$' + v.toFixed(2);
+                        if (unit === '%')              return v.toFixed(1) + '%';
+                        if (unit === 'x')              return v.toFixed(2) + 'x';
+                        if (unit === 'days')           return v.toFixed(1) + 'd';
+                        if (unit === 'USD')            return '$' + Math.round(v).toLocaleString();
                         return v.toLocaleString();
                       };
 
@@ -13989,6 +14304,386 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   ))}
                                 </div>
                               )}
+                            </>
+                          )}
+
+                          {/* ════════════════════════════════════════════════
+                              INCOME STATEMENT
+                              ════════════════════════════════════════════════ */}
+                          {incomeStatement && (
+                            <>
+                              <SectionHeading>// INCOME STATEMENT</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Top-line growth, margin trajectory, and dividend payout history.</div>
+
+                              {incomeStatement.netSales       && <TimeSeriesChart data={incomeStatement.netSales} />}
+                              {incomeStatement.grossProfit    && <TimeSeriesChart data={incomeStatement.grossProfit} />}
+                              {incomeStatement.netIncome      && <TimeSeriesChart data={incomeStatement.netIncome} />}
+                              {incomeStatement.eps            && <TimeSeriesChart data={incomeStatement.eps} />}
+
+                              {/* Margin trio */}
+                              {incomeStatement.margins && (() => {
+                                const m = incomeStatement.margins;
+                                const allYears = m.gross.map(d => d.year);
+                                const maxVal = Math.max(...m.gross.map(d=>d.value), ...m.operating.map(d=>d.value), ...m.profit.map(d=>d.value));
+                                const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
+                                const innerW = W - PL - PR;
+                                const innerH = H - PT - PB;
+                                const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
+                                const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
+                                const lines = [
+                                  { label: 'Gross Margin',     series: m.gross,     color: amber },
+                                  { label: 'Operating Margin', series: m.operating, color: 'rgba(34,197,94,0.9)' },
+                                  { label: 'Profit Margin',    series: m.profit,    color: 'rgba(96,165,250,0.9)' },
+                                ];
+                                return (
+                                  <div style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'14px',
+                                    marginBottom:'12px',
+                                  }}>
+                                    <div style={{marginBottom:'10px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// MARGIN TRIO · %</div>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
+                                    </div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
+                                      {lines.map((L, i) => (
+                                        <div key={i} style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                                          <span style={{display:'inline-block',width:'14px',height:'2px',background:L.color,borderRadius:'1px'}}/>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{L.label}</span>
+                                          <span style={{fontSize:'10px',color:L.color,fontFamily:'monospace',fontWeight:700}}>{L.series[L.series.length-1].value.toFixed(1)}%</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    <div style={{width:'100%',overflowX:'auto'}}>
+                                      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
+                                        {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                          <g key={i}>
+                                            <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                            <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{(maxVal * p).toFixed(0)}%</text>
+                                          </g>
+                                        ))}
+                                        {allYears.map((y, i) => {
+                                          if (i % 3 !== 0 && i !== allYears.length - 1) return null;
+                                          return <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(y).slice(-2)}</text>;
+                                        })}
+                                        {lines.map((L, i) => (
+                                          <polyline key={i} points={L.series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ')} fill="none" stroke={L.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        ))}
+                                      </svg>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Tax rate */}
+                              {incomeStatement.taxRate && (
+                                <>
+                                  <TimeSeriesChart data={incomeStatement.taxRate} />
+                                  {incomeStatement.taxRate.note && (
+                                    <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                      <span style={{color:amber,fontWeight:600}}>Note —</span> {incomeStatement.taxRate.note}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                              {/* Dividends table — 25-year history with payout flags */}
+                              {incomeStatement.dividends && (
+                                <div style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'12px',
+                                }}>
+                                  <div style={{marginBottom:'10px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// DIVIDENDS PER SHARE · 25-YEAR HISTORY</div>
+                                    <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{incomeStatement.dividends.note}</div>
+                                  </div>
+                                  <div style={{overflowX:'auto'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                          <th style={{textAlign:'left',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EPS</th>
+                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVIDEND</th>
+                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PAYOUT %</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {incomeStatement.dividends.rows.map((r, i) => (
+                                          <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)',background: r.abnormal ? 'rgba(239,68,68,0.04)' : 'transparent'}}>
+                                            <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                            <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.eps.toFixed(2)}</td>
+                                            <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.dividend.toFixed(2)}</td>
+                                            <td style={{padding:'5px 8px',textAlign:'right',color: r.abnormal ? 'rgba(239,68,68,0.95)' : 'rgba(224,234,255,0.8)',fontWeight: r.abnormal ? 700 : 400}}>{r.payout.toFixed(2)}%{r.abnormal ? ' ⚠' : ''}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* CAGR callouts */}
+                              {incomeStatement.cagr && (
+                                <div style={{
+                                  marginBottom:'12px',
+                                  padding:'12px 14px',
+                                  background:'rgba(34,197,94,0.06)',
+                                  border:'0.5px solid rgba(34,197,94,0.35)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                  borderRadius:'3px',
+                                }}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// NET INCOME CAGR</div>
+                                  <div style={{display:'flex',gap:'18px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                    <div>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2014</div>
+                                      <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2014}%</div>
+                                    </div>
+                                    <div>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2014 – 2024</div>
+                                      <div style={{fontSize:'16px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2014_2024}%</div>
+                                    </div>
+                                    <div>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>2004 – 2024</div>
+                                      <div style={{fontSize:'16px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>{incomeStatement.cagr.netIncomeCAGR_2004_2024}%</div>
+                                    </div>
+                                  </div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{incomeStatement.cagr.note}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ════════════════════════════════════════════════
+                              BALANCE SHEET
+                              ════════════════════════════════════════════════ */}
+                          {balanceSheet && (
+                            <>
+                              <SectionHeading>// BALANCE SHEET</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Asset growth, debt picture, returns on capital, and working capital efficiency.</div>
+
+                              {balanceSheet.totalAssets && <TimeSeriesChart data={balanceSheet.totalAssets} />}
+                              {balanceSheet.totalDebt && <TimeSeriesChart data={balanceSheet.totalDebt} />}
+                              {balanceSheet.shareholderEquity && <TimeSeriesChart data={balanceSheet.shareholderEquity} />}
+                              {balanceSheet.bookValuePerShare && <TimeSeriesChart data={balanceSheet.bookValuePerShare} />}
+                              {balanceSheet.currentRatio && <TimeSeriesChart data={balanceSheet.currentRatio} />}
+                              {balanceSheet.debtToEquity && (
+                                <>
+                                  <TimeSeriesChart data={balanceSheet.debtToEquity} />
+                                  {balanceSheet.debtToEquity.note && (
+                                    <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                      <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.debtToEquity.note}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                              {/* Returns triple — multi-line ROE/ROIC/ROA */}
+                              {balanceSheet.returns && (() => {
+                                const r = balanceSheet.returns;
+                                const allYears = [...new Set([...r.roe.map(d=>d.year), ...r.roic.map(d=>d.year), ...r.roa.map(d=>d.year)])].sort((a,b)=>a-b);
+                                const maxVal = Math.max(...r.roe.map(d=>d.value), ...r.roic.map(d=>d.value), ...r.roa.map(d=>d.value));
+                                const W = 800, H = 220, PL = 50, PR = 12, PT = 16, PB = 30;
+                                const innerW = W - PL - PR;
+                                const innerH = H - PT - PB;
+                                const xFor = (year) => PL + (allYears.indexOf(year) / (allYears.length - 1)) * innerW;
+                                const yFor = (val)  => PT + innerH - (val / maxVal) * innerH;
+                                const lines = [
+                                  { label: 'ROE',  series: r.roe,  color: amber, avg: r.averages.roe },
+                                  { label: 'ROIC', series: r.roic, color: 'rgba(34,197,94,0.9)', avg: r.averages.roic },
+                                  { label: 'ROA',  series: r.roa,  color: 'rgba(96,165,250,0.9)', avg: r.averages.roa },
+                                ];
+                                return (
+                                  <div style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'14px',
+                                    marginBottom:'12px',
+                                  }}>
+                                    <div style={{marginBottom:'10px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// RETURNS · ROE · ROIC · ROA</div>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{allYears[0]} – {allYears[allYears.length-1]}</div>
+                                    </div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'14px',marginBottom:'10px'}}>
+                                      {lines.map((L, i) => (
+                                        <div key={i} style={{display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                          <span style={{display:'inline-block',width:'14px',height:'2px',background:L.color,borderRadius:'1px'}}/>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.5px',fontWeight:600}}>{L.label}</span>
+                                          <span style={{fontSize:'10px',color:L.color,fontFamily:'monospace',fontWeight:700}}>{L.series[L.series.length-1].value.toFixed(1)}%</span>
+                                          <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace'}}>avg {L.avg}%</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    <div style={{width:'100%',overflowX:'auto'}}>
+                                      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" style={{width:'100%',minWidth:'520px',display:'block'}}>
+                                        {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                                          <g key={i}>
+                                            <line x1={PL} x2={W-PR} y1={PT + innerH * (1-p)} y2={PT + innerH * (1-p)} stroke="rgba(245,158,11,0.08)" strokeWidth="0.5" />
+                                            <text x={PL-6} y={PT + innerH * (1-p) + 3} textAnchor="end" fontSize="8" fill="rgba(245,158,11,0.4)" fontFamily="monospace">{(maxVal * p).toFixed(0)}%</text>
+                                          </g>
+                                        ))}
+                                        {allYears.map((y, i) => {
+                                          if (i % 3 !== 0 && i !== allYears.length - 1) return null;
+                                          return <text key={y} x={xFor(y)} y={H - PB + 14} textAnchor="middle" fontSize="8" fill="rgba(224,234,255,0.5)" fontFamily="monospace">{String(y).slice(-2)}</text>;
+                                        })}
+                                        {lines.map((L, i) => (
+                                          <polyline key={i} points={L.series.map(d => `${xFor(d.year)},${yFor(d.value)}`).join(' ')} fill="none" stroke={L.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        ))}
+                                      </svg>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Cash Conversion Cycle */}
+                              {balanceSheet.ccc && (
+                                <>
+                                  <TimeSeriesChart data={balanceSheet.ccc} />
+                                  {balanceSheet.ccc.note && (
+                                    <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                      <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {balanceSheet.ccc.note}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                              {/* Retained Earnings Test — Buffett's preferred compounder check */}
+                              {balanceSheet.retainedEarningsTest && (() => {
+                                const t = balanceSheet.retainedEarningsTest;
+                                return (
+                                  <div style={{
+                                    background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                    border:'0.5px solid rgba(34,197,94,0.55)',
+                                    borderLeft:'2px solid rgba(34,197,94,0.95)',
+                                    borderRadius:'4px',
+                                    padding:'18px',
+                                    marginBottom:'12px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'8px',left:'8px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
+                                    <div style={{position:'absolute',top:'8px',right:'8px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
+                                    <div style={{position:'absolute',bottom:'8px',left:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
+                                    <div style={{position:'absolute',bottom:'8px',right:'8px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// BUFFETT'S $1 RETAINED EARNINGS TEST · {t.period}</div>
+                                    <div style={{fontSize:'11px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'14px',letterSpacing:'0.3px'}}>For every $1 of retained earnings, how much market value did the company create?</div>
+
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'10px',marginBottom:'14px'}}>
+                                      <div>
+                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2009</div>
+                                        <div style={{fontSize:'14px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2009.toLocaleString()}M</div>
+                                      </div>
+                                      <div>
+                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2024</div>
+                                        <div style={{fontSize:'14px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2024.toLocaleString()}M</div>
+                                      </div>
+                                      <div>
+                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE INCREASE</div>
+                                        <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.retainedEarningsIncrease}B</div>
+                                      </div>
+                                      <div>
+                                        <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP INCREASE</div>
+                                        <div style={{fontSize:'14px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700}}>+${t.marketCapIncrease}B</div>
+                                      </div>
+                                    </div>
+
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'10px',justifyContent:'center',padding:'12px 14px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'4px',marginBottom:'10px'}}>
+                                      <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>$1 IN →</span>
+                                      <span style={{fontSize:'30px',color:'rgba(34,197,94,1)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>${t.multiplier}</span>
+                                      <span style={{fontSize:'11px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>OUT</span>
+                                    </div>
+
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{t.verdict}</div>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Tangible equity / ROTE breakdown */}
+                              {balanceSheet.tangibleEquity && (() => {
+                                const te = balanceSheet.tangibleEquity;
+                                return (
+                                  <div style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'4px',
+                                    padding:'14px',
+                                    marginBottom:'12px',
+                                  }}>
+                                    <div style={{marginBottom:'10px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// TANGIBLE EQUITY · ROTE</div>
+                                      <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{te.note}</div>
+                                    </div>
+
+                                    {/* Big ROTE callout */}
+                                    <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// 2024 ROTE</div>
+                                      <div style={{fontSize:'28px',color:amber,fontFamily:'monospace',fontWeight:700}}>{te.rote2024.toLocaleString()}%</div>
+                                      <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>$2.2B Net Income on $134M Tangible Equity</div>
+                                    </div>
+
+                                    <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                                      <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                        <thead>
+                                          <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                            <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EQUITY</th>
+                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– GOODWILL</th>
+                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– INTANGIBLES</th>
+                                            <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>= TANGIBLE</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {te.rows.map((r, i) => (
+                                            <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
+                                              <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                              <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>{r.equity.toLocaleString()}</td>
+                                              <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.goodwill.toLocaleString()}</td>
+                                              <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.intangibles.toLocaleString()}</td>
+                                              <td style={{padding:'4px 8px',textAlign:'right',color: r.tangible < 0 ? 'rgba(239,68,68,0.9)' : 'rgba(34,197,94,0.9)',fontWeight:700}}>{r.tangible.toLocaleString()}</td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </table>
+                                    </div>
+
+                                    <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                      <span style={{color:amber,fontWeight:600}}>Interpretation —</span> {te.interpretation}
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+                            </>
+                          )}
+
+                          {/* ════════════════════════════════════════════════
+                              CASH FLOW
+                              ════════════════════════════════════════════════ */}
+                          {cashFlow && (
+                            <>
+                              <SectionHeading>// CASH FLOW</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Operating cash flow, reinvestment intensity, and free cash flow / owner earnings.</div>
+
+                              {cashFlow.operatingCashFlow && <TimeSeriesChart data={cashFlow.operatingCashFlow} />}
+                              {cashFlow.capex && <TimeSeriesChart data={cashFlow.capex} />}
+                              {cashFlow.capexRatio && (
+                                <>
+                                  <TimeSeriesChart data={cashFlow.capexRatio} />
+                                  {cashFlow.capexRatio.note && (
+                                    <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                      <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {cashFlow.capexRatio.note}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                              {cashFlow.freeCashFlow && <TimeSeriesChart data={cashFlow.freeCashFlow} />}
                             </>
                           )}
                         </div>
