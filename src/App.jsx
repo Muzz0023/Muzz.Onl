@@ -13640,8 +13640,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               : [];
 
             const cardBtn = {
-              width: '100%', textAlign: 'left', background: 'rgba(5,12,24,0.85)',
-              border: '0.5px solid rgba(0,200,255,0.2)', borderLeft: '2px solid rgba(0,200,255,0.6)',
+              width: '100%', textAlign: 'left', background: 'rgba(15,10,2,0.85)',
+              border: `0.5px solid ${amberGlow}`, borderLeft: `2px solid ${amber}`,
               borderRadius: '6px', padding: '16px 18px', cursor: 'pointer', display: 'flex',
               alignItems: 'center', justifyContent: 'space-between', gap: '12px',
             };
@@ -13651,14 +13651,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
               return (
                 <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
                   <button onClick={() => setCoverageCompany(null)}
-                    style={{alignSelf:'flex-start',fontSize:'11px',color:'rgba(0,200,255,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',background:'rgba(0,200,255,0.08)',border:'0.5px solid rgba(0,200,255,0.4)',padding:'7px 14px',cursor:'pointer',borderRadius:'3px',fontWeight:600}}>
+                    style={{alignSelf:'flex-start',fontSize:'11px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,padding:'7px 14px',cursor:'pointer',borderRadius:'3px',fontWeight:600}}>
                     ← BACK
                   </button>
                   {/* Header */}
-                  <div style={{background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.25)',borderLeft:'2px solid #00c8ff',borderRadius:'6px',padding:'20px 24px',backgroundImage:'radial-gradient(rgba(0,200,255,0.03) 1px,transparent 1px)',backgroundSize:'20px 20px'}}>
+                  <div style={{background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'6px',padding:'20px 24px',backgroundImage:'radial-gradient(rgba(245,158,11,0.03) 1px,transparent 1px)',backgroundSize:'20px 20px'}}>
                     <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
                       <div>
-                        <div style={{fontSize:'9px',color:'rgba(0,200,255,0.5)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {selected.industry} · {selected.country}</div>
+                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {selected.industry} · {selected.country}</div>
                         <div style={{fontSize:'26px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{selected.ticker}</div>
                         <div style={{fontSize:'13px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',marginTop:'2px'}}>{selected.name}</div>
                       </div>
@@ -13754,6 +13754,96 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       const changePct = first.value !== 0 ? ((latest.value - first.value) / first.value) * 100 : 0;
                       // Display newest → oldest for scanning
                       const rowsDesc = [...series].reverse();
+
+                      // Copy handler — writes both rich HTML table and TSV plain text to clipboard
+                      // so Apple Notes / Pages / Word receive a real table, plain editors get TSV.
+                      // Uses direct DOM manipulation for "COPIED" feedback since this component is
+                      // re-created on every parent render (defined inside a render function).
+                      const handleCopy = async (e) => {
+                        const btn = e.currentTarget;
+                        const original = btn.innerHTML;
+                        const originalBg = btn.style.background;
+                        const originalBorder = btn.style.border;
+                        const originalColor = btn.style.color;
+                        try {
+                          // Build TSV (tab-separated) plain text fallback
+                          const tsvHeader = ['Year', 'Value', 'YoY %', 'Flag'].join('\t');
+                          const tsvRows = rowsDesc.map((d, i) => {
+                            const prior = rowsDesc[i + 1];
+                            const yoy = prior && prior.value !== 0 ? ((d.value - prior.value) / prior.value) * 100 : null;
+                            const isPeak = d.year === peakYear;
+                            const isTrough = d.year === troughYear;
+                            const flags = [];
+                            if (isPeak)   flags.push('PEAK');
+                            if (isTrough) flags.push('TROUGH');
+                            if (d.spike)  flags.push('SPIKE');
+                            if (d.down)   flags.push('DOWN');
+                            return [
+                              d.year,
+                              fmtVal(d.value, data.unit),
+                              yoy === null ? '' : (yoy >= 0 ? '+' : '') + yoy.toFixed(1) + '%',
+                              flags.join(' '),
+                            ].join('\t');
+                          });
+                          const tsv = [data.label, `${first.year} – ${latest.year} · ${series.length} years`, '', tsvHeader, ...tsvRows].join('\n');
+
+                          // Build HTML table for rich paste (Apple Notes / Pages / Word recognise this)
+                          const htmlRows = rowsDesc.map((d, i) => {
+                            const prior = rowsDesc[i + 1];
+                            const yoy = prior && prior.value !== 0 ? ((d.value - prior.value) / prior.value) * 100 : null;
+                            const isPeak = d.year === peakYear;
+                            const isTrough = d.year === troughYear;
+                            const flags = [];
+                            if (isPeak)   flags.push('↑ PEAK');
+                            if (isTrough) flags.push('↓ TROUGH');
+                            if (d.spike)  flags.push('⚠ SPIKE');
+                            if (d.down)   flags.push('⬇ DOWN');
+                            const yoyText = yoy === null ? '' : (yoy >= 0 ? '+' : '') + yoy.toFixed(1) + '%';
+                            return `<tr><td>${d.year}</td><td style="text-align:right">${fmtVal(d.value, data.unit)}</td><td style="text-align:right">${yoyText}</td><td>${flags.join(' ')}</td></tr>`;
+                          }).join('');
+                          const html = `<div><b>${data.label}</b><br><i>${first.year} – ${latest.year} · ${series.length} years · Latest ${fmtVal(latest.value, data.unit)} · Change ${changePct >= 0 ? '+' : ''}${changePct.toFixed(0)}%</i></div><table border="1" cellpadding="6" cellspacing="0"><thead><tr><th>Year</th><th>Value</th><th>YoY %</th><th>Flag</th></tr></thead><tbody>${htmlRows}</tbody></table>`;
+
+                          // Write both MIME types so target app picks the best one
+                          if (navigator.clipboard && window.ClipboardItem) {
+                            const item = new ClipboardItem({
+                              'text/html':  new Blob([html], { type: 'text/html' }),
+                              'text/plain': new Blob([tsv],  { type: 'text/plain' }),
+                            });
+                            await navigator.clipboard.write([item]);
+                          } else if (navigator.clipboard) {
+                            await navigator.clipboard.writeText(tsv);
+                          } else {
+                            throw new Error('Clipboard API not available');
+                          }
+                          // Flash success feedback via DOM (safe because component may re-render)
+                          btn.innerHTML = '✓ COPIED';
+                          btn.style.background = 'rgba(34,197,94,0.15)';
+                          btn.style.border = '0.5px solid rgba(34,197,94,0.6)';
+                          btn.style.color = 'rgba(34,197,94,0.95)';
+                          setTimeout(() => {
+                            if (btn.isConnected) {
+                              btn.innerHTML = original;
+                              btn.style.background = originalBg;
+                              btn.style.border = originalBorder;
+                              btn.style.color = originalColor;
+                            }
+                          }, 1500);
+                        } catch (err) {
+                          btn.innerHTML = '✗ FAILED';
+                          btn.style.background = 'rgba(239,68,68,0.15)';
+                          btn.style.border = '0.5px solid rgba(239,68,68,0.6)';
+                          btn.style.color = 'rgba(239,68,68,0.95)';
+                          setTimeout(() => {
+                            if (btn.isConnected) {
+                              btn.innerHTML = original;
+                              btn.style.background = originalBg;
+                              btn.style.border = originalBorder;
+                              btn.style.color = originalColor;
+                            }
+                          }, 1500);
+                        }
+                      };
+
                       return (
                         <div style={{
                           background:'rgba(0,0,0,0.4)',
@@ -13769,7 +13859,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// {data.label.toUpperCase()}</div>
                               <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600}}>{first.year} – {latest.year} · {series.length} years</div>
                             </div>
-                            <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
+                            <div style={{display:'flex',gap:'10px',alignItems:'flex-start',flexWrap:'wrap'}}>
                               <div style={{textAlign:'right'}}>
                                 <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>LATEST</div>
                                 <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{fmtVal(latest.value, data.unit)}</div>
@@ -13778,6 +13868,26 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CHANGE</div>
                                 <div style={{fontSize:'14px',color: changePct >= 0 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{changePct >= 0 ? '+' : ''}{changePct.toFixed(0)}%</div>
                               </div>
+                              <button
+                                onClick={handleCopy}
+                                title="Copy as table (paste into Apple Notes, Pages, Word, etc.)"
+                                style={{
+                                  alignSelf:'flex-start',
+                                  marginTop:'2px',
+                                  padding:'5px 9px',
+                                  background:'rgba(245,158,11,0.08)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderRadius:'3px',
+                                  color:amber,
+                                  fontFamily:'monospace',
+                                  fontSize:'9px',
+                                  letterSpacing:'1.5px',
+                                  fontWeight:700,
+                                  cursor:'pointer',
+                                  whiteSpace:'nowrap',
+                                }}>
+                                ⧉ COPY
+                              </button>
                             </div>
                           </div>
                           {/* Table */}
@@ -16045,8 +16155,8 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       </div>
                     );
                   })() : (
-                    <div style={{background:'rgba(5,12,24,0.5)',border:'0.5px dashed rgba(0,200,255,0.25)',borderRadius:'6px',padding:'40px 24px',textAlign:'center'}}>
-                      <div style={{fontSize:'11px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// FULL BREAKDOWN COMING</div>
+                    <div style={{background:'rgba(15,10,2,0.5)',border:`0.5px dashed ${amberGlow}`,borderRadius:'6px',padding:'40px 24px',textAlign:'center'}}>
+                      <div style={{fontSize:'11px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// FULL BREAKDOWN COMING</div>
                       <div style={{fontSize:'12px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.6,maxWidth:'460px',margin:'0 auto'}}>This is where the deep analysis lives — business overview, brand/moat, segment data, income statement, balance sheet, cash flow, owner earnings, thesis &amp; risks. We build {selected.ticker} out next.</div>
                     </div>
                   )}
@@ -16115,14 +16225,14 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* Breadcrumb */}
                 <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',letterSpacing:'1px'}}>
                   <button onClick={() => { setCoverageIndustry(null); setCoverageCountry(null); }}
-                    style={{background:'none',border:'none',color: coverageIndustry ? 'rgba(0,200,255,0.7)' : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
+                    style={{background:'none',border:'none',color: coverageIndustry ? amber : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
                     ALL INDUSTRIES
                   </button>
                   {coverageIndustry && (
                     <>
                       <span style={{color:'rgba(148,163,184,0.3)'}}>/</span>
                       <button onClick={() => setCoverageCountry(null)}
-                        style={{background:'none',border:'none',color: coverageCountry ? 'rgba(0,200,255,0.7)' : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
+                        style={{background:'none',border:'none',color: coverageCountry ? amber : 'rgba(148,163,184,0.5)',cursor:'pointer',fontFamily:'monospace',fontSize:'10px',letterSpacing:'1px',padding:0,fontWeight:600}}>
                         {coverageIndustry.toUpperCase()}
                       </button>
                     </>
@@ -16138,7 +16248,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* LEVEL 1: industries */}
                 {!coverageIndustry && (
                   <>
-                    <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// BROWSE BY INDUSTRY</div>
+                    <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// BROWSE BY INDUSTRY</div>
                     {industries.length === 0 ? (
                       <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies analysed yet.</div>
                     ) : industries.map(ind => {
@@ -16156,7 +16266,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* LEVEL 2: countries within industry */}
                 {coverageIndustry && !coverageCountry && (
                   <>
-                    <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageIndustry.toUpperCase()} · BY COUNTRY</div>
+                    <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageIndustry.toUpperCase()} · BY COUNTRY</div>
                     {countriesInIndustry.map(country => {
                       const count = COVERAGE.filter(c => c.industry === coverageIndustry && c.country === country).length;
                       return (
@@ -16172,7 +16282,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {/* LEVEL 3: companies within industry + country */}
                 {coverageIndustry && coverageCountry && (
                   <>
-                    <div style={{fontSize:'10px',color:'rgba(0,200,255,0.6)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
+                    <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
                     {companiesInScope.map(c => (
                       <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); }}
                         style={{width:'100%',textAlign:'left',background:'rgba(5,12,24,0.85)',border:'0.5px solid rgba(0,200,255,0.2)',borderLeft:'2px solid rgba(0,200,255,0.6)',borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
