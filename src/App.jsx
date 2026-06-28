@@ -7771,11 +7771,585 @@ const REH_BREAKDOWN = {
           ratios: [ {year:2019,ratio:0.55}, {year:2020,ratio:0.57}, {year:2021,ratio:0.53}, {year:2022,ratio:0.50}, {year:2023,ratio:0.48}, {year:2024,ratio:0.45} ],
         },
         branches: {
-          note: 'Branch counts by region. The \u2b50 marks FY2020 \u2014 the last year REH traded at ~A$12 per share. ANZ added 22 net branches since then; the US added 59 (more than 3\u00d7 the ANZ pace), consistent with the US scale-up strategy.',
-          anz:  [ {year:2018,value:615}, {year:2019,value:634}, {year:2020,value:639,star:true}, {year:2021,value:642}, {year:2022,value:645}, {year:2023,value:655}, {year:2024,value:661} ],
-          us:   [ {year:2018,value:171}, {year:2019,value:175}, {year:2020,value:184,star:true}, {year:2021,value:189}, {year:2022,value:204}, {year:2023,value:231}, {year:2024,value:243} ],
-          anzAdded: 22, usAdded: 59,
+          anz:  [ {year:2018,value:615}, {year:2019,value:634}, {year:2020,value:639}, {year:2021,value:642}, {year:2022,value:645}, {year:2023,value:655}, {year:2024,value:661} ],
+          us:   [ {year:2018,value:171}, {year:2019,value:175}, {year:2020,value:184}, {year:2021,value:189}, {year:2022,value:204}, {year:2023,value:231}, {year:2024,value:243} ],
         },
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // INCOME STATEMENT (FY2017–FY2024)
+    // ════════════════════════════════════════════════════════════════
+    incomeStatement: {
+      netSales: {
+        label: 'Revenue from Sale of Goods', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 2429307 }, { year: 2018, value: 2688576 }, { year: 2019, value: 5463787 },
+          { year: 2020, value: 6009878 }, { year: 2021, value: 6270706 }, { year: 2022, value: 7654047 },
+          { year: 2023, value: 8839572 }, { year: 2024, value: 9104772 },
+        ],
+        note: 'Revenue jumped from A$2.69B (FY18) to A$5.46B (FY19) \u2014 a A$2.78B step-up driven almost entirely by the MORSCO acquisition (US entry). A further A$1.4B of the FY21\u2192FY22 jump came from the International Quadratics / Dontek deals. Underlying organic growth is steadier; the big steps are M&A.',
+      },
+      costOfSales: {
+        label: 'Cost of Sales', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 1619208 }, { year: 2018, value: 1799481 }, { year: 2019, value: 3926427 },
+          { year: 2020, value: 4338667 }, { year: 2021, value: 4509176 }, { year: 2022, value: 5515083 },
+          { year: 2023, value: 6321354 }, { year: 2024, value: 6499068 },
+        ],
+      },
+      grossProfit: {
+        label: 'Gross Profit', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 811750 }, { year: 2018, value: 891875 }, { year: 2019, value: 1545386 },
+          { year: 2020, value: 1675074 }, { year: 2021, value: 1773346 }, { year: 2022, value: 2170326 },
+          { year: 2023, value: 2518218 }, { year: 2024, value: 2605704 },
+        ],
+      },
+      grossMargin: {
+        label: 'Gross Margin', unit: '%',
+        series: [
+          { year: 2017, value: 33.4 }, { year: 2018, value: 33.1 }, { year: 2019, value: 28.3, down: true },
+          { year: 2020, value: 27.8 }, { year: 2021, value: 28.2 }, { year: 2022, value: 28.2 },
+          { year: 2023, value: 28.5 }, { year: 2024, value: 28.6 },
+        ],
+        note: 'Gross margin stepped DOWN from ~33% to ~28% when MORSCO consolidated in FY19 \u2014 the US distribution business runs structurally lower margins than ANZ. Since then it has been remarkably stable at ~28%, showing pricing discipline. The pre-2019 ~33% reflects the higher-margin ANZ-only business.',
+      },
+      smaExpense: {
+        label: 'Selling & Administrative Expenses', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 508703 }, { year: 2018, value: 572434 }, { year: 2019, value: 1189006 },
+          { year: 2020, value: 1264492 }, { year: 2021, value: 1280774 }, { year: 2022, value: 1592122 },
+          { year: 2023, value: 1856906 }, { year: 2024, value: 1932356 },
+        ],
+      },
+      smaToGrossProfit: {
+        label: 'SG&A as % of Gross Profit', unit: '%',
+        series: [
+          { year: 2017, value: 62.7 }, { year: 2018, value: 64.2 }, { year: 2019, value: 76.9, spike: true },
+          { year: 2020, value: 75.5 }, { year: 2021, value: 72.2 }, { year: 2022, value: 73.4 },
+          { year: 2023, value: 73.8 }, { year: 2024, value: 74.2 },
+        ],
+        note: 'SG&A consumed ~63% of gross profit pre-MORSCO, jumping to ~77% in FY19 as the lower-margin US business (and its DSD-style cost base) consolidated. Has improved slightly to ~74% as the US scales.',
+      },
+      operatingProfit: {
+        label: 'EBIT (Earnings Before Interest & Tax)', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 303047 }, { year: 2018, value: 319441 }, { year: 2019, value: 356380 },
+          { year: 2020, value: 410612 }, { year: 2021, value: 492572 }, { year: 2022, value: 578204 },
+          { year: 2023, value: 654104 }, { year: 2024, value: 681390 },
+        ],
+        note: 'EBIT compounded steadily from A$303M (FY17) to A$681M (FY24) \u2014 more than doubling. Unlike revenue, EBIT growth is smoother because the lower-margin US revenue contributes proportionally less to profit.',
+      },
+      operatingMargin: {
+        label: 'Operating Margin (EBIT)', unit: '%',
+        series: [
+          { year: 2017, value: 12.5 }, { year: 2018, value: 11.9 }, { year: 2019, value: 6.5, down: true },
+          { year: 2020, value: 6.8 }, { year: 2021, value: 7.8 }, { year: 2022, value: 7.5 },
+          { year: 2023, value: 7.4 }, { year: 2024, value: 7.5 },
+        ],
+        note: 'Operating margin halved from ~12.5% to ~6.5% when MORSCO consolidated (FY19) \u2014 the US business is far lower-margin. It has since recovered to ~7.5% as US scale improves. The pre-2019 ~12% is the ANZ-only margin profile.',
+      },
+      interestExpense: {
+        label: 'Finance Costs (net)', unit: 'M AUD',
+        series: [
+          { year: 2019, value: 83304 }, { year: 2020, value: 110880, spike: true }, { year: 2021, value: 112289 },
+          { year: 2022, value: 68803 }, { year: 2023, value: 86265 }, { year: 2024, value: 91809 },
+        ],
+        note: 'Finance costs peaked at ~A$112M in FY20\u201321 (pandemic-era debt to fund the US build) and have since moderated as the balance sheet deleveraged. (Not separately disclosed pre-FY19.)',
+      },
+      otherIncomeExpense: {
+        label: 'Other Income', unit: 'M AUD',
+        series: [ { year: 2023, value: 21741 }, { year: 2024, value: 8042 } ],
+        note: 'Other income (FY23\u2013FY24 only) \u2014 minor, non-operating items.',
+      },
+      provisionForTaxes: {
+        label: 'Income Tax Expense', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 91256 }, { year: 2018, value: 94821 }, { year: 2019, value: 94924 },
+          { year: 2020, value: 83506 }, { year: 2021, value: 94688 }, { year: 2022, value: 116914 },
+          { year: 2023, value: 180232, spike: true }, { year: 2024, value: 170410 },
+        ],
+      },
+      taxRate: {
+        label: 'Effective Tax Rate', unit: '%',
+        series: [
+          { year: 2017, value: 30.1 }, { year: 2018, value: 29.7 }, { year: 2019, value: 31.9 },
+          { year: 2020, value: 26.7 }, { year: 2021, value: 24.9 }, { year: 2022, value: 22.9 },
+          { year: 2023, value: 31.7 }, { year: 2024, value: 28.9 },
+        ],
+        note: 'Effective tax rate has ranged 23\u201332%, around the ~30% Australian corporate rate. The lower FY21\u201322 rates reflect US tax effects and timing; FY23\u2019s 31.7% is the high end.',
+      },
+      netIncome: {
+        label: 'Net Profit for the Year', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 211791 }, { year: 2018, value: 224620 }, { year: 2019, value: 202100, down: true },
+          { year: 2020, value: 228999 }, { year: 2021, value: 285595 }, { year: 2022, value: 392487 },
+          { year: 2023, value: 387607, down: true }, { year: 2024, value: 419171 },
+        ],
+        note: 'Net profit dipped in FY19 (the MORSCO integration year actually reduced net profit by ~A$22M) before compounding strongly to A$419M by FY24. The International Quadratics / Dontek deals added ~A$107M to the FY21\u2192FY22 jump.',
+      },
+      profitMargin: {
+        label: 'Net Profit Margin', unit: '%',
+        series: [
+          { year: 2017, value: 8.7 }, { year: 2018, value: 8.5 }, { year: 2019, value: 4.1, down: true },
+          { year: 2020, value: 3.8 }, { year: 2021, value: 3.4, down: true }, { year: 2022, value: 7.3 },
+          { year: 2023, value: 5.2 }, { year: 2024, value: 4.6 },
+        ],
+        note: 'Net margin compressed from ~8.7% (ANZ-only) to ~4% post-MORSCO \u2014 reflecting the lower-margin US mix plus higher D&A and finance costs. FY22\u2019s 7.3% was a strong year. The structural reality: REH is now a ~4\u20135% net-margin business at group level, weighed down by the US.',
+      },
+      eps: {
+        label: 'Diluted EPS', unit: 'AUD per share',
+        series: [
+          { year: 2017, value: 0.43 }, { year: 2018, value: 0.45 }, { year: 2019, value: 0.36, down: true },
+          { year: 2020, value: 0.40 }, { year: 2021, value: 0.44 }, { year: 2022, value: 0.61 },
+          { year: 2023, value: 0.60, down: true }, { year: 2024, value: 0.65 },
+        ],
+        note: 'Diluted EPS dipped to A$0.36 in FY19 (MORSCO dilution \u2014 the equity raise plus integration costs) before recovering to A$0.65 by FY24. The FY19 dip is the cost of the US entry showing up per share.',
+      },
+      cagr: {
+        label: 'Diluted EPS CAGR (2017\u20132024)', value: '5.97%',
+        note: 'EPS compounded at ~6% over the period \u2014 modest, held back by the FY19 MORSCO dilution. Stripping the acquisition years, the underlying ANZ compounding is stronger; the US is still a drag on per-share earnings while it scales.',
+      },
+      nopat: {
+        label: 'NOPAT (Net Operating Profit After Tax)', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 212000 }, { year: 2018, value: 224000 }, { year: 2019, value: 262000 },
+          { year: 2020, value: 327000 }, { year: 2021, value: 398000 }, { year: 2022, value: 461300 },
+          { year: 2023, value: 473700 }, { year: 2024, value: 511000 },
+        ],
+        note: 'NOPAT (EBIT after tax) grew from A$212M to A$511M \u2014 a cleaner measure of operating profitability than net profit because it strips out finance costs. The steady NOPAT compounding underpins the ROIC story.',
+      },
+      roeOperating: {
+        label: 'Operating ROE (EBIT-based)', unit: '%',
+        series: [
+          { year: 2017, value: 26.2, spike: true }, { year: 2018, value: 17.0 }, { year: 2019, value: 17.9 },
+          { year: 2020, value: 14.9 }, { year: 2021, value: 17.1 }, { year: 2022, value: 17.4 },
+          { year: 2023, value: 18.0 }, { year: 2024, value: 17.5 },
+        ],
+        note: 'EBIT ÷ shareholders\u2019 equity has held a remarkably stable ~17\u201318% since FY18 (the FY17 26.2% reflects a much smaller pre-raise equity base). A consistent high-teens operating ROE is a quality signal \u2014 capital is being put to work efficiently.',
+      },
+      dividends: {
+        note: 'Reece pays a conservative, well-covered dividend \u2014 payout ratio of ~30\u201340% of EPS, leaving most earnings to reinvest in the US build. The FY20 cut to A$0.12 was a COVID-era capital-preservation move; it has since been rebuilt to A$0.25.',
+        cagr: '3.8%',
+        cagrPeriod: '2018 \u2192 2024',
+        cagrNote: 'Dividends per share grew from A$0.20 (FY18) to A$0.25 (FY24) at a ~3.8% CAGR \u2014 modest, reflecting the choice to retain capital for US expansion rather than maximise the payout.',
+        rows: [
+          { year: 2024, dividend: 0.25, eps: 0.65, payout: 38.5 },
+          { year: 2023, dividend: 0.25, eps: 0.60, payout: 41.7 },
+          { year: 2022, dividend: 0.22, eps: 0.61, payout: 36.1 },
+          { year: 2021, dividend: 0.18, eps: 0.44, payout: 40.9 },
+          { year: 2020, dividend: 0.12, eps: 0.40, payout: 30.0, abnormal: true, note: 'COVID-era cut for capital preservation.' },
+          { year: 2019, dividend: 0.20, eps: 0.36, payout: 55.6 },
+          { year: 2018, dividend: 0.20, eps: 0.45, payout: 44.4 },
+        ],
+      },
+
+      // === REH income extras (custom render) ===
+      depreciation: {
+        label: 'Depreciation', unit: 'M AUD',
+        series: [
+          { year: 2019, value: -84862 }, { year: 2020, value: -188670, spike: true }, { year: 2021, value: -184310 },
+          { year: 2022, value: -204713, spike: true }, { year: 2023, value: -227405 }, { year: 2024, value: -258527, spike: true },
+        ],
+        toGrossProfit: [
+          { year: 2019, value: 5.5 }, { year: 2020, value: 11.3 }, { year: 2021, value: 10.4 },
+          { year: 2022, value: 9.4 }, { year: 2023, value: 9.0 }, { year: 2024, value: 9.9 },
+        ],
+        note: 'Depreciation jumped from A$85M (FY19) to A$259M (FY24) as the asset base grew (MORSCO, branches, distribution centres, right-of-use lease assets). As a share of gross profit it sits ~9\u201311% \u2014 a meaningful but stable charge. The FY19 5.5% is artificially low (partial-year MORSCO).',
+      },
+      impairment: {
+        label: 'Impairment of Goodwill', unit: 'M AUD',
+        series: [ { year: 2023, value: -28949 } ],
+        note: 'A single A$28.9M goodwill impairment in FY23 \u2014 the only impairment across the FY17\u2013FY24 window. Minor relative to the ~A$2B intangible base, and not repeated.',
+      },
+      comprehensiveIncome: {
+        label: 'Total Comprehensive Income (net of tax)', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 210899 }, { year: 2018, value: 228744 }, { year: 2019, value: 223808, down: true },
+          { year: 2020, value: 229803 }, { year: 2021, value: 215125, down: true }, { year: 2022, value: 557149 },
+          { year: 2023, value: 455223, down: true }, { year: 2024, value: 415518, down: true },
+        ],
+        cagr: '10.4%',
+        note: 'Comprehensive income (net profit PLUS the FX-translation and cash-flow-hedge movements that bypass the P&L) is what Reece\u2019s ROE/ROA/ROIC are actually computed on. It is far more volatile than net profit \u2014 FY22\u2019s A$557M was inflated by a A$138M favourable FX swing on US operations, while FY21\u2019s A$215M was dragged by a A$129M adverse FX move. Over the period it compounded ~10.4%, but the year-to-year FX noise is large because of the US dollar exposure.',
+        ociComponents: [
+          {
+            label: 'FX translation of foreign operations',
+            series: [
+              { year: 2017, value: -43 }, { year: 2018, value: -1204 }, { year: 2019, value: 82839 }, { year: 2020, value: 22907 },
+              { year: 2021, value: -129285 }, { year: 2022, value: 137811 }, { year: 2023, value: 71288 }, { year: 2024, value: -483 },
+            ],
+          },
+          {
+            label: 'Change in cash-flow hedges (fair value)',
+            series: [
+              { year: 2017, value: -849 }, { year: 2018, value: 5328 }, { year: 2019, value: -61131 }, { year: 2020, value: -22295 },
+              { year: 2021, value: 58815 }, { year: 2022, value: 26851 }, { year: 2023, value: -3672 }, { year: 2024, value: -3170 },
+            ],
+          },
+        ],
+      },
+      sharesOutstanding: {
+        label: 'Shares Outstanding', unit: 'thousands',
+        series: [
+          { year: 2017, value: 498000 }, { year: 2018, value: 503336 }, { year: 2019, value: 560823, spike: true },
+          { year: 2020, value: 574122 }, { year: 2021, value: 645984, spike: true }, { year: 2022, value: 645984 },
+          { year: 2023, value: 645721 }, { year: 2024, value: 645721 },
+        ],
+        note: 'Share count rose in two steps \u2014 FY19 (MORSCO equity raise) and FY21 (International Quadratics / Dontek) \u2014 from ~498M to ~646M, then held flat. The ~30% dilution over the period is the share-count cost of the acquisition strategy; importantly, no dilution since FY21.',
+      },
+      peHistory: {
+        label: 'Historical P/E (average yearly price)',
+        currentNote: 'Currently ~24x \u2014 below the FY-average multiple. REH has historically commanded a premium multiple (avg ~31x ex-2018); the current ~24x is the cheapest it has been on a forward basis in years, the core of the valuation case.',
+        avgExcl2018: 31.3,
+        avgExcl2018And2021: 29.0,
+        rows: [
+          { year: 2024, price: 22.0, eps: 0.65, pe: 33.8, under31: false, under29: false, under24: false },
+          { year: 2023, price: 17.5, eps: 0.60, pe: 29.2, under31: true,  under29: false, under24: false },
+          { year: 2022, price: 19.5, eps: 0.61, pe: 32.0, under31: false, under29: false, under24: false },
+          { year: 2021, price: 20.0, eps: 0.44, pe: 45.5, under31: false, under29: false, under24: false },
+          { year: 2020, price: 12.5, eps: 0.40, pe: 31.3, under31: false, under29: false, under24: false },
+          { year: 2019, price: 10.0, eps: 0.36, pe: 27.8, under31: true,  under29: true,  under24: false },
+          { year: 2018, price: 2.5,  eps: 0.45, pe: 5.6,  under31: true,  under29: true,  under24: true },
+          { year: 2017, price: 8.5,  eps: 0.43, pe: 19.8, under31: true,  under29: true,  under24: true },
+        ],
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // CASH FLOW (FY2017–FY2024)
+    // ════════════════════════════════════════════════════════════════
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Operating Cash Flow', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 214809 }, { year: 2018, value: 180925, down: true }, { year: 2019, value: 254466 },
+          { year: 2020, value: 600962 }, { year: 2021, value: 351916, down: true }, { year: 2022, value: 221786, down: true },
+          { year: 2023, value: 766382 }, { year: 2024, value: 750905, down: true },
+        ],
+        note: 'Operating cash flow is lumpy \u2014 swinging from A$222M (FY22, a heavy working-capital build year) to A$766M (FY23). The FY20 spike (A$601M) reflected pandemic-era working-capital release. Over the full period OCF compounded at ~19% per year. The volatility is driven by inventory swings as the business scales.',
+      },
+      capex: {
+        label: 'Capital Expenditures', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 94883 }, { year: 2018, value: 88244 }, { year: 2019, value: 99199 },
+          { year: 2020, value: 83328 }, { year: 2021, value: 69608 }, { year: 2022, value: 184232 },
+          { year: 2023, value: 151667 }, { year: 2024, value: 236310 },
+        ],
+        note: 'CapEx stepped up sharply from ~A$70\u2013100M (FY17\u201321) to A$236M (FY24) as Reece invested in branches, distribution centres (Auckland, Texas), and systems. The rising capex is the visible cost of the network-expansion strategy.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow', unit: '%',
+        series: [
+          { year: 2017, value: 44.2 }, { year: 2018, value: 48.8 }, { year: 2019, value: 39.0 },
+          { year: 2020, value: 13.9 }, { year: 2021, value: 19.8 }, { year: 2022, value: 83.0, spike: true },
+          { year: 2023, value: 19.8 }, { year: 2024, value: 31.5 },
+        ],
+        note: '8-year average ~37.5%. The FY22 spike to 83% is the combination of low operating cash flow (working-capital build) AND high capex that year \u2014 a temporary squeeze, not a structural one. In normal years Reece reinvests ~20\u201340% of operating cash into capex.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 119926 }, { year: 2018, value: 92681, down: true }, { year: 2019, value: 155267 },
+          { year: 2020, value: 517634 }, { year: 2021, value: 282308, down: true }, { year: 2022, value: 37554, down: true, spike: true },
+          { year: 2023, value: 614715 }, { year: 2024, value: 514595, down: true },
+        ],
+        note: 'FCF is volatile but strongly positive across the cycle, compounding at ~23% per year. The FY22 trough (A$38M) was the working-capital + capex squeeze; FY23 rebounded to A$615M. The business reliably converts profit to cash over time \u2014 essential for self-funding the US expansion without over-leveraging.',
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // BALANCE SHEET (FY2017–FY2024)
+    // ════════════════════════════════════════════════════════════════
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 101805 }, { year: 2018, value: 539891, spike: true }, { year: 2019, value: 127707, down: true },
+          { year: 2020, value: 1004708, spike: true }, { year: 2021, value: 828966 }, { year: 2022, value: 220483, down: true },
+          { year: 2023, value: 372706 }, { year: 2024, value: 341380 },
+        ],
+        note: 'Cash swings widely with the M&A and capital-raising cycle \u2014 the FY20 A$1B peak reflected pandemic-era caution plus the equity base; it has since normalised to ~A$340M as capital was deployed into the US build and debt repayment.',
+      },
+      accountsReceivable: {
+        label: 'Trade & Other Receivables', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 360912 }, { year: 2018, value: 410212 }, { year: 2019, value: 875324, spike: true },
+          { year: 2020, value: 931628 }, { year: 2021, value: 1044037 }, { year: 2022, value: 1367503, spike: true },
+          { year: 2023, value: 1338414 }, { year: 2024, value: 1369302 },
+        ],
+      },
+      dso: {
+        label: 'Days Sales Outstanding (DSO)', unit: 'days',
+        series: [
+          { year: 2018, value: 52.3 }, { year: 2019, value: 42.9 }, { year: 2020, value: 54.8 },
+          { year: 2021, value: 57.4 }, { year: 2022, value: 57.3 }, { year: 2023, value: 55.9 }, { year: 2024, value: 54.3 },
+        ],
+        note: 'DSO sits in a tight ~54\u201357 day band \u2014 healthy and stable for a trade-credit distributor. Reece collects from trade customers in under two months, with no deterioration as it scales.',
+      },
+      inventory: {
+        label: 'Inventories', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 457063 }, { year: 2018, value: 540564 }, { year: 2019, value: 955711, spike: true },
+          { year: 2020, value: 967510 }, { year: 2021, value: 1138117 }, { year: 2022, value: 1528411, spike: true },
+          { year: 2023, value: 1504892 }, { year: 2024, value: 1496348 },
+        ],
+        note: 'Inventory is the single largest working-capital line for a distributor. The FY22 build to A$1.53B (supply-chain stocking) was the main driver of that year\u2019s weak free cash flow; it has since stabilised.',
+      },
+      inventoryTurnover: {
+        label: 'Inventory Turnover', unit: 'x',
+        series: [
+          { year: 2018, value: 3.61 }, { year: 2019, value: 5.25 }, { year: 2020, value: 4.51 },
+          { year: 2021, value: 4.28 }, { year: 2022, value: 4.14 }, { year: 2023, value: 4.17 }, { year: 2024, value: 4.33 },
+        ],
+        note: 'Inventory turns ~4\u20134.5x per year \u2014 typical for a broadline plumbing/HVAC distributor holding deep SKU range for trade availability. Turnover dipped during the FY22 stocking build and has recovered.',
+      },
+      dio: {
+        label: 'Days Inventory Outstanding (DIO)', unit: 'days',
+        series: [
+          { year: 2018, value: 101 }, { year: 2019, value: 70 }, { year: 2020, value: 81 },
+          { year: 2021, value: 85 }, { year: 2022, value: 88 }, { year: 2023, value: 88 }, { year: 2024, value: 84 },
+        ],
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 919780 }, { year: 2018, value: 1490667, spike: true }, { year: 2019, value: 1960951, spike: true },
+          { year: 2020, value: 2903846, spike: true }, { year: 2021, value: 3012149 }, { year: 2022, value: 3123116 },
+          { year: 2023, value: 3219059 }, { year: 2024, value: 3207030 },
+        ],
+      },
+      ppeNet: {
+        label: 'Property, Plant & Equipment', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 528908 }, { year: 2018, value: 568714 }, { year: 2019, value: 664009 },
+          { year: 2020, value: 656932 }, { year: 2021, value: 624099 }, { year: 2022, value: 729405 },
+          { year: 2023, value: 786922 }, { year: 2024, value: 909369 },
+        ],
+        note: 'PP&E has grown steadily to A$909M as Reece invests in branches, distribution centres, and fleet \u2014 the physical backbone of the distribution network.',
+      },
+      goodwill: {
+        label: 'Intangible Assets (incl. goodwill)', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 205169 }, { year: 2018, value: 225741 }, { year: 2019, value: 1772166, spike: true },
+          { year: 2020, value: 1970942 }, { year: 2021, value: 1780630 }, { year: 2022, value: 1906340 },
+          { year: 2023, value: 2020888 }, { year: 2024, value: 1983219 },
+        ],
+        note: 'Intangibles exploded from A$226M (FY18) to A$1.77B (FY19) \u2014 the goodwill and acquired intangibles from the MORSCO purchase. This ~A$2B of intangibles is the accounting footprint of the US acquisition, and is exactly what gets stripped out to compute tangible equity.',
+      },
+      totalAssets: {
+        label: 'Total Assets', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 1687946 }, { year: 2018, value: 2324247, spike: true }, { year: 2019, value: 4474110, spike: true },
+          { year: 2020, value: 6343885, spike: true }, { year: 2021, value: 6118069 }, { year: 2022, value: 6607574 },
+          { year: 2023, value: 6924286 }, { year: 2024, value: 7094869 },
+        ],
+        note: 'Total assets nearly doubled in FY19 (MORSCO) and have grown to A$7.1B \u2014 a much larger balance sheet than the pre-2019 ANZ-only business.',
+      },
+      accountsPayable: {
+        label: 'Trade & Other Payables', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 353942 }, { year: 2018, value: 369557 }, { year: 2019, value: 699893, spike: true },
+          { year: 2020, value: 792977 }, { year: 2021, value: 984024 }, { year: 2022, value: 1215975, spike: true },
+          { year: 2023, value: 1179405 }, { year: 2024, value: 1240395 },
+        ],
+      },
+      dpo: {
+        label: 'Days Payables Outstanding (DPO)', unit: 'days',
+        series: [
+          { year: 2018, value: 73.4 }, { year: 2019, value: 49.7 }, { year: 2020, value: 62.9 },
+          { year: 2021, value: 71.9 }, { year: 2022, value: 72.8 }, { year: 2023, value: 69.2 }, { year: 2024, value: 68.0 },
+        ],
+        note: 'Reece pays suppliers in ~68\u201373 days \u2014 it uses supplier credit roughly in line with how long it holds inventory, a balanced position that doesn\u2019t over-stretch the supply base.',
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 424698 }, { year: 2018, value: 437194 }, { year: 2019, value: 793192, spike: true },
+          { year: 2020, value: 1075454, spike: true }, { year: 2021, value: 1258827 }, { year: 2022, value: 1460061 },
+          { year: 2023, value: 1421028 }, { year: 2024, value: 1479012 },
+        ],
+      },
+      currentRatio: {
+        label: 'Current Liabilities \u00f7 Current Assets', unit: 'x',
+        series: [
+          { year: 2017, value: 0.46 }, { year: 2018, value: 0.29 }, { year: 2019, value: 0.40 },
+          { year: 2020, value: 0.37 }, { year: 2021, value: 0.42 }, { year: 2022, value: 0.47 },
+          { year: 2023, value: 0.44 }, { year: 2024, value: 0.46 },
+        ],
+        note: 'Current liabilities are consistently well under half of current assets (~0.4\u20130.5x) \u2014 i.e. current assets cover current liabilities ~2x over. Comfortable short-term liquidity throughout. (Note: this is the inverse of the conventional current ratio; lower is better here.)',
+      },
+      longTermDebt: {
+        label: 'Interest-Bearing Liabilities', unit: 'M AUD',
+        series: [
+          { year: 2019, value: 1593041 }, { year: 2020, value: 1747219 }, { year: 2021, value: 1319173 },
+          { year: 2022, value: 1090088 }, { year: 2023, value: 1097490 }, { year: 2024, value: 859322 },
+        ],
+        note: 'Interest-bearing debt peaked at ~A$1.75B in FY20 (funding the US build through the pandemic) and has been steadily paid down to A$859M by FY24 \u2014 a deliberate deleveraging. (Not separately disclosed pre-FY19.)',
+      },
+      debtToEquity: {
+        label: 'Total Liabilities \u00f7 Equity (Debt-to-Equity)', unit: 'x',
+        series: [
+          { year: 2017, value: 0.46 }, { year: 2018, value: 0.24 }, { year: 2019, value: 1.25, spike: true },
+          { year: 2020, value: 1.31, spike: true }, { year: 2021, value: 1.12 }, { year: 2022, value: 0.99 },
+          { year: 2023, value: 0.91 }, { year: 2024, value: 0.83 },
+        ],
+        note: 'D/E jumped above 1.0x in FY19\u201321 (MORSCO debt) and has fallen steadily to 0.83x \u2014 the balance sheet is deleveraging every year. Pre-MORSCO it was barely geared (0.24x). The trajectory is the right direction for a Buffett-style holder.',
+      },
+      ltDebtToEquity: {
+        label: 'Non-Current Liabilities \u00f7 Equity', unit: 'x',
+        series: [
+          { year: 2017, value: 0.09 }, { year: 2018, value: 0.00 }, { year: 2019, value: 0.85, spike: true },
+          { year: 2020, value: 0.92, spike: true }, { year: 2021, value: 0.68 }, { year: 2022, value: 0.55 },
+          { year: 2023, value: 0.52 }, { year: 2024, value: 0.45 },
+        ],
+        note: 'Long-term gearing peaked near 0.9x in FY20 and has halved to 0.45x \u2014 consistent, disciplined debt reduction.',
+      },
+      ltDebtToNetIncome: {
+        label: 'Non-Current Liabilities \u00f7 Profit (Debt / Profit)', unit: 'x',
+        series: [
+          { year: 2017, value: 0.50 }, { year: 2018, value: 0.03 }, { year: 2019, value: 7.55, spike: true },
+          { year: 2020, value: 10.96, spike: true }, { year: 2021, value: 9.16, spike: true }, { year: 2022, value: 3.28 },
+          { year: 2023, value: 4.13 }, { year: 2024, value: 4.17 },
+        ],
+        note: 'Debt relative to profit spiked to ~11x in FY20 (high debt + COVID-depressed comprehensive income) and has fallen to ~4x \u2014 a manageable level. The FY19\u201321 readings look alarming but reflect the acquisition-debt peak coinciding with low-profit years; the deleveraging since is the key signal.',
+      },
+      totalLiabilities: {
+        label: 'Total Liabilities', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 529645 }, { year: 2018, value: 443409 }, { year: 2019, value: 2482530, spike: true },
+          { year: 2020, value: 3593999, spike: true }, { year: 2021, value: 3229960 }, { year: 2022, value: 3286705 },
+          { year: 2023, value: 3298862 }, { year: 2024, value: 3210726 },
+        ],
+        note: 'Total liabilities jumped with MORSCO (FY19\u201320) and have been flat-to-declining since as Reece pays down debt while equity grows \u2014 driving the falling debt-to-equity ratio.',
+      },
+      additionalPaidInCapital: {
+        label: 'Contributed Equity', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 9960 }, { year: 2018, value: 604349, spike: true }, { year: 2019, value: 604849 },
+          { year: 2020, value: 1246918, spike: true }, { year: 2021, value: 1246918 }, { year: 2022, value: 1246918 },
+          { year: 2023, value: 1246918 }, { year: 2024, value: 1246918 },
+        ],
+        note: 'Contributed equity stepped up twice \u2014 the FY18 raise and the FY20 raise \u2014 both to fund the US expansion. It has been flat at A$1.25B since FY20, meaning no further shareholder dilution: growth since has been funded by retained earnings and cash flow.',
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 1144593 }, { year: 2018, value: 1268617 }, { year: 2019, value: 1357151 },
+          { year: 2020, value: 1472584 }, { year: 2021, value: 1680661 }, { year: 2022, value: 1947182 },
+          { year: 2023, value: 2186212 }, { year: 2024, value: 2443887 },
+        ],
+        note: 'Retained earnings compounded steadily from A$1.14B to A$2.44B \u2014 the engine of self-funded growth. Reece keeps ~60\u201370% of earnings and reinvests them.',
+      },
+      retainedEarningsTest: {
+        period: 'FY2017 \u2192 FY2024',
+        startYear: 2017,
+        endYear: 2024,
+        retainedEarningsStart: 1145,
+        retainedEarningsEnd: 2444,
+        retainedEarningsIncrease: 1.30,
+        marketCapIncrease: 5.54,
+        multiplier: 4.26,
+        verdict: 'Buffett\u2019s test: for every A$1 of earnings retained (not paid out), how much market value did it create? From FY17\u2192FY24, Reece retained ~A$1.30B of earnings and market cap rose ~A$5.54B \u2014 a 4.26x return on retained earnings. Every A$1 management kept turned into ~A$4.26 of market value. A strong pass: capital is being retained and reinvested productively.',
+      },
+      shareholderEquity: {
+        label: 'Net Assets / Total Shareholder Equity', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 1158301 }, { year: 2018, value: 1880838, spike: true }, { year: 2019, value: 1991580 },
+          { year: 2020, value: 2749886, spike: true }, { year: 2021, value: 2888109 }, { year: 2022, value: 3320869 },
+          { year: 2023, value: 3625424 }, { year: 2024, value: 3884143 },
+        ],
+        note: 'Shareholder equity tripled from A$1.16B (FY17) to A$3.88B (FY24) \u2014 the combination of capital raises (FY18, FY20) and steady retained-earnings compounding.',
+      },
+      investedCapital: {
+        label: 'Invested Capital', unit: 'M AUD',
+        series: [
+          { year: 2017, value: 437800 }, { year: 2018, value: 507867 }, { year: 2019, value: 2959672, spike: true },
+          { year: 2020, value: 3836209, spike: true }, { year: 2021, value: 3647912 }, { year: 2022, value: 4313140 },
+          { year: 2023, value: 4173074 }, { year: 2024, value: 4116264 },
+        ],
+        note: 'Invested capital (total liabilities + contributed equity \u2212 cash) jumped with MORSCO and sits ~A$4.1B. The slight decline since FY22 reflects debt paydown \u2014 Reece is generating returns on a stable-to-shrinking capital base, which lifts ROIC.',
+      },
+      returns: {
+        roe: [
+          { year: 2017, value: 18.2 }, { year: 2018, value: 12.2 }, { year: 2019, value: 11.2 }, { year: 2020, value: 8.4 },
+          { year: 2021, value: 7.4 }, { year: 2022, value: 16.8 }, { year: 2023, value: 12.6 }, { year: 2024, value: 10.7 },
+        ],
+        roic: [
+          { year: 2017, value: 48.4 }, { year: 2018, value: 44.1 }, { year: 2019, value: 8.8 }, { year: 2020, value: 8.5 },
+          { year: 2021, value: 10.9 }, { year: 2022, value: 10.7 }, { year: 2023, value: 11.3 }, { year: 2024, value: 12.4 },
+        ],
+        roa: [
+          { year: 2017, value: 12.5 }, { year: 2018, value: 9.8 }, { year: 2019, value: 5.0 }, { year: 2020, value: 3.6 },
+          { year: 2021, value: 3.5 }, { year: 2022, value: 8.4 }, { year: 2023, value: 6.6 }, { year: 2024, value: 5.9 },
+        ],
+        averages: { roe: 12.2, roic: 19.4, roa: 6.9 },
+        note: 'ROE (on total equity, using comprehensive income) runs ~7\u201318%; ROIC has recovered to ~12% as invested capital stabilises and NOPAT grows. The FY17\u201318 ROIC of 44\u201348% reflects a tiny pre-MORSCO capital base \u2014 not a sustainable run-rate. The trend that matters: ROIC rising every year since FY20 (8.5% \u2192 12.4%) as the US acquisition starts earning its keep.',
+      },
+      ccc: {
+        label: 'Cash Conversion Cycle (DIO + DSO \u2212 DPO)', unit: 'days',
+        series: [
+          { year: 2018, value: 79.9 }, { year: 2019, value: 63.2 }, { year: 2020, value: 72.9 },
+          { year: 2021, value: 70.5 }, { year: 2022, value: 72.5 }, { year: 2023, value: 74.7 }, { year: 2024, value: 70.3 },
+        ],
+        note: 'Cash conversion cycle sits ~63\u201380 days \u2014 cash is tied up for ~70 days between paying for inventory and collecting from customers. Stable for a distributor; inventory is the dominant component (~84 days), partly offset by ~68 days of supplier credit.',
+      },
+      bookValuePerShare: {
+        label: 'Book Value Per Share', unit: 'AUD per share',
+        series: [
+          { year: 2017, value: 2.33 }, { year: 2018, value: 3.74 }, { year: 2019, value: 3.55, down: true },
+          { year: 2020, value: 4.79 }, { year: 2021, value: 4.47, down: true }, { year: 2022, value: 5.14 },
+          { year: 2023, value: 5.61 }, { year: 2024, value: 6.01 },
+        ],
+        cagr2015_2024: 14.6,
+        cagrLabel: 'CAGR 2017-2024',
+      },
+      tangibleEquity: {
+        note: 'Tangible equity = total equity minus intangible assets (the ~A$2B of MORSCO goodwill/intangibles). ROTE (net profit \u00f7 tangible equity) reveals how hard the REAL, non-accounting capital works.',
+        rote2024: 22.05,
+        subLabel: 'A$419M Net Profit on A$1,900,924K Tangible Equity (FY24)',
+        rows: [
+          { year: 2024, equity: 3884143, goodwill: 0, intangibles: 1983219, tangible: 1900924 },
+          { year: 2023, equity: 3625424, goodwill: 0, intangibles: 2020888, tangible: 1604536 },
+          { year: 2022, equity: 3320869, goodwill: 0, intangibles: 1906340, tangible: 1414529 },
+          { year: 2021, equity: 2888109, goodwill: 0, intangibles: 1780630, tangible: 1107479 },
+          { year: 2020, equity: 2749886, goodwill: 0, intangibles: 1970942, tangible: 778944 },
+          { year: 2019, equity: 1991580, goodwill: 0, intangibles: 1772166, tangible: 219414 },
+          { year: 2018, equity: 1880838, goodwill: 0, intangibles: 225741, tangible: 1655097 },
+          { year: 2017, equity: 1158301, goodwill: 0, intangibles: 205169, tangible: 953132 },
+        ],
+        interpretation: 'This business delivers elite returns on tangible equity \u2014 20\u201330% ROTE in nearly every year (22% in FY24), Buffett/Coke/Hershey-level territory. The FY19 reading of 92% is an anomaly: tangible equity was momentarily tiny (A$219M) right after the MORSCO acquisition adjustment, so the ratio exploded \u2014 not "fake", just a small denominator. Stripping that one-off, the stable high-20s ROTE signals strong pricing power, brand strength, low reinvestment needs, and high compounding quality \u2014 the profile of a classic defensible consumer-distribution franchise.',
+      },
+
+      // === REH-specific extras (custom render) ===
+      tangibleRoic: {
+        label: 'Tangible ROIC (NOPAT \u00f7 Tangible Invested Capital)',
+        rows: [
+          { year: 2024, nopat: 511000, ic: 4116264, intangibles: 1983219, tangibleIc: 2133045, roic: 23.9 },
+          { year: 2023, nopat: 473700, ic: 4173074, intangibles: 2020888, tangibleIc: 2152186, roic: 22.0 },
+          { year: 2022, nopat: 461300, ic: 4313140, intangibles: 1906340, tangibleIc: 2406800, roic: 19.2 },
+          { year: 2021, nopat: 398000, ic: 3647912, intangibles: 1780630, tangibleIc: 1867282, roic: 21.3 },
+          { year: 2020, nopat: 327000, ic: 3836209, intangibles: 1970942, tangibleIc: 1865267, roic: 17.5 },
+          { year: 2019, nopat: 262000, ic: 2959672, intangibles: 1772166, tangibleIc: 1187506, roic: 22.1 },
+          { year: 2018, nopat: 224000, ic: 507867, intangibles: 225741, tangibleIc: 282126, roic: 79.4 },
+          { year: 2017, nopat: 212000, ic: 437800, intangibles: 205169, tangibleIc: 232631, roic: 91.1 },
+        ],
+        note: 'Stripping intangibles from invested capital reveals the true return on tangible capital deployed: ~20\u201324% in recent years (23.9% FY24). Like ROTE, the FY17\u201318 figures (79\u201391%) reflect a tiny tangible base pre-MORSCO. The recent ~20%+ tangible ROIC is the real, durable signal \u2014 the operating business earns excellent returns on the physical capital it actually uses.',
+      },
+      priceToBook: {
+        label: 'Price-to-Book Ratio',
+        avgExclOutlier: 3.45,
+        currentNote: 'At the current ~A$12 share price (20 Oct 2025) against FY24 BVPS of A$6.01, Reece trades at ~2.0x book \u2014 the second-lowest price-to-book in 8 years. Only FY18 (0.67x, a depressed year) was cheaper on this measure.',
+        rows: [
+          { year: 2024, bvps: 6.01, price: 22.0, pb: 3.66, underAvg: false },
+          { year: 2023, bvps: 5.61, price: 17.5, pb: 3.12, underAvg: true },
+          { year: 2022, bvps: 5.14, price: 19.5, pb: 3.79, underAvg: false },
+          { year: 2021, bvps: 4.47, price: 20.0, pb: 4.48, underAvg: false },
+          { year: 2020, bvps: 4.79, price: 12.5, pb: 2.61, underAvg: true },
+          { year: 2019, bvps: 3.55, price: 10.0, pb: 2.82, underAvg: true },
+          { year: 2018, bvps: 3.74, price: 2.5, pb: 0.67, underAvg: true },
+          { year: 2017, bvps: 2.33, price: 8.5, pb: 3.65, underAvg: false },
+        ],
       },
     },
   },
@@ -22997,6 +23571,121 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </div>
                           )}
+
+                          {/* REH INCOME EXTRAS (custom) */}
+                          {IS.depreciation && (
+                            <>
+                              <SectionHeading>// DEPRECIATION</SectionHeading>
+                              <TimeSeriesTable data={IS.depreciation} />
+                              {IS.depreciation.toGrossProfit && <TimeSeriesTable data={{ label: 'Depreciation as % of Gross Profit', unit: '%', series: IS.depreciation.toGrossProfit }} />}
+                              {IS.depreciation.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.depreciation.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {IS.impairment && (
+                            <>
+                              <SectionHeading>// IMPAIRMENT</SectionHeading>
+                              <TimeSeriesTable data={IS.impairment} />
+                              {IS.impairment.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.impairment.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {IS.comprehensiveIncome && (
+                            <>
+                              <SectionHeading>// TOTAL COMPREHENSIVE INCOME</SectionHeading>
+                              <TimeSeriesTable data={IS.comprehensiveIncome} />
+                              {IS.comprehensiveIncome.cagr && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>CAGR 2017-2024 —</span> {IS.comprehensiveIncome.cagr} per year.
+                                </div>
+                              )}
+                              {IS.comprehensiveIncome.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.comprehensiveIncome.note}
+                                </div>
+                              )}
+                              {IS.comprehensiveIncome.ociComponents && (
+                                <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'3px',overflow:'hidden',marginBottom:'12px'}}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// OCI COMPONENTS (the FX + hedge noise)</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'4px 12px 10px',borderTop:`0.5px solid ${amberGlow}`}}>
+                                    {IS.comprehensiveIncome.ociComponents.map((c, i) => (
+                                      <TimeSeriesTable key={i} data={{ label: c.label, unit: 'M AUD', series: c.series }} />
+                                    ))}
+                                  </div>
+                                </details>
+                              )}
+                            </>
+                          )}
+
+                          {IS.sharesOutstanding && (
+                            <>
+                              <SectionHeading>// SHARES OUTSTANDING</SectionHeading>
+                              <TimeSeriesTable data={IS.sharesOutstanding} />
+                              {IS.sharesOutstanding.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {IS.sharesOutstanding.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {IS.peHistory && IS.peHistory.rows && (
+                            <>
+                              <SectionHeading>// HISTORICAL P/E · VALUATION</SectionHeading>
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                {IS.peHistory.currentNote && (
+                                  <div style={{padding:'12px 14px',background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.45)',borderLeft:'2px solid rgba(34,197,94,0.95)',borderRadius:'3px',marginBottom:'12px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>◆ CURRENT ~24×</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{IS.peHistory.currentNote}</div>
+                                  </div>
+                                )}
+                                <div style={{overflowX:'auto'}}>
+                                  <table style={{width:'100%',minWidth:'480px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                        <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>AVG PRICE</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EPS</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px'}}>P/E</th>
+                                        <th style={{textAlign:'center',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>&lt;31×</th>
+                                        <th style={{textAlign:'center',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>&lt;29×</th>
+                                        <th style={{textAlign:'center',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>&lt;24×</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {IS.peHistory.rows.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
+                                          <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>${r.price.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>${r.eps.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color: r.pe <= 29 ? 'rgba(34,197,94,0.95)' : amber,fontWeight:700}}>{r.pe.toFixed(1)}×</td>
+                                          <td style={{padding:'4px 8px',textAlign:'center',color: r.under31 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.7)'}}>{r.under31 ? '✓' : '✗'}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'center',color: r.under29 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.7)'}}>{r.under29 ? '✓' : '✗'}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'center',color: r.under24 ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.7)'}}>{r.under24 ? '✓' : '✗'}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {(IS.peHistory.avgExcl2018 || IS.peHistory.avgExcl2018And2021) && (
+                                  <div style={{marginTop:'10px',fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                    <span style={{color:amber,fontWeight:600}}>Average P/E —</span> {IS.peHistory.avgExcl2018}× (ex-2018) · {IS.peHistory.avgExcl2018And2021}× (ex-2018 &amp; 2021). The current ~24× sits below both.
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
                         </div>
                       );
                     };
@@ -23111,22 +23800,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             {br.branches && (
                               <>
                                 <SectionHeading>// BRANCH NETWORK</SectionHeading>
-                                {br.branches.note && <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'8px',lineHeight:1.5,letterSpacing:'0.3px'}}>{br.branches.note}</div>}
                                 <div style={{overflowX:'auto',marginBottom:'8px'}}>
                                   <table style={{width:'100%',minWidth:'420px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
                                     <thead>
                                       <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
                                         <th style={{textAlign:'left',padding:'5px 8px',color:amber,letterSpacing:'1px',fontWeight:700,fontSize:'8px'}}>REGION</th>
-                                        {br.branches.anz.map(d => <th key={d.year} style={{textAlign:'right',padding:'5px 8px',color:amberDim,fontWeight:600,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>{String(d.year).slice(2)}{d.star && <span style={{color:'rgba(245,158,11,0.9)'}}> ⭐</span>}</th>)}
-                                        <th style={{textAlign:'right',padding:'5px 8px',color:'rgba(34,197,94,0.95)',fontWeight:700,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>+SINCE FY20</th>
+                                        {br.branches.anz.map(d => <th key={d.year} style={{textAlign:'right',padding:'5px 8px',color:amberDim,fontWeight:600,fontSize:'8px',borderLeft:`0.5px solid ${amberGlow}`}}>{String(d.year).slice(2)}</th>)}
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {[{label:'🇦🇺 ANZ',data:br.branches.anz,added:br.branches.anzAdded},{label:'🇺🇸 US',data:br.branches.us,added:br.branches.usAdded}].map((row,ri) => (
+                                      {[{label:'🇦🇺 ANZ',data:br.branches.anz},{label:'🇺🇸 US',data:br.branches.us}].map((row,ri) => (
                                         <tr key={ri} style={{borderBottom:'0.5px solid rgba(245,158,11,0.05)'}}>
                                           <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:700,letterSpacing:'0.2px',whiteSpace:'nowrap'}}>{row.label}</td>
-                                          {row.data.map((d,di) => <td key={di} style={{padding:'5px 8px',textAlign:'right',color: d.star ? amber : 'rgba(224,234,255,0.82)',fontWeight: d.star ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>{d.value}</td>)}
-                                          <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(34,197,94,0.95)',fontWeight:700,borderLeft:`0.5px solid ${amberGlow}`}}>+{row.added}</td>
+                                          {row.data.map((d,di) => <td key={di} style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.82)',fontWeight:500,borderLeft:`0.5px solid ${amberGlow}`}}>{d.value}</td>)}
                                         </tr>
                                       ))}
                                     </tbody>
@@ -23717,7 +24403,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <TimeSeriesTable data={BS.bookValuePerShare} />
                               {BS.bookValuePerShare.cagr2015_2024 && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
-                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>CAGR 2015-2024 —</span> {BS.bookValuePerShare.cagr2015_2024}% per year. Outstanding compounding rate.
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>{BS.bookValuePerShare.cagrLabel || 'CAGR 2015-2024'} —</span> {BS.bookValuePerShare.cagr2015_2024}% per year. Outstanding compounding rate.
                                 </div>
                               )}
                             </>
@@ -23860,7 +24546,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
                                   <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// 2024 ROTE</div>
                                   <div style={{fontSize:'28px',color:amber,fontFamily:'monospace',fontWeight:700}}>{te.rote2024.toLocaleString()}%</div>
-                                  <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>$2.2B Net Income on $134M Tangible Equity</div>
+                                  <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.5px',fontStyle:'italic'}}>{te.subLabel || '$2.2B Net Income on $134M Tangible Equity'}</div>
                                 </div>
                                 <div style={{overflowX:'auto',marginBottom:'10px'}}>
                                   <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
@@ -23892,6 +24578,90 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </div>
                             );
                           })()}
+
+                          {/* REH TANGIBLE ROIC (custom) */}
+                          {BS.tangibleRoic && BS.tangibleRoic.rows && (
+                            <>
+                              <SectionHeading>// TANGIBLE ROIC</SectionHeading>
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                                  <table style={{width:'100%',minWidth:'460px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                        <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>NOPAT</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>INV. CAP</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>– INTANG.</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>= TANG. IC</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px'}}>ROIC</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {BS.tangibleRoic.rows.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
+                                          <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>{r.nopat.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.ic.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.6)'}}>{r.intangibles.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.85)',fontWeight:600}}>{r.tangibleIc.toLocaleString()}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color: r.roic >= 15 ? 'rgba(34,197,94,0.95)' : amber,fontWeight:700}}>{r.roic}%</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {BS.tangibleRoic.note && (
+                                  <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                    <span style={{color:amber,fontWeight:600}}>Note —</span> {BS.tangibleRoic.note}
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          {/* REH PRICE-TO-BOOK (custom) */}
+                          {BS.priceToBook && BS.priceToBook.rows && (
+                            <>
+                              <SectionHeading>// PRICE-TO-BOOK · VALUATION</SectionHeading>
+                              <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                                {BS.priceToBook.currentNote && (
+                                  <div style={{padding:'12px 14px',background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.45)',borderLeft:'2px solid rgba(34,197,94,0.95)',borderRadius:'3px',marginBottom:'12px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>◆ CURRENT</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{BS.priceToBook.currentNote}</div>
+                                  </div>
+                                )}
+                                <div style={{overflowX:'auto'}}>
+                                  <table style={{width:'100%',minWidth:'420px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                        <th style={{textAlign:'left',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>BVPS</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>AVG PRICE</th>
+                                        <th style={{textAlign:'right',padding:'5px 8px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px'}}>P/B</th>
+                                        <th style={{textAlign:'center',padding:'5px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>VS AVG</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {BS.priceToBook.rows.map((r, i) => (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)'}}>
+                                          <td style={{padding:'4px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.bvps.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color:'rgba(224,234,255,0.7)'}}>${r.price.toFixed(2)}</td>
+                                          <td style={{padding:'4px 8px',textAlign:'right',color: r.underAvg ? 'rgba(34,197,94,0.95)' : 'rgba(224,234,255,0.85)',fontWeight:700}}>{r.pb.toFixed(2)}×</td>
+                                          <td style={{padding:'4px 8px',textAlign:'center',color: r.underAvg ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.8)',fontWeight:700}}>{r.underAvg ? '✓ under' : '✗ over'}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                {BS.priceToBook.avgExclOutlier && (
+                                  <div style={{marginTop:'10px',fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',letterSpacing:'0.3px'}}>
+                                    <span style={{color:amber,fontWeight:600}}>Average P/B (excl. FY18 outlier) —</span> {BS.priceToBook.avgExclOutlier}× · "under avg" = cheaper than this mean.
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
 
                           {/* PENSION PLANS — U.S. + Non-U.S. investment strategy & asset table */}
                           {BS.pensionPlans && (
