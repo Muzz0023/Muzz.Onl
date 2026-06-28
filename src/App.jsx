@@ -6527,22 +6527,175 @@ const PEP_BREAKDOWN = {
     // ════════════════════════════════════════════════════════════════
     segments: {
       byCountry: {
-        period: '2015 \u2013 2024',
-        description: 'PepsiCo reports net revenue by country. The U.S. is the dominant market at ~56% of sales, with the remaining ~44% spread across 200+ countries. No single international market exceeds ~8% \u2014 a diversified but U.S.-anchored geographic footprint.',
+        period: '2013 \u2013 2024',
+        description: 'PepsiCo reports net revenue (and long-lived assets) by country. The U.S. is the dominant market at ~56% of sales, with the remaining ~44% spread across 200+ countries. No single international market exceeds ~8% \u2014 a diversified but U.S.-anchored geographic footprint. Full year-by-year revenue and share of total sales shown below for every disclosed country.',
         usVsIntl: { us: 56.26, intl: 43.74, year: 2024 },
         countries: [
-          { name: 'United States',     flag: '🇺🇸', featured: true, rev2015: 35266, rev2020: 40800, rev2024: 51668, share2024: 56.26, note: 'The anchor market. US revenue grew from $35B (2015) to $52B (2024). Share has held remarkably steady at 56\u201358% for a decade \u2014 PEP is fundamentally a US business with global reach.' },
-          { name: 'Mexico',            flag: '🇲🇽', rev2015: 3687,  rev2020: 3924,  rev2024: 7123,  share2024: 7.75, note: 'PEP\u2019s #2 market and fastest grower \u2014 nearly doubled from 2020 to 2024 (Sabritas, Gamesa). The largest international contributor at ~8%.' },
-          { name: 'Russia',            flag: '🇷🇺', rev2015: 2797,  rev2020: 3009,  rev2024: 3880,  share2024: 4.22, note: 'A meaningful ~4% of revenue (Wimm-Bill-Dann dairy + snacks). A geopolitical risk flagged in the Risks tab \u2014 ~40% of FX translation loss comes from the ruble.' },
-          { name: 'Canada',            flag: '🇨🇦', rev2015: 2677,  rev2020: 2989,  rev2024: 3764,  share2024: 4.10, note: 'Steady, low-risk developed market. Grown consistently to ~$3.8B.' },
-          { name: 'China',            flag: '🇨🇳', rev2015: null, rev2020: 1732, rev2024: 2709, share2024: 2.95, note: 'Not separately disclosed before 2019. Grew rapidly from $1.3B (2019) to $2.7B (2024) \u2014 a key emerging-market growth vector.' },
-          { name: 'United Kingdom',    flag: '🇬🇧', rev2015: 1966,  rev2020: 1882,  rev2024: 2063,  share2024: 2.25, note: 'Mature market (Walkers crisps + Pepsi). Roughly flat over the decade at ~$2B.' },
-          { name: 'South Africa',      flag: '🇿🇦', rev2015: null,  rev2020: 1282,  rev2024: 1859,  share2024: 2.02, note: 'Emerged as a disclosed market in 2019\u201320 after the Pioneer Foods acquisition. ~$1.9B and growing.' },
-          { name: 'Brazil',            flag: '🇧🇷', rev2015: 1289,  rev2020: null,  rev2024: 1765,  share2024: 1.92, note: 'Disclosed intermittently. ~$1.8B \u2014 a meaningful Latin American foods market.' },
-          { name: 'All other countries', flag: '🌍', rev2015: 15374, rev2020: 14754, rev2024: 17023, share2024: 18.53, note: 'The long tail \u2014 ~$17B spread across 190+ remaining markets. No single country here is large enough to break out, underscoring how diversified PEP\u2019s international footprint is.' },
+          {
+            name: 'United States', flag: '🇺🇸', featured: true,
+            rows: [
+              { year: 2024, revenue: 51668, share: 56.26, down: true },
+              { year: 2023, revenue: 52165, share: 57.05 },
+              { year: 2022, revenue: 49390, share: 57.18 },
+              { year: 2021, revenue: 44545, share: 56.05 },
+              { year: 2020, revenue: 40800, share: 57.98 },
+              { year: 2019, revenue: 38644, share: 57.55 },
+              { year: 2018, revenue: 37148, share: 57.45 },
+              { year: 2017, revenue: 36546, share: 57.52, down: true },
+              { year: 2016, revenue: 36732, share: 58.50 },
+              { year: 2015, revenue: 35266, share: 55.95 },
+              { year: 2014, revenue: 34219, share: 51.32 },
+              { year: 2013, revenue: 33626, share: 50.62 },
+            ],
+            note: 'The anchor market. US revenue grew from $33.6B (2013) to $51.7B (2024). Share rose from ~51% (2013\u201314) to a steady 56\u201358% from 2015 onward \u2014 PEP is fundamentally a US business with global reach.',
+          },
+          {
+            name: 'Mexico', flag: '🇲🇽',
+            rows: [
+              { year: 2024, revenue: 7123, share: 7.75 },
+              { year: 2023, revenue: 7011, share: 7.67 },
+              { year: 2022, revenue: 5472, share: 6.34 },
+              { year: 2021, revenue: 4580, share: 5.76 },
+              { year: 2020, revenue: 3924, share: 5.58, down: true },
+              { year: 2019, revenue: 4190, share: 6.24 },
+              { year: 2018, revenue: 3878, share: 6.00 },
+              { year: 2017, revenue: 3650, share: 5.75 },
+              { year: 2016, revenue: 3431, share: 5.46, down: true },
+              { year: 2015, revenue: 3687, share: 5.85, down: true },
+              { year: 2014, revenue: 4113, share: 6.17, down: true },
+              { year: 2013, revenue: 4347, share: 6.55 },
+            ],
+            note: 'PEP\u2019s #2 market and fastest recent grower \u2014 nearly doubled from 2020 to 2024 (Sabritas, Gamesa). Dipped 2014\u201316, then accelerated. The largest international contributor at ~8%.',
+          },
+          {
+            name: 'Russia', flag: '🇷🇺',
+            rows: [
+              { year: 2024, revenue: 3880, share: 4.22 },
+              { year: 2023, revenue: 3566, share: 3.90, down: true },
+              { year: 2022, revenue: 4118, share: 4.77 },
+              { year: 2021, revenue: 3426, share: 4.31 },
+              { year: 2020, revenue: 3009, share: 4.28, down: true },
+              { year: 2019, revenue: 3263, share: 4.86 },
+              { year: 2018, revenue: 3191, share: 4.94, down: true },
+              { year: 2017, revenue: 3232, share: 5.09 },
+              { year: 2016, revenue: 2648, share: 4.22, down: true },
+              { year: 2015, revenue: 2797, share: 4.44, down: true },
+              { year: 2014, revenue: 4414, share: 6.62, down: true },
+              { year: 2013, revenue: 4908, share: 7.39 },
+            ],
+            note: 'A meaningful ~4% of revenue (Wimm-Bill-Dann dairy + snacks). Revenue more than halved from $4.9B (2013) to ~$2.6B (2016) on ruble devaluation, then recovered to ~$3.9B. A geopolitical risk flagged in the Risks tab \u2014 ~40% of FX translation loss comes from the ruble.',
+          },
+          {
+            name: 'Canada', flag: '🇨🇦',
+            rows: [
+              { year: 2024, revenue: 3764, share: 4.10 },
+              { year: 2023, revenue: 3722, share: 4.07 },
+              { year: 2022, revenue: 3536, share: 4.09 },
+              { year: 2021, revenue: 3405, share: 4.28 },
+              { year: 2020, revenue: 2989, share: 4.25 },
+              { year: 2019, revenue: 2831, share: 4.21 },
+              { year: 2018, revenue: 2736, share: 4.23 },
+              { year: 2017, revenue: 2691, share: 4.24, down: true },
+              { year: 2016, revenue: 2692, share: 4.29 },
+              { year: 2015, revenue: 2677, share: 4.25, down: true },
+              { year: 2014, revenue: 3022, share: 4.53, down: true },
+              { year: 2013, revenue: 3195, share: 4.81 },
+            ],
+            note: 'Steady, low-risk developed market. Dipped 2014\u201315 on FX, then grown consistently to ~$3.8B at a stable ~4% share.',
+          },
+          {
+            name: 'China', flag: '🇨🇳',
+            rows: [
+              { year: 2024, revenue: 2709, share: 2.95 },
+              { year: 2023, revenue: 2703, share: 2.96, down: true },
+              { year: 2022, revenue: 2752, share: 3.19 },
+              { year: 2021, revenue: 2679, share: 3.37 },
+              { year: 2020, revenue: 1732, share: 2.46 },
+              { year: 2019, revenue: 1300, share: 1.94 },
+            ],
+            note: 'Not separately disclosed before 2019. Grew rapidly from $1.3B (2019) to $2.7B (2024) \u2014 a key emerging-market growth vector. (No disclosure 2013\u201318.)',
+          },
+          {
+            name: 'United Kingdom', flag: '🇬🇧',
+            rows: [
+              { year: 2024, revenue: 2063, share: 2.25 },
+              { year: 2023, revenue: 1946, share: 2.13 },
+              { year: 2022, revenue: 1844, share: 2.14, down: true },
+              { year: 2021, revenue: 2102, share: 2.65 },
+              { year: 2020, revenue: 1882, share: 2.67 },
+              { year: 2019, revenue: 1723, share: 2.56, down: true },
+              { year: 2018, revenue: 1743, share: 2.70 },
+              { year: 2017, revenue: 1650, share: 2.60, down: true },
+              { year: 2016, revenue: 1737, share: 2.77, down: true },
+              { year: 2015, revenue: 1966, share: 3.12, down: true },
+              { year: 2014, revenue: 2174, share: 3.26 },
+              { year: 2013, revenue: 2115, share: 3.19 },
+            ],
+            note: 'Mature market (Walkers crisps + Pepsi). Declined from $2.2B (2014) to ~$1.65B (2017) on FX/Brexit, then recovered to ~$2.1B. Share has drifted down from ~3.2% to ~2.3% as other markets grew faster.',
+          },
+          {
+            name: 'South Africa', flag: '🇿🇦',
+            rows: [
+              { year: 2024, revenue: 1859, share: 2.02 },
+              { year: 2023, revenue: 1707, share: 1.87, down: true },
+              { year: 2022, revenue: 1837, share: 2.13, down: true },
+              { year: 2021, revenue: 2008, share: 2.53 },
+              { year: 2020, revenue: 1282, share: 1.82 },
+              { year: 2019, revenue: 405, share: 0.60 },
+            ],
+            note: 'Emerged as a disclosed market in 2019\u201320 after the Pioneer Foods acquisition (note the jump from $405M in 2019 to $1.28B in 2020). ~$1.9B and growing. (No disclosure 2013\u201318.)',
+          },
+          {
+            name: 'Brazil', flag: '🇧🇷',
+            rows: [
+              { year: 2024, revenue: 1765, share: 1.92, down: true },
+              { year: 2023, revenue: 1779, share: 1.95 },
+              { year: 2022, revenue: 1617, share: 1.87 },
+              { year: 2018, revenue: 1335, share: 2.06, down: true },
+              { year: 2017, revenue: 1427, share: 2.25 },
+              { year: 2016, revenue: 1305, share: 2.08 },
+              { year: 2015, revenue: 1289, share: 2.04, down: true },
+              { year: 2014, revenue: 1790, share: 2.68, down: true },
+              { year: 2013, revenue: 1835, share: 2.76 },
+            ],
+            note: 'Disclosed intermittently \u2014 reported 2013\u201318, dropped 2019\u201321, then re-disclosed from 2022. ~$1.8B \u2014 a meaningful Latin American foods market.',
+          },
+          {
+            name: 'All other countries', flag: '🌍',
+            rows: [
+              { year: 2024, revenue: 17023, share: 18.53 },
+              { year: 2023, revenue: 16872, share: 18.45 },
+              { year: 2022, revenue: 15826, share: 18.32, down: true },
+              { year: 2021, revenue: 16729, share: 21.05 },
+              { year: 2020, revenue: 14754, share: 20.97, down: true },
+              { year: 2019, revenue: 14805, share: 22.05 },
+              { year: 2018, revenue: 14630, share: 22.63 },
+              { year: 2017, revenue: 14329, share: 22.55 },
+              { year: 2016, revenue: 14254, share: 22.70, down: true },
+              { year: 2015, revenue: 15374, share: 24.38, down: true },
+              { year: 2014, revenue: 16951, share: 25.42 },
+              { year: 2013, revenue: 16389, share: 24.68 },
+            ],
+            note: 'The long tail \u2014 ~$17B spread across 190+ remaining markets. Note the share has FALLEN from ~25% (2013\u201314) to ~18.5% (2024) \u2014 not because it shrank in dollars, but because the US, Mexico, and newly-disclosed markets (China, South Africa) grew faster and were broken out separately.',
+          },
         ],
-        totalRevenue: { y2015: 63056, y2020: 70372, y2024: 91854 },
-        takeaway: 'PepsiCo is a US-anchored global business: ~56% of revenue is domestic, and the largest single foreign market (Mexico) is under 8%. This concentration is a double-edged sword \u2014 the US provides stability and pricing power, but limits the emerging-market growth runway that a more internationally-weighted peer might have. The diversified ~44% international base (no country over 8%) reduces single-country risk, though Russia (~4%) carries outsized geopolitical and FX exposure.',
+        total: {
+          rows: [
+            { year: 2024, revenue: 91854 },
+            { year: 2023, revenue: 91471 },
+            { year: 2022, revenue: 86392 },
+            { year: 2021, revenue: 79474 },
+            { year: 2020, revenue: 70372 },
+            { year: 2019, revenue: 67161 },
+            { year: 2018, revenue: 64661 },
+            { year: 2017, revenue: 63525 },
+            { year: 2016, revenue: 62799, down: true },
+            { year: 2015, revenue: 63056, down: true },
+            { year: 2014, revenue: 66683 },
+            { year: 2013, revenue: 66415 },
+          ],
+        },
+        takeaway: 'PepsiCo is a US-anchored global business: ~56% of revenue is domestic, and the largest single foreign market (Mexico) is under 8%. This concentration is a double-edged sword \u2014 the US provides stability and pricing power, but limits the emerging-market growth runway that a more internationally-weighted peer might have. The diversified ~44% international base (no country over 8%) reduces single-country risk, though Russia (~4%) carries outsized geopolitical and FX exposure. Note total revenue actually DIPPED from $66.7B (2014) to $62.8B (2016) \u2014 an FX/divestiture trough \u2014 before compounding to $91.9B by 2024.',
       },
     },
   },
@@ -22278,54 +22431,92 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </div>
                           )}
 
-                          {/* Country table */}
+                          {/* Per-country full year-by-year tables */}
                           {segments.byCountry.countries && segments.byCountry.countries.length > 0 && (
-                            <div style={{overflowX:'auto',marginBottom:'10px'}}>
-                              <table style={{width:'100%',minWidth:'520px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
-                                <thead>
-                                  <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
-                                    <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>COUNTRY</th>
-                                    <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2015</th>
-                                    <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2020</th>
-                                    <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024</th>
-                                    <th style={{textAlign:'right',padding:'8px 10px',color:amber,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024 SHARE</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {segments.byCountry.countries.map((c, i) => (
-                                    <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: c.featured ? 'rgba(245,158,11,0.06)' : 'transparent'}}>
-                                      <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight: c.featured ? 700 : 600,letterSpacing:'0.3px'}}>
-                                        {c.flag && <span style={{marginRight:'6px'}}>{c.flag}</span>}
-                                        {c.name}
-                                        {c.featured && <span style={{marginLeft:'6px',fontSize:'8px',color:amber,fontWeight:700,letterSpacing:'1px'}}>★</span>}
-                                      </td>
-                                      <td style={{padding:'6px 10px',textAlign:'right',color:'rgba(224,234,255,0.7)',fontWeight:500,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.rev2015 != null ? '$'+(c.rev2015/1000).toFixed(1)+'B' : '—'}</td>
-                                      <td style={{padding:'6px 10px',textAlign:'right',color:'rgba(224,234,255,0.7)',fontWeight:500,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.rev2020 != null ? '$'+(c.rev2020/1000).toFixed(1)+'B' : '—'}</td>
-                                      <td style={{padding:'6px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.rev2024 != null ? '$'+(c.rev2024/1000).toFixed(1)+'B' : '—'}</td>
-                                      <td style={{padding:'6px 10px',textAlign:'right',color:amber,fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.share2024 != null ? c.share2024+'%' : '—'}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                            <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                              {segments.byCountry.countries.map((c, i) => {
+                                const latest = c.rows[0];
+                                const oldest = c.rows[c.rows.length - 1];
+                                return (
+                                  <details key={i} open={c.featured} style={{
+                                    background: c.featured ? 'rgba(245,158,11,0.05)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${c.featured ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                        {c.flag && <span style={{fontSize:'15px'}}>{c.flag}</span>}
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                        {c.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ ANCHOR</span>}
+                                      </span>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
+                                        <span style={{fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>${(latest.revenue/1000).toFixed(1)}B</span>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',fontWeight:600}}>{latest.share}% · {latest.year}</span>
+                                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                      </span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.02)'}}>
+                                      <div style={{overflowX:'auto',marginBottom: c.note ? '8px' : 0}}>
+                                        <table style={{width:'100%',minWidth:'340px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                          <thead>
+                                            <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                              <th style={{textAlign:'left',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                              <th style={{textAlign:'right',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>NET REVENUE</th>
+                                              <th style={{textAlign:'right',padding:'6px 10px',color:amber,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>% OF TOTAL</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {c.rows.map((r, j) => (
+                                              <tr key={j} style={{borderBottom:'0.5px solid rgba(245,158,11,0.05)'}}>
+                                                <td style={{padding:'5px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{r.year}</td>
+                                                <td style={{padding:'5px 10px',textAlign:'right',color: r.down ? 'rgba(239,68,68,0.9)' : 'rgba(224,234,255,0.85)',fontWeight: 600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>
+                                                  ${r.revenue.toLocaleString()}M
+                                                  {r.down && <span style={{marginLeft:'5px',fontSize:'8px'}}>⬇</span>}
+                                                </td>
+                                                <td style={{padding:'5px 10px',textAlign:'right',color:'rgba(245,158,11,0.85)',fontWeight:600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{r.share}%</td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                      {c.note && (
+                                        <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.note}</div>
+                                      )}
+                                    </div>
+                                  </details>
+                                );
+                              })}
                             </div>
                           )}
 
-                          {/* Country notes — collapsible */}
-                          {segments.byCountry.countries && segments.byCountry.countries.some(c => c.note) && (
-                            <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'10px'}}>
-                              <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
-                                <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>📍 Country-by-Country Notes</span>
-                                <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
-                              </summary>
-                              <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)',display:'flex',flexDirection:'column',gap:'5px'}}>
-                                {segments.byCountry.countries.filter(c => c.note).map((c, i) => (
-                                  <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
-                                    <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'3px'}}>{c.flag} {c.name}</div>
-                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.note}</div>
-                                  </div>
-                                ))}
+                          {/* Total revenue — full year-by-year */}
+                          {segments.byCountry.total && segments.byCountry.total.rows && (
+                            <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'12px',marginBottom:'10px'}}>
+                              <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>// TOTAL NET REVENUE · ALL COUNTRIES</div>
+                              <div style={{overflowX:'auto'}}>
+                                <table style={{width:'100%',minWidth:'300px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                  <thead>
+                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                      <th style={{textAlign:'left',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                      <th style={{textAlign:'right',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>TOTAL NET REVENUE</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {segments.byCountry.total.rows.map((r, j) => (
+                                      <tr key={j} style={{borderBottom:'0.5px solid rgba(245,158,11,0.05)'}}>
+                                        <td style={{padding:'5px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{r.year}</td>
+                                        <td style={{padding:'5px 10px',textAlign:'right',color: r.down ? 'rgba(239,68,68,0.9)' : '#e0eaff',fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>
+                                          ${r.revenue.toLocaleString()}M
+                                          {r.down && <span style={{marginLeft:'5px',fontSize:'8px'}}>⬇</span>}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
                               </div>
-                            </details>
+                            </div>
                           )}
 
                           {/* Takeaway */}
