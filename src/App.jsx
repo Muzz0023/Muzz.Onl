@@ -7343,6 +7343,140 @@ const PEP_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════════
+// REECE GROUP (REH) — ANZ + US plumbing/HVAC-R/waterworks distributor
+// ════════════════════════════════════════════════════════════════════
+const REH_BREAKDOWN = {
+  overview: {
+    facts: {
+      founded: '1920',
+      teamMembers: '~9,000',
+      anzRevenue: 'A$3.8b',
+      usRevenue: 'A$5.3b',
+    },
+    identity: {
+      coreIdentity: 'Reece Group is a market-leading distributor of plumbing, HVAC-R (heating, ventilation, air-conditioning & refrigeration) and waterworks products to commercial and residential customers. Founded in 1920 and still controlled by the founding Wilson family (now in its third generation of leadership), Reece operates a dense branch network serving trade professionals across Australia, New Zealand, and the United States. The business runs on two geographic engines: a mature, dominant ANZ operation (~A$3.8b FY24 revenue) and a younger, larger-by-revenue but lower-margin US operation \u2014 Reece USA, built on the 2018 MORSCO acquisition (~A$5.3b FY24 revenue in AUD).',
+      industryPosition: [
+        'Market-leading plumbing & bathroom distributor in Australia & New Zealand \u2014 the dominant #1 position with a century-long head start',
+        'Entered the US in 2018 via the A$1.91b MORSCO acquisition; US is now ~A$5.3b FY24 revenue (AUD) \u2014 the larger revenue base, though lower-margin and earlier-stage',
+        '~9,000 team members across ANZ + US operations',
+        'Family-controlled: the Wilson family retains a controlling stake, with 3rd-generation leader Peter Wilson as CEO (becoming Chairman & CEO in Nov 2024)',
+        'Five business areas in ANZ (Plumbing, Bathrooms & Kitchens, HVAC-R, Waterworks, Irrigation & Pools); four in the US (same, ex-Irrigation & Pools)',
+        'Trade-focused distribution moat built on branch density, service quality, technical expertise, and deep customer relationships \u2014 "The Reece Way"',
+      ],
+    },
+
+    // Buffett-style framing — REH as a family-controlled compounder
+    buffettFraming: {
+      headline: '"A boring, essential-products distributor run by an owner-family who think in decades, not quarters."',
+      body: 'Reece is the kind of business Buffett & Munger gravitate toward: unglamorous, essential, and dominant in its home market, with a 100-year track record and a controlling founding family whose wealth is tied directly to the long-term health of the business. The ANZ operation is a wide-moat cash machine \u2014 dense branch network, sticky trade customers, high service. The US expansion is the swing factor: a long runway in a large, fragmented market, but lower-margin and capital-hungry while it scales under the Reece USA banner.',
+      bottomLine: 'For Buffett-framework investors, REH is a bet on two things: (1) the durability of the ANZ distribution moat, and (2) management\u2019s ability to replicate even a fraction of that economics in the much larger, more fragmented US market. The Wilson family\u2019s skin-in-the-game and "promote from within" culture align incentives strongly \u2014 but the controlling stake also means minority holders are along for the ride on the family\u2019s terms.',
+    },
+
+    // REH-specific overview content (custom render block)
+    reece: {
+      footprint: {
+        description: 'Reece operates across two regions with very different profiles. ANZ is the mature, dominant, higher-margin home market \u2014 the profit engine. The US (Reece USA, built on the MORSCO acquisition) is now the larger revenue base but earlier-stage and lower-margin \u2014 the key growth runway and the key risk on the thesis.',
+        regions: [
+          {
+            name: 'Australia & New Zealand', flag: '🇦🇺', revenue: 'A$3.8b', revenueLabel: 'ANZ FY24 Revenue',
+            businessAreas: ['Plumbing', 'Bathrooms & Kitchens', 'HVAC-R', 'Waterworks', 'Irrigation & Pools'],
+            note: 'The mature home market \u2014 dominant #1 position, dense branch network, century-long head start. Higher-margin and the profit engine. Australia went nationwide in 1997; New Zealand entered in 2006 (new Auckland distribution centre opened 2024).',
+          },
+          {
+            name: 'United States', flag: '🇺🇸', revenue: 'A$5.3b', revenueLabel: 'US FY24 Revenue (AUD)',
+            businessAreas: ['Plumbing', 'Bathrooms & Kitchens', 'HVAC-R', 'Waterworks'],
+            note: 'Reece USA \u2014 built on the 2018 MORSCO acquisition. Now the larger revenue base (in AUD) but lower-margin and earlier-stage. Multiple acquired brands are being consolidated under the single Reece name. The long-term growth swing factor in a large, fragmented market.',
+          },
+        ],
+      },
+      milestones: [
+        { year: '1920', label: 'Founded',                        detail: 'The business is established in Australia.' },
+        { year: '1997', label: 'Nationwide Australian footprint', detail: 'Completed national coverage across Australia.' },
+        { year: '2006', label: 'Entered New Zealand',             detail: 'First international expansion.' },
+        { year: '2018', label: 'Entered the United States',       detail: 'A$1.91b MORSCO acquisition \u2014 the transformative move.' },
+      ],
+      acquisitions: [
+        { year: '2018', target: 'MORSCO Inc. (U.S.)',                    price: 'A$1.91b (\u2248 US$1.44b)', funding: 'Equity raising + debt',     note: 'The transformative US entry. The Wilson family diluted part of their private holding during the equity raise, letting public investors inject new capital to fund the US expansion. Now the foundation of Reece USA.', featured: true },
+        { year: '2022', target: 'International Quadratics / Dontek',      price: 'Undisclosed',               funding: 'Not publicly detailed', note: 'Bolt-on acquisitions; terms not disclosed.' },
+        { year: '2024', target: 'Shadowboxer / Southpaw',                price: 'Undisclosed',               funding: 'Not publicly detailed', note: 'Bolt-on acquisitions; terms not disclosed.' },
+      ],
+      shareholderLetters: {
+        chair: {
+          who: 'Tim Poole, Chair',
+          context: 'Final report after 8 years on the Board',
+          points: [
+            'Reflects on a period of transformative growth, including the successful US expansion and strong foundations for future global growth.',
+            'FY24 marked the most significant leadership changes since 2008 \u2014 Peter Wilson transitioning to combined Chairman & CEO (Nov 2024), reflecting the Wilson family\u2019s enduring stewardship.',
+            'New appointments reinforce "promote from within": Sasha Nikolic to Group President & MD, James Healy to CEO of Reece USA.',
+            'Highlights "The Reece Way" \u2014 a culture of long-term thinking, customer focus, and talent development.',
+            'Expects short-term economic challenges to persist but remains committed to investing through the cycle.',
+            'Declared a final fully-franked dividend of 17.75c, bringing the FY24 total to 25.75c per share.',
+          ],
+        },
+        ceo: {
+          who: 'Peter Wilson, CEO',
+          context: 'FY24 performance & strategy',
+          points: [
+            'FY24 performance: A$9.1b revenue, A$681m adjusted EBIT, A$416m adjusted NPAT \u2014 solid execution despite a softer macro backdrop.',
+            'Refreshed company purpose: "Building a better world for our customers by being the best." Vision: become "our trade\u2019s most valuable partner by 2030."',
+            'Continued long-term investment in branch-network expansion, people, and digital innovation.',
+            'Significant progress on the US rebranding program \u2014 consolidating multiple acquired brands under the single Reece name.',
+            'Optimistic on long-term prospects despite expected near-term market softness; favorable long-term industry fundamentals.',
+            'Core message: future strength comes from people, long-term focus, and "making it better every day."',
+          ],
+        },
+      },
+      caseStudies: [
+        { title: 'New Zealand Distribution Centre',     tag: 'SERVICE',       location: 'Auckland Airport',  summary: 'Opened April 2024, replacing two smaller outdated DCs Reece had outgrown. Triples storage capacity, enhances scalability, and simplifies supply-chain operations. Planning began in 2018.', quote: 'This facility demonstrates our commitment to growth, customised service, and better serving our valued customers in New Zealand.' },
+        { title: 'Partnership with Nightingale Housing', tag: 'RELATIONSHIPS', location: 'Melbourne, Australia', summary: 'Formal strategic partnership with a not-for-profit building socially, financially and environmentally sustainable apartments sold "at cost" via ballot. Reece supplies accessible, high-quality bathroom & kitchen products. Projects include Nightingale Preston and Wurru Wurru Biik.', quote: 'Our partnership with Reece underscores our shared commitment to creating sustainable homes that people genuinely love living in. \u2014 Dan McKenna, CEO, Nightingale Housing' },
+        { title: 'Actrol Engineering Team',              tag: 'EXPERTISE',     location: 'HVAC-R business',   summary: 'Actrol (Reece\u2019s HVAC-R business) expands its refrigeration-engineer team, supporting customers across the project lifecycle. Backed by "The Virtual Engineer" digital platform. Helps small/medium businesses navigate complex refrigerant regulations.', quote: 'We use Actrol Engineers because they\u2019re the best of the best. Without them nothing gets done. \u2014 Actrol customer' },
+        { title: 'Fortiline Emergency Response',         tag: 'QUALITY',       location: 'Lake Worth, Florida', summary: 'Reece\u2019s US subsidiary Fortiline Waterworks responded to a damaged 36-inch sewer line threatening to spill millions of gallons of wastewater. Supplied HDPE pipe, a fusion machine, and a qualified technician; repair completed within 72 hours, working through the night.', quote: 'Their collective efforts have been nothing short of phenomenal. \u2014 Sam Heady, Director, Lake Worth Utility District' },
+      ],
+    },
+
+    leadership: {
+      asOf: 'FY2024 (30 June 2024)',
+      executives: [
+        { name: 'Peter Wilson',    role: 'CEO & Deputy Executive Chair (\u2192 Chairman & CEO, Nov 2024)', since: 'CEO since 2008 \u00b7 Deputy Chair since 2022', tenureYears: 27, history: 'Joined Reece in 1997. 3rd-generation Wilson-family leader. Spearheaded the company\u2019s U.S. expansion via the MORSCO acquisition. B.Com (Melbourne), FAIM. Transitioning to the combined Chairman & CEO role in November 2024 \u2014 reflecting the family\u2019s enduring stewardship.', featured: true },
+        { name: 'Andrew Young',     role: 'Chief Financial Officer (Group & ANZ)', since: 'CFO since 1 Oct 2023', history: 'Appointed CFO in October 2023, replacing Andrew Cowlishaw. Leads group and ANZ finance.' },
+        { name: 'Sasha Nikolic',    role: 'CEO \u2014 United States (\u2192 Group President & Managing Director)', since: 'US CEO through FY24', history: 'Oversaw Reece\u2019s US operations through FY24; promoted to Group President & Managing Director, reflecting the "promote from within" philosophy. A key figure in the US growth strategy.', featured: true },
+        { name: 'James Healy',      role: 'CEO \u2014 Reece USA', since: 'Appointed FY24', history: 'Promoted to CEO of Reece USA as part of the FY24 leadership transition, taking operational leadership of the US business under the unified Reece brand.' },
+        { name: 'Chip Hornsby',     role: 'Executive Chair \u2014 United States', since: 'Through FY24', history: 'Former MORSCO CEO; leads the US board and strategy. Brings deep US distribution-market experience from the acquired MORSCO business.' },
+      ],
+      executiveTakeaways: [
+        'FY24 marked the most significant leadership change since 2008: Peter Wilson moves to the combined Chairman & CEO role (Nov 2024), consolidating Wilson-family stewardship.',
+        'Strong "promote from within" culture \u2014 Sasha Nikolic (Group President & MD) and James Healy (CEO Reece USA) both internal promotions.',
+        'CFO transition (Cowlishaw \u2192 Young, Oct 2023) was an orderly succession, not a red flag.',
+        'US leadership anchored by Chip Hornsby (ex-MORSCO) \u2014 retaining acquired-company expertise rather than replacing it.',
+        '3rd-generation family CEO with ~27 years inside the business \u2014 deep operational continuity and owner-alignment.',
+      ],
+      board: [
+        { name: 'Tim Poole',       role: 'Chair (Independent) \u00b7 2016 \u00b7 Chair since 2022', background: 'Independent Chair. Commerce background (B.Com, Melbourne); experienced chair/director across large infrastructure and listed companies. Also a director of Aurizon Holdings. Brings financial discipline and governance. Chairs the Remuneration Committee. (FY24 was his final report after 8 years.)', category: 'Lead' },
+        { name: 'Peter Wilson',    role: 'CEO & Deputy Executive Chair \u00b7 joined 1997', background: '3rd-generation Wilson-family leader and CEO since 2008. The driving force behind the U.S. expansion. Becoming Chairman & CEO in November 2024.', category: 'Operational' },
+        { name: 'L. Alan Wilson',  role: 'Executive Director \u00b7 joined 1969', background: 'Patriarch of the Wilson family. Executive Chair 2001\u20132022; built Reece into the national plumbing leader and oversaw the transition to professional management. Multi-decade industry leadership.', category: 'Capital Allocation' },
+        { name: 'Andrew Wilson',   role: 'Non-Executive Director \u00b7 2018', background: 'Member of the Wilson family. Accounting & finance background (B.Bus RMIT, ACMA/CGMA, GAICD). Sits on the Audit & Risk Committee; focus on financial oversight and succession.', category: 'Finance' },
+        { name: 'Bruce C. Wilson', role: 'Non-Executive Director \u00b7 2016', background: 'Member of the Wilson family. Commerce (B.Com La Trobe), with operational and management experience within Reece. Sits on the Remuneration Committee; focus on governance and strategic continuity.', category: 'Operational' },
+        { name: 'Karen Penrose',   role: 'Non-Executive Director (Independent) \u00b7 2023', background: 'B.Com (UNSW), CPA, FAICD. Extensive finance and ASX-board experience in banking and healthcare (Bank of Queensland, Ramsay Health Care, Cochlear). Chairs the Audit & Risk Committee \u2014 strengthens financial and risk governance.', category: 'Finance' },
+        { name: 'Megan Quinn',     role: 'Non-Executive Director (Independent) \u00b7 2017', background: 'Retail & branding expertise (GAICD); co-founder of Net-a-Porter. Strong consumer-brand and digital-commerce experience (City Chic, The Lottery Corporation). Brings consumer insight to the board.', category: 'Digital/Media' },
+      ],
+      boardTakeaways: {
+        title: 'Family-controlled governance assessment',
+        scores: [
+          { label: 'Founding-family alignment (skin in the game)', rating: 'strong' },
+          { label: 'Long-term / through-the-cycle orientation',    rating: 'strong' },
+          { label: 'Financial depth (Poole, Penrose, A. Wilson)',  rating: 'strong' },
+          { label: 'Consumer / retail / digital expertise (Quinn)', rating: 'medium' },
+          { label: 'Board independence (3 of 7 independent)',       rating: 'weak' },
+          { label: 'Minority-shareholder protections',              rating: 'weak' },
+        ],
+        verdict: 'Reece is a family-controlled company \u2014 the Wilson family holds the CEO role and three of seven board seats, and is consolidating control further with Peter Wilson becoming Chairman & CEO. In the Buffett framework this is a double-edged sword: genuine owner-alignment and decades-long thinking (a real plus that most listed companies lack), but reduced board independence and minority holders who are along for the ride on the family\u2019s terms. Independent directors (Poole as Chair, Penrose on finance/risk, Quinn on consumer) provide governance ballast, but the family\u2019s grip is firm and deliberate.',
+      },
+    },
+  },
+};
+
+
+// ════════════════════════════════════════════════════════════════════
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
 const COVERAGE_DATA = [
@@ -7390,7 +7524,7 @@ const COVERAGE_DATA = [
   { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
 
   // === WHOLESALE · AUSTRALIA ===
-  { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: null },
+  { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: REH_BREAKDOWN },
 
   // === BANKING · AUSTRALIA ===
   { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null, locked: true },
@@ -18197,7 +18331,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     };
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory, reece } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -18281,6 +18415,17 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               };
                               const founded     = parseFact(facts.founded);
                               const incorporated = parseFact(facts.incorporated);
+                              // REH shape — distributor at-a-glance (no brands/global-reach)
+                              if (facts.teamMembers) {
+                                return (
+                                  <>
+                                    <StatCard label="FOUNDED"     value={founded.value}      sub="100+ years" />
+                                    <StatCard label="TEAM"         value={facts.teamMembers}  sub="employees (ANZ + US)" />
+                                    <StatCard label="ANZ REVENUE"  value={facts.anzRevenue}   sub="FY24" />
+                                    <StatCard label="US REVENUE"   value={facts.usRevenue}    sub="FY24 · AUD" />
+                                  </>
+                                );
+                              }
                               return (
                                 <>
                                   <StatCard label="FOUNDED"      value={founded.value}     sub={founded.sub || 'year established'} />
@@ -18296,6 +18441,145 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <SectionHeading>// IDENTITY & POSITIONING</SectionHeading>
                           <InfoPanel label="// CORE IDENTITY">{identity.coreIdentity}</InfoPanel>
                           <BulletPanel label="// INDUSTRY POSITION" items={identity.industryPosition} />
+
+                          {/* REECE-SPECIFIC: international footprint, milestones, acquisitions, letters, case studies */}
+                          {reece && (
+                            <>
+                              {/* INTERNATIONAL FOOTPRINT */}
+                              {reece.footprint && (
+                                <>
+                                  <SectionHeading>// INTERNATIONAL FOOTPRINT</SectionHeading>
+                                  {reece.footprint.description && <InfoPanel label="// TWO ENGINES">{reece.footprint.description}</InfoPanel>}
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'10px',marginBottom:'8px'}}>
+                                    {reece.footprint.regions.map((r, i) => (
+                                      <div key={i} style={{background:'linear-gradient(160deg, rgba(245,158,11,0.08) 0%, rgba(0,0,0,0.4) 100%)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'12px 14px',position:'relative'}}>
+                                        <div style={{position:'absolute',top:'8px',right:'10px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'8px'}}>
+                                          <span style={{fontSize:'16px'}}>{r.flag}</span>
+                                          <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.name}</span>
+                                        </div>
+                                        <div style={{fontSize:'22px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',lineHeight:1.1}}>{r.revenue}</div>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,marginBottom:'8px'}}>{r.revenueLabel}</div>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginBottom:'8px'}}>
+                                          {r.businessAreas.map((ba, j) => (
+                                            <span key={j} style={{padding:'2px 7px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{ba}</span>
+                                          ))}
+                                        </div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.72)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{r.note}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* MILESTONES */}
+                              {reece.milestones && reece.milestones.length > 0 && (
+                                <>
+                                  <SectionHeading>// COMPANY MILESTONES</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'4px',marginBottom:'8px'}}>
+                                    {reece.milestones.map((m, i) => (
+                                      <div key={i} style={{display:'flex',alignItems:'stretch',gap:'10px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'8px 12px'}}>
+                                        <div style={{fontSize:'15px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',minWidth:'52px'}}>{m.year}</div>
+                                        <div style={{flex:1}}>
+                                          <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{m.label}</div>
+                                          {m.detail && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.65)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'2px'}}>{m.detail}</div>}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* ACQUISITIONS */}
+                              {reece.acquisitions && reece.acquisitions.length > 0 && (
+                                <>
+                                  <SectionHeading>// ACQUISITIONS</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'8px'}}>
+                                    {reece.acquisitions.map((a, i) => (
+                                      <div key={i} style={{
+                                        background: a.featured ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${a.featured ? amber : amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px',
+                                      }}>
+                                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                          <span style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                            <span style={{fontSize:'14px',color:amber,fontFamily:'monospace',fontWeight:700}}>{a.year}</span>
+                                            <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{a.target}</span>
+                                            {a.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>TRANSFORMATIVE</span>}
+                                          </span>
+                                          <span style={{fontSize:'12px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{a.price}</span>
+                                        </div>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,marginBottom:'4px'}}>FUNDING: {a.funding}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{a.note}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* SHAREHOLDER LETTERS */}
+                              {reece.shareholderLetters && (
+                                <>
+                                  <SectionHeading>// LETTER TO SHAREHOLDERS · FY24</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'8px'}}>
+                                    {['chair','ceo'].filter(k => reece.shareholderLetters[k]).map((k) => {
+                                      const L = reece.shareholderLetters[k];
+                                      return (
+                                        <details key={k} open style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden'}}>
+                                          <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                                            <span style={{display:'flex',flexDirection:'column',gap:'2px'}}>
+                                              <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>{k === 'chair' ? '// CHAIR' : '// CEO'}</span>
+                                              <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{L.who}</span>
+                                              {L.context && <span style={{fontSize:'9px',color:'rgba(224,234,255,0.55)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{L.context}</span>}
+                                            </span>
+                                            <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                          </summary>
+                                          <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                            <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                              {L.points.map((p, i) => (
+                                                <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                                  <span style={{color:amberDim,flexShrink:0}}>›</span><span>{p}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        </details>
+                                      );
+                                    })}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* CASE STUDIES — The Reece Way in action */}
+                              {reece.caseStudies && reece.caseStudies.length > 0 && (
+                                <>
+                                  <SectionHeading>// "THE REECE WAY" IN ACTION</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'8px'}}>
+                                    {reece.caseStudies.map((c, i) => (
+                                      <details key={i} style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden'}}>
+                                        <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                                          <span style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                            <span style={{padding:'1px 7px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>{c.tag}</span>
+                                            <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.title}</span>
+                                          </span>
+                                          <span style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                            {c.location && <span style={{fontSize:'9px',color:'rgba(224,234,255,0.5)',fontFamily:'monospace',letterSpacing:'0.3px',whiteSpace:'nowrap'}}>{c.location}</span>}
+                                            <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                          </span>
+                                        </summary>
+                                        <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>{c.summary}</div>
+                                          {c.quote && (
+                                            <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>"{c.quote}"</div>
+                                          )}
+                                        </div>
+                                      </details>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
 
                           {/* CUSTOMERS & MARKETING */}
                           {customers && (
@@ -19441,7 +19725,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                             )}
                                             {e.joined && (
                                               <div style={{padding:'5px 8px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
-                                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// JOINED KO</div>
+                                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// JOINED</div>
                                                 <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.4}}>{e.joined}</div>
                                               </div>
                                             )}
