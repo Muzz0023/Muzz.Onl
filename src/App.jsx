@@ -5697,6 +5697,371 @@ const KO_BREAKDOWN = {
 
 
 // ════════════════════════════════════════════════════════════════════
+// PEP — PepsiCo
+// ════════════════════════════════════════════════════════════════════
+const PEP_BREAKDOWN = {
+  overview: {
+    facts: {
+      founded:        '1898 by Caleb Bradham',
+      incorporated:   '1919 \u00b7 Delaware \u00b7 reincorporated 1986 \u00b7 North Carolina',
+      brandCount:     '~20+',
+      globalReach:    '200+ countries',
+    },
+    identity: {
+      coreIdentity: 'PepsiCo is a global leader in both beverages and convenient foods \u2014 selling products in 200+ countries through company-owned operations, bottlers, contract manufacturers, and third parties. Unlike Coca-Cola (a pure-play beverage licensor), PEP is structurally a diversified consumer packaged goods company with two profit engines: PepsiCo Beverages North America and Frito-Lay North America. The snacks business (Frito-Lay) is widely considered the more profitable and harder-to-displace side of the business.',
+      industryPosition: [
+        'Global #2 beverage company by U.S. liquid refreshment share (~18%), behind Coca-Cola (~21%)',
+        'Global #1 in salty snacks via Frito-Lay (dominant US share; major international presence)',
+        '~20+ billion-dollar brands across beverages, snacks, hydration, and cereals',
+        'Operates in 200+ countries through hybrid model: company-owned + bottlers + contract manufacturers + third parties',
+        'Owns its bottling operations (unlike KO, which licenses to independent bottlers)',
+        'Restructuring from 7 segments to 6 effective 2025 \u2014 consolidating North American food businesses',
+      ],
+    },
+
+    // The Buffett-style framing — PEP is fundamentally different from KO
+    buffettFraming: {
+      headline: '"Coke owns the mind in beverages; Pepsi owns the stomach in snacks."',
+      body: 'PepsiCo is often compared to Coca-Cola, but the comparison is misleading. KO is a pure-play beverage licensor with ~1 mega-brand and asset-light economics. PEP is a diversified CPG conglomerate with ~20 billion-dollar brands across beverages, salty snacks, cereals, and hydration. It owns its bottling, owns Frito-Lay (the dominant US salty snack monopoly), and competes on multiple fronts simultaneously.',
+      keyDifferences: [
+        { dimension: 'Business model',       ko: 'Asset-light brand licensor', pep: 'Vertically integrated (owns bottling + manufacturing + DSD)' },
+        { dimension: 'Mega-brands',          ko: '~1 (Coca-Cola)',             pep: '~20 billion-dollar brands' },
+        { dimension: 'Profit engine',        ko: 'Sparkling beverages',         pep: 'Frito-Lay (salty snacks)' },
+        { dimension: 'Moat risk',            ko: 'Health/regulatory (sugar)',   pep: 'Private label in snacks' },
+        { dimension: 'Categories',           ko: 'Beverages only',              pep: 'Beverages + snacks + cereals + hydration' },
+      ],
+      bottomLine: 'For Buffett-framework investors: KO is the simpler, more concentrated bet on a singular global brand. PEP is the more diversified bet on a portfolio of category leaders \u2014 but with more enemies (competing with KO in beverages, private label in snacks, General Mills/Kellogg in cereals, Monster/Red Bull in energy).',
+    },
+
+    // Operating segments — current (through 2024) AND the 2025 restructuring
+    operatingSegments: {
+      asOf: 'Through end of 2024',
+      preamble: 'PepsiCo currently reports 7 segments (3 North America + 4 international). Effective 2025, the company is restructuring into 6 segments \u2014 combining FLNA + QFNA into a single North American food unit and reorganising international operations along food vs. beverage lines.',
+      current: [
+        { name: 'Frito-Lay North America (FLNA)',                    coverage: 'U.S. & Canada',                  focus: 'Branded convenient foods', detail: 'Salty snacks: Lay\u2019s, Doritos, Cheetos, Ruffles, Fritos, Tostitos, dips. Acquired full control of Sabra (dips/spreads) in Dec 2024.', featured: true, profitEngine: true },
+        { name: 'Quaker Foods North America (QFNA)',                 coverage: 'U.S. & Canada',                  focus: 'Branded convenient foods', detail: 'Cereal, rice, pasta, oatmeal, granola bars, instant meals. Brands: Cap\u2019n Crunch, Life, Quaker Oats, Rice-A-Roni, Pearl Milling.' },
+        { name: 'PepsiCo Beverages North America (PBNA)',            coverage: 'U.S. & Canada',                  focus: 'Beverage portfolio',       detail: 'Beverages: Pepsi, Mountain Dew, Gatorade, Aquafina, Bubly, Propel; licensed brands (Dr Pepper, Crush, Schweppes, Dole, Ocean Spray). Owns bottling plants + distribution. JV with Starbucks (RTD coffee) & Unilever (Lipton tea). Retained 39% in Tropicana JV (2022).', featured: true },
+        { name: 'Latin America (LatAm)',                              coverage: 'All of Latin America',           focus: 'Beverages and convenient foods', detail: 'Foods: Cheetos, Doritos, Lay\u2019s, Sabritas, Gamesa, Ruffles, Quaker. Beverages: Pepsi, 7UP, Gatorade, Mirinda, Manzanita Sol. Includes Lipton JV.' },
+        { name: 'Europe',                                             coverage: 'All of Europe',                  focus: 'Beverages and convenient foods', detail: 'Foods: Lay\u2019s, Walkers, Cheetos, Ruffles, Quaker. Beverages: Pepsi, Mirinda, 7UP, Adrenaline Rush, SodaStream. Dairy brands (Agusha, Chudo). Lipton JV, Tropicana JV (39% retained).' },
+        { name: 'Africa, Middle East & South Asia (AMESA)',          coverage: 'Africa, Middle East, South Asia', focus: 'Beverages and convenient foods', detail: 'Foods: Cheetos, Lay\u2019s, Kurkure, Chipsy, Sasko, Spekko, Quaker. Beverages: Pepsi, 7UP, Aquafina, Mirinda, Mountain Dew, Sting Energy. Lipton JV.' },
+        { name: 'Asia Pacific, Australia, NZ & China (APAC)',        coverage: 'Asia Pacific, Australia, NZ, China', focus: 'Beverages and convenient foods', detail: 'Foods: Lay\u2019s, Cheetos, Smith\u2019s, BaiCaoWei, Quaker. Beverages: Pepsi, 7UP, Aquafina, Mirinda, Mountain Dew, Sting Energy. Lipton JV.' },
+      ],
+
+      // The 2025 restructuring
+      restructuring2025: {
+        effectiveDate: '2025',
+        rationale: 'Streamlines from 7 segments to 6. Combines North American food businesses (FLNA + QFNA) into a single unit. Reorganises international operations along food vs. beverage lines.',
+        newSegments: [
+          { name: 'PepsiCo Foods North America',     includes: 'FLNA + QFNA combined',                                  note: 'North American food businesses merged into a single segment.' },
+          { name: 'PepsiCo Beverages North America', includes: 'U.S. & Canada beverage business (unchanged)',          note: 'No structural change to PBNA.' },
+          { name: 'Latin America Foods',             includes: 'All foods in Latin America',                           note: 'Carved out from the legacy LatAm segment.' },
+          { name: 'EMEA',                             includes: 'Europe + Middle East + Africa (foods + company-owned bottling)', note: 'Consolidates Europe + AMESA + Africa. Includes bottling ops.' },
+          { name: 'Other International Foods',       includes: 'Foods in APAC + India (from AMESA)',                    note: 'Covers Asia-Pacific food businesses.' },
+          { name: 'International Beverages Franchise', includes: 'Franchise beverages in LatAm, Europe, AMESA, APAC',  note: 'Separates beverages outside North America.' },
+        ],
+        takeaway: 'The restructuring signals PEP\u2019s strategic shift: think of the business as 2 dimensions \u2014 (1) Food vs Beverage, and (2) North America vs International. This makes international beverage franchising more visible as a distinct line item.',
+      },
+    },
+
+    // Distribution channels
+    distribution: {
+      preamble: 'PepsiCo uses a hybrid distribution model across 4 channels, each optimised for different product types and customer needs.',
+      channels: [
+        { name: 'Direct-Store-Delivery (DSD)',  emoji: '🚚', mechanism: 'PepsiCo, independent bottlers, and distributors deliver directly to retail stores. Merchandised by PepsiCo staff or bottlers.',           bestFor: 'Products needing frequent restocking, high visibility, in-store promotions (snacks, beverages).', featured: true },
+        { name: 'Customer Warehouse',            emoji: '📦', mechanism: 'Products shipped from plants/DCs to customer warehouses (company or 3rd-party run). Lower cost than DSD.',                                   bestFor: 'Items that are less fragile/perishable, slower turnover.' },
+        { name: 'Distributor Networks',          emoji: '🏪', mechanism: '3rd-party distributors deliver products, often with mixed loads of many items. Key for foodservice/vending.',                              bestFor: 'Restaurants, schools, businesses, stadiums; foodservice & vending channels.' },
+        { name: 'E-commerce',                    emoji: '💻', mechanism: 'Products sold direct-to-consumer via PepsiCo websites, apps, and 3rd-party platforms.',                                                     bestFor: 'Growing channel; direct online sales of beverages and snacks.' },
+      ],
+      shortPunchline: 'DSD = visibility & speed. Warehouse = cost efficiency. Distributors = reach. E-commerce = direct consumer access.',
+      moatNote: 'Frito-Lay\u2019s DSD network is one of PEP\u2019s strongest competitive moats. Owning the route directly into ~315,000 retail stores creates a defensive barrier that\u2019s extremely expensive for new entrants or private label brands to replicate.',
+    },
+
+    // Raw materials & ingredients
+    rawMaterials: {
+      preamble: 'PepsiCo relies on a broad set of agricultural commodities, packaging materials, and energy inputs. Prices are volatile, but risks are managed with multi-source contracts, derivatives, and sustainability initiatives.',
+      categories: [
+        { name: 'Food & Beverage Ingredients', emoji: '🌾', items: 'Corn, corn sweeteners, sugar, flavorings, flour, potatoes, oats, rice, nuts, raw milk, juice concentrates, seasonings, vegetable & essential oils. Water is a core input.',           notes: 'Also uses artificial sweeteners: acesulfame potassium, aspartame, sucralose.' },
+        { name: 'Packaging',                    emoji: '📦', items: 'Plastic resins (PET, polypropylene), aluminum, glass, closures, cardboard, paperboard.',                                                                                              notes: 'Increased use of recycled PET & recyclability focus.' },
+        { name: 'Energy & Fuel',                emoji: '⚡', items: 'Fuel, electricity, natural gas.',                                                                                                                                                       notes: 'Needed for factories + distribution fleets.' },
+      ],
+      riskManagement: [
+        'Specialists secure supplies across multiple suppliers and regions',
+        'Uses fixed-price contracts, purchase orders, and pricing agreements',
+        'Hedges with derivatives (swaps, futures) \u2014 see Risks tab for details',
+        'Investing in sustainable farming practices and expanding globally',
+        'Supply chain finance: voluntary agreements let suppliers sell PepsiCo receivables to global financial institutions (no material impact on financials)',
+      ],
+      volatility: '2024 saw continued commodity, packaging, and input cost volatility, expected to persist into 2025. Some cost increases may be passed on to customers.',
+    },
+
+    // Regulatory matters
+    regulatory: {
+      preamble: 'PepsiCo faces broad global regulation \u2014 food safety, marketing, labeling, labor, privacy, environment, and anti-corruption. Current compliance costs are manageable, but sugar taxes, packaging bans, and climate rules could increase costs going forward.',
+      scope: 'Federal, state, local, and international laws covering food safety, labeling, advertising, marketing, labor, competition, trade, privacy, packaging, and environmental issues. Operates in 200+ markets, each with local rules.',
+      areas: [
+        {
+          area: 'U.S. Regulations',
+          icon: '🇺🇸',
+          details: [
+            { label: 'Food & Safety',           detail: 'Federal Food, Drug & Cosmetic Act; Food Safety Modernization Act' },
+            { label: 'Workplace',                detail: 'OSHA and state safety laws' },
+            { label: 'Competition / Advertising', detail: 'FTC Act, Lanham Act, Robinson-Patman Act, Clayton Act' },
+            { label: 'Employment',               detail: 'EEOC Act, NLRA, Fair Labor Standards Act' },
+            { label: 'Privacy',                  detail: 'California Consumer Privacy Act (CCPA/CPRA)' },
+            { label: 'Trade & Corruption',       detail: 'Customs laws, tariffs, FCPA (Foreign Corrupt Practices Act), Trade Sanctions Reform Act' },
+            { label: 'Consumer Protection',      detail: 'California Proposition 65 (cancer/birth defect warnings)' },
+          ],
+        },
+        {
+          area: 'International Regulations',
+          icon: '🌍',
+          details: [
+            { label: 'Food & Safety (UK)',       detail: 'UK Food (Promotion and Placement) Regulations' },
+            { label: 'Supply Chain (UK)',         detail: 'UK Modern Slavery Act' },
+            { label: 'Privacy (EU)',              detail: 'EU GDPR' },
+            { label: 'Anti-Corruption (UK)',      detail: 'UK Bribery Act' },
+            { label: 'Local laws',                detail: 'Competition, health & safety, and trade laws across 200+ markets' },
+          ],
+        },
+        {
+          area: 'Taxes on Products',
+          icon: '💰',
+          critical: true,
+          details: [
+            { label: 'Sugar / sweetener taxes',  detail: 'Some jurisdictions impose or are considering sugar/sweetener taxes' },
+            { label: 'Per-liter beverage taxes', detail: 'Flat taxes per litre of beverage' },
+            { label: 'Snack taxes',               detail: 'Linked to sodium, sugar, or fat content' },
+          ],
+        },
+        {
+          area: 'Labeling & Marketing Restrictions',
+          icon: '⚠',
+          details: [
+            { label: 'Warning labels',           detail: 'Required disclosures for sugar, sodium, fat content' },
+            { label: 'Age restrictions',          detail: 'Limits on marketing to children' },
+            { label: 'Sales restrictions',        detail: 'Limits on where products can be sold (e.g., schools)' },
+            { label: 'Health concerns',           detail: 'Required to highlight health concerns' },
+          ],
+        },
+        {
+          area: 'Packaging & Recycling Rules',
+          icon: '♻',
+          details: [
+            { label: 'Deposit-return systems',   detail: 'Container deposit refund schemes (CDS) in many jurisdictions' },
+            { label: 'Extended producer responsibility', detail: 'Producers responsible for post-consumer waste' },
+            { label: 'Single-use plastic restrictions', detail: 'Bans or restrictions on single-use plastics or packaging with PFAS' },
+            { label: 'Environmental labeling',    detail: 'Environmental impact disclosures required' },
+          ],
+        },
+        {
+          area: 'Environmental Laws',
+          icon: '🌱',
+          details: [
+            { label: 'U.S. environmental statutes', detail: 'Clean Air Act, Clean Water Act, CERCLA, RCRA' },
+            { label: 'Global equivalents',         detail: 'Local equivalents across all operating markets' },
+            { label: 'Focus areas',                 detail: 'Emissions, water use, waste handling, climate change compliance' },
+          ],
+        },
+      ],
+      compliance: 'PepsiCo uses in-house/outside counsel, compliance experts, and operational programs to meet requirements. To date, compliance costs have not had a material financial impact.',
+      futureRisks: 'Future changes (climate laws, ESG reporting, water restrictions) could raise costs. Sugar taxes spreading globally are a particular watch item for the beverages business.',
+      remediation: 'Ongoing environmental cleanup from historical operations and acquisitions; not expected to materially impact earnings.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // BRANDS — PepsiCo's brand portfolio
+  // ════════════════════════════════════════════════════════════════
+  brands: {
+    preamble: 'PepsiCo\u2019s value rests heavily on its brand IP portfolio \u2014 both iconic global brands and regional/local powerhouses. The company owns ~20+ billion-dollar brands and strategically leverages licenses, JVs, and brand extensions (e.g., Lipton, Starbucks, Ocean Spray, Celsius, Dr Pepper) to broaden reach without always owning the brands outright.',
+
+    // Intellectual Property structure — how PEP owns/licenses brands
+    intellectualProperty: [
+      { category: 'Trademarks Owned',           detail: 'Hundreds of trademarks including global flagships (Pepsi, Mountain Dew, Gatorade, Lay\u2019s, Doritos, Cheetos, Quaker, SodaStream, Bubly, Rockstar, SunChips, Walkers, Ruffles, Tostitos, Aquafina, Cap\u2019n Crunch, Life, Sabra, Smartfood).', icon: '™' },
+      { category: 'Regional / Specialty Brands', detail: 'Gamesa, Sabritas, Chipsy, Smith\u2019s, Simba, Obela, Kurkure, BaiCaoWei, Matutano, Agusha, Chudo, Domik v Derevne, Sasko, Spekko, Wheaten, White Star.', icon: '🌍' },
+      { category: 'Licenses (External Brands)', detail: 'Long-term rights to use and distribute brands including Ocean Spray (juices), Keurig Dr Pepper brands (Dr Pepper, Crush, Schweppes) in select markets, and Celsius energy drinks.', icon: '📜' },
+      { category: 'Joint Ventures (Shared IP)', detail: 'JVs hold/use trademarks for Lipton (tea with Unilever) and Starbucks (ready-to-drink coffee). PepsiCo also distributes Tropicana Brands Group juices in U.S. foodservice/small-format channels.', icon: '🤝' },
+      { category: 'Alcoholic Beverages',         detail: 'In 2024, shifted from direct distribution to a trademark licensing + flavor sales model for alcoholic products (e.g., Hard MTN Dew).', icon: '🍺' },
+      { category: 'Licensing Out',                detail: 'PepsiCo authorises its trademarks for joint ventures, bottling appointments, and retail merchandise licensing (to boost brand awareness).', icon: '↗' },
+      { category: 'Patents',                      detail: 'Holds numerous patents for products, packaging, processes, and equipment. Some are licensed to others.', icon: '🔬' },
+      { category: 'Trademark Protection',         detail: 'Trademarks remain valid as long as properly used. PepsiCo emphasises correct identification and licensing use globally.', icon: '🛡' },
+    ],
+
+    // Brand portfolio organised by category
+    brandCategories: [
+      {
+        category: '🥤 Beverages',
+        subcategories: [
+          { sub: 'Cola / CSDs',              brands: ['Pepsi', 'Diet Pepsi', 'Pepsi Zero Sugar'] },
+          { sub: 'Other CSDs',                brands: ['Mountain Dew', 'Sierra Mist (now Starry)', 'Mug Root Beer', 'Mist Twst'] },
+          { sub: 'Juices',                    brands: ['Tropicana (partly divested but still licensed in some markets)', 'Naked Juice'] },
+          { sub: 'Water / Hydration',         brands: ['LIFEWTR', 'Aquafina', 'Propel'] },
+          { sub: 'Sports Drinks',             brands: ['Gatorade', 'Gatorade Zero'] },
+          { sub: 'Energy Drinks',             brands: ['Rockstar', 'Mountain Dew Energy', 'Bang (distribution deal)', 'Celsius (distribution & minority stake)'] },
+          { sub: 'Coffee / RTD',              brands: ['Starbucks RTD (partnership)', 'KeVita (probiotic)', 'Mtn Dew Kickstart'] },
+          { sub: 'At-home carbonation',       brands: ['SodaStream'] },
+        ],
+      },
+      {
+        category: '🍟 Snacks (Frito-Lay — the profit machine)',
+        featured: true,
+        subcategories: [
+          { sub: 'Potato Chips',              brands: ['Lay\u2019s', 'Ruffles'] },
+          { sub: 'Tortilla Chips',            brands: ['Doritos', 'Tostitos'] },
+          { sub: 'Corn Snacks',                brands: ['Cheetos', 'Fritos'] },
+          { sub: 'Multigrain / Healthy',      brands: ['SunChips', 'Stacy\u2019s Pita Chips', 'Bare Snacks'] },
+          { sub: 'Dips & Salsas',              brands: ['Tostitos Salsa', 'Lay\u2019s Dips'] },
+          { sub: 'Pretzels',                   brands: ['Rold Gold'] },
+          { sub: 'Popcorn',                    brands: ['Smartfood', 'PopCorner'] },
+        ],
+      },
+      {
+        category: '🏭 Quaker Foods North America',
+        subcategories: [
+          { sub: 'Breakfast Cereals & Oats',  brands: ['Quaker Oats', 'Cap\u2019n Crunch', 'Life Cereal'] },
+          { sub: 'Granola Bars / Snacks',     brands: ['Quaker Chewy'] },
+          { sub: 'Rice / Pasta',               brands: ['Rice-A-Roni', 'Pasta Roni'] },
+          { sub: 'Instant Meals',              brands: ['Quaker Instant Oatmeal', 'Quaker Grits'] },
+        ],
+      },
+      {
+        category: '🌍 International / Emerging Market Brands',
+        subcategories: [
+          { sub: 'Mexico',                     brands: ['Sabritas', 'Gamesa (cookies, biscuits)'] },
+          { sub: 'India',                      brands: ['Kurkure'] },
+          { sub: 'Russia (before exit)',      brands: ['Wimm-Bill-Dann (dairy)'], note: '\u26a0 Some Russia brands are now fully exited or scaled down due to recent events.' },
+        ],
+      },
+    ],
+
+    // Billion-dollar brands — the megabrand list
+    billionDollarBrands: {
+      headline: '~20+ brands generating $1B+ in estimated annual revenue',
+      tagline: 'In Buffett terms: "Coke is one giant billion-dollar brand. Pepsi is 20 of them."',
+      brands: [
+        { name: 'Pepsi',           category: 'Cola (CSD)' },
+        { name: 'Mountain Dew',    category: 'CSD (huge in the US market)' },
+        { name: 'Gatorade',        category: 'Sports Drinks' },
+        { name: 'Tropicana',       category: 'Juices (partly retained/licensed globally after 2021 divestment)' },
+        { name: 'Aquafina',        category: 'Bottled Water' },
+        { name: 'LIFEWTR',         category: 'Premium Water' },
+        { name: 'Rockstar',        category: 'Energy Drinks' },
+        { name: 'Starbucks RTD',   category: 'Coffee (partnership)' },
+        { name: 'Lipton',          category: 'RTD Tea (partnership via Unilever JV)' },
+        { name: 'SodaStream',      category: 'At-home sparkling' },
+        { name: 'Lay\u2019s',       category: 'Potato Chips', featured: true },
+        { name: 'Doritos',         category: 'Tortilla Chips', featured: true },
+        { name: 'Ruffles',         category: 'Potato Chips' },
+        { name: 'Cheetos',         category: 'Cheese Snacks', featured: true },
+        { name: 'Fritos',          category: 'Corn Chips' },
+        { name: 'Tostitos',        category: 'Tortilla Chips / Dips' },
+        { name: 'SunChips',        category: 'Multigrain Chips' },
+        { name: 'Quaker Oats',     category: 'Breakfast / Cereal' },
+        { name: 'Cap\u2019n Crunch', category: 'Breakfast Cereal' },
+        { name: 'Sabritas',         category: 'Mexican Snacks (regional billion-dollar brand)' },
+        { name: 'Gamesa',           category: 'Cookies / Biscuits (Mexico / Latin America)' },
+      ],
+      buffettObservations: [
+        'Roughly 20+ billion-dollar brands \u2014 vastly more diversified than KO',
+        'Snacks (Frito-Lay) are PEP\u2019s profit powerhouse, not beverages',
+        'Beverages are well-diversified: sports, water, energy, coffee, and CSD',
+        'More category diversification than KO \u2014 but also more enemies to fight on each front',
+      ],
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // MOAT — competitive analysis (Buffett-style)
+  // ════════════════════════════════════════════════════════════════
+  moat: {
+    preamble: 'PepsiCo operates in a highly competitive market with global multinationals, regional players, private labels, and niche micro-brands (often via e-commerce or local sourcing). The company believes its competitive advantage stems from: strong brand strength + loyalty, continuous innovation, efficient production, effective marketing, flexible distribution (DSD + warehouse + e-commerce), and protection of IP.',
+
+    // Buffett-style summary
+    summary: {
+      headline: 'Pepsi has more moats, but more enemies than Coca-Cola.',
+      breakdown: [
+        { division: 'Beverages',  moatStrength: 'Moderate',  biggestRisk: 'Coca-Cola (KO) \u2014 main global rival',                                                  icon: '🥤' },
+        { division: 'Snacks',      moatStrength: 'Very Strong', biggestRisk: 'Private label \u2014 but Frito-Lay\u2019s DSD network is the strongest barrier in PEP\u2019s portfolio', icon: '🍟', featured: true },
+        { division: 'Breakfast',   moatStrength: 'Moderate',  biggestRisk: 'General Mills (Cheerios) / Kellogg\u2019s',                                              icon: '🥣' },
+        { division: 'Energy',      moatStrength: 'Weak',      biggestRisk: 'Monster / Red Bull / Celsius',                                                            icon: '⚡' },
+      ],
+      buffettTakeaways: [
+        'Frito-Lay is Pepsi\u2019s strongest monopoly \u2014 the DSD network is extremely expensive to replicate',
+        'Private label is always lurking \u2014 the snack aisle is a permanent battleground',
+        'KO is the more focused (single-category) bet; PEP is the more diversified (multi-category) bet',
+        'PEP fights on more fronts simultaneously \u2014 which can either dilute focus or hedge category risk depending on management execution',
+      ],
+    },
+
+    // Market share — primary beverage rival
+    marketShare: {
+      headline: 'U.S. Liquid Refreshment Beverage Share (2024)',
+      data: [
+        { company: 'The Coca-Cola Company', share: 21,  color: 'rgba(239,68,68,0.9)',  note: 'Main competitor. Leads in carbonated soft drinks outside the U.S.' },
+        { company: 'PepsiCo',                share: 18,  color: 'rgba(34,197,94,0.9)',   note: 'PepsiCo\u2019s U.S. liquid refreshment share in 2024.', featured: true },
+        { company: 'All others combined',    share: 61,  color: 'rgba(148,163,184,0.5)', note: 'Includes Keurig Dr Pepper, Nestlé, Danone, Monster, Red Bull, regional players, private label.' },
+      ],
+      note: 'In the U.S. beverage market, KO has held a ~3-point share lead over PEP for decades. Outside the U.S., KO leads in carbonated soft drinks by a wider margin.',
+    },
+
+    // Competitive landscape by category
+    competitiveLandscape: {
+      preamble: 'Competition factors include: brand recognition & loyalty, taste, price/value, quality, variety, innovation, distribution reach, shelf space, advertising/marketing (including digital), packaging, convenience, customer service, and the ability to anticipate consumer trends (health, wellness, sustainability, e-commerce).',
+      majorCompetitors: ['The Coca-Cola Company', 'Keurig Dr Pepper', 'Nestlé', 'Monster Beverage', 'Red Bull', 'Mondelēz', 'Kraft Heinz', 'Kellanova', 'General Mills', 'Campbell\u2019s', 'Conagra', 'Hormel', 'Link Snacks', 'Primo', 'Utz Brands'],
+      categories: [
+        {
+          category: 'Beverages',
+          icon: '🥤',
+          rows: [
+            { type: 'Cola / CSD',        pepBrands: 'Pepsi, Mountain Dew',          competitors: 'Coca-Cola (Coke, Sprite, Fanta), Keurig Dr Pepper (Dr Pepper, 7UP)' },
+            { type: 'Water',              pepBrands: 'Aquafina, LIFEWTR',            competitors: 'Coca-Cola (Dasani, Smartwater), Nestlé (Perrier, San Pellegrino), Danone (Evian)' },
+            { type: 'Sports Drinks',      pepBrands: 'Gatorade',                       competitors: 'BodyArmor (KO), Powerade (KO), emerging Celsius hydration' },
+            { type: 'Energy Drinks',      pepBrands: 'Rockstar',                       competitors: 'Red Bull, Monster (KO partner), Celsius' },
+            { type: 'Juices',              pepBrands: 'Tropicana',                      competitors: 'Coca-Cola (Minute Maid, Simply), private labels (Walmart, Costco, Aldi)' },
+            { type: 'Coffee / RTD',       pepBrands: 'Starbucks RTD (Pepsi partner)', competitors: 'Nestlé (Nespresso, Nescafe RTD), Coca-Cola (Costa Coffee RTD)' },
+          ],
+        },
+        {
+          category: 'Snacks (Frito-Lay)',
+          icon: '🍟',
+          featured: true,
+          rows: [
+            { type: 'Potato Chips',       pepBrands: 'Lay\u2019s, Ruffles',           competitors: 'Private label (Walmart Great Value, Aldi, Kirkland), Herr\u2019s, Utz' },
+            { type: 'Tortilla Chips',     pepBrands: 'Doritos, Tostitos',            competitors: 'Private label, smaller regional brands' },
+            { type: 'Corn Snacks',         pepBrands: 'Cheetos, Fritos',              competitors: 'Private label, regional' },
+            { type: 'Pretzels & Popcorn', pepBrands: 'Rold Gold, Smartfood',         competitors: 'Snyder\u2019s-Lance (Campbell\u2019s), private labels' },
+            { type: 'Healthy / Better-for-you', pepBrands: 'Stacy\u2019s, Bare, SunChips', competitors: 'Kind (Mars), General Mills, private labels' },
+          ],
+        },
+        {
+          category: 'Quaker Foods',
+          icon: '🥣',
+          rows: [
+            { type: 'Oatmeal / Cereals',  pepBrands: 'Quaker Oats, Cap\u2019n Crunch', competitors: 'General Mills (Cheerios), Kellogg\u2019s, Post Holdings' },
+            { type: 'Granola Bars',        pepBrands: 'Quaker Chewy',                  competitors: 'General Mills (Nature Valley), Clif (Mondelēz), Kind (Mars)' },
+            { type: 'Rice / Pasta',        pepBrands: 'Rice-A-Roni, Pasta Roni',      competitors: 'Private label, Riviana' },
+          ],
+        },
+      ],
+    },
+
+    // Private label — the hidden competitor
+    privateLabelThreat: {
+      headline: 'The big hidden competitor: Private Label',
+      body: 'Private label brands from major retailers exert significant pricing pressure on PEP, particularly in snacks, water, and juice categories. Frito-Lay\u2019s DSD network and brand strength mitigate this risk \u2014 but it never goes away.',
+      majorPrivateLabels: [
+        { retailer: 'Costco',  brand: 'Kirkland Signature',  reach: 'Global members-only warehouse' },
+        { retailer: 'Walmart', brand: 'Great Value',         reach: 'Largest US grocer by revenue' },
+        { retailer: 'Aldi',    brand: 'Global private label', reach: 'Discount grocer expanding rapidly in U.S.' },
+        { retailer: 'Lidl',    brand: 'Private label',       reach: 'European discount grocer' },
+      ],
+      impact: 'Private label pressures pricing power in snacks, water, and juice. Frito-Lay has the strongest brand differentiation (Doritos and Cheetos are hard to substitute), but generic potato chips are a real threat to Lay\u2019s and Ruffles volume.',
+    },
+  },
+};
+
+
+// ════════════════════════════════════════════════════════════════════
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
 const COVERAGE_DATA = [
@@ -5725,7 +6090,7 @@ const COVERAGE_DATA = [
 
   // === BEVERAGE · USA ===
   { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
-  { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: null },
+  { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: PEP_BREAKDOWN },
 
   // === WASTE · USA ===
   { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: null },
@@ -15930,7 +16295,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === BRANDS TAB ===
                     const renderBrandsTab = () => {
                       if (!bd.brands) return null;
-                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups, competitorLandscape, brandCategories, officialCategories, officialNote, partnerships } = bd.brands;
+                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups, competitorLandscape, brandCategories, officialCategories, officialNote, partnerships, preamble, intellectualProperty, billionDollarBrands } = bd.brands;
 
                       return (
                         <div>
@@ -16336,7 +16701,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* DETAILED BRAND CATEGORIES (8-cat breakdown) */}
-                          {brandCategories && brandCategories.length > 0 && (
+                          {brandCategories && brandCategories.length > 0 && brandCategories[0].brands && (
                             <>
                               <SectionHeading>// DETAILED CATEGORY BREAKDOWN · {brandCategories.length}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Brands grouped by drink type for easier scanning.</div>
@@ -16394,14 +16759,164 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </div>
                             </>
                           )}
+
+                          {/* ════════════════════════════════════════════════ */}
+                          {/* PEP-SPECIFIC BRAND RENDER BLOCKS */}
+                          {/* ════════════════════════════════════════════════ */}
+
+                          {/* Preamble */}
+                          {preamble && (
+                            <div style={{
+                              padding:'12px 14px',
+                              background:'rgba(245,158,11,0.04)',
+                              border:`0.5px solid ${amberGlow}`,
+                              borderLeft:`2px solid ${amber}`,
+                              borderRadius:'3px',
+                              marginBottom:'12px',
+                              fontSize:'11px',
+                              color:'rgba(224,234,255,0.85)',
+                              fontFamily:'monospace',
+                              lineHeight:1.6,
+                              letterSpacing:'0.3px',
+                            }}>
+                              {preamble}
+                            </div>
+                          )}
+
+                          {/* INTELLECTUAL PROPERTY — collapsible list */}
+                          {intellectualProperty && intellectualProperty.length > 0 && (
+                            <>
+                              <SectionHeading>// INTELLECTUAL PROPERTY · {intellectualProperty.length} CATEGORIES</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>How PepsiCo owns, licenses, and protects its brand portfolio.</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'12px'}}>
+                                {intellectualProperty.map((ip, i) => (
+                                  <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'4px'}}>
+                                      {ip.icon && <span style={{fontSize:'14px'}}>{ip.icon}</span>}
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{ip.category}</span>
+                                    </div>
+                                    {ip.detail && (
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{ip.detail}</div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* BRAND CATEGORIES (PEP shape) — collapsible categories with subcategories */}
+                          {brandCategories && brandCategories.length > 0 && brandCategories[0].subcategories && (
+                            <>
+                              <SectionHeading>// BRAND PORTFOLIO · {brandCategories.length} CATEGORIES</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>PepsiCo's brand portfolio organised by category and subcategory.</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'12px'}}>
+                                {brandCategories.map((cat, i) => (
+                                  <details key={i} open={cat.featured} style={{
+                                    background: cat.featured ? 'rgba(245,158,11,0.05)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${cat.featured ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{cat.category}</span>
+                                        {cat.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ PROFIT ENGINE</span>}
+                                      </span>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{cat.subcategories.length} ›</span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                        {cat.subcategories.map((sub, j) => (
+                                          <div key={j} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// {sub.sub.toUpperCase()}</div>
+                                            <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginBottom: sub.note ? '5px' : 0}}>
+                                              {sub.brands.map((b, k) => (
+                                                <span key={k} style={{padding:'3px 8px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{b}</span>
+                                              ))}
+                                            </div>
+                                            {sub.note && (
+                                              <div style={{padding:'5px 7px',background:'rgba(239,68,68,0.06)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px',fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',fontStyle:'italic'}}>{sub.note}</div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* BILLION-DOLLAR BRANDS — featured panel */}
+                          {billionDollarBrands && (
+                            <>
+                              <SectionHeading>// BILLION-DOLLAR BRANDS · {billionDollarBrands.brands.length}</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:'0.5px solid rgba(34,197,94,0.4)',
+                                borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                {billionDollarBrands.headline && (
+                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'6px'}}>{billionDollarBrands.headline}</div>
+                                )}
+                                {billionDollarBrands.tagline && (
+                                  <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px',marginBottom:'12px',fontSize:'11px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                    "{billionDollarBrands.tagline}"
+                                  </div>
+                                )}
+
+                                {/* Brand table */}
+                                {billionDollarBrands.brands && billionDollarBrands.brands.length > 0 && (
+                                  <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                                    <table style={{width:'100%',minWidth:'400px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>BRAND</th>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>CATEGORY</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {billionDollarBrands.brands.map((b, i) => (
+                                          <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: b.featured ? 'rgba(34,197,94,0.05)' : 'transparent'}}>
+                                            <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight: b.featured ? 700 : 600,letterSpacing:'0.3px'}}>
+                                              {b.name}
+                                              {b.featured && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontWeight:700,letterSpacing:'1px'}}>★</span>}
+                                            </td>
+                                            <td style={{padding:'6px 10px',color:'rgba(224,234,255,0.7)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{b.category}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                )}
+
+                                {/* Buffett observations */}
+                                {billionDollarBrands.buffettObservations && billionDollarBrands.buffettObservations.length > 0 && (
+                                  <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>🔬 BUFFETT OBSERVATIONS</div>
+                                    <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                      {billionDollarBrands.buffettObservations.map((o, i) => (
+                                        <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                          <span style={{color:'rgba(34,197,94,0.95)',flexShrink:0,fontWeight:700}}>✓</span>
+                                          <span>{o}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
                         </div>
                       );
                     };
-
-                    // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, buffettFraming, regulatory } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -16536,7 +17051,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* RAW MATERIALS & PRICING */}
-                          {rawMaterials && (
+                          {rawMaterials && rawMaterials.keyInput && (
                             <>
                               <SectionHeading>// RAW MATERIALS & PRICING</SectionHeading>
 
@@ -16718,7 +17233,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             );
                           })()}
                           {/* DISTRIBUTION SYSTEM — global empire stats */}
-                          {distribution && (
+                          {distribution && distribution.headlineStats && (
                             <>
                               <SectionHeading>// DISTRIBUTION SYSTEM · {distribution.asOf}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The empire by the numbers — how much Coca-Cola moves through the world each day.</div>
@@ -16791,7 +17306,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
                           {/* OPERATING SEGMENTS — organisational structure */}
-                          {operatingSegments && (
+                          {operatingSegments && operatingSegments.segments && (
                             <>
                               <SectionHeading>// OPERATING SEGMENTS · {operatingSegments.asOf}</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.description}</div>
@@ -17217,6 +17732,334 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {facilityMatrix.capacityNote && (
                                 <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
                                   {facilityMatrix.capacityNote}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* ════════════════════════════════════════════════ */}
+                          {/* PEP-SPECIFIC RENDER BLOCKS — fire only for PEP shape */}
+                          {/* ════════════════════════════════════════════════ */}
+
+                          {/* BUFFETT FRAMING — featured panel positioning PEP vs KO */}
+                          {buffettFraming && (
+                            <>
+                              <SectionHeading>// THE BUFFETT FRAMING</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:`0.5px solid ${amber}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'16px',
+                                marginBottom:'12px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>🥤 vs 🍟 KO vs PEP</div>
+                                {buffettFraming.headline && (
+                                  <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'10px',fontStyle:'italic'}}>
+                                    {buffettFraming.headline}
+                                  </div>
+                                )}
+                                {buffettFraming.body && (
+                                  <div style={{fontSize:'11px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                    {buffettFraming.body}
+                                  </div>
+                                )}
+
+                                {/* Key differences table */}
+                                {buffettFraming.keyDifferences && buffettFraming.keyDifferences.length > 0 && (
+                                  <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                                    <table style={{width:'100%',minWidth:'500px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIMENSION</th>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:'rgba(239,68,68,0.85)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>KO</th>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:'rgba(34,197,94,0.95)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>PEP</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {buffettFraming.keyDifferences.map((d, i) => (
+                                          <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                            <td style={{padding:'7px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{d.dimension}</td>
+                                            <td style={{padding:'7px 10px',color:'rgba(224,234,255,0.8)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{d.ko}</td>
+                                            <td style={{padding:'7px 10px',color:'rgba(224,234,255,0.8)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{d.pep}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                )}
+
+                                {/* Bottom line */}
+                                {buffettFraming.bottomLine && (
+                                  <div style={{padding:'10px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ BOTTOM LINE</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{buffettFraming.bottomLine}</div>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          {/* OPERATING SEGMENTS (PEP shape) — current + 2025 restructuring */}
+                          {operatingSegments && operatingSegments.current && (
+                            <>
+                              <SectionHeading>// OPERATING SEGMENTS · {operatingSegments.asOf || 'CURRENT'}</SectionHeading>
+                              {operatingSegments.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.preamble}</div>
+                              )}
+
+                              {/* Current segment cards */}
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'12px'}}>
+                                {operatingSegments.current.map((s, i) => {
+                                  const isFeatured  = s.featured;
+                                  const isProfitEng = s.profitEngine;
+                                  return (
+                                    <div key={i} style={{
+                                      padding:'10px 12px',
+                                      background: isFeatured ? 'rgba(245,158,11,0.05)' : 'rgba(0,0,0,0.3)',
+                                      border:`0.5px solid ${isFeatured ? amber : amberGlow}`,
+                                      borderLeft:`2px solid ${isProfitEng ? 'rgba(34,197,94,0.85)' : (isFeatured ? amber : amberDim)}`,
+                                      borderRadius:'2px',
+                                    }}>
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                          <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{s.name}</span>
+                                          {isProfitEng && <span style={{padding:'1px 6px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>💰 PROFIT ENGINE</span>}
+                                          {isFeatured && !isProfitEng && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ FEATURED</span>}
+                                        </div>
+                                        {s.coverage && <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'0.3px',fontWeight:600}}>{s.coverage}</span>}
+                                      </div>
+                                      {s.focus && (
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// {s.focus.toUpperCase()}</div>
+                                      )}
+                                      {s.detail && (
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{s.detail}</div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+
+                              {/* 2025 RESTRUCTURING — collapsible */}
+                              {operatingSegments.restructuring2025 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amber}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'12px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🔄 2025 SEGMENT RESTRUCTURING</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    {operatingSegments.restructuring2025.rationale && (
+                                      <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:amber,fontWeight:700}}>Rationale —</span> {operatingSegments.restructuring2025.rationale}
+                                      </div>
+                                    )}
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'8px'}}>
+                                      {operatingSegments.restructuring2025.newSegments.map((s, i) => (
+                                        <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'3px'}}>
+                                            <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{s.name}</span>
+                                            <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'0.3px',fontWeight:600}}>{s.includes}</span>
+                                          </div>
+                                          {s.note && (
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{s.note}</div>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                    {operatingSegments.restructuring2025.takeaway && (
+                                      <div style={{padding:'10px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.restructuring2025.takeaway}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </details>
+                              )}
+                            </>
+                          )}
+
+                          {/* DISTRIBUTION (PEP shape) — 4 channels + DSD moat callout */}
+                          {distribution && distribution.channels && (
+                            <>
+                              <SectionHeading>// DISTRIBUTION CHANNELS · {distribution.channels.length}</SectionHeading>
+                              {distribution.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{distribution.preamble}</div>
+                              )}
+
+                              {/* Channel cards */}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'6px',marginBottom:'10px'}}>
+                                {distribution.channels.map((c, i) => (
+                                  <div key={i} style={{
+                                    padding:'10px 12px',
+                                    background: c.featured ? 'rgba(245,158,11,0.05)' : 'rgba(0,0,0,0.3)',
+                                    border:`0.5px solid ${c.featured ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${c.featured ? amber : amberDim}`,
+                                    borderRadius:'2px',
+                                  }}>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',marginBottom:'5px'}}>
+                                      {c.emoji && <span style={{fontSize:'16px'}}>{c.emoji}</span>}
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                      {c.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ MOAT</span>}
+                                    </div>
+                                    {c.mechanism && (
+                                      <div style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'4px'}}>
+                                        <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// MECHANISM</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.mechanism}</div>
+                                      </div>
+                                    )}
+                                    {c.bestFor && (
+                                      <div style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// BEST FOR</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.bestFor}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Short punchline */}
+                              {distribution.shortPunchline && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                  {distribution.shortPunchline}
+                                </div>
+                              )}
+
+                              {/* DSD moat callout */}
+                              {distribution.moatNote && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>🛡 DSD MOAT</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{distribution.moatNote}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* RAW MATERIALS (PEP shape) — categories + risk management */}
+                          {rawMaterials && rawMaterials.categories && (
+                            <>
+                              <SectionHeading>// RAW MATERIALS & INGREDIENTS</SectionHeading>
+                              {rawMaterials.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{rawMaterials.preamble}</div>
+                              )}
+
+                              {/* Category cards */}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'6px',marginBottom:'10px'}}>
+                                {rawMaterials.categories.map((c, i) => (
+                                  <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'5px'}}>
+                                      {c.emoji && <span style={{fontSize:'14px'}}>{c.emoji}</span>}
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                    </div>
+                                    {c.items && (
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'4px'}}>{c.items}</div>
+                                    )}
+                                    {c.notes && (
+                                      <div style={{padding:'5px 8px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',fontStyle:'italic'}}>{c.notes}</div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Risk management */}
+                              {rawMaterials.riskManagement && rawMaterials.riskManagement.length > 0 && (
+                                <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'8px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>🛡 SUPPLY RISK MANAGEMENT</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {rawMaterials.riskManagement.map((r, i) => (
+                                      <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:amber,flexShrink:0,fontWeight:700}}>›</span>
+                                        <span>{r}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Volatility note */}
+                              {rawMaterials.volatility && (
+                                <div style={{padding:'10px 12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.35)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>⚠ VOLATILITY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{rawMaterials.volatility}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* REGULATORY — 6 areas, collapsible */}
+                          {regulatory && regulatory.areas && (
+                            <>
+                              <SectionHeading>// REGULATORY ENVIRONMENT</SectionHeading>
+                              {regulatory.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{regulatory.preamble}</div>
+                              )}
+
+                              {regulatory.scope && (
+                                <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// SCOPE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{regulatory.scope}</div>
+                                </div>
+                              )}
+
+                              {/* Areas — collapsible */}
+                              <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'10px'}}>
+                                {regulatory.areas.map((a, i) => (
+                                  <details key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${a.critical ? 'rgba(239,68,68,0.35)' : amberGlow}`,
+                                    borderLeft:`2px solid ${a.critical ? 'rgba(239,68,68,0.85)' : amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                        {a.icon && <span style={{fontSize:'14px'}}>{a.icon}</span>}
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{a.area}</span>
+                                        {a.critical && <span style={{padding:'1px 6px',background:'rgba(239,68,68,0.10)',border:'0.5px solid rgba(239,68,68,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>⚠ CRITICAL</span>}
+                                      </span>
+                                      <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background: a.critical ? 'rgba(239,68,68,0.03)' : 'rgba(245,158,11,0.03)'}}>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                        {a.details.map((d, j) => (
+                                          <div key={j} style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// {d.label.toUpperCase()}</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.detail}</div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
+
+                              {/* Compliance + future risks + remediation panels */}
+                              {regulatory.compliance && (
+                                <div style={{padding:'8px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'5px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// COMPLIANCE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{regulatory.compliance}</div>
+                                </div>
+                              )}
+                              {regulatory.futureRisks && (
+                                <div style={{padding:'10px 12px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'2px',marginBottom:'5px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'3px'}}>⚠ FUTURE RISKS</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{regulatory.futureRisks}</div>
+                                </div>
+                              )}
+                              {regulatory.remediation && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                  <span style={{color:amber,fontStyle:'normal',fontWeight:700}}>Remediation —</span> {regulatory.remediation}
                                 </div>
                               )}
                             </>
@@ -20460,7 +21303,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === MOAT TAB ===
                     const renderMoatTab = () => {
                       if (!bd.moat) return null;
-                      const { pricingPower, acquisitionStrategy } = bd.moat;
+                      const { pricingPower, acquisitionStrategy, preamble, summary, marketShare, competitiveLandscape, privateLabelThreat } = bd.moat;
 
                       // Multi-line chart that compares price series across multiple products
                       const PricingPowerChart = ({ data }) => {
@@ -20767,6 +21610,258 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{acquisitionStrategy.bottomLine}</div>
                                 </div>
                               )}
+                            </>
+                          )}
+
+                          {/* ════════════════════════════════════════════════ */}
+                          {/* PEP-SPECIFIC MOAT RENDER BLOCKS */}
+                          {/* ════════════════════════════════════════════════ */}
+
+                          {/* Preamble */}
+                          {preamble && (
+                            <div style={{
+                              padding:'12px 14px',
+                              background:'rgba(245,158,11,0.04)',
+                              border:`0.5px solid ${amberGlow}`,
+                              borderLeft:`2px solid ${amber}`,
+                              borderRadius:'3px',
+                              marginBottom:'12px',
+                              fontSize:'11px',
+                              color:'rgba(224,234,255,0.85)',
+                              fontFamily:'monospace',
+                              lineHeight:1.6,
+                              letterSpacing:'0.3px',
+                            }}>
+                              {preamble}
+                            </div>
+                          )}
+
+                          {/* SUMMARY — "more moats, more enemies" featured panel */}
+                          {summary && (
+                            <>
+                              <SectionHeading>// MOAT MAP · BY DIVISION</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:`0.5px solid ${amber}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                {summary.headline && (
+                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'12px',fontStyle:'italic'}}>
+                                    "{summary.headline}"
+                                  </div>
+                                )}
+
+                                {/* Division breakdown table */}
+                                {summary.breakdown && summary.breakdown.length > 0 && (
+                                  <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                                    <table style={{width:'100%',minWidth:'500px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVISION</th>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>MOAT STRENGTH</th>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>BIGGEST RISK</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {summary.breakdown.map((b, i) => {
+                                          const strengthColors = {
+                                            'Very Strong': 'rgba(34,197,94,0.95)',
+                                            'Strong':       'rgba(34,197,94,0.85)',
+                                            'Moderate':     amber,
+                                            'Weak':         'rgba(239,68,68,0.95)',
+                                          };
+                                          const strengthColor = strengthColors[b.moatStrength] || 'rgba(224,234,255,0.8)';
+                                          return (
+                                            <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: b.featured ? 'rgba(34,197,94,0.05)' : 'transparent'}}>
+                                              <td style={{padding:'7px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>
+                                                {b.icon && <span style={{marginRight:'6px'}}>{b.icon}</span>}
+                                                {b.division}
+                                                {b.featured && <span style={{marginLeft:'6px',padding:'1px 5px',background:'rgba(34,197,94,0.15)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ KEY</span>}
+                                              </td>
+                                              <td style={{padding:'7px 10px',color:strengthColor,fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{b.moatStrength}</td>
+                                              <td style={{padding:'7px 10px',color:'rgba(224,234,255,0.75)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`,fontSize:'10px'}}>{b.biggestRisk}</td>
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                )}
+
+                                {/* Buffett takeaways */}
+                                {summary.buffettTakeaways && summary.buffettTakeaways.length > 0 && (
+                                  <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>🔬 BUFFETT TAKEAWAYS</div>
+                                    <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                      {summary.buffettTakeaways.map((t, i) => (
+                                        <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                          <span style={{color:amber,flexShrink:0,fontWeight:700}}>›</span>
+                                          <span>{t}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          {/* MARKET SHARE — US beverage share visualisation */}
+                          {marketShare && marketShare.data && (
+                            <>
+                              <SectionHeading>// {marketShare.headline ? marketShare.headline.toUpperCase() : 'MARKET SHARE'}</SectionHeading>
+                              <div style={{
+                                background:'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                {/* Horizontal bar visualization */}
+                                <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'12px'}}>
+                                  {marketShare.data.map((m, i) => (
+                                    <div key={i} style={{padding:'8px 10px',background: m.featured ? 'rgba(34,197,94,0.05)' : 'rgba(0,0,0,0.3)',border:`0.5px solid ${m.featured ? 'rgba(34,197,94,0.4)' : amberGlow}`,borderLeft:`2px solid ${m.color || amber}`,borderRadius:'2px'}}>
+                                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',marginBottom:'4px'}}>
+                                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight: m.featured ? 700 : 600,letterSpacing:'0.3px'}}>
+                                          {m.company}
+                                          {m.featured && <span style={{marginLeft:'6px',padding:'1px 5px',background:'rgba(34,197,94,0.15)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>★ PEP</span>}
+                                        </span>
+                                        <span style={{fontSize:'14px',color:m.color || amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{m.share}%</span>
+                                      </div>
+                                      {/* Bar */}
+                                      <div style={{width:'100%',height:'8px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.15)',borderRadius:'2px',overflow:'hidden',marginBottom:'4px'}}>
+                                        <div style={{width: `${m.share}%`,height:'100%',background: m.color || amber,opacity:0.7}}/>
+                                      </div>
+                                      {m.note && (
+                                        <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',fontStyle:'italic'}}>{m.note}</div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+
+                                {marketShare.note && (
+                                  <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                    {marketShare.note}
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          {/* COMPETITIVE LANDSCAPE — competitors by category */}
+                          {competitiveLandscape && competitiveLandscape.categories && (
+                            <>
+                              <SectionHeading>// COMPETITIVE LANDSCAPE · {competitiveLandscape.categories.length} CATEGORIES</SectionHeading>
+                              {competitiveLandscape.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitiveLandscape.preamble}</div>
+                              )}
+
+                              {/* Major competitors chips */}
+                              {competitiveLandscape.majorCompetitors && competitiveLandscape.majorCompetitors.length > 0 && (
+                                <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>// MAJOR COMPETITORS · {competitiveLandscape.majorCompetitors.length}</div>
+                                  <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                    {competitiveLandscape.majorCompetitors.map((c, i) => (
+                                      <span key={i} style={{padding:'3px 8px',background:'rgba(239,68,68,0.06)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{c}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Categories — collapsible */}
+                              <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'12px'}}>
+                                {competitiveLandscape.categories.map((cat, i) => (
+                                  <details key={i} open={cat.featured} style={{
+                                    background: cat.featured ? 'rgba(245,158,11,0.05)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${cat.featured ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                        {cat.icon && <span style={{fontSize:'14px'}}>{cat.icon}</span>}
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{cat.category}</span>
+                                        {cat.featured && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ STRONGEST MOAT</span>}
+                                      </span>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{cat.rows.length} ›</span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                      <div style={{overflowX:'auto'}}>
+                                        <table style={{width:'100%',minWidth:'400px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                          <thead>
+                                            <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.04)'}}>
+                                              <th style={{textAlign:'left',padding:'7px 9px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>TYPE</th>
+                                              <th style={{textAlign:'left',padding:'7px 9px',color:'rgba(34,197,94,0.95)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>PEP BRANDS</th>
+                                              <th style={{textAlign:'left',padding:'7px 9px',color:'rgba(239,68,68,0.85)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>COMPETITORS</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {cat.rows.map((row, j) => (
+                                              <tr key={j} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                                <td style={{padding:'6px 9px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{row.type}</td>
+                                                <td style={{padding:'6px 9px',color:'rgba(34,197,94,0.85)',fontWeight:600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{row.pepBrands}</td>
+                                                <td style={{padding:'6px 9px',color:'rgba(224,234,255,0.75)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{row.competitors}</td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* PRIVATE LABEL THREAT — red callout */}
+                          {privateLabelThreat && (
+                            <>
+                              <SectionHeading>// THE HIDDEN COMPETITOR · PRIVATE LABEL</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:'0.5px solid rgba(239,68,68,0.5)',
+                                borderLeft:'2px solid rgba(239,68,68,0.95)',
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                              }}>
+                                {privateLabelThreat.headline && (
+                                  <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'8px'}}>⚠ {privateLabelThreat.headline}</div>
+                                )}
+                                {privateLabelThreat.body && (
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{privateLabelThreat.body}</div>
+                                )}
+
+                                {/* Major private labels */}
+                                {privateLabelThreat.majorPrivateLabels && privateLabelThreat.majorPrivateLabels.length > 0 && (
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'5px',marginBottom:'10px'}}>
+                                    {privateLabelThreat.majorPrivateLabels.map((p, i) => (
+                                      <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.7)',borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// {p.retailer.toUpperCase()}</div>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'2px'}}>{p.brand}</div>
+                                        <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{p.reach}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {privateLabelThreat.impact && (
+                                  <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// IMPACT</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{privateLabelThreat.impact}</div>
+                                  </div>
+                                )}
+                              </div>
                             </>
                           )}
                         </div>
