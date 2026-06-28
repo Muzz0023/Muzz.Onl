@@ -4197,8 +4197,446 @@ const KO_BREAKDOWN = {
       ],
       note: '2017 trough ($20K) reflects the one-off Tax Cuts and Jobs Act (TCJA) charge that hammered reported net income that year. Underlying trend: NI per employee compounded 2.6x from $59.6K (2015) to $152.5K (2024) — extreme leverage from the asset-light pivot.',
     },
+
+    // ════════════════════════════════════════════════════════════════
+    // INCOME STATEMENT — Revenue, costs, margins, operating profit, EPS
+    // ════════════════════════════════════════════════════════════════
+    incomeStatement: {
+      netSales: {
+        label: 'Revenue', unit: 'M USD',
+        series: [
+          { year: 2015, value: 44294 }, { year: 2016, value: 41863, down: true }, { year: 2017, value: 35410, down: true },
+          { year: 2018, value: 31856, down: true }, { year: 2019, value: 37266 }, { year: 2020, value: 33014, down: true },
+          { year: 2021, value: 38655 }, { year: 2022, value: 43004 }, { year: 2023, value: 45754 },
+          { year: 2024, value: 47061 },
+        ],
+        note: 'Revenue dipped 2015\u20132018 due to bottler refranchising (KO sold off bottling operations to focus on the high-margin concentrate business). 2020 dip = COVID. Since 2021 KO has compounded steadily \u2014 $38.7B \u2192 $47.1B (+21.7% over 3 years).',
+      },
+      costOfSales: {
+        label: 'Cost of Sales', unit: 'M USD',
+        series: [
+          { year: 2015, value: 17482 }, { year: 2016, value: 16465 }, { year: 2017, value: 13255 },
+          { year: 2018, value: 11770 }, { year: 2019, value: 14619 }, { year: 2020, value: 13433 },
+          { year: 2021, value: 15357 }, { year: 2022, value: 18000 }, { year: 2023, value: 18520 },
+          { year: 2024, value: 18324 },
+        ],
+      },
+      grossProfit: {
+        label: 'Gross Profit', unit: 'M USD',
+        series: [
+          { year: 2015, value: 26812 }, { year: 2016, value: 25398, down: true }, { year: 2017, value: 22155, down: true },
+          { year: 2018, value: 20086, down: true }, { year: 2019, value: 22647 }, { year: 2020, value: 19581, down: true },
+          { year: 2021, value: 23298 }, { year: 2022, value: 25004 }, { year: 2023, value: 27234 },
+          { year: 2024, value: 28737 },
+        ],
+      },
+      grossMargin: {
+        label: 'Gross Margin %', unit: '%',
+        series: [
+          { year: 2015, value: 60.5 }, { year: 2016, value: 60.7 }, { year: 2017, value: 62.6 },
+          { year: 2018, value: 63.1 }, { year: 2019, value: 60.8 }, { year: 2020, value: 59.3 },
+          { year: 2021, value: 60.3 }, { year: 2022, value: 58.1 }, { year: 2023, value: 59.5 },
+          { year: 2024, value: 61.1 },
+        ],
+        avg10yr: 60.6,
+        note: 'Range: ~58%\u201363%. Highest: 2018 at 63.1% (post-refranchising peak). Lowest: 2022 at 58.1% (input cost inflation). Returning to 61.1% in 2024 = strong pricing power recovery.',
+      },
+      smaExpense: {
+        label: 'SG&A Expense', unit: 'M USD',
+        series: [
+          { year: 2015, value: 16427 }, { year: 2016, value: 15370 }, { year: 2017, value: 12654 },
+          { year: 2018, value: 10307 }, { year: 2019, value: 12103 }, { year: 2020, value: 9731 },
+          { year: 2021, value: 12144 }, { year: 2022, value: 12880 }, { year: 2023, value: 13972 },
+          { year: 2024, value: 14582 },
+        ],
+      },
+      smaToGrossProfit: {
+        label: 'SG&A as % of Gross Profit', unit: '%',
+        series: [
+          { year: 2015, value: 61.3, spike: true }, { year: 2016, value: 60.5, spike: true }, { year: 2017, value: 57.1, spike: true },
+          { year: 2018, value: 51.3 }, { year: 2019, value: 53.4 }, { year: 2020, value: 49.7 },
+          { year: 2021, value: 52.1 }, { year: 2022, value: 51.5 }, { year: 2023, value: 51.3 },
+          { year: 2024, value: 50.7 },
+        ],
+        note: 'SG&A consumed ~60% of gross profit in 2015\u20132017 due to bottling operations. Post-refranchising the ratio dropped to a structural ~50\u201353% range. Lower = more operating leverage.',
+      },
+      opex: {
+        label: 'Operating Expenses (SG&A + Other)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 18084 }, { year: 2016, value: 16741 }, { year: 2017, value: 14556 },
+          { year: 2018, value: 11386 }, { year: 2019, value: 12561 }, { year: 2020, value: 10584 },
+          { year: 2021, value: 12990 }, { year: 2022, value: 14015 }, { year: 2023, value: 15923 },
+          { year: 2024, value: 18745 },
+        ],
+      },
+      totalExpenses: {
+        label: 'Total Expenses (OpEx + Cost of Sales)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 35566 }, { year: 2016, value: 33206 }, { year: 2017, value: 27811 },
+          { year: 2018, value: 23156 }, { year: 2019, value: 27180 }, { year: 2020, value: 24017 },
+          { year: 2021, value: 28347 }, { year: 2022, value: 32015 }, { year: 2023, value: 34443 },
+          { year: 2024, value: 37069 },
+        ],
+      },
+      expensesToRevenue: {
+        label: 'Expenses to Revenue %', unit: '%',
+        series: [
+          { year: 2015, value: 78 }, { year: 2016, value: 75 }, { year: 2017, value: 74 },
+          { year: 2018, value: 73 }, { year: 2019, value: 72 }, { year: 2020, value: 72 },
+          { year: 2021, value: 72 }, { year: 2022, value: 78 }, { year: 2023, value: 79 },
+          { year: 2024, value: 80 },
+        ],
+        avg10yr: 75,
+        note: '10-year average: 75%. Climbing from 72% (2019\u20132021) to 80% (2024) = cost pressure or reinvestment. Worth tracking \u2014 if it keeps climbing, operating leverage compresses.',
+      },
+      operatingProfit: {
+        label: 'Operating Income', unit: 'M USD',
+        series: [
+          { year: 2015, value: 8728 }, { year: 2016, value: 8657, down: true }, { year: 2017, value: 7501, down: true },
+          { year: 2018, value: 8700 }, { year: 2019, value: 10086 }, { year: 2020, value: 8997, down: true },
+          { year: 2021, value: 10308 }, { year: 2022, value: 10909 }, { year: 2023, value: 11311 },
+          { year: 2024, value: 9992, down: true },
+        ],
+      },
+      provisionForTaxes: {
+        label: 'Provision for Income Tax', unit: 'M USD',
+        series: [
+          { year: 2015, value: 2239 }, { year: 2016, value: 1586 }, { year: 2017, value: 5560, spike: true },
+          { year: 2018, value: 1623 }, { year: 2019, value: 1801 }, { year: 2020, value: 1981 },
+          { year: 2021, value: 2621 }, { year: 2022, value: 2115 }, { year: 2023, value: 2249 },
+          { year: 2024, value: 2437 },
+        ],
+        note: '2017 spike to $5.56B = one-off TCJA (Tax Cuts and Jobs Act) repatriation charge. Stripping that, tax provisions trend in the $1.6\u20132.6B range.',
+      },
+      taxRate: {
+        label: 'Effective Tax Rate', unit: '%',
+        series: [
+          { year: 2015, value: 25 }, { year: 2016, value: 18 }, { year: 2017, value: 81.8, spike: true },
+          { year: 2018, value: 18 }, { year: 2019, value: 17 }, { year: 2020, value: 22 },
+          { year: 2021, value: 25 }, { year: 2022, value: 19 }, { year: 2023, value: 19 },
+          { year: 2024, value: 24 },
+        ],
+        note: '2017 effective rate ballooned due to the TCJA one-time charge ($5.56B tax on $6.8B pre-tax \u2192 ~82%). Underlying rate sits in the 17\u201325% range. Post-TCJA, the U.S. corporate rate cut to 21% benefited KO.',
+      },
+      netIncome: {
+        label: 'Net Income', unit: 'M USD',
+        series: [
+          { year: 2015, value: 7351 }, { year: 2016, value: 6527, down: true }, { year: 2017, value: 1238, down: true },
+          { year: 2018, value: 6434 }, { year: 2019, value: 8985 }, { year: 2020, value: 7747, down: true },
+          { year: 2021, value: 9771 }, { year: 2022, value: 9542, down: true }, { year: 2023, value: 10714 },
+          { year: 2024, value: 10631, down: true },
+        ],
+        note: '2017 collapse to $1.24B = TCJA one-off, not operating weakness. Underlying earnings power: $6.4B (2018) compounded to $10.6B (2024) = +66% over 6 years, or ~9% CAGR.',
+      },
+      profitMargin: {
+        label: 'Profit Margin %', unit: '%',
+        series: [
+          { year: 2015, value: 16.59 }, { year: 2016, value: 15.60 }, { year: 2017, value: 3.50 },
+          { year: 2018, value: 20.20 }, { year: 2019, value: 24.11 }, { year: 2020, value: 23.47 },
+          { year: 2021, value: 25.28 }, { year: 2022, value: 22.18 }, { year: 2023, value: 23.43 },
+          { year: 2024, value: 22.59 },
+        ],
+        note: 'Margins jumped from ~16% (2015\u20132016) to ~23\u201325% post-refranchising \u2014 the asset-light pivot dramatically improved profit per dollar of revenue.',
+      },
+      eps: {
+        label: 'EPS (Diluted)', unit: 'USD',
+        series: [
+          { year: 2015, value: 1.67 }, { year: 2016, value: 1.49, down: true }, { year: 2017, value: 0.29, down: true },
+          { year: 2018, value: 1.50 }, { year: 2019, value: 2.07 }, { year: 2020, value: 1.79, down: true },
+          { year: 2021, value: 2.25 }, { year: 2022, value: 2.19, down: true }, { year: 2023, value: 2.47 },
+          { year: 2024, value: 2.46, down: true },
+        ],
+      },
+      cagr: {
+        label: 'EPS CAGR (2015\u20132024)', value: '4.35%',
+        note: 'Even excluding the 2017 TCJA disruption, EPS growth has been modest. Buybacks have supported per-share growth more than top-line expansion.',
+      },
+      nopat: {
+        label: 'NOPAT (Net Operating Profit After Tax)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 6546 }, { year: 2016, value: 7098 }, { year: 2017, value: 6001 },
+          { year: 2018, value: 7134 }, { year: 2019, value: 8369 }, { year: 2020, value: 7017 },
+          { year: 2021, value: 7731 }, { year: 2022, value: 8834 }, { year: 2023, value: 9166 },
+          { year: 2024, value: 7594 },
+        ],
+        note: '2017 NOPAT estimated at 20% normalised tax rate (vs reported 82% effective due to TCJA). NOPAT strips out tax distortions and shows true operating earnings power.',
+      },
+    },
+
     // Balance Sheet — pension plans (will be expanded later)
     balanceSheet: {
+      // ═══════════════════════════════════════════════════════════
+      // CURRENT ASSETS
+      // ═══════════════════════════════════════════════════════════
+      cash: {
+        label: 'Cash & Cash Equivalents', unit: 'M USD',
+        series: [
+          { year: 2015, value: 7309 }, { year: 2016, value: 8555 }, { year: 2017, value: 6006, down: true },
+          { year: 2018, value: 8926 }, { year: 2019, value: 6480, down: true }, { year: 2020, value: 6795 },
+          { year: 2021, value: 9684 }, { year: 2022, value: 9519, down: true }, { year: 2023, value: 9366, down: true },
+          { year: 2024, value: 10828 },
+        ],
+      },
+      inventory: {
+        label: 'Inventory', unit: 'M USD',
+        series: [
+          { year: 2015, value: 2902 }, { year: 2016, value: 2675 }, { year: 2017, value: 2655 },
+          { year: 2018, value: 2766 }, { year: 2019, value: 3379 }, { year: 2020, value: 3266 },
+          { year: 2021, value: 3414 }, { year: 2022, value: 4233 }, { year: 2023, value: 4424 },
+          { year: 2024, value: 4728 },
+        ],
+      },
+      inventoryTurnover: {
+        label: 'Inventory Turnover', unit: 'x',
+        series: [
+          { year: 2015, value: 6.02 }, { year: 2016, value: 6.16 }, { year: 2017, value: 4.99 },
+          { year: 2018, value: 4.26, spike: true }, { year: 2019, value: 4.33, spike: true }, { year: 2020, value: 4.11, spike: true },
+          { year: 2021, value: 4.50, spike: true }, { year: 2022, value: 4.25, spike: true }, { year: 2023, value: 4.19, spike: true },
+          { year: 2024, value: 3.88, spike: true },
+        ],
+        avg10yr: 4.67,
+        note: '10-year average: 4.67x per year. Turnover declined steadily as inventory grew faster than COGS \u2014 partly reflects more finished-product inventory post-acquisitions (Costa, fairlife).',
+      },
+      dio: {
+        label: 'Days Inventory Outstanding (DIO)', unit: 'days',
+        series: [
+          { year: 2015, value: 60.59 }, { year: 2016, value: 59.30 }, { year: 2017, value: 73.11 },
+          { year: 2018, value: 85.78, spike: true }, { year: 2019, value: 84.37, spike: true }, { year: 2020, value: 88.74, spike: true },
+          { year: 2021, value: 81.14, spike: true }, { year: 2022, value: 85.84, spike: true }, { year: 2023, value: 87.19, spike: true },
+          { year: 2024, value: 94.18, spike: true },
+        ],
+        avg10yr: 80.02,
+        note: '10-year average: 80.02 days. DIO has climbed from 60 days (2015) to 94 days (2024) \u2014 KO carries ~5 weeks more inventory now than a decade ago.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets', unit: 'M USD',
+        series: [
+          { year: 2015, value: 33395 }, { year: 2016, value: 34010 }, { year: 2017, value: 36545 },
+          { year: 2018, value: 30634, down: true }, { year: 2019, value: 20411, down: true }, { year: 2020, value: 19240, down: true },
+          { year: 2021, value: 22545 }, { year: 2022, value: 22591 }, { year: 2023, value: 26732 },
+          { year: 2024, value: 25997, down: true },
+        ],
+        note: 'Big step-down in 2019 as bottling assets were divested (current assets dropped $10B). Current asset base now stabilised around $22\u201326B.',
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable (net)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 3941 }, { year: 2016, value: 3856 }, { year: 2017, value: 3667 },
+          { year: 2018, value: 3396 }, { year: 2019, value: 3971 }, { year: 2020, value: 3144 },
+          { year: 2021, value: 3512 }, { year: 2022, value: 3487 }, { year: 2023, value: 3410 },
+          { year: 2024, value: 3569 },
+        ],
+      },
+      dso: {
+        label: 'Days Sales Outstanding (DSO)', unit: 'days',
+        series: [
+          { year: 2015, value: 32.48 }, { year: 2016, value: 33.62, spike: true }, { year: 2017, value: 37.80, spike: true },
+          { year: 2018, value: 38.91, spike: true }, { year: 2019, value: 38.89, spike: true }, { year: 2020, value: 34.76, spike: true },
+          { year: 2021, value: 33.16 }, { year: 2022, value: 29.60 }, { year: 2023, value: 27.20 },
+          { year: 2024, value: 27.68 },
+        ],
+        avg10yr: 33.41,
+        note: '10-year average: 33.41 days. DSO has improved (lower = collecting faster) from ~38 days (2018\u20132019) to ~27 days now. Concentrate-focused model has better terms with bottlers.',
+      },
+      // ═══════════════════════════════════════════════════════════
+      // TOTAL ASSETS
+      // ═══════════════════════════════════════════════════════════
+      totalAssets: {
+        label: 'Total Assets', unit: 'M USD',
+        series: [
+          { year: 2015, value: 90093 }, { year: 2016, value: 87270, down: true }, { year: 2017, value: 87896 },
+          { year: 2018, value: 83216, down: true }, { year: 2019, value: 86381 }, { year: 2020, value: 87296 },
+          { year: 2021, value: 94354 }, { year: 2022, value: 92763, down: true }, { year: 2023, value: 97703 },
+          { year: 2024, value: 100549 },
+        ],
+        note: 'Total assets shrank during refranchising (2016\u20132018) then climbed back as KO acquired BodyArmor (2021) and grew its concentrate base. Crossed $100B in 2024.',
+      },
+      // ═══════════════════════════════════════════════════════════
+      // CURRENT LIABILITIES
+      // ═══════════════════════════════════════════════════════════
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities', unit: 'M USD',
+        series: [
+          { year: 2015, value: 26930 }, { year: 2016, value: 26532 }, { year: 2017, value: 27194 },
+          { year: 2018, value: 29223 }, { year: 2019, value: 26973 }, { year: 2020, value: 14601, spike: true },
+          { year: 2021, value: 19950, spike: true }, { year: 2022, value: 19724 }, { year: 2023, value: 23571, spike: true },
+          { year: 2024, value: 25249 },
+        ],
+        note: '2020 dip ($14.6B) tied to short-term debt restructuring during COVID. Has since climbed back toward ~$25B.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable & Accrued Expenses', unit: 'M USD',
+        series: [
+          { year: 2015, value: 9660 }, { year: 2016, value: 9490 }, { year: 2017, value: 8748 },
+          { year: 2018, value: 8932 }, { year: 2019, value: 11312 }, { year: 2020, value: 11145 },
+          { year: 2021, value: 14619 }, { year: 2022, value: 15749 }, { year: 2023, value: 15485 },
+          { year: 2024, value: 21715 },
+        ],
+        note: 'AP has more than doubled from $9.7B (2015) to $21.7B (2024). Coca-Cola is increasingly using suppliers as a free credit line \u2014 see DPO.',
+      },
+      dpo: {
+        label: 'Days Payable Outstanding (DPO)', unit: 'days',
+        series: [
+          { year: 2015, value: 201.69, spike: true }, { year: 2016, value: 210.38, spike: true }, { year: 2017, value: 240.89, spike: true },
+          { year: 2018, value: 277.00, spike: true }, { year: 2019, value: 282.43, spike: true }, { year: 2020, value: 302.83 },
+          { year: 2021, value: 347.46 }, { year: 2022, value: 319.35 }, { year: 2023, value: 305.18 },
+          { year: 2024, value: 432.55 },
+        ],
+        avg10yr: 291.98,
+        note: '10-year average: 292 days. KO\u2019s DPO is extraordinary \u2014 432 days in 2024 means it takes KO 14 months to pay suppliers. Effectively using suppliers as a free credit line. Buffett-style competitive advantage: a moat large enough to dictate payment terms.',
+      },
+      shortTermDebt: {
+        label: 'Loans & Notes Payable', unit: 'M USD',
+        series: [
+          { year: 2015, value: 13129 }, { year: 2016, value: 12498 }, { year: 2017, value: 13205 },
+          { year: 2018, value: 13194 }, { year: 2019, value: 10994 }, { year: 2020, value: 2183, spike: true },
+          { year: 2021, value: 3307 }, { year: 2022, value: 2373 }, { year: 2023, value: 4557 },
+          { year: 2024, value: 1499 },
+        ],
+        note: '2020 spike-DOWN to $2.2B (from $11B in 2019): Coke massively cut short-term loans during COVID by refinancing into long-term debt \u2014 made the balance sheet structurally safer. Short-term debt has stayed structurally lower ever since.',
+      },
+      currentRatio: {
+        label: 'Current Ratio', unit: 'x',
+        series: [
+          { year: 2015, value: 1.24 }, { year: 2016, value: 1.28 }, { year: 2017, value: 1.34 },
+          { year: 2018, value: 1.05 }, { year: 2019, value: 0.76 }, { year: 2020, value: 1.32 },
+          { year: 2021, value: 1.13 }, { year: 2022, value: 1.15 }, { year: 2023, value: 1.13 },
+          { year: 2024, value: 1.03 },
+        ],
+        note: '2019 dropped below 1.0 (current liabilities exceeded current assets) due to bottling divestiture restructuring. Stabilised in a healthy ~1.0\u20131.3x range thereafter.',
+      },
+      // ═══════════════════════════════════════════════════════════
+      // LONG-TERM DEBT
+      // ═══════════════════════════════════════════════════════════
+      longTermDebt: {
+        label: 'Long-Term Debt', unit: 'M USD',
+        series: [
+          { year: 2015, value: 28407 }, { year: 2016, value: 29684 }, { year: 2017, value: 31182 },
+          { year: 2018, value: 25364 }, { year: 2019, value: 27516 }, { year: 2020, value: 40125, spike: true },
+          { year: 2021, value: 38116 }, { year: 2022, value: 36377 }, { year: 2023, value: 35547 },
+          { year: 2024, value: 42375, spike: true },
+        ],
+        note: '2020 spike to $40B = COVID refinancing (short-term debt converted to long-term to lock in low rates). 2024 spike to $42B reflects continued capital structure positioning at low long-term rates.',
+      },
+      ltDebtToEquity: {
+        label: 'Long-Term Debt to Equity', unit: 'x',
+        series: [
+          { year: 2015, value: 1.10 }, { year: 2016, value: 1.28 }, { year: 2017, value: 1.64 },
+          { year: 2018, value: 1.33 }, { year: 2019, value: 1.30 }, { year: 2020, value: 1.88 },
+          { year: 2021, value: 1.29 }, { year: 2022, value: 1.41 }, { year: 2023, value: 1.29 },
+          { year: 2024, value: 1.58 },
+        ],
+        note: 'KO carries more debt relative to equity than most consumer-staples peers. Justified by extremely stable cash flows that easily service the debt.',
+      },
+      ltDebtToNetIncome: {
+        label: 'Long-Term Debt to Net Income', unit: 'x',
+        series: [
+          { year: 2015, value: 3.87 }, { year: 2016, value: 4.55 }, { year: 2017, value: 25.20, spike: true },
+          { year: 2018, value: 3.94 }, { year: 2019, value: 3.06 }, { year: 2020, value: 5.18 },
+          { year: 2021, value: 3.90 }, { year: 2022, value: 3.81 }, { year: 2023, value: 3.32 },
+          { year: 2024, value: 3.98 },
+        ],
+        note: '2017 spike to 25.20x = TCJA-related NI collapse, not a debt problem. Normal range is 3\u20135x net income, which is conservative for a company with KO\u2019s stable cash generation.',
+      },
+      // ═══════════════════════════════════════════════════════════
+      // EQUITY
+      // ═══════════════════════════════════════════════════════════
+      additionalPaidInCapital: {
+        label: 'Capital Surplus (Additional Paid-In Capital)', unit: 'M USD',
+        series: [
+          { year: 2015, value: 14016 }, { year: 2016, value: 14993 }, { year: 2017, value: 15864 },
+          { year: 2018, value: 16520 }, { year: 2019, value: 17154 }, { year: 2020, value: 17601 },
+          { year: 2021, value: 18116 }, { year: 2022, value: 18882 }, { year: 2023, value: 19209 },
+          { year: 2024, value: 19801 },
+        ],
+        note: 'Capital surplus = money raised from shareholders above par value when KO first sold stock. Has grown slowly and steadily \u2014 not the main driver of equity. Retained earnings does the heavy lifting.',
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings', unit: 'M USD',
+        series: [
+          { year: 2015, value: 65018 }, { year: 2016, value: 65502 }, { year: 2017, value: 60430, down: true },
+          { year: 2018, value: 63234 }, { year: 2019, value: 65855 }, { year: 2020, value: 66555 },
+          { year: 2021, value: 69094 }, { year: 2022, value: 71019 }, { year: 2023, value: 73782 },
+          { year: 2024, value: 76054 },
+        ],
+        note: 'KO has retained ~$11B in additional earnings over the past decade (2015 \u2192 2024). Despite returning the majority of profits as dividends + buybacks, the retained portion has still grown.',
+      },
+      retainedEarningsTest: {
+        period: '2015 \u2013 2024',
+        startYear: 2015,
+        endYear: 2024,
+        retainedEarningsStart: 65018,
+        retainedEarningsEnd: 76054,
+        retainedEarningsIncrease: 11.036,
+        marketCapStart: 185,
+        marketCapEnd: 269,
+        marketCapIncrease: 84,
+        multiplier: 7.62,
+        verdict: 'For every $1 of retained earnings, Coca-Cola created $7.62 in market value from 2015 to 2024. KO passes the productivity test \u2014 retained earnings have been deployed productively (buybacks, reinvestment, dividends, BodyArmor + Costa acquisitions) and investors rewarded the company with higher valuation.',
+      },
+      shareholderEquity: {
+        label: 'Shareholder Equity', unit: 'M USD',
+        series: [
+          { year: 2015, value: 25764 }, { year: 2016, value: 23220, down: true }, { year: 2017, value: 18977, down: true },
+          { year: 2018, value: 19058 }, { year: 2019, value: 21098 }, { year: 2020, value: 21284 },
+          { year: 2021, value: 24860 }, { year: 2022, value: 25826 }, { year: 2023, value: 27480 },
+          { year: 2024, value: 26732, down: true },
+        ],
+        note: 'Equity dipped in 2016\u20132017 due to TCJA + bottling refranchising. Has rebuilt steadily since 2018 \u2014 a healthy floor of ~$25\u201327B.',
+      },
+      investedCapital: {
+        label: 'Invested Capital', unit: 'M USD',
+        series: [
+          { year: 2015, value: 64472 }, { year: 2016, value: 64766 }, { year: 2017, value: 63520, down: true },
+          { year: 2018, value: 64720 }, { year: 2019, value: 65900 }, { year: 2020, value: 52928, down: true },
+          { year: 2021, value: 45067, down: true }, { year: 2022, value: 54696 }, { year: 2023, value: 52183, down: true },
+          { year: 2024, value: 55854 },
+        ],
+        note: 'Invested capital = Equity + Long-Term Debt. KO\u2019s base is around $45\u201365B \u2014 stable, with shifts reflecting debt restructuring. Denominator for ROIC calculation.',
+      },
+      // ═══════════════════════════════════════════════════════════
+      // RETURNS (ROIC + ROE + ROA combined multi-line chart)
+      // ═══════════════════════════════════════════════════════════
+      returns: {
+        roe: [
+          { year: 2015, value: 28.53 }, { year: 2016, value: 28.11 }, { year: 2017, value: 6.52 },
+          { year: 2018, value: 33.76 }, { year: 2019, value: 42.59 }, { year: 2020, value: 36.40 },
+          { year: 2021, value: 39.30 }, { year: 2022, value: 36.95 }, { year: 2023, value: 38.99 },
+          { year: 2024, value: 39.77 },
+        ],
+        roic: [
+          { year: 2015, value: 10.2 }, { year: 2016, value: 11.0 }, { year: 2017, value: 9.5 },
+          { year: 2018, value: 11.0 }, { year: 2019, value: 12.7 }, { year: 2020, value: 13.3 },
+          { year: 2021, value: 17.1 }, { year: 2022, value: 16.1 }, { year: 2023, value: 17.6 },
+          { year: 2024, value: 13.6 },
+        ],
+        roa: [
+          { year: 2015, value: 8.16 }, { year: 2016, value: 7.48 }, { year: 2017, value: 1.40 },
+          { year: 2018, value: 7.73 }, { year: 2019, value: 10.40 }, { year: 2020, value: 8.87 },
+          { year: 2021, value: 10.36 }, { year: 2022, value: 10.26 }, { year: 2023, value: 10.97 },
+          { year: 2024, value: 10.57 },
+        ],
+        averages: {
+          roe: 33,
+          roic: 13,
+          roa: 8,
+        },
+        note: '10-year averages: ROE 33% (extremely high \u2014 brand moat + buybacks shrink equity base), ROIC 13% (strong for capital-intensive consumer staples), ROA 8% (asset-light pivot improved this materially). 2017 dip across all three = TCJA noise.',
+      },
+      // ═══════════════════════════════════════════════════════════
+      // CASH CONVERSION CYCLE
+      // ═══════════════════════════════════════════════════════════
+      ccc: {
+        label: 'Cash Conversion Cycle', unit: 'days',
+        series: [
+          { year: 2015, value: -108.62, spike: true }, { year: 2016, value: -117.46, spike: true }, { year: 2017, value: -129.98, spike: true },
+          { year: 2018, value: -152.30, spike: true }, { year: 2019, value: -159.17, spike: true }, { year: 2020, value: -179.33 },
+          { year: 2021, value: -233.15 }, { year: 2022, value: -203.92 }, { year: 2023, value: -190.79 },
+          { year: 2024, value: -310.69 },
+        ],
+        avg10yr: -178.54,
+        note: '10-year average: -178.54 days. NEGATIVE = KO collects cash from customers BEFORE paying suppliers. -310 days in 2024 means KO holds suppliers\u2019 cash for ~10 months \u2014 a structural cash machine. This is what financial moats look like.',
+      },
       pensionPlans: {
         description: 'Coca-Cola maintains separate pension plans for U.S. and non-U.S. employees, with distinct investment strategies. U.S. plan is more conservative (heavier fixed-income + alternatives); non-U.S. plans lean toward equities.',
         // U.S. Pension Plan Strategy
@@ -4274,6 +4712,162 @@ const KO_BREAKDOWN = {
           ],
           takeaway: 'Pension plans are well-diversified, mixing stocks, bonds, hedge funds, real estate, and alternatives \u2014 balancing growth, stability, and risk management to meet future employee retirement obligations.',
         },
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // CASH FLOW — Operating cash flow, CapEx, FCF (19-year history)
+    // ════════════════════════════════════════════════════════════════
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Operating Cash Flow', unit: 'M USD',
+        series: [
+          { year: 2006, value: 5957 }, { year: 2007, value: 7150 }, { year: 2008, value: 7571 },
+          { year: 2009, value: 8186 }, { year: 2010, value: 9532 }, { year: 2011, value: 9474, down: true },
+          { year: 2012, value: 10645 }, { year: 2013, value: 10542, down: true }, { year: 2014, value: 10615 },
+          { year: 2015, value: 10528, down: true }, { year: 2016, value: 8792, down: true }, { year: 2017, value: 6930, down: true },
+          { year: 2018, value: 7320 }, { year: 2019, value: 10471 }, { year: 2020, value: 9844, down: true },
+          { year: 2021, value: 12625 }, { year: 2022, value: 11018, down: true }, { year: 2023, value: 11599 },
+          { year: 2024, value: 6805, down: true },
+        ],
+        note: 'OCF averaged ~$10\u201311B for most years. 2024 dip to $6.8B reflects working capital changes and IRS prepayment ($6B to stop interest accrual on the transfer pricing dispute). Underlying OCF is stronger than the headline number.',
+      },
+      capex: {
+        label: 'Capital Expenditure (CapEx)', unit: 'M USD',
+        series: [
+          { year: 2006, value: 1407 }, { year: 2007, value: 1648 }, { year: 2008, value: 1968 },
+          { year: 2009, value: 1993 }, { year: 2010, value: 2215 }, { year: 2011, value: 2920 },
+          { year: 2012, value: 2780 }, { year: 2013, value: 2550 }, { year: 2014, value: 2406 },
+          { year: 2015, value: 2553 }, { year: 2016, value: 2262 }, { year: 2017, value: 1675 },
+          { year: 2018, value: 1347 }, { year: 2019, value: 2054 }, { year: 2020, value: 1177 },
+          { year: 2021, value: 1367 }, { year: 2022, value: 1484 }, { year: 2023, value: 1852 },
+          { year: 2024, value: 2064 },
+        ],
+        note: 'CapEx peaked in 2011 ($2.9B) when KO still owned its bottling assets. Post-refranchising, CapEx fell to a $1.1\u20132.0B range \u2014 the asset-light model requires far less capital investment.',
+      },
+      capexRatio: {
+        label: 'CapEx to Operating Cash Flow %', unit: '%',
+        series: [
+          { year: 2006, value: 23.6 }, { year: 2007, value: 23.0 }, { year: 2008, value: 26.0 },
+          { year: 2009, value: 24.3 }, { year: 2010, value: 23.2 }, { year: 2011, value: 30.8 },
+          { year: 2012, value: 26.1 }, { year: 2013, value: 24.2 }, { year: 2014, value: 22.7 },
+          { year: 2015, value: 24.3 }, { year: 2016, value: 25.7 }, { year: 2017, value: 24.2 },
+          { year: 2018, value: 18.4 }, { year: 2019, value: 19.6 }, { year: 2020, value: 12.0 },
+          { year: 2021, value: 10.8 }, { year: 2022, value: 13.5 }, { year: 2023, value: 16.0 },
+          { year: 2024, value: 30.3 },
+        ],
+        note: 'Historic range: ~24\u201326% pre-refranchising. Dropped to 10\u201316% post-refranchising = phenomenal capital efficiency. 2024 spike to 30% reflects the one-off low OCF (IRS prepayment) more than any CapEx surge.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow', unit: 'M USD',
+        series: [
+          { year: 2006, value: 4550 }, { year: 2007, value: 5502 }, { year: 2008, value: 5603 },
+          { year: 2009, value: 6193 }, { year: 2010, value: 7317 }, { year: 2011, value: 6554, down: true },
+          { year: 2012, value: 7865 }, { year: 2013, value: 7992 }, { year: 2014, value: 8209 },
+          { year: 2015, value: 7975, down: true }, { year: 2016, value: 6530, down: true }, { year: 2017, value: 5255, down: true },
+          { year: 2018, value: 5973 }, { year: 2019, value: 8417 }, { year: 2020, value: 8667 },
+          { year: 2021, value: 11258 }, { year: 2022, value: 9534, down: true }, { year: 2023, value: 9747 },
+          { year: 2024, value: 4741, down: true },
+        ],
+        note: '19-year FCF history. Peaked at $11.3B in 2021 (post-refranchising peak). 2024 dip ($4.7B) reflects the IRS $6B prepayment temporarily distorting headline cash flow \u2014 underlying FCF generation remains in the $8\u201311B range.',
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // SEGMENTS — Worldwide Unit Case Volume + Revenue by Country
+    // ════════════════════════════════════════════════════════════════
+    segments: {
+      // Worldwide Unit Case Volume — 23-year history with liters derivation
+      unitCaseVolume: {
+        label: 'Worldwide Unit Case Volume', unit: 'B unit cases',
+        unitDefinition: '1 unit case = 192 U.S. fluid ounces (24 eight-ounce servings) = 5.678 litres of finished beverage.',
+        context: [
+          '33.7B unit cases sold in 2024 \u2192 ~191 billion litres of finished beverages',
+          'That\u2019s 26 litres per person on Earth in 2024',
+          'Equivalent to filling 76,000 Olympic-sized swimming pools',
+          '523 million litres sold every single day worldwide (\u224895 litres every second)',
+        ],
+        contextTagline: 'Coca-Cola isn\u2019t just a brand \u2014 it\u2019s one of the biggest flows of liquid on the planet.',
+        rows: [
+          { year: 2002, unitCases: 18.7, liters: 106.2 },
+          { year: 2003, unitCases: 19.4, liters: 110.2 },
+          { year: 2004, unitCases: 19.8, liters: 112.5 },
+          { year: 2005, unitCases: 20.6, liters: 117.1 },
+          { year: 2006, unitCases: 21.4, liters: 121.5 },
+          { year: 2007, unitCases: 22.7, liters: 129.0 },
+          { year: 2008, unitCases: 23.7, liters: 134.7 },
+          { year: 2009, unitCases: 24.4, liters: 138.6 },
+          { year: 2010, unitCases: 25.5, liters: 144.8 },
+          { year: 2011, unitCases: 26.7, liters: 151.7 },
+          { year: 2012, unitCases: 27.7, liters: 157.3 },
+          { year: 2013, unitCases: 28.2, liters: 160.1 },
+          { year: 2014, unitCases: 28.6, liters: 162.5 },
+          { year: 2015, unitCases: 29.2, liters: 165.9 },
+          { year: 2016, unitCases: 29.3, liters: 166.5 },
+          { year: 2017, unitCases: 29.2, liters: 165.9, down: true },
+          { year: 2018, unitCases: 29.6, liters: 168.2 },
+          { year: 2019, unitCases: 30.3, liters: 172.1 },
+          { year: 2020, unitCases: 29.0, liters: 164.7, down: true },
+          { year: 2021, unitCases: 31.3, liters: 177.8 },
+          { year: 2022, unitCases: 32.7, liters: 185.8 },
+          { year: 2023, unitCases: 33.3, liters: 189.1 },
+          { year: 2024, unitCases: 33.7, liters: 191.4 },
+        ],
+        cagr: '2.6%',
+        cagrPeriod: '2002\u20132024',
+        note: 'Unit case volume has compounded at ~2.6% per year for 23 years \u2014 a steady, predictable physical-volume tailwind. Real revenue growth comes from pricing/mix on top of this base.',
+      },
+      // Revenue by Country (US vs International) — 3 business lines × 7 years
+      revenueByCountry: {
+        period: '2018\u20132024',
+        unit: 'M USD',
+        description: 'Coca-Cola breaks revenue into two business lines (Concentrate Operations + Finished Product Operations), each split by U.S. vs International. International is the dominant share for both lines.',
+        businessLines: [
+          {
+            name: 'Concentrate Operations',
+            description: 'Selling concentrate and syrup to bottlers, who finish and distribute the products. The high-margin core of KO\u2019s business.',
+            rows: [
+              { year: 2018, us: 4571, intl: 15323, total: 19894 },
+              { year: 2019, us: 5252, intl: 15247, total: 20499, intlDown: true },
+              { year: 2020, us: 5443, intl: 13139, total: 18582, intlDown: true, totalDown: true },
+              { year: 2021, us: 6551, intl: 15248, total: 21799 },
+              { year: 2022, us: 7702, intl: 16369, total: 24071 },
+              { year: 2023, us: 8780, intl: 17759, total: 26539 },
+              { year: 2024, us: 8813, intl: 18912, total: 27725 },
+            ],
+            intlSharePct2024: 68,
+          },
+          {
+            name: 'Finished Product Operations',
+            description: 'Selling fully finished products (mostly through company-owned bottlers in Bottling Investments + Costa retail). Lower-margin but captures more of the value chain.',
+            rows: [
+              { year: 2018, us: 6773, intl: 7633, total: 14406 },
+              { year: 2019, us: 6463, intl: 10304, total: 16767, usDown: true },
+              { year: 2020, us: 5838, intl: 8594, total: 14432, usDown: true, intlDown: true, totalDown: true },
+              { year: 2021, us: 6459, intl: 10397, total: 16856 },
+              { year: 2022, us: 7711, intl: 11222, total: 18933 },
+              { year: 2023, us: 7770, intl: 11445, total: 19215 },
+              { year: 2024, us: 9549, intl: 9787, total: 19336, intlDown: true },
+            ],
+            intlSharePct2024: 51,
+          },
+          {
+            name: 'Total Net Operating Revenues',
+            description: 'Combined revenue from both business lines.',
+            rows: [
+              { year: 2018, us: 11344, intl: 22956, total: 34300 },
+              { year: 2019, us: 11715, intl: 25551, total: 37266 },
+              { year: 2020, us: 11281, intl: 21733, total: 33014, usDown: true, intlDown: true, totalDown: true },
+              { year: 2021, us: 13010, intl: 25645, total: 38655 },
+              { year: 2022, us: 15413, intl: 27591, total: 43004 },
+              { year: 2023, us: 16550, intl: 29204, total: 45754 },
+              { year: 2024, us: 18362, intl: 28699, total: 47061, intlDown: true },
+            ],
+            intlSharePct2024: 61,
+            featured: true,
+          },
+        ],
+        takeaway: 'International is 61% of total revenue in 2024 ($28.7B vs $18.4B U.S.). For Concentrate Operations the international share is even higher at 68% \u2014 KO\u2019s real growth engine is outside the U.S.',
       },
     },
   },
@@ -17475,6 +18069,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {IS.netSales       && <TimeSeriesTable data={IS.netSales} />}
                           {IS.costOfSales    && <TimeSeriesTable data={IS.costOfSales} />}
                           {IS.grossProfit    && <TimeSeriesTable data={IS.grossProfit} />}
+                          {IS.grossMargin    && (
+                            <>
+                              <TimeSeriesTable data={IS.grossMargin} />
+                              {IS.grossMargin.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Gross Margin Power —</span> {IS.grossMargin.note}
+                                </div>
+                              )}
+                            </>
+                          )}
 
                           {/* OPERATING EXPENSES */}
                           {IS.smaExpense     && <TimeSeriesTable data={IS.smaExpense} />}
@@ -17484,6 +18088,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               {IS.smaToGrossProfit.note && (
                                 <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
                                   <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Operating Leverage —</span> {IS.smaToGrossProfit.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {IS.opex           && <TimeSeriesTable data={IS.opex} />}
+                          {IS.totalExpenses  && <TimeSeriesTable data={IS.totalExpenses} />}
+                          {IS.expensesToRevenue && (
+                            <>
+                              <TimeSeriesTable data={IS.expensesToRevenue} />
+                              {IS.expensesToRevenue.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Cost Pressure —</span> {IS.expensesToRevenue.note}
                                 </div>
                               )}
                             </>
@@ -17656,7 +18272,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* CAGR */}
-                          {IS.cagr && (
+                          {IS.cagr && IS.cagr.netIncomeCAGR_2004_2014 && (
                             <div style={{
                               marginBottom:'12px',
                               padding:'12px 14px',
@@ -17683,6 +18299,25 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.cagr.note}</div>
                             </div>
                           )}
+                          {/* CAGR — KO shape (single value with label) */}
+                          {IS.cagr && IS.cagr.value && !IS.cagr.netIncomeCAGR_2004_2014 && (
+                            <div style={{
+                              marginBottom:'12px',
+                              padding:'12px 14px',
+                              background:'rgba(34,197,94,0.06)',
+                              border:'0.5px solid rgba(34,197,94,0.35)',
+                              borderLeft:'2px solid rgba(34,197,94,0.85)',
+                              borderRadius:'3px',
+                            }}>
+                              <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// {IS.cagr.label ? IS.cagr.label.toUpperCase() : 'CAGR'}</div>
+                              <div style={{display:'flex',alignItems:'baseline',gap:'14px',marginBottom:'8px'}}>
+                                <div style={{fontSize:'28px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{IS.cagr.value}</div>
+                              </div>
+                              {IS.cagr.note && (
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.cagr.note}</div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     };
@@ -17696,7 +18331,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       {/* ════════════════════════════════════════════════
                           SEGMENT RESULTS
                           ════════════════════════════════════════════════ */}
-                      {segments && (
+                      {segments && (segments.headlineInsight || segments.mix || segments.naConfectionery || segments.naSaltySnacks || segments.international || segments.naCombined) && (
                         <>
                           <SectionHeading>// SEGMENT RESULTS</SectionHeading>
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Revenue by reportable segment — the mix shift toward salty snacks is one of HSY’s defining strategic stories.</div>
@@ -17868,6 +18503,186 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         </>
                       )}
 
+                      {/* WORLDWIDE UNIT CASE VOLUME — KO shape (23-year physical-volume series) */}
+                      {segments && segments.unitCaseVolume && (() => {
+                        const ucv = segments.unitCaseVolume;
+                        const latest = ucv.rows[ucv.rows.length - 1];
+                        return (
+                          <>
+                            <SectionHeading>// {ucv.label.toUpperCase()} · {ucv.rows.length}-YEAR HISTORY</SectionHeading>
+                            {ucv.unitDefinition && (
+                              <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// UNIT CASE DEFINITION</div>
+                                <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{ucv.unitDefinition}</div>
+                              </div>
+                            )}
+
+                            {/* Headline tiles for latest year */}
+                            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'6px',marginBottom:'12px'}}>
+                              <div style={{padding:'10px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// UNIT CASES {latest.year}</div>
+                                <div style={{fontSize:'20px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{latest.unitCases}B</div>
+                              </div>
+                              <div style={{padding:'10px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// LITRES {latest.year}</div>
+                                <div style={{fontSize:'20px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{latest.liters}B</div>
+                              </div>
+                              {ucv.cagr && (
+                                <div style={{padding:'10px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// CAGR {ucv.cagrPeriod}</div>
+                                  <div style={{fontSize:'20px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{ucv.cagr}</div>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Context callouts */}
+                            {ucv.context && ucv.context.length > 0 && (
+                              <div style={{padding:'12px 14px',background:'linear-gradient(160deg, rgba(245,158,11,0.08) 0%, rgba(0,0,0,0.4) 100%)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',marginBottom:'12px',position:'relative'}}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>🌍 SCALE PERSPECTIVE · {latest.year}</div>
+                                <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                  {ucv.context.map((c, i) => (
+                                    <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
+                                      <span style={{color:amber,flexShrink:0,fontWeight:700}}>›</span>
+                                      <span>{c}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                                {ucv.contextTagline && (
+                                  <div style={{marginTop:'8px',padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                    "{ucv.contextTagline}"
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Full 23-year table */}
+                            <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                              <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                <thead>
+                                  <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                    <th style={{textAlign:'left',padding:'8px 12px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                    <th style={{textAlign:'right',padding:'8px 12px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>UNIT CASES (B)</th>
+                                    <th style={{textAlign:'right',padding:'8px 12px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>BEVERAGE VOLUME (B LITRES)</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {ucv.rows.map((row, i) => (
+                                    <tr key={i} style={{
+                                      borderBottom:'0.5px solid rgba(245,158,11,0.06)',
+                                      background: row.year === latest.year ? 'rgba(245,158,11,0.05)' : 'transparent',
+                                    }}>
+                                      <td style={{padding:'6px 12px',color:'#e0eaff',fontWeight: row.year === latest.year ? 700 : 500,letterSpacing:'0.3px'}}>{row.year}</td>
+                                      <td style={{padding:'6px 12px',textAlign:'right',color: row.down ? 'rgba(239,68,68,0.95)' : (row.year === latest.year ? amber : 'rgba(224,234,255,0.85)'),fontWeight: row.year === latest.year ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>
+                                        {row.unitCases}
+                                        {row.down && <span style={{marginLeft:'5px',fontSize:'9px'}}>⬇</span>}
+                                      </td>
+                                      <td style={{padding:'6px 12px',textAlign:'right',color: row.down ? 'rgba(239,68,68,0.95)' : (row.year === latest.year ? amber : 'rgba(224,234,255,0.85)'),fontWeight: row.year === latest.year ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>
+                                        {row.liters}
+                                        {row.down && <span style={{marginLeft:'5px',fontSize:'9px'}}>⬇</span>}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+
+                            {ucv.note && (
+                              <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{ucv.note}</div>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+
+                      {/* REVENUE BY COUNTRY — KO shape (Concentrate + Finished Product + Total, US vs Intl) */}
+                      {segments && segments.revenueByCountry && (
+                        <>
+                          <SectionHeading>// REVENUE BY GEOGRAPHY · {segments.revenueByCountry.period}</SectionHeading>
+                          {segments.revenueByCountry.description && (
+                            <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.revenueByCountry.description}</div>
+                          )}
+
+                          <div style={{display:'flex',flexDirection:'column',gap:'12px',marginBottom:'12px'}}>
+                            {segments.revenueByCountry.businessLines.map((bl, bli) => (
+                              <div key={bli} style={{
+                                background: bl.featured ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                border:`0.5px solid ${bl.featured ? amber : amberGlow}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'3px',
+                                padding:'12px',
+                                position:'relative',
+                              }}>
+                                {bl.featured && (
+                                  <>
+                                    <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                    <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                  </>
+                                )}
+                                <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'6px'}}>
+                                  <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{bl.name}</span>
+                                  {bl.intlSharePct2024 && (
+                                    <span style={{padding:'3px 8px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{bl.intlSharePct2024}% INTL · 2024</span>
+                                  )}
+                                </div>
+                                {bl.description && (
+                                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'8px',lineHeight:1.5,letterSpacing:'0.3px'}}>{bl.description}</div>
+                                )}
+                                <div style={{overflowX:'auto'}}>
+                                  <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.04)'}}>
+                                        <th style={{textAlign:'left',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                        <th style={{textAlign:'right',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>U.S.</th>
+                                        <th style={{textAlign:'right',padding:'6px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>INTERNATIONAL</th>
+                                        <th style={{textAlign:'right',padding:'6px 10px',color:amber,letterSpacing:'1.5px',fontWeight:700,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>TOTAL</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {bl.rows.map((r, ri) => {
+                                        const isLatest = ri === bl.rows.length - 1;
+                                        return (
+                                          <tr key={ri} style={{
+                                            borderBottom:'0.5px solid rgba(245,158,11,0.06)',
+                                            background: isLatest ? 'rgba(245,158,11,0.04)' : 'transparent',
+                                          }}>
+                                            <td style={{padding:'5px 10px',color:'#e0eaff',fontWeight: isLatest ? 700 : 500,letterSpacing:'0.3px'}}>{r.year}</td>
+                                            <td style={{padding:'5px 10px',textAlign:'right',color: r.usDown ? 'rgba(239,68,68,0.95)' : (isLatest ? amber : 'rgba(224,234,255,0.85)'),fontWeight: isLatest ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>
+                                              {r.us > 0 ? '$' + r.us.toLocaleString() : '—'}
+                                              {r.usDown && <span style={{marginLeft:'4px',fontSize:'9px'}}>⬇</span>}
+                                            </td>
+                                            <td style={{padding:'5px 10px',textAlign:'right',color: r.intlDown ? 'rgba(239,68,68,0.95)' : (isLatest ? amber : 'rgba(224,234,255,0.85)'),fontWeight: isLatest ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>
+                                              {r.intl > 0 ? '$' + r.intl.toLocaleString() : '—'}
+                                              {r.intlDown && <span style={{marginLeft:'4px',fontSize:'9px'}}>⬇</span>}
+                                            </td>
+                                            <td style={{padding:'5px 10px',textAlign:'right',color: r.totalDown ? 'rgba(239,68,68,0.95)' : (isLatest ? amber : '#e0eaff'),fontWeight: 700,borderLeft:`0.5px solid ${amberGlow}`}}>
+                                              {r.total > 0 ? '$' + r.total.toLocaleString() : '—'}
+                                              {r.totalDown && <span style={{marginLeft:'4px',fontSize:'9px'}}>⬇</span>}
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {segments.revenueByCountry.takeaway && (
+                            <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                              <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.revenueByCountry.takeaway}</div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
                         </div>
                       );
                     };
@@ -17955,6 +18770,16 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {BS.additionalPaidInCapital && <TimeSeriesTable data={BS.additionalPaidInCapital} />}
                           {BS.retainedEarnings        && chartWithNote(BS.retainedEarnings, 'amber')}
                           {BS.shareholderEquity       && <TimeSeriesTable data={BS.shareholderEquity} />}
+                          {BS.investedCapital && (
+                            <>
+                              <TimeSeriesTable data={BS.investedCapital} />
+                              {BS.investedCapital.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Invested Capital —</span> {BS.investedCapital.note}
+                                </div>
+                              )}
+                            </>
+                          )}
                           {BS.bookValuePerShare && (
                             <>
                               <TimeSeriesTable data={BS.bookValuePerShare} />
