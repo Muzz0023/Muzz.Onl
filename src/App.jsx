@@ -18529,7 +18529,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
 
                       return (
                         <div>
-                          {pricingPower && (
+                          {pricingPower && pricingPower.products && (
                             <>
                               <SectionHeading>// PRICING POWER</SectionHeading>
                               <PricingPowerChart data={pricingPower} />
