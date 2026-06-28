@@ -3759,6 +3759,39 @@ const KO_BREAKDOWN = {
         'Operates the world’s largest beverage distribution system through independent bottling partners.',
       ],
     },
+    // Distribution System — global empire stats
+    distribution: {
+      asOf: '2024',
+      headlineStats: [
+        { label: 'GLOBAL REACH',        value: '200+',         sub: 'countries & territories' },
+        { label: 'DAILY SERVINGS',      value: '~2.2B',        sub: 'consumed each day' },
+        { label: 'UNIT CASE VOLUME',    value: '33.7B',        sub: 'worldwide 2024 (vs 33.3B 2023)' },
+        { label: 'SPARKLING MIX',       value: '69%',          sub: 'of total volume (same as 2023)' },
+      ],
+      trademarkCokeShare: {
+        global: '47%',
+        note: 'Trademark Coca-Cola = 47% of global volume — the single biggest brand in the company.',
+      },
+      regionalMix: {
+        us: {
+          share: '16%',
+          sparkling: '61%',
+          trademarkCoke: '42%',
+          label: 'U.S. CONTRIBUTION',
+        },
+        nonUs: {
+          share: '84%',
+          sparkling: '71%',
+          trademarkCoke: '48%',
+          label: 'NON-U.S. CONTRIBUTION',
+        },
+      },
+      topNonUsMarkets: {
+        markets: ['Mexico', 'China', 'Brazil', 'India'],
+        share: '33%',
+        note: 'These 4 markets together = 33% of worldwide volume.',
+      },
+    },
     // Operating segments — organisational structure (geographic + bottling)
     operatingSegments: {
       asOf: '2024',
@@ -3806,11 +3839,121 @@ const KO_BREAKDOWN = {
         },
       ],
     },
+    // Bottler's Agreements — US vs Outside US comparison
+    bottlerAgreements: {
+      description: 'Coca-Cola operates two distinct bottler contract regimes. Outside the U.S. uses standard bottler agreements; inside the U.S. uses Comprehensive Beverage Agreements (CBAs).',
+      dimensions: [
+        {
+          name: 'Agreement Type',
+          outsideUs: 'Standard bottler\u2019s agreements (fixed duration, sometimes renewable).',
+          insideUs: 'Comprehensive Beverage Agreements (CBAs). Some bottlers still under legacy agreements.',
+        },
+        {
+          name: 'Termination',
+          outsideUs: 'Can be terminated by Coca-Cola for events of default or ownership/control changes.',
+          insideUs: 'Can be terminated by Coca-Cola for nonperformance or defined defaults.',
+        },
+        {
+          name: 'Rights Granted',
+          outsideUs: 'Typically authorised to prepare, package, distribute and sell Coca-Cola beverages in designated territories (sometimes non-exclusive basis).',
+          insideUs: 'Bottlers get exclusive rights to distribute, promote, and market Company beverages in assigned territories. Manufacturing is generally retained by Coca-Cola unless separately authorised.',
+        },
+        {
+          name: 'Fountain Syrups',
+          outsideUs: 'Bottlers often authorised to manufacture & distribute fountain syrups.',
+          insideUs: 'Bottlers are NOT authorised to manufacture fountain syrups. Coca-Cola makes and sells directly to wholesalers/retailers.',
+          highlight: true,
+        },
+        {
+          name: 'Pricing',
+          outsideUs: 'Coca-Cola generally sets concentrate/syrup prices, subject to competitive market conditions. Incidence-based pricing model widely used.',
+          insideUs: 'CBAs include mandatory incidence pricing, aligning Coca-Cola and bottler revenues with consumer/channel mix. Legacy agreements use formula-based pricing tied to sweetener costs.',
+        },
+        {
+          name: 'Types of Bottlers',
+          outsideUs: 'Regular bottlers; in some areas bottlers produce for other bottlers or resell across territories.',
+          insideUs: 'EPBs (Expanding Participating Bottlers — 10-year renewable CBAs, binding national governance, mandatory incidence pricing). Participating Bottlers (similar 10-year CBAs, slightly different performance requirements). Legacy Bottlers (old contracts, minimal current U.S. volume).',
+        },
+        {
+          name: 'Territory Rules',
+          outsideUs: 'Coca-Cola usually prevents overlap but reserves the right to (1) make for export, (2) sell in other formats, (3) handle multi-territory key accounts.',
+          insideUs: 'CBAs grant bottlers exclusive sales rights in territory, but Coca-Cola may still manage national accounts & retain certain manufacturing rights.',
+        },
+      ],
+      takeaway: 'Outside the U.S.: more varied, sometimes nonexclusive, bottlers can make fountain syrups. Inside the U.S.: stricter CBAs with incidence pricing, 10-year renewable terms, national governance — and Coca-Cola retains full control of fountain syrups.',
+    },
+    // Bottling Investments — KO's stake structure in bottlers
+    bottlingInvestments: {
+      description: 'Coca-Cola only fully owns bottling operations when necessary (e.g., to turn around underperforming markets). Long-term strategy is to refranchise back to independent bottlers once stabilised, while keeping influence through equity stakes.',
+      types: [
+        {
+          number: '01',
+          name: 'Full Ownership / Control',
+          subtitle: 'Consolidated Bottling Operations',
+          description: 'Coca-Cola directly acquires or controls a bottler, usually in underperforming markets.',
+          purpose: ['Use resources & expertise to improve performance', 'Strengthen sales & marketing', 'Develop business & IT systems', 'Establish proper capital structure'],
+          strategy: 'Often temporary: may later divest or reduce stake to an independent bottler once performance is stabilised.',
+        },
+        {
+          number: '02',
+          name: 'Equity Method Investments',
+          subtitle: 'Significant Minority Stakes',
+          description: 'Coca-Cola acquires noncontrolling but significant stakes in bottlers.',
+          purpose: ['Maintain influence over bottler\u2019s operations', 'Align bottler with Coca-Cola system strategy', 'Share in earnings/losses of the bottler'],
+          strategy: 'Strengthens collaboration without full ownership; promotes efficiency and system-wide growth.',
+        },
+        {
+          number: '03',
+          name: 'Noncontrolling / Smaller Investments',
+          subtitle: 'Strategic Minority Stakes',
+          description: 'Smaller, strategic minority investments in bottlers.',
+          purpose: ['Provide expertise/resources to improve performance', 'Support marketing, production, and distribution efficiency'],
+          strategy: 'Designed to increase unit case volume, revenues, and profits at the bottler level, which then boosts Coca-Cola\u2019s concentrate sales.',
+        },
+      ],
+      takeaway: 'This system ensures Coca-Cola focuses on its high-margin concentrate business, while bottlers handle the capital-intensive distribution.',
+    },
+    // Top 5 Independent Bottling Partners
+    topBottlers: {
+      asOf: '2024',
+      combinedShare: '44%',
+      shareNote: 'These five bottlers = 44% of Coca-Cola\u2019s worldwide case volume in 2024.',
+      disclaimer: 'Bottlers are independent contractors, not legal partners or joint ventures with Coca-Cola.',
+      bottlers: [
+        {
+          name: 'Coca-Cola FEMSA',
+          ticker: 'KOF',
+          highlight: 'Largest Coca-Cola bottler globally by volume',
+          regions: ['Mexico (central, SE, NE)', 'Guatemala', 'Colombia', 'Nicaragua', 'Costa Rica', 'Panama', 'Venezuela', 'Uruguay', 'Brazil (São Paulo, Minas Gerais, RS, SC, PR, MS, parts of RJ & GO)', 'Argentina (Buenos Aires metro)'],
+          featured: true,
+        },
+        {
+          name: 'Coca-Cola Europacific Partners',
+          ticker: 'CCEP',
+          highlight: 'Biggest bottler in Europe + Australia/Asia Pacific',
+          regions: ['Andorra', 'Australia', 'Belgium', 'France', 'Germany', 'GB', 'Iceland', 'Indonesia', 'Luxembourg', 'Monaco', 'Netherlands', 'NZ & Pacific', 'Norway', 'PNG', 'Philippines', 'Portugal', 'Spain', 'Sweden'],
+        },
+        {
+          name: 'Coca-Cola HBC (Hellenic)',
+          ticker: 'CCH',
+          highlight: 'Strong Europe + Africa presence — 29 countries',
+          regions: ['Austria', 'Italy', 'Greece', 'Switzerland', 'Poland', 'Nigeria', 'Egypt', 'Russia', 'Ukraine', 'Balkans', 'Baltics', '+ 18 more'],
+        },
+        {
+          name: 'Arca Continental',
+          ticker: 'AC',
+          highlight: 'Major Latin America bottler, plus U.S. footprint',
+          regions: ['N. & W. Mexico', 'N. Argentina', 'Ecuador', 'Peru', 'U.S. (Texas + parts of NM, OK, AR)'],
+        },
+        {
+          name: 'Swire Coca-Cola',
+          ticker: null,
+          highlight: 'Key Asia-Pacific and Western U.S. distributor',
+          regions: ['China (11 provinces + Shanghai)', 'Hong Kong', 'Taiwan', 'Cambodia', 'Laos', 'Thailand', 'Vietnam', 'Western U.S. (13 states)'],
+        },
+      ],
+    },
   },
-
-  // ════════════════════════════════════════════════════════════════
-  // BRANDS — portfolio across 8 categories + partnerships
-  // ════════════════════════════════════════════════════════════════
   brands: {
     // Official 10-K 4-category structure (high-level)
     officialCategories: [
@@ -3838,6 +3981,49 @@ const KO_BREAKDOWN = {
         details: 'Coca-Cola owns ~19% stake. Coca-Cola system bottlers distribute Monster Energy in U.S., Canada & international territories under formal distribution agreements.',
       },
     ],
+    // Competitor Landscape — industry characteristics + rivals + KO position
+    competitorLandscape: {
+      industryCharacteristics: 'Highly competitive — global, regional and local players. Includes traditional nonalcoholic beverages (soft drinks, water, juices, teas, coffee, sports & energy drinks, dairy, plant-based, functional drinks) and now alcohol ready-to-drink (RTDs).',
+      mainCompetitors: [
+        { name: 'PepsiCo, Inc.',              note: 'Primary rival in most markets',               category: 'Global' },
+        { name: 'Nestlé S.A.',                note: 'Water, coffee, nutrition',                     category: 'Global' },
+        { name: 'Keurig Dr Pepper Inc.',      note: 'North American soft drinks',                   category: 'Global' },
+        { name: 'Danone S.A.',                note: 'Water, dairy, plant-based',                    category: 'Global' },
+        { name: 'Suntory Beverage & Food',    note: 'Asia-Pacific soft drinks',                     category: 'Global' },
+        { name: 'Red Bull GmbH',              note: 'Energy drinks',                                category: 'Specialist' },
+        { name: 'Anheuser-Busch InBev',       note: 'Alcohol RTDs',                                 category: 'Alcohol' },
+        { name: 'Kirin Holdings',             note: 'Alcohol RTDs',                                 category: 'Alcohol' },
+        { name: 'Heineken',                   note: 'Alcohol RTDs',                                 category: 'Alcohol' },
+        { name: 'Diageo',                     note: 'Alcohol RTDs',                                 category: 'Alcohol' },
+      ],
+      otherCompetitors: [
+        'Regional/local beverage companies',
+        'Private-label/store brands by retailers',
+        'Microbrands via e-commerce platforms (fast-growing niche disruptors)',
+      ],
+      keyCompetitiveFactors: [
+        'Pricing & affordability',
+        'Advertising & digital marketing',
+        'Promotions, in-store displays, point-of-sale visibility',
+        'Product/ingredient innovation',
+        'Packaging & vending/dispensing equipment',
+        'Marketing partnerships (arenas, theatres, universities, sports)',
+        'Trademark & brand protection',
+      ],
+      strengths: [
+        'Iconic brands (Coca-Cola, Sprite, Fanta, etc.) with strong loyalty',
+        'Global bottling & distribution system (reach in 200+ countries)',
+        'Advanced marketing capabilities (global/local execution, digital power)',
+        'Strong workforce (talented, execution-driven employees)',
+      ],
+      challenges: [
+        'Intense competition across all regions',
+        'Concentrated retail sector (powerful buyers, strong private-label presence)',
+        'Emerging microbrands (direct-to-consumer disruptors)',
+        'Changing consumer behaviour (shift toward e-commerce, digital-first shopping)',
+      ],
+      bottomLine: 'Coca-Cola competes on brand strength, global reach, marketing, and innovation, but faces pressure from PepsiCo and other large beverage multinationals, as well as private labels, local competitors, and fast-growing microbrands. Success depends on constant innovation, adapting to digital commerce, and maintaining strong consumer loyalty.',
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -3910,7 +4096,85 @@ const KO_BREAKDOWN = {
     },
   },
 
-  // MOAT, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS — to be added
+  // ════════════════════════════════════════════════════════════════
+  // RISKS — Governmental & regulatory exposure
+  // ════════════════════════════════════════════════════════════════
+  risks: {
+    governmentalRegulation: {
+      summary: 'Coca-Cola faces multi-layered legal exposure across food safety, marketing, competition law, environmental protection, packaging/recycling, and data privacy. While compliance hasn\u2019t materially hurt financials yet, tightening rules on ingredients, plastics, climate, and privacy could increase future costs or force reformulation.',
+      sections: [
+        {
+          number: '01',
+          name: 'General Compliance',
+          bullets: [
+            { label: 'Policy', text: 'Comply with all applicable laws globally.' },
+            { label: 'Scrutiny', text: 'Competition/antitrust authorities often monitor Coca-Cola due to its size and market position.' },
+          ],
+        },
+        {
+          number: '02',
+          name: 'U.S. Laws & Regulations',
+          bullets: [
+            { label: 'Food & Safety',          text: 'Federal Food, Drug, and Cosmetic Act.' },
+            { label: 'Marketing/Advertising',  text: 'FTC Act, Lanham Act, state consumer protection laws.' },
+            { label: 'Competition',            text: 'Robinson-Patman Act, Clayton Antitrust Act.' },
+            { label: 'Employment',             text: 'Workplace safety, equal opportunity, compensation laws.' },
+            { label: 'Environmental',          text: 'Federal, state & local regulations on air, water, waste.' },
+            { label: 'Privacy/Data',           text: 'Increasingly strict rules (see Section 06).' },
+            { label: 'Trade/Anti-corruption',  text: 'Foreign Corrupt Practices Act, Trade Sanctions Reform Act.' },
+          ],
+        },
+        {
+          number: '03',
+          name: 'Ingredient & Product Regulations',
+          description: 'Growing scrutiny on additives/ingredients. Some jurisdictions impose bans, labelling requirements, or sales restrictions on health/environmental grounds.',
+          bullets: [
+            { label: 'California Prop 65', text: 'Requires warning labels if products contain substances linked to cancer/reproductive harm (with exemptions). Coca-Cola maintains products are safe or exempt, but disputes with California or other parties may occur.', highlight: true },
+          ],
+        },
+        {
+          number: '04',
+          name: 'Packaging & Recycling',
+          description: 'Bottlers use recyclable containers (both nonrefillable and refillable).',
+          bullets: [
+            { label: 'Deposits & EPR',  text: 'Many jurisdictions require container deposits, recycling fees, ecotaxes, or extended producer responsibility (EPR).' },
+            { label: 'PFAS & Plastics', text: 'Restrictions emerging on PFAS and certain plastics.' },
+            { label: 'Outlook',         text: 'Coca-Cola expects more regulation globally in the future.' },
+          ],
+        },
+        {
+          number: '05',
+          name: 'Environmental Regulations',
+          description: 'Covers water use, wastewater, air emissions, climate change, and plastics.',
+          futureRules: [
+            'Greenhouse gas reduction targets',
+            'Plastic restrictions',
+            'Water usage limits',
+            'Mandatory sustainability reporting',
+          ],
+          closer: 'Coca-Cola invests in compliance and sustainability but acknowledges potential financial impact if regulations tighten.',
+        },
+        {
+          number: '06',
+          name: 'Data Privacy & Cybersecurity',
+          description: 'Subject to global privacy laws across multiple jurisdictions.',
+          laws: [
+            { name: 'GDPR',                                jurisdiction: 'European Union' },
+            { name: 'PIPL (Personal Information Protection Law)', jurisdiction: 'China' },
+            { name: 'CCPA / CPRA',                         jurisdiction: 'California' },
+            { name: '18+ state privacy laws',              jurisdiction: 'United States (effective 2025+)' },
+          ],
+          bullets: [
+            { label: 'Trends',     text: 'Expanding scope, complexity, and obligations (especially "sensitive" data).' },
+            { label: 'Risk',       text: 'Must adapt practices — could reduce ability to fully use consumer data.' },
+            { label: 'Monitoring', text: 'Coca-Cola tracks legislation globally and updates compliance programs.' },
+          ],
+        },
+      ],
+    },
+  },
+
+  // MOAT, SEGMENTS, INCOME, BALANCE, CASH FLOW, THESIS — to be added
 };
 
 
@@ -14389,6 +14653,123 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
+                          {/* COMPETITOR LANDSCAPE — new shape (industry + main competitors + strengths/challenges) */}
+                          {competitorLandscape && competitorLandscape.mainCompetitors && (
+                            <>
+                              <SectionHeading>// COMPETITORS &amp; INDUSTRY POSITION</SectionHeading>
+                              {competitorLandscape.industryCharacteristics && (
+                                <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// INDUSTRY CHARACTERISTICS</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitorLandscape.industryCharacteristics}</div>
+                                </div>
+                              )}
+
+                              {/* Main competitors list */}
+                              <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// MAIN GLOBAL COMPETITORS · {competitorLandscape.mainCompetitors.length}</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'4px',marginBottom:'12px'}}>
+                                {competitorLandscape.mainCompetitors.map((c, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'8px 12px',
+                                    display:'flex',
+                                    alignItems:'baseline',
+                                    justifyContent:'space-between',
+                                    gap:'10px',
+                                    flexWrap:'wrap',
+                                  }}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'2px',flex:1,minWidth:0}}>
+                                      <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{c.name}</div>
+                                      {c.note && <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{c.note}</div>}
+                                    </div>
+                                    {c.category && (
+                                      <span style={{
+                                        padding:'2px 8px',
+                                        background: c.category === 'Alcohol' ? 'rgba(168,85,247,0.10)' : (c.category === 'Specialist' ? 'rgba(34,197,94,0.10)' : 'rgba(245,158,11,0.10)'),
+                                        border: `0.5px solid ${c.category === 'Alcohol' ? 'rgba(168,85,247,0.4)' : (c.category === 'Specialist' ? 'rgba(34,197,94,0.4)' : amberGlow)}`,
+                                        borderRadius:'2px',
+                                        fontSize:'9px',
+                                        color: c.category === 'Alcohol' ? 'rgba(168,85,247,0.95)' : (c.category === 'Specialist' ? 'rgba(34,197,94,0.95)' : amber),
+                                        fontFamily:'monospace',
+                                        fontWeight:700,
+                                        letterSpacing:'1px',
+                                      }}>{c.category.toUpperCase()}</span>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Other competitors list */}
+                              {competitorLandscape.otherCompetitors && competitorLandscape.otherCompetitors.length > 0 && (
+                                <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'5px'}}>// OTHER COMPETITORS</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                    {competitorLandscape.otherCompetitors.map((c, i) => (
+                                      <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                        <span>{c}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Key Competitive Factors */}
+                              {competitorLandscape.keyCompetitiveFactors && (
+                                <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'5px'}}>// KEY COMPETITIVE FACTORS</div>
+                                  <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                    {competitorLandscape.keyCompetitiveFactors.map((f, i) => (
+                                      <span key={i} style={{padding:'3px 8px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{f}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Strengths vs Challenges side-by-side */}
+                              {(competitorLandscape.strengths || competitorLandscape.challenges) && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'8px',marginBottom:'12px'}}>
+                                  {competitorLandscape.strengths && (
+                                    <div style={{padding:'12px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>✓ COCA-COLA STRENGTHS</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                        {competitorLandscape.strengths.map((s, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>+</span>
+                                            <span>{s}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                  {competitorLandscape.challenges && (
+                                    <div style={{padding:'12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.35)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>⚠ COCA-COLA CHALLENGES</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                        {competitorLandscape.challenges.map((c, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(239,68,68,0.85)',flexShrink:0,fontWeight:700}}>−</span>
+                                            <span>{c}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Bottom Line */}
+                              {competitorLandscape.bottomLine && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// BOTTOM LINE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{competitorLandscape.bottomLine}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
                           {/* OFFICIAL 10-K CATEGORIES */}
                           {officialCategories && officialCategories.length > 0 && (
                             <>
@@ -14489,7 +14870,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -14774,6 +15155,79 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </>
                             );
                           })()}
+                          {/* DISTRIBUTION SYSTEM — global empire stats */}
+                          {distribution && (
+                            <>
+                              <SectionHeading>// DISTRIBUTION SYSTEM · {distribution.asOf}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The empire by the numbers — how much Coca-Cola moves through the world each day.</div>
+                              {/* Headline stat grid */}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'8px',marginBottom:'12px'}}>
+                                {distribution.headlineStats.map((s, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'6px',right:'8px',width:'8px',height:'8px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// {s.label}</div>
+                                    <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'2px'}}>{s.value}</div>
+                                    <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.4}}>{s.sub}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              {/* Trademark Coke share callout */}
+                              {distribution.trademarkCokeShare && (
+                                <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'center',gap:'14px',flexWrap:'wrap'}}>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'10px'}}>
+                                    <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>TRADEMARK COKE</span>
+                                    <span style={{fontSize:'22px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{distribution.trademarkCokeShare.global}</span>
+                                    <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>OF GLOBAL VOLUME</span>
+                                  </div>
+                                  <span style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,flex:1,minWidth:'200px'}}>{distribution.trademarkCokeShare.note}</span>
+                                </div>
+                              )}
+                              {/* Regional mix — US vs Non-US */}
+                              {distribution.regionalMix && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'8px',marginBottom:'12px'}}>
+                                  {[distribution.regionalMix.us, distribution.regionalMix.nonUs].map((r, i) => (
+                                    <div key={i} style={{
+                                      background:'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'3px',
+                                      padding:'12px',
+                                    }}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'6px'}}>// {r.label}</div>
+                                      <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'8px'}}>
+                                        <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{r.share}</span>
+                                        <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>OF WORLDWIDE VOLUME</span>
+                                      </div>
+                                      <div style={{display:'flex',gap:'10px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',color:'rgba(224,234,255,0.75)'}}>
+                                        <span><span style={{color:amberDim,letterSpacing:'1px'}}>SPARKLING</span> {r.sparkling}</span>
+                                        <span><span style={{color:amberDim,letterSpacing:'1px'}}>TRADEMARK COKE</span> {r.trademarkCoke}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {/* Top Non-US Markets */}
+                              {distribution.topNonUsMarkets && (
+                                <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'6px'}}>// TOP NON-U.S. MARKETS</div>
+                                  <div style={{display:'flex',flexWrap:'wrap',gap:'5px',marginBottom:'6px'}}>
+                                    {distribution.topNonUsMarkets.markets.map((m, i) => (
+                                      <span key={i} style={{padding:'3px 8px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{m}</span>
+                                    ))}
+                                    <span style={{padding:'3px 8px',background:'rgba(245,158,11,0.15)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>= {distribution.topNonUsMarkets.share}</span>
+                                  </div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{distribution.topNonUsMarkets.note}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
                           {/* OPERATING SEGMENTS — organisational structure */}
                           {operatingSegments && (
                             <>
@@ -14884,6 +15338,141 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </div>
                             </>
                           )}
+
+                          {/* BOTTLER'S AGREEMENTS — US vs Outside US comparison */}
+                          {bottlerAgreements && (
+                            <>
+                              <SectionHeading>// BOTTLER'S AGREEMENTS · U.S. VS OUTSIDE U.S.</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{bottlerAgreements.description}</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {bottlerAgreements.dimensions.map((d, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${d.highlight ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                  }}>
+                                    <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'8px'}}>{d.name}</div>
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'8px'}}>
+                                      <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// OUTSIDE U.S.</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.outsideUs}</div>
+                                      </div>
+                                      <div style={{padding:'8px 10px',background:'rgba(34,197,94,0.04)',border:'0.5px solid rgba(34,197,94,0.25)',borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// INSIDE U.S.</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.insideUs}</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              {bottlerAgreements.takeaway && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ KEY TAKEAWAY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{bottlerAgreements.takeaway}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* BOTTLING INVESTMENTS — KO's stake structure */}
+                          {bottlingInvestments && (
+                            <>
+                              <SectionHeading>// BOTTLING INVESTMENTS · {bottlingInvestments.types.length} TYPES</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{bottlingInvestments.description}</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'10px'}}>
+                                {bottlingInvestments.types.map((t, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'14px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'10px',right:'12px',fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>{t.number}</div>
+                                    <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'2px',paddingRight:'30px'}}>{t.name}</div>
+                                    {t.subtitle && <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',marginBottom:'6px',letterSpacing:'0.5px',fontStyle:'italic'}}>{t.subtitle}</div>}
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{t.description}</div>
+                                    {t.purpose && t.purpose.length > 0 && (
+                                      <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'6px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// PURPOSE / BENEFITS</div>
+                                        <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                          {t.purpose.map((p, j) => (
+                                            <li key={j} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                              <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                              <span>{p}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    {t.strategy && (
+                                      <div style={{padding:'6px 10px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// STRATEGY</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{t.strategy}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                              {bottlingInvestments.takeaway && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ KEY TAKEAWAY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{bottlingInvestments.takeaway}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* TOP BOTTLERS — 5 independent bottling partners */}
+                          {topBottlers && (
+                            <>
+                              <SectionHeading>// TOP {topBottlers.bottlers.length} INDEPENDENT BOTTLING PARTNERS · {topBottlers.asOf}</SectionHeading>
+                              {topBottlers.shareNote && (
+                                <div style={{padding:'10px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px',display:'flex',alignItems:'center',gap:'14px',flexWrap:'wrap'}}>
+                                  <span style={{fontSize:'24px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{topBottlers.combinedShare}</span>
+                                  <span style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,flex:1,minWidth:'200px',letterSpacing:'0.3px'}}>{topBottlers.shareNote}</span>
+                                </div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {topBottlers.bottlers.map((b, i) => (
+                                  <div key={i} style={{
+                                    background: b.featured ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${b.featured ? amber : amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                    position:'relative',
+                                  }}>
+                                    {b.featured && (
+                                      <>
+                                        <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                        <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                      </>
+                                    )}
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'4px',flexWrap:'wrap'}}>
+                                      <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{b.name}</span>
+                                      {b.ticker && <span style={{padding:'2px 7px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{b.ticker}</span>}
+                                    </div>
+                                    <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'8px'}}>{b.highlight}</div>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// REGIONS SERVED</div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                      {b.regions.map((r, j) => (
+                                        <span key={j} style={{padding:'2px 7px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace'}}>{r}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              {topBottlers.disclaimer && (
+                                <div style={{padding:'8px 12px',background:'rgba(148,163,184,0.05)',border:'0.5px solid rgba(148,163,184,0.25)',borderRadius:'3px',fontSize:'9px',color:'rgba(148,163,184,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic',marginBottom:'10px'}}>
+                                  ⚖ {topBottlers.disclaimer}
+                                </div>
+                              )}
+                            </>
+                          )}
                         </div>
                       );
                     };
@@ -14897,7 +15486,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -15278,6 +15867,91 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{erm.independence.summary}</div>
                                 </div>
                               )}
+                            </>
+                          )}
+
+                          {/* GOVERNMENTAL REGULATION — multi-section legal/regulatory exposure */}
+                          {governmentalRegulation && (
+                            <>
+                              <SectionHeading>// GOVERNMENTAL REGULATION · {governmentalRegulation.sections.length} AREAS</SectionHeading>
+                              {governmentalRegulation.summary && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// COMPLIANCE OVERVIEW</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{governmentalRegulation.summary}</div>
+                                </div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {governmentalRegulation.sections.map((s, i) => (
+                                  <details key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                      <span style={{display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>{s.number}</span>
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{s.name}</span>
+                                      </span>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>›</span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                      {s.description && (
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>{s.description}</div>
+                                      )}
+                                      {s.bullets && s.bullets.length > 0 && (
+                                        <div style={{display:'flex',flexDirection:'column',gap:'4px',marginBottom: (s.laws || s.futureRules || s.closer) ? '8px' : 0}}>
+                                          {s.bullets.map((b, j) => (
+                                            <div key={j} style={{
+                                              padding:'8px 10px',
+                                              background: b.highlight ? 'rgba(245,158,11,0.08)' : 'rgba(0,0,0,0.25)',
+                                              border:`0.5px solid ${b.highlight ? amber : amberGlow}`,
+                                              borderRadius:'2px',
+                                            }}>
+                                              <div style={{display:'flex',gap:'8px',alignItems:'baseline',flexWrap:'wrap',marginBottom:'2px'}}>
+                                                <span style={{fontSize:'9px',color: b.highlight ? amber : amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>{b.label.toUpperCase()}</span>
+                                              </div>
+                                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{b.text}</div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                      {s.laws && s.laws.length > 0 && (
+                                        <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>// APPLICABLE LAWS</div>
+                                          <div style={{display:'flex',flexDirection:'column',gap:'3px'}}>
+                                            {s.laws.map((L, j) => (
+                                              <div key={j} style={{display:'flex',gap:'10px',alignItems:'baseline',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                                <span style={{color:'#e0eaff',fontWeight:600,minWidth:'180px'}}>{L.name}</span>
+                                                <span style={{color:'rgba(148,163,184,0.7)'}}>{L.jurisdiction}</span>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                      {s.futureRules && s.futureRules.length > 0 && (
+                                        <div style={{padding:'8px 10px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.25)',borderRadius:'2px',marginBottom:'8px'}}>
+                                          <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>⚠ FUTURE RULES THAT MAY INCREASE COSTS</div>
+                                          <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                            {s.futureRules.map((r, j) => (
+                                              <li key={j} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                                <span style={{color:'rgba(239,68,68,0.85)',flexShrink:0}}>›</span>
+                                                <span>{r}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                      {s.closer && (
+                                        <div style={{padding:'6px 10px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                          {s.closer}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
                             </>
                           )}
                         </div>
