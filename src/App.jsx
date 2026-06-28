@@ -3749,9 +3749,9 @@ const COVERAGE_DATA = [
   { ticker: 'ORCL',  name: 'Oracle',                         industry: 'Technology',    country: 'United States', marketCap: 530000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Enterprise database and cloud infrastructure provider.',                                       breakdown: null },
 
   // === RAILWAY · CANADA & USA ===
-  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null },
-  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railway',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null },
-  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railway',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null },
+  { ticker: 'UNP',   name: 'Union Pacific Corporation',      industry: 'Railway',       country: 'United States', marketCap: 155000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US Class I freight railroad, dominant in the western half of the country.',          breakdown: null, locked: true },
+  { ticker: 'CSX',   name: 'CSX Corporation',                industry: 'Railway',       country: 'United States', marketCap: 85000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Eastern US Class I freight railroad operator.',                                              breakdown: null, locked: true },
+  { ticker: 'CP',    name: 'Canadian Pacific Kansas City',   industry: 'Railway',       country: 'Canada',        marketCap: 75000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'First transcontinental rail network linking Canada, the US and Mexico. Trades on NYSE.',     breakdown: null, locked: true },
   { ticker: 'CNI',   name: 'Canadian National Railway',      industry: 'Railway',       country: 'Canada',        marketCap: 70000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Canadian rail network, reaching three coasts. Trades on NYSE.',                       breakdown: null },
 
   // === FINANCIAL · USA ===
@@ -3761,8 +3761,8 @@ const COVERAGE_DATA = [
   { ticker: 'MCO',   name: 'Moody’s',                   industry: 'Financial',     country: 'United States', marketCap: 79000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Credit ratings, risk assessment and financial analytics duopoly.',                              breakdown: null },
 
   // === MEDIA · USA ===
-  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null },
-  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null },
+  { ticker: 'FOX',   name: 'Fox Corporation',                industry: 'Media',         country: 'United States', marketCap: 20000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'US broadcast, cable news and sports media operator.',                                          breakdown: null, locked: true },
+  { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
 
   // === BEVERAGE · USA ===
   { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: null },
@@ -3770,7 +3770,7 @@ const COVERAGE_DATA = [
 
   // === WASTE · USA ===
   { ticker: 'WM',    name: 'Waste Management',               industry: 'Waste',         country: 'United States', marketCap: 86000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest US waste collection and landfill operator.',                                         breakdown: null },
-  { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null },
+  { ticker: 'RSG',   name: 'Republic Services',              industry: 'Waste',         country: 'United States', marketCap: 63000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest US waste collection and recycling duopoly partner to WM.',                     breakdown: null, locked: true },
 
   // === CONGLOMERATE · USA ===
   { ticker: 'BRK.B', name: 'Berkshire Hathaway',             industry: 'Conglomerate',  country: 'United States', marketCap: 1000000000000, marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified holding company built by Warren Buffett — insurance float plus equity portfolio.', breakdown: null },
@@ -3788,24 +3788,24 @@ const COVERAGE_DATA = [
   { ticker: 'REH',   name: 'Reece Group',                    industry: 'Wholesale',     country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Dominant ANZ plumbing wholesaler with emerging US footprint.',                                breakdown: null },
 
   // === BANKING · AUSTRALIA ===
-  { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null },
+  { ticker: 'CBA',   name: 'Commonwealth Bank of Australia', industry: 'Banking',       country: 'Australia',     marketCap: 190000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian bank by market cap and home loan share.',                                  breakdown: null, locked: true },
 
   // === RETAIL · AUSTRALIA ===
-  { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null },
-  { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: null },
-  { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: null },
+  { ticker: 'WES',   name: 'Wesfarmers',                     industry: 'Retail',        country: 'Australia',     marketCap: 68000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified conglomerate behind Bunnings, Kmart, Officeworks and Target.',                    breakdown: null, locked: true },
+  { ticker: 'WOW',   name: 'Woolworths Group',               industry: 'Retail',        country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest Australian grocery retailer and supermarket duopoly leader.',                          breakdown: null, locked: true },
+  { ticker: 'COL',   name: 'Coles Group',                    industry: 'Retail',        country: 'Australia',     marketCap: 22000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Second-largest Australian grocery retailer, duopoly partner to Woolworths.',                  breakdown: null, locked: true },
 
   // === INFRASTRUCTURE · AUSTRALIA ===
-  { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null },
+  { ticker: 'TCL',   name: 'Transurban Group',               industry: 'Infrastructure',country: 'Australia',     marketCap: 33000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Toll road operator across major Australian and US urban networks.',                            breakdown: null, locked: true },
 
   // === EXCHANGE · AUSTRALIA ===
-  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: null },
+  { ticker: 'ASX',   name: 'ASX Limited',                    industry: 'Exchange',      country: 'Australia',     marketCap: 7000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Operator of Australia’s primary stock exchange — monopoly listing venue.',                breakdown: null, locked: true },
 
   // === TECHNOLOGY · AUSTRALIA ===
-  { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null },
+  { ticker: 'PXA',   name: 'PEXA Group',                     industry: 'Technology',    country: 'Australia',     marketCap: 1500000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Digital property settlement platform — near-monopoly in Australian e-conveyancing.',           breakdown: null, locked: true },
 
   // === MEDIA · AUSTRALIA ===
-  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null },
+  { ticker: 'NEC',   name: 'Nine Entertainment',             industry: 'Media',         country: 'Australia',     marketCap: 1000000000,    marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Australian free-to-air TV, streaming (Stan), publishing and digital media.',                  breakdown: null, locked: true },
 ];
 
 function MuzzApp() {
@@ -4323,6 +4323,7 @@ function MuzzApp() {
   const [coverageCountry, setCoverageCountry] = useState(null);   // selected country or null
   const [coverageCompany, setCoverageCompany] = useState(null);   // selected company ticker or null
   const [coverageBreakdownTab, setCoverageBreakdownTab] = useState('overview'); // active tab on Coverage company breakdown page
+  const [coverageComingSoon, setCoverageComingSoon] = useState(null);            // ticker currently showing the COMING SOON flash (locked cards)
   const [coverageSearch, setCoverageSearch] = useState('');       // search query
   // Investment Map — free-form graph state (one per mode)
   const [investmentMapGraph, setInvestmentMapGraph] = useState({
@@ -16183,24 +16184,45 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',letterSpacing:'1.5px'}}>{searchResults.length} RESULT{searchResults.length !== 1 ? 'S' : ''}</div>
                   {searchResults.length === 0 ? (
                     <div style={{fontSize:'12px',color:'rgba(148,163,184,0.5)',fontFamily:'monospace',padding:'20px',textAlign:'center'}}>No companies match "{coverageSearch}".</div>
-                  ) : searchResults.map(c => (
-                    <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); setCoverageSearch(''); }}
-                      style={{width:'100%',textAlign:'left',background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
+                  ) : searchResults.map(c => {
+                    const isLocked = c.locked;
+                    const isFlashing = coverageComingSoon === c.ticker;
+                    const handleClick = () => {
+                      if (isLocked) {
+                        setCoverageComingSoon(c.ticker);
+                        setTimeout(() => setCoverageComingSoon(t => t === c.ticker ? null : t), 2000);
+                        return;
+                      }
+                      setCoverageCompany(c.ticker);
+                      setCoverageBreakdownTab('overview');
+                      setCoverageSearch('');
+                    };
+                    return (
+                    <button key={c.ticker} onClick={handleClick}
+                      style={{width:'100%',textAlign:'left',background: isLocked ? 'rgba(15,10,2,0.5)' : 'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${isLocked ? amberDim : amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
+                      {isLocked && (
+                        <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>🔒 LOCKED</span>
+                      )}
                       <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
                         <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
                         <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
                       </div>
-                      <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
-                        <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px'}}>{c.industry} · {c.country}</span>
-                        {c.marketCap ? (
-                          <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'3px 9px'}}>
-                            <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
-                            <span style={{fontSize:'12px',color:'#4ade80',fontFamily:'monospace',fontWeight:700}}>{fmtCap(c.marketCap)}</span>
-                          </span>
-                        ) : null}
-                      </div>
+                      {isFlashing ? (
+                        <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',fontSize:'11px',color:amber,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>⏳ COMING SOON — breakdown not yet available</div>
+                      ) : (
+                        <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
+                          <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px'}}>{c.industry} · {c.country}</span>
+                          {c.marketCap ? (
+                            <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'3px 9px'}}>
+                              <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
+                              <span style={{fontSize:'12px',color:'#4ade80',fontFamily:'monospace',fontWeight:700}}>{fmtCap(c.marketCap)}</span>
+                            </span>
+                          ) : null}
+                        </div>
+                      )}
                     </button>
-                  ))}
+                    );
+                  })}
                 </div>
               );
             }
@@ -16286,28 +16308,50 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                 {coverageIndustry && coverageCountry && (
                   <>
                     <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600}}>// {coverageCountry.toUpperCase()} · BY MARKET CAP</div>
-                    {companiesInScope.map(c => (
-                      <button key={c.ticker} onClick={() => { setCoverageCompany(c.ticker); setCoverageBreakdownTab('overview'); }}
-                        style={{width:'100%',textAlign:'left',background:'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px'}}>
+                    {companiesInScope.map(c => {
+                      const isLocked = c.locked;
+                      const isFlashing = coverageComingSoon === c.ticker;
+                      const handleClick = () => {
+                        if (isLocked) {
+                          setCoverageComingSoon(c.ticker);
+                          setTimeout(() => setCoverageComingSoon(t => t === c.ticker ? null : t), 2000);
+                          return;
+                        }
+                        setCoverageCompany(c.ticker);
+                        setCoverageBreakdownTab('overview');
+                      };
+                      return (
+                      <button key={c.ticker} onClick={handleClick}
+                        style={{width:'100%',textAlign:'left',background: isLocked ? 'rgba(15,10,2,0.5)' : 'rgba(15,10,2,0.85)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${isLocked ? amberDim : amber}`,borderRadius:'6px',padding:'16px 18px',cursor:'pointer',display:'flex',flexDirection:'column',gap:'10px',opacity: isLocked ? 0.65 : 1,position:'relative'}}>
+                        {isLocked && (
+                          <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>🔒 LOCKED</span>
+                        )}
                         {/* Top row: ticker + name */}
-                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',paddingRight: isLocked ? '90px' : 0}}>
                           <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
                           <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
                         </div>
-                        {/* Description */}
-                        <div style={{fontSize:'12px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5}}>{c.oneLiner}</div>
-                        {/* Market cap stat chip */}
-                        {c.marketCap ? (
-                          <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
-                            <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'4px 10px'}}>
-                              <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
-                              <span style={{fontSize:'13px',color:'#4ade80',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{fmtCap(c.marketCap)}</span>
-                            </span>
-                            {c.marketCapDate ? <span style={{fontSize:'9px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'0.5px'}}>as of {c.marketCapDate}</span> : null}
-                          </div>
-                        ) : null}
+                        {isFlashing ? (
+                          <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'3px',fontSize:'11px',color:amber,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>⏳ COMING SOON — full breakdown not yet available for this company</div>
+                        ) : (
+                          <>
+                            {/* Description */}
+                            <div style={{fontSize:'12px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5}}>{c.oneLiner}</div>
+                            {/* Market cap stat chip */}
+                            {c.marketCap ? (
+                              <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
+                                <span style={{display:'inline-flex',alignItems:'baseline',gap:'5px',background:'rgba(34,197,94,0.1)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'4px',padding:'4px 10px'}}>
+                                  <span style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>MKT CAP</span>
+                                  <span style={{fontSize:'13px',color:'#4ade80',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{fmtCap(c.marketCap)}</span>
+                                </span>
+                                {c.marketCapDate ? <span style={{fontSize:'9px',color:'rgba(148,163,184,0.4)',fontFamily:'monospace',letterSpacing:'0.5px'}}>as of {c.marketCapDate}</span> : null}
+                              </div>
+                            ) : null}
+                          </>
+                        )}
                       </button>
-                    ))}
+                      );
+                    })}
                   </>
                 )}
               </div>
