@@ -18387,7 +18387,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       { id: 'trust',     label: 'TRUST',     enabled: !!bd.trust },
                       { id: 'brands',    label: 'BRANDS',    enabled: !!bd.brands },
                       { id: 'moat',      label: 'MOAT',      enabled: !!bd.moat },
-                      { id: 'numbers',   label: 'NUMBERS',   enabled: !!bd.numbers },
+                      { id: 'numbers',   label: 'NUMBERS',   enabled: !!(bd.numbers && (bd.numbers.marketCapHistory || bd.numbers.employees || bd.numbers.usEmployees || bd.numbers.revenuePerEmployee || bd.numbers.netIncomePerEmployee || bd.numbers.ceoPerformance || bd.numbers.retirement)) },
                       { id: 'segments',  label: 'SEGMENTS',  enabled: !!(bd.numbers && bd.numbers.segments) },
                       { id: 'income',    label: 'INCOME',    enabled: !!(bd.numbers && bd.numbers.incomeStatement) },
                       { id: 'balance',   label: 'BALANCE',   enabled: !!(bd.numbers && bd.numbers.balanceSheet) },
