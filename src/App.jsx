@@ -5724,7 +5724,7 @@ const COVERAGE_DATA = [
   { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
 
   // === BEVERAGE · USA ===
-  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
+  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
   { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: null },
 
   // === WASTE · USA ===
@@ -5738,7 +5738,7 @@ const COVERAGE_DATA = [
   { ticker: 'COST',  name: 'Costco Wholesale',               industry: 'Retail',        country: 'United States', marketCap: 420000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Membership-fee warehouse club retailer with cult customer loyalty.',                           breakdown: null },
 
   // === FOOD · USA ===
-  { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
+  { ticker: 'HSY',   name: 'The Hershey Company',            industry: 'Food',          country: 'United States', marketCap: 35000000000,   marketCapDate: '20 Jun 2026', verdict: null, tier: 1, oneLiner: 'Brand-led North American confectionery leader with emerging snacks portfolio.',                breakdown: HSY_BREAKDOWN },
 
   // === ENTERTAINMENT · NETHERLANDS ===
   { ticker: 'UMG',   name: 'Universal Music Group',          industry: 'Entertainment', country: 'Netherlands',   marketCap: 40000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Largest global music label, royalties from a deep recorded music catalogue.',                  breakdown: null },
@@ -15624,7 +15624,19 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
                       <div>
                         <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>// {selected.industry} · {selected.country}</div>
-                        <div style={{fontSize:'26px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{selected.ticker}</div>
+                        <div style={{display:'flex',alignItems:'baseline',gap:'12px',flexWrap:'wrap'}}>
+                          <div style={{fontSize:'26px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'1px'}}>{selected.ticker}</div>
+                          {selected.tier && (() => {
+                            const tierColors = {
+                              1: { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.5)',   text:'rgba(34,197,94,0.95)' },
+                              2: { bg:'rgba(245,158,11,0.10)', border:amber,                    text:amber },
+                              3: { bg:'rgba(148,163,184,0.10)',border:'rgba(148,163,184,0.5)',  text:'rgba(203,213,225,0.95)' },
+                            }[selected.tier];
+                            return (
+                              <span style={{display:'inline-flex',alignItems:'center',gap:'5px',background:tierColors.bg,border:`0.5px solid ${tierColors.border}`,borderRadius:'3px',padding:'3px 9px',fontSize:'9px',color:tierColors.text,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>★ TIER {selected.tier}</span>
+                            );
+                          })()}
+                        </div>
                         <div style={{fontSize:'13px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',marginTop:'2px'}}>{selected.name}</div>
                       </div>
                       <div style={{textAlign:'right'}}>
@@ -21310,8 +21322,18 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {isLocked && (
                           <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>🔒 LOCKED</span>
                         )}
+                        {!isLocked && c.tier && (() => {
+                          const tierColors = {
+                            1: { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.5)',   text:'rgba(34,197,94,0.95)' },
+                            2: { bg:'rgba(245,158,11,0.10)', border:amber,                    text:amber },
+                            3: { bg:'rgba(148,163,184,0.10)',border:'rgba(148,163,184,0.5)',  text:'rgba(203,213,225,0.95)' },
+                          }[c.tier];
+                          return (
+                            <span style={{position:'absolute',top:'10px',right:'12px',display:'inline-flex',alignItems:'center',gap:'5px',background:tierColors.bg,border:`0.5px solid ${tierColors.border}`,borderRadius:'3px',padding:'3px 8px',fontSize:'8px',color:tierColors.text,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700}}>★ TIER {c.tier}</span>
+                          );
+                        })()}
                         {/* Top row: ticker + name */}
-                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',paddingRight: isLocked ? '90px' : 0}}>
+                        <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap',paddingRight: (isLocked || c.tier) ? '90px' : 0}}>
                           <span style={{fontSize:'20px',color:'#ffffff',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.ticker}</span>
                           <span style={{fontSize:'12px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',fontWeight:400}}>{c.name}</span>
                         </div>
