@@ -3738,6 +3738,183 @@ const HSY_BREAKDOWN = {
 };
 
 // ════════════════════════════════════════════════════════════════════
+// KO_BREAKDOWN — The Coca-Cola Company deep-dive Coverage data
+// ════════════════════════════════════════════════════════════════════
+const KO_BREAKDOWN = {
+  // ════════════════════════════════════════════════════════════════
+  // OVERVIEW — company identity, operating segments, business lines
+  // ════════════════════════════════════════════════════════════════
+  overview: {
+    facts: {
+      founded:      '1886 by John Pemberton',
+      incorporated: '1892 · Delaware',
+      brandCount:   '200+',
+      globalReach:  '~200 countries',
+    },
+    identity: {
+      coreIdentity: 'World’s largest non-alcoholic beverage company. Concentrate-led, asset-light business model leveraging the world’s most valuable beverage trademark.',
+      industryPosition: [
+        'World’s #1 non-alcoholic ready-to-drink (NARTD) beverage company by volume and value share.',
+        'Owns or licenses 200+ beverage brands across sparkling, hydration, juice, dairy, coffee, tea, and alcoholic ready-to-drink.',
+        'Operates the world’s largest beverage distribution system through independent bottling partners.',
+      ],
+    },
+    // Operating segments — organisational structure (geographic + bottling)
+    operatingSegments: {
+      asOf: '2024',
+      description: 'Coca-Cola organises globally by 4 geographic regions, bottling investments, and Global Ventures. Starting 2025, Global Ventures is being phased out and folded into regional segments.',
+      segments: [
+        { number: '01', name: 'Europe, Middle East & Africa',  shortName: 'EMEA',              type: 'Geographic' },
+        { number: '02', name: 'Latin America',                  shortName: 'LATAM',             type: 'Geographic' },
+        { number: '03', name: 'North America',                  shortName: 'NA',                type: 'Geographic' },
+        { number: '04', name: 'Asia Pacific',                   shortName: 'APAC',              type: 'Geographic' },
+        { number: '05', name: 'Global Ventures',                shortName: 'GV',                type: 'Non-geographic', sunset: 'Sunset Jan 2025', detail: 'Oversees Costa Coffee (limited operations), innocent, doğadan, and coordination with Monster Beverage.' },
+        { number: '06', name: 'Bottling Investments',           shortName: 'BIG',               type: 'Non-geographic', detail: 'Direct ownership of certain bottling operations not yet refranchised to independent bottlers.' },
+      ],
+      operatingUnits: 'Each geographic segment contains operating units focused on local and regional execution. Goal: eliminate duplication, scale new products faster, stay close to the consumer. Operating units collaborate with five global marketing category leadership teams that drive innovation and marketing efficiency.',
+      corporate: {
+        center: 'Strategic initiatives, policy, governance, and scaling global initiatives.',
+        platformServices: 'Shared global services — data management, consumer analytics, digital commerce, social/digital hubs, transactional work — supporting operating units and marketing teams.',
+      },
+      upcomingChanges: {
+        effectiveDate: '1 January 2025',
+        bullets: [
+          'Global Ventures phased out to streamline operations.',
+          'Costa (excluding ready-to-drink), innocent, and doğadan → moved to EMEA segment.',
+          'Costa ready-to-drink + Monster fees → shifted to relevant geographic segments.',
+        ],
+      },
+    },
+    // Business lines — concentrate vs finished product economics
+    businessLines: {
+      description: 'Coca-Cola operates two distinct business models with different revenue and margin profiles.',
+      lines: [
+        {
+          name: 'Concentrate Operations',
+          description: 'Sale of concentrates, syrups (incl. fountain), and some finished beverages to bottlers. Bottlers produce & package finished drinks for retail.',
+          revenueProfile: 'Lower revenue, higher margins',
+          marginNote: 'Asset-light, capital-efficient',
+          reportedIn: 'Geographic Segments + Global Ventures',
+          highlight: true,
+        },
+        {
+          name: 'Finished Product Operations',
+          description: 'Direct sale of sparkling soft drinks & other finished beverages to retailers, distributors, wholesalers, and via Costa retail stores. Includes U.S. fountain syrup sales.',
+          revenueProfile: 'Higher revenue, lower margins',
+          marginNote: 'Capital-intensive, declining as bottling is refranchised',
+          reportedIn: 'Bottling Investments + some Geographic Segments',
+        },
+      ],
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // BRANDS — portfolio across 8 categories + partnerships
+  // ════════════════════════════════════════════════════════════════
+  brands: {
+    // Official 10-K 4-category structure (high-level)
+    officialCategories: [
+      { name: 'Sparkling Soft Drinks',                  brands: ['Coca-Cola', 'Diet Coke / Coca-Cola Light', 'Coca-Cola Zero Sugar', 'Fanta', 'Fresca', 'Schweppes*', 'Sprite', 'Thums Up'] },
+      { name: 'Water, Sports, Coffee & Tea',             brands: ['Aquarius', 'Ayataka', 'BODYARMOR', 'Ciel', 'Costa', 'Crystal', 'Dasani', 'doğadan', 'Fuze Tea', 'Georgia', 'Smartwater', 'Vitaminwater', 'Gold Peak', 'I LOHAS', 'Powerade', 'Topo Chico'] },
+      { name: 'Juice, Value-Added Dairy & Plant-Based',  brands: ['Core Power', 'Del Valle', 'fairlife', 'innocent', 'Maaza', 'Minute Maid', 'Minute Maid Pulpy', 'Simply'] },
+      { name: 'Alcohol (select markets)',                brands: ['Jack Daniel’s & Coca-Cola', 'Lemon-Dou', 'Topo Chico Hard Seltzer'] },
+    ],
+    officialNote: 'Schweppes is owned by Coca-Cola in certain countries outside the U.S.',
+    // Detailed 8-category breakdown — easier to scan
+    brandCategories: [
+      { emoji: '🥤', name: 'Soft Drinks',                 brands: ['Coca-Cola', 'Sprite', 'Fanta', 'Fresca', 'Schweppes', 'Thums Up', 'Inca Kola', 'Barq’s', 'Mello Yello', 'Kin', 'Royal', 'Appletiser', 'AHA'] },
+      { emoji: '💧', name: 'Water & Hydration',           brands: ['Dasani', 'Smartwater', 'Vitaminwater', 'Ciel', 'Topo Chico', 'Aquarius', 'I LOHAS', 'Bonaqua'] },
+      { emoji: '☕', name: 'Coffee',                       brands: ['Costa Coffee', 'Georgia Coffee', 'Gold Peak Coffee'] },
+      { emoji: '🍵', name: 'Tea',                          brands: ['Fuze Tea', 'Honest Tea', 'Peace Tea', 'Ayataka', 'Gold Peak Tea'] },
+      { emoji: '⚡', name: 'Energy',                       brands: ['Monster (~19% stake)', 'Powerade', 'BodyArmor', 'Glacéau Energy (Vitaminwater Energy)', 'Full Throttle', 'NOS'] },
+      { emoji: '🥛', name: 'Juice, Dairy & Plant-Based',  brands: ['Minute Maid (Simply Orange, Lemonade, Watermelon)', 'Del Valle', 'Innocent', 'Fairlife (fully owned)', 'Ades (plant-based)', 'Suja (organic juices, U.S.)'] },
+      { emoji: '🍸', name: 'Alcohol (select markets)',    brands: ['Topo Chico Hard Seltzer', 'Jack Daniel’s & Coca-Cola RTD', 'Lemon-Dou (Asia)', 'Simply Spiked'] },
+    ],
+    // Partnerships & licensing
+    partnerships: [
+      {
+        name: 'Monster Beverage Corporation',
+        stake: '~19%',
+        details: 'Coca-Cola owns ~19% stake. Coca-Cola system bottlers distribute Monster Energy in U.S., Canada & international territories under formal distribution agreements.',
+      },
+    ],
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // NUMBERS — Long-term productivity & headcount history
+  // ════════════════════════════════════════════════════════════════
+  numbers: {
+    employees: {
+      label: 'Total Employees (Worldwide)', unit: 'count',
+      series: [
+        { year: 2015, value: 123200 },
+        { year: 2016, value: 100300 },
+        { year: 2017, value: 61800,  spike: true },
+        { year: 2018, value: 62600 },
+        { year: 2019, value: 86200,  spike: true },
+        { year: 2020, value: 80300 },
+        { year: 2021, value: 79000 },
+        { year: 2022, value: 82500 },
+        { year: 2023, value: 79100 },
+        { year: 2024, value: 69700,  down: true },
+      ],
+      note: 'Sharp 2015→2017 drop (123K → 62K) reflects KO’s strategic refranchising of company-owned bottling operations to independent bottlers — an asset-light pivot. Headcount drifted higher 2018-2022 with acquisitions (Costa 2019, BodyArmor 2021) before tapering down through 2024.',
+    },
+    usEmployees: {
+      label: 'U.S. Employees', unit: 'count',
+      series: [
+        { year: 2015, value: 60900 },
+        { year: 2016, value: 51000 },
+        { year: 2017, value: 12400, down: true },
+        { year: 2018, value: 11400 },
+        { year: 2019, value: 10100 },
+        { year: 2020, value: 9300 },
+        { year: 2021, value: 9400 },
+        { year: 2022, value: 9000 },
+        { year: 2023, value: 9000 },
+        { year: 2024, value: 8900 },
+      ],
+      note: 'US headcount collapsed from 61K (2015) to 8.9K (2024) — the most extreme expression of the bottler refranchising. KO sold off its US bottling operations to Coca-Cola Consolidated, Reyes, Arca Continental and other independent bottlers between 2015-2017.',
+    },
+    revenuePerEmployee: {
+      label: 'Revenue per Employee', unit: 'USD',
+      series: [
+        { year: 2015, value: 359000 },
+        { year: 2016, value: 417384 },
+        { year: 2017, value: 573953 },
+        { year: 2018, value: 509713 },
+        { year: 2019, value: 432207 },
+        { year: 2020, value: 411168, down: true },
+        { year: 2021, value: 489430 },
+        { year: 2022, value: 521263 },
+        { year: 2023, value: 578707 },
+        { year: 2024, value: 675315 },
+      ],
+      note: 'Productivity nearly doubled $359K → $675K (+88%) as refranchising removed lower-margin bottling labour. Each remaining KO employee is now responsible for far more revenue — the hallmark of an asset-light beverage concentrate model.',
+    },
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee', unit: 'USD',
+      series: [
+        { year: 2015, value: 59600 },
+        { year: 2016, value: 65083 },
+        { year: 2017, value: 20032, down: true },
+        { year: 2018, value: 102805 },
+        { year: 2019, value: 104248 },
+        { year: 2020, value: 96478,  down: true },
+        { year: 2021, value: 123044 },
+        { year: 2022, value: 115539 },
+        { year: 2023, value: 135444 },
+        { year: 2024, value: 152506 },
+      ],
+      note: '2017 trough ($20K) reflects the one-off Tax Cuts and Jobs Act (TCJA) charge that hammered reported net income that year. Underlying trend: NI per employee compounded 2.6x from $59.6K (2015) to $152.5K (2024) — extreme leverage from the asset-light pivot.',
+    },
+  },
+
+  // MOAT, SEGMENTS, INCOME, BALANCE, CASH FLOW, RISKS, THESIS — to be added
+};
+
+
+// ════════════════════════════════════════════════════════════════════
 // COVERAGE_DATA — Muzz analyst coverage library (module-level, accessible everywhere)
 // ════════════════════════════════════════════════════════════════════
 const COVERAGE_DATA = [
@@ -3765,7 +3942,7 @@ const COVERAGE_DATA = [
   { ticker: 'NWS',   name: 'News Corp',                      industry: 'Media',         country: 'United States', marketCap: 16000000000,   marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global news, publishing and real estate digital media group.',                                breakdown: null, locked: true },
 
   // === BEVERAGE · USA ===
-  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: null },
+  { ticker: 'KO',    name: 'Coca-Cola',                      industry: 'Beverage',      country: 'United States', marketCap: 341000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Global beverage distribution and brand portfolio leader.',                                    breakdown: KO_BREAKDOWN },
   { ticker: 'PEP',   name: 'PepsiCo',                        industry: 'Beverage',      country: 'United States', marketCap: 194000000000,  marketCapDate: '20 Jun 2026', verdict: null, oneLiner: 'Diversified beverages and snacks giant (Pepsi + Frito-Lay + Quaker).',                       breakdown: null },
 
   // === WASTE · USA ===
@@ -13958,7 +14135,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === BRANDS TAB ===
                     const renderBrandsTab = () => {
                       if (!bd.brands) return null;
-                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups, competitorLandscape } = bd.brands;
+                      const { segments, topSellers, portfolio, categoryRankings, competitorMatchups, competitorLandscape, brandCategories, officialCategories, officialNote, partnerships } = bd.brands;
 
                       return (
                         <div>
@@ -14211,6 +14388,100 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </div>
                             </>
                           )}
+
+                          {/* OFFICIAL 10-K CATEGORIES */}
+                          {officialCategories && officialCategories.length > 0 && (
+                            <>
+                              <SectionHeading>// 10-K BRAND PORTFOLIO BY CATEGORY · {officialCategories.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The official categories used in annual reporting (high-level grouping).</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {officialCategories.map((cat, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'10px 12px',
+                                  }}>
+                                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'6px',gap:'10px',flexWrap:'wrap'}}>
+                                      <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{cat.name}</div>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{cat.brands.length} BRANDS</div>
+                                    </div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                      {cat.brands.map((b, j) => (
+                                        <span key={j} style={{padding:'2px 7px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{b}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              {officialNote && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {officialNote}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* DETAILED BRAND CATEGORIES (8-cat breakdown) */}
+                          {brandCategories && brandCategories.length > 0 && (
+                            <>
+                              <SectionHeading>// DETAILED CATEGORY BREAKDOWN · {brandCategories.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Brands grouped by drink type for easier scanning.</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {brandCategories.map((cat, i) => (
+                                  <details key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                      <span style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                        {cat.emoji && <span style={{fontSize:'14px'}}>{cat.emoji}</span>}
+                                        <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{cat.name}</span>
+                                      </span>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{cat.brands.length} ›</span>
+                                    </summary>
+                                    <div style={{padding:'8px 12px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                      <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                        {cat.brands.map((b, j) => (
+                                          <span key={j} style={{padding:'2px 7px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{b}</span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* PARTNERSHIPS & LICENSING */}
+                          {partnerships && partnerships.length > 0 && (
+                            <>
+                              <SectionHeading>// PARTNERSHIPS &amp; LICENSING · {partnerships.length}</SectionHeading>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}}>
+                                {partnerships.map((p, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                  }}>
+                                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'6px',gap:'10px',flexWrap:'wrap'}}>
+                                      <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{p.name}</div>
+                                      {p.stake && (
+                                        <div style={{padding:'2px 8px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>STAKE {p.stake}</div>
+                                      )}
+                                    </div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{p.details}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </div>
                       );
                     };
@@ -14218,7 +14489,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -14503,11 +14774,119 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </>
                             );
                           })()}
+                          {/* OPERATING SEGMENTS — organisational structure */}
+                          {operatingSegments && (
+                            <>
+                              <SectionHeading>// OPERATING SEGMENTS · {operatingSegments.asOf}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.description}</div>
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'8px',marginBottom:'12px'}}>
+                                {operatingSegments.segments.map((s, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                    position:'relative',
+                                  }}>
+                                    <div style={{position:'absolute',top:'8px',right:'10px',fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{s.number}</div>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// {s.type.toUpperCase()}</div>
+                                    <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'4px'}}>{s.name}</div>
+                                    {s.shortName && (
+                                      <div style={{display:'inline-block',padding:'2px 6px',background:'rgba(245,158,11,0.08)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'1px',fontWeight:700,marginBottom:'6px'}}>{s.shortName}</div>
+                                    )}
+                                    {s.sunset && (
+                                      <div style={{display:'inline-block',marginLeft: s.shortName ? '5px' : 0,padding:'2px 6px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.4)',borderRadius:'2px',fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:700,marginBottom:'6px'}}>{s.sunset}</div>
+                                    )}
+                                    {s.detail && (
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',marginTop:'4px'}}>{s.detail}</div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                              {operatingSegments.operatingUnits && (
+                                <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// OPERATING UNITS</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.operatingUnits}</div>
+                                </div>
+                              )}
+                              {operatingSegments.corporate && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'8px',marginBottom:'10px'}}>
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// CENTER</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.corporate.center}</div>
+                                  </div>
+                                  <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',padding:'10px 12px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// PLATFORM SERVICES</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{operatingSegments.corporate.platformServices}</div>
+                                  </div>
+                                </div>
+                              )}
+                              {operatingSegments.upcomingChanges && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'4px'}}>⚡ UPCOMING CHANGES · EFFECTIVE {operatingSegments.upcomingChanges.effectiveDate.toUpperCase()}</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px',marginTop:'6px'}}>
+                                    {operatingSegments.upcomingChanges.bullets.map((b, i) => (
+                                      <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                        <span>{b}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* BUSINESS LINES — concentrate vs finished product */}
+                          {businessLines && (
+                            <>
+                              <SectionHeading>// BUSINESS LINES · {businessLines.lines.length}</SectionHeading>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{businessLines.description}</div>
+                              <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                                {businessLines.lines.map((L, i) => {
+                                  const isHighlight = L.highlight;
+                                  return (
+                                    <div key={i} style={{
+                                      background: isHighlight ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                      border:`0.5px solid ${isHighlight ? amber : amberGlow}`,
+                                      borderLeft:`2px solid ${amber}`,
+                                      borderRadius:'4px',
+                                      padding:'14px',
+                                      position:'relative',
+                                    }}>
+                                      {isHighlight && (
+                                        <>
+                                          <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                          <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                        </>
+                                      )}
+                                      <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'8px'}}>{L.name}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{L.description}</div>
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'8px'}}>
+                                        <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// PROFILE</div>
+                                          <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,lineHeight:1.4}}>{L.revenueProfile}</div>
+                                          {L.marginNote && (
+                                            <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.4,marginTop:'3px',fontStyle:'italic'}}>{L.marginNote}</div>
+                                          )}
+                                        </div>
+                                        <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// REPORTED IN</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.4}}>{L.reportedIn}</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
                         </div>
                       );
                     };
-
-                    // === PLACEHOLDER FOR UNBUILT TABS ===
                     const renderEmptyTab = (tabName) => (
                       <div style={{padding:'40px 24px',textAlign:'center',background:'rgba(5,12,24,0.4)',border:`0.5px dashed ${amberGlow}`,borderRadius:'4px'}}>
                         <div style={{fontSize:'11px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// {tabName.toUpperCase()} · COMING NEXT</div>
@@ -14908,7 +15287,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === NUMBERS TAB ===
                     const renderNumbersTab = () => {
                       if (!bd.numbers) return null;
-                      const { marketCapHistory, employees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance } = bd.numbers;
+                      const { marketCapHistory, employees, usEmployees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance } = bd.numbers;
 
                       return (
                         <div>
@@ -14917,9 +15296,46 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Multi-year time-series across market cap, headcount, and productivity per employee.</div>
 
                           {marketCapHistory && <TimeSeriesTable data={marketCapHistory} />}
-                          {employees && <TimeSeriesTable data={employees} />}
-                          {revenuePerEmployee && <TimeSeriesTable data={revenuePerEmployee} />}
-                          {netIncomePerEmployee && <TimeSeriesTable data={netIncomePerEmployee} />}
+                          {employees && (
+                            <>
+                              <TimeSeriesTable data={employees} />
+                              {employees.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {employees.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {usEmployees && (
+                            <>
+                              <TimeSeriesTable data={usEmployees} />
+                              {usEmployees.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>Note —</span> {usEmployees.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {revenuePerEmployee && (
+                            <>
+                              <TimeSeriesTable data={revenuePerEmployee} />
+                              {revenuePerEmployee.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {revenuePerEmployee.note}
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {netIncomePerEmployee && (
+                            <>
+                              <TimeSeriesTable data={netIncomePerEmployee} />
+                              {netIncomePerEmployee.note && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'3px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                                  <span style={{color:'rgba(34,197,94,0.85)',fontWeight:600}}>Trend —</span> {netIncomePerEmployee.note}
+                                </div>
+                              )}
+                            </>
+                          )}
 
                           {/* CEO PERFORMANCE */}
                           {ceoPerformance && (
