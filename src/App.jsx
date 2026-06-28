@@ -18861,6 +18861,10 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* Retained Earnings Test */}
                           {BS.retainedEarningsTest && (() => {
                             const t = BS.retainedEarningsTest;
+                            const startYear = t.startYear || 2009;
+                            const endYear = t.endYear || 2024;
+                            const reStart = t.retainedEarningsStart || t.retainedEarnings2009;
+                            const reEnd = t.retainedEarningsEnd || t.retainedEarnings2024;
                             return (
                               <div style={{
                                 background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
@@ -18879,12 +18883,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <div style={{fontSize:'11px',color:'rgba(148,163,184,0.75)',fontFamily:'monospace',marginBottom:'14px',letterSpacing:'0.3px'}}>For every $1 of retained earnings, how much market value did the company create?</div>
                                 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'10px',marginBottom:'14px'}}>
                                   <div>
-                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2009</div>
-                                    <div style={{fontSize:'14px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2009.toLocaleString()}M</div>
+                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE {startYear}</div>
+                                    <div style={{fontSize:'14px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',fontWeight:700}}>${reStart.toLocaleString()}M</div>
                                   </div>
                                   <div>
-                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE 2024</div>
-                                    <div style={{fontSize:'14px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>${t.retainedEarnings2024.toLocaleString()}M</div>
+                                    <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE {endYear}</div>
+                                    <div style={{fontSize:'14px',color:'rgba(224,234,255,0.95)',fontFamily:'monospace',fontWeight:700}}>${reEnd.toLocaleString()}M</div>
                                   </div>
                                   <div>
                                     <div style={{fontSize:'8px',color:'rgba(34,197,94,0.7)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>RE INCREASE</div>
