@@ -5893,6 +5893,59 @@ const PEP_BREAKDOWN = {
       landLeasedNote: 'Land on which these properties are located is leased.',
       condition: 'PepsiCo believes its properties are generally in good operating condition and, taken as a whole, are suitable, adequate, and of sufficient capacity for current operations.',
     },
+
+    // Leadership — senior executives + board of directors
+    leadership: {
+      asOf: 'Feb 2025',
+      executives: [
+        { name: 'Ramon L. Laguarta',   age: 61, role: 'Chairman & CEO',                              since: 'CEO since 2018 · Chairman since 2019', joined: 1996, tenureYears: 29, history: 'President, PepsiCo (2017\u201318); CEO Europe Sub-Saharan Africa (2015\u201317); President Emerging Markets Europe (2012\u201315); GM Iberia (2002\u201306).', featured: true },
+        { name: 'James T. Caulfield',   age: 65, role: 'EVP & CFO',                                   since: 'CFO since Nov 2023',                   joined: 1993, tenureYears: 32, history: 'CFO PepsiCo Foods NA (2019\u201323); SVP Investor Relations (2010\u201319); CFO Beverages Canada (2010\u201311); VP Strategy & Development (2007\u201310); Finance roles Frito-Lay NA (1995\u20132000).', featured: true },
+        { name: 'Steven Williams',      age: 59, role: 'CEO, North America',                          since: 'Since Jan 2025',                       joined: 2001, tenureYears: 24, history: 'CEO PepsiCo Foods NA (2019\u201324); SVP Sales & CCO Frito-Lay (2017\u201319); GM East Division (2016\u201317); Global Walmart GM (2013\u201316); SVP Sales Nutrition (2011\u201313). Joined via Quaker (1997; PepsiCo in 2001) \u2014 ~28 yrs incl. Quaker.' },
+        { name: 'Ram Krishnan',         age: 54, role: 'CEO, U.S. Beverages',                        since: 'Since Jan 2025',                       joined: 2006, tenureYears: 19, history: 'CEO PepsiCo Beverages NA (2024\u201325); CEO Int\u2019l Beverages & CCO (2022\u201324); EVP & CCO (2019\u201321); CEO AsiaPac/China (2018\u201320); Walmart Global CCO (2016\u201317); Frito-Lay NA CMO (2014\u201316).' },
+        { name: 'Silviu Popovici',      age: 57, role: 'CEO, Europe, Middle East & Africa',          since: 'Since Jan 2025',                       joined: 2011, tenureYears: 14, history: 'CEO Europe (2019\u201324); CEO Sub-Saharan Africa (2019); President Russia/Ukraine/CIS (2015\u201317). Joined via the Wimm-Bill-Dann acquisition.' },
+        { name: 'Paula Santilli',       age: 60, role: 'CEO, Latin America Foods',                   since: 'Since Jan 2025',                       joined: 2001, tenureYears: 24, history: 'CEO Latin America (2019\u201324); President PepsiCo Mexico Foods (2017\u201319); COO Mexico Foods (2016\u201317); VP & GM Mexico Foods (2011\u201316). Started at Quaker 1992; joined via Quaker deal \u2014 ~33 yrs incl. Quaker.' },
+        { name: 'Eugene Willemsen',     age: 57, role: 'CEO, International Franchise Beverages',      since: 'Since Jan 2025',                       joined: 1995, tenureYears: 30, history: 'CEO AMESA + Int\u2019l Beverages (2024); CEO AMESA (2019\u201324); EVP Global Categories & Franchise (2015\u201319); Led Pepsi-Lipton JV (2014\u201315); GM Europe regions (1998\u20132013).' },
+        { name: 'David J. Flavell',     age: 53, role: 'EVP, General Counsel & Corporate Secretary', since: 'Since 2021',                            joined: 2011, tenureYears: 14, history: 'Deputy GC & CCO (2019\u201321); GC multiple regions (2011\u201319). Prior: Danone (GC Asia Pac/ME), Fonterra, Corrs Chambers Westgarth.' },
+        { name: 'Becky Schmitt',        age: 51, role: 'EVP & Chief People Officer',                 since: 'Since Jun 2023',                       joined: 2023, tenureYears: 2,  history: 'CHRO Cognizant (2020\u201323); HR leadership at Walmart (2016\u201320); 20+ years at Accenture in HR.' },
+        { name: 'Marie T. Gallagher',   age: 65, role: 'SVP & Controller',                           since: 'Since 2011 · retiring May 2025',       joined: 2005, tenureYears: 20, history: 'VP & Assistant Controller (2005\u201311). Prior: Altria Assistant Controller (1992\u20132005).' },
+      ],
+      executiveTakeaways: [
+        'Major leadership realignment effective Jan 2025: Krishnan, Popovici, Santilli, Willemsen, and Williams all appointed to new roles \u2014 reflects the Foods + Beverages restructuring.',
+        'CEO Laguarta (29 yrs) and CFO Caulfield (32 yrs) both deep PepsiCo insiders \u2014 strong operational continuity.',
+        'Structure organised along the new segment lines: North America (Williams), US Beverages (Krishnan), EMEA (Popovici), LatAm Foods (Santilli), Int\u2019l Franchise Beverages (Willemsen).',
+        'Several leaders joined via acquisitions \u2014 Williams & Santilli via Quaker (2001), Popovici via Wimm-Bill-Dann \u2014 showing PEP retains talent through M&A.',
+        'Controller Gallagher retiring May 2025 after 20 years \u2014 a routine succession, not a red flag.',
+      ],
+      board: [
+        { name: 'Ramon L. Laguarta',    role: 'Chairman & CEO · 2018 · ~7 yrs',         background: 'Chairman & CEO of PepsiCo \u2014 leads company strategy, M&A, and overall capital allocation. The only management director on the board.', category: 'Operational' },
+        { name: 'Ian Cook',             role: 'Director · 2008 · ~17 yrs',              background: 'Former Chairman, President & CEO of Colgate-Palmolive. Deep global CPG operating and brand-building experience. Longest-tenured independent director.', category: 'Capital Allocation' },
+        { name: 'Dina Dublon',          role: 'Director · 2005 · ~20 yrs',              background: 'Former EVP & CFO of JPMorgan Chase & Co. Extensive finance, risk, and capital-markets expertise.', category: 'Finance' },
+        { name: 'Susan M. Diamond',     role: 'Director · 2023 · ~2 yrs',               background: 'Former CFO of Humana Inc. Healthcare finance and large-cap financial leadership.', category: 'Finance' },
+        { name: 'Alberto Weisser',      role: 'Director · 2011 · ~14 yrs',              background: 'Former Chairman & CEO of Bunge Limited. Agribusiness and global commodities expertise \u2014 directly relevant to PEP\u2019s input cost exposure.', category: 'Finance' },
+        { name: 'Edith W. Cooper',      role: 'Director · 2021 · ~4 yrs',               background: 'Former EVP & Global Head of Human Capital Management at Goldman Sachs. Talent, culture, and financial-services governance.', category: 'Finance' },
+        { name: 'Segun Agbaje',         role: 'Director · 2020 · ~5 yrs',               background: 'Group CEO of Guaranty Trust Holding Company Plc (GTCO Plc). African banking and emerging-markets finance perspective.', category: 'Finance' },
+        { name: 'Michelle Gass',        role: 'Director · 2019 · ~6 yrs',               background: 'President & CEO of Levi Strauss & Co. Active consumer-brand CEO with retail and DTC expertise.', category: 'Operational' },
+        { name: 'Sir Dave J. Lewis',    role: 'Director · 2020 · ~5 yrs',               background: 'Former Group CEO of Tesco PLC; Chair of Haleon plc; Chairman of Xlinks. Global retail and consumer-goods turnaround experience.', category: 'Operational' },
+        { name: 'Daniel Vasella, MD',   role: 'Director · 2002 · ~23 yrs',              background: 'Former Chairman & CEO of Novartis AG. Long-tenured director with global healthcare and large-cap leadership experience.', category: 'Operational' },
+        { name: 'Jennifer Bailey',      role: 'Director · 2023 · ~2 yrs',               background: 'VP, Internet Services (Apple Pay) at Apple Inc. Digital payments, e-commerce, and technology platform expertise.', category: 'Digital/Media' },
+        { name: 'Cesar Conde',          role: 'Director · 2016 · ~9 yrs',               background: 'Chairman of NBCUniversal News Group. Media, content, marketing, and Hispanic-market expertise.', category: 'Digital/Media' },
+        { name: 'Robert C. Pohlad',     role: 'Director · 2015 · ~10 yrs',              background: 'President & CEO of family-owned entities; former Chairman & CEO of PepsiAmericas Inc. Deep bottling-system and PepsiCo-ecosystem knowledge.', category: 'Capital Allocation' },
+        { name: 'David C. Page, MD',    role: 'Director · 2014 · ~11 yrs',              background: 'Professor at MIT; former Director & President of the Whitehead Institute for Biomedical Research. Science, R&D, and health/nutrition perspective.', category: 'Operational' },
+        { name: 'Darren Walker',        role: 'Director · 2016 · ~9 yrs',               background: 'President of the Ford Foundation. Governance, ESG, philanthropy, and public-policy expertise.', category: 'Lead' },
+      ],
+      boardTakeaways: {
+        title: 'Buffett-style governance assessment',
+        scores: [
+          { label: 'Board independence (14 of 15)',        rating: 'strong' },
+          { label: 'CPG / consumer operating expertise',   rating: 'strong' },
+          { label: 'Financial depth (4 ex-CFOs/bankers)',  rating: 'strong' },
+          { label: 'Commodity / agribusiness knowledge',   rating: 'strong' },
+          { label: 'Long-tenured continuity',              rating: 'medium' },
+          { label: 'Founder / controlling shareholder',    rating: 'weak' },
+        ],
+        verdict: 'A deep, independent, professionally-stacked board \u2014 14 of 15 directors are independent, with heavy CPG operating experience (Cook, Gass, Lewis), strong finance (Dublon, Diamond, Weisser, Cooper, Agbaje), and relevant commodity expertise (Weisser/Bunge). Unlike HSY there\u2019s no controlling shareholder, so PEP is a normally-governed widely-held company \u2014 more exposed to activists than HSY but with conventional shareholder accountability.',
+      },
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -5970,6 +6023,36 @@ const PEP_BREAKDOWN = {
         { year: 2024, value: 30020 },
       ],
       note: '2018 spike ($46,884) reflects TCJA-related tax benefits. 2017 trough ($18,471) reflects TCJA-related tax charge. Excluding those, net income per employee has grown steadily from ~$21K (2015) to ~$30K (2024).',
+    },
+
+    // Retirement & Pension — US plan assets, 401(k), plan management
+    retirement: {
+      preamble: 'PepsiCo runs both defined-benefit pension plans and a voluntary 401(k) defined-contribution plan for eligible U.S. employees. The pension plan assets are professionally managed against future benefit obligations.',
+      usPlanReturn: { y2025: '7.5%', y2024: '7.4%', label: 'Expected long-term rate of return on U.S. plan assets' },
+      targetAllocations: [
+        { asset: 'Fixed income',         y2025: 56, y2024: 55 },
+        { asset: 'U.S. equity',          y2025: 22, y2024: 22 },
+        { asset: 'International equity',  y2025: 18, y2024: 19 },
+        { asset: 'Real estate',          y2025: 4,  y2024: 4 },
+      ],
+      allocationNote: 'Actual investment allocations may vary from target allocations due to prevailing market conditions. PepsiCo regularly reviews actual allocations and periodically rebalances. The ~56% fixed-income tilt is conservative \u2014 typical of a mature plan focused on matching liabilities rather than chasing returns.',
+      savingsPlan: {
+        description: 'Certain U.S. employees may participate in a voluntary 401(k) defined-contribution plan. PepsiCo makes matching contributions for certain employees based on years of service. Employees not eligible for (or capped under) the defined-benefit pension may also receive an employer contribution based on service or age + service, regardless of their own contribution.',
+        contributions: [
+          { year: 2022, value: 283 },
+          { year: 2023, value: 356 },
+          { year: 2024, value: 411 },
+        ],
+        contributionNote: 'Total Company 401(k) contributions grew from $283M (2022) to $411M (2024) \u2014 a ~45% increase over 3 years, reflecting both headcount growth and wage inflation.',
+      },
+      planAssetsManagement: [
+        { element: 'Actively Managed Accounts', explanation: 'Professional managers actively buy/sell investments rather than just tracking an index.', impact: 'Aims for higher returns, but with more cost and some risk.' },
+        { element: 'Periodic Review',            explanation: 'Strategy reviewed regularly against plan obligations, market conditions, risk tolerance, and cash needs for benefit payments.', impact: 'Keeps investments aligned with future pension / medical payment requirements.' },
+        { element: 'Diversified Portfolio',      explanation: 'Mix of equities (stocks), high-quality debt (bonds), and real estate.', impact: 'Balances growth (stocks) with stability (bonds / real estate); reduces single-asset reliance.' },
+        { element: 'Derivatives for Risk Mgmt',  explanation: 'Uses futures (lock in security prices) and currency forwards (hedge FX risk).', impact: 'Protects against interest-rate and FX swings that could hurt returns.' },
+        { element: 'Securities Lending',         explanation: 'Loans plan assets (stocks / bonds) to borrowers in exchange for collateral (cash or non-cash).', impact: 'Generates extra income while keeping collateral protection.' },
+        { element: 'Objective',                  explanation: 'Ensure enough money is available to pay pension and retiree medical benefits when due.', impact: 'Protects retirees and reduces long-term funding risk for PepsiCo.' },
+      ],
     },
   },
 
@@ -6394,6 +6477,72 @@ const PEP_BREAKDOWN = {
         ukraine: { label: 'Ukraine', revenue: '<1% of revenue', assets: '<1% of assets', note: 'Limited direct financial exposure.' },
       },
       oecdTax: 'OECD 15% global minimum tax expected to be widely implemented by 2025 \u2014 may increase PepsiCo\u2019s global tax burden and impact income tax provisions.',
+    },
+
+    // Derivatives & Hedging — risk management mechanics (KO shape)
+    derivatives: {
+      summary: 'PepsiCo uses derivatives (swaps, futures, forwards, locks) to MANAGE financial risk, not to speculate. It hedges commodities with swaps/futures and fixed-price supplier deals, hedges debt with interest rate swaps/locks, hedges FX with forwards & cross-currency swaps, and locks in net investment hedges for overseas operations \u2014 while spreading counterparty risk across multiple banks.',
+      risksHedged: [
+        {
+          name: 'Commodity Prices',
+          icon: '🌾',
+          description: 'Volatility in raw material & energy costs (corn, sugar, metals, fuel, packaging). A competitive market limits the ability to raise prices.',
+          instruments: 'Fixed-price contracts & purchase orders, pricing agreements, derivatives (swaps, futures \u2264 2 years), multiple suppliers & geographies',
+          purpose: 'Lock in input costs and avoid sharp cost spikes',
+          extraNote: 'Derivatives that don\u2019t qualify for hedge accounting flow gains/losses through earnings (cost of sales / SG&A).',
+        },
+        {
+          name: 'Interest Rates',
+          icon: '📊',
+          description: 'Rising rates can increase borrowing costs on PEP\u2019s debt.',
+          instruments: 'Interest rate swaps, cross-currency interest rate swaps, treasury locks & swap locks (to hedge new debt issuances)',
+          purpose: 'Keep borrowing costs predictable',
+          extraNote: 'Swaps convert some fixed debt to floating. ~13% of total debt at variable rates in 2024 (vs 9% in 2023).',
+        },
+        {
+          name: 'Foreign Exchange',
+          icon: '🌍',
+          description: 'Currency fluctuations impact revenue (44% of sales abroad) plus supplier contracts.',
+          instruments: 'Local sourcing of inputs, contracts in local currencies, FX forwards (\u2264 2 yrs), cross-currency interest rate swaps (\u2264 12 yrs)',
+          purpose: 'Offset underlying currency exposures \u2014 minimal net impact',
+          extraNote: '2024 FX headwinds cut revenue by 1.5 points (notably Egypt, Russia, Mexico, Brazil).',
+        },
+        {
+          name: 'Net Investment Hedges',
+          icon: '🏦',
+          description: 'Risk from the net assets of PepsiCo\u2019s foreign subsidiaries.',
+          instruments: 'Cross-currency interest rate swaps, foreign currency debt',
+          purpose: 'Protect the value of overseas operations from translation swings',
+          extraNote: '2024: entered $500M RMB swaps (mature 2025\u20132029) to hedge Chinese operations. Uses the "spot method" for effectiveness testing.',
+        },
+        {
+          name: 'Credit Risk',
+          icon: '🛡',
+          description: 'Risk that derivative counterparties default.',
+          instruments: 'Spread contracts across multiple banks, assess counterparties via credit ratings / CDS spreads / stress tests, netting agreements',
+          purpose: 'Reduce concentration and counterparty default risk',
+          extraNote: 'Contingent collateral posting if downgraded below Moody\u2019s A2 / S&P A. 2024: $208M derivatives in net liability position \u2014 no collateral posted.',
+        },
+      ],
+      hedgeTypes: [
+        { name: 'Fixed-Price Supplier Deals', description: 'Locks in commodity costs directly with suppliers, reducing reliance on financial derivatives.' },
+        { name: 'Interest Rate Swaps & Locks', description: 'Converts fixed debt to floating (or vice versa) and hedges new debt issuances to keep borrowing costs predictable.' },
+        { name: 'FX Forwards & Cross-Currency Swaps', description: 'Offsets transaction and translation currency exposures across PEP\u2019s international footprint.' },
+        { name: 'Net Investment Hedges', description: 'Foreign-currency debt and cross-currency swaps protect the value of overseas subsidiaries.' },
+      ],
+      accountingNote: 'Derivatives that qualify for hedge accounting have gains/losses deferred and matched to the underlying exposure. Those that don\u2019t qualify flow straight through earnings (cost of sales / SG&A) \u2014 which can add some quarter-to-quarter noise.',
+      pros: [
+        'Reduces volatility in input costs, borrowing costs, and translated international earnings',
+        'Fixed-price supplier deals reduce reliance on purely financial derivatives',
+        'Counterparty risk actively spread across multiple banks with netting + collateral triggers',
+        'Most exposures are substantially offset \u2014 net P&L impact is typically small',
+      ],
+      cons: [
+        'Derivatives that don\u2019t qualify for hedge accounting create earnings noise (cost of sales / SG&A)',
+        'Heavy international exposure (44% of sales) means FX hedging is a permanent, complex requirement',
+        'Rising share of variable-rate debt (~13% in 2024 vs 9% in 2023) increases sensitivity to rate moves',
+      ],
+      bigPicture: 'PEP runs a conservative, insurance-style hedging program across commodities, rates, FX, and net investments \u2014 not a profit center. The mechanics are more complex than KO\u2019s because PEP owns its bottling and manufacturing (more physical commodity and energy exposure) and earns 44% of revenue abroad. But the philosophy is the same: smooth volatility, protect margins, and never speculate.',
     },
 
     // Restructuring & Impairment — 2019 Productivity Plan
@@ -20331,7 +20480,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               <SectionHeading>// DERIVATIVES &amp; HEDGING · RISK MANAGEMENT</SectionHeading>
                               {derivatives.summary && (
                                 <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
-                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// HOW KO USES DERIVATIVES</div>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// HOW {selected.ticker} USES DERIVATIVES</div>
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{derivatives.summary}</div>
                                 </div>
                               )}
@@ -20364,6 +20513,12 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                             <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{r.purpose}</div>
                                           </div>
                                         </div>
+                                        {r.extraNote && (
+                                          <div style={{marginTop:'6px',padding:'6px 9px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// 2024 DETAIL</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{r.extraNote}</div>
+                                          </div>
+                                        )}
                                       </div>
                                     ))}
                                   </div>
@@ -20707,7 +20862,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === NUMBERS TAB ===
                     const renderNumbersTab = () => {
                       if (!bd.numbers) return null;
-                      const { marketCapHistory, employees, usEmployees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance } = bd.numbers;
+                      const { marketCapHistory, employees, usEmployees, revenuePerEmployee, netIncomePerEmployee, ceoPerformance, retirement } = bd.numbers;
 
                       return (
                         <div>
@@ -20813,6 +20968,101 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   ))}
                                 </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* RETIREMENT & PENSION (PEP) */}
+                          {retirement && (
+                            <>
+                              <SectionHeading>// RETIREMENT & PENSION</SectionHeading>
+                              {retirement.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{retirement.preamble}</div>
+                              )}
+
+                              {/* US plan target allocations */}
+                              {retirement.targetAllocations && retirement.targetAllocations.length > 0 && (
+                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'10px'}}>
+                                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',flexWrap:'wrap',gap:'8px',marginBottom:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>U.S. Plan Target Allocations</span>
+                                    {retirement.usPlanReturn && (
+                                      <span style={{fontSize:'10px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>Exp. return: {retirement.usPlanReturn.y2025} (2025) · {retirement.usPlanReturn.y2024} (2024)</span>
+                                    )}
+                                  </div>
+
+                                  <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                    <table style={{width:'100%',minWidth:'320px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>ASSET CLASS</th>
+                                          <th style={{textAlign:'right',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2025</th>
+                                          <th style={{textAlign:'right',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024</th>
+                                          <th style={{textAlign:'left',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`,width:'40%'}}>WEIGHT</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {retirement.targetAllocations.map((a, i) => (
+                                          <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                            <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px'}}>{a.asset}</td>
+                                            <td style={{padding:'6px 10px',textAlign:'right',color:amber,fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{a.y2025}%</td>
+                                            <td style={{padding:'6px 10px',textAlign:'right',color:'rgba(224,234,255,0.7)',fontWeight:600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{a.y2024}%</td>
+                                            <td style={{padding:'6px 10px',borderLeft:`0.5px solid ${amberGlow}`}}>
+                                              <div style={{width:'100%',height:'7px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.15)',borderRadius:'2px',overflow:'hidden'}}>
+                                                <div style={{width:`${a.y2025}%`,height:'100%',background: amber,opacity:0.65}}/>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+
+                                  {retirement.allocationNote && (
+                                    <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{retirement.allocationNote}</div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* 401(k) savings plan */}
+                              {retirement.savingsPlan && (
+                                <div style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>401(k) Savings Plan</div>
+                                  {retirement.savingsPlan.description && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{retirement.savingsPlan.description}</div>
+                                  )}
+                                  {retirement.savingsPlan.contributions && retirement.savingsPlan.contributions.length > 0 && (
+                                    <div style={{display:'flex',gap:'6px',marginBottom:'8px',flexWrap:'wrap'}}>
+                                      {retirement.savingsPlan.contributions.map((c, i) => (
+                                        <div key={i} style={{flex:'1',minWidth:'90px',padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',textAlign:'center'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,marginBottom:'2px'}}>{c.year}</div>
+                                          <div style={{fontSize:'15px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>${c.value}M</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  {retirement.savingsPlan.contributionNote && (
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{retirement.savingsPlan.contributionNote}</div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Plan assets management — collapsible */}
+                              {retirement.planAssetsManagement && retirement.planAssetsManagement.length > 0 && (
+                                <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'12px'}}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>⚙ How Plan Assets Are Managed</span>
+                                    <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{retirement.planAssetsManagement.length} ›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)',display:'flex',flexDirection:'column',gap:'5px'}}>
+                                    {retirement.planAssetsManagement.map((p, i) => (
+                                      <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'3px'}}>{p.element}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'3px'}}>{p.explanation}</div>
+                                        <div style={{fontSize:'9px',color:'rgba(34,197,94,0.8)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}><span style={{color:'rgba(34,197,94,0.95)',fontWeight:700}}>→ </span>{p.impact}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </details>
                               )}
                             </>
                           )}
