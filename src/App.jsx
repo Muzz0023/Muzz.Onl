@@ -4005,6 +4005,57 @@ const KO_BREAKDOWN = {
       capitalStrategy: 'Own the core production assets (concentrate, many bottlers) but lease logistics and retail for flexibility.',
       capacityNote: 'Management believes facilities are suitable and adequate, with sufficient production capacity for present intended purposes. Additional capacity can be achieved by adding personnel, capital equipment, or shifts \u2014 except for certain dairy products that require specialised equipment, where capacity expansion is in progress.',
     },
+    // Leadership — senior executives + board of directors
+    leadership: {
+      asOf: 'Feb 2025',
+      executives: [
+        { name: 'James Quincey',         age: 60, role: 'Chairman & CEO',                                                 since: 'CEO since May 2017 · Chairman since Apr 2019', joined: 1996, tenureYears: 29, history: 'President & COO (2015\u201317); President (2015\u201318); joined KO 1996.', featured: true },
+        { name: 'John Murphy',           age: 63, role: 'President & CFO',                                                since: 'President since Oct 2022 · CFO since Mar 2019',  joined: 1988, tenureYears: 30, history: 'EVP (2019\u201322); Deputy CFO (2019); President Asia Pacific Group (2016\u201318); President South Latin (2013\u201316).', featured: true },
+        { name: 'Henrique Braun',         age: 56, role: 'COO',                                                            since: 'COO since Jan 2025 · EVP since Jan 2024',         joined: 1996, tenureYears: 29, history: 'President, International Development (2023\u201324); President, Latin America (2020\u201322); President, Brazil (2016\u201320); President, Greater China & Korea (2013\u201316).' },
+        { name: 'Manuel Arroyo',          age: 57, role: 'EVP & Global CMO',                                              since: 'EVP since Jan 2024 · Global CMO since Jan 2020',  joined: 1995, tenureYears: 17, history: 'President, Asia Pacific Group (2019\u201320); President, Mexico BU (2017\u201318); GM Iberia (2017); CEO of Deoleo S.A. (2015\u201316); President, ASEAN BU (2010\u201314).' },
+        { name: 'Jennifer Mann',          age: 52, role: 'EVP & President, North America',                                since: 'EVP since Jan 2024 · NA President since Jan 2023', joined: 1997, tenureYears: 28, history: 'President, Global Ventures (2019\u201322); Chief People Officer (2017\u201319); Chief of Staff to CEO Quincey (2015\u201318); VP & GM Coca-Cola Freestyle (2012\u201315).' },
+        { name: 'Nikolaos Koumettis',     age: 60, role: 'President, Europe Operating Unit',                              since: 'Since Jan 2021',                                  joined: 2001, tenureYears: 24, history: 'President, EMEA Group (2019\u201320); President, Central & Eastern Europe (2016\u201318); President, Central & Southern Europe (2011\u201316).' },
+        { name: 'Beatriz Perez',          age: 55, role: 'EVP & Global Chief Comms, Sustainability & Partnerships',       since: 'EVP since Jan 2024 · Role since 2017',            joined: 1996, tenureYears: 29, history: 'First Chief Sustainability Officer (2011\u201317); VP Global Partnerships & Licensing (2016\u201317). Chair, Coca-Cola Foundation (since 2017).' },
+        { name: 'Nancy Quan',             age: 58, role: 'EVP & Global Chief Technical & Innovation Officer',             since: 'EVP since Jan 2024 · CTIO since Feb 2021',         joined: 1991, tenureYears: 34, history: 'CTO (2019\u201321); CTO North America (2016\u201318); Global R&D Officer (2012\u201316).' },
+        { name: 'Monica Howard Douglas',  age: 52, role: 'EVP & Global General Counsel',                                  since: 'EVP since Jan 2024 · GC since Apr 2021',          joined: 2008, tenureYears: 17, history: 'SVP & Chief Compliance Officer, North America (2018\u201321); Legal Director, Southern & East Africa (2013\u201317); VP Supply Chain & Counsel, Coca-Cola Refreshments (2008\u201313).' },
+        { name: 'Lisa Chang',             age: 56, role: 'EVP & Global Chief People Officer',                             since: 'EVP since Jan 2024 · CPO since Mar 2019',         joined: 2019, tenureYears: 6,  history: 'SVP & CHRO AMB Group (2014\u201318); VP HR International, Equifax (2013\u201314).' },
+        { name: 'Bruno Pietracci',        age: 50, role: 'President, Latin America',                                     since: 'Since Feb 2023',                                  joined: 2008, tenureYears: 17, history: 'President, Africa OU (2021\u201323); President, Africa & Middle East BU (2020); President, South & East Africa BU (2018\u201320); VP Ops, EMEA Group (2016\u201318).' },
+      ],
+      executiveTakeaways: [
+        'Global geographic segmentation: dedicated leadership for nearly every operating region (Asia, India, China, Japan, Middle East, Africa, LatAm, Europe).',
+        'Strong capital allocation and financial oversight (Murphy as CFO).',
+        'Deep governance & legal expertise across the senior team.',
+        'Massive marketing capability (Arroyo + Beatriz Perez).',
+        'R&D and product innovation strength (Nancy Quan, 34 years tenure).',
+        'Modern risk management & tech infrastructure.',
+        'Very Berkshire-style operating structure: decentralisation with strong central capital allocation.',
+      ],
+      board: [
+        { name: 'James Quincey',         role: 'Chairman & CEO',                  background: 'CEO of Coca-Cola \u2014 leads company strategy, M&A, overall capital allocation.', category: 'Operational' },
+        { name: 'David B. Weinberg',     role: 'Lead Independent Director',       background: 'Chairman & CEO of Judd Enterprises Inc. \u2014 long-time private investment management, very experienced independent director.', category: 'Lead' },
+        { name: 'Herb Allen',            role: 'Director',                        background: 'President, Allen & Co. \u2014 long-time Buffett inner circle. Allen family historically connected with Berkshire.', category: 'Capital Allocation' },
+        { name: 'Christopher C. Davis',  role: 'Director',                        background: 'Chairman of Davis Selected Advisers \u2014 highly respected long-term investor (Buffett/Munger philosophy).', category: 'Capital Allocation' },
+        { name: 'Thomas Gayner',         role: 'Director',                        background: 'CEO of Markel Group \u2014 extremely Buffett-like capital allocator, insurance + long-term investment philosophy.', category: 'Capital Allocation' },
+        { name: 'Ana Bot\u00edn',        role: 'Director',                        background: 'Executive Chair of Banco Santander \u2014 global banking, finance, regulatory, European markets experience.', category: 'Finance' },
+        { name: 'Maria Elena Lagomasino', role: 'Director',                       background: 'CEO of WE Family Offices \u2014 family office wealth management, fiduciary governance, global wealth expertise.', category: 'Finance' },
+        { name: 'Amity Millhiser',       role: 'Director',                        background: 'Former Vice Chair at PwC \u2014 deep financial, audit, accounting expertise (strong for audit committee).', category: 'Finance' },
+        { name: 'Bela Bajaria',          role: 'Director',                        background: 'Chief Content Officer, Netflix \u2014 global content, media, and digital streaming experience.', category: 'Digital/Media' },
+        { name: 'Carolyn Everson',       role: 'Director',                        background: 'Senior Advisor, Permira (private equity) \u2014 global media, marketing, Facebook/Meta veteran.', category: 'Digital/Media' },
+        { name: 'Caroline Tsay',         role: 'Director',                        background: 'Tech advisor and limited partner in venture capital \u2014 modern tech, data, digital commerce expertise.', category: 'Digital/Media' },
+      ],
+      boardTakeaways: {
+        title: 'Buffett-style governance assessment',
+        scores: [
+          { label: 'Long-term thinking',              rating: 'strong' },
+          { label: 'Financial conservatism',          rating: 'strong' },
+          { label: 'Minimal dilution / capital discipline', rating: 'strong' },
+          { label: 'Broad global expertise',          rating: 'strong' },
+          { label: 'Digital + tech exposure',         rating: 'improving' },
+          { label: 'Independent board leadership',    rating: 'strong' },
+        ],
+        verdict: 'This board structure is exactly the kind Buffett likes: stable, cautious, non-promotional, extremely focused on long-term per-share value growth.',
+      },
+    },
   },
   brands: {
     // Official 10-K 4-category structure (high-level)
@@ -4146,6 +4197,85 @@ const KO_BREAKDOWN = {
       ],
       note: '2017 trough ($20K) reflects the one-off Tax Cuts and Jobs Act (TCJA) charge that hammered reported net income that year. Underlying trend: NI per employee compounded 2.6x from $59.6K (2015) to $152.5K (2024) — extreme leverage from the asset-light pivot.',
     },
+    // Balance Sheet — pension plans (will be expanded later)
+    balanceSheet: {
+      pensionPlans: {
+        description: 'Coca-Cola maintains separate pension plans for U.S. and non-U.S. employees, with distinct investment strategies. U.S. plan is more conservative (heavier fixed-income + alternatives); non-U.S. plans lean toward equities.',
+        // U.S. Pension Plan Strategy
+        usStrategy: {
+          name: 'U.S. Pension Plan',
+          asOf: 'Dec 31, 2024',
+          allocations: [
+            { name: 'Equity Securities',     target: 21, detail: 'Mostly public equities. Diversified by country & sector. Coca-Cola stock = 9% of equity securities (≈4% of total plan assets).' },
+            { name: 'Fixed-Income Securities', target: 47, detail: '62% Long-Duration Bonds (high-quality, publicly traded, diversified). 38% Multi-Strategy Alternative Credit (high-yield bonds, bank loans, structured credit, emerging market debt).' },
+            { name: 'Alternative Investments', target: 32, detail: 'Hedge funds, reinsurance, private equity, real estate. Goal: higher returns than public equities, but illiquid (long-term).' },
+          ],
+          objectives: [
+            'Optimise long-term return at an acceptable risk',
+            'Maintain broad diversification across asset classes & managers',
+            'Control risk within each asset class',
+          ],
+          governance: 'Investment managers must follow specific guidelines (eligible securities, diversification rules, credit quality standards). No manager > 24% of assets. Deviations need written approval.',
+        },
+        // Non-U.S. Pension Plan Strategy (split into 64% / 36% subsidiary groups)
+        nonUsStrategy: {
+          name: 'Non-U.S. Pension Plans',
+          asOf: 'Dec 31, 2024',
+          subsidiaryGroups: [
+            {
+              groupName: '64% of international subsidiaries',
+              detail: 'Mainly Europe & Canada',
+              allocations: [
+                { name: 'Equity Securities',     target: 58 },
+                { name: 'Fixed-Income Securities', target: 29 },
+                { name: 'Other Investments',     target: 13 },
+              ],
+            },
+            {
+              groupName: 'Remaining 36% of international subsidiaries',
+              detail: 'Smaller, varied markets',
+              allocations: [
+                { name: 'Mutual, Pooled & Commingled Funds', target: 39 },
+                { name: 'Other Investments',              target: 36 },
+                { name: 'Fixed-Income Securities',         target: 24 },
+                { name: 'Equity Securities',              target: 1 },
+              ],
+            },
+          ],
+          notes: [
+            'Strategies vary significantly by country',
+            'Often influenced by local laws/regulations',
+            'No individual non-U.S. plan is large enough for separate disclosure',
+          ],
+        },
+        // Actual assets by category (2024 vs 2023)
+        assetTable: {
+          asOf: 'Dec 31',
+          unit: 'M USD',
+          assetClasses: [
+            { name: 'Cash and cash equivalents',         us2024: 160,   us2023: 203,   ne2024: 419,   ne2023: 172 },
+            { name: 'Equity: U.S.-based companies',       us2024: 469,   us2023: 457,   ne2024: 582,   ne2023: 721 },
+            { name: 'Equity: International-based companies', us2024: 248, us2023: 208,   ne2024: 455,   ne2023: 713 },
+            { name: 'Government bonds',                  us2024: 626,   us2023: 848,   ne2024: 383,   ne2023: 538 },
+            { name: 'Corporate bonds & debt securities',  us2024: 442,   us2023: 426,   ne2024: 104,   ne2023: 153 },
+            { name: 'Mutual, pooled & commingled funds',  us2024: 210,   us2023: 243,   ne2024: 477,   ne2023: 535 },
+            { name: 'Hedge funds / limited partnerships', us2024: 1004,  us2023: 1038,  ne2024: 19,    ne2023: 19,  highlight: 'us' },
+            { name: 'Real estate',                       us2024: 341,   us2023: 367,   ne2024: 0,     ne2023: 9 },
+            { name: 'Derivative financial instruments',  us2024: 0,     us2023: 0,     ne2024: -63,   ne2023: 33 },
+            { name: 'Other',                              us2024: 261,   us2023: 266,   ne2024: 298,   ne2023: 311 },
+          ],
+          totals: { us2024: 3761, us2023: 4056, ne2024: 2674, ne2023: 3204 },
+          observations: [
+            'U.S. plan: $3.76B in 2024 (down from $4.06B in 2023).',
+            'Non-U.S. plan: $2.67B in 2024 (down from $3.20B in 2023).',
+            'U.S. plans heavily tilted toward hedge funds/LPs (~27%); non-U.S. plans more tilted toward equities and pooled funds.',
+            'Negative derivative value in non-U.S. plans in 2024 indicates hedges lost value (not unusual — meant to offset risks elsewhere).',
+            'Both plans saw asset declines in 2024 vs 2023, likely due to market volatility, currency shifts, and benefit payouts.',
+          ],
+          takeaway: 'Pension plans are well-diversified, mixing stocks, bonds, hedge funds, real estate, and alternatives \u2014 balancing growth, stability, and risk management to meet future employee retirement obligations.',
+        },
+      },
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -4271,6 +4401,247 @@ const KO_BREAKDOWN = {
         },
       ],
     },
+    // Risk Factors — 7 categories × key risks × impact
+    riskFactors: {
+      summary: 'Coca-Cola faces multi-dimensional risks: macro/geopolitical (inflation, conflicts), consumer trends (health, sustainability), system dependence (bottlers, supply chain), regulation & litigation, financial volatility, cybersecurity/data, and environmental sustainability pressures. All could raise costs, shrink margins, or reduce demand if not managed carefully.',
+      categories: [
+        {
+          name: 'Operations',
+          risks: [
+            'Global economic/geopolitical instability (inflation, recession, conflicts, tariffs, sanctions)',
+            'Intensified competition (PepsiCo, Nestl\u00e9, private labels, e-commerce)',
+            'Failure in innovation or digital transformation',
+            'Retail consolidation & rise of discounters/e-commerce',
+            'Struggles in emerging markets',
+            'Productivity initiatives causing disruption',
+            'Talent attraction/retention challenges',
+            'Supply chain disruption (raw materials, energy, packaging)',
+            'Poor integration of acquisitions or joint ventures',
+            'Dependence on third-party partners',
+            'Labour unrest or strikes',
+          ],
+          impact: 'Lower sales, shrinking margins, higher costs, reputational harm, operational inefficiencies.',
+        },
+        {
+          name: 'Consumer Demand',
+          risks: [
+            'Health concerns: obesity, sugar taxes, sweeteners',
+            'Evolving preferences: wellness, sustainability, transparency',
+            'Product safety/quality concerns, recalls',
+            'Negative publicity (health, environment, human rights)',
+            'New product launch failures',
+          ],
+          impact: 'Reduced demand, boycotts, increased compliance/marketing costs, reputational damage.',
+        },
+        {
+          name: 'Coca-Cola System',
+          risks: [
+            'Dependence on bottlers (alignment, financial stability, independence)',
+            'Refranchising/divestitures misaligned with strategy',
+          ],
+          impact: 'Potential decline in concentrate sales, equity income losses, efficiency setbacks.',
+        },
+        {
+          name: 'Regulatory & Legal',
+          risks: [
+            'Higher income & indirect taxes (sweetened beverages, packaging, carbon)',
+            'Packaging & recycling regulations (plastic, PFAS bans)',
+            'Ingredient restrictions (e.g., Prop 65)',
+            'Ongoing litigation, compliance failures, high-risk markets',
+            'Intellectual property disputes',
+            'Expanding global regulation (competition, AI, privacy)',
+          ],
+          impact: 'Increased costs, reformulation, fines, business disruption, reduced profitability.',
+        },
+        {
+          name: 'Finance & Accounting',
+          risks: [
+            'FX fluctuations',
+            'Interest rate increases & credit rating downgrades',
+            'Failure to meet long-term growth objectives',
+            'Counterparty risk (bank/hedge failures)',
+            'Impairment charges',
+          ],
+          impact: 'Earnings volatility, higher borrowing costs, investor confidence erosion.',
+        },
+        {
+          name: 'Cybersecurity & Data Privacy',
+          risks: [
+            'Cyberattacks, ransomware, system failures',
+            'Data privacy violations (GDPR, CPRA, China\u2019s PIPL, etc.)',
+            'Risks from bottlers & third-party vendors',
+          ],
+          impact: 'Business disruption, legal penalties, reputational harm, financial losses.',
+        },
+        {
+          name: 'Environmental & Social',
+          risks: [
+            'Sustainability/ESG scrutiny (both pro-ESG and anti-ESG)',
+            'Plastic packaging concerns/regulations',
+            'Water scarcity/quality issues',
+            'Agricultural constraints (climate change, regulation)',
+            'Climate change (transition & physical risks)',
+            'Adverse weather affecting demand',
+          ],
+          impact: 'Higher costs, reduced raw material availability, reputational damage, reduced sales.',
+        },
+      ],
+    },
+    // Cybersecurity — strategy, governance, oversight
+    cyber: {
+      threats: ['Unauthorised access', 'Ransomware', 'Malware', 'Phishing', 'Data theft', 'System disruptions'],
+      approach: {
+        framework: 'NIST Cybersecurity Framework',
+        ermIntegration: 'Integrated into the Enterprise Risk Management (ERM) program \u2014 cyber risks managed alongside operational, financial, and strategic risks.',
+        layers: [
+          { name: 'Physical safeguards',     detail: 'Building, equipment, and physical access controls.' },
+          { name: 'Administrative safeguards', detail: 'Policies, procedures, training, governance structures.' },
+          { name: 'Technical safeguards',    detail: 'Encryption, access control, monitoring, detection systems.' },
+        ],
+        testing: ['External penetration testing', 'Tabletop exercises', 'Audits'],
+        insurance: 'Maintains cybersecurity insurance (though coverage may be insufficient).',
+        thirdPartyOversight: 'Security assessments for key vendors and ongoing engagement with bottlers, distributors, and partners.',
+        incidentResponse: 'Response plan includes triage, escalation, investigation, containment, remediation, and compliance with legal obligations.',
+      },
+      governance: {
+        ciso: {
+          credentials: 'MBA, Columbia; 25+ years experience in large-company cybersecurity',
+          reportsTo: 'CIO',
+          leads: 'Cybersecurity Oversight Council',
+        },
+        council: {
+          name: 'Cybersecurity Oversight Council',
+          members: ['Privacy', 'Legal', 'IT', 'Audit', 'Security'],
+          cadence: 'Quarterly meetings, aligns with Risk Steering Committee under ERM',
+        },
+        board: {
+          oversight: 'Audit Committee oversees cybersecurity risks',
+          briefings: 'Receives regular briefings from CISO & CIO. Committee is informed immediately of material incidents and updated on lower-impact ones. Audit Chair briefs the full Board.',
+        },
+        employeeTraining: ['Phishing', 'Deepfakes', 'Password hygiene', 'Mobile security', 'Data protection', 'Incident reporting'],
+      },
+      takeaways: [
+        'Proactive, layered approach with both internal controls and external consultants.',
+        'Cybersecurity tightly linked to overall enterprise risk management.',
+        'Strong oversight: CISO-led council + Board Audit Committee.',
+        'Regular training builds employee awareness.',
+        'While attacks have occurred, none have had a material impact so far.',
+      ],
+    },
+    // Derivatives — hedging mechanism (not speculation)
+    derivatives: {
+      summary: 'Coca-Cola uses derivatives (swaps, forwards, futures, options) to MANAGE financial risks, not to speculate. Think of them as insurance contracts \u2014 they smooth volatility rather than create profits.',
+      risksHedged: [
+        {
+          name: 'Foreign Currency Risk',
+          icon: '🌍',
+          description: 'KO sells in 200+ countries, so earnings swing when USD strengthens or weakens.',
+          instruments: 'Currency forwards, options, swaps',
+          purpose: 'Stabilise cash flows and protect margins',
+        },
+        {
+          name: 'Commodity Price Risk',
+          icon: '🌾',
+          description: 'Key inputs like sugar, corn syrup, aluminum, PET plastic, juice, coffee, dairy can be expensive and volatile.',
+          instruments: 'Commodity futures and swaps',
+          purpose: 'Lock in costs and avoid nasty surprises',
+        },
+        {
+          name: 'Interest Rate Risk',
+          icon: '📊',
+          description: 'KO borrows billions in long-term debt. If rates rise, debt values fall.',
+          instruments: 'Interest rate swaps (fair value and cash flow hedges)',
+          purpose: 'Keep borrowing costs predictable',
+        },
+      ],
+      hedgeTypes: [
+        { name: 'Cash Flow Hedges',     description: 'Smooths future cash flows (e.g., protects against FX or commodity swings).' },
+        { name: 'Fair Value Hedges',    description: 'Offsets changes in debt values when rates move.' },
+        { name: 'Non-Designated Hedges', description: 'Used for shorter-term exposures; results go straight to P&L.' },
+        { name: 'Net Investment Hedges', description: 'Protects KO\u2019s foreign subsidiaries\u2019 earnings from translation swings.' },
+      ],
+      accountingNote: 'Most hedge gains/losses are parked in Other Comprehensive Income (AOCI) and reclassified when the actual sales/expenses hit, so income statements aren\u2019t whiplashed quarter to quarter.',
+      pros: [
+        'Reduces volatility in earnings, debt costs, and raw material prices',
+        'Helps management focus on operations, not FX/commodity speculation',
+        'Most years, net hedge impacts are tiny \u2014 showing effectiveness',
+      ],
+      cons: [
+        'Hedges aren\u2019t perfect \u2014 sometimes small "ineffectiveness" charges',
+        'If KO misjudges exposure, hedges can backfire in timing',
+        'Add complexity \u2014 investors need to peel through footnotes to see real economics',
+      ],
+      bigPicture: 'KO is not using derivatives to gamble. They\u2019re doing what you\u2019d expect a multinational consumer giant to do: hedge predictable risks in currency, commodities, and debt. Overall \u2014 a prudent, good practice that makes their cash flows and earnings steadier.',
+    },
+    // Challenges — 6 categories × issues × company response
+    challenges: [
+      {
+        name: 'Obesity',
+        icon: '⚖️',
+        issues: 'Rising global concern about obesity and health issues linked to sweetened beverages.',
+        response: [
+          'Expanded portfolio with reduced-, low-, and no-calorie options',
+          'Transparent nutrition labelling (calories on front)',
+          'Smaller package sizes for portion control',
+          'No advertising to children under 13',
+          'Invest in R&D for new noncaloric sweeteners and flavours',
+        ],
+      },
+      {
+        name: 'Evolving Consumer Preferences',
+        icon: '🌱',
+        issues: 'Shifts in demographics, lifestyles, sustainability focus, and demand for transparency and personalisation.',
+        response: [
+          'Broaden beverage portfolio (low/no-calorie products)',
+          'Enter new profitable beverage categories',
+          'Invest in innovative & sustainable packaging',
+          'Provide product info on website for transparency',
+        ],
+      },
+      {
+        name: 'Evolving Competitive Landscape & Digital Marketplace',
+        icon: '📱',
+        issues: 'Intense competition (global, regional, local); rise of e-commerce and digital shopping.',
+        response: [
+          'Strengthen digital marketing and innovation',
+          'Invest in e-commerce & meal delivery',
+          'Create package sizes optimised for online sales',
+          'Shift promotions toward digital platforms',
+        ],
+      },
+      {
+        name: 'Product Safety & Quality',
+        icon: '🔬',
+        issues: 'Consumer concerns over ingredients; regulatory requirements across 200+ countries.',
+        response: [
+          'Rigorous product safety & quality standards',
+          'Integrated global quality management program',
+          'Strong governance, compliance & industry engagement',
+          'Continuous testing in quality labs (ingredients & finished goods)',
+          'Regularly refine global standards across supply chain',
+        ],
+      },
+      {
+        name: 'Sustainability Matters',
+        icon: '🌍',
+        issues: 'Rising stakeholder and investor focus on environmental and social sustainability.',
+        response: [
+          'Set public sustainability goals and aspirations',
+          'Collaborate with stakeholders (bottlers, NGOs, governments, suppliers)',
+          'Build business resilience through sustainable practices',
+        ],
+      },
+      {
+        name: 'Talent Acquisition & Retention',
+        icon: '👥',
+        issues: 'Competition for talent, worker expectations, labour shortages (especially specialised skills).',
+        response: [
+          'Focus on culture, inclusivity, and being an employer of choice',
+          'Attract and retain high-performing, diverse talent',
+          'Build a sustainable workforce aligned with company purpose',
+        ],
+      },
+    ],
     // Commitments & Contingencies — guarantees, IRS dispute, self-insurance
     commitmentsAndContingencies: {
       summary: 'Coca-Cola backs some partner debts ($766M), but payout risk is low. Legal cases (besides tax) aren\u2019t material. The big risk is the IRS transfer pricing case: they already prepaid $6B but may recover it if they win on appeal. If they lose fully, future taxes could balloon by another $12B.',
@@ -15050,7 +15421,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -15870,6 +16241,155 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+
+                          {/* LEADERSHIP — senior executives + board of directors */}
+                          {leadership && (
+                            <>
+                              {/* SENIOR EXECUTIVES */}
+                              {leadership.executives && leadership.executives.length > 0 && (
+                                <>
+                                  <SectionHeading>// SENIOR LEADERSHIP · {leadership.executives.length} · {leadership.asOf}</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'12px'}}>
+                                    {leadership.executives.map((e, i) => (
+                                      <details key={i} style={{
+                                        background: e.featured ? 'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)' : 'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${e.featured ? amber : amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        overflow:'hidden',
+                                      }}>
+                                        <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',flexWrap:'wrap'}}>
+                                          <div style={{display:'flex',flexDirection:'column',gap:'3px',flex:1,minWidth:0}}>
+                                            <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                              <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{e.name}</span>
+                                              {e.age && <span style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace'}}>age {e.age}</span>}
+                                            </div>
+                                            <div style={{fontSize:'10px',color:amber,fontFamily:'monospace',letterSpacing:'0.3px',fontWeight:600}}>{e.role}</div>
+                                          </div>
+                                          <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
+                                            {e.tenureYears && (
+                                              <span style={{padding:'3px 8px',background:'rgba(34,197,94,0.08)',border:'0.5px solid rgba(34,197,94,0.4)',borderRadius:'2px',fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{e.tenureYears}Y TENURE</span>
+                                            )}
+                                            <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                          </div>
+                                        </summary>
+                                        <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'5px',marginBottom:'6px'}}>
+                                            {e.since && (
+                                              <div style={{padding:'5px 8px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// SINCE</div>
+                                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.4}}>{e.since}</div>
+                                              </div>
+                                            )}
+                                            {e.joined && (
+                                              <div style={{padding:'5px 8px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                                <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// JOINED KO</div>
+                                                <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.4}}>{e.joined}</div>
+                                              </div>
+                                            )}
+                                          </div>
+                                          {e.history && (
+                                            <div style={{padding:'6px 9px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// PRIOR ROLES</div>
+                                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{e.history}</div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </details>
+                                    ))}
+                                  </div>
+
+                                  {/* Executive takeaways */}
+                                  {leadership.executiveTakeaways && leadership.executiveTakeaways.length > 0 && (
+                                    <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'14px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>✓ BUFFETT-STYLE READ</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                        {leadership.executiveTakeaways.map((t, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>›</span>
+                                            <span>{t}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                              {/* BOARD OF DIRECTORS */}
+                              {leadership.board && leadership.board.length > 0 && (
+                                <>
+                                  <SectionHeading>// BOARD OF DIRECTORS · {leadership.board.length}</SectionHeading>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'12px'}}>
+                                    {leadership.board.map((b, i) => {
+                                      const cat = b.category || 'Other';
+                                      const color = cat === 'Capital Allocation' ? 'rgba(34,197,94,0.95)'
+                                                 : cat === 'Finance'            ? amber
+                                                 : cat === 'Digital/Media'      ? 'rgba(168,85,247,0.95)'
+                                                 : cat === 'Lead'               ? 'rgba(239,68,68,0.95)'
+                                                 : cat === 'Operational'        ? 'rgba(34,197,94,0.95)'
+                                                 : 'rgba(148,163,184,0.85)';
+                                      const bg = cat === 'Capital Allocation' ? 'rgba(34,197,94,0.05)'
+                                              : cat === 'Finance'            ? 'rgba(245,158,11,0.05)'
+                                              : cat === 'Digital/Media'      ? 'rgba(168,85,247,0.05)'
+                                              : cat === 'Lead'               ? 'rgba(239,68,68,0.05)'
+                                              : cat === 'Operational'        ? 'rgba(34,197,94,0.05)'
+                                              : 'rgba(148,163,184,0.05)';
+                                      return (
+                                        <div key={i} style={{
+                                          background: 'rgba(0,0,0,0.4)',
+                                          border:`0.5px solid ${amberGlow}`,
+                                          borderLeft:`2px solid ${color}`,
+                                          borderRadius:'3px',
+                                          padding:'10px 12px',
+                                        }}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                            <div style={{flex:1,minWidth:0}}>
+                                              <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap'}}>
+                                                <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{b.name}</span>
+                                                <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'0.3px'}}>{b.role}</span>
+                                              </div>
+                                            </div>
+                                            <span style={{padding:'2px 7px',background:bg,border:`0.5px solid ${color}`,borderRadius:'2px',fontSize:'8px',color:color,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>{cat.toUpperCase()}</span>
+                                          </div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{b.background}</div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+
+                                  {/* Board scorecard */}
+                                  {leadership.boardTakeaways && (
+                                    <div style={{padding:'12px 14px',background:'linear-gradient(160deg, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.4) 100%)',border:'0.5px solid rgba(34,197,94,0.45)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px',position:'relative'}}>
+                                      <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.5)',borderLeft:'1px solid rgba(34,197,94,0.5)'}}/>
+                                      <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.5)',borderRight:'1px solid rgba(34,197,94,0.5)'}}/>
+                                      <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.5)',borderLeft:'1px solid rgba(34,197,94,0.5)'}}/>
+                                      <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.5)',borderRight:'1px solid rgba(34,197,94,0.5)'}}/>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>🔧 {leadership.boardTakeaways.title.toUpperCase()}</div>
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'5px',marginBottom:'8px'}}>
+                                        {leadership.boardTakeaways.scores.map((s, i) => {
+                                          const tickColor = s.rating === 'strong' ? 'rgba(34,197,94,0.95)' : (s.rating === 'improving' ? amber : 'rgba(148,163,184,0.85)');
+                                          const tick = s.rating === 'strong' ? '✓' : (s.rating === 'improving' ? '↗' : '○');
+                                          return (
+                                            <div key={i} style={{display:'flex',gap:'8px',alignItems:'baseline',fontSize:'10px',fontFamily:'monospace',lineHeight:1.4}}>
+                                              <span style={{color:tickColor,fontWeight:700,fontSize:'12px',flexShrink:0}}>{tick}</span>
+                                              <span style={{color:'rgba(224,234,255,0.85)',letterSpacing:'0.3px',flex:1}}>{s.label}</span>
+                                              <span style={{color:tickColor,fontWeight:700,letterSpacing:'1px',fontSize:'9px',textTransform:'uppercase'}}>{s.rating}</span>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                      {leadership.boardTakeaways.verdict && (
+                                        <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px',marginTop:'6px',fontSize:'10px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                          "{leadership.boardTakeaways.verdict}"
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
                         </div>
                       );
                     };
@@ -15883,7 +16403,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -15933,7 +16453,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                       return (
                         <div>
                           {/* RISK FACTORS — expandable rows grouped by category */}
-                          {riskFactors && (
+                          {riskFactors && riskFactors.categories && riskFactors.categories[0] && riskFactors.categories[0].items && (
                             <>
                               <SectionHeading>// RISK FACTORS</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Tap a risk to reveal what it means and why it matters.</div>
@@ -15966,8 +16486,56 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             </>
                           )}
 
-                          {/* CYBERSECURITY — 8 panels */}
-                          {cyber && (
+                          {/* RISK FACTORS — KO shape (risks: string[] + impact) */}
+                          {riskFactors && riskFactors.categories && riskFactors.categories[0] && riskFactors.categories[0].risks && (
+                            <>
+                              <SectionHeading>// RISK FACTORS · {riskFactors.categories.length} CATEGORIES</SectionHeading>
+                              {riskFactors.summary && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// IN SHORT</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{riskFactors.summary}</div>
+                                </div>
+                              )}
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'12px'}}>
+                                {riskFactors.categories.map((cat, ci) => (
+                                  <details key={ci} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    overflow:'hidden',
+                                  }}>
+                                    <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{cat.name}</span>
+                                      <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{cat.risks.length} RISKS ›</span>
+                                    </summary>
+                                    <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                      <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// KEY RISKS</div>
+                                        <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                          {cat.risks.map((r, i) => (
+                                            <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                              <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                              <span>{r}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                      {cat.impact && (
+                                        <div style={{padding:'8px 10px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>⚠ IMPACT ON BUSINESS</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cat.impact}</div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* CYBERSECURITY — HSY shape (rows array) */}
+                          {cyber && cyber.rows && (
                             <>
                               <SectionHeading>// CYBERSECURITY · ITEM 1C</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.55)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5}}>Hershey’s defensive posture across {cyber.rows.length} dimensions of cyber risk.</div>
@@ -15975,6 +16543,141 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                 <InfoPanel key={i} category={r.category} points={r.points} meaning={r.meaning} />
                               ))}
                               {cyber.tldr && <Tldr text={cyber.tldr} />}
+                            </>
+                          )}
+
+                          {/* CYBERSECURITY — KO shape (threats + approach + governance + takeaways) */}
+                          {cyber && cyber.threats && cyber.approach && cyber.governance && (
+                            <>
+                              <SectionHeading>// CYBERSECURITY · RISK MANAGEMENT &amp; STRATEGY</SectionHeading>
+
+                              {/* Threats faced */}
+                              <div style={{padding:'10px 12px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>⚠ THREATS FACED</div>
+                                <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                  {cyber.threats.map((t, i) => (
+                                    <span key={i} style={{padding:'3px 8px',background:'rgba(239,68,68,0.08)',border:'0.5px solid rgba(239,68,68,0.4)',borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{t}</span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Approach */}
+                              <div style={{marginBottom:'10px'}}>
+                                <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// APPROACH</div>
+                                {cyber.approach.framework && (
+                                  <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderRadius:'3px',marginBottom:'8px',display:'flex',alignItems:'baseline',gap:'12px',flexWrap:'wrap'}}>
+                                    <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700}}>// FRAMEWORK</span>
+                                    <span style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{cyber.approach.framework}</span>
+                                  </div>
+                                )}
+                                {cyber.approach.ermIntegration && (
+                                  <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// ERM INTEGRATION</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cyber.approach.ermIntegration}</div>
+                                  </div>
+                                )}
+                                {cyber.approach.layers && (
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'6px',marginBottom:'8px'}}>
+                                    {cyber.approach.layers.map((l, i) => (
+                                      <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// LAYER</div>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'3px'}}>{l.name}</div>
+                                        <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{l.detail}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {cyber.approach.testing && (
+                                  <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'8px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// TESTING</div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                      {cyber.approach.testing.map((t, i) => (
+                                        <span key={i} style={{padding:'2px 7px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{t}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                {(cyber.approach.insurance || cyber.approach.thirdPartyOversight || cyber.approach.incidentResponse) && (
+                                  <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                    {cyber.approach.incidentResponse && (
+                                      <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// INCIDENT RESPONSE</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cyber.approach.incidentResponse}</div>
+                                      </div>
+                                    )}
+                                    {cyber.approach.insurance && (
+                                      <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// INSURANCE</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cyber.approach.insurance}</div>
+                                      </div>
+                                    )}
+                                    {cyber.approach.thirdPartyOversight && (
+                                      <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// THIRD-PARTY OVERSIGHT</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cyber.approach.thirdPartyOversight}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Governance */}
+                              <div style={{marginBottom:'10px'}}>
+                                <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>🛡 GOVERNANCE &amp; OVERSIGHT</div>
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                  {cyber.governance.ciso && (
+                                    <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'5px'}}>// CISO</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'3px'}}><span style={{color:amberDim,fontWeight:600}}>Credentials:</span> {cyber.governance.ciso.credentials}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'3px'}}><span style={{color:amberDim,fontWeight:600}}>Reports to:</span> {cyber.governance.ciso.reportsTo}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}><span style={{color:amberDim,fontWeight:600}}>Leads:</span> {cyber.governance.ciso.leads}</div>
+                                    </div>
+                                  )}
+                                  {cyber.governance.council && (
+                                    <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'5px'}}>// {cyber.governance.council.name.toUpperCase()}</div>
+                                      <div style={{display:'flex',flexWrap:'wrap',gap:'3px',marginBottom:'5px'}}>
+                                        {cyber.governance.council.members.map((m, i) => (
+                                          <span key={i} style={{padding:'2px 7px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{m}</span>
+                                        ))}
+                                      </div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{cyber.governance.council.cadence}</div>
+                                    </div>
+                                  )}
+                                  {cyber.governance.board && (
+                                    <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'5px'}}>// BOARD OVERSIGHT</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'4px',fontWeight:600}}>{cyber.governance.board.oversight}</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{cyber.governance.board.briefings}</div>
+                                    </div>
+                                  )}
+                                </div>
+                                {cyber.governance.employeeTraining && (
+                                  <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// EMPLOYEE ANNUAL TRAINING</div>
+                                    <div style={{display:'flex',flexWrap:'wrap',gap:'3px'}}>
+                                      {cyber.governance.employeeTraining.map((t, i) => (
+                                        <span key={i} style={{padding:'2px 7px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{t}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Takeaways */}
+                              {cyber.takeaways && cyber.takeaways.length > 0 && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>✓ KEY TAKEAWAYS</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {cyber.takeaways.map((t, i) => (
+                                      <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>›</span>
+                                        <span>{t}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
                             </>
                           )}
 
@@ -16490,6 +17193,151 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{contractualObligations.takeaway}</div>
                                 </div>
                               )}
+                            </>
+                          )}
+
+                          {/* DERIVATIVES — hedging mechanism */}
+                          {derivatives && (
+                            <>
+                              <SectionHeading>// DERIVATIVES &amp; HEDGING · RISK MANAGEMENT</SectionHeading>
+                              {derivatives.summary && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// HOW KO USES DERIVATIVES</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{derivatives.summary}</div>
+                                </div>
+                              )}
+
+                              {/* Risks hedged */}
+                              {derivatives.risksHedged && (
+                                <>
+                                  <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// RISKS HEDGED · {derivatives.risksHedged.length}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'12px'}}>
+                                    {derivatives.risksHedged.map((r, i) => (
+                                      <div key={i} style={{
+                                        background:'rgba(0,0,0,0.4)',
+                                        border:`0.5px solid ${amberGlow}`,
+                                        borderLeft:`2px solid ${amber}`,
+                                        borderRadius:'3px',
+                                        padding:'10px 12px',
+                                      }}>
+                                        <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'6px'}}>
+                                          {r.icon && <span style={{fontSize:'16px'}}>{r.icon}</span>}
+                                          <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.name}</span>
+                                        </div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>{r.description}</div>
+                                        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'5px'}}>
+                                          <div style={{padding:'6px 9px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// INSTRUMENTS</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{r.instruments}</div>
+                                          </div>
+                                          <div style={{padding:'6px 9px',background:'rgba(34,197,94,0.04)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px'}}>
+                                            <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// PURPOSE</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{r.purpose}</div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* Hedge types */}
+                              {derivatives.hedgeTypes && (
+                                <>
+                                  <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// HEDGE ACCOUNTING TYPES · {derivatives.hedgeTypes.length}</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'6px',marginBottom:'10px'}}>
+                                    {derivatives.hedgeTypes.map((h, i) => (
+                                      <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'3px'}}>{h.name}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{h.description}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {derivatives.accountingNote && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                  📓 {derivatives.accountingNote}
+                                </div>
+                              )}
+
+                              {/* Pros vs Cons */}
+                              {(derivatives.pros || derivatives.cons) && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'8px',marginBottom:'12px'}}>
+                                  {derivatives.pros && (
+                                    <div style={{padding:'12px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>✓ GOOD</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                        {derivatives.pros.map((p, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>+</span>
+                                            <span>{p}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                  {derivatives.cons && (
+                                    <div style={{padding:'12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.35)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'3px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>⚠ RISKS / LIMITATIONS</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'5px'}}>
+                                        {derivatives.cons.map((c, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(239,68,68,0.85)',flexShrink:0,fontWeight:700}}>−</span>
+                                            <span>{c}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {derivatives.bigPicture && (
+                                <div style={{padding:'12px 14px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>🧾 BIG PICTURE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{derivatives.bigPicture}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CHALLENGES — 6 categories with company response */}
+                          {challenges && challenges.length > 0 && (
+                            <>
+                              <SectionHeading>// CHALLENGES &amp; COMPANY RESPONSE · {challenges.length}</SectionHeading>
+                              <div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'12px'}}>
+                                {challenges.map((c, i) => (
+                                  <div key={i} style={{
+                                    background:'rgba(0,0,0,0.4)',
+                                    border:`0.5px solid ${amberGlow}`,
+                                    borderLeft:`2px solid ${amber}`,
+                                    borderRadius:'3px',
+                                    padding:'12px',
+                                  }}>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'8px'}}>
+                                      {c.icon && <span style={{fontSize:'16px'}}>{c.icon}</span>}
+                                      <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{c.name}</span>
+                                    </div>
+                                    <div style={{padding:'8px 10px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px',marginBottom:'8px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>⚠ KEY ISSUES</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.issues}</div>
+                                    </div>
+                                    <div style={{padding:'8px 10px',background:'rgba(34,197,94,0.04)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>✓ COMPANY RESPONSE / STRATEGY</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                        {c.response.map((r, j) => (
+                                          <li key={j} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:'rgba(34,197,94,0.85)',flexShrink:0,fontWeight:700}}>›</span>
+                                            <span>{r}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </>
                           )}
                         </div>
@@ -17283,6 +18131,209 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </div>
                             );
                           })()}
+
+                          {/* PENSION PLANS — U.S. + Non-U.S. investment strategy & asset table */}
+                          {BS.pensionPlans && (
+                            <>
+                              <SectionHeading>// PENSION PLAN ASSETS</SectionHeading>
+                              {BS.pensionPlans.description && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{BS.pensionPlans.description}</div>
+                              )}
+
+                              {/* U.S. Pension Strategy */}
+                              {BS.pensionPlans.usStrategy && (
+                                <div style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  padding:'12px',
+                                  marginBottom:'10px',
+                                }}>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'8px',flexWrap:'wrap'}}>
+                                    <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🏦 {BS.pensionPlans.usStrategy.name}</span>
+                                    <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{BS.pensionPlans.usStrategy.asOf}</span>
+                                  </div>
+
+                                  {/* Allocation grid */}
+                                  {BS.pensionPlans.usStrategy.allocations && (
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'10px'}}>
+                                      {BS.pensionPlans.usStrategy.allocations.map((a, i) => (
+                                        <div key={i} style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'3px',gap:'10px',flexWrap:'wrap'}}>
+                                            <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{a.name}</span>
+                                            <span style={{padding:'2px 8px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{a.target}%</span>
+                                          </div>
+                                          {a.detail && <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{a.detail}</div>}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {/* Objectives */}
+                                  {BS.pensionPlans.usStrategy.objectives && (
+                                    <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'6px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'5px'}}>// OBJECTIVES</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                        {BS.pensionPlans.usStrategy.objectives.map((o, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:amberDim,flexShrink:0,fontWeight:700}}>{String(i + 1).padStart(2,'0')}</span>
+                                            <span>{o}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {/* Governance */}
+                                  {BS.pensionPlans.usStrategy.governance && (
+                                    <div style={{padding:'7px 10px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                      <span style={{color:amber,fontWeight:600,fontStyle:'normal'}}>Governance —</span> {BS.pensionPlans.usStrategy.governance}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Non-U.S. Pension Strategy */}
+                              {BS.pensionPlans.nonUsStrategy && (
+                                <div style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  padding:'12px',
+                                  marginBottom:'10px',
+                                }}>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'8px',flexWrap:'wrap'}}>
+                                    <span style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🌍 {BS.pensionPlans.nonUsStrategy.name}</span>
+                                    <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>{BS.pensionPlans.nonUsStrategy.asOf}</span>
+                                  </div>
+
+                                  {/* Subsidiary groups */}
+                                  {BS.pensionPlans.nonUsStrategy.subsidiaryGroups && (
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'8px',marginBottom:'8px'}}>
+                                      {BS.pensionPlans.nonUsStrategy.subsidiaryGroups.map((g, i) => (
+                                        <div key={i} style={{padding:'10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px',marginBottom:'2px'}}>{g.groupName}</div>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1px',marginBottom:'8px',fontStyle:'italic'}}>{g.detail}</div>
+                                          <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                            {g.allocations.map((a, j) => (
+                                              <div key={j} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'4px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                                <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>{a.name}</span>
+                                                <span style={{fontSize:'11px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{a.target}%</span>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {/* Notes */}
+                                  {BS.pensionPlans.nonUsStrategy.notes && (
+                                    <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.25)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                        {BS.pensionPlans.nonUsStrategy.notes.map((n, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                            <span>{n}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Asset table */}
+                              {BS.pensionPlans.assetTable && (
+                                <>
+                                  <div style={{fontSize:'10px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// PENSION PLAN ASSETS BY CLASS · {BS.pensionPlans.assetTable.asOf}</div>
+
+                                  {/* Totals headline */}
+                                  {BS.pensionPlans.assetTable.totals && (
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'6px',marginBottom:'10px'}}>
+                                      {[
+                                        { label: 'U.S. 2024', value: BS.pensionPlans.assetTable.totals.us2024, color: amber },
+                                        { label: 'U.S. 2023', value: BS.pensionPlans.assetTable.totals.us2023, color: amberDim },
+                                        { label: 'NON-U.S. 2024', value: BS.pensionPlans.assetTable.totals.ne2024, color: amber },
+                                        { label: 'NON-U.S. 2023', value: BS.pensionPlans.assetTable.totals.ne2023, color: amberDim },
+                                      ].map((t, i) => (
+                                        <div key={i} style={{padding:'10px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${t.color}`,borderRadius:'3px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// {t.label}</div>
+                                          <div style={{fontSize:'18px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>${(t.value/1000).toFixed(2)}B</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {/* Asset class breakdown table */}
+                                  <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                                    <table style={{width:'100%',minWidth:'600px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>ASSET CLASS</th>
+                                          <th colSpan={2} style={{textAlign:'center',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>U.S. PENSION</th>
+                                          <th colSpan={2} style={{textAlign:'center',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>NON-U.S. PENSION</th>
+                                        </tr>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                          <th style={{padding:'4px 10px'}}></th>
+                                          <th style={{textAlign:'right',padding:'4px 8px',color:amber,fontWeight:700,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024</th>
+                                          <th style={{textAlign:'right',padding:'4px 8px',color:amberDim,fontWeight:600,fontSize:'9px'}}>2023</th>
+                                          <th style={{textAlign:'right',padding:'4px 8px',color:amber,fontWeight:700,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024</th>
+                                          <th style={{textAlign:'right',padding:'4px 8px',color:amberDim,fontWeight:600,fontSize:'9px'}}>2023</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {BS.pensionPlans.assetTable.assetClasses.map((cl, i) => (
+                                          <tr key={i} style={{
+                                            borderBottom:'0.5px solid rgba(245,158,11,0.06)',
+                                            background: cl.highlight ? 'rgba(245,158,11,0.04)' : 'transparent',
+                                          }}>
+                                            <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight: cl.highlight ? 700 : 500,letterSpacing:'0.3px'}}>{cl.name}</td>
+                                            <td style={{padding:'6px 8px',textAlign:'right',color: cl.us2024 !== 0 ? '#e0eaff' : 'rgba(148,163,184,0.4)',fontWeight: cl.highlight === 'us' ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>{cl.us2024 !== 0 ? '$' + cl.us2024.toLocaleString() : '—'}</td>
+                                            <td style={{padding:'6px 8px',textAlign:'right',color: cl.us2023 !== 0 ? 'rgba(224,234,255,0.65)' : 'rgba(148,163,184,0.4)',fontWeight:500}}>{cl.us2023 !== 0 ? '$' + cl.us2023.toLocaleString() : '—'}</td>
+                                            <td style={{padding:'6px 8px',textAlign:'right',color: cl.ne2024 !== 0 ? (cl.ne2024 < 0 ? 'rgba(239,68,68,0.95)' : '#e0eaff') : 'rgba(148,163,184,0.4)',fontWeight:500,borderLeft:`0.5px solid ${amberGlow}`}}>{cl.ne2024 !== 0 ? (cl.ne2024 < 0 ? '($' + Math.abs(cl.ne2024).toLocaleString() + ')' : '$' + cl.ne2024.toLocaleString()) : '—'}</td>
+                                            <td style={{padding:'6px 8px',textAlign:'right',color: cl.ne2023 !== 0 ? 'rgba(224,234,255,0.65)' : 'rgba(148,163,184,0.4)',fontWeight:500}}>{cl.ne2023 !== 0 ? '$' + cl.ne2023.toLocaleString() : '—'}</td>
+                                          </tr>
+                                        ))}
+                                        {/* Totals row */}
+                                        <tr style={{borderTop:`0.5px solid ${amber}`,background:'rgba(245,158,11,0.08)'}}>
+                                          <td style={{padding:'8px 10px',color:amber,fontWeight:700,letterSpacing:'0.5px'}}>TOTAL</td>
+                                          <td style={{padding:'8px',textAlign:'right',color:'#e0eaff',fontWeight:700,borderLeft:`0.5px solid ${amberGlow}`}}>${BS.pensionPlans.assetTable.totals.us2024.toLocaleString()}</td>
+                                          <td style={{padding:'8px',textAlign:'right',color:'rgba(224,234,255,0.75)',fontWeight:700}}>${BS.pensionPlans.assetTable.totals.us2023.toLocaleString()}</td>
+                                          <td style={{padding:'8px',textAlign:'right',color:'#e0eaff',fontWeight:700,borderLeft:`0.5px solid ${amberGlow}`}}>${BS.pensionPlans.assetTable.totals.ne2024.toLocaleString()}</td>
+                                          <td style={{padding:'8px',textAlign:'right',color:'rgba(224,234,255,0.75)',fontWeight:700}}>${BS.pensionPlans.assetTable.totals.ne2023.toLocaleString()}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+
+                                  {/* Observations */}
+                                  {BS.pensionPlans.assetTable.observations && (
+                                    <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY OBSERVATIONS</div>
+                                      <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                        {BS.pensionPlans.assetTable.observations.map((o, i) => (
+                                          <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                            <span style={{color:amberDim,flexShrink:0}}>›</span>
+                                            <span>{o}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {BS.pensionPlans.assetTable.takeaway && (
+                                    <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ IN SHORT</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{BS.pensionPlans.assetTable.takeaway}</div>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
                         </div>
                       );
                     };
