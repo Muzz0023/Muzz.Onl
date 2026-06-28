@@ -2117,7 +2117,12 @@ const HSY_BREAKDOWN = {
       ],
       keyTakeaway: 'The dual-class system isn\u2019t a quirky founder-friendly setup \u2014 it\u2019s a deliberate legal structure to keep Hershey\u2019s profits flowing to the Milton Hershey School in perpetuity. Public shareholders own most of the equity but do not control corporate governance.',
     },
+  },
 
+  // ════════════════════════════════════════════════════════════════
+  // TRUST — Hershey Trust Company, Milton Hershey School & Trust's broader empire
+  // ════════════════════════════════════════════════════════════════
+  trust: {
     // Share Ownership — top holders as of March 7, 2025
     shareOwnership: {
       asOf: 'March 7, 2025',
@@ -2172,7 +2177,7 @@ const HSY_BREAKDOWN = {
       holdings: {
         endowment: { label: 'Endowment', value: '~$17\u201318B', note: 'Among the largest K-12 educational endowments globally.' },
         hersheyCoStake: { label: 'Hershey Co. stake', value: 'Class B (10-vote) + some Common', note: '~79\u201381% combined voting power.' },
-        otherAssets: { label: 'Other assets', value: 'Hershey Entertainment & Resorts (HE&R); broad real estate (farmland + campus)' },
+        otherAssets: { label: 'Other assets', value: 'Hershey Entertainment & Resorts (HE&R); broad real estate (farmland + campus); M.S. Hershey Foundation' },
         diversification: { label: 'Diversification', value: 'Periodic sales of Common shares (e.g., 2023: ~1M shares; 2024: ~4.5M shares)', note: 'Maintains voting control while reinvesting proceeds under \u201cprudent investor\u201d policy.' },
       },
 
@@ -2240,6 +2245,87 @@ const HSY_BREAKDOWN = {
         peers: 'Ford/Walton foundations are independent of their founding companies. Hershey Trust retains corporate control \u2014 similar to IKEA\u2019s Stichting INGKA Foundation structure.',
         scale: 'MHS endowment (~$17B) is comparable in size to the Ford Foundation. Top-tier by assets.',
       },
+    },
+
+    // Buffett/Ackman insight — why activist investors avoid HSY
+    investorInsight: {
+      title: 'Why Buffett & Ackman avoid Hershey',
+      body: 'The Trust\u2019s ~79% voting control means activist investors and large allocators like Warren Buffett or Bill Ackman cannot influence the board, force a sale, or push for capital allocation changes. Even with a massive equity stake, an outsider has no leverage. The Trust\u2019s charter and PA Attorney General oversight effectively make HSY un-takeover-able. This is why high-conviction stock pickers who depend on management responsiveness tend to steer clear \u2014 the alpha they generate elsewhere through engagement doesn\u2019t exist at HSY.',
+      buffettConnection: 'Ironic given Buffett famously called See\u2019s Candies one of his best-ever acquisitions. He clearly respects the confectionery moat \u2014 he just can\u2019t use it at HSY because the Trust would never sell.',
+      takeawayLabel: 'Buffett-framework implication',
+      takeaway: 'For passive long-term holders, the Trust\u2019s control is a FEATURE (it forces long-term thinking, prevents leveraged buyouts, blocks short-termism). For activists, it\u2019s a wall they can\u2019t climb. HSY is structurally suited to patient capital, not engagement capital.',
+    },
+
+    // The broader Trust empire — entities the Trust owns beyond Hershey Co.
+    trustEmpire: {
+      summary: 'Beyond its controlling stake in The Hershey Company, the Hershey Trust owns a wide range of entities that together form the Hershey, Pennsylvania ecosystem. These holdings generate additional revenue for the Trust and reinforce the Hershey brand presence in the community where it was founded.',
+
+      // Hershey Entertainment & Resorts
+      heAndR: {
+        name: 'Hershey Entertainment & Resorts (HE&R)',
+        description: 'The Trust\u2019s entertainment & hospitality arm. Owns and operates Hershey\u2019s theme park, hotels, restaurants, sports venues, and a professional hockey team.',
+        attractions: [
+          { name: 'Hersheypark',                   type: 'Theme park',           emoji: '🎢', featured: true },
+          { name: 'Hershey Lodge',                 type: 'Hotel',                emoji: '🏨' },
+          { name: 'The Hotel Hershey',             type: 'Hotel',                emoji: '🏨' },
+          { name: 'The Spa at the Hotel Hershey',  type: 'Spa',                  emoji: '🧖' },
+          { name: 'MeltSpa by Hershey',            type: 'Spa',                  emoji: '🧖' },
+          { name: 'Hershey Camping Resort',        type: 'Camping',              emoji: '⛺' },
+          { name: 'Hershey Country Club',          type: 'Country club',         emoji: '⛳' },
+          { name: 'ZooAmerica',                    type: 'Zoo (in Hersheypark)', emoji: '🦁' },
+        ],
+        restaurants: [
+          'The Circular at The Hotel Hershey',
+          'The Chocolatier at Hersheypark',
+          'Fire & Grain at Hershey Lodge',
+          'Houlihan\u2019s Restaurant + Bar at The Hershey Press Building',
+          'Devon Seafood + Steak at The Hershey Press Building',
+          'Milton\u2019s Ice Cream Parlor at Hersheypark',
+          '1933 Restaurant & Tavern at The Hotel Hershey',
+          'Revelry at Hershey Lodge',
+          'Trevi 5 at The Hotel Hershey',
+          'The Sweeterie Confectionery Kitchen at Hersheypark',
+          'Chef\u2019s Market at The Hotel Hershey',
+          'Cocoa Beanery at Hershey Lodge',
+          'The Bears\u2019 Den at Hershey Lodge',
+          'Iberian Lounge at The Hotel Hershey',
+          'Stacks at Hershey Lodge',
+        ],
+        sportsTeam: {
+          name: 'Hershey Bears',
+          league: 'AHL (American Hockey League)',
+          note: 'Professional ice hockey team. One of the most successful franchises in AHL history.',
+        },
+        venues: [
+          { name: 'GIANT Center',         type: 'Indoor arena (home of Hershey Bears + concerts)',  emoji: '🏟' },
+          { name: 'Hersheypark Stadium',  type: 'Outdoor stadium (major concerts + events)',         emoji: '🏟' },
+        ],
+        medical: {
+          name: 'Medical centre',
+          note: 'Trust-affiliated medical facilities (separate from PSU Hershey Medical Center, which received a $50M Trust gift in 1963).',
+        },
+      },
+
+      // M.S. Hershey Foundation
+      msHersheyFoundation: {
+        name: 'The M.S. Hershey Foundation',
+        description: 'A separate charitable foundation established by Milton Hershey to preserve the community\u2019s history, arts, and educational legacy.',
+        holdings: [
+          { name: 'The Hershey Story',         type: 'Museum',          emoji: '🏛' },
+          { name: 'Hershey Gardens',           type: 'Public gardens',  emoji: '🌷' },
+          { name: 'Hershey Theatre',           type: 'Performing arts venue', emoji: '🎭' },
+          { name: 'Hershey Community Archives', type: 'Historical archives',  emoji: '📚' },
+        ],
+      },
+
+      // Other entities
+      otherEntities: [
+        { name: 'Hershey Cemetery',  type: 'Cemetery',             description: 'Final resting place of Milton & Catherine Hershey. Owned by the Trust as part of the broader Hershey community stewardship.', emoji: '🪦' },
+        { name: 'Hershey WestEnd',   type: 'Mixed-use development', description: 'Real estate development on the western edge of the Hershey campus. Part of the Trust\u2019s diversification into community real estate.', emoji: '🏘' },
+        { name: 'Hershey Real Estate', type: 'Land & property portfolio', description: 'Broad real estate holdings including farmland, residential land, and commercial properties across the Hershey, PA region. Provides diversification away from a single concentrated bet on Hershey Co. shares.', emoji: '🗺' },
+      ],
+
+      bottomLine: 'The Trust\u2019s empire extends far beyond Hershey Co. shares. It owns the town\u2019s theme park, hotels, restaurants, golf course, hockey team, museum, theatre, gardens, archives, cemetery, and significant real estate. This diversification provides additional income streams and reinforces the cultural moat \u2014 making Hershey, PA effectively a Trust-owned company town with deep community alignment.',
     },
   },
   brands: {
@@ -15471,6 +15557,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // amber palette inherited from enclosing scope
                     const TABS = [
                       { id: 'overview',  label: 'OVERVIEW',  enabled: !!bd.overview },
+                      { id: 'trust',     label: 'TRUST',     enabled: !!bd.trust },
                       { id: 'brands',    label: 'BRANDS',    enabled: !!bd.brands },
                       { id: 'moat',      label: 'MOAT',      enabled: !!bd.moat },
                       { id: 'numbers',   label: 'NUMBERS',   enabled: !!bd.numbers },
@@ -16220,7 +16307,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, shareOwnership, controllingShareholder } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -17284,6 +17371,49 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               )}
                             </>
                           )}
+                        </div>
+                      );
+                    };
+                    // === TRUST TAB ===
+                    const renderTrustTab = () => {
+                      if (!bd.trust) return null;
+                      const { shareOwnership, controllingShareholder, investorInsight, trustEmpire } = bd.trust;
+                      return (
+                        <div>
+                          {/* Investor Insight — why Buffett & Ackman avoid HSY (top of tab) */}
+                          {investorInsight && (
+                            <>
+                              <SectionHeading>// INVESTOR INSIGHT · {investorInsight.title.toUpperCase()}</SectionHeading>
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:`0.5px solid ${amber}`,
+                                borderLeft:`2px solid ${amber}`,
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'14px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>🚫 NO ACTIVISTS ALLOWED</div>
+                                <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'10px'}}>{investorInsight.body}</div>
+                                {investorInsight.buffettConnection && (
+                                  <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'10px'}}>
+                                    <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'4px'}}>// THE BUFFETT IRONY</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{investorInsight.buffettConnection}</div>
+                                  </div>
+                                )}
+                                {investorInsight.takeaway && (
+                                  <div style={{padding:'10px 12px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'2px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ {investorInsight.takeawayLabel ? investorInsight.takeawayLabel.toUpperCase() : 'TAKEAWAY'}</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{investorInsight.takeaway}</div>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
 
                           {/* SHARE OWNERSHIP — top beneficial owners */}
                           {shareOwnership && (
@@ -17760,6 +17890,195 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   </div>
                                 </details>
+                              )}
+                            </>
+                          )}
+
+                          {/* TRUST EMPIRE — entities the Trust owns beyond Hershey Co. */}
+                          {trustEmpire && (
+                            <>
+                              <SectionHeading>// THE TRUST'S BROADER EMPIRE</SectionHeading>
+                              {trustEmpire.summary && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{trustEmpire.summary}</div>
+                              )}
+
+                              {/* Hershey Entertainment & Resorts */}
+                              {trustEmpire.heAndR && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🎢 {trustEmpire.heAndR.name.toUpperCase()}</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    {trustEmpire.heAndR.description && (
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{trustEmpire.heAndR.description}</div>
+                                    )}
+
+                                    {/* Attractions grid */}
+                                    {trustEmpire.heAndR.attractions && trustEmpire.heAndR.attractions.length > 0 && (
+                                      <>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// ATTRACTIONS & HOSPITALITY</div>
+                                        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'5px',marginBottom:'10px'}}>
+                                          {trustEmpire.heAndR.attractions.map((a, i) => (
+                                            <div key={i} style={{
+                                              padding:'8px 10px',
+                                              background: a.featured ? 'rgba(245,158,11,0.06)' : 'rgba(0,0,0,0.3)',
+                                              border: `0.5px solid ${a.featured ? amber : amberGlow}`,
+                                              borderLeft: `2px solid ${amber}`,
+                                              borderRadius:'2px',
+                                              display:'flex',
+                                              alignItems:'baseline',
+                                              gap:'8px',
+                                            }}>
+                                              {a.emoji && <span style={{fontSize:'14px'}}>{a.emoji}</span>}
+                                              <div style={{flex:1}}>
+                                                <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight: a.featured ? 700 : 600,letterSpacing:'0.3px'}}>{a.name}</div>
+                                                {a.type && <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.3px',marginTop:'2px'}}>{a.type}</div>}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </>
+                                    )}
+
+                                    {/* Restaurants */}
+                                    {trustEmpire.heAndR.restaurants && trustEmpire.heAndR.restaurants.length > 0 && (
+                                      <>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// RESTAURANTS · {trustEmpire.heAndR.restaurants.length}</div>
+                                        <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'10px'}}>
+                                          <div style={{display:'flex',flexWrap:'wrap',gap:'4px'}}>
+                                            {trustEmpire.heAndR.restaurants.map((r, i) => (
+                                              <span key={i} style={{padding:'3px 8px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace'}}>🍽 {r}</span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </>
+                                    )}
+
+                                    {/* Sports team */}
+                                    {trustEmpire.heAndR.sportsTeam && (
+                                      <div style={{padding:'10px 12px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px',marginBottom:'10px'}}>
+                                        <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>🏒 SPORTS TEAM</div>
+                                        <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'2px'}}>{trustEmpire.heAndR.sportsTeam.name}</div>
+                                        {trustEmpire.heAndR.sportsTeam.league && (
+                                          <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.3px',marginBottom:'4px'}}>{trustEmpire.heAndR.sportsTeam.league}</div>
+                                        )}
+                                        {trustEmpire.heAndR.sportsTeam.note && (
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{trustEmpire.heAndR.sportsTeam.note}</div>
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {/* Venues */}
+                                    {trustEmpire.heAndR.venues && trustEmpire.heAndR.venues.length > 0 && (
+                                      <>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// ENTERTAINMENT VENUES</div>
+                                        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'5px',marginBottom:'10px'}}>
+                                          {trustEmpire.heAndR.venues.map((v, i) => (
+                                            <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px',display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                              {v.emoji && <span style={{fontSize:'14px'}}>{v.emoji}</span>}
+                                              <div style={{flex:1}}>
+                                                <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{v.name}</div>
+                                                {v.type && <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.3px',marginTop:'2px'}}>{v.type}</div>}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </>
+                                    )}
+
+                                    {/* Medical */}
+                                    {trustEmpire.heAndR.medical && (
+                                      <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>🏥 {trustEmpire.heAndR.medical.name.toUpperCase()}</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{trustEmpire.heAndR.medical.note}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* M.S. Hershey Foundation */}
+                              {trustEmpire.msHersheyFoundation && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🏛 {trustEmpire.msHersheyFoundation.name.toUpperCase()}</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    {trustEmpire.msHersheyFoundation.description && (
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'10px'}}>{trustEmpire.msHersheyFoundation.description}</div>
+                                    )}
+                                    {trustEmpire.msHersheyFoundation.holdings && trustEmpire.msHersheyFoundation.holdings.length > 0 && (
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'5px'}}>
+                                        {trustEmpire.msHersheyFoundation.holdings.map((h, i) => (
+                                          <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px',display:'flex',alignItems:'baseline',gap:'8px'}}>
+                                            {h.emoji && <span style={{fontSize:'14px'}}>{h.emoji}</span>}
+                                            <div style={{flex:1}}>
+                                              <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{h.name}</div>
+                                              {h.type && <div style={{fontSize:'9px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',letterSpacing:'0.3px',marginTop:'2px'}}>{h.type}</div>}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Other entities — Cemetery, WestEnd, Real Estate */}
+                              {trustEmpire.otherEntities && trustEmpire.otherEntities.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🏘 OTHER TRUST-OWNED ENTITIES</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {trustEmpire.otherEntities.map((e, i) => (
+                                        <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                            {e.emoji && <span style={{fontSize:'14px'}}>{e.emoji}</span>}
+                                            <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{e.name}</span>
+                                            {e.type && <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'1px',fontWeight:600,padding:'1px 6px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>{e.type.toUpperCase()}</span>}
+                                          </div>
+                                          {e.description && (
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{e.description}</div>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Bottom line */}
+                              {trustEmpire.bottomLine && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginTop:'10px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ BOTTOM LINE</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{trustEmpire.bottomLine}</div>
+                                </div>
                               )}
                             </>
                           )}
@@ -20564,6 +20883,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                         {tabsStrip}
                         <div style={{paddingTop:'8px'}}>
                           {activeTab === 'overview' && (bd.overview ? renderOverviewTab() : renderEmptyTab('overview'))}
+                          {activeTab === 'trust'    && (bd.trust ? renderTrustTab() : renderEmptyTab('trust'))}
                           {activeTab === 'brands'   && (bd.brands ? renderBrandsTab() : renderEmptyTab('brands'))}
                           {activeTab === 'moat'     && (bd.moat ? renderMoatTab() : renderEmptyTab('moat'))}
                           {activeTab === 'numbers'  && (bd.numbers ? renderNumbersTab() : renderEmptyTab('numbers'))}
