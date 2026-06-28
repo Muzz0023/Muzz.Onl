@@ -2036,6 +2036,211 @@ const HSY_BREAKDOWN = {
         },
       ],
     },
+    // Leadership — senior executives + board of directors (Hershey Co.)
+    leadership: {
+      asOf: 'Aug 2025',
+      executives: [
+        { name: 'Kirk Tanner',            role: 'President & CEO',                                  since: 'Joined Hershey Aug 2025',     joined: 2025, tenureYears: 0,  history: 'Former CEO of Wendy\u2019s. 30 years at PepsiCo \u2014 CEO PepsiCo Beverages NA, COO, Global Foodservice, Frito-Lay, PepsiCo UK & Ireland. B.A. Accounting, University of Utah. Boards: V.F. Corp, American Beverage Association.', featured: true },
+        { name: 'Steve Voskuil',          role: 'SVP & Chief Financial Officer',                     since: 'CFO at Hershey',              joined: 2019, tenureYears: 6,  history: 'Oversees finance: FP&A, accounting, tax, treasury, IR, audit. Previously CFO at Avanos Medical, CFO at Halyard Health, and 20+ years at Kimberly-Clark. B.A. University of Wisconsin; MS Management, Stanford GSB.', featured: true },
+        { name: 'Andrew Archambault',     role: 'President, U.S. Confection',                        since: 'President, U.S. Confection',   joined: 2024, tenureYears: 1,  history: 'Oversees U.S. confection P&L, brand & commercial strategy. Previously President U.S. Refreshment Beverages at KDP, CCO at KDP, CCO at Nature\u2019s Bounty, Bacardi USA, and 17 years at Coca-Cola (VP Walmart team). B.A. Gettysburg College; MBA Georgia State. Boards: ABA, Tractor Beverage.' },
+        { name: 'Rohit Grover',           role: 'President, International',                         since: 'President, International',    joined: 2010, tenureYears: 15, history: 'Oversees international markets, exports, emerging markets. Previously VP & GM Greater China; GM Canada, SE Asia, Middle East at Hershey. Early career at Colgate Palmolive & MTV India. MBA Finance & Marketing, University of Miami; Executive programs at Chicago & Harvard.' },
+        { name: 'Vero Villasenor',        role: 'President, Salty Snacks',                          since: 'President, Salty Snacks',     joined: 2010, tenureYears: 15, history: 'Leads salty snacks division \u2014 key growth driver. Previously VP Salty Snacks; VP Marketing Confection; Director Global Innovation; Marketing roles at Hershey Mexico. B.A. Marketing; MBA Tec de Monterrey.' },
+        { name: 'Stacy Taffet',           role: 'Chief Growth Officer',                              since: 'Chief Growth Officer',        joined: 2024, tenureYears: 1,  history: 'Leads strategy, growth, marketing, R&D, brand reputation. 15+ years at PepsiCo (brand & portfolio leadership). B.A. University of Pennsylvania; MBA Harvard. Board: Project Sunshine.' },
+        { name: 'Jason Reiman',           role: 'SVP, Chief Supply Chain Officer',                  since: 'CSCO at Hershey',             joined: 1996, tenureYears: 29, history: 'Leads procurement, manufacturing, quality, logistics, engineering & network optimization. Multiple supply chain roles at Hershey since 1996; previously Consultant at Manugistics. B.S. Business Logistics, Penn State. Awards: CGT Visionary, Pashek Award, Smeal Achievement.' },
+        { name: 'Deepak Bhatia',          role: 'SVP, Chief Technology Officer',                    since: 'CTO at Hershey',              joined: 2023, tenureYears: 2,  history: 'Leads technology strategy, ERP & digital transformation. 12 years at Amazon (VP Supply Chain Optimization Tech); Applied Materials; Daewoo Motors. MS&E Stanford; MS Aeronautics & Astronautics Purdue; BS Mechanical Eng.' },
+        { name: 'Kris Meulen',            role: 'Chief Development Officer',                        since: 'CDO at Hershey',              joined: 2021, tenureYears: 4,  history: 'Leads M&A, ventures, inorganic growth. Previously VP M&A Hershey; roles in Amplify Snacks & ONE Brands; ABI InBev (VP M&A, Ventures); UBS & Morgan Stanley IB; CCC Info Services. B.A. University of Chicago; MBA Finance & Accounting, Kellogg.' },
+        { name: 'James Turoff',           role: 'SVP, General Counsel & Secretary',                 since: 'GC at Hershey',               joined: 2014, tenureYears: 11, history: 'Oversees legal, governance, litigation, compliance, risk, government relations. Multiple legal leadership roles at Hershey since 2014; previously Assistant GC at Harsco. B.A. Poli Sci/Econ, Ashland University; J.D. University of Virginia.' },
+        { name: 'Natalie Rothman',        role: 'Chief Human Resources Officer',                    since: 'Joined Aug 2025',             joined: 2025, tenureYears: 0,  history: 'Oversees global HR, talent, transformation. Previously CPO Inspire Brands; CHRO Advance Auto Parts; HR at PepsiCo; Employment attorney. J.D. Brooklyn Law; M.A. HR Management, American University; B.A. Ithaca. Boards: Udemy (Chair Comp.), Pearce Services, Emory Advisory.' },
+      ],
+      executiveTakeaways: [
+        'CEO transition Aug 2025: Kirk Tanner replaced Michele Buck after a multi-year planning period.',
+        'CFO Steve Voskuil brings deep CPG finance experience (Kimberly-Clark, Avanos, Halyard).',
+        'Three business presidents structure: U.S. Confection (Archambault) / International (Grover) / Salty Snacks (Villasenor) \u2014 reflects HSY\u2019s segment reporting.',
+        'New Chief Growth Officer (Taffet) and CHRO (Rothman) joined in 2024/2025 \u2014 CEO has rebuilt his senior team.',
+        'Jason Reiman (Supply Chain) has 29 years at Hershey \u2014 deep operational continuity through leadership transitions.',
+      ],
+      board: [
+        { name: 'Kirk Tanner',              role: 'President & CEO',                       background: 'Hershey CEO since Aug 2025. Ex-CEO Wendy\u2019s; 30 years at PepsiCo. Food & beverage leadership, global brand growth, operations. Other boards: V.F. Corp; American Beverage Association (former).', category: 'Operational' },
+        { name: 'Mary Kay Haben',           role: 'Director (since Aug 2013)',             background: 'Former President, North America, Wm. Wrigley Jr. Co. CPG expertise, brand growth, product innovation. Other boards: Grocery Outlet; Trustee, Equity Residential. Committee chairs: Compensation; Executive; Finance & Risk Mgmt.', category: 'Capital Allocation' },
+        { name: 'Kevin M. Ozan',            role: 'Director (since May 2024)',             background: 'Former SEVP Strategic Initiatives & CFO at McDonald\u2019s. Finance, M&A, strategy, risk, global ops. Other boards: McKesson; Cineworld. Audit Committee Chair.', category: 'Finance' },
+        { name: 'Deirdre A. Mahlan',        role: 'Director (since May 2025)',             background: 'Former CEO & Chair, The Duckhorn Portfolio; ex-President Diageo N.A. Consumer goods leadership, finance, accounting, branded alcohol. Other boards: Kimberly-Clark; Duckhorn (former); Haleon (former).', category: 'Finance' },
+        { name: 'Marie Quintero-Johnson',   role: 'Director (since May 2025)',             background: 'Sr. Advisor, Rothschild; ex-CVP Coca-Cola (Corp Dev & Insights). Finance, strategy, M&A, international ops. Other boards: UNOS; AARP; Cristo Rey School.', category: 'Finance' },
+        { name: 'Christopher W. Brandt',    role: 'Director (since Aug 2025)',             background: 'President & Chief Brand Officer, Chipotle. Brand strategy, marketing, customer engagement, innovation. Other boards: Tractor Beverage; Association of National Advertisers.', category: 'Digital/Media' },
+        { name: 'Timothy W. Curoe',         role: 'Director (since May 2025)',             background: 'CEO, R.D. Offutt Company (ex-Target, GE). Food & retail operations, HR, sales, merchandising. Other boards: Idahoan Foods; Columbia River Technologies.', category: 'Operational' },
+        { name: 'Juan R. Perez',            role: 'Director (since May 2019)',             background: 'Former EVP & CIO, Salesforce; ex-UPS CIO/Engineering Chief. Supply chain, logistics, AI, cybersecurity, digital transformation. Governance Committee Chair.', category: 'Digital/Media' },
+        { name: 'Barry J. Nalebuff',        role: 'Director (since May 2025)',             background: 'Prof. of Management, Yale SOM (strategy, negotiation, game theory). Strategy, entrepreneurship, innovation, commercialization. Other boards: Calicraft Brewing; Eat the Change.', category: 'Capital Allocation' },
+        { name: 'Huong Maria T. Kraus',     role: 'Director (since May 2023) · TRUST REP', background: 'CFO Wedgewood Pharmacy. Chair of Hershey Trust & Milton Hershey School (since 2024). Finance, M&A, corporate development, governance. Trust representative on the Hershey Co. board.', category: 'Lead' },
+        { name: 'Cordel Robbin-Coker',      role: 'Director (since May 2024) · TRUST REP', background: 'CEO & Co-Founder, Carry1st (Africa gaming & fintech). Ex-Carlyle VP; ex-Morgan Stanley M&A. Consumer tech, fintech, M&A. Trust representative on the Hershey Co. board. Finance & Risk Mgmt Committee Chair.', category: 'Lead' },
+        { name: 'Harold Singleton III',     role: 'Director (since May 2025) · TRUST REP', background: 'Director, Hershey Trust; Trustee, Fidelity Rutland Square Trust II. Investment management, financial services, governance, NACD certified. Other boards: WisdomTree (former); Illinois Institute of Tech.', category: 'Lead' },
+      ],
+      boardTakeaways: {
+        title: 'Buffett-style governance assessment',
+        scores: [
+          { label: 'Long-term thinking',              rating: 'strong' },
+          { label: 'Financial conservatism',          rating: 'strong' },
+          { label: 'Minimal dilution / capital discipline', rating: 'strong' },
+          { label: 'Trust representation (3 designees)', rating: 'strong' },
+          { label: 'CPG / brand expertise',           rating: 'strong' },
+          { label: 'Independence (10/11 indep.)',     rating: 'strong' },
+        ],
+        verdict: 'Three Trust designees plus 88% pay-at-risk for CEO. Combined with the controlling shareholder structure, this is one of the most aligned boards in U.S. consumer staples \u2014 management cannot deviate from long-term mission without Trust approval.',
+      },
+    },
+
+    // Equity Structure — dual-class share system (Common vs Class B)
+    equityStructure: {
+      summary: 'Hershey operates a dual-class share structure designed to keep voting control in the hands of Hershey Trust Company (trustee for Milton Hershey School Trust). Common Stock gets higher dividends but lower votes; Class B Stock gets lower dividends but 10x voting power.',
+      classes: [
+        {
+          name: 'Common Stock',
+          votingRights: '1 vote per share',
+          dividendRights: 'Entitled to 10% HIGHER cash dividends than Class B',
+          boardElections: 'Common Stockholders vote separately to elect 1/6 of the Board',
+          control: 'Widely held but limited influence due to lower voting power per share',
+          color: 'amber',
+        },
+        {
+          name: 'Class B Stock',
+          votingRights: '10 votes per share',
+          dividendRights: 'Receives 10% LOWER cash dividends than Common Stock',
+          boardElections: 'Votes together with Common Stock on all matters, including director elections',
+          control: 'Hershey Trust Company (as trustee for Milton Hershey School Trust) holds voting control through Class B',
+          color: 'green',
+        },
+      ],
+      conversionRights: 'Class B shares can be converted into Common Stock 1:1 at any time. Automatic conversion happens if Hershey Trust loses majority control (i.e., if Trust holds <50% of Class B AND <15% total stock).',
+      controlProtection: 'Hershey cannot issue stock or take actions that dilute the Trust\u2019s majority control without approval from Hershey Trust Company or Milton Hershey School.',
+      legalProtections: [
+        'Pennsylvania law requires notice to the Attorney General if Hershey Trust would lose voting control',
+        'The Attorney General can petition the court to block such a transaction if it threatens Hershey\u2019s long-term viability or violates fiduciary obligations',
+        'This effectively makes hostile takeovers or third-party control of Hershey nearly impossible',
+      ],
+      keyTakeaway: 'The dual-class system isn\u2019t a quirky founder-friendly setup \u2014 it\u2019s a deliberate legal structure to keep Hershey\u2019s profits flowing to the Milton Hershey School in perpetuity. Public shareholders own most of the equity but do not control corporate governance.',
+    },
+
+    // Share Ownership — top holders as of March 7, 2025
+    shareOwnership: {
+      asOf: 'March 7, 2025',
+      description: 'Top beneficial owners of Hershey\u2019s outstanding voting securities. The Hershey Trust holds nearly all Class B shares plus a small Common stake, giving it ~79% of combined voting power.',
+      majorHolders: [
+        { name: 'Hershey Trust Company (as trustee for Milton Hershey School Trust)', commonShares: 2066119, commonPct: 1.4, classBShares: 54612012, classBPct: 99.9, notes: 'CONTROLLING SHAREHOLDER \u2014 holds all Class B (10-vote) shares plus a small Common stake. Combined voting power: ~79%.', controlling: true },
+        { name: 'Vanguard Group, Inc.',         commonShares: 19387143, commonPct: 13.1, classBShares: 0, classBPct: 0,  notes: 'Largest public-equity holder via index funds.' },
+        { name: 'Capital International Investors', commonShares: 12653080, commonPct: 8.6,  classBShares: 0, classBPct: 0,  notes: 'Long-only active fund manager.' },
+        { name: 'BlackRock, Inc.',              commonShares: 12264953, commonPct: 8.3,  classBShares: 0, classBPct: 0,  notes: 'iShares + active fund holdings.' },
+      ],
+      directorsAndOfficersGroup: {
+        label: 'All directors and executive officers (24 persons)',
+        commonShares: 239691,
+        exercisableStockOptions: 208164,
+        deferredCommonStockUnits: 118340,
+        notes: 'Combined insider holdings represent less than 1% of Common Stock \u2014 typical of a controlled company where the Trust holds the bulk of voting power.',
+      },
+      footnote: 'Class B Stock is held almost entirely (99.9%) by Hershey Trust Company. Each Class B share = 10 votes, vs 1 vote per Common share. Although the Trust\u2019s Common stake is only 1.4%, its Class B holdings deliver ~79% of combined voting power.',
+    },
+
+    // Controlling Shareholder — The Hershey Trust Company (Milton Hershey School Trust)
+    controllingShareholder: {
+      name: 'Hershey Trust Company',
+      subtitle: 'Trustee for the Milton Hershey School Trust',
+      headline: '~79% voting control · ~$17\u201318B endowment · Sole purpose: fund Milton Hershey School',
+      summary: 'The Hershey Trust Company is a Pennsylvania-chartered trust that serves as trustee for the Milton Hershey School Trust. It controls Hershey Co. via its Class B super-voting stake, and the dividends it receives from Hershey fund the Milton Hershey School \u2014 a tuition-free residential K-12 school for ~2,200 disadvantaged children. This structure makes hostile takeovers nearly impossible and aligns Hershey\u2019s long-term governance with its 1909 charitable mission.',
+
+      // Founding & Purpose
+      founding: [
+        { year: '1905', event: 'Milton S. Hershey founds Hershey Trust Company in Hershey, PA.' },
+        { year: '1909', event: 'Milton & Catherine Hershey create a charitable Industrial School for underprivileged children.' },
+        { year: '1918', event: 'Milton donates all Hershey Chocolate stock (~$60M) to fund the School\u2019s endowment.' },
+      ],
+      mission: 'Advance the legacy of Milton & Catherine Hershey in perpetuity by funding Milton Hershey School (MHS) and related education charities.',
+      beneficiary: 'Milton Hershey School (MHS) is the sole beneficiary; trust income funds school operations.',
+
+      // Governance
+      governance: {
+        status: 'Pennsylvania-chartered trust company. Independent Board focused on the charitable trust.',
+        boardMix: 'Alumni of MHS + experts in education, finance, governance, and child welfare.',
+        keyRules: [
+          { since: 2016, rule: '10-year trustee term limit' },
+          { since: 2016, rule: 'Pay capped (~$110k/year)' },
+          { since: 2016, rule: 'PA Attorney General pre-approval required for new trustees' },
+          { since: 2016, rule: 'Separation from Hershey Co. management roles' },
+        ],
+        overlapCap: '\u2264 3 individuals may serve on both Trust and Hershey Co. boards (currently: Kraus, Robbin-Coker, Singleton).',
+        boardSize: 'Target ~13 directors (~dozen in 2024)',
+      },
+
+      // Financial Holdings & Control
+      holdings: {
+        endowment: { label: 'Endowment', value: '~$17\u201318B', note: 'Among the largest K-12 educational endowments globally.' },
+        hersheyCoStake: { label: 'Hershey Co. stake', value: 'Class B (10-vote) + some Common', note: '~79\u201381% combined voting power.' },
+        otherAssets: { label: 'Other assets', value: 'Hershey Entertainment & Resorts (HE&R); broad real estate (farmland + campus)' },
+        diversification: { label: 'Diversification', value: 'Periodic sales of Common shares (e.g., 2023: ~1M shares; 2024: ~4.5M shares)', note: 'Maintains voting control while reinvesting proceeds under \u201cprudent investor\u201d policy.' },
+      },
+
+      // Trust Board of Directors (12 members)
+      trustBoard: [
+        { name: 'Huong Maria T. Kraus',         role: 'Chair (2024\u201325)',           since: 2018, background: 'CFO, Wedgewood Pharmacy. 25+ years finance, CPA, governance experience. MHS Valedictorian (1989). BS Accounting (Penn State).', mhsAlumna: true, hsyBoard: true },
+        { name: 'M. Diane Koken',               role: 'Vice Chair (2024)',           since: 2016, background: 'Former PA Insurance Commissioner (10 years). Ex-VP & GC, Provident Mutual Life. Board governance & regulatory expert. JD Villanova; BS Education (Millersville).', mhsAlumna: false, hsyBoard: false, prevChair: true },
+        { name: 'Jason Wolfe',                  role: 'Vice Chair (2025)',           since: 2023, background: 'Entrepreneur. Founder/CEO Wolfe LLC, GiftCards.com ($1B+ sales), MyCoupons. Ex-chair Pittsburgh Tech Council. MHS alumnus (1987). BA Marketing (Bloomsburg).', mhsAlumna: true, hsyBoard: false },
+        { name: 'Jan L. Bergen',                role: 'Director',                    since: 2017, background: 'Retired CEO, Penn Medicine Lancaster General Health. Ex-CEO Bryn Mawr Rehab. Deep health care & nonprofit board experience. BA Lafayette; grad coursework Penn, Temple, Harvard.', mhsAlumna: false, hsyBoard: false },
+        { name: 'James W. Brown',               role: 'Director',                    since: 2016, background: 'Ex-Chief of Staff to U.S. Senator & Governor Casey. Partner, SCP Private Equity. Strong government, PE/VC, education nonprofit experience. JD Virginia; BA Villanova.', mhsAlumna: false, hsyBoard: false },
+        { name: 'Cordel Robbin-Coker',          role: 'Director',                    since: 2019, background: 'CEO & Co-Founder, Carry1st (Africa gaming & fintech). Ex-Carlyle VP; ex-Morgan Stanley M&A. MHS Valedictorian (2004). BA Political Science (Stanford). Also on Hershey Co. board.', mhsAlumna: true, hsyBoard: true },
+        { name: 'Michelle Figlar',              role: 'Director',                    since: 2023, background: 'Executive Director, Birmingham Foundation. Ex-VP Learning at Heinz Endowments. Ex-PA Deputy Secretary of Child Development. Early childhood education leader. Ed.D. Vanderbilt.', mhsAlumna: false, hsyBoard: false },
+        { name: 'Melissa L. Peeples-Fullmore',  role: 'Director',                    since: 2017, background: 'CEO, KIPP Jacksonville (3,100+ students). 30 years education leadership. MHS alumna (1991). Ed.D. SMU; Ed.M. Harvard.', mhsAlumna: true, hsyBoard: false },
+        { name: 'Dan Katzir',                   role: 'Director',                    since: 2019, background: 'Ex-CEO Alliance College-Ready Public Schools (12,500 students). Senior roles at Broad Foundation, Sylvan, UCLA, Teach for America. MBA Harvard; BA Dartmouth.', mhsAlumna: false, hsyBoard: false },
+        { name: 'James C. Katzman',             role: 'Director',                    since: 2017, background: 'SVP Corporate Development, GE Aerospace. Former Goldman Sachs Partner (Head of M&A West). MBA Columbia; AB Dartmouth.', mhsAlumna: false, hsyBoard: false },
+        { name: 'Amy K. Marsh',                 role: 'Director',                    since: 2019, background: 'Former CIO/Treasurer, University of Pittsburgh. Board roles at Pittsburgh Foundation, symphony, major endowments. MM Finance (Kellogg); AB Wittenberg.', mhsAlumna: false, hsyBoard: false },
+        { name: 'Harold Singleton III',         role: 'Director',                    since: 2023, background: '30+ years asset management. Former MD Lincoln Financial ($200B platform). Ex-PineBridge, UBS, Fidelity Board Trustee, WisdomTree Board. CFA. MBA Chicago Booth. Also on Hershey Co. board.', mhsAlumna: false, hsyBoard: true },
+      ],
+
+      // Trust Leadership Team
+      trustLeadership: [
+        { name: 'Leslie Lenzo, CFA',         role: 'CEO & CIO',                                background: 'Former CIO at Advocate Aurora Health ($14B assets, $8B DC plans). Senior roles at Northwestern Memorial Healthcare & Partners HealthCare. Ex-equity research at SG Cowen. Boards: Ascendium Education.', joined: 2023, education: 'BA Economics/Government (Georgetown); MBA Finance (Boston University); CFA' },
+        { name: 'Joshua Shannon, CFA',       role: 'Deputy CIO & VP, Strategy',                background: 'Ex-Portfolio Manager at Goldman Sachs (US Fundamental Equity). Honeywell Capital Management. JPMorgan consumer staples analyst. Leads co-investment program, controlled companies, MHST real estate.', joined: 2019, education: 'BA Economics (Lafayette College); CFA' },
+        { name: 'Evril Clayton',             role: 'VP, Public Markets',                       background: 'Ex-Managing Director, Rockefeller University. 12 years at NY State Common Retirement Fund (Deputy Director Global Equity).', joined: 2023, education: 'BS Business Admin (SUNY Potsdam); MBA Clarkson University' },
+        { name: 'Terry Davis, CPA',          role: 'VP, Finance',                              background: 'Ex-CFO & Controller at Farm Credit System. 20 years US Marine Corps aviation roles. Oversees accounting, controls, compliance, audit, tax, treasury.', joined: 2023, education: 'Master of Accountancy (West Florida); BS Business Admin (Hawaii Pacific); CPA' },
+        { name: 'Jerel Hopkins, Esq.',       role: 'VP, General Counsel & Corporate Secretary', background: '24 years legal experience. Ex-Managing Director, Corporate Secretary & Associate GC at Macquarie Asset Management. Expertise in corporate & securities law.', joined: 0, education: 'BS Economics (Wharton); JD Villanova; admitted PA & NJ' },
+        { name: 'Laura Minteer',             role: 'VP, Corporate Services',                   background: 'Leads HR, IT, communications, facilities. Ex-VP HR at Meritus Health. Senior HR leader at Menno Haven Retirement Community.', joined: 2022, education: 'BS Business Admin (Shippensburg); MS HR Mgmt (St. Francis)' },
+        { name: 'Muzzamil Mussani, CFA',     role: 'VP, Investment Operations & Portfolio Analytics', background: '17+ years experience. Built investment ops at Advocate Aurora Health. Prior roles in Chicago and Pakistan (equity research & trading). Active in OPEN Chicago nonprofit.', joined: 0, education: 'MBA Finance (Institute of Business Mgmt, Pakistan); CFA' },
+      ],
+
+      // Oversight of MHS
+      oversight: {
+        trustBoardRole: 'Trustee & investment manager. Allocates the endowment, approves major capital projects and expansion.',
+        mhsBoardRole: 'Milton Hershey School Board of Managers runs school policy & oversight. Educators manage day-to-day.',
+        funding: 'Trust income fully funds the tuition-free residential K-12 program. The Trust "holds the purse strings".',
+      },
+
+      // Philanthropy & Impact
+      philanthropy: [
+        { area: 'MHS scale',     detail: '~2,200+ students; all expenses paid; high per-student spend (~$80\u201390k/year).' },
+        { area: 'Results',       detail: 'Near-universal HS completion; college/vocational pathways.' },
+        { area: 'Expansion',     detail: 'Catherine Hershey early-childhood centers (~$350M commitment, 2019\u201323).' },
+        { area: 'Community',     detail: 'M.S. Hershey Foundation (Theatre, Gardens, Archives); 1963 gift of $50M to PSU Hershey Medical Center; payments supporting local schools/taxes.' },
+      ],
+
+      // Controversies & Reforms (2010-2025)
+      controversies: [
+        { period: '2010\u201313', highlight: 'Scrutiny over a Vermont golf property purchase. AG settlement \u2192 stronger conflict rules, approvals, compensation caps.' },
+        { period: '2014\u201316', highlight: 'Renewed investigations, expense scrutiny. 2016 reform deal: term limits, AG veto on appointments. Several long-tenured directors exited.' },
+        { period: '2017\u201321', highlight: 'Pressure to spend more on kids. $350M early-childhood expansion. Internal transparency disputes.' },
+        { period: '2016/2020/2024', highlight: 'Trust REJECTED Mondelez takeover approaches (3 times). Prioritises mission and control over short-term shareholder returns.', critical: true },
+      ],
+
+      // Recent Developments
+      recentDevelopments: [
+        { year: 2023, item: 'Leslie Lenzo named CEO/CIO of the Trust' },
+        { year: 2024, item: 'Maria Kraus elected Chair of the Trust' },
+        { year: 2023, item: 'Sold ~1M HSY Common shares for diversification' },
+        { year: 2024, item: 'Sold ~4.5M HSY Common shares for diversification \u2014 voting control unchanged' },
+      ],
+
+      // Comparison
+      comparison: {
+        structure: 'Unusual U.S. charity controlling a major public company (grandfathered pre-1969 IRS rules).',
+        peers: 'Ford/Walton foundations are independent of their founding companies. Hershey Trust retains corporate control \u2014 similar to IKEA\u2019s Stichting INGKA Foundation structure.',
+        scale: 'MHS endowment (~$17B) is comparable in size to the Ford Foundation. Top-tier by assets.',
+      },
+    },
   },
   brands: {
     segments: [
@@ -15280,7 +15485,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // Tabs strip
                     const tabsStrip = (
                       <div style={{display:'flex',gap:'4px',flexWrap:'wrap',borderBottom:`0.5px solid ${amberGlow}`,paddingBottom:'10px'}}>
-                        {TABS.map(t => {
+                        {TABS.filter(t => t.enabled).map(t => {
                           const isActive = activeTab === t.id;
                           return (
                             <button
@@ -16015,7 +16220,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === OVERVIEW TAB ===
                     const renderOverviewTab = () => {
                       if (!bd.overview) return null;
-                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership } = bd.overview;
+                      const { facts, identity, customers, rawMaterials, properties, operatingSegments, businessLines, distribution, bottlerAgreements, bottlingInvestments, topBottlers, rawMaterialsCategories, headquarters, facilityMatrix, leadership, equityStructure, shareOwnership, controllingShareholder } = bd.overview;
 
                       // Quick-glance stat card
                       const StatCard = ({ label, value, sub }) => (
@@ -16981,6 +17186,580 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </div>
                                   )}
                                 </>
+                              )}
+                            </>
+                          )}
+
+                          {/* EQUITY STRUCTURE — dual-class share system */}
+                          {equityStructure && (
+                            <>
+                              <SectionHeading>// EQUITY STRUCTURE · DUAL-CLASS</SectionHeading>
+                              {equityStructure.summary && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{equityStructure.summary}</div>
+                              )}
+
+                              {/* Two share class cards side by side */}
+                              {equityStructure.classes && equityStructure.classes.length > 0 && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'8px',marginBottom:'12px'}}>
+                                  {equityStructure.classes.map((c, i) => {
+                                    const color = c.color === 'green' ? 'rgba(34,197,94,0.95)' : amber;
+                                    const bg = c.color === 'green' ? 'rgba(34,197,94,0.05)' : 'rgba(245,158,11,0.05)';
+                                    const border = c.color === 'green' ? 'rgba(34,197,94,0.4)' : amber;
+                                    return (
+                                      <div key={i} style={{
+                                        background: bg,
+                                        border: `0.5px solid ${border}`,
+                                        borderLeft: `2px solid ${color}`,
+                                        borderRadius: '3px',
+                                        padding: '12px',
+                                      }}>
+                                        <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'8px'}}>{c.name}</div>
+                                        <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                          <div style={{padding:'6px 9px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${border}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'8px',color: color,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'2px'}}>// VOTING RIGHTS</div>
+                                            <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{c.votingRights}</div>
+                                          </div>
+                                          <div style={{padding:'6px 9px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${border}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'8px',color: color,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'2px'}}>// DIVIDEND RIGHTS</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.dividendRights}</div>
+                                          </div>
+                                          {c.boardElections && (
+                                            <div style={{padding:'6px 9px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${border}`,borderRadius:'2px'}}>
+                                              <div style={{fontSize:'8px',color: color,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'2px'}}>// BOARD ELECTIONS</div>
+                                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.boardElections}</div>
+                                            </div>
+                                          )}
+                                          {c.control && (
+                                            <div style={{padding:'6px 9px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${border}`,borderRadius:'2px'}}>
+                                              <div style={{fontSize:'8px',color: color,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'2px'}}>// CONTROL</div>
+                                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.control}</div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+
+                              {/* Conversion + control protection */}
+                              {(equityStructure.conversionRights || equityStructure.controlProtection) && (
+                                <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'10px'}}>
+                                  {equityStructure.conversionRights && (
+                                    <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// CONVERSION RIGHTS</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{equityStructure.conversionRights}</div>
+                                    </div>
+                                  )}
+                                  {equityStructure.controlProtection && (
+                                    <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// CONTROL PROTECTION</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{equityStructure.controlProtection}</div>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Legal protections */}
+                              {equityStructure.legalProtections && equityStructure.legalProtections.length > 0 && (
+                                <div style={{padding:'10px 12px',background:'rgba(239,68,68,0.04)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>⚖ LEGAL PROTECTIONS</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {equityStructure.legalProtections.map((p, i) => (
+                                      <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                        <span style={{color:'rgba(239,68,68,0.85)',flexShrink:0,fontWeight:700}}>›</span>
+                                        <span>{p}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Key takeaway */}
+                              {equityStructure.keyTakeaway && (
+                                <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ KEY TAKEAWAY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{equityStructure.keyTakeaway}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* SHARE OWNERSHIP — top beneficial owners */}
+                          {shareOwnership && (
+                            <>
+                              <SectionHeading>// SHARE OWNERSHIP · {shareOwnership.asOf}</SectionHeading>
+                              {shareOwnership.description && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{shareOwnership.description}</div>
+                              )}
+
+                              {/* Major holders table */}
+                              {shareOwnership.majorHolders && shareOwnership.majorHolders.length > 0 && (
+                                <div style={{overflowX:'auto',marginBottom:'12px'}}>
+                                  <table style={{width:'100%',minWidth:'600px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                    <thead>
+                                      <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                        <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>HOLDER</th>
+                                        <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>COMMON</th>
+                                        <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>%</th>
+                                        <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>CLASS B</th>
+                                        <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>%</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {shareOwnership.majorHolders.map((h, i) => (
+                                        <React.Fragment key={i}>
+                                          <tr style={{
+                                            borderBottom:'0.5px solid rgba(245,158,11,0.06)',
+                                            background: h.controlling ? 'rgba(34,197,94,0.06)' : 'transparent',
+                                          }}>
+                                            <td style={{padding:'7px 10px',color:'#e0eaff',fontWeight: h.controlling ? 700 : 500,letterSpacing:'0.3px'}}>
+                                              {h.name}
+                                              {h.controlling && <span style={{padding:'1px 6px',marginLeft:'8px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'2px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',whiteSpace:'nowrap'}}>★ CONTROLLING</span>}
+                                            </td>
+                                            <td style={{padding:'7px 10px',textAlign:'right',color: h.commonShares > 0 ? '#e0eaff' : 'rgba(148,163,184,0.4)',fontWeight: h.controlling ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>{h.commonShares > 0 ? h.commonShares.toLocaleString() : '—'}</td>
+                                            <td style={{padding:'7px 10px',textAlign:'right',color: h.commonPct > 0 ? amber : 'rgba(148,163,184,0.4)',fontWeight:700}}>{h.commonPct > 0 ? h.commonPct + '%' : '—'}</td>
+                                            <td style={{padding:'7px 10px',textAlign:'right',color: h.classBShares > 0 ? '#e0eaff' : 'rgba(148,163,184,0.4)',fontWeight: h.controlling ? 700 : 500,borderLeft:`0.5px solid ${amberGlow}`}}>{h.classBShares > 0 ? h.classBShares.toLocaleString() : '—'}</td>
+                                            <td style={{padding:'7px 10px',textAlign:'right',color: h.classBPct > 0 ? 'rgba(34,197,94,0.95)' : 'rgba(148,163,184,0.4)',fontWeight:700}}>{h.classBPct > 0 ? h.classBPct + '%' : '—'}</td>
+                                          </tr>
+                                          {h.notes && (
+                                            <tr style={{background: h.controlling ? 'rgba(34,197,94,0.03)' : 'rgba(245,158,11,0.02)'}}>
+                                              <td colSpan={5} style={{padding:'4px 10px 8px 10px',color:'rgba(224,234,255,0.65)',fontSize:'9px',fontFamily:'monospace',fontStyle:'italic',lineHeight:1.5,letterSpacing:'0.3px'}}>{h.notes}</td>
+                                            </tr>
+                                          )}
+                                        </React.Fragment>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              )}
+
+                              {/* Insider group summary */}
+                              {shareOwnership.directorsAndOfficersGroup && (
+                                <div style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amberDim}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// {shareOwnership.directorsAndOfficersGroup.label.toUpperCase()}</div>
+                                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'6px',marginBottom:'6px'}}>
+                                    <div style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// COMMON SHARES</div>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{shareOwnership.directorsAndOfficersGroup.commonShares.toLocaleString()}</div>
+                                    </div>
+                                    <div style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// EXERCISABLE OPTIONS</div>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{shareOwnership.directorsAndOfficersGroup.exercisableStockOptions.toLocaleString()}</div>
+                                    </div>
+                                    <div style={{padding:'6px 8px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'2px'}}>// DEFERRED UNITS</div>
+                                      <div style={{fontSize:'13px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700}}>{shareOwnership.directorsAndOfficersGroup.deferredCommonStockUnits.toLocaleString()}</div>
+                                    </div>
+                                  </div>
+                                  {shareOwnership.directorsAndOfficersGroup.notes && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{shareOwnership.directorsAndOfficersGroup.notes}</div>
+                                  )}
+                                </div>
+                              )}
+
+                              {shareOwnership.footnote && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.03)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'10px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                                  {shareOwnership.footnote}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CONTROLLING SHAREHOLDER — Hershey Trust Company */}
+                          {controllingShareholder && (
+                            <>
+                              <SectionHeading>// CONTROLLING SHAREHOLDER · {controllingShareholder.name.toUpperCase()}</SectionHeading>
+
+                              {/* Headline panel */}
+                              <div style={{
+                                background:'linear-gradient(160deg, rgba(34,197,94,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                border:'0.5px solid rgba(34,197,94,0.55)',
+                                borderLeft:'2px solid rgba(34,197,94,0.95)',
+                                borderRadius:'4px',
+                                padding:'14px',
+                                marginBottom:'12px',
+                                position:'relative',
+                              }}>
+                                <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderLeft:'1px solid rgba(34,197,94,0.6)'}}/>
+                                <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:'1px solid rgba(34,197,94,0.6)',borderRight:'1px solid rgba(34,197,94,0.6)'}}/>
+                                {controllingShareholder.subtitle && (
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// {controllingShareholder.subtitle.toUpperCase()}</div>
+                                )}
+                                {controllingShareholder.headline && (
+                                  <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'8px',lineHeight:1.5}}>{controllingShareholder.headline}</div>
+                                )}
+                                {controllingShareholder.summary && (
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>{controllingShareholder.summary}</div>
+                                )}
+                              </div>
+
+                              {/* Founding timeline */}
+                              {controllingShareholder.founding && controllingShareholder.founding.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>📜 FOUNDING &amp; PURPOSE</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'8px'}}>
+                                      {controllingShareholder.founding.map((f, i) => (
+                                        <div key={i} style={{display:'flex',gap:'12px',padding:'6px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <span style={{fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px',minWidth:'48px'}}>{f.year}</span>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{f.event}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    {controllingShareholder.mission && (
+                                      <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amber}`,borderRadius:'2px',marginBottom:'5px'}}>
+                                        <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'3px'}}>// MISSION</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>"{controllingShareholder.mission}"</div>
+                                      </div>
+                                    )}
+                                    {controllingShareholder.beneficiary && (
+                                      <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// BENEFICIARY</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.beneficiary}</div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Governance */}
+                              {controllingShareholder.governance && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>⚖ GOVERNANCE STRUCTURE</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    {controllingShareholder.governance.status && (
+                                      <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'5px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// STATUS</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.governance.status}</div>
+                                      </div>
+                                    )}
+                                    {controllingShareholder.governance.boardMix && (
+                                      <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'5px'}}>
+                                        <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// BOARD MIX</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.governance.boardMix}</div>
+                                      </div>
+                                    )}
+                                    {controllingShareholder.governance.keyRules && controllingShareholder.governance.keyRules.length > 0 && (
+                                      <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.05)',border:`0.5px solid ${amber}`,borderRadius:'2px',marginBottom:'5px'}}>
+                                        <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'5px'}}>// KEY RULES (post-{controllingShareholder.governance.keyRules[0].since} reforms)</div>
+                                        <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'3px'}}>
+                                          {controllingShareholder.governance.keyRules.map((r, i) => (
+                                            <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                              <span style={{color:amber,flexShrink:0,fontWeight:700}}>›</span>
+                                              <span>{r.rule}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    {(controllingShareholder.governance.overlapCap || controllingShareholder.governance.boardSize) && (
+                                      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'5px'}}>
+                                        {controllingShareholder.governance.overlapCap && (
+                                          <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// OVERLAP CAP</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.governance.overlapCap}</div>
+                                          </div>
+                                        )}
+                                        {controllingShareholder.governance.boardSize && (
+                                          <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                            <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// BOARD SIZE</div>
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.governance.boardSize}</div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Holdings */}
+                              {controllingShareholder.holdings && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>💰 FINANCIAL HOLDINGS &amp; CONTROL</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {Object.values(controllingShareholder.holdings).map((h, i) => (
+                                        <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'3px'}}>
+                                            <span style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>// {h.label.toUpperCase()}</span>
+                                            <span style={{fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{h.value}</span>
+                                          </div>
+                                          {h.note && (
+                                            <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{h.note}</div>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Trust Board of Directors */}
+                              {controllingShareholder.trustBoard && controllingShareholder.trustBoard.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>👥 TRUST BOARD · {controllingShareholder.trustBoard.length} DIRECTORS</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {controllingShareholder.trustBoard.map((b, i) => (
+                                        <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${b.hsyBoard ? amber : 'rgba(34,197,94,0.7)'}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                            <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                              <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{b.name}</span>
+                                              <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'0.3px',fontWeight:600}}>{b.role}</span>
+                                              {b.since && <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace'}}>since {b.since}</span>}
+                                            </div>
+                                            <div style={{display:'flex',gap:'4px'}}>
+                                              {b.mhsAlumna && <span style={{padding:'1px 6px',background:'rgba(34,197,94,0.10)',border:'0.5px solid rgba(34,197,94,0.4)',borderRadius:'2px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>MHS ALUMNI</span>}
+                                              {b.hsyBoard && <span style={{padding:'1px 6px',background:'rgba(245,158,11,0.10)',border:`0.5px solid ${amber}`,borderRadius:'2px',fontSize:'8px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>HSY BOARD</span>}
+                                            </div>
+                                          </div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{b.background}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Trust Leadership */}
+                              {controllingShareholder.trustLeadership && controllingShareholder.trustLeadership.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🏛 TRUST LEADERSHIP TEAM · {controllingShareholder.trustLeadership.length}</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {controllingShareholder.trustLeadership.map((l, i) => (
+                                        <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                            <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                              <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{l.name}</span>
+                                              <span style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'0.3px',fontWeight:600}}>{l.role}</span>
+                                            </div>
+                                            {l.joined > 0 && <span style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace'}}>joined {l.joined}</span>}
+                                          </div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'3px'}}>{l.background}</div>
+                                          {l.education && (
+                                            <div style={{padding:'4px 7px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',fontSize:'9px',color:'rgba(224,234,255,0.65)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{l.education}</div>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Oversight */}
+                              {controllingShareholder.oversight && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🎓 OVERSIGHT OF MHS</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {controllingShareholder.oversight.trustBoardRole && (
+                                        <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// TRUST BOARD ROLE</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.oversight.trustBoardRole}</div>
+                                        </div>
+                                      )}
+                                      {controllingShareholder.oversight.mhsBoardRole && (
+                                        <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// MHS BOARD ROLE</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.oversight.mhsBoardRole}</div>
+                                        </div>
+                                      )}
+                                      {controllingShareholder.oversight.funding && (
+                                        <div style={{padding:'7px 10px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.35)',borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'3px'}}>💰 FUNDING</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.oversight.funding}</div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Philanthropy */}
+                              {controllingShareholder.philanthropy && controllingShareholder.philanthropy.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>❤ PHILANTHROPY &amp; IMPACT</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {controllingShareholder.philanthropy.map((p, i) => (
+                                        <div key={i} style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// {p.area.toUpperCase()}</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{p.detail}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Controversies & Reforms */}
+                              {controllingShareholder.controversies && controllingShareholder.controversies.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:'2px solid rgba(239,68,68,0.7)',
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>⚠ CONTROVERSIES &amp; REFORMS (2010\u20132025)</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(239,68,68,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {controllingShareholder.controversies.map((c, i) => (
+                                        <div key={i} style={{padding:'8px 10px',background: c.critical ? 'rgba(239,68,68,0.06)' : 'rgba(0,0,0,0.3)',border:`0.5px solid ${c.critical ? 'rgba(239,68,68,0.4)' : amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{display:'flex',alignItems:'baseline',gap:'10px',marginBottom:'4px',flexWrap:'wrap'}}>
+                                            <span style={{fontSize:'10px',color: c.critical ? 'rgba(239,68,68,0.95)' : amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1px'}}>{c.period}</span>
+                                            {c.critical && <span style={{padding:'1px 6px',background:'rgba(239,68,68,0.10)',border:'0.5px solid rgba(239,68,68,0.4)',borderRadius:'2px',fontSize:'8px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>⚠ TAKEOVER REJECTED</span>}
+                                          </div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.highlight}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Recent Developments */}
+                              {controllingShareholder.recentDevelopments && controllingShareholder.recentDevelopments.length > 0 && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'6px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>📰 RECENT DEVELOPMENTS</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                      {controllingShareholder.recentDevelopments.map((d, i) => (
+                                        <div key={i} style={{display:'flex',gap:'12px',padding:'5px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',minWidth:'40px'}}>{d.year}</span>
+                                          <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.item}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </details>
+                              )}
+
+                              {/* Comparison */}
+                              {controllingShareholder.comparison && (
+                                <details style={{
+                                  background:'rgba(0,0,0,0.4)',
+                                  border:`0.5px solid ${amberGlow}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'3px',
+                                  overflow:'hidden',
+                                  marginBottom:'12px',
+                                }}>
+                                  <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🌐 COMPARISON TO OTHER FOUNDATIONS</span>
+                                    <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                                  </summary>
+                                  <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)'}}>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                                      {controllingShareholder.comparison.structure && (
+                                        <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// STRUCTURE</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.comparison.structure}</div>
+                                        </div>
+                                      )}
+                                      {controllingShareholder.comparison.peers && (
+                                        <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// PEER COMPARISON</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.comparison.peers}</div>
+                                        </div>
+                                      )}
+                                      {controllingShareholder.comparison.scale && (
+                                        <div style={{padding:'7px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                          <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// SCALE</div>
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{controllingShareholder.comparison.scale}</div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </details>
                               )}
                             </>
                           )}
