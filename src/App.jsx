@@ -4697,6 +4697,44 @@ const KO_BREAKDOWN = {
         ],
         note: '2017 NOPAT estimated at 20% normalised tax rate (vs reported 82% effective due to TCJA). NOPAT strips out tax distortions and shows true operating earnings power.',
       },
+      // Dividends per share — 25-year history with stock split adjustment
+      dividends: {
+        note: 'KO has paid an annual dividend every year since 1893. A 2-for-1 stock split occurred in 2012 \u2014 the table shows BOTH the split-adjusted dividend (apples-to-apples comparison) and the unadjusted historical value where they differ. Payout % is calculated using split-adjusted dividend \u00f7 EPS.',
+        splitNote: '2-for-1 stock split in 2012: unadjusted 2010 dividend $1.76 = split-adjusted $0.88. Pre-2012 values were halved for consistent comparison.',
+        cagr: '7.50%',
+        cagrPeriod: '2001 \u2192 2025',
+        cagrNote: 'Dividend grew from $0.36 (2001, split-adjusted) to $2.04 (2025) over 24 years \u2014 a 7.5% annual compound growth rate. One of the most reliable dividend growth streaks in the S&P 500.',
+        rows: [
+          // 2025 — dividend declared, EPS not yet reported
+          { year: 2025, dividend: 2.04, dividendUnadjusted: 2.04 },
+          // 2015–2024: EPS available from income statement
+          { year: 2024, dividend: 1.94, dividendUnadjusted: 1.94, eps: 2.46, payout: 78.86 },
+          { year: 2023, dividend: 1.84, dividendUnadjusted: 1.84, eps: 2.47, payout: 74.49 },
+          { year: 2022, dividend: 1.76, dividendUnadjusted: 1.76, eps: 2.19, payout: 80.37 },
+          { year: 2021, dividend: 1.68, dividendUnadjusted: 1.68, eps: 2.25, payout: 74.67 },
+          { year: 2020, dividend: 1.64, dividendUnadjusted: 1.64, eps: 1.79, payout: 91.62 },
+          { year: 2019, dividend: 1.60, dividendUnadjusted: 1.60, eps: 2.07, payout: 77.29 },
+          { year: 2018, dividend: 1.56, dividendUnadjusted: 1.56, eps: 1.50, payout: 104.00, abnormal: true },
+          { year: 2017, dividend: 1.48, dividendUnadjusted: 1.48, eps: 0.29, payout: 510.34, abnormal: true, note: 'TCJA tax charge collapsed EPS to $0.29 \u2014 payout % is artificially distorted, not an operating issue.' },
+          { year: 2016, dividend: 1.40, dividendUnadjusted: 1.40, eps: 1.49, payout: 93.96 },
+          { year: 2015, dividend: 1.32, dividendUnadjusted: 1.32, eps: 1.67, payout: 79.04 },
+          // Pre-2015 — no EPS available, dividend only
+          { year: 2014, dividend: 1.22, dividendUnadjusted: 1.22 },
+          { year: 2013, dividend: 1.12, dividendUnadjusted: 1.12 },
+          { year: 2012, dividend: 1.02, dividendUnadjusted: 1.02, splitYear: true },
+          { year: 2011, dividend: 0.94, dividendUnadjusted: 0.94 },
+          { year: 2010, dividend: 0.88, dividendUnadjusted: 1.76 },
+          { year: 2009, dividend: 0.82, dividendUnadjusted: 1.64 },
+          { year: 2008, dividend: 0.76, dividendUnadjusted: 1.52 },
+          { year: 2007, dividend: 0.68, dividendUnadjusted: 1.36 },
+          { year: 2006, dividend: 0.62, dividendUnadjusted: 1.24 },
+          { year: 2005, dividend: 0.56, dividendUnadjusted: 1.12 },
+          { year: 2004, dividend: 0.50, dividendUnadjusted: 1.00 },
+          { year: 2003, dividend: 0.44, dividendUnadjusted: 0.88 },
+          { year: 2002, dividend: 0.40, dividendUnadjusted: 0.80 },
+          { year: 2001, dividend: 0.36, dividendUnadjusted: 0.72 },
+        ],
+      },
     },
 
     // Balance Sheet — pension plans (will be expanded later)
@@ -19386,31 +19424,96 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               marginBottom:'12px',
                             }}>
                               <div style={{marginBottom:'10px'}}>
-                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// DIVIDENDS PER SHARE · 25-YEAR HISTORY</div>
-                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{IS.dividends.note}</div>
+                                <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'3px'}}>// DIVIDENDS PER SHARE · {IS.dividends.rows.length}-YEAR HISTORY</div>
+                                {IS.dividends.note && (
+                                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px'}}>{IS.dividends.note}</div>
+                                )}
                               </div>
-                              <div style={{overflowX:'auto'}}>
-                                <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
-                                  <thead>
-                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
-                                      <th style={{textAlign:'left',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
-                                      <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EPS</th>
-                                      <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVIDEND</th>
-                                      <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PAYOUT %</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {IS.dividends.rows.map((r, i) => (
-                                      <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.08)',background: r.abnormal ? 'rgba(239,68,68,0.04)' : 'transparent'}}>
-                                        <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:600}}>{r.year}</td>
-                                        <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.eps.toFixed(2)}</td>
-                                        <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.8)'}}>${r.dividend.toFixed(2)}</td>
-                                        <td style={{padding:'5px 8px',textAlign:'right',color: r.abnormal ? 'rgba(239,68,68,0.95)' : 'rgba(224,234,255,0.8)',fontWeight: r.abnormal ? 700 : 400}}>{r.payout.toFixed(2)}%{r.abnormal ? ' ⚠' : ''}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
+
+                              {/* Stock split note if applicable */}
+                              {IS.dividends.splitNote && (
+                                <div style={{padding:'8px 10px',background:'rgba(245,158,11,0.04)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px',marginBottom:'10px',fontSize:'9px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:600}}>✂ STOCK SPLIT —</span> {IS.dividends.splitNote}
+                                </div>
+                              )}
+
+                              {(() => {
+                                // Detect if any row has dividendUnadjusted that differs from dividend (= stock split occurred)
+                                const hasSplit = IS.dividends.rows.some(r => r.dividendUnadjusted !== undefined && r.dividendUnadjusted !== r.dividend);
+                                // Detect if any row has eps (i.e. payout data)
+                                const hasPayout = IS.dividends.rows.some(r => r.eps !== undefined);
+                                return (
+                                  <div style={{overflowX:'auto'}}>
+                                    <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                          <th style={{textAlign:'left',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                          {hasPayout && <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>EPS</th>}
+                                          <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVIDEND{hasSplit ? ' (ADJ)' : ''}</th>
+                                          {hasSplit && <th style={{textAlign:'right',padding:'6px 8px',color:'rgba(148,163,184,0.5)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>UNADJ</th>}
+                                          {hasPayout && <th style={{textAlign:'right',padding:'6px 8px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PAYOUT %</th>}
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {IS.dividends.rows.map((r, i) => (
+                                          <React.Fragment key={i}>
+                                            <tr style={{
+                                              borderBottom:'0.5px solid rgba(245,158,11,0.08)',
+                                              background: r.abnormal ? 'rgba(239,68,68,0.04)' : (r.splitYear ? 'rgba(245,158,11,0.06)' : 'transparent'),
+                                            }}>
+                                              <td style={{padding:'5px 8px',color:'#e0eaff',fontWeight:600}}>
+                                                {r.year}
+                                                {r.splitYear && <span style={{marginLeft:'6px',fontSize:'8px',color:amber,fontWeight:700,letterSpacing:'1px'}}>✂ SPLIT</span>}
+                                              </td>
+                                              {hasPayout && (
+                                                <td style={{padding:'5px 8px',textAlign:'right',color: r.eps !== undefined ? 'rgba(224,234,255,0.8)' : 'rgba(148,163,184,0.3)'}}>
+                                                  {r.eps !== undefined ? '$' + r.eps.toFixed(2) : '—'}
+                                                </td>
+                                              )}
+                                              <td style={{padding:'5px 8px',textAlign:'right',color:'rgba(224,234,255,0.85)',fontWeight:500}}>${r.dividend.toFixed(2)}</td>
+                                              {hasSplit && (
+                                                <td style={{padding:'5px 8px',textAlign:'right',color: r.dividendUnadjusted !== undefined && r.dividendUnadjusted !== r.dividend ? 'rgba(148,163,184,0.7)' : 'rgba(148,163,184,0.3)',fontStyle:'italic'}}>
+                                                  {r.dividendUnadjusted !== undefined && r.dividendUnadjusted !== r.dividend ? '$' + r.dividendUnadjusted.toFixed(2) : '—'}
+                                                </td>
+                                              )}
+                                              {hasPayout && (
+                                                <td style={{padding:'5px 8px',textAlign:'right',color: r.abnormal ? 'rgba(239,68,68,0.95)' : (r.payout !== undefined ? 'rgba(224,234,255,0.8)' : 'rgba(148,163,184,0.3)'),fontWeight: r.abnormal ? 700 : 400}}>
+                                                  {r.payout !== undefined ? r.payout.toFixed(2) + '%' + (r.abnormal ? ' ⚠' : '') : '—'}
+                                                </td>
+                                              )}
+                                            </tr>
+                                            {r.note && (
+                                              <tr style={{background:'rgba(239,68,68,0.03)'}}>
+                                                <td colSpan={1 + (hasPayout ? 2 : 0) + 1 + (hasSplit ? 1 : 0)} style={{padding:'4px 8px 8px 8px',color:'rgba(239,68,68,0.85)',fontSize:'9px',fontFamily:'monospace',fontStyle:'italic',lineHeight:1.5,letterSpacing:'0.3px'}}>↑ {r.note}</td>
+                                              </tr>
+                                            )}
+                                          </React.Fragment>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Dividend CAGR callout */}
+                              {IS.dividends.cagr && (
+                                <div style={{
+                                  marginTop:'12px',
+                                  padding:'12px 14px',
+                                  background:'rgba(34,197,94,0.06)',
+                                  border:'0.5px solid rgba(34,197,94,0.35)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                  borderRadius:'3px',
+                                }}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>// DIVIDEND CAGR{IS.dividends.cagrPeriod ? ' · ' + IS.dividends.cagrPeriod : ''}</div>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'14px',marginBottom: IS.dividends.cagrNote ? '8px' : 0,flexWrap:'wrap'}}>
+                                    <div style={{fontSize:'28px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{IS.dividends.cagr}</div>
+                                  </div>
+                                  {IS.dividends.cagrNote && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{IS.dividends.cagrNote}</div>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           )}
 
