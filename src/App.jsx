@@ -5867,6 +5867,32 @@ const PEP_BREAKDOWN = {
       futureRisks: 'Future changes (climate laws, ESG reporting, water restrictions) could raise costs. Sugar taxes spreading globally are a particular watch item for the beverages business.',
       remediation: 'Ongoing environmental cleanup from historical operations and acquisitions; not expected to materially impact earnings.',
     },
+
+    // Properties — significant facilities by division (PEP-specific shape)
+    properties: {
+      preamble: 'Significant properties by division. Most plants are owned or leased on a long-term basis. PepsiCo also utilises a highly distributed network of plants, warehouses, and distribution centers owned or leased by contract manufacturers, co-packers, strategic alliances, or JVs in which it has an equity interest.',
+      byDivision: [
+        { division: 'FLNA',                                  type: 'Research & development facility', location: 'Plano, Texas',            status: 'Owned' },
+        { division: 'QFNA',                                  type: 'Convenient food plant',           location: 'Cedar Rapids, Iowa',     status: 'Owned' },
+        { division: 'PBNA',                                  type: 'Research & development facility', location: 'Valhalla, New York',      status: 'Owned' },
+        { division: 'PBNA',                                  type: 'Concentrate plant',               location: 'Arlington, Texas',       status: 'Owned' },
+        { division: 'LatAm',                                 type: 'Convenient food plant',           location: 'Celaya, Mexico',         status: 'Owned' },
+        { division: 'LatAm',                                 type: 'Two convenient food plants',      location: 'Vallejo, Mexico',        status: 'Owned' },
+        { division: 'Europe',                                type: 'Convenient food plant',           location: 'Leicester, United Kingdom', status: 'Owned', landLeased: true },
+        { division: 'Europe',                                type: 'Convenient food plant',           location: 'Kashira, Russia',        status: 'Owned' },
+        { division: 'Europe',                                type: 'Manufacturing plant',             location: 'Lehavim, Israel',        status: 'Owned' },
+        { division: 'Europe',                                type: 'Dairy plant',                     location: 'Moscow, Russia',         status: 'Owned' },
+        { division: 'AMESA',                                 type: 'Convenient food plant',           location: 'Riyadh, Saudi Arabia',   status: 'Owned', landLeased: true },
+        { division: 'APAC',                                  type: 'Convenient food plant',           location: 'Shanghai, China',        status: 'Owned', landLeased: true },
+        { division: 'FLNA, QFNA, PBNA, LatAm, Corporate',    type: 'Shared service center',           location: 'Mexico City, Mexico',    status: 'Leased' },
+        { division: 'PBNA, LatAm',                           type: 'Concentrate plant',               location: 'Colonia, Uruguay',       status: 'Owned', landLeased: true },
+        { division: 'PBNA, Europe, AMESA',                   type: 'Two concentrate plants',          location: 'Cork, Ireland',          status: 'Owned' },
+        { division: 'PBNA, AMESA, APAC',                     type: 'Concentrate plant',               location: 'Singapore',              status: 'Owned', landLeased: true },
+        { division: 'All divisions',                         type: 'Shared service center',           location: 'Hyderabad, India',       status: 'Leased' },
+      ],
+      landLeasedNote: 'Land on which these properties are located is leased.',
+      condition: 'PepsiCo believes its properties are generally in good operating condition and, taken as a whole, are suitable, adequate, and of sufficient capacity for current operations.',
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -6222,6 +6248,261 @@ const PEP_BREAKDOWN = {
 
       bottomLine: 'PEP is much more acquisitive than KO \u2014 11 major deals in 25 years vs KO\u2019s mostly bolt-on approach. The trade-off: PEP funds with cash/debt (avoids dilution since 2001), gets diversified scale across snacks + hydration + energy, but accepts higher operational and integration risk. Lower blended ROIC than KO due to snacks margins, but stronger growth optionality.',
     },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // RISKS — multi-layered risk profile
+  // ════════════════════════════════════════════════════════════════
+  risks: {
+    // Risk factors — Business / Financial / Legal-Tax-Regulatory (HSY .items shape)
+    riskFactors: {
+      categories: [
+        {
+          name: 'Business Risks',
+          items: [
+            { risk: 'Demand Shifts',              meaning: 'Missing consumer trends (health / "ultra-processed" backlash, weight-loss drugs, e-commerce channel shifts, private label trade-down) leads to lower volumes, write-offs, and market share loss.' },
+            { risk: 'Brand / Reputation Damage',  meaning: 'ESG / human rights concerns, product health perceptions, social media backlash, or political stances could trigger boycotts, lower demand, and regulatory scrutiny.' },
+            { risk: 'Product Quality & Recalls',  meaning: 'Mislabeling, contamination, or undeclared allergens (including at JVs) could cause recalls, fines, lost sales, and plant shutdowns.' },
+            { risk: 'Competition',                meaning: 'Coca-Cola in beverages plus many global / regional rivals and private labels create pricing pressure, shelf space loss, and higher marketing spend.' },
+            { risk: 'Talent & Workforce',         meaning: 'Hiring / retention challenges, wage inflation, turnover, succession (including CEO), and digital / AI skills gaps create execution risk, higher costs, and culture / reputation hits.' },
+            { risk: 'Water Scarcity',             meaning: 'Limited or low-quality water, rising compliance costs, and climate pressure could cause supply disruptions, capex needs, and higher cost to serve.' },
+            { risk: 'Retail Landscape Change',    meaning: 'Growth of e-commerce & hard discounters plus retailer consolidation & power means pricing / promotional pressure, reduced shelf space, and key-customer risk.' },
+            { risk: 'Supply Chain & Input Inflation', meaning: 'Wars, disasters, sole-source / seasonal shortages, and volatile commodities / packaging / fuel / transport / labor drive higher COGS, stockouts, and margin compression.' },
+            { risk: 'Geopolitical / Political',   meaning: 'Tariffs / sanctions, nationalization, currency controls, protests, and employee safety issues create cost / FX volatility, asset loss, and operational disruption.' },
+            { risk: 'Emerging Markets Execution', meaning: 'Regulation, ownership limits, inflation, FX controls, and weak legal systems can deliver returns below plan, trapped cash, and deconsolidation risk.' },
+            { risk: 'Macro Conditions',           meaning: 'Inflation, rates, recessions, credit tightening, and pension asset declines drive trade-down to cheaper brands and demand softness.' },
+            { risk: 'Cyber / IT Outages',         meaning: 'Ransomware, supply-chain attacks, and AI-enabled threats (plus remote work exposure) could cause operations downtime, data loss, fines, and reputational harm.' },
+            { risk: 'Third-Party & ERP Dependence', meaning: 'Failures by outsourcers / cloud providers or enterprise system migrations could cause disruptions, errors, extra costs, and reporting risks.' },
+            { risk: 'Climate & Sustainability',   meaning: 'Extreme weather plus carbon / water / plastics rules and reporting burdens could raise capex / opex, hit supply, and create litigation / reputation risk.' },
+            { risk: 'Strikes / Work Stoppages',   meaning: 'Unionized labor at the company or partners could cause production / distribution interruptions and higher costs.' },
+          ],
+        },
+        {
+          name: 'Financial Risks',
+          items: [
+            { risk: 'Productivity / Reorg Misses', meaning: 'Digitalization / shared services not delivering savings (or causing disruption) leads to margin shortfall, morale / attrition, and execution drag.' },
+            { risk: 'Impairments',                meaning: 'Goodwill / intangibles / investments (including JVs like TBG) marked down causes EPS hits and volatility in reported results.' },
+            { risk: 'FX Volatility',              meaning: 'Translation & transaction exposure across many currencies creates revenue / margin variability.' },
+            { risk: 'Credit Ratings',             meaning: 'A downgrade or watchlist status means higher borrowing costs and tighter liquidity / commercial paper access.' },
+          ],
+        },
+        {
+          name: 'Legal, Tax & Regulatory Risks',
+          items: [
+            { risk: 'Product Taxes',              meaning: 'Sugar / sweetener or snack taxes (flat, graduated, or threshold-based) force price increases, demand decline, and negative PR.' },
+            { risk: 'Marketing / Sales Limits',   meaning: 'HFSS placement bans, school restrictions, age limits, color-coded labels, and "ultra-processed" scrutiny lower consumption and force reformulation / packaging changes.' },
+            { risk: 'Packaging & Plastics Rules', meaning: 'EPR fees, recycled content mandates, deposit systems, PFAS / single-use bans, and tethered caps mean higher costs / capex, label changes, and demand shifts.' },
+            { risk: 'Data Privacy',               meaning: 'CCPA / CPRA, GDPR / UK GDPR, China PIPL, and others create compliance cost, fines, and litigation risk.' },
+            { risk: 'Tax Changes',                meaning: 'OECD 15% global minimum tax plus audits and enforcement drive a higher effective tax rate, uncertainty, and compliance cost.' },
+            { risk: 'IP Risks',                   meaning: 'Protecting formulas / brands / patents and defending infringement claims (including AI-related) means litigation, injunctions, product delays, and costs.' },
+            { risk: 'General Compliance',         meaning: 'Expanding ESG / AI reporting and evolving laws across markets raise costs, force reformulations, and create penalties if non-compliant.' },
+            { risk: 'Litigation & Investigations', meaning: 'Claims over labeling, marketing, ESG, environment, and employment cause expense, management distraction, and reputational harm.' },
+          ],
+        },
+      ],
+      tldr: 'PepsiCo faces a multi-layered risk profile \u2014 rising input costs, climate regulation, geopolitics, FX volatility, retailer power, and regulatory / taxation changes. Strong risk governance (Board + PepsiCo Risk Committee + hedging) helps mitigate, but exposure to global macro shocks remains material.',
+    },
+
+    // Cybersecurity (HSY .rows shape)
+    cyber: {
+      rows: [
+        {
+          category: 'Risk Posture & Leadership',
+          points: [
+            'Regularly targeted by cyberattacks; treats cyber risk within the Enterprise Risk Management (ERM) framework alongside other company risks',
+            'Information Security works with ERM; led by Chief Strategy & Transformation Officer and Chief Information Security Officer (CISO)',
+            'Program assessed against NIST (industry-leading cybersecurity framework)',
+          ],
+          meaning: 'PepsiCo treats cybersecurity as an enterprise-level risk with senior leadership ownership, not an isolated IT function.',
+        },
+        {
+          category: 'Testing & Assessments',
+          points: [
+            'Internal red-team / penetration testing',
+            'Independent third-party internal & external pen tests',
+            'Periodic capability assessments, tabletop exercises, and risk interviews',
+            'Information sharing with industry, law enforcement, and intelligence communities',
+          ],
+          meaning: 'PepsiCo continuously stress-tests its defenses through both internal and independent external testing.',
+        },
+        {
+          category: 'Training & Awareness',
+          points: [
+            'Mandatory computer-based training for employees',
+            'Internal communications campaigns',
+            'Regular phishing simulations with immediate feedback and remediation',
+          ],
+          meaning: 'The human layer is actively managed \u2014 PepsiCo trains and tests employees to reduce social-engineering risk.',
+        },
+        {
+          category: 'Third-Party Risk',
+          points: [
+            'Pre-contract risk evaluation using assessment repositories, external monitoring, threat intel, and predictive analytics',
+            'Contractual security requirements imposed on vendors',
+            'Issues tracked with ongoing monitoring',
+          ],
+          meaning: 'PepsiCo monitors not just its own systems but the security posture of its vendors and partners.',
+        },
+        {
+          category: 'Incident Response',
+          points: [
+            'Documented IR plan: preparation, detection, triage, escalation, containment, investigation, remediation, recovery',
+            'Disclosure / legal compliance and brand / reputation mitigation built in',
+            'Cross-functional coordination across the business',
+          ],
+          meaning: 'A formal, rehearsed incident response plan covers the full lifecycle from detection through disclosure.',
+        },
+        {
+          category: 'Insurance & Materiality',
+          points: [
+            'Maintains cyber insurance (subject to terms / conditions) to address certain incident costs',
+            'As of the 10-K date, no cybersecurity threats or past incidents have materially affected (or are reasonably likely to materially affect) the business',
+          ],
+          meaning: 'PepsiCo carries financial protection and reports no material cyber incidents to date \u2014 but insurance is not foolproof.',
+        },
+      ],
+    },
+
+    // Market Risks — PEP-specific $ exposure data
+    marketRisks: {
+      preamble: 'PepsiCo quantifies its derivative and currency exposures in its 10-K. These figures show the dollar sensitivity to adverse market moves \u2014 most of which are substantially offset by hedges.',
+      risks: [
+        {
+          name: 'Commodity Prices',
+          icon: '🌾',
+          exposure: '$1.4B derivative exposure (2024) vs $1.7B (2023)',
+          sensitivity: 'A 10% decline in commodity prices would increase net unrealized losses by ~$140M, partly offset by lower purchase costs.',
+          detail: 'Exposure to volatile commodity prices (corn, sugar, fuel, packaging). Managed with fixed-price contracts, purchase orders, pricing agreements, and derivatives (swaps / futures).',
+        },
+        {
+          name: 'Foreign Exchange',
+          icon: '🌍',
+          exposure: '$3.1B FX derivative exposure (2024)',
+          sensitivity: 'A 10% unfavorable move = ~$319M hit, mostly offset by hedges. Cross-currency swaps add $1.2B exposure (10% move = ~$107M hit). Debt hedges: $2.9B.',
+          detail: '44% of 2024 revenue came from international markets. Key exposure: Mexico, Russia, Canada, China, UK, South Africa, Brazil (~25% combined). 2024 FX reduced revenue growth by 1.5% (mainly Egyptian pound, ruble, peso, real).',
+        },
+        {
+          name: 'Interest Rates & Market Conditions',
+          icon: '📊',
+          exposure: 'Affects cost of debt + fair value of derivatives',
+          sensitivity: 'Rate fluctuations affect cost of debt, fair value of derivatives, goodwill / intangible assets, and pension / retiree plan assets.',
+          detail: 'Inflation / deflation also impacts demand and pricing power. Market conditions feed into multiple line items simultaneously.',
+        },
+      ],
+      keyExposures: {
+        russia: { label: 'Russia', revenue: '4% of revenue', assets: '3% of assets', note: '~40% of currency translation adjustment loss.' },
+        ukraine: { label: 'Ukraine', revenue: '<1% of revenue', assets: '<1% of assets', note: 'Limited direct financial exposure.' },
+      },
+      oecdTax: 'OECD 15% global minimum tax expected to be widely implemented by 2025 \u2014 may increase PepsiCo\u2019s global tax burden and impact income tax provisions.',
+    },
+
+    // Restructuring & Impairment — 2019 Productivity Plan
+    restructuring: {
+      title: '2019 Productivity Plan',
+      summary: 'A company-wide cost-saving & efficiency program \u2014 simplify the organization, automate processes, optimize manufacturing & supply chain, and cut duplication. Originally a smaller $3.65B plan, now expanded to $6.15B pre-tax charges and extended from 2019 through 2030.',
+      keyStats: [
+        { label: 'TOTAL COST', value: '~$6.15B', sub: 'pre-tax (expanded from original $3.65B)' },
+        { label: 'TIMEFRAME', value: '2019\u20132030', sub: 'extended from original plan' },
+        { label: 'SPENT TO DATE', value: '$2.63B', sub: 'through end of 2024' },
+        { label: 'CASH COSTS', value: '~$5.1B', sub: 'of total; ~$1.05B non-cash write-downs' },
+      ],
+      chargeBreakdown: [
+        { category: 'Severance / Employee Costs', pct: 55, note: 'Severance, terminations, early retirement' },
+        { category: 'Other Costs',                 pct: 35, note: 'Consultants, contract termination, system changes' },
+        { category: 'Asset Impairments',           pct: 10, note: 'Closing plants or writing down assets' },
+      ],
+      byRegion: [
+        { region: 'PBNA (Beverages NA)', pct: 25 },
+        { region: 'Europe',               pct: 25 },
+        { region: 'FLNA (Frito-Lay NA)',  pct: 15 },
+        { region: 'Corporate',            pct: 15 },
+        { region: 'LatAm',                pct: 10 },
+        { region: 'AMESA',                pct: 5 },
+        { region: 'APAC',                 pct: 4 },
+        { region: 'QFNA (Quaker NA)',     pct: 1 },
+      ],
+      annualCharges: [
+        { year: 2022, pretax: 411, afterTax: 334, eps: -0.24 },
+        { year: 2023, pretax: 445, afterTax: 349, eps: -0.25 },
+        { year: 2024, pretax: 727, afterTax: 563, eps: -0.41 },
+      ],
+      planToDate: 'Through end of 2024, total spent = $2.63B ($1.43B severance, $306M impairments, $887M other costs). Remaining $364M liability at Dec 2024, most to be paid by end of 2025.',
+      takeaway: 'A long-term ($6.15B) investment to cut costs and modernize operations. Most charges are severance + consulting; impairments (plant closures / write-offs) are smaller. Annual charges lower reported EPS now (\u2013$0.24 to \u2013$0.41 per share) but aim to improve long-term margins and efficiency. Europe & North America Beverages are the biggest restructuring focus.',
+    },
+
+    // Contingencies — legal / audit / uncertain tax (PEP-specific shape)
+    contingencies: {
+      items: [
+        { topic: 'Legal Contingencies',  detail: 'PepsiCo faces litigation, claims, regulatory proceedings, inquiries, and investigations. Management does not expect any of these to materially impact financial condition, results, or cash flow.', takeaway: 'Legal risks exist, but no major expected financial damage.' },
+        { topic: 'Audit Opinion (2024)', detail: 'Independent auditors (PCAOB-registered) gave a clean / unqualified opinion: financial statements fairly present results; internal controls are effective (no material weaknesses).', takeaway: 'Financial reporting considered reliable and compliant with U.S. GAAP.' },
+        { topic: 'Internal Controls',     detail: 'Policies and procedures to ensure accurate financial reporting, authorized transactions, and safeguarding of assets. Limitations exist due to human error or changes in conditions.', takeaway: 'Controls are strong, but not infallible.' },
+      ],
+      criticalAuditMatter: {
+        title: 'Critical Audit Matter (CAM): Unrecognized Tax Benefits',
+        reserve: '$2.3B',
+        detail: 'PepsiCo recorded $2.3B in reserves for uncertain tax positions. Complexity arises due to global operations, varying tax laws, transfer pricing, and settlement history. Requires judgment on timing and amount of reserves.',
+        auditProcedures: 'Auditors tested controls around identifying / evaluating uncertain tax positions, used tax experts to assess PepsiCo\u2019s interpretation of laws / court rulings / settlements, and reviewed transfer pricing, external legal opinions, and ongoing tax examinations.',
+        flag: 'Auditors highlighted this as the most complex / judgment-heavy area of the audit.',
+      },
+      plainEnglish: 'PepsiCo is not facing any game-changing lawsuits. Auditors gave a clean bill of health on both financials and internal controls. The only tricky area flagged: uncertain tax positions ($2.3B reserves), because tax law is complex and requires judgment about future settlements.',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  // THESIS — pep+ (PepsiCo Positive) future strategy
+  // ════════════════════════════════════════════════════════════════
+  thesis: {
+    vision: 'pep+ (PepsiCo Positive) is PepsiCo\u2019s long-term transformation strategy \u2014 aimed at sustainable growth by reshaping the supply chain, portfolio, and organisational capabilities while aligning with consumer needs and environmental goals.',
+    strategicImperatives: [
+      {
+        number: '01',
+        title: 'Sustainable Operations & Supply Chain',
+        points: [
+          'Invest in regenerative agriculture \u2014 training farmers, adapting to climate change, deploying new technologies.',
+          'Operate net-zero water and energy facilities in many markets.',
+          'Electrify transport fleets and accelerate use of recycled plastics.',
+          'Goal: build resilience, lower costs, strengthen supply chain, and enhance shareholder value.',
+        ],
+      },
+      {
+        number: '02',
+        title: 'Portfolio Transformation',
+        points: [
+          'Reformulate products to reduce sodium, sugar, and saturated fat.',
+          'Incorporate diverse, nutritious ingredients.',
+          'Expand occasions & experiences for consumers within existing brands.',
+          'Acquire complementary food & beverage brands to expand the portfolio.',
+        ],
+      },
+      {
+        number: '03',
+        title: 'Consumer-Centric Growth',
+        points: [
+          'More personalisation, value, and choice for consumers.',
+          'Invest in innovation and experiences without sacrificing taste or quality.',
+          'Use AI and advanced tech to optimise supply chain, reduce waste, and improve speed to market.',
+        ],
+      },
+      {
+        number: '04',
+        title: 'Organisational Realignment',
+        points: [
+          'North America: combine U.S. Foods & Beverages into a single region \u2014 synergies across supply chain, inventory, and logistics for a stronger go-to-market strategy.',
+          'Expand better-for-you foods and drinks to meet health-focused trends.',
+          'International: reorganise food & beverage operations into distinct categories with the right resources per market.',
+        ],
+      },
+      {
+        number: '05',
+        title: 'Productivity & Efficiency',
+        points: [
+          'Record productivity in 2024 driven by automation, frontline empowerment, transportation optimisation, and waste elimination.',
+          'Productivity savings fuel reinvestment into brands, capabilities, and innovation.',
+          'The 2019 Productivity Plan ($6.15B, extended to 2030) underpins this imperative \u2014 see the Risks tab for detail.',
+        ],
+      },
+    ],
+    bigPicture: 'Near-term, PepsiCo aims to meet consumer demand, protect margins, drive market share, and stay agile in inflationary conditions. Long-term, the goal is sustainable, resilient growth by aligning with global consumer trends and ESG expectations while delivering value for all stakeholders \u2014 shareholders, employees, customers, and communities. pep+ ties these together: reshape the supply chain (sustainable), reshape the portfolio (healthier), and reshape the organisation (Foods + Beverages combined in North America).',
   },
 };
 
@@ -17263,7 +17544,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           )}
 
                           {/* PROPERTIES / FACILITIES */}
-                          {properties && (() => {
+                          {properties && properties.facilities && (() => {
                             // Group facilities by country, then sub-group by type within country
                             const typeOrder = [
                               { match: /Manufacturing.*confectionery/i, label: 'Manufacturing · Confectionery' },
@@ -17397,6 +17678,60 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                               </>
                             );
                           })()}
+
+                          {/* PROPERTIES (PEP shape) — significant facilities by division */}
+                          {properties && properties.byDivision && (
+                            <>
+                              <SectionHeading>// SIGNIFICANT PROPERTIES · {properties.byDivision.length} FACILITIES</SectionHeading>
+                              {properties.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{properties.preamble}</div>
+                              )}
+
+                              <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                                <table style={{width:'100%',minWidth:'560px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                  <thead>
+                                    <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                      <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>DIVISION</th>
+                                      <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>PROPERTY TYPE</th>
+                                      <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>LOCATION</th>
+                                      <th style={{textAlign:'center',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>STATUS</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {properties.byDivision.map((p, i) => {
+                                      const isLeased = p.status === 'Leased';
+                                      return (
+                                        <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                          <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight:600,letterSpacing:'0.3px',fontSize:'9px'}}>{p.division}</td>
+                                          <td style={{padding:'6px 10px',color:'rgba(224,234,255,0.8)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{p.type}</td>
+                                          <td style={{padding:'6px 10px',color:'rgba(224,234,255,0.85)',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>
+                                            {p.location}
+                                            {p.landLeased && <span style={{marginLeft:'5px',fontSize:'8px',color:amber,fontWeight:700}} title="Land is leased">⁽ᵃ⁾</span>}
+                                          </td>
+                                          <td style={{padding:'6px 10px',textAlign:'center',borderLeft:`0.5px solid ${amberGlow}`}}>
+                                            <span style={{padding:'1px 7px',background: isLeased ? 'rgba(245,158,11,0.10)' : 'rgba(34,197,94,0.10)',border:`0.5px solid ${isLeased ? amber : 'rgba(34,197,94,0.5)'}`,borderRadius:'2px',fontSize:'9px',color: isLeased ? amber : 'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{p.status}</span>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                  </tbody>
+                                </table>
+                              </div>
+
+                              {properties.landLeasedNote && (
+                                <div style={{fontSize:'9px',color:'rgba(148,163,184,0.6)',fontFamily:'monospace',marginBottom:'8px',lineHeight:1.4,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:700}}>⁽ᵃ⁾</span> {properties.landLeasedNote}
+                                </div>
+                              )}
+
+                              {properties.condition && (
+                                <div style={{padding:'8px 12px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  {properties.condition}
+                                </div>
+                              )}
+                            </>
+                          )}
+
                           {/* DISTRIBUTION SYSTEM — global empire stats */}
                           {distribution && distribution.headlineStats && (
                             <>
@@ -19197,7 +19532,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                     // === RISKS TAB ===
                     const renderRisksTab = () => {
                       if (!bd.risks) return null;
-                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges } = bd.risks;
+                      const { riskFactors, cyber, macroTrends, foodQuality, environmental, purchaseObligations, contingencies, erm, governmentalRegulation, commitmentsAndContingencies, contractualObligations, derivatives, challenges, marketRisks, restructuring } = bd.risks;
 
                       // Shared panel style for cyber + macro rows
                       const InfoPanel = ({ category, points, meaning }) => (
@@ -19601,7 +19936,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           })()}
 
                           {/* CONTINGENCIES — Environmental + Legal + Labor */}
-                          {contingencies && (
+                          {contingencies && (contingencies.environmental || contingencies.legal || contingencies.labor) && (
                             <>
                               <SectionHeading>// CONTINGENCIES</SectionHeading>
                               <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>Environmental, legal, and labor exposures disclosed in financial statements.</div>
@@ -20132,6 +20467,237 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   </div>
                                 ))}
                               </div>
+                            </>
+                          )}
+
+                          {/* ════════════════════════════════════════════════ */}
+                          {/* PEP-SPECIFIC RISK RENDER BLOCKS */}
+                          {/* ════════════════════════════════════════════════ */}
+
+                          {/* MARKET RISKS — $ exposure quantification */}
+                          {marketRisks && marketRisks.risks && (
+                            <>
+                              <SectionHeading>// MARKET RISKS · QUANTIFIED EXPOSURE</SectionHeading>
+                              {marketRisks.preamble && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{marketRisks.preamble}</div>
+                              )}
+
+                              <div style={{display:'flex',flexDirection:'column',gap:'6px',marginBottom:'10px'}}>
+                                {marketRisks.risks.map((r, i) => (
+                                  <div key={i} style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                    <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'6px'}}>
+                                      {r.icon && <span style={{fontSize:'16px'}}>{r.icon}</span>}
+                                      <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.name}</span>
+                                    </div>
+                                    {r.exposure && (
+                                      <div style={{padding:'6px 9px',background:'rgba(245,158,11,0.06)',border:`0.5px solid ${amber}`,borderRadius:'2px',marginBottom:'5px'}}>
+                                        <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'2px'}}>// EXPOSURE</div>
+                                        <div style={{fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{r.exposure}</div>
+                                      </div>
+                                    )}
+                                    {r.sensitivity && (
+                                      <div style={{padding:'6px 9px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px',marginBottom:'5px'}}>
+                                        <div style={{fontSize:'8px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'2px'}}>// SENSITIVITY</div>
+                                        <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{r.sensitivity}</div>
+                                      </div>
+                                    )}
+                                    {r.detail && (
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{r.detail}</div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Russia / Ukraine key exposures */}
+                              {marketRisks.keyExposures && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'6px',marginBottom:'8px'}}>
+                                  {Object.values(marketRisks.keyExposures).map((e, i) => (
+                                    <div key={i} style={{padding:'10px 12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.7)',borderRadius:'2px'}}>
+                                      <div style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'4px'}}>{e.label}</div>
+                                      <div style={{display:'flex',gap:'10px',marginBottom:'3px',flexWrap:'wrap'}}>
+                                        <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:600}}>{e.revenue}</span>
+                                        <span style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace'}}>·</span>
+                                        <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:600}}>{e.assets}</span>
+                                      </div>
+                                      <div style={{fontSize:'9px',color:'rgba(224,234,255,0.7)',fontFamily:'monospace',lineHeight:1.4,letterSpacing:'0.3px',fontStyle:'italic'}}>{e.note}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* OECD tax note */}
+                              {marketRisks.oecdTax && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'12px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:700}}>OECD Minimum Tax —</span> {marketRisks.oecdTax}
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* RESTRUCTURING — 2019 Productivity Plan */}
+                          {restructuring && (
+                            <>
+                              <SectionHeading>// RESTRUCTURING · {restructuring.title ? restructuring.title.toUpperCase() : 'PRODUCTIVITY PLAN'}</SectionHeading>
+                              {restructuring.summary && (
+                                <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{restructuring.summary}</div>
+                              )}
+
+                              {/* Key stats grid */}
+                              {restructuring.keyStats && restructuring.keyStats.length > 0 && (
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'6px',marginBottom:'10px'}}>
+                                  {restructuring.keyStats.map((s, i) => (
+                                    <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <div style={{fontSize:'8px',color:amberDim,fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600,marginBottom:'3px'}}>// {s.label}</div>
+                                      <div style={{fontSize:'16px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'2px'}}>{s.value}</div>
+                                      {s.sub && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',lineHeight:1.3,letterSpacing:'0.3px'}}>{s.sub}</div>}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Charge breakdown — horizontal bars */}
+                              {restructuring.chargeBreakdown && restructuring.chargeBreakdown.length > 0 && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px',marginBottom:'8px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>// CHARGE BREAKDOWN</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                                    {restructuring.chargeBreakdown.map((c, i) => (
+                                      <div key={i}>
+                                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',marginBottom:'3px'}}>
+                                          <span style={{fontSize:'10px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>{c.category}</span>
+                                          <span style={{fontSize:'12px',color:amber,fontFamily:'monospace',fontWeight:700}}>{c.pct}%</span>
+                                        </div>
+                                        <div style={{width:'100%',height:'8px',background:'rgba(0,0,0,0.5)',border:'0.5px solid rgba(245,158,11,0.15)',borderRadius:'2px',overflow:'hidden',marginBottom:'2px'}}>
+                                          <div style={{width: `${c.pct}%`,height:'100%',background:amber,opacity:0.7}}/>
+                                        </div>
+                                        {c.note && <div style={{fontSize:'9px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.3px',fontStyle:'italic'}}>{c.note}</div>}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* By region + annual charges side by side */}
+                              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'6px',marginBottom:'8px'}}>
+                                {/* By region */}
+                                {restructuring.byRegion && restructuring.byRegion.length > 0 && (
+                                  <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                    <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>// BY REGION / DIVISION</div>
+                                    <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+                                      {restructuring.byRegion.map((r, i) => (
+                                        <div key={i} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                          <span style={{fontSize:'9px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',letterSpacing:'0.3px',minWidth:'130px'}}>{r.region}</span>
+                                          <div style={{flex:1,height:'6px',background:'rgba(0,0,0,0.5)',borderRadius:'2px',overflow:'hidden'}}>
+                                            <div style={{width: `${r.pct * 4}%`,height:'100%',background:amber,opacity:0.7}}/>
+                                          </div>
+                                          <span style={{fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,minWidth:'30px',textAlign:'right'}}>{r.pct}%</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Annual charges */}
+                                {restructuring.annualCharges && restructuring.annualCharges.length > 0 && (
+                                  <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                    <div style={{fontSize:'9px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'8px'}}>// ANNUAL CHARGES (EPS IMPACT)</div>
+                                    <div style={{overflowX:'auto'}}>
+                                      <table style={{width:'100%',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px'}}>
+                                        <thead>
+                                          <tr style={{borderBottom:`0.5px solid ${amberGlow}`}}>
+                                            <th style={{textAlign:'left',padding:'5px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                            <th style={{textAlign:'right',padding:'5px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>PRE-TAX</th>
+                                            <th style={{textAlign:'right',padding:'5px 6px',color:amberDim,letterSpacing:'1px',fontWeight:600,fontSize:'9px'}}>EPS</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {restructuring.annualCharges.map((a, i) => (
+                                            <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)'}}>
+                                              <td style={{padding:'5px 6px',color:'#e0eaff',fontWeight:600}}>{a.year}</td>
+                                              <td style={{padding:'5px 6px',textAlign:'right',color:'rgba(224,234,255,0.85)'}}>${a.pretax}M</td>
+                                              <td style={{padding:'5px 6px',textAlign:'right',color:'rgba(239,68,68,0.95)',fontWeight:700}}>${a.eps.toFixed(2)}</td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Plan to date */}
+                              {restructuring.planToDate && (
+                                <div style={{padding:'8px 12px',background:'rgba(245,158,11,0.04)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',marginBottom:'8px',fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                  <span style={{color:amber,fontWeight:700}}>Plan-to-date —</span> {restructuring.planToDate}
+                                </div>
+                              )}
+
+                              {/* Takeaway */}
+                              {restructuring.takeaway && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{restructuring.takeaway}</div>
+                                </div>
+                              )}
+                            </>
+                          )}
+
+                          {/* CONTINGENCIES (PEP shape) — legal / audit / CAM */}
+                          {contingencies && contingencies.items && (
+                            <>
+                              <SectionHeading>// CONTINGENCIES</SectionHeading>
+                              <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'10px'}}>
+                                {contingencies.items.map((c, i) => (
+                                  <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px'}}>
+                                    <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'5px'}}>{c.topic}</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'5px'}}>{c.detail}</div>
+                                    {c.takeaway && (
+                                      <div style={{padding:'5px 8px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.25)',borderRadius:'2px'}}>
+                                        <span style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginRight:'6px'}}>→</span>
+                                        <span style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',letterSpacing:'0.3px'}}>{c.takeaway}</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Critical Audit Matter — flagged panel */}
+                              {contingencies.criticalAuditMatter && (
+                                <div style={{
+                                  background:'linear-gradient(160deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)',
+                                  border:'0.5px solid rgba(239,68,68,0.5)',
+                                  borderLeft:'2px solid rgba(239,68,68,0.95)',
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'10px',
+                                }}>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                    <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>⚠ {contingencies.criticalAuditMatter.title}</span>
+                                    {contingencies.criticalAuditMatter.reserve && (
+                                      <span style={{padding:'2px 8px',background:'rgba(239,68,68,0.15)',border:'0.5px solid rgba(239,68,68,0.5)',borderRadius:'3px',fontSize:'13px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px'}}>{contingencies.criticalAuditMatter.reserve}</span>
+                                    )}
+                                  </div>
+                                  {contingencies.criticalAuditMatter.detail && (
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'8px'}}>{contingencies.criticalAuditMatter.detail}</div>
+                                  )}
+                                  {contingencies.criticalAuditMatter.auditProcedures && (
+                                    <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.4)',border:'0.5px solid rgba(239,68,68,0.3)',borderRadius:'2px',marginBottom:'6px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:700,marginBottom:'3px'}}>// AUDIT PROCEDURES</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.8)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{contingencies.criticalAuditMatter.auditProcedures}</div>
+                                    </div>
+                                  )}
+                                  {contingencies.criticalAuditMatter.flag && (
+                                    <div style={{fontSize:'10px',color:'rgba(239,68,68,0.9)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>{contingencies.criticalAuditMatter.flag}</div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Plain English */}
+                              {contingencies.plainEnglish && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ PLAIN ENGLISH</div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{contingencies.plainEnglish}</div>
+                                </div>
+                              )}
                             </>
                           )}
                         </div>
@@ -22201,7 +22767,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {strategicImperatives && strategicImperatives.length > 0 && (
                             <>
                               <SectionHeading>// STRATEGIC IMPERATIVES · {strategicImperatives.length}</SectionHeading>
-                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The four pillars guiding Hershey’s capital allocation and operating decisions.</div>
+                              <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>The {strategicImperatives.length === 4 ? 'four' : strategicImperatives.length === 5 ? 'five' : strategicImperatives.length} pillars guiding {selected.name}\u2019s capital allocation and operating decisions.</div>
                               <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'4px'}}>
                                 {strategicImperatives.map((imp, i) => (
                                   <div key={i} style={{
