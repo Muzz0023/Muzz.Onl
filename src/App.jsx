@@ -21154,6 +21154,78 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   </div>
                 </div>
 
+                {/* Tier system explainer */}
+                <div style={{
+                  background:'rgba(15,10,2,0.85)',
+                  border:`0.5px solid ${amberGlow}`,
+                  borderRadius:'6px',
+                  padding:'14px 16px',
+                }}>
+                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>// COVERAGE TIERS</div>
+                  <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',marginBottom:'12px'}}>
+                    Each company is assigned a tier that reflects how deep the breakdown goes. The tier sets expectations for what you'll find inside.
+                  </div>
+
+                  {/* Three tier cards */}
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'8px',marginBottom:'10px'}}>
+                    {/* Tier 1 — full green */}
+                    <div style={{
+                      background:'rgba(34,197,94,0.06)',
+                      border:'0.5px solid rgba(34,197,94,0.35)',
+                      borderLeft:'2px solid rgba(34,197,94,0.85)',
+                      borderRadius:'3px',
+                      padding:'10px 12px',
+                    }}>
+                      <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'4px'}}>
+                        <span style={{padding:'2px 8px',background:'rgba(34,197,94,0.15)',border:'0.5px solid rgba(34,197,94,0.5)',borderRadius:'3px',fontSize:'10px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1.5px'}}>TIER 1</span>
+                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>Very Detailed</span>
+                      </div>
+                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                        Full breakdown across every tab. Multi-year income statement, balance sheet, and cash flow. Detailed brand portfolio, moat analysis, leadership and board, and segment data. Comprehensive risk factors and contractual commitments.
+                      </div>
+                    </div>
+
+                    {/* Tier 2 — amber/orange */}
+                    <div style={{
+                      background:'rgba(245,158,11,0.06)',
+                      border:`0.5px solid ${amber}`,
+                      borderLeft:`2px solid ${amber}`,
+                      borderRadius:'3px',
+                      padding:'10px 12px',
+                    }}>
+                      <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'4px'}}>
+                        <span style={{padding:'2px 8px',background:'rgba(245,158,11,0.15)',border:`0.5px solid ${amber}`,borderRadius:'3px',fontSize:'10px',color:amber,fontFamily:'monospace',fontWeight:700,letterSpacing:'1.5px'}}>TIER 2</span>
+                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>Semi-Detailed</span>
+                      </div>
+                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                        Moderate depth. Solid overview, moat assessment, key financial metrics, thesis and main risks. Some sections may be light or not yet populated. Enough to form an investment view, but not exhaustive.
+                      </div>
+                    </div>
+
+                    {/* Tier 3 — neutral grey */}
+                    <div style={{
+                      background:'rgba(148,163,184,0.05)',
+                      border:'0.5px solid rgba(148,163,184,0.35)',
+                      borderLeft:'2px solid rgba(148,163,184,0.7)',
+                      borderRadius:'3px',
+                      padding:'10px 12px',
+                    }}>
+                      <div style={{display:'flex',alignItems:'baseline',gap:'8px',marginBottom:'4px'}}>
+                        <span style={{padding:'2px 8px',background:'rgba(148,163,184,0.15)',border:'0.5px solid rgba(148,163,184,0.5)',borderRadius:'3px',fontSize:'10px',color:'rgba(203,213,225,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'1.5px'}}>TIER 3</span>
+                        <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.3px'}}>Basic</span>
+                      </div>
+                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                        High-level reference only. Overview, business description, and broad thesis. No detailed financial breakdown. Use these as a starting point &mdash; not enough on their own for an investment decision.
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Disclaimer about tier movement */}
+                  <div style={{padding:'8px 12px',background:'rgba(0,0,0,0.3)',borderLeft:`2px solid ${amberDim}`,borderRadius:'2px',fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px',fontStyle:'italic'}}>
+                    <span style={{color:amber,fontStyle:'normal',fontWeight:700}}>Note —</span> Tiers reflect the <span style={{color:amber,fontStyle:'normal',fontWeight:700}}>current</span> depth of research, not a permanent rating. As research deepens on a company, it can move <span style={{color:'rgba(34,197,94,0.95)',fontStyle:'normal',fontWeight:700}}>up a tier</span>. A Tier 3 today may be a Tier 1 next year.
+                  </div>
+                </div>
+
                 {/* Breadcrumb */}
                 <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',fontSize:'10px',fontFamily:'monospace',letterSpacing:'1px'}}>
                   <button onClick={() => { setCoverageIndustry(null); setCoverageCountry(null); }}
