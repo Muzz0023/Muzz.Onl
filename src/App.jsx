@@ -6242,42 +6242,58 @@ const PEP_BREAKDOWN = {
       operatingCashFlow: {
         label: 'Operating Cash Flow', unit: 'M USD',
         series: [
+          { year: 2003, value: 4328 }, { year: 2004, value: 5054 }, { year: 2005, value: 4328, down: true },
+          { year: 2006, value: 5540 }, { year: 2007, value: 5852 }, { year: 2008, value: 6084 },
+          { year: 2009, value: 6767 }, { year: 2010, value: 8448 }, { year: 2011, value: 8944 },
+          { year: 2012, value: 8479, down: true }, { year: 2013, value: 9688 }, { year: 2014, value: 9513, down: true },
           { year: 2015, value: 10580 }, { year: 2016, value: 10663 }, { year: 2017, value: 10030, down: true },
           { year: 2018, value: 9415, down: true }, { year: 2019, value: 9649 }, { year: 2020, value: 10613 },
           { year: 2021, value: 11616 }, { year: 2022, value: 10811, down: true }, { year: 2023, value: 13442 },
           { year: 2024, value: 12507, down: true },
         ],
-        note: 'Operating cash flow grew from ~$10.6B (2015) to ~$12.5B (2024), peaking at $13.4B in 2023. Consistently strong cash generation \u2014 the engine that funds dividends, buybacks, and capex.',
+        note: 'Operating cash flow grew from ~$4.3B (2003) to ~$12.5B (2024), peaking at $13.4B in 2023. Consistently strong cash generation \u2014 the engine that funds dividends, buybacks, and capex. Full 22-year history shown.',
       },
       capex: {
         label: 'Capital Expenditures', unit: 'M USD',
         series: [
+          { year: 2003, value: 1345 }, { year: 2004, value: 1387 }, { year: 2005, value: 1736 },
+          { year: 2006, value: 2068 }, { year: 2007, value: 2430 }, { year: 2008, value: 2446 },
+          { year: 2009, value: 2128 }, { year: 2010, value: 3253 }, { year: 2011, value: 3339 },
+          { year: 2012, value: 2714 }, { year: 2013, value: 2625 }, { year: 2014, value: 4937 },
           { year: 2015, value: 3569 }, { year: 2016, value: 3040 }, { year: 2017, value: 2969 },
           { year: 2018, value: 3282 }, { year: 2019, value: 4232 }, { year: 2020, value: 4240 },
           { year: 2021, value: 4625 }, { year: 2022, value: 5207 }, { year: 2023, value: 5518 },
           { year: 2024, value: 5318 },
         ],
-        note: 'CapEx rose from ~$3B (2016\u201317) to ~$5.3B (2024) as PEP invested heavily in capacity, automation, and supply-chain modernisation (the pep+ productivity agenda). Higher than KO because PEP owns its manufacturing and bottling.',
+        note: 'CapEx rose from ~$1.3B (2003) to ~$5.3B (2024) as PEP invested heavily in capacity, automation, and supply-chain modernisation (the pep+ productivity agenda). Higher than KO because PEP owns its manufacturing and bottling. Full 22-year history shown.',
       },
       capexRatio: {
         label: 'CapEx as % of Operating Cash Flow', unit: '%',
         series: [
+          { year: 2003, value: 31.1 }, { year: 2004, value: 27.5 }, { year: 2005, value: 40.1 },
+          { year: 2006, value: 37.3 }, { year: 2007, value: 41.5 }, { year: 2008, value: 40.2 },
+          { year: 2009, value: 31.5 }, { year: 2010, value: 38.5 }, { year: 2011, value: 37.3 },
+          { year: 2012, value: 32.0 }, { year: 2013, value: 27.1 }, { year: 2014, value: 51.9 },
           { year: 2015, value: 33.7 }, { year: 2016, value: 28.5 }, { year: 2017, value: 29.6 },
           { year: 2018, value: 34.9 }, { year: 2019, value: 43.8 }, { year: 2020, value: 39.9 },
           { year: 2021, value: 39.8 }, { year: 2022, value: 48.2 }, { year: 2023, value: 41.0 },
           { year: 2024, value: 42.5 },
         ],
-        note: '10-year average ~41%. PEP reinvests roughly 40 cents of every operating cash dollar back into the business \u2014 meaningfully more capital-intensive than KO (asset-light concentrate model). The rising trend reflects pep+ supply-chain investment. 5-yr avg 42.9% vs 20-yr avg 37.2%.',
+        note: 'PEP reinvests roughly 40 cents of every operating cash dollar back into the business \u2014 meaningfully more capital-intensive than KO (asset-light concentrate model). The rising trend reflects pep+ supply-chain investment. Averages: 5-yr 42.9% \u00b7 10-yr 40.8% \u00b7 20-yr 37.2%. Full 22-year history shown.',
       },
       freeCashFlow: {
         label: 'Free Cash Flow', unit: 'M USD',
         series: [
+          { year: 2005, value: 4116 }, { year: 2006, value: 4016, down: true }, { year: 2007, value: 4504 },
+          { year: 2008, value: 4553 }, { year: 2009, value: 4668 }, { year: 2010, value: 5195 },
+          { year: 2011, value: 5605 }, { year: 2012, value: 5765 }, { year: 2013, value: 6893 },
+          { year: 2014, value: 7647 },
           { year: 2015, value: 7822 }, { year: 2016, value: 7623, down: true }, { year: 2017, value: 7061, down: true },
           { year: 2018, value: 6133, down: true }, { year: 2019, value: 5417, down: true }, { year: 2020, value: 6373 },
           { year: 2021, value: 6991 }, { year: 2022, value: 5604, down: true }, { year: 2023, value: 7904 },
           { year: 2024, value: 7189, down: true },
         ],
-        note: 'FCF (operating cash flow minus capex) has ranged $5.4\u20137.9B over the decade. The dip from 2017\u201319 reflects rising capex outpacing cash-flow growth. 13 of 20 years have been "good" (up) years. FCF comfortably covers the dividend, though the payout consumes a large share.',
+        note: 'FCF (operating cash flow minus capex) grew from ~$4.1B (2005) to ~$7.2B (2024). The dip from 2017\u201319 reflects rising capex outpacing cash-flow growth. Over the full 20-year window, 13 of 20 years were "good" (up) years and 7 were down. FCF comfortably covers the dividend, though the payout consumes a large share.',
       },
     },
 
@@ -6298,6 +6314,8 @@ const PEP_BREAKDOWN = {
       accountsReceivable: {
         label: 'Accounts Receivable, net', unit: 'M USD',
         series: [
+          { year: 2010, value: 6323 }, { year: 2011, value: 6912 }, { year: 2012, value: 7041 },
+          { year: 2013, value: 6954 }, { year: 2014, value: 6651 },
           { year: 2015, value: 6437 }, { year: 2016, value: 6694 }, { year: 2017, value: 7024 },
           { year: 2018, value: 7142 }, { year: 2019, value: 7822 }, { year: 2020, value: 8404 },
           { year: 2021, value: 8680 }, { year: 2022, value: 10163 }, { year: 2023, value: 10815 },
@@ -6318,6 +6336,8 @@ const PEP_BREAKDOWN = {
       inventory: {
         label: 'Total Inventories', unit: 'M USD',
         series: [
+          { year: 2010, value: 3373 }, { year: 2011, value: 3827 }, { year: 2012, value: 3581 },
+          { year: 2013, value: 3409 }, { year: 2014, value: 3143 },
           { year: 2015, value: 2720 }, { year: 2016, value: 2743 }, { year: 2017, value: 2947 },
           { year: 2018, value: 3128 }, { year: 2019, value: 3338 }, { year: 2020, value: 4172, spike: true },
           { year: 2021, value: 4347 }, { year: 2022, value: 5222, spike: true }, { year: 2023, value: 5334 },
@@ -6349,6 +6369,8 @@ const PEP_BREAKDOWN = {
       totalCurrentAssets: {
         label: 'Total Current Assets', unit: 'M USD',
         series: [
+          { year: 2010, value: 17599 }, { year: 2011, value: 17441, down: true }, { year: 2012, value: 17441 },
+          { year: 2013, value: 22203 }, { year: 2014, value: 22603 },
           { year: 2015, value: 23031 }, { year: 2016, value: 27899 }, { year: 2017, value: 31027 },
           { year: 2018, value: 21893, down: true }, { year: 2019, value: 17645, down: true }, { year: 2020, value: 23001 },
           { year: 2021, value: 21783, down: true }, { year: 2022, value: 21539, down: true }, { year: 2023, value: 26950 },
@@ -6369,6 +6391,8 @@ const PEP_BREAKDOWN = {
       accountsPayable: {
         label: 'Accounts Payable & Other Current Liabilities', unit: 'M USD',
         series: [
+          { year: 2010, value: 10923 }, { year: 2011, value: 11757 }, { year: 2012, value: 11757 },
+          { year: 2013, value: 12533 }, { year: 2014, value: 13016 },
           { year: 2015, value: 13507 }, { year: 2016, value: 14243 }, { year: 2017, value: 15017 },
           { year: 2018, value: 18112, spike: true }, { year: 2019, value: 17541 }, { year: 2020, value: 19592, spike: true },
           { year: 2021, value: 21159, spike: true }, { year: 2022, value: 23371, spike: true }, { year: 2023, value: 25137, spike: true },
@@ -6408,12 +6432,14 @@ const PEP_BREAKDOWN = {
       longTermDebt: {
         label: 'Long-Term Debt', unit: 'M USD',
         series: [
+          { year: 2010, value: 19999 }, { year: 2011, value: 20968 }, { year: 2012, value: 20968 },
+          { year: 2013, value: 24333, spike: true }, { year: 2014, value: 28821, spike: true },
           { year: 2015, value: 29213 }, { year: 2016, value: 30053 }, { year: 2017, value: 28095 },
           { year: 2018, value: 28295 }, { year: 2019, value: 30419 }, { year: 2020, value: 40370, spike: true },
           { year: 2021, value: 36026 }, { year: 2022, value: 35657 }, { year: 2023, value: 37595 },
           { year: 2024, value: 37224 },
         ],
-        note: 'Long-term debt jumped to $40B in 2020 (pandemic-era cheap borrowing + Rockstar acquisition) and has since settled around $36\u201338B. PEP carries more leverage than KO relative to equity, reflecting its more acquisitive strategy.',
+        note: 'Long-term debt roughly doubled from $20B (2010\u201312) to ~$29B (2014\u201315) as PEP levered up, then jumped to $40B in 2020 (pandemic-era cheap borrowing + Rockstar acquisition) and has since settled around $36\u201338B. PEP carries more leverage than KO relative to equity, reflecting its more acquisitive strategy.',
       },
       ltDebtToEquity: {
         label: 'Long-Term Debt ÷ Equity', unit: 'x',
@@ -6435,9 +6461,23 @@ const PEP_BREAKDOWN = {
         ],
         note: 'It would take ~3.9 years of net income to repay long-term debt (2024) \u2014 improved from ~5.4x in 2015. The 2018 trough (2.26x) is a TCJA artifact (inflated net income). The downtrend since 2020 shows debt being managed down relative to growing earnings.',
       },
+      totalLiabilities: {
+        label: 'Total Liabilities', unit: 'M USD',
+        series: [
+          { year: 2010, value: 46677 }, { year: 2011, value: 51983, spike: true }, { year: 2012, value: 52239 },
+          { year: 2013, value: 53089 }, { year: 2014, value: 52961 },
+          { year: 2015, value: 57637, spike: true }, { year: 2016, value: 62930, spike: true }, { year: 2017, value: 68823, spike: true },
+          { year: 2018, value: 63046 }, { year: 2019, value: 63679 }, { year: 2020, value: 79366, spike: true },
+          { year: 2021, value: 76226 }, { year: 2022, value: 74914 }, { year: 2023, value: 81858, spike: true },
+          { year: 2024, value: 81296 },
+        ],
+        note: 'Total liabilities grew from ~$47B (2010) to ~$81B (2024). The 2017 jump reflects TCJA-era debt, and the 2020 jump ($79B) reflects pandemic borrowing + Rockstar. Total liabilities (~$81B) vastly exceed equity (~$18B) \u2014 a function of decades of buybacks shrinking the equity base, not balance-sheet distress, given PEP\u2019s strong cash generation and investment-grade rating.',
+      },
       additionalPaidInCapital: {
         label: 'Capital in Excess of Par Value', unit: 'M USD',
         series: [
+          { year: 2010, value: 4527 }, { year: 2011, value: 4461, down: true }, { year: 2012, value: 4172, down: true },
+          { year: 2013, value: 4095, down: true }, { year: 2014, value: 4115 },
           { year: 2015, value: 4076 }, { year: 2016, value: 4091 }, { year: 2017, value: 3996, down: true },
           { year: 2018, value: 3953, down: true }, { year: 2019, value: 3886, down: true }, { year: 2020, value: 3910 },
           { year: 2021, value: 4001 }, { year: 2022, value: 4134 }, { year: 2023, value: 4261 },
@@ -6447,12 +6487,14 @@ const PEP_BREAKDOWN = {
       retainedEarnings: {
         label: 'Retained Earnings', unit: 'M USD',
         series: [
+          { year: 2010, value: 37090 }, { year: 2011, value: 40316 }, { year: 2012, value: 43158 },
+          { year: 2013, value: 46420 }, { year: 2014, value: 49092 },
           { year: 2015, value: 50472 }, { year: 2016, value: 52839 },
           { year: 2018, value: 59947 }, { year: 2019, value: 61946 }, { year: 2020, value: 63443 },
           { year: 2021, value: 65165 }, { year: 2022, value: 67800 }, { year: 2023, value: 70035 },
           { year: 2024, value: 72266 },
         ],
-        note: 'Retained earnings compounded from ~$50B (2015) to ~$72B (2024) \u2014 the cumulative record of profits reinvested rather than paid out. Steady growth reflects consistent profitability and a disciplined payout. (2017 omitted \u2014 not in source data.)',
+        note: 'Retained earnings compounded from ~$37B (2010) to ~$72B (2024) \u2014 the cumulative record of profits reinvested rather than paid out. Steady growth reflects consistent profitability and a disciplined payout. (2017 omitted \u2014 not in source data.)',
       },
       retainedEarningsTest: {
         period: '2010 \u2013 2024',
@@ -22608,6 +22650,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {BS.deferredTaxesNonCurrent  && <TimeSeriesTable data={BS.deferredTaxesNonCurrent} />}
                           {BS.totalDebt                && <TimeSeriesTable data={BS.totalDebt} />}
                           {BS.debtToEquity             && chartWithNote(BS.debtToEquity, 'green')}
+                          {BS.totalLiabilities         && chartWithNote(BS.totalLiabilities, 'amber')}
 
                           {/* EQUITY */}
                           <SectionHeading>// EQUITY</SectionHeading>
