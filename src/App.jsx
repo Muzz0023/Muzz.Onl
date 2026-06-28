@@ -3392,7 +3392,7 @@ const HSY_BREAKDOWN = {
         ],
       },
       bookValuePerShare: {
-        label: 'Book Value Per Share', unit: 'USD',
+        label: 'Book Value Per Share', unit: 'USD per share',
         series: [
           { year: 2009, value: 2.11 }, { year: 2010, value: 2.60 }, { year: 2011, value: 2.43 },
           { year: 2012, value: 2.91 }, { year: 2013, value: 4.48 }, { year: 2014, value: 4.22 },
@@ -4675,7 +4675,7 @@ const KO_BREAKDOWN = {
         note: 'Margins jumped from ~16% (2015\u20132016) to ~23\u201325% post-refranchising \u2014 the asset-light pivot dramatically improved profit per dollar of revenue.',
       },
       eps: {
-        label: 'EPS (Diluted)', unit: 'USD',
+        label: 'EPS (Diluted)', unit: 'USD per share',
         series: [
           { year: 2015, value: 1.67 }, { year: 2016, value: 1.49, down: true }, { year: 2017, value: 0.29, down: true },
           { year: 2018, value: 1.50 }, { year: 2019, value: 2.07 }, { year: 2020, value: 1.79, down: true },
