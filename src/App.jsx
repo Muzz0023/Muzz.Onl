@@ -21045,7 +21045,7 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                   <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
                   <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>⚠ DO YOUR OWN RESEARCH</div>
                   <div style={{fontSize:'11px',color:'rgba(224,234,255,0.9)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px',marginBottom:'8px'}}>
-                    The information shown here reflects Muzz's personal research notes. It is not financial advice and may contain errors, omissions, or outdated figures.
+                    The information shown here reflects Muzz's research team notes. It is not financial advice and may contain errors, omissions, or outdated figures.
                   </div>
                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.6,letterSpacing:'0.3px'}}>
                     Before making any investment decision, please <span style={{color:amber,fontWeight:700}}>do your own research</span> &mdash; read the company's <span style={{color:amber,fontWeight:700}}>10-K filings</span>, <span style={{color:amber,fontWeight:700}}>proxy statements</span>, and stay current with <span style={{color:amber,fontWeight:700}}>recent news</span>. Verify all financial data against primary sources (SEC EDGAR, company investor relations pages).
