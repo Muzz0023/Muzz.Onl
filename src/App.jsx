@@ -6054,6 +6054,497 @@ const PEP_BREAKDOWN = {
         { element: 'Objective',                  explanation: 'Ensure enough money is available to pay pension and retiree medical benefits when due.', impact: 'Protects retirees and reduces long-term funding risk for PepsiCo.' },
       ],
     },
+
+    // ════════════════════════════════════════════════════════════════
+    // INCOME STATEMENT
+    // ════════════════════════════════════════════════════════════════
+    incomeStatement: {
+      netSales: {
+        label: 'Revenue', unit: 'M USD',
+        series: [
+          { year: 2015, value: 63056 }, { year: 2016, value: 62799, down: true }, { year: 2017, value: 63525 },
+          { year: 2018, value: 64661 }, { year: 2019, value: 67161 }, { year: 2020, value: 70372 },
+          { year: 2021, value: 79474 }, { year: 2022, value: 86392 }, { year: 2023, value: 91471 },
+          { year: 2024, value: 91854 },
+        ],
+        note: 'Revenue grew from $63.1B (2015) to $91.9B (2024), a ~46% increase. The acceleration since 2020 reflects pricing power during inflation plus volume growth \u2014 $70.4B \u2192 $91.9B (+30.5% over 4 years).',
+      },
+      costOfSales: {
+        label: 'Cost of Sales', unit: 'M USD',
+        series: [
+          { year: 2015, value: 28384 }, { year: 2016, value: 28222 }, { year: 2017, value: 28796 },
+          { year: 2018, value: 29381 }, { year: 2019, value: 30132 }, { year: 2020, value: 31797 },
+          { year: 2021, value: 37075 }, { year: 2022, value: 40576 }, { year: 2023, value: 41881 },
+          { year: 2024, value: 41744 },
+        ],
+      },
+      grossProfit: {
+        label: 'Gross Profit', unit: 'M USD',
+        series: [
+          { year: 2015, value: 34672 }, { year: 2016, value: 34577, down: true }, { year: 2017, value: 34729 },
+          { year: 2018, value: 35280 }, { year: 2019, value: 37029 }, { year: 2020, value: 38575 },
+          { year: 2021, value: 42399 }, { year: 2022, value: 45816 }, { year: 2023, value: 49590 },
+          { year: 2024, value: 50110 },
+        ],
+      },
+      grossMargin: {
+        label: 'Gross Margin', unit: '%',
+        series: [
+          { year: 2015, value: 55.01 }, { year: 2016, value: 55.07 }, { year: 2017, value: 54.67 },
+          { year: 2018, value: 54.56 }, { year: 2019, value: 55.12 }, { year: 2020, value: 54.81 },
+          { year: 2021, value: 53.38, down: true }, { year: 2022, value: 53.05, down: true }, { year: 2023, value: 54.24 },
+          { year: 2024, value: 54.56 },
+        ],
+        note: 'Gross margin has held remarkably steady around 53\u201355% for a decade \u2014 a sign of durable pricing power. The 2021\u201322 dip reflects input cost inflation; PEP recovered margin by 2023\u201324 through pricing. Lower than KO\u2019s ~60%+ because PEP owns its bottling and manufacturing (more COGS).',
+      },
+      smaExpense: {
+        label: 'SG&A Expenses', unit: 'M USD',
+        series: [
+          { year: 2015, value: 24885 }, { year: 2016, value: 24773 }, { year: 2017, value: 24453 },
+          { year: 2018, value: 25170 }, { year: 2019, value: 26738 }, { year: 2020, value: 28495 },
+          { year: 2021, value: 31237 }, { year: 2022, value: 34459 }, { year: 2023, value: 36677 },
+          { year: 2024, value: 37190 },
+        ],
+      },
+      smaToGrossProfit: {
+        label: 'SG&A as % of Gross Profit', unit: '%',
+        series: [
+          { year: 2015, value: 71.77 }, { year: 2016, value: 71.65 }, { year: 2017, value: 70.41 },
+          { year: 2018, value: 71.34 }, { year: 2019, value: 72.22 }, { year: 2020, value: 73.88 },
+          { year: 2021, value: 73.67 }, { year: 2022, value: 75.24 }, { year: 2023, value: 73.96 },
+          { year: 2024, value: 74.23 },
+        ],
+        note: 'SG&A consumes ~70\u201375% of gross profit \u2014 a heavy cost structure reflecting PEP\u2019s DSD distribution (trucks, drivers, merchandising) and massive marketing spend. This is the cost of owning the route to market. Has crept up slightly over the decade.',
+      },
+      opex: {
+        label: 'Operating Expenses + Cost of Sales', unit: 'M USD',
+        series: [
+          { year: 2015, value: 54628 }, { year: 2016, value: 52949 }, { year: 2017, value: 53249 },
+          { year: 2018, value: 54551 }, { year: 2019, value: 56870 }, { year: 2020, value: 60292 },
+          { year: 2021, value: 68312 }, { year: 2022, value: 75035 }, { year: 2023, value: 78558 },
+          { year: 2024, value: 78934 },
+        ],
+      },
+      expensesToRevenue: {
+        label: 'Total Expenses to Revenue', unit: '%',
+        series: [
+          { year: 2015, value: 86 }, { year: 2016, value: 84 }, { year: 2017, value: 83 },
+          { year: 2018, value: 84 }, { year: 2019, value: 84 }, { year: 2020, value: 85 },
+          { year: 2021, value: 85 }, { year: 2022, value: 86 }, { year: 2023, value: 85 },
+          { year: 2024, value: 85 },
+        ],
+        note: '10-year average ~85%. Total operating costs consume about 85 cents of every revenue dollar, leaving ~15% operating margin. Very stable \u2014 a sign of a predictable, well-run cost structure.',
+      },
+      operatingProfit: {
+        label: 'Operating Income', unit: 'M USD',
+        series: [
+          { year: 2015, value: 8353 }, { year: 2016, value: 9804 }, { year: 2017, value: 10276 },
+          { year: 2018, value: 10110 }, { year: 2019, value: 10291 }, { year: 2020, value: 10080 },
+          { year: 2021, value: 11162 }, { year: 2022, value: 11512 }, { year: 2023, value: 11986 },
+          { year: 2024, value: 12887 },
+        ],
+        note: 'Operating income grew from $8.4B (2015) to $12.9B (2024). Steady compounding with no major dips \u2014 even through COVID (2020) operating income held flat, showing the defensive nature of snacks + beverages.',
+      },
+      provisionForTaxes: {
+        label: 'Provision for Income Tax', unit: 'M USD',
+        series: [
+          { year: 2015, value: 1941 }, { year: 2016, value: 2174 }, { year: 2017, value: 4694, spike: true },
+          { year: 2018, value: -3370, spike: true }, { year: 2019, value: 1959 }, { year: 2020, value: 1894 },
+          { year: 2021, value: 2142 }, { year: 2022, value: 1727 }, { year: 2023, value: 2262 },
+          { year: 2024, value: 2320 },
+        ],
+        note: '2017 spike ($4.7B) = TCJA one-time transition tax on foreign earnings. 2018 negative ($-3.37B) = TCJA-related benefit. Both are tax-reform noise, not operating changes.',
+      },
+      taxRate: {
+        label: 'Effective Tax Rate', unit: '%',
+        series: [
+          { year: 2015, value: 23 }, { year: 2016, value: 22 }, { year: 2017, value: 45, spike: true },
+          { year: 2018, value: 0 }, { year: 2019, value: 19 }, { year: 2020, value: 18 },
+          { year: 2021, value: 19 }, { year: 2022, value: 15 }, { year: 2023, value: 18 },
+          { year: 2024, value: 18 },
+        ],
+        note: '2017 rate of 45% reflects the TCJA transition tax; 2018 was a net benefit (≈0%). Normalised rate has settled around 18\u201319% post-TCJA \u2014 down from ~23% pre-reform.',
+      },
+      netIncome: {
+        label: 'Net Income', unit: 'M USD',
+        series: [
+          { year: 2015, value: 5452 }, { year: 2016, value: 6329 }, { year: 2017, value: 4857, down: true },
+          { year: 2018, value: 12515, spike: true }, { year: 2019, value: 7314, down: true }, { year: 2020, value: 7120, down: true },
+          { year: 2021, value: 7618 }, { year: 2022, value: 8910 }, { year: 2023, value: 9074 },
+          { year: 2024, value: 9578 },
+        ],
+        note: '2017 trough ($4.9B) and 2018 spike ($12.5B) are both TCJA tax distortions. Underlying trend: steady growth from ~$6B (2016) to ~$9.6B (2024). Smooth and predictable once tax noise is removed.',
+      },
+      profitMargin: {
+        label: 'Profit Margin', unit: '%',
+        series: [
+          { year: 2015, value: 8.65 }, { year: 2016, value: 10.08 }, { year: 2017, value: 7.64, down: true },
+          { year: 2018, value: 19.36, spike: true }, { year: 2019, value: 10.89 }, { year: 2020, value: 10.12 },
+          { year: 2021, value: 9.59 }, { year: 2022, value: 10.31 }, { year: 2023, value: 9.92 },
+          { year: 2024, value: 10.42 },
+        ],
+        note: 'Net margin hovers around 10% (ex-2018 TCJA spike). Lower than KO\u2019s ~22%+ because PEP owns bottling/manufacturing (capital-intensive, lower-margin) and Frito-Lay snacks carry lower margins than concentrate. Consistent ~10% is healthy for a vertically-integrated CPG.',
+      },
+      eps: {
+        label: 'EPS (Diluted)', unit: 'USD per share',
+        series: [
+          { year: 2015, value: 3.67 }, { year: 2016, value: 4.36 }, { year: 2017, value: 3.38, down: true },
+          { year: 2018, value: 8.78, spike: true }, { year: 2019, value: 5.20, down: true }, { year: 2020, value: 5.12, down: true },
+          { year: 2021, value: 5.49 }, { year: 2022, value: 6.42 }, { year: 2023, value: 6.56 },
+          { year: 2024, value: 6.95 },
+        ],
+        note: '2018 spike ($8.78) is TCJA-inflated; 2017 trough ($3.38) is TCJA-depressed. Underlying EPS compounded steadily from ~$3.67 (2015) to ~$6.95 (2024), supported by both earnings growth and buybacks.',
+      },
+      cagr: {
+        label: 'EPS CAGR (2015\u20132024)', value: '7.38%',
+        note: 'Diluted EPS compounded at 7.38% annually over the decade \u2014 a solid result driven by revenue growth, margin stability, and consistent share buybacks. Stronger than KO\u2019s ~4.4% over the same period.',
+      },
+      // Dividends per share — 25-year history
+      dividends: {
+        note: 'PepsiCo is a Dividend King \u2014 it has raised its dividend for 50+ consecutive years. Payout % is calculated as dividend \u00f7 EPS. The 2017\u201318 payout swings are artefacts of TCJA tax distortion on EPS, not operating issues.',
+        cagr: '9.90%',
+        cagrPeriod: '2000 \u2192 2024',
+        cagrNote: 'Dividend per share grew from $0.55 (2000) to $5.33 (2024) over 24 years \u2014 a ~9.9% annual compound growth rate. PepsiCo has not split its stock since 1996, so these figures are directly comparable.',
+        rows: [
+          { year: 2024, dividend: 5.33, eps: 6.95, payout: 76.69 },
+          { year: 2023, dividend: 4.94, eps: 6.56, payout: 75.30 },
+          { year: 2022, dividend: 4.52, eps: 6.42, payout: 70.40 },
+          { year: 2021, dividend: 4.24, eps: 5.49, payout: 77.23 },
+          { year: 2020, dividend: 4.02, eps: 5.12, payout: 78.52 },
+          { year: 2019, dividend: 3.79, eps: 5.20, payout: 72.88 },
+          { year: 2018, dividend: 3.58, eps: 8.78, payout: 40.77, abnormal: true, note: 'Payout looks artificially LOW because 2018 EPS was inflated by the TCJA tax benefit.' },
+          { year: 2017, dividend: 3.16, eps: 3.38, payout: 93.49, abnormal: true, note: 'Payout looks artificially HIGH because 2017 EPS was depressed by the TCJA transition tax.' },
+          { year: 2016, dividend: 2.96, eps: 4.36, payout: 67.89 },
+          { year: 2015, dividend: 2.76, eps: 3.67, payout: 75.20 },
+          { year: 2014, dividend: 2.53 },
+          { year: 2013, dividend: 2.24 },
+          { year: 2012, dividend: 2.12 },
+          { year: 2011, dividend: 2.02 },
+          { year: 2010, dividend: 1.89 },
+          { year: 2009, dividend: 1.75 },
+          { year: 2008, dividend: 1.65 },
+          { year: 2007, dividend: 1.42 },
+          { year: 2006, dividend: 1.16 },
+          { year: 2005, dividend: 1.01 },
+          { year: 2004, dividend: 0.85 },
+          { year: 2003, dividend: 0.63 },
+          { year: 2002, dividend: 0.59 },
+          { year: 2001, dividend: 0.57 },
+          { year: 2000, dividend: 0.55 },
+        ],
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // CASH FLOW
+    // ════════════════════════════════════════════════════════════════
+    cashFlow: {
+      operatingCashFlow: {
+        label: 'Operating Cash Flow', unit: 'M USD',
+        series: [
+          { year: 2015, value: 10580 }, { year: 2016, value: 10663 }, { year: 2017, value: 10030, down: true },
+          { year: 2018, value: 9415, down: true }, { year: 2019, value: 9649 }, { year: 2020, value: 10613 },
+          { year: 2021, value: 11616 }, { year: 2022, value: 10811, down: true }, { year: 2023, value: 13442 },
+          { year: 2024, value: 12507, down: true },
+        ],
+        note: 'Operating cash flow grew from ~$10.6B (2015) to ~$12.5B (2024), peaking at $13.4B in 2023. Consistently strong cash generation \u2014 the engine that funds dividends, buybacks, and capex.',
+      },
+      capex: {
+        label: 'Capital Expenditures', unit: 'M USD',
+        series: [
+          { year: 2015, value: 3569 }, { year: 2016, value: 3040 }, { year: 2017, value: 2969 },
+          { year: 2018, value: 3282 }, { year: 2019, value: 4232 }, { year: 2020, value: 4240 },
+          { year: 2021, value: 4625 }, { year: 2022, value: 5207 }, { year: 2023, value: 5518 },
+          { year: 2024, value: 5318 },
+        ],
+        note: 'CapEx rose from ~$3B (2016\u201317) to ~$5.3B (2024) as PEP invested heavily in capacity, automation, and supply-chain modernisation (the pep+ productivity agenda). Higher than KO because PEP owns its manufacturing and bottling.',
+      },
+      capexRatio: {
+        label: 'CapEx as % of Operating Cash Flow', unit: '%',
+        series: [
+          { year: 2015, value: 33.7 }, { year: 2016, value: 28.5 }, { year: 2017, value: 29.6 },
+          { year: 2018, value: 34.9 }, { year: 2019, value: 43.8 }, { year: 2020, value: 39.9 },
+          { year: 2021, value: 39.8 }, { year: 2022, value: 48.2 }, { year: 2023, value: 41.0 },
+          { year: 2024, value: 42.5 },
+        ],
+        note: '10-year average ~41%. PEP reinvests roughly 40 cents of every operating cash dollar back into the business \u2014 meaningfully more capital-intensive than KO (asset-light concentrate model). The rising trend reflects pep+ supply-chain investment. 5-yr avg 42.9% vs 20-yr avg 37.2%.',
+      },
+      freeCashFlow: {
+        label: 'Free Cash Flow', unit: 'M USD',
+        series: [
+          { year: 2015, value: 7822 }, { year: 2016, value: 7623, down: true }, { year: 2017, value: 7061, down: true },
+          { year: 2018, value: 6133, down: true }, { year: 2019, value: 5417, down: true }, { year: 2020, value: 6373 },
+          { year: 2021, value: 6991 }, { year: 2022, value: 5604, down: true }, { year: 2023, value: 7904 },
+          { year: 2024, value: 7189, down: true },
+        ],
+        note: 'FCF (operating cash flow minus capex) has ranged $5.4\u20137.9B over the decade. The dip from 2017\u201319 reflects rising capex outpacing cash-flow growth. 13 of 20 years have been "good" (up) years. FCF comfortably covers the dividend, though the payout consumes a large share.',
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // BALANCE SHEET
+    // ════════════════════════════════════════════════════════════════
+    balanceSheet: {
+      cash: {
+        label: 'Cash & Cash Equivalents', unit: 'M USD',
+        series: [
+          { year: 2015, value: 9096 }, { year: 2016, value: 9158 }, { year: 2017, value: 10610 },
+          { year: 2018, value: 8721 }, { year: 2019, value: 5509, spike: true }, { year: 2020, value: 8185 },
+          { year: 2021, value: 5596, spike: true }, { year: 2022, value: 4954 }, { year: 2023, value: 9711, spike: true },
+          { year: 2024, value: 8505 },
+        ],
+        note: 'Cash fluctuates between ~$5B and ~$10B depending on capital-return timing (buybacks, dividends) and acquisitions. PEP holds less idle cash than KO \u2014 it actively deploys cash rather than letting it pile up.',
+      },
+      accountsReceivable: {
+        label: 'Accounts Receivable, net', unit: 'M USD',
+        series: [
+          { year: 2015, value: 6437 }, { year: 2016, value: 6694 }, { year: 2017, value: 7024 },
+          { year: 2018, value: 7142 }, { year: 2019, value: 7822 }, { year: 2020, value: 8404 },
+          { year: 2021, value: 8680 }, { year: 2022, value: 10163 }, { year: 2023, value: 10815 },
+          { year: 2024, value: 10333 },
+        ],
+      },
+      dso: {
+        label: 'Days Sales Outstanding (DSO)', unit: 'days',
+        series: [
+          { year: 2015, value: 37.26 }, { year: 2016, value: 38.91 }, { year: 2017, value: 40.36 },
+          { year: 2018, value: 40.32 }, { year: 2019, value: 42.51, spike: true }, { year: 2020, value: 43.59, spike: true },
+          { year: 2021, value: 39.86 }, { year: 2022, value: 42.94, spike: true }, { year: 2023, value: 43.16, spike: true },
+          { year: 2024, value: 41.06, spike: true },
+        ],
+        avg10yr: 41.00,
+        note: '10-year average ~41 days. PEP collects from customers in about 6 weeks \u2014 stable and well-controlled. Slightly elevated 2022\u201324 as the business mix shifted, but no deterioration concern.',
+      },
+      inventory: {
+        label: 'Total Inventories', unit: 'M USD',
+        series: [
+          { year: 2015, value: 2720 }, { year: 2016, value: 2743 }, { year: 2017, value: 2947 },
+          { year: 2018, value: 3128 }, { year: 2019, value: 3338 }, { year: 2020, value: 4172, spike: true },
+          { year: 2021, value: 4347 }, { year: 2022, value: 5222, spike: true }, { year: 2023, value: 5334 },
+          { year: 2024, value: 5306 },
+        ],
+      },
+      inventoryTurnover: {
+        label: 'Inventory Turnover', unit: 'x per year',
+        series: [
+          { year: 2015, value: 10.44 }, { year: 2016, value: 10.29 }, { year: 2017, value: 9.77 },
+          { year: 2018, value: 9.39 }, { year: 2019, value: 9.03 }, { year: 2020, value: 7.62, spike: true },
+          { year: 2021, value: 8.53, spike: true }, { year: 2022, value: 7.77, spike: true }, { year: 2023, value: 7.85, spike: true },
+          { year: 2024, value: 7.87, spike: true },
+        ],
+        avg10yr: 8.86,
+        note: '10-year average 8.86x. Inventory turnover has slowed from ~10x (2015) to ~8x (2024) \u2014 the business carries more inventory as it has grown and diversified (more SKUs, more international, Sabra/Siete acquisitions). Still healthy for a food & beverage company.',
+      },
+      dio: {
+        label: 'Days Inventory Outstanding (DIO)', unit: 'days',
+        series: [
+          { year: 2015, value: 34.98 }, { year: 2016, value: 35.48 }, { year: 2017, value: 37.35 },
+          { year: 2018, value: 38.86 }, { year: 2019, value: 40.43 }, { year: 2020, value: 47.89, spike: true },
+          { year: 2021, value: 42.80, spike: true }, { year: 2022, value: 46.97, spike: true }, { year: 2023, value: 46.49, spike: true },
+          { year: 2024, value: 46.39, spike: true },
+        ],
+        avg10yr: 41.76,
+        note: '10-year average ~42 days. Days inventory has risen from ~35 (2015) to ~46 (2024), mirroring the turnover slowdown. PEP holds inventory ~1.5 months \u2014 reasonable for perishable snacks + beverages.',
+      },
+      totalCurrentAssets: {
+        label: 'Total Current Assets', unit: 'M USD',
+        series: [
+          { year: 2015, value: 23031 }, { year: 2016, value: 27899 }, { year: 2017, value: 31027 },
+          { year: 2018, value: 21893, down: true }, { year: 2019, value: 17645, down: true }, { year: 2020, value: 23001 },
+          { year: 2021, value: 21783, down: true }, { year: 2022, value: 21539, down: true }, { year: 2023, value: 26950 },
+          { year: 2024, value: 25826, down: true },
+        ],
+        note: 'The 2017 peak ($31B) reflected high cash before TCJA repatriation. Current assets have since settled around $22\u201327B. The decline from 2017 partly reflects cash being deployed into buybacks and capex.',
+      },
+      totalAssets: {
+        label: 'Total Assets', unit: 'M USD',
+        series: [
+          { year: 2015, value: 69667 }, { year: 2016, value: 74129 }, { year: 2017, value: 79804 },
+          { year: 2018, value: 77648, down: true }, { year: 2019, value: 78547 }, { year: 2020, value: 92918 },
+          { year: 2021, value: 92377, down: true }, { year: 2022, value: 92187, down: true }, { year: 2023, value: 100495 },
+          { year: 2024, value: 99467, down: true },
+        ],
+        note: 'Total assets grew from ~$70B (2015) to ~$99B (2024), crossing $100B in 2023. Growth driven by acquisitions (goodwill/intangibles) and capex. The 2020 jump reflects the Rockstar acquisition plus pandemic-era balance-sheet expansion.',
+      },
+      accountsPayable: {
+        label: 'Accounts Payable & Other Current Liabilities', unit: 'M USD',
+        series: [
+          { year: 2015, value: 13507 }, { year: 2016, value: 14243 }, { year: 2017, value: 15017 },
+          { year: 2018, value: 18112, spike: true }, { year: 2019, value: 17541 }, { year: 2020, value: 19592, spike: true },
+          { year: 2021, value: 21159, spike: true }, { year: 2022, value: 23371, spike: true }, { year: 2023, value: 25137, spike: true },
+          { year: 2024, value: 24454 },
+        ],
+      },
+      dpo: {
+        label: 'Days Payable Outstanding (DPO)', unit: 'days',
+        series: [
+          { year: 2015, value: 173.69, spike: true }, { year: 2016, value: 184.21, spike: true }, { year: 2017, value: 190.35, spike: true },
+          { year: 2018, value: 225.01 }, { year: 2019, value: 212.48 }, { year: 2020, value: 224.90 },
+          { year: 2021, value: 208.31 }, { year: 2022, value: 210.23 }, { year: 2023, value: 219.07 },
+          { year: 2024, value: 213.82 },
+        ],
+        avg10yr: 206.21,
+        note: '10-year average ~206 days. PEP takes ~7 months to pay suppliers \u2014 a powerful source of free financing. This long DPO (vs ~41 day DSO) is what drives the deeply negative cash conversion cycle. Suppliers effectively fund PEP\u2019s working capital.',
+      },
+      totalCurrentLiabilities: {
+        label: 'Total Current Liabilities', unit: 'M USD',
+        series: [
+          { year: 2015, value: 17578 }, { year: 2016, value: 21135, spike: true }, { year: 2017, value: 20502 },
+          { year: 2018, value: 22138 }, { year: 2019, value: 20461 }, { year: 2020, value: 23372 },
+          { year: 2021, value: 26220, spike: true }, { year: 2022, value: 26785 }, { year: 2023, value: 31647, spike: true },
+          { year: 2024, value: 31536 },
+        ],
+      },
+      currentRatio: {
+        label: 'Current Ratio', unit: 'x',
+        series: [
+          { year: 2015, value: 1.31 }, { year: 2016, value: 1.32 }, { year: 2017, value: 1.51 },
+          { year: 2018, value: 0.99, down: true }, { year: 2019, value: 0.86, down: true }, { year: 2020, value: 0.98 },
+          { year: 2021, value: 0.83, down: true }, { year: 2022, value: 0.80, down: true }, { year: 2023, value: 0.85 },
+          { year: 2024, value: 0.82 },
+        ],
+        note: 'Current ratio fell below 1.0 after 2017 and now sits ~0.8. For most companies that would flag liquidity risk \u2014 but for PEP it\u2019s by design: the deeply negative cash conversion cycle means suppliers fund operations, so PEP doesn\u2019t need a large current-asset buffer. A sub-1.0 ratio here is a sign of working-capital strength, not weakness.',
+      },
+      longTermDebt: {
+        label: 'Long-Term Debt', unit: 'M USD',
+        series: [
+          { year: 2015, value: 29213 }, { year: 2016, value: 30053 }, { year: 2017, value: 28095 },
+          { year: 2018, value: 28295 }, { year: 2019, value: 30419 }, { year: 2020, value: 40370, spike: true },
+          { year: 2021, value: 36026 }, { year: 2022, value: 35657 }, { year: 2023, value: 37595 },
+          { year: 2024, value: 37224 },
+        ],
+        note: 'Long-term debt jumped to $40B in 2020 (pandemic-era cheap borrowing + Rockstar acquisition) and has since settled around $36\u201338B. PEP carries more leverage than KO relative to equity, reflecting its more acquisitive strategy.',
+      },
+      ltDebtToEquity: {
+        label: 'Long-Term Debt ÷ Equity', unit: 'x',
+        series: [
+          { year: 2015, value: 2.43 }, { year: 2016, value: 2.68 }, { year: 2017, value: 2.56 },
+          { year: 2018, value: 1.94 }, { year: 2019, value: 2.05 }, { year: 2020, value: 2.98, spike: true },
+          { year: 2021, value: 2.23 }, { year: 2022, value: 2.06 }, { year: 2023, value: 2.02 },
+          { year: 2024, value: 2.05 },
+        ],
+        note: 'Debt-to-equity sits around 2.0\u20132.7x. The high ratio partly reflects PEP\u2019s relatively small equity base (heavy buybacks shrink equity). Peaked at ~3.0x in 2020. Manageable given PEP\u2019s investment-grade rating and strong cash generation, but worth monitoring.',
+      },
+      ltDebtToNetIncome: {
+        label: 'Long-Term Debt ÷ Net Income', unit: 'x',
+        series: [
+          { year: 2015, value: 5.36 }, { year: 2016, value: 4.75 }, { year: 2017, value: 5.78, spike: true },
+          { year: 2018, value: 2.26 }, { year: 2019, value: 4.16 }, { year: 2020, value: 5.67 },
+          { year: 2021, value: 4.73 }, { year: 2022, value: 4.00 }, { year: 2023, value: 4.14 },
+          { year: 2024, value: 3.89 },
+        ],
+        note: 'It would take ~3.9 years of net income to repay long-term debt (2024) \u2014 improved from ~5.4x in 2015. The 2018 trough (2.26x) is a TCJA artifact (inflated net income). The downtrend since 2020 shows debt being managed down relative to growing earnings.',
+      },
+      additionalPaidInCapital: {
+        label: 'Capital in Excess of Par Value', unit: 'M USD',
+        series: [
+          { year: 2015, value: 4076 }, { year: 2016, value: 4091 }, { year: 2017, value: 3996, down: true },
+          { year: 2018, value: 3953, down: true }, { year: 2019, value: 3886, down: true }, { year: 2020, value: 3910 },
+          { year: 2021, value: 4001 }, { year: 2022, value: 4134 }, { year: 2023, value: 4261 },
+          { year: 2024, value: 4385 },
+        ],
+      },
+      retainedEarnings: {
+        label: 'Retained Earnings', unit: 'M USD',
+        series: [
+          { year: 2015, value: 50472 }, { year: 2016, value: 52839 },
+          { year: 2018, value: 59947 }, { year: 2019, value: 61946 }, { year: 2020, value: 63443 },
+          { year: 2021, value: 65165 }, { year: 2022, value: 67800 }, { year: 2023, value: 70035 },
+          { year: 2024, value: 72266 },
+        ],
+        note: 'Retained earnings compounded from ~$50B (2015) to ~$72B (2024) \u2014 the cumulative record of profits reinvested rather than paid out. Steady growth reflects consistent profitability and a disciplined payout. (2017 omitted \u2014 not in source data.)',
+      },
+      retainedEarningsTest: {
+        period: '2010 \u2013 2024',
+        startYear: 2010,
+        endYear: 2024,
+        retainedEarningsStart: 37090,
+        retainedEarningsEnd: 72266,
+        retainedEarningsIncrease: 35.176,
+        marketCapStart: 103,
+        marketCapEnd: 209,
+        marketCapIncrease: 106,
+        multiplier: 3.01,
+        verdict: 'For every $1 of retained earnings added from 2010 to 2024, PepsiCo created about $3.01 of market value ($106B market-cap increase \u00f7 $35.2B retained-earnings increase). PEP passes Buffett\u2019s retained-earnings test strongly \u2014 management has converted reinvested profits into market value at roughly 3x. Capital has been deployed productively (buybacks, acquisitions, capacity, brands).',
+      },
+      shareholderEquity: {
+        label: 'Shareholder Equity', unit: 'M USD',
+        series: [
+          { year: 2015, value: 12030 }, { year: 2016, value: 11199, down: true }, { year: 2017, value: 10981, down: true },
+          { year: 2018, value: 14602 }, { year: 2019, value: 14868 }, { year: 2020, value: 13552, down: true },
+          { year: 2021, value: 16151 }, { year: 2022, value: 17273 }, { year: 2023, value: 18637 },
+          { year: 2024, value: 18171, down: true },
+        ],
+        note: 'Equity is relatively small (~$11\u201318B) versus assets (~$99B) \u2014 because decades of buybacks have returned capital to shareholders, shrinking the equity base. A small equity base mechanically inflates ROE. This is a capital-return signature, not a balance-sheet weakness.',
+      },
+      investedCapital: {
+        label: 'Invested Capital', unit: 'M USD',
+        series: [
+          { year: 2015, value: 42993 }, { year: 2016, value: 43836 }, { year: 2017, value: 48692 },
+          { year: 2018, value: 46789, down: true }, { year: 2019, value: 52577 }, { year: 2020, value: 61361 },
+          { year: 2021, value: 60561, down: true }, { year: 2022, value: 60448, down: true }, { year: 2023, value: 59137, down: true },
+          { year: 2024, value: 59426 },
+        ],
+        note: 'Invested capital (equity + long-term debt) grew from ~$43B (2015) to ~$59B (2024). This is the denominator for ROIC. The plateau since 2020 (~$59\u201361B) while earnings grew is what pushed ROIC up to 17%.',
+      },
+      returns: {
+        roe: [
+          { year: 2015, value: 45.32 }, { year: 2016, value: 56.51 }, { year: 2017, value: 44.23 },
+          { year: 2018, value: 85.71 }, { year: 2019, value: 49.19 }, { year: 2020, value: 52.54 },
+          { year: 2021, value: 47.17 }, { year: 2022, value: 51.58 }, { year: 2023, value: 48.69 },
+          { year: 2024, value: 52.71 },
+        ],
+        roic: [
+          { year: 2015, value: 14 }, { year: 2016, value: 17 }, { year: 2017, value: 11 },
+          { year: 2019, value: 15 }, { year: 2020, value: 13 },
+          { year: 2021, value: 14 }, { year: 2022, value: 16 }, { year: 2023, value: 16 },
+          { year: 2024, value: 17 },
+        ],
+        roa: [
+          { year: 2015, value: 7.83 }, { year: 2016, value: 8.54 }, { year: 2017, value: 6.09 },
+          { year: 2018, value: 16.12 }, { year: 2019, value: 9.31 }, { year: 2020, value: 7.66 },
+          { year: 2021, value: 8.25 }, { year: 2022, value: 9.67 }, { year: 2023, value: 9.03 },
+          { year: 2024, value: 9.62 },
+        ],
+        averages: { roe: 53, roic: 15, roa: 9 },
+        note: '10-year averages: ROE 53% (extremely high \u2014 driven by the small, buyback-shrunk equity base), ROIC 15% (strong and rising, a true measure of capital efficiency), ROA 9% (solid for a capital-intensive, vertically-integrated CPG). The 2018 ROE/ROA spikes are TCJA-inflated. ROIC of 15% comfortably exceeds PEP\u2019s cost of capital \u2014 the hallmark of a value-creating business.',
+      },
+      ccc: {
+        label: 'Cash Conversion Cycle', unit: 'days',
+        series: [
+          { year: 2015, value: -101.45, spike: true }, { year: 2016, value: -109.82, spike: true }, { year: 2017, value: -112.63, spike: true },
+          { year: 2018, value: -145.83 }, { year: 2019, value: -129.54 }, { year: 2020, value: -133.42 },
+          { year: 2021, value: -125.65 }, { year: 2022, value: -120.32, spike: true }, { year: 2023, value: -129.43 },
+          { year: 2024, value: -126.37 },
+        ],
+        avg10yr: -123.45,
+        note: '10-year average -123 days. NEGATIVE means PEP collects cash from customers (~41 day DSO) and holds inventory (~46 day DIO) but pays suppliers far later (~206 day DPO) \u2014 so suppliers fund the working capital. PEP operates on roughly 4 months of free supplier financing. Not as extreme as KO\u2019s ~-300 days (KO is asset-lighter), but still a structural cash-flow advantage.',
+      },
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    // SEGMENTS — revenue by geography
+    // ════════════════════════════════════════════════════════════════
+    segments: {
+      byCountry: {
+        period: '2015 \u2013 2024',
+        description: 'PepsiCo reports net revenue by country. The U.S. is the dominant market at ~56% of sales, with the remaining ~44% spread across 200+ countries. No single international market exceeds ~8% \u2014 a diversified but U.S.-anchored geographic footprint.',
+        usVsIntl: { us: 56.26, intl: 43.74, year: 2024 },
+        countries: [
+          { name: 'United States',     flag: '🇺🇸', featured: true, rev2015: 35266, rev2020: 40800, rev2024: 51668, share2024: 56.26, note: 'The anchor market. US revenue grew from $35B (2015) to $52B (2024). Share has held remarkably steady at 56\u201358% for a decade \u2014 PEP is fundamentally a US business with global reach.' },
+          { name: 'Mexico',            flag: '🇲🇽', rev2015: 3687,  rev2020: 3924,  rev2024: 7123,  share2024: 7.75, note: 'PEP\u2019s #2 market and fastest grower \u2014 nearly doubled from 2020 to 2024 (Sabritas, Gamesa). The largest international contributor at ~8%.' },
+          { name: 'Russia',            flag: '🇷🇺', rev2015: 2797,  rev2020: 3009,  rev2024: 3880,  share2024: 4.22, note: 'A meaningful ~4% of revenue (Wimm-Bill-Dann dairy + snacks). A geopolitical risk flagged in the Risks tab \u2014 ~40% of FX translation loss comes from the ruble.' },
+          { name: 'Canada',            flag: '🇨🇦', rev2015: 2677,  rev2020: 2989,  rev2024: 3764,  share2024: 4.10, note: 'Steady, low-risk developed market. Grown consistently to ~$3.8B.' },
+          { name: 'China',            flag: '🇨🇳', rev2015: null, rev2020: 1732, rev2024: 2709, share2024: 2.95, note: 'Not separately disclosed before 2019. Grew rapidly from $1.3B (2019) to $2.7B (2024) \u2014 a key emerging-market growth vector.' },
+          { name: 'United Kingdom',    flag: '🇬🇧', rev2015: 1966,  rev2020: 1882,  rev2024: 2063,  share2024: 2.25, note: 'Mature market (Walkers crisps + Pepsi). Roughly flat over the decade at ~$2B.' },
+          { name: 'South Africa',      flag: '🇿🇦', rev2015: null,  rev2020: 1282,  rev2024: 1859,  share2024: 2.02, note: 'Emerged as a disclosed market in 2019\u201320 after the Pioneer Foods acquisition. ~$1.9B and growing.' },
+          { name: 'Brazil',            flag: '🇧🇷', rev2015: 1289,  rev2020: null,  rev2024: 1765,  share2024: 1.92, note: 'Disclosed intermittently. ~$1.8B \u2014 a meaningful Latin American foods market.' },
+          { name: 'All other countries', flag: '🌍', rev2015: 15374, rev2020: 14754, rev2024: 17023, share2024: 18.53, note: 'The long tail \u2014 ~$17B spread across 190+ remaining markets. No single country here is large enough to break out, underscoring how diversified PEP\u2019s international footprint is.' },
+        ],
+        totalRevenue: { y2015: 63056, y2020: 70372, y2024: 91854 },
+        takeaway: 'PepsiCo is a US-anchored global business: ~56% of revenue is domestic, and the largest single foreign market (Mexico) is under 8%. This concentration is a double-edged sword \u2014 the US provides stability and pricing power, but limits the emerging-market growth runway that a more internationally-weighted peer might have. The diversified ~44% international base (no country over 8%) reduces single-country risk, though Russia (~4%) carries outsized geopolitical and FX exposure.',
+      },
+    },
   },
 
   // ════════════════════════════════════════════════════════════════
@@ -21759,6 +22250,89 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                             <div style={{padding:'10px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
                               <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
                               <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.revenueByCountry.takeaway}</div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* REVENUE BY COUNTRY (PEP shape) */}
+                      {segments && segments.byCountry && (
+                        <>
+                          <SectionHeading>// REVENUE BY GEOGRAPHY · {segments.byCountry.period}</SectionHeading>
+                          {segments.byCountry.description && (
+                            <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'12px',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.byCountry.description}</div>
+                          )}
+
+                          {/* US vs International split */}
+                          {segments.byCountry.usVsIntl && (
+                            <div style={{background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',border:`0.5px solid ${amber}`,borderLeft:`2px solid ${amber}`,borderRadius:'4px',padding:'14px',marginBottom:'12px'}}>
+                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'8px'}}>// U.S. vs INTERNATIONAL · {segments.byCountry.usVsIntl.year}</div>
+                              <div style={{display:'flex',height:'28px',borderRadius:'3px',overflow:'hidden',border:`0.5px solid ${amberGlow}`,marginBottom:'8px'}}>
+                                <div style={{width:`${segments.byCountry.usVsIntl.us}%`,background:'rgba(245,158,11,0.55)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                                  <span style={{fontSize:'10px',color:'#fff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🇺🇸 US {segments.byCountry.usVsIntl.us}%</span>
+                                </div>
+                                <div style={{width:`${segments.byCountry.usVsIntl.intl}%`,background:'rgba(96,165,250,0.45)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                                  <span style={{fontSize:'10px',color:'#fff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>🌍 INTL {segments.byCountry.usVsIntl.intl}%</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Country table */}
+                          {segments.byCountry.countries && segments.byCountry.countries.length > 0 && (
+                            <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                              <table style={{width:'100%',minWidth:'520px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                <thead>
+                                  <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                    <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>COUNTRY</th>
+                                    <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2015</th>
+                                    <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2020</th>
+                                    <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024</th>
+                                    <th style={{textAlign:'right',padding:'8px 10px',color:amber,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>2024 SHARE</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {segments.byCountry.countries.map((c, i) => (
+                                    <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: c.featured ? 'rgba(245,158,11,0.06)' : 'transparent'}}>
+                                      <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight: c.featured ? 700 : 600,letterSpacing:'0.3px'}}>
+                                        {c.flag && <span style={{marginRight:'6px'}}>{c.flag}</span>}
+                                        {c.name}
+                                        {c.featured && <span style={{marginLeft:'6px',fontSize:'8px',color:amber,fontWeight:700,letterSpacing:'1px'}}>★</span>}
+                                      </td>
+                                      <td style={{padding:'6px 10px',textAlign:'right',color:'rgba(224,234,255,0.7)',fontWeight:500,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.rev2015 != null ? '$'+(c.rev2015/1000).toFixed(1)+'B' : '—'}</td>
+                                      <td style={{padding:'6px 10px',textAlign:'right',color:'rgba(224,234,255,0.7)',fontWeight:500,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.rev2020 != null ? '$'+(c.rev2020/1000).toFixed(1)+'B' : '—'}</td>
+                                      <td style={{padding:'6px 10px',textAlign:'right',color:'#e0eaff',fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.rev2024 != null ? '$'+(c.rev2024/1000).toFixed(1)+'B' : '—'}</td>
+                                      <td style={{padding:'6px 10px',textAlign:'right',color:amber,fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{c.share2024 != null ? c.share2024+'%' : '—'}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+
+                          {/* Country notes — collapsible */}
+                          {segments.byCountry.countries && segments.byCountry.countries.some(c => c.note) && (
+                            <details style={{background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',overflow:'hidden',marginBottom:'10px'}}>
+                              <summary style={{padding:'10px 12px',cursor:'pointer',listStyle:'none',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px'}}>
+                                <span style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>📍 Country-by-Country Notes</span>
+                                <span style={{fontSize:'10px',color:amberDim,fontFamily:'monospace'}}>›</span>
+                              </summary>
+                              <div style={{padding:'10px 12px',borderTop:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.03)',display:'flex',flexDirection:'column',gap:'5px'}}>
+                                {segments.byCountry.countries.filter(c => c.note).map((c, i) => (
+                                  <div key={i} style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'2px'}}>
+                                    <div style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'3px'}}>{c.flag} {c.name}</div>
+                                    <div style={{fontSize:'10px',color:'rgba(224,234,255,0.78)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{c.note}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </details>
+                          )}
+
+                          {/* Takeaway */}
+                          {segments.byCountry.takeaway && (
+                            <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.06)',border:'0.5px solid rgba(34,197,94,0.35)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'12px'}}>
+                              <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{segments.byCountry.takeaway}</div>
                             </div>
                           )}
                         </>
