@@ -14936,10 +14936,33 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           {/* HEADLINE STATS */}
                           <SectionHeading>// HEADLINE STATS</SectionHeading>
                           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px',marginBottom:'4px'}}>
-                            <StatCard label="FOUNDED"      value="1894"             sub="by Milton S. Hershey" />
-                            <StatCard label="INCORPORATED" value="1927"             sub="Delaware" />
-                            <StatCard label="BRANDS"       value={facts.brandCount} sub="across all categories" />
-                            <StatCard label="GLOBAL REACH" value={facts.globalReach} sub="worldwide" />
+                            {(() => {
+                              // Parse founded: "1894 by Milton S. Hershey" → value "1894", sub "by Milton S. Hershey"
+                              const parseFact = (str) => {
+                                if (!str) return { value: '—', sub: '' };
+                                // Try splitting on " by " first
+                                if (str.includes(' by ')) {
+                                  const parts = str.split(' by ');
+                                  return { value: parts[0].trim(), sub: 'by ' + parts.slice(1).join(' by ').trim() };
+                                }
+                                // Try splitting on " · " (incorporated: "1927 · Delaware")
+                                if (str.includes(' · ')) {
+                                  const parts = str.split(' · ');
+                                  return { value: parts[0].trim(), sub: parts.slice(1).join(' · ').trim() };
+                                }
+                                return { value: str, sub: '' };
+                              };
+                              const founded     = parseFact(facts.founded);
+                              const incorporated = parseFact(facts.incorporated);
+                              return (
+                                <>
+                                  <StatCard label="FOUNDED"      value={founded.value}     sub={founded.sub || 'year established'} />
+                                  <StatCard label="INCORPORATED" value={incorporated.value} sub={incorporated.sub || 'corporate'} />
+                                  <StatCard label="BRANDS"       value={facts.brandCount}   sub="across all categories" />
+                                  <StatCard label="GLOBAL REACH" value={facts.globalReach}  sub="worldwide" />
+                                </>
+                              );
+                            })()}
                           </div>
 
                           {/* IDENTITY & POSITIONING */}
@@ -14948,75 +14971,83 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                           <BulletPanel label="// INDUSTRY POSITION" items={identity.industryPosition} />
 
                           {/* CUSTOMERS & MARKETING */}
-                          <SectionHeading>// CUSTOMERS & MARKETING</SectionHeading>
-                          <InfoPanel label="// MAIN CUSTOMERS">{customers.mainCustomers}</InfoPanel>
-
-                          {/* McLane callout — concentration risk, render in red accent */}
-                          {customers.keyDistributor && (
-                            <div style={{
-                              background:'rgba(239,68,68,0.04)',
-                              border:'0.5px solid rgba(239,68,68,0.4)',
-                              borderLeft:'2px solid rgba(239,68,68,0.85)',
-                              borderRadius:'4px',
-                              padding:'14px',
-                              marginBottom:'8px',
-                              position:'relative',
-                            }}>
-                              <div style={{position:'absolute',top:'8px',right:'10px',fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CONCENTRATION RISK</div>
-                              <div style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY DISTRIBUTOR</div>
-                              <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'8px'}}>
-                                <span style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{customers.keyDistributor.name}</span>
-                                <span style={{fontSize:'18px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{customers.keyDistributor.share}</span>
-                                <span style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.5px'}}>{customers.keyDistributor.period}</span>
-                              </div>
-                              <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{customers.keyDistributor.note}</div>
-                            </div>
-                          )}
-
-                          <InfoPanel label="// MARKETING FOUNDATION">{customers.marketingFoundation}</InfoPanel>
-                          <BulletPanel label="// MARKETING ACTIVITIES" items={customers.marketingActivities} />
-                          <BulletPanel label="// DISTRIBUTION NETWORK" items={customers.distributionNetwork} />
-
-                          {/* RAW MATERIALS & PRICING */}
-                          <SectionHeading>// RAW MATERIALS & PRICING</SectionHeading>
-
-                          {/* Featured cocoa callout */}
-                          {rawMaterials.keyInput && (
-                            <div style={{
-                              background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
-                              border:`0.5px solid ${amber}`,
-                              borderLeft:`2px solid ${amber}`,
-                              borderRadius:'4px',
-                              padding:'14px',
-                              marginBottom:'8px',
-                              position:'relative',
-                            }}>
-                              <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
-                              <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
-                              <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
-                              <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
-                              <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY RAW MATERIAL</div>
-                              <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'6px'}}>{rawMaterials.keyInput.name}</div>
-                              <div style={{fontSize:'11px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{rawMaterials.keyInput.detail}</div>
-                            </div>
-                          )}
-
-                          {/* Cocoa supply detail — regions has 70% West Africa, treat as concentration risk */}
-                          {rawMaterials.cocoaSupply && (
+                          {customers && (
                             <>
-                              <InfoPanel label="// COCOA SUPPLY · REGIONS" accent="red">{rawMaterials.cocoaSupply.regions} <span style={{color:'rgba(239,68,68,0.85)',fontWeight:600}}>Heavy geographic concentration.</span></InfoPanel>
-                              <InfoPanel label="// COCOA SUPPLY · RISKS">{rawMaterials.cocoaSupply.risks}</InfoPanel>
-                              <InfoPanel label="// COCOA PROCUREMENT">{rawMaterials.cocoaSupply.procurement}</InfoPanel>
+                              <SectionHeading>// CUSTOMERS & MARKETING</SectionHeading>
+                              <InfoPanel label="// MAIN CUSTOMERS">{customers.mainCustomers}</InfoPanel>
+
+                              {/* McLane callout — concentration risk, render in red accent */}
+                              {customers.keyDistributor && (
+                                <div style={{
+                                  background:'rgba(239,68,68,0.04)',
+                                  border:'0.5px solid rgba(239,68,68,0.4)',
+                                  borderLeft:'2px solid rgba(239,68,68,0.85)',
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'8px',
+                                  position:'relative',
+                                }}>
+                                  <div style={{position:'absolute',top:'8px',right:'10px',fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1.5px',fontWeight:600}}>CONCENTRATION RISK</div>
+                                  <div style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY DISTRIBUTOR</div>
+                                  <div style={{display:'flex',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'8px'}}>
+                                    <span style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px'}}>{customers.keyDistributor.name}</span>
+                                    <span style={{fontSize:'18px',color:'rgba(239,68,68,0.95)',fontFamily:'monospace',fontWeight:700}}>{customers.keyDistributor.share}</span>
+                                    <span style={{fontSize:'10px',color:'rgba(224,234,255,0.6)',fontFamily:'monospace',letterSpacing:'0.5px'}}>{customers.keyDistributor.period}</span>
+                                  </div>
+                                  <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{customers.keyDistributor.note}</div>
+                                </div>
+                              )}
+
+                              {customers.marketingFoundation && <InfoPanel label="// MARKETING FOUNDATION">{customers.marketingFoundation}</InfoPanel>}
+                              {customers.marketingActivities && <BulletPanel label="// MARKETING ACTIVITIES" items={customers.marketingActivities} />}
+                              {customers.distributionNetwork && <BulletPanel label="// DISTRIBUTION NETWORK" items={customers.distributionNetwork} />}
                             </>
                           )}
 
-                          <InfoPanel label="// OTHER RAW MATERIALS">{rawMaterials.otherMaterials}</InfoPanel>
-                          <BulletPanel label="// SOURCING" items={rawMaterials.sourcing} />
-
-                          {rawMaterials.pricingStrategy && (
+                          {/* RAW MATERIALS & PRICING */}
+                          {rawMaterials && (
                             <>
-                              <InfoPanel label="// PRICING STRATEGY">{rawMaterials.pricingStrategy.approach}</InfoPanel>
-                              <InfoPanel label="// LAG IN PRICE IMPACT">{rawMaterials.pricingStrategy.lag}</InfoPanel>
+                              <SectionHeading>// RAW MATERIALS & PRICING</SectionHeading>
+
+                              {/* Featured cocoa callout */}
+                              {rawMaterials.keyInput && (
+                                <div style={{
+                                  background:'linear-gradient(160deg, rgba(245,158,11,0.10) 0%, rgba(0,0,0,0.4) 100%)',
+                                  border:`0.5px solid ${amber}`,
+                                  borderLeft:`2px solid ${amber}`,
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'8px',
+                                  position:'relative',
+                                }}>
+                                  <div style={{position:'absolute',top:'6px',left:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                  <div style={{position:'absolute',top:'6px',right:'6px',width:'10px',height:'10px',borderTop:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                  <div style={{position:'absolute',bottom:'6px',left:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderLeft:`1px solid ${amberDim}`}}/>
+                                  <div style={{position:'absolute',bottom:'6px',right:'6px',width:'10px',height:'10px',borderBottom:`1px solid ${amberDim}`,borderRight:`1px solid ${amberDim}`}}/>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px'}}>// KEY RAW MATERIAL</div>
+                                  <div style={{fontSize:'15px',color:'#e0eaff',fontFamily:'monospace',fontWeight:600,letterSpacing:'0.5px',marginBottom:'6px'}}>{rawMaterials.keyInput.name}</div>
+                                  <div style={{fontSize:'11px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{rawMaterials.keyInput.detail}</div>
+                                </div>
+                              )}
+
+                              {/* Cocoa supply detail — regions has 70% West Africa, treat as concentration risk */}
+                              {rawMaterials.cocoaSupply && (
+                                <>
+                                  <InfoPanel label="// COCOA SUPPLY · REGIONS" accent="red">{rawMaterials.cocoaSupply.regions} <span style={{color:'rgba(239,68,68,0.85)',fontWeight:600}}>Heavy geographic concentration.</span></InfoPanel>
+                                  <InfoPanel label="// COCOA SUPPLY · RISKS">{rawMaterials.cocoaSupply.risks}</InfoPanel>
+                                  <InfoPanel label="// COCOA PROCUREMENT">{rawMaterials.cocoaSupply.procurement}</InfoPanel>
+                                </>
+                              )}
+
+                              {rawMaterials.otherMaterials && <InfoPanel label="// OTHER RAW MATERIALS">{rawMaterials.otherMaterials}</InfoPanel>}
+                              {rawMaterials.sourcing && <BulletPanel label="// SOURCING" items={rawMaterials.sourcing} />}
+
+                              {rawMaterials.pricingStrategy && (
+                                <>
+                                  <InfoPanel label="// PRICING STRATEGY">{rawMaterials.pricingStrategy.approach}</InfoPanel>
+                                  <InfoPanel label="// LAG IN PRICE IMPACT">{rawMaterials.pricingStrategy.lag}</InfoPanel>
+                                </>
+                              )}
                             </>
                           )}
 
