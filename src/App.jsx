@@ -5870,6 +5870,84 @@ const PEP_BREAKDOWN = {
   },
 
   // ════════════════════════════════════════════════════════════════
+  // NUMBERS — Human Capital (employees, productivity)
+  // ════════════════════════════════════════════════════════════════
+  numbers: {
+    // Employees worldwide
+    employees: {
+      label: 'Total Employees (Worldwide)',
+      unit: 'people',
+      series: [
+        { year: 2015, value: 263000 },
+        { year: 2016, value: 264000 },
+        { year: 2017, value: 263000 },
+        { year: 2018, value: 267000 },
+        { year: 2019, value: 267000 },
+        { year: 2020, value: 291000 },
+        { year: 2021, value: 309000 },
+        { year: 2022, value: 315000 },
+        { year: 2023, value: 318000 },
+        { year: 2024, value: 319000 },
+      ],
+      note: 'Worldwide headcount grew from 263K (2015) to 319K (2024) \u2014 a ~21% increase over 9 years. Growth driven by international expansion and acquisitions (Rockstar 2020, SodaStream 2018).',
+    },
+    // US employees
+    usEmployees: {
+      label: 'U.S. Employees',
+      unit: 'people',
+      series: [
+        { year: 2015, value: 110000 },
+        { year: 2016, value: 113000 },
+        { year: 2017, value: 113000 },
+        { year: 2018, value: 114000 },
+        { year: 2019, value: 116000 },
+        { year: 2020, value: 120000 },
+        { year: 2021, value: 129000 },
+        { year: 2022, value: 132000 },
+        { year: 2023, value: 134000 },
+        { year: 2024, value: 134000 },
+      ],
+      note: 'US headcount grew from 110K (2015) to 134K (2024). US represents ~42% of global workforce \u2014 reflecting the dominance of FLNA + PBNA + QFNA in PEP\u2019s business mix.',
+    },
+    // Revenue per employee (productivity)
+    revenuePerEmployee: {
+      label: 'Revenue per Employee',
+      unit: 'USD',
+      series: [
+        { year: 2015, value: 239756 },
+        { year: 2016, value: 237117, down: true },
+        { year: 2017, value: 241613 },
+        { year: 2018, value: 242159 },
+        { year: 2019, value: 251166 },
+        { year: 2020, value: 241752, down: true },
+        { year: 2021, value: 257267 },
+        { year: 2022, value: 274270 },
+        { year: 2023, value: 287330 },
+        { year: 2024, value: 287915 },
+      ],
+      note: 'Revenue per employee grew from ~$240K (2015) to ~$288K (2024) \u2014 a ~20% increase. Reflects pricing power + productivity initiatives. Note: this is roughly HALF of KO\u2019s $675K/employee \u2014 because PEP owns its bottling (more people per dollar of revenue) while KO is asset-light.',
+    },
+    // Net income per employee
+    netIncomePerEmployee: {
+      label: 'Net Income per Employee',
+      unit: 'USD',
+      series: [
+        { year: 2015, value: 20730 },
+        { year: 2016, value: 23967 },
+        { year: 2017, value: 18471,  down: true },
+        { year: 2018, value: 46884,  spike: true },
+        { year: 2019, value: 27393, down: true },
+        { year: 2020, value: 24478, down: true },
+        { year: 2021, value: 24651 },
+        { year: 2022, value: 28286 },
+        { year: 2023, value: 28537 },
+        { year: 2024, value: 30020 },
+      ],
+      note: '2018 spike ($46,884) reflects TCJA-related tax benefits. 2017 trough ($18,471) reflects TCJA-related tax charge. Excluding those, net income per employee has grown steadily from ~$21K (2015) to ~$30K (2024).',
+    },
+  },
+
+  // ════════════════════════════════════════════════════════════════
   // BRANDS — PepsiCo's brand portfolio
   // ════════════════════════════════════════════════════════════════
   brands: {
@@ -6056,6 +6134,93 @@ const PEP_BREAKDOWN = {
         { retailer: 'Lidl',    brand: 'Private label',       reach: 'European discount grocer' },
       ],
       impact: 'Private label pressures pricing power in snacks, water, and juice. Frito-Lay has the strongest brand differentiation (Doritos and Cheetos are hard to substitute), but generic potato chips are a real threat to Lay\u2019s and Ruffles volume.',
+    },
+
+    // Pricing Power — Pepsi cans + Frito-Lay chips (50+ year history)
+    pricingPower: {
+      label: 'Pepsi Can Price · 1970s \u2192 2025',
+      description: 'Pepsi has steadily raised prices over the decades, demonstrating consistent pricing power through brand strength and consumer loyalty. Unlike KO\u2019s legendary 73-year 5-cent freeze (1886\u20131959), PEP\u2019s pricing data is more recent but shows the same compounding pattern.',
+      milestones: [
+        { period: '1970s', price: '~$0.25',  note: 'A can of Pepsi was priced around 25 cents.' },
+        { period: '1980s', price: '~$0.50',  note: 'Prices doubled over the decade as inflation pressed.' },
+        { period: '1990s', price: '~$0.75',  note: 'Steady upward trend through the 90s.' },
+        { period: '2000s', price: '~$1.00',  note: 'Crossed the dollar mark in the 2000s.' },
+        { period: '2010s', price: '~$1.25',  note: 'Continued pricing power through the 2010s.' },
+        { period: '2020s', price: '~$1.50+', note: 'Prices have approached or exceeded $1.50 per can, depending on region and channel.', current: true },
+      ],
+      takeaway: 'From ~25\u00a2 (1970s) to ~$1.50+ (2025) = ~6x nominal price increase over 50 years. Steady pricing power reflects brand strength + consumer loyalty.',
+
+      // Frito-Lay snack pricing — PEP\u2019s second pricing engine
+      fritoLayMilestones: {
+        label: 'Frito-Lay (Lay\u2019s 16oz) · 1975 \u2192 2025',
+        description: 'Frito-Lay\u2019s pricing power has been even more impressive than Pepsi beverages \u2014 the 16oz bag of Lay\u2019s chips has risen from ~$0.59\u20130.79 (1975) to ~$6.73 (2025), roughly an 8\u201310x increase over 50 years.',
+        rows: [
+          { year: 1975, pepsi: '~$0.25',         fritoLay: '~$0.59\u20130.79' },
+          { year: 1985, pepsi: '~$0.50',         fritoLay: '~$1.50' },
+          { year: 1995, pepsi: '~$0.75',         fritoLay: '~$2.50' },
+          { year: 2005, pepsi: '~$1.00',         fritoLay: '~$3.50' },
+          { year: 2015, pepsi: '~$1.25',         fritoLay: '~$5.00' },
+          { year: 2025, pepsi: '~$1.50+',        fritoLay: '~$6.73', current: true },
+        ],
+        takeaway: 'Frito-Lay has demonstrated stronger pricing power than Pepsi beverages over the same period \u2014 reinforcing the "snacks are the profit engine" thesis. The Lay\u2019s 16oz bag has gone from under a dollar to nearly $7 in 50 years.',
+      },
+    },
+
+    // Acquisition Strategy — much more aggressive than KO
+    acquisitionStrategy: {
+      summary: 'PepsiCo runs a BOLD acquisition strategy \u2014 much more aggressive than Coca-Cola. Uses mostly cash and debt (avoids dilution), focuses on diversifying beyond CSDs into snacks, hydration, energy, and emerging markets. The trade-off: more operational and integration risk than KO\u2019s ultra-stable asset-light model.',
+      fundingMethods: [
+        { type: 'Cash',   emoji: '💵', usage: 'Very common',     note: 'Strong internal free cash flow. PEP regularly funds large deals with cash.', frequency: 'common' },
+        { type: 'Debt',   emoji: '💳', usage: 'Common',           note: 'PEP\u2019s investment-grade credit rating gives access to low-cost borrowing. Used for larger transformative deals.', frequency: 'occasional' },
+        { type: 'Equity', emoji: '🧾', usage: 'Very rare',        note: 'PEP has only meaningfully diluted ONCE in modern history \u2014 the 2001 Quaker Oats deal (~8% dilution). Otherwise PEP strongly avoids issuing shares for M&A.', frequency: 'rare' },
+      ],
+      majorAcquisitions: [
+        { name: 'Siete (Mexican-American foods)',  year: 2025, price: '~$1.2B',   funding: 'Cash',         country: 'USA',    featured: true, note: 'Closed Jan 17, 2025. Final valuation pending Q1 2026.' },
+        { name: 'Sabra (remaining 50%)',           year: 2024, price: '$241M',    funding: 'Cash',         country: 'USA',    featured: true, note: 'Closed Dec 3, 2024. Booked $122M pre-tax gain from remeasuring prior 50% stake.' },
+        { name: 'Be & Cheery',                     year: 2022, price: 'Undisclosed', funding: 'Cash',      country: 'China' },
+        { name: 'Rockstar Energy',                  year: 2020, price: '~$3.85B', funding: 'Cash',         country: 'USA',    featured: true },
+        { name: 'SodaStream',                       year: 2018, price: '~$3.2B',  funding: 'Cash',         country: 'Israel', featured: true },
+        { name: 'Bare Snacks',                      year: 2018, price: 'Undisclosed', funding: 'Cash',      country: 'USA' },
+        { name: 'Wimm-Bill-Dann (dairy)',           year: 2011, price: '~$5.4B',  funding: 'Cash + Debt',  country: 'Russia', featured: true },
+        { name: 'Pepsi Bottling Group + PepsiAmericas', year: 2010, price: '~$7.8B', funding: 'Cash + Debt', country: 'USA', featured: true, note: 'Brought bottling control in-house \u2014 fundamentally different from KO\u2019s franchise model.' },
+        { name: 'Stacy\u2019s Pita Chips',          year: 2006, price: '~$250M',  funding: 'Cash',         country: 'USA' },
+        { name: 'Quaker Oats (incl. Gatorade)',    year: 2001, price: '~$13.8B', funding: 'Stock (~70%) + Cash (~30%)', country: 'USA', featured: true, dilution: true, note: 'Transformational deal. Got Gatorade. The ONLY major dilution event in PEP\u2019s recent history \u2014 issued ~132M new shares (~8% dilution).' },
+        { name: 'Tropicana',                        year: 1998, price: '~$3.3B',  funding: 'Cash + Debt',  country: 'USA',    note: 'Largely divested 2022 (kept 39% in TBG JV).' },
+      ],
+
+      // Divestitures (separate section)
+      divestitures: [
+        { name: 'Tropicana / Naked Juice (sold to PAI Partners)', year: 2022, price: '~$3.5B cash', impact: 'PEP exited low-margin juices, pocketed $3.5B + retained 39% in TBG JV. Booked $520M pre-tax remeasurement gain. Now exclusive U.S. distributor for TBG chilled brands.' },
+      ],
+
+      // Buffett-style observations
+      buffettObservations: [
+        'Very strong free cash flow generation',
+        'Limited dilution history (only Quaker 2001)',
+        'Maintains investment-grade balance sheet',
+        'Keeps leverage within reasonable range',
+        'Uses acquisitions to strengthen core global platform',
+        'But: takes MORE operational & integration risk than KO',
+      ],
+
+      // Share count trend — proof of low dilution
+      shareCountTrend: {
+        headline: 'Share count trend: PEP today has FEWER shares than 20 years ago',
+        rows: [
+          { year: '2000 (pre-Quaker)',     shares: '~1.45B' },
+          { year: '2001 (post-Quaker)',     shares: '~1.58B', note: '+~132M shares from Quaker stock-funded deal' },
+          { year: '2025',                    shares: '~1.37B', note: 'Net 130M+ share reduction since 2001 via buybacks', current: true },
+        ],
+        takeaway: 'PEP diluted ~8% for Quaker Oats in 2001, then never again. Aggressive buybacks have since reduced share count BELOW the pre-Quaker baseline. Buffett would approve of the disciplined capital allocation since 2001.',
+      },
+
+      // Buffett quote (for the existing render)
+      buffettQuote: {
+        text: 'PEP\u2019s acquisition style is bold but funding-disciplined. The Quaker Oats deal in 2001 added Gatorade and remains the only meaningful dilution event. Since then they\u2019ve operated like a Buffett-approved capital allocator.',
+        attribution: 'Buffett-framework synthesis',
+      },
+
+      bottomLine: 'PEP is much more acquisitive than KO \u2014 11 major deals in 25 years vs KO\u2019s mostly bolt-on approach. The trade-off: PEP funds with cash/debt (avoids dilution since 2001), gets diversified scale across snacks + hydration + energy, but accepts higher operational and integration risk. Lower blended ROIC than KO due to snacks margins, but stronger growth optionality.',
     },
   },
 };
@@ -21516,6 +21681,60 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                   <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{pricingPower.takeaway}</div>
                                 </div>
                               )}
+
+                              {/* FRITO-LAY PRICING — PEP-specific second pricing engine */}
+                              {pricingPower.fritoLayMilestones && (
+                                <div style={{
+                                  background:'linear-gradient(160deg, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.4) 100%)',
+                                  border:'0.5px solid rgba(34,197,94,0.4)',
+                                  borderLeft:'2px solid rgba(34,197,94,0.85)',
+                                  borderRadius:'4px',
+                                  padding:'14px',
+                                  marginBottom:'12px',
+                                }}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>🍟 SECONDARY PRICING ENGINE</div>
+                                  {pricingPower.fritoLayMilestones.label && (
+                                    <div style={{fontSize:'14px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.5px',marginBottom:'6px'}}>{pricingPower.fritoLayMilestones.label}</div>
+                                  )}
+                                  {pricingPower.fritoLayMilestones.description && (
+                                    <div style={{fontSize:'10px',color:'rgba(148,163,184,0.7)',fontFamily:'monospace',marginBottom:'10px',lineHeight:1.5,letterSpacing:'0.3px'}}>{pricingPower.fritoLayMilestones.description}</div>
+                                  )}
+
+                                  {/* Side-by-side comparison table */}
+                                  {pricingPower.fritoLayMilestones.rows && pricingPower.fritoLayMilestones.rows.length > 0 && (
+                                    <div style={{overflowX:'auto',marginBottom:'10px'}}>
+                                      <table style={{width:'100%',minWidth:'400px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                        <thead>
+                                          <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                            <th style={{textAlign:'left',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>YEAR</th>
+                                            <th style={{textAlign:'right',padding:'8px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>🥤 PEPSI (12oz)</th>
+                                            <th style={{textAlign:'right',padding:'8px 10px',color:'rgba(34,197,94,0.85)',letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>🍟 LAY'S (16oz)</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {pricingPower.fritoLayMilestones.rows.map((r, i) => (
+                                            <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: r.current ? 'rgba(34,197,94,0.06)' : 'transparent'}}>
+                                              <td style={{padding:'7px 10px',color:'#e0eaff',fontWeight: r.current ? 700 : 600,letterSpacing:'0.3px'}}>
+                                                {r.year}
+                                                {r.current && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontWeight:700,letterSpacing:'1px'}}>● TODAY</span>}
+                                              </td>
+                                              <td style={{padding:'7px 10px',textAlign:'right',color:'rgba(224,234,255,0.85)',fontWeight:600,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{r.pepsi}</td>
+                                              <td style={{padding:'7px 10px',textAlign:'right',color:'rgba(34,197,94,0.95)',fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{r.fritoLay}</td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  )}
+
+                                  {pricingPower.fritoLayMilestones.takeaway && (
+                                    <div style={{padding:'8px 10px',background:'rgba(0,0,0,0.3)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>✓ TAKEAWAY</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{pricingPower.fritoLayMilestones.takeaway}</div>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </>
                           )}
 
@@ -21592,6 +21811,86 @@ Remember: Be natural and varied. Don't spam the same phrases. Keep it short, hel
                                     </table>
                                   </div>
                                 </>
+                              )}
+
+                              {/* DIVESTITURES — PEP-specific */}
+                              {acquisitionStrategy.divestitures && acquisitionStrategy.divestitures.length > 0 && (
+                                <>
+                                  <div style={{fontSize:'9px',color:amberDim,fontFamily:'monospace',letterSpacing:'2px',fontWeight:600,marginBottom:'6px',marginTop:'12px'}}>// MAJOR DIVESTITURES · {acquisitionStrategy.divestitures.length}</div>
+                                  <div style={{display:'flex',flexDirection:'column',gap:'5px',marginBottom:'10px'}}>
+                                    {acquisitionStrategy.divestitures.map((d, i) => (
+                                      <div key={i} style={{padding:'10px 12px',background:'rgba(239,68,68,0.05)',border:'0.5px solid rgba(239,68,68,0.3)',borderLeft:'2px solid rgba(239,68,68,0.85)',borderRadius:'2px'}}>
+                                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'10px',flexWrap:'wrap',marginBottom:'4px'}}>
+                                          <span style={{fontSize:'11px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>↗ SOLD: {d.name}</span>
+                                          <div style={{display:'flex',alignItems:'baseline',gap:'8px',flexWrap:'wrap'}}>
+                                            <span style={{fontSize:'9px',color:'rgba(239,68,68,0.85)',fontFamily:'monospace',letterSpacing:'1px',fontWeight:600}}>{d.year}</span>
+                                            <span style={{fontSize:'11px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px'}}>{d.price}</span>
+                                          </div>
+                                        </div>
+                                        {d.impact && (
+                                          <div style={{fontSize:'10px',color:'rgba(224,234,255,0.75)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{d.impact}</div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* BUFFETT OBSERVATIONS — PEP-specific checklist */}
+                              {acquisitionStrategy.buffettObservations && acquisitionStrategy.buffettObservations.length > 0 && (
+                                <div style={{padding:'12px 14px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.3)',borderLeft:'2px solid rgba(34,197,94,0.85)',borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'6px'}}>🔬 BUFFETT-LENS OBSERVATIONS</div>
+                                  <ul style={{listStyle:'none',padding:0,margin:0,display:'flex',flexDirection:'column',gap:'4px'}}>
+                                    {acquisitionStrategy.buffettObservations.map((o, i) => {
+                                      const isPositive = !o.startsWith('But:');
+                                      return (
+                                        <li key={i} style={{display:'flex',gap:'8px',fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>
+                                          <span style={{color: isPositive ? 'rgba(34,197,94,0.95)' : 'rgba(239,68,68,0.95)',flexShrink:0,fontWeight:700}}>{isPositive ? '✓' : '⚠'}</span>
+                                          <span>{o}</span>
+                                        </li>
+                                      );
+                                    })}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* SHARE COUNT TREND — PEP-specific (proof of low dilution) */}
+                              {acquisitionStrategy.shareCountTrend && (
+                                <div style={{padding:'12px 14px',background:'rgba(0,0,0,0.4)',border:`0.5px solid ${amberGlow}`,borderLeft:`2px solid ${amber}`,borderRadius:'3px',marginBottom:'10px'}}>
+                                  <div style={{fontSize:'9px',color:amber,fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'4px'}}>📉 SHARE COUNT TREND</div>
+                                  <div style={{fontSize:'12px',color:'#e0eaff',fontFamily:'monospace',fontWeight:700,letterSpacing:'0.3px',marginBottom:'10px'}}>{acquisitionStrategy.shareCountTrend.headline}</div>
+
+                                  <div style={{overflowX:'auto',marginBottom:'8px'}}>
+                                    <table style={{width:'100%',minWidth:'350px',borderCollapse:'collapse',fontFamily:'monospace',fontSize:'10px',background:'rgba(0,0,0,0.3)',border:`0.5px solid ${amberGlow}`,borderRadius:'3px'}}>
+                                      <thead>
+                                        <tr style={{borderBottom:`0.5px solid ${amberGlow}`,background:'rgba(245,158,11,0.05)'}}>
+                                          <th style={{textAlign:'left',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px'}}>PERIOD</th>
+                                          <th style={{textAlign:'right',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>SHARES OUT</th>
+                                          <th style={{textAlign:'left',padding:'7px 10px',color:amberDim,letterSpacing:'1.5px',fontWeight:600,fontSize:'9px',borderLeft:`0.5px solid ${amberGlow}`}}>NOTE</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {acquisitionStrategy.shareCountTrend.rows.map((r, i) => (
+                                          <tr key={i} style={{borderBottom:'0.5px solid rgba(245,158,11,0.06)',background: r.current ? 'rgba(34,197,94,0.05)' : 'transparent'}}>
+                                            <td style={{padding:'6px 10px',color:'#e0eaff',fontWeight: r.current ? 700 : 500,letterSpacing:'0.3px'}}>
+                                              {r.year}
+                                              {r.current && <span style={{marginLeft:'6px',fontSize:'8px',color:'rgba(34,197,94,0.95)',fontWeight:700,letterSpacing:'1px'}}>● TODAY</span>}
+                                            </td>
+                                            <td style={{padding:'6px 10px',textAlign:'right',color: r.current ? 'rgba(34,197,94,0.95)' : 'rgba(224,234,255,0.85)',fontWeight:700,letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`}}>{r.shares}</td>
+                                            <td style={{padding:'6px 10px',color:'rgba(224,234,255,0.7)',fontStyle:'italic',letterSpacing:'0.3px',borderLeft:`0.5px solid ${amberGlow}`,fontSize:'9px'}}>{r.note || '\u2014'}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+
+                                  {acquisitionStrategy.shareCountTrend.takeaway && (
+                                    <div style={{padding:'8px 10px',background:'rgba(34,197,94,0.05)',border:'0.5px solid rgba(34,197,94,0.3)',borderRadius:'2px'}}>
+                                      <div style={{fontSize:'9px',color:'rgba(34,197,94,0.95)',fontFamily:'monospace',letterSpacing:'2px',fontWeight:700,marginBottom:'3px'}}>✓ TAKEAWAY</div>
+                                      <div style={{fontSize:'10px',color:'rgba(224,234,255,0.85)',fontFamily:'monospace',lineHeight:1.5,letterSpacing:'0.3px'}}>{acquisitionStrategy.shareCountTrend.takeaway}</div>
+                                    </div>
+                                  )}
+                                </div>
                               )}
 
                               {/* Buffett quote */}
